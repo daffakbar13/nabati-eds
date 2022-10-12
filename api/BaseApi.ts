@@ -50,17 +50,3 @@ export function call({
   }
   return instance.request(config)
 }
-
-namespace API {
-  export const URL = 'https://dist-system.nabatisnack.co.id:3001/'
-  export interface Pagination {
-    total: number
-    per_page: number
-    previous_page: number
-    current_page: number
-    next_page: number
-    total_page: number
-  }
-}
-
-export default API

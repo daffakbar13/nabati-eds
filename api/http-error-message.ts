@@ -10,7 +10,7 @@ export const HTTP_NETWORK_ERROR = 'Network Error'
 export const HTTP_NETWORK_ISSUE_ERROR =
   'This could be server network issue or dropped internet connection'
 
-export default {
+const ERROR_MESSAGE = {
   HTTP_ERROR,
   HTTP_UNAUTHORIZED_ACTION,
   HTTP_INTERNAL_SERVER_ERROR,
@@ -21,3 +21,5 @@ export default {
   HTTP_NETWORK_ISSUE_ERROR,
   HTTP_SESSION_EXPIRED,
 }
+
+export default ERROR_MESSAGE
