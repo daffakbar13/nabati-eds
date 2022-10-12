@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react'
-import LoginLayout from 'containers/Layouts/LoginLayout'
+import LoginLayout from 'src/containers/Layouts/LoginLayout'
 import type { NextPageWithLayout } from './_app'
 
 const Page: NextPageWithLayout = () => {

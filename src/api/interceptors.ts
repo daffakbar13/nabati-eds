@@ -1,7 +1,7 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import Router from 'next/router'
-import { toCamelCase } from 'utils/formatter'
-import { PUBLIC_URL } from 'configs/env'
+import { toCamelCase } from 'src/utils/formatter'
+import { PUBLIC_URL } from 'src/configs/env'
 import MSG from './http-error-message'
 
 const LOGIN_SUB_URL = 'login'

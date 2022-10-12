@@ -1,11 +1,11 @@
-import { call } from 'api/BaseApi'
-import { METHODS } from 'api/methods'
+import { call } from 'src/api/BaseApi'
+import { METHODS } from 'src/api/methods'
 import {
   CommonListResponse,
   CommonDetailResponse,
   CommonListParams,
   CommonDetailParams,
-} from 'api/models'
+} from 'src/api/types'
 import { QuotationItem } from './types'
 
 const subUrl = 'v1/quotations'

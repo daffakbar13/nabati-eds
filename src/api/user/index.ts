@@ -1,6 +1,6 @@
-import { call } from 'api/BaseApi'
-import { METHODS } from 'api/methods'
-import { SignInApiResponse } from 'api/user/types'
+import { call } from 'src/api/BaseApi'
+import { METHODS } from 'src/api/methods'
+import { SignInApiResponse } from 'src/api/user/types'
 
 export const signInApi = async (
   password: string,

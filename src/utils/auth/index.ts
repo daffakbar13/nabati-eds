@@ -1,8 +1,8 @@
-import { PUBLIC_URL } from 'configs/env'
+import { PUBLIC_URL } from 'src/configs/env'
 import { AuthUserInfo, SignInInputTypes } from './types'
-import { LOCAL_STORAGE } from 'configs/localStorage'
-import { SignInApiResponse } from 'api/user/types'
-import { logout } from 'api/user'
+import { LOCAL_STORAGE } from 'src/configs/localStorage'
+import { SignInApiResponse } from 'src/api/user/types'
+import { logout } from 'src/api/user'
 
 export const auth = {
   authenticate: (
