@@ -1,4 +1,3 @@
-import React, { ReactNode, PropsWithChildren } from 'react'
 import Router from 'next/router'
 import {
   ICField,
@@ -12,17 +11,7 @@ import {
   ICPackage,
 } from 'assets'
 
-import {
-  Sidebar,
-  Layout,
-  Header,
-  MenuLogout,
-  Notification,
-  Spacer,
-  Alert,
-} from 'pink-lava-ui'
-
-const menuConfig = [
+export const menu = [
   { type: 'title', title: 'Overview' },
   {
     key: 'dashboard',
@@ -170,12 +159,3 @@ const menuConfig = [
     ],
   },
 ]
-
-export default function DashboardLayout(props: PropsWithChildren<{}>) {
-  return (
-    <div style={{ height: '100vh' }}>
-      Dashboard Layout xxx
-      {props}
-    </div>
-  )
-}
