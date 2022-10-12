@@ -1,3 +1,5 @@
-/dist
-/vendors
-/next
+.next
+__generated__
+.now
+.vscode/settings.json
+.devcontainer
