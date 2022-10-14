@@ -16,6 +16,13 @@
     "isolatedModules": true,
     "jsx": "preserve"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "utils/formatter.js"],
+  "include": [
+    "next-env.d.ts",
+    "additional-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "utils/formatter.js",
+    "next.config.js"
+  ],
   "exclude": ["node_modules"]
 }
