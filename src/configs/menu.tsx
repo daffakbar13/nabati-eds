@@ -5,10 +5,10 @@ import {
   ICMenu,
   ICCalendar,
   ICFinance,
-  ICInventory,
-  ICPurchaseOrg,
-  ICDollar,
-  ICPackage,
+  // ICInventory,
+  // ICPurchaseOrg,
+  // ICDollar,
+  // ICPackage,
 } from 'src/assets'
 
 export const menu = [
@@ -157,5 +157,46 @@ export const menu = [
         onClick: () => Router.push('/formating/date'),
       },
     ],
+  },
+]
+
+export const headerMenu = [
+  { label: 'Home' },
+  { label: 'Marketing' },
+  { label: 'Sales' },
+  { label: 'Master Data Management' },
+]
+
+export const notifItems = [
+  {
+    isRead: false,
+    content: (
+      <p style={{ fontWeight: '600', marginBottom: 0 }}>
+        Term of payment of the week, Please complete it before 01-01-2022
+      </p>
+    ),
+  },
+  {
+    isRead: false,
+    content: (
+      <p style={{ fontWeight: '600', marginBottom: 0 }}>
+        Term of payment following the month, Please complete it before
+        01-01-2022
+      </p>
+    ),
+  },
+  {
+    isRead: true,
+    content: (
+      <p style={{ fontWeight: '600', marginBottom: 0 }}>New Product Launch</p>
+    ),
+  },
+  {
+    isRead: true,
+    content: (
+      <p style={{ fontWeight: '600', marginBottom: 0 }}>
+        You need review a approval Here
+      </p>
+    ),
   },
 ]
