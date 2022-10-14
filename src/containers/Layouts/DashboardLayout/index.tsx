@@ -29,7 +29,7 @@ import {
 //   TextRole,
 // } from './styledComponents'
 
-import { menu, headerMenu, notifItems } from 'src/configs/menu'
+import { menu, headerMenu, notificationItems } from 'src/configs/menus'
 
 // const flexStyles = {
 //   display: 'flex',
