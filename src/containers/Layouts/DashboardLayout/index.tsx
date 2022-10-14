@@ -20,6 +20,7 @@ import {
   Notification,
   Spacer,
   Alert,
+  Text,
 } from 'pink-lava-ui'
 
 const menuConfig = [
@@ -173,9 +174,13 @@ const menuConfig = [
 
 export default function DashboardLayout(props: PropsWithChildren<{}>) {
   return (
-    <div style={{ height: '100vh' }}>
-      Dashboard Layout xxx
-      {props}
-    </div>
+    <Layout style={{ height: '100vh' }}>
+      <Alert>
+        <Text variant="subtitle2" color="cheese.darkest">
+          Test
+        </Text>
+      </Alert>
+      <Alert>Hahah</Alert>
+    </Layout>
   )
 }
