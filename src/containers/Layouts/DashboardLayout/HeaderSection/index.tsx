@@ -20,7 +20,7 @@ import {
     MenuDropdown,
     TextName,
     TextRole,
-} from '../styledComponents'
+} from './styledComponents'
 
 import { headerMenu, notificationItems } from 'src/configs/menus'
 
