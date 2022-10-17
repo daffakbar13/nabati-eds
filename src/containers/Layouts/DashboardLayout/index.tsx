@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useState } from 'react'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 
 import {
   Sidebar,
@@ -41,6 +41,9 @@ import { menu, headerMenu, notificationItems } from 'src/configs/menus'
 // }
 
 export default function DashboardLayout(page: PropsWithChildren<{}>) {
+  const router = useRouter()
+  const defaulMenu = router.asPath.split('/').filter(e => e !== '')[0]
+
   const [current, setCurrent] = useState('0')
 
   const handleCLickTabNav = (e: any) => {
@@ -58,7 +61,7 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
       <Sidebar
         logo="/icons/logo-nabati.svg"
         menu={menu}
-        defaultMenu={'dashboard'}
+        defaultMenu={defaulMenu}
       />
       <Layout
         className="site-layout"
