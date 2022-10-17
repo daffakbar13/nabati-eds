@@ -5,6 +5,4 @@ export const Example = styled.div`
   align-items: center;
   gap: 10px;
 `
-export default {
-  Example,
-}
+export default { Example }

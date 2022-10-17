@@ -1,26 +1,26 @@
 export const columns = [
   {
-    title: 'Billing Number',
+    title: 'Shipment',
     dataIndex: 'billingNumber',
     key: 'billingNumber',
   },
   {
-    title: 'Billing',
+    title: 'Vechile Number',
     dataIndex: 'billingNumber',
     key: 'billingNumber',
   },
   {
-    title: 'Order Type',
+    title: 'Driver',
     dataIndex: 'billingNumber',
     key: 'billingNumber',
   },
   {
-    title: 'Order Date',
+    title: 'Created Date',
     dataIndex: 'billingNumber',
     key: 'billingNumber',
   },
   {
-    title: 'Sales Org',
+    title: 'Total DO',
     dataIndex: 'billingNumber',
     key: 'billingNumber',
   },
@@ -29,23 +29,6 @@ export const columns = [
     dataIndex: 'billingNumber',
     key: 'billingNumber',
   },
-  {
-    title: 'Ship to customer',
-    dataIndex: 'billingNumber',
-    key: 'billingNumber',
-  },
-  {
-    title: 'Shipment Number',
-    dataIndex: 'billingNumber',
-    key: 'billingNumber',
-  },
-  {
-    title: 'Salesman',
-    dataIndex: 'billingNumber',
-    key: 'billingNumber',
-  },
 ]
 
-export default {
-  columns,
-}
+export default { columns }

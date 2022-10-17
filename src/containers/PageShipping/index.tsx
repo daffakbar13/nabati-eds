@@ -9,7 +9,7 @@ import { columns } from './columns'
 export default function Shipping() {
   return (
     <Col>
-      <Text variant={'h4'}>Billing</Text>
+      <Text variant={'h4'}>Shipping</Text>
       <Spacer size={20} />
       <Card>
         <Row justifyContent="space-between">
@@ -31,11 +31,7 @@ export default function Shipping() {
         </Row>
       </Card>
       <Spacer size={10} />
-      <Card
-        style={{
-          padding: '16px 20px',
-        }}
-      >
+      <Card style={{ padding: '16px 20px' }}>
         <Col gap="60px">
           <Table loading={false} columns={columns} data={[]} />
         </Col>

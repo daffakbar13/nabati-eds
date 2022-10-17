@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useState } from 'react'
 import { Sidebar, Layout, Spacer } from 'pink-lava-ui'
-import HeaderSection from './HeaderSection'
 import { menu } from 'src/configs/menus'
+import HeaderSection from './HeaderSection'
 
 export default function DashboardLayout(page: PropsWithChildren<{}>) {
   return (
@@ -13,10 +13,7 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
       />
       <Layout
         className="site-layout"
-        style={{
-          height: '100vh',
-          overflow: 'auto',
-        }}
+        style={{ height: '100vh', overflow: 'auto' }}
       >
         <HeaderSection />
         <div style={{ padding: '20px' }}>

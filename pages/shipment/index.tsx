@@ -1,14 +1,6 @@
 import React from 'react'
-import PageDashboard from 'src/containers/PageDashboard'
+import PageShipping from 'src/containers/PageShipping'
 
-interface ShipmentProps {
-
-}
-
-export default function Shipment(props: ShipmentProps) {
-    const { } = props
-
-    return (
-        <div><PageDashboard /></div>
-    )
+export default function Shipment() {
+  return <PageShipping />
 }
