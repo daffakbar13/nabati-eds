@@ -23,6 +23,6 @@
     "**/*.tsx",
     "utils/formatter.js",
     "next.config.js"
-  ],
+, "pages/_document.js"  ],
   "exclude": ["node_modules"]
 }
