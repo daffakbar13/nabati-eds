@@ -23,7 +23,7 @@ import {
   Notification,
   Spacer,
   Alert,
-  Radio,
+  // Radio,
   Text,
   Pagination,
 } from 'pink-lava-ui'
@@ -31,7 +31,7 @@ import {
 const Page: NextPageWithLayout = () => {
   return (
     <Layout style={{ height: '100vh' }}>
-      <Radio>Text</Radio>
+      {/* <Radio>Text</Radio> */}
     </Layout>
   )
 }

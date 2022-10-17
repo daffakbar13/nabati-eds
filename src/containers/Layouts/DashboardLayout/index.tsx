@@ -61,7 +61,7 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
       <Sidebar
         logo="/icons/logo-nabati.svg"
         menu={menu}
-        defaultMenu={defaulMenu}
+        defaultMenu={'dashboard'}
       />
       <Layout
         className="site-layout"
