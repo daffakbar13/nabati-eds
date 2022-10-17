@@ -5,7 +5,7 @@ export const columns = [
     key: 'billingNumber',
   },
   {
-    title: 'Vechile Number',
+    title: 'Vehicle Number',
     dataIndex: 'billingNumber',
     key: 'billingNumber',
   },
