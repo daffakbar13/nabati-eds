@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Col, Row, Search, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { columns } from './columns'
+import { TableShipment } from 'src/data/tables'
 
 // import { BillingProps } from './types'
 
@@ -33,7 +33,7 @@ export default function Shipping() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <Col gap="60px">
-          <Table loading={false} columns={columns} data={[]} />
+          <Table loading={false} columns={TableShipment} data={[]} />
         </Col>
       </Card>
     </Col>
