@@ -1,14 +1,15 @@
 import React from 'react'
-import { Button, Col, Row, Search, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Col, Row, Search, Spacer, Table, Text, Layout } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { TableBilling } from 'src/data/tables'
-import { PageBillingProps } from './types'
+import { TableSalesOrder } from 'src/data/tables'
 
-export default function PageBilling(props: PageBillingProps) {
+// import { BillingProps } from './types'
+
+export default function PageSalesOrder() {
   return (
-    <Col>
-      <Text variant={'h4'}>Billing</Text>
+    <Layout>
+      <Text variant={'h4'}>Sales Order</Text>
       <Spacer size={20} />
       <Card>
         <Row justifyContent="space-between">
@@ -31,10 +32,10 @@ export default function PageBilling(props: PageBillingProps) {
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
-        <Col gap="60px">
-          <Table loading={false} columns={TableBilling} data={[]} />
-        </Col>
+        <Layout gap="60px">
+          <Table loading={false} columns={TableSalesOrder} data={[]} />
+        </Layout>
       </Card>
-    </Col>
+    </Layout>
   )
 }

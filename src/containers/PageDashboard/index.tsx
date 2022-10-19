@@ -2,9 +2,9 @@ import React from 'react'
 import { PageDashboardProps } from './types'
 
 export default function PageDashboard(props: PageDashboardProps) {
-    const { } = props
+  const { } = props
 
-    return (
+  return (
         <div>PageDashboard</div>
-    )
+  )
 }

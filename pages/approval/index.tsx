@@ -1,14 +1,14 @@
 import React from 'react'
-import PageDashboard from 'src/containers/PageDashboard'
+import PageApproval from 'src/containers/PageApproval'
 
 interface ApprovalProps {
 
 }
 
 export default function Approval(props: ApprovalProps) {
-    const { } = props
+  const { } = props
 
-    return (
-        <div><PageDashboard /></div>
-    )
+  return (
+        <PageApproval/>
+  )
 }

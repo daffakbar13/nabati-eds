@@ -1,14 +1,14 @@
 import React from 'react'
-import PageDashboard from 'src/containers/PageDashboard'
+import PageDeliveryOrder from 'src/containers/PageDeliveryOrder'
 
 interface DeliveryOrderProps {
 
 }
 
 export default function DeliveryOrder(props: DeliveryOrderProps) {
-    const { } = props
+  const { } = props
 
-    return (
-        <div><PageDashboard /></div>
-    )
+  return (
+        <PageDeliveryOrder/>
+  )
 }

@@ -1,14 +1,14 @@
 import React from 'react'
-import PageDashboard from 'src/containers/PageDashboard'
+import PageCollection from 'src/containers/PageCollection'
 
 interface CollectionProps {
 
 }
 
 export default function Collection(props: CollectionProps) {
-    const { } = props
+  const { } = props
 
-    return (
-        <div><PageDashboard /></div>
-    )
+  return (
+        <PageCollection/>
+  )
 }

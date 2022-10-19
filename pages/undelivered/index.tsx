@@ -1,14 +1,14 @@
 import React from 'react'
-import PageDashboard from 'src/containers/PageDashboard'
+import PageUndelivered from 'src/containers/PageUndelivered'
 
 interface UndeliveredProps {
 
 }
 
 export default function Undelivered(props: UndeliveredProps) {
-    const { } = props
+  const { } = props
 
-    return (
-        <div><PageDashboard /></div>
-    )
+  return (
+        <PageUndelivered/>
+  )
 }

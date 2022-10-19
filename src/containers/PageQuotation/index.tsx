@@ -1,15 +1,15 @@
 import React from 'react'
-import { Button, Col, Row, Search, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Col, Row, Search, Spacer, Table, Text, Layout } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { TableShipment } from 'src/data/tables'
+import { TableQuotation } from 'src/data/tables'
 
 // import { BillingProps } from './types'
 
-export default function Shipping() {
+export default function PageQuotation() {
   return (
-    <Col>
-      <Text variant={'h4'}>Shipping</Text>
+    <Layout>
+      <Text variant={'h4'}>Quotation</Text>
       <Spacer size={20} />
       <Card>
         <Row justifyContent="space-between">
@@ -32,10 +32,10 @@ export default function Shipping() {
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
-        <Col gap="60px">
-          <Table loading={false} columns={TableShipment} data={[]} />
-        </Col>
+        <Layout gap="60px">
+          <Table loading={false} columns={TableQuotation} data={[]} />
+        </Layout>
       </Card>
-    </Col>
+    </Layout>
   )
 }

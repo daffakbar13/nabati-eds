@@ -1,14 +1,14 @@
 import React from 'react'
-import PageDashboard from 'src/containers/PageDashboard'
+import PageQuotation from 'src/containers/PageQuotation'
 
 interface QuotationProps {
 
 }
 
 export default function Quotation(props: QuotationProps) {
-    const { } = props
+  const { } = props
 
-    return (
-        <div><PageDashboard /></div>
-    )
+  return (
+        <PageQuotation/>
+  )
 }

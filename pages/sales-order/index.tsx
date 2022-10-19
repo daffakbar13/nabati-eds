@@ -1,14 +1,14 @@
 import React from 'react'
-import PageDashboard from 'src/containers/PageDashboard'
+import PageSalesOrder from 'src/containers/PageSalesOrder'
 
 interface SalesOrderProps {
 
 }
 
 export default function SalesOrder(props: SalesOrderProps) {
-    const { } = props
+  const { } = props
 
-    return (
-        <div><PageDashboard /></div>
-    )
+  return (
+        <PageSalesOrder/>
+  )
 }

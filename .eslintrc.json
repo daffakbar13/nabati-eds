@@ -1,12 +1,22 @@
 {
-  "extends": ["next/core-web-vitals", "airbnb-base"],
+  "extends": [
+    "next/core-web-vitals",
+    "airbnb-base"
+  ],
   "rules": {
+    "import/named": "off",
+    "eol-last": "off",
+    "import/prefer-default-export": "off",
+    "no-empty-pattern": "off",
     "import/no-named-as-default": 0,
     "linebreak-style": 0,
     "object-curly-newline": [
       "error",
       {
-        "ObjectExpression": { "multiline": true, "minProperties": 5 }
+        "ObjectExpression": {
+          "multiline": true,
+          "minProperties": 5
+        }
       }
     ],
     "semi": "off",

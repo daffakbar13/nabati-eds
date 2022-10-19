@@ -1,6 +1,6 @@
 import React from 'react'
-import PageShipping from 'src/containers/PageShipping'
+import PageShipment from 'src/containers/PageShipment'
 
 export default function Shipment() {
-  return <PageShipping />
+  return <PageShipment />
 }
