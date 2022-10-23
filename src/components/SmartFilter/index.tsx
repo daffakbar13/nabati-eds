@@ -1,31 +1,28 @@
-import React, { useState } from 'react'
-import { ICFilterSelect } from 'src/assets'
-import { fakeApi } from 'src/api/fakeApi'
-import DebounceSelect from '../DebounceSelect'
+import React, { useState, useCallback, useEffect } from 'react'
+import { FilterOption } from 'src/configs/filterType'
+import SingleFilter from './SingleFilter'
 
-interface UserValue {
-  label: string
-  value: string
-}
+function SmartFilter({ defaultOptions }) {
+  const [options, setOptions] = useState<FilterOption[]>(defaultOptions)
 
-function SmartFilter() {
-  const [value, setValue] = useState<UserValue[]>([])
+  const onChangeOption = useCallback(
+    (newObj: FilterOption) => {
+      const index = options.findIndex((o) => o.fields === newObj.fields)
+      const newOptions = [...options]
+      newOptions[index] = { ...newOptions[index], ...newObj }
+      setOptions(newOptions)
+    },
+    [options],
+  )
+
+  console.log('options', options)
 
   return (
-    <div>
-      <ICFilterSelect />
-
-      <DebounceSelect
-        // mode="multiple"
-        value={value}
-        placeholder="Select users"
-        fetchOptions={fakeApi}
-        onChange={(newValue) => {
-          setValue(newValue as UserValue[])
-        }}
-        style={{ width: '100%' }}
-      />
-    </div>
+    <>
+      {options.map((opt: FilterOption) => (
+        <SingleFilter key={opt.fields} option={opt} onChange={onChangeOption} />
+      ))}
+    </>
   )
 }
 

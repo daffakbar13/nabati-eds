@@ -13,6 +13,7 @@ function DebounceSelect<
 >({
   fetchOptions,
   debounceTimeout = 800,
+  style = {},
   ...props
 }: DebounceSelectProps<ValueType>) {
   const [fetching, setFetching] = useState(false)
@@ -50,7 +51,7 @@ function DebounceSelect<
       {...props}
       options={options}
       size="large"
-      style={{ border: '1px solid #AAAAAA', borderRadius: 8, width: '100%' }}
+      style={{ border: '1px solid #AAAAAA', borderRadius: 8, ...style }}
     />
   )
 }
