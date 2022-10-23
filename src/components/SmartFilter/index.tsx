@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ICFilter2 } from 'src/assets'
+import { ICFilterSelect } from 'src/assets'
 import { fakeApi } from 'src/api/fakeApi'
 import DebounceSelect from '../DebounceSelect'
 
@@ -13,7 +13,7 @@ function SmartFilter() {
 
   return (
     <div>
-      <ICFilter2 />
+      <ICFilterSelect />
 
       <DebounceSelect
         // mode="multiple"
