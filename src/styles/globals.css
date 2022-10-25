@@ -1,25 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
-
 /*
   1. Use a more-intuitive box-sizing model.
 */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 /*
     2. Remove default margin
 */
 * {
-  margin: 0;
+    margin: 0;
 }
 /*
     3. Allow percentage-based heights in the application
 */
 html,
 body {
-  height: 100%;
+    height: 100%;
 }
 /*
     Typographic tweaks!
@@ -27,9 +26,9 @@ body {
     5. Improve text rendering
 */
 body {
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  font-family: Nunito Sans;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    font-family: Nunito Sans;
 }
 /*
     6. Improve media defaults
@@ -39,8 +38,8 @@ picture,
 video,
 canvas,
 svg {
-  display: block;
-  max-width: 100%;
+    display: block;
+    max-width: 100%;
 }
 /*
     7. Remove built-in form typography styles
@@ -49,7 +48,7 @@ input,
 button,
 textarea,
 select {
-  font: inherit;
+    font: inherit;
 }
 /*
     8. Avoid text overflows
@@ -61,18 +60,18 @@ h3,
 h4,
 h5,
 h6 {
-  overflow-wrap: break-word;
+    overflow-wrap: break-word;
 }
 /*
     9. Create a root stacking context
 */
 #root,
 #__next {
-  isolation: isolate;
+    isolation: isolate;
 }
 
 p {
-  margin: 0;
+    margin: 0;
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -87,19 +86,27 @@ p {
 
 /* START - ANTD SELECT */
 .ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  position: relative;
-  background-color: rgba(255, 255, 255, 0);
-  border: 0px;
-  border-radius: 2px;
-  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    position: relative;
+    background-color: rgba(255, 255, 255, 0);
+    border: 0px;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 /* END - ANTD SELECT */
 
 ::-webkit-scrollbar {
-  width: 0;  /* Remove scrollbar space */
-  background: transparent;  /* Optional: just make scrollbar invisible */
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
 }
 
-th.ant-table-cell::before{
-  display:none
+th.ant-table-cell::before {
+    display: none;
+}
+
+.ant-tabs-ink-bar {
+    border-bottom: 4px solid #2bbecb;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #2bbecb;
 }

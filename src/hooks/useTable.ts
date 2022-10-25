@@ -1,24 +1,25 @@
 import React from 'react'
 
-interface haveCheckBox{
-    headCell: string
-    member: string[]
+interface haveCheckBox {
+  headCell: string
+  member: string[]
 }
 
-interface useTableProps{
-    api: string,
-    haveCheckbox?: haveCheckBox | 'All',
-    columns: any[]
+interface useTableProps {
+  api: string,
+  haveCheckbox?: haveCheckBox | 'All',
+  columns: any[]
 }
 
-export default function useTable(props:useTableProps) {
+export default function useTable(props: useTableProps) {
   const { api, haveCheckbox } = props
   const [data, setData] = React.useState([])
   const [columns, setColumns] = React.useState(props.columns)
+  const [rowSelection, setRowSelection] = React.useState({})
   const [loading, setLoading] = React.useState(true)
   const [selected, setSelected] = React.useState([])
   const [hiddenColumns, setHiddenColumns] = React.useState([])
-  const isHaveCheckbox = (key:string) => haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
+  const isHaveCheckbox = (key: string) => haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
 
   const updateData = (newData: any[]) => {
     setLoading(true)
@@ -26,7 +27,7 @@ export default function useTable(props:useTableProps) {
     setLoading(false)
   }
 
-  const handleHideShowColumns = (event, newData:any) => {
+  const handleHideShowColumns = (event, newData: any) => {
     // eslint-disable-next-line no-unused-expressions
     event.checked
       ? setHiddenColumns(hiddenColumns.filter((e) => e !== newData))
@@ -37,11 +38,11 @@ export default function useTable(props:useTableProps) {
     setHiddenColumns([])
   }
 
-  const rowSelection = {
+  const defineRowSelection = {
     onChange: (selectedRowKeys) => {
       setSelected(selectedRowKeys)
     },
-    ...(haveCheckbox || haveCheckbox !== 'All' && {
+    ...(haveCheckbox !== 'All' && {
       getCheckboxProps: (record) => ({
         style: { ...(isHaveCheckbox(record[haveCheckbox.headCell]) && { display: 'none' }) },
         disabled: isHaveCheckbox(record[haveCheckbox.headCell]),
@@ -54,6 +55,7 @@ export default function useTable(props:useTableProps) {
   };
 
   React.useEffect(() => {
+    if (haveCheckbox) { setRowSelection(defineRowSelection) }
     updateData([])
   }, [])
 

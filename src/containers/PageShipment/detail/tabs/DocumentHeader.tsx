@@ -3,20 +3,18 @@ import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import useTable from 'src/hooks/useTable'
-import { Spacer } from 'pink-lava-ui';
-import { TableQuotation } from '../columns'
+import { Spacer } from 'pink-lava-ui'
+import { TableDocumentHeader } from '../columns'
 
-interface QuotationProps {
-
-}
+interface DocumentHeaderProps {}
 
 const createDataList = (label: string, value: string) => ({ label, value })
 
-export default function Quotation(props: QuotationProps) {
-    const { } = props
-    const table = useTable({ api: '', columns: TableQuotation })
+export default function DocumentHeader(props: DocumentHeaderProps) {
+    const {} = props
+    const table = useTable({ api: '', columns: TableDocumentHeader })
     const dataList = [
-        createDataList('Quotation', 'ZOP1'),
+        createDataList('DocumentHeader', 'ZOP1'),
         createDataList('Customer', 'ZOP1'),
         createDataList('Sales Org.', 'ZOP1'),
         createDataList('Plant', 'ZOP1'),
@@ -36,33 +34,32 @@ export default function Quotation(props: QuotationProps) {
     return (
         <>
             <Row gutter={8}>
-                <Col span={8} >
+                <Col span={8}>
                     {dataList.slice(0, 5).map(({ label, value }, i) => (
                         <DataList key={i} label={label} value={value} />
                     ))}
                 </Col>
-                <Col span={8} >
+                <Col span={8}>
                     {dataList.slice(5, 10).map(({ label, value }, i) => (
                         <DataList key={i} label={label} value={value} />
                     ))}
                 </Col>
-                <Col span={8} >
+                <Col span={8}>
                     {dataList.slice(10).map(({ label, value }, i) => (
                         <DataList key={i} label={label} value={value} />
                     ))}
                 </Col>
             </Row>
             <Divider />
-            <div style={{ overflow: 'scroll' }} >
+            <div style={{ overflow: 'scroll' }}>
                 <Table columns={table.columns} dataSource={[]} />
             </div>
             <Spacer size={30} />
             <Row>
                 <Col span={12} offset={12}>
-                    <Total label='Total Amount' value={123} />
+                    <Total label="Total Amount" value={123} />
                 </Col>
             </Row>
-
         </>
     )
 }

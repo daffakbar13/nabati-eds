@@ -5,11 +5,7 @@ import DocumentFlow from './DocumentFlow'
 import Quotation from './Quotation'
 import SalesmanInfo from './SalesmanInfo'
 
-const CreateTabs = (label: React.ReactNode, key: string, children: React.ReactNode) => (
-    {
-        label, key, children, forceRender: true, destroyInactiveTabPane: true,
-    }
-)
+const CreateTabs = (label: React.ReactNode, key: string) => ({label, key})
 
 const AllTabs = [
     // {
@@ -30,10 +26,12 @@ const AllTabs = [
     //     key: 'Salesman Info',
     //     children: <SalesmanInfo />,
     // },
-    CreateTabs(`Quotation`, '1', ''),
-    CreateTabs(`Document Flow`, '2', ''),
-    CreateTabs(`Customer Info`, '3', ''),
-    CreateTabs(`Salesman Info`, '4', ''),
+    CreateTabs(`Sales Order`, '1'),
+    CreateTabs(`Pricing Condition`, '2'),
+    CreateTabs(`Promotion List`, '3'),
+    CreateTabs(`Document Flow`, '4'),
+    CreateTabs(`Customer Info`, '5'),
+    CreateTabs(`Salesman Info`, '6'),
 ]
 
 export default AllTabs

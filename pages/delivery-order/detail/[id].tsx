@@ -1,13 +1,10 @@
 import React from 'react'
+import PageDeliveryOrderDetail from 'src/containers/PageDeliveryOrder/detail'
 
-interface DeliveryOrderDetailProps {
-
-}
+interface DeliveryOrderDetailProps {}
 
 export default function DeliveryOrderDetail(props: DeliveryOrderDetailProps) {
-    const { } = props
+    const {} = props
 
-    return (
-        <div>DeliveryOrderDetail</div>
-    )
+    return <PageDeliveryOrderDetail />
 }

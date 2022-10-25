@@ -3,6 +3,8 @@ import { Button as ButtonPinkLava, Col, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Button, Tabs } from 'antd';
 import useTitlePage from 'src/hooks/useTitlePage'
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import { useRouter } from 'next/router';
 import { PageQuotationDetailProps } from './types'
 import AllTabs from './tabs';
 import Quotation from './tabs/Quotation';
@@ -13,10 +15,21 @@ import SalesmanInfo from './tabs/SalesmanInfo';
 export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
+  const router = useRouter()
 
   return (
     <Col>
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', gap: 5 }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+          onClick={() => { router.push('/quotation') }}
+        >
+         <ArrowLeftOutlined style={{ fontSize: 25 }} />
+        </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }} >
           <Button>

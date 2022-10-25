@@ -19,7 +19,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageBilling(props: PageBillingProps) {
-  const [showFilter, setShowFilter] = React.useState(true)
+  const [showFilter, setShowFilter] = React.useState(false)
   const table = useTable({ api: '', haveCheckbox: { headCell: 'status', member: ['new'] }, columns: TableBilling })
   const titlePage = useTitlePage('list')
 
