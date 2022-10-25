@@ -89,3 +89,7 @@ p {
   width: 0;  /* Remove scrollbar space */
   background: transparent;  /* Optional: just make scrollbar invisible */
 }
+
+th.ant-table-cell::before{
+  display:none
+}

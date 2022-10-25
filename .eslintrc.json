@@ -21,6 +21,7 @@
     ],
     "semi": "off",
     "no-unused-vars": "warn",
+    "indent": 0,
     "import/extensions": [
       "error",
       "ignorePackages",

@@ -8,8 +8,10 @@ const CreateMenu = (
   icon?: any,
   content?: () => string,
   onClick?: () => Promise<boolean>,
-  children?: any[]
-) => ({ key, title, type, icon, content, onClick, children })
+  children?: any[],
+) => ({
+  key, title, type, icon, content, onClick, children,
+})
 
 export const menu = [
   CreateMenu('overview', 'Overview', 'title'),

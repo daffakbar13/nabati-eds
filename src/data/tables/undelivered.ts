@@ -1,4 +1,4 @@
-import CreateDataTable from 'src/utils/createDataTable';
+import CreateDataTable from 'src/utils/createColumns';
 
 export const TableUndelivered = CreateDataTable('list', [
   ['Shipment', 'shipment_id'],

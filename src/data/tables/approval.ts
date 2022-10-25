@@ -1,4 +1,4 @@
-import CreateDataTable from 'src/utils/createDataTable';
+import CreateDataTable from 'src/utils/createColumns';
 
 export const TableApproval = CreateDataTable('list', [
   ['Sales Order', 'shipment_id'],

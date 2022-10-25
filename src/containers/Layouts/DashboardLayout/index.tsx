@@ -16,10 +16,12 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
         style={{ height: '100vh', overflow: 'auto' }}
       >
         <HeaderSection />
-        <div style={{ padding: '20px' }}>
-          <Spacer size={12} />
-          {page}
-        </div>
+        <main>
+          <div style={{ padding: '20px' }}>
+            <Spacer size={12} />
+            {page}
+          </div>
+        </main>
       </Layout>
     </Layout>
   )

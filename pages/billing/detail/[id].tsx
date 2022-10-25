@@ -1,4 +1,5 @@
 import React from 'react'
+import PageBillingDetail from 'src/containers/PageBilling/detail'
 
 interface BillingDetailProps {
 
@@ -7,7 +8,5 @@ interface BillingDetailProps {
 export default function BillingDetail(props: BillingDetailProps) {
     const { } = props
 
-    return (
-        <div>BillingDetail</div>
-    )
+    return <PageBillingDetail />
 }
