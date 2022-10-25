@@ -1,68 +1,81 @@
-import { Col, Row, Table, Divider } from 'antd'
+import { Col, Row, Divider } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import useTable from 'src/hooks/useTable'
-import { Spacer } from 'pink-lava-ui';
+import { Spacer, Table } from 'pink-lava-ui'
+import useDetail from 'src/hooks/useDetail'
 import { TableQuotation } from '../columns'
 
 interface QuotationProps {
-
+    data: any
 }
 
 const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function Quotation(props: QuotationProps) {
-    const { } = props
-    const table = useTable({ api: '', columns: TableQuotation })
+    const { data } = props
+    const [total, setTotal] = React.useState(0)
+
     const dataList = [
-        createDataList('Quotation', 'ZOP1'),
-        createDataList('Customer', 'ZOP1'),
-        createDataList('Sales Org.', 'ZOP1'),
-        createDataList('Plant', 'ZOP1'),
-        createDataList('Salesman', 'ZOP1'),
-        createDataList('Doc. Date', 'ZOP1'),
-        createDataList('Valid From', 'ZOP1'),
-        createDataList('Valid To', 'ZOP1'),
-        createDataList('Delivery Date', 'ZOP1'),
-        createDataList('Reference', 'ZOP1'),
-        createDataList('Created On', 'ZOP1'),
-        createDataList('Created By', 'ZOP1'),
-        createDataList('Modified On', 'ZOP1'),
-        createDataList('Modified By', 'ZOP1'),
-        createDataList('Created From', 'ZOP1'),
+        createDataList('Quotation', data.id),
+        createDataList('Customer', data.customer_name),
+        createDataList('Sales Org.', data.sales_org_id),
+        createDataList('Plant', data.plant),
+        createDataList('Salesman', data.salesman_id),
+        createDataList('Doc. Date', data.doc_date),
+        createDataList('Valid From', data.valid_from),
+        createDataList('Valid To', data.valid_to),
+        createDataList('Delivery Date', data.delivery_date),
+        createDataList('Reference', data.reference),
+        createDataList('Created On', data.created_at),
+        createDataList('Created By', data.created_by),
+        createDataList('Modified On', data.modified_at),
+        createDataList('Modified By', data.modified_by),
+        createDataList('Created From', data.created_from),
     ]
+
+    console.log(data)
+
+    // if (data.items) {
+    //     data.items.map((obj, index) => ({
+    //         ...obj,
+    //         no: index + 1,
+    //         sub_total: obj.order_qty * obj.price,
+    //     }))
+    //     data.items.map((obj) => {
+    //         setTotal(obj.order_qty * obj.price)
+    //     })
+    // }
 
     return (
         <>
             <Row gutter={8}>
-                <Col span={8} >
+                <Col span={8}>
                     {dataList.slice(0, 5).map(({ label, value }, i) => (
                         <DataList key={i} label={label} value={value} />
                     ))}
                 </Col>
-                <Col span={8} >
+                <Col span={8}>
                     {dataList.slice(5, 10).map(({ label, value }, i) => (
                         <DataList key={i} label={label} value={value} />
                     ))}
                 </Col>
-                <Col span={8} >
+                <Col span={8}>
                     {dataList.slice(10).map(({ label, value }, i) => (
                         <DataList key={i} label={label} value={value} />
                     ))}
                 </Col>
             </Row>
             <Divider />
-            <div style={{ overflow: 'scroll' }} >
-                <Table columns={table.columns} dataSource={[]} />
+            <div style={{ overflow: 'scroll' }}>
+                <Table columns={TableQuotation} data={data.items} />
             </div>
             <Spacer size={30} />
             <Row>
                 <Col span={12} offset={12}>
-                    <Total label='Total Amount' value={123} />
+                    <Total label="Total Amount" value={total} />
                 </Col>
             </Row>
-
         </>
     )
 }

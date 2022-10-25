@@ -4,7 +4,7 @@ import useTable from 'src/hooks/useTable'
 import { TableDocumentFlow } from '../columns'
 
 interface DocumentFlowProps {
-
+    data: object
 }
 
 export default function DocumentFlow(props: DocumentFlowProps) {

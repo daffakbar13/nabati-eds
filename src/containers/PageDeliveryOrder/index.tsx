@@ -2,13 +2,13 @@ import React from 'react'
 import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-// import { TableBilling } from 'src/data/tables'
+// import { TableDeliveryOrder } from 'src/data/tables'
 import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd';
 import useTable from 'src/hooks/useTable';
 import { MoreOutlined } from '@ant-design/icons';
 import useTitlePage from 'src/hooks/useTitlePage';
 import { PageDeliveryOrderProps } from './types'
-import { TableBilling } from './columns'
+import { TableDeliveryOrder } from './columns'
 
 const columns = [
   {
@@ -38,12 +38,12 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
-  const table = useTable({ api: '', haveCheckbox: { headCell: 'status', member: ['new'] }, columns: TableBilling })
+  const table = useTable({ api: '', haveCheckbox: { headCell: 'status', member: ['new'] }, columns: TableDeliveryOrder })
   const titlePage = useTitlePage('list')
 
   const content = (
     <>
-      {TableBilling.map(({ title }, index) => (
+      {TableDeliveryOrder.map(({ title }, index) => (
         <div key={index}>
           <Checkbox
             defaultChecked={!table.hiddenColumns.includes(title)}

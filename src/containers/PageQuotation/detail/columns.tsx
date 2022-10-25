@@ -2,11 +2,11 @@ import CreateColumns from 'src/utils/createColumns';
 
 export const TableQuotation = [
   CreateColumns('No', 'no'),
-  CreateColumns('Item', 'item'),
-  CreateColumns('Item Category', 'item_category'),
-  CreateColumns('Uom', 'uom'),
-  CreateColumns('Quantity', 'quantity'),
-  CreateColumns('Based Price', 'based_price'),
+  CreateColumns('Item', 'product_id'),
+  CreateColumns('Item Category', 'item_category_id'),
+  CreateColumns('Uom', 'uom_id'),
+  CreateColumns('Quantity', 'order_qty'),
+  CreateColumns('Based Price', 'price'),
   CreateColumns('Sub Total', 'sub_total'),
   CreateColumns('Remarks', 'remarks'),
 ]

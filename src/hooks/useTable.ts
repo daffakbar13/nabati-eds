@@ -56,7 +56,14 @@ export default function useTable(props: useTableProps) {
 
   React.useEffect(() => {
     if (haveCheckbox) { setRowSelection(defineRowSelection) }
-    updateData([])
+    async function getApi() {
+      fetch(api)
+        .then((response) => response.json())
+        .then((result) => updateData(result.data.result))
+        .catch((_) => updateData([]))
+    }
+
+    getApi()
   }, [])
 
   React.useEffect(() => {

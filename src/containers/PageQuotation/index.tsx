@@ -1,11 +1,12 @@
 import React from 'react'
-import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
+import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider, Table } from 'antd'
+import { Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
+import FloatAction from 'src/components/FloatAction'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
@@ -16,7 +17,11 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageQuotation(props: PageQuotationProps) {
-    const table = useTable({ api: '', columns: TableQuotation })
+    const table = useTable({
+        api: '/dummy/list-quotation.json',
+        haveCheckbox: { headCell: 'status_name', member: ['New'] },
+        columns: TableQuotation,
+    })
     const titlePage = useTitlePage('list')
 
     const content = (
@@ -33,14 +38,22 @@ export default function PageQuotation(props: PageQuotationProps) {
                 </div>
             ))}
             <Divider />
-            <h4 onClick={table.handleResetHideShowColumns} style={{ textAlign: 'center', cursor: 'pointer' }}>
+            <h4
+                onClick={table.handleResetHideShowColumns}
+                style={{ textAlign: 'center', cursor: 'pointer' }}
+            >
                 Reset
             </h4>
         </>
     )
 
     const HideShowColumns = () => (
-        <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
+        <Popover
+            placement="bottomRight"
+            title={'Hide/Show Columns'}
+            content={content}
+            trigger="click"
+        >
             <MoreOutlined />
         </Popover>
     )
@@ -75,10 +88,10 @@ export default function PageQuotation(props: PageQuotationProps) {
                         // sticky
                         // loading={table.loading}
                         columns={[...table.columns, { title: <HideShowColumns /> }]}
-                        dataSource={table.data}
+                        data={table.data}
                         showSorterTooltip={false}
                         rowSelection={table.rowSelection}
-                        // rowKey={'shipment_id'}
+                        rowKey={'id'}
                         // pagination={false}
                         // onChange={(_, __, sorter) => console.log(sorter)}
                         // style={{ overflow: 'scroll' }}
@@ -94,6 +107,21 @@ export default function PageQuotation(props: PageQuotationProps) {
                     total={table.data.length}
                     showTotal={showTotal}
                 />
+                { table.selected.length > 0 && 
+                    <FloatAction>
+                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                            <b>{table.selected.length} Document Quotation are Selected</b>
+                        </div>
+                        <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+                            <Button size="big" variant="tertiary" onClick={() => {}}>
+                                Cancel
+                            </Button>
+                            <Button size="big" variant="primary" onClick={() => {}}>
+                                Submit
+                            </Button>
+                        </div>
+                    </FloatAction>
+                }
             </Card>
         </Col>
     )
