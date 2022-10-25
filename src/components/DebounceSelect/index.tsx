@@ -43,9 +43,31 @@ function DebounceSelect<
         return debounce(loadOptions, debounceTimeout)
     }, [fetchOptions, debounceTimeout])
 
-    return (
-        <div>
-            {label && (
+    const mainComponent = (
+        <Select
+            showSearch
+            labelInValue
+            filterOption={false}
+            onSearch={debounceFetcher}
+            notFoundContent={fetching ? <Spin size="small" /> : null}
+            placeholder="Type To Search"
+            {...props}
+            options={options}
+            size="large"
+            style={{
+                border: '1px solid #AAAAAA',
+                borderRadius: 8,
+                height: 48,
+                display: 'flex',
+                alignItems: 'center',
+                ...style,
+            }}
+        />
+    )
+
+    if (label) {
+        return (
+            <div>
                 <Text
                     variant="headingSmall"
                     textAlign="center"
@@ -53,28 +75,12 @@ function DebounceSelect<
                 >
                     {label}
                 </Text>
-            )}
-            <Select
-                showSearch
-                labelInValue
-                filterOption={false}
-                onSearch={debounceFetcher}
-                notFoundContent={fetching ? <Spin size="small" /> : null}
-                placeholder="Type To Search"
-                {...props}
-                options={options}
-                size="large"
-                style={{
-                    border: '1px solid #AAAAAA',
-                    borderRadius: 8,
-                    height: 48,
-                    display: 'flex',
-                    alignItems: 'center',
-                    ...style,
-                }}
-            />
-        </div>
-    )
+                {mainComponent}
+            </div>
+        )
+    }
+
+    return mainComponent
 }
 
 export default DebounceSelect

@@ -1,11 +1,11 @@
+import React from 'react'
 import { Text } from 'pink-lava-ui'
+import { InputNumber, Input } from 'antd'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { CommonSelectValue } from 'src/configs/commonTypes'
+import { fakeApi } from 'src/api/fakeApi'
 
 export const columns = () => [
-    {
-        title: '',
-        dataIndex: 'id',
-        key: 'id',
-    },
     {
         title: (
             <Text variant="headingRegular" style={{ fontWeight: 600 }}>
@@ -14,6 +14,9 @@ export const columns = () => [
         ),
         dataIndex: 'item',
         key: 'item',
+        editable: true,
+        inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
+        render: (obj: CommonSelectValue) => obj?.label,
     },
     {
         title: (
@@ -21,8 +24,11 @@ export const columns = () => [
                 Uom
             </Text>
         ),
-        dataIndex: 'item',
-        key: 'item',
+        dataIndex: 'uom',
+        key: 'uom',
+        editable: true,
+        inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
+        render: (obj: CommonSelectValue) => obj?.label,
     },
     {
         title: (
@@ -30,8 +36,10 @@ export const columns = () => [
                 Quantity
             </Text>
         ),
-        dataIndex: 'item',
-        key: 'item',
+        dataIndex: 'qty',
+        key: 'qty',
+        editable: true,
+        inputNode: <InputNumber />,
     },
     {
         title: (
@@ -39,8 +47,10 @@ export const columns = () => [
                 Base Price
             </Text>
         ),
-        dataIndex: 'item',
-        key: 'item',
+        dataIndex: 'price',
+        key: 'price',
+        editable: true,
+        inputNode: <InputNumber />,
     },
     {
         title: (
@@ -48,7 +58,33 @@ export const columns = () => [
                 Gross
             </Text>
         ),
-        dataIndex: 'item',
-        key: 'item',
+        dataIndex: 'gross',
+        key: 'gross',
+        editable: true,
+        inputNode: <InputNumber />,
+    },
+]
+
+export const columns2 = () => [
+    {
+        title: 'Name',
+        dataIndex: 'name',
+        editable: true,
+        inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
+        render: (obj: CommonSelectValue) => obj.label,
+    },
+    {
+        title: 'Age',
+        dataIndex: 'age',
+        width: '15%',
+        editable: true,
+        inputNode: <InputNumber />,
+    },
+    {
+        title: 'Address',
+        dataIndex: 'address',
+        width: '40%',
+        editable: true,
+        inputNode: <Input />,
     },
 ]
