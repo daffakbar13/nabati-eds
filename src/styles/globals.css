@@ -85,6 +85,16 @@ p {
   }
 } */
 
+/* START - ANTD SELECT */
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0);
+  border: 0px;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+/* END - ANTD SELECT */
+
 ::-webkit-scrollbar {
   width: 0;  /* Remove scrollbar space */
   background: transparent;  /* Optional: just make scrollbar invisible */

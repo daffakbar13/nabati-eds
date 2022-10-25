@@ -3,12 +3,15 @@ import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
+import { ICFilter } from 'src/assets/icons'
 import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd';
 import useTable from 'src/hooks/useTable';
 import { MoreOutlined } from '@ant-design/icons';
 import useTitlePage from 'src/hooks/useTitlePage';
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
+
+import HeadFIlterModal from './modals/headFIlter'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -17,6 +20,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageBilling(props: PageBillingProps) {
+  const [showFilter, setShowFilter] = useState(true)
   const table = useTable({ api: '', haveCheckbox: { headCell: 'status', member: ['new'] }, columns: TableBilling })
   const titlePage = useTitlePage('list')
 
@@ -49,13 +53,28 @@ export default function PageBilling(props: PageBillingProps) {
       <Spacer size={20} />
       <Card>
         <Row justifyContent="space-between">
-          <Search
-            width="380px"
-            nameIcon="SearchOutlined"
-            placeholder="Search Menu Design Name"
-            colorIcon={colors.grey.regular}
-            onChange={() => { }}
-          />
+          <Row gap="16px">
+            <Search
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search Menu Design Name"
+              colorIcon={colors.grey.regular}
+              onChange={() => {}}
+            />
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => setShowFilter(true)}
+              style={{
+                border: '1px solid #888888',
+                color: '#888888',
+                justifyContent: 'flex-start',
+                gap: 16,
+              }}
+            >
+              <ICFilter /> Filter
+            </Button>
+          </Row>
           <Row gap="16px">
             <Button size="big" variant="secondary" onClick={() => { }}>
               Download
@@ -91,6 +110,13 @@ export default function PageBilling(props: PageBillingProps) {
           />
         </div>
       </Card>
+
+      <HeadFIlterModal
+        visible={showFilter}
+        onOk={() => {}}
+        onCancel={() => setShowFilter(false)}
+        title="Filter"
+      />
     </Col>
   )
 }
