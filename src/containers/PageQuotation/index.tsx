@@ -6,6 +6,7 @@ import { colors } from 'src/configs/colors'
 import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd';
 import useTable from 'src/hooks/useTable';
 import { MoreOutlined } from '@ant-design/icons';
+import useTitlePage from 'src/hooks/useTitlePage';
 import { PageQuotationProps } from './types'
 import { TableBilling } from './columns'
 
@@ -17,6 +18,7 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageQuotation(props: PageQuotationProps) {
   const table = useTable({ api: '', haveCheckbox: { headCell: 'status', member: ['new'] }, columns: TableBilling })
+  const titlePage = useTitlePage('list')
 
   const content = (
     <>
@@ -43,7 +45,7 @@ export default function PageQuotation(props: PageQuotationProps) {
 
   return (
     <Col>
-      <Text variant={'h4'}>Billing</Text>
+      <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card>
         <Row justifyContent="space-between">
