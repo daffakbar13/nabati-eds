@@ -10,7 +10,6 @@ import { MoreOutlined } from '@ant-design/icons';
 import useTitlePage from 'src/hooks/useTitlePage';
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
-
 import HeadFIlterModal from './modals/headFIlter'
 
 function showTotal(total: number, range: number[]) {
@@ -20,7 +19,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageBilling(props: PageBillingProps) {
-  const [showFilter, setShowFilter] = useState(true)
+  const [showFilter, setShowFilter] = React.useState(true)
   const table = useTable({ api: '', haveCheckbox: { headCell: 'status', member: ['new'] }, columns: TableBilling })
   const titlePage = useTitlePage('list')
 
