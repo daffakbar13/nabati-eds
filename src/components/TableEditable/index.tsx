@@ -79,6 +79,8 @@ const TableEditable: React.FC<TableEditableProps> = ({ columns, data, setData })
     }
 
     const addNewData = () => {
+        form.resetFields()
+
         const newData = { key: data.length.toString() }
         const oldData = data.map((i, ind) => ({ ...i, key: ind.toString() }))
         setData([...oldData, newData])
