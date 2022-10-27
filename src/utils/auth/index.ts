@@ -1,8 +1,9 @@
+/* eslint-disable import/no-cycle */
 import { PUBLIC_URL } from 'src/configs/env'
-import { AuthUserInfo, SignInInputTypes } from './types'
 import { LOCAL_STORAGE } from 'src/configs/localStorage'
 import { SignInApiResponse } from 'src/api/user/types'
 import { logout } from 'src/api/user'
+import { AuthUserInfo, SignInInputTypes } from './types'
 
 export const auth = {
   authenticate: (

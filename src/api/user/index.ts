@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
 import { SignInApiResponse } from 'src/api/user/types'

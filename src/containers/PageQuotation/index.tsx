@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -7,6 +7,7 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
+import { getQuotation } from 'src/api/quotation'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
@@ -17,6 +18,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageQuotation(props: PageQuotationProps) {
+    const [data, setData] = useState(null)
     const table = useTable({
         api: '/dummy/list-quotation.json',
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
@@ -57,6 +59,16 @@ export default function PageQuotation(props: PageQuotationProps) {
             <MoreOutlined />
         </Popover>
     )
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const res = await getQuotation({ page: 1 })
+            setData(res.data)
+        }
+        fetchData()
+    }, [])
+
+    console.log('data', data)
 
     return (
         <Col>
@@ -107,12 +119,20 @@ export default function PageQuotation(props: PageQuotationProps) {
                     total={table.data.length}
                     showTotal={showTotal}
                 />
-                { table.selected.length > 0 && 
+                {table.selected.length > 0 && (
                     <FloatAction>
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                            }}
+                        >
                             <b>{table.selected.length} Document Quotation are Selected</b>
                         </div>
-                        <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+                        <div
+                            style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}
+                        >
                             <Button size="big" variant="tertiary" onClick={() => {}}>
                                 Cancel
                             </Button>
@@ -121,7 +141,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                             </Button>
                         </div>
                     </FloatAction>
-                }
+                )}
             </Card>
         </Col>
     )
