@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -8,6 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { getQuotation } from 'src/api/quotation'
+import { getCompany } from 'src/api/master-data'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
@@ -62,7 +64,22 @@ export default function PageQuotation(props: PageQuotationProps) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const res = await getQuotation({ page: 1 })
+            // const res2 = await getCompany({ page: 1 })
+            // console.log('company', res2)
+
+            await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', {
+                method: 'POST',
+            })
+                .then((res) => res.json())
+                .then((data) => console.log(data))
+
+            axios
+                .post('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list')
+                // .then((res) => res.json())
+                .then((data) => console.log(data))
+
+            const res = await getQuotation()
+            console.log('res', res)
             setData(res.data)
         }
         fetchData()

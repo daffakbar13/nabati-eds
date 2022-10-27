@@ -17,6 +17,10 @@ interface CallOptions {
   overrideBaseUrl?: string
 }
 
+function isObjectEmpty(obj) {
+  return Object.keys(obj).length === 0;
+}
+
 export function call({
   method,
   subUrl = '',
@@ -28,25 +32,29 @@ export function call({
   const config: AxiosRequestConfig = {
     ...options,
     baseURL: overrideBaseUrl || API_URL,
-    withCredentials: true,
+    // withCredentials: true,
     method,
     url: subUrl,
-    headers: {
-      ...(options && options.headers ? options.headers : {}),
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
+    // headers: {
+    //   ...(options && options.headers ? options.headers : {}),
+    //   'Content-Type': 'application/json',
+    //   Authorization: `Bearer ${token}`,
+    // },
   }
   const payload = { ...data }
   if (method === METHODS.GET) {
-    Object.keys(payload).forEach((key) => {
-      if (payload[key] === null || payload[key] === '') {
-        delete payload[key]
-      }
-    })
-    config.params = toSnakeCase(payload)
-  } else {
+    if (!isObjectEmpty(payload)) {
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] === null || payload[key] === '') {
+          delete payload[key]
+        }
+      })
+      config.params = toSnakeCase(payload)
+    }
+  } else if (!isObjectEmpty(payload)) {
     config.data = toSnakeCase(payload)
   }
+
+  console.log('config', config)
   return instance.request(config)
 }

@@ -4,6 +4,7 @@
     "airbnb-base"
   ],
   "rules": {
+    "import/no-cycle": "off",
     "import/named": "off",
     "no-undef": "off",
     "eol-last": "off",
