@@ -1,6 +1,6 @@
 import React from 'react'
 
-interface FloatActionProps{
+interface FloatActionProps {
     children?: React.ReactNode
 }
 
@@ -19,12 +19,10 @@ export default function FloatAction(props: FloatActionProps) {
                 borderRadius: 16,
                 border: '2px solid #2BBECB',
                 width: 780,
-                zIndex: 9999,
+                zIndex: 999,
             }}
         >
-            <div style={{ display: 'flex' }}>
-                {children}
-            </div>
+            <div style={{ display: 'flex' }}>{children}</div>
         </div>
     )
 }

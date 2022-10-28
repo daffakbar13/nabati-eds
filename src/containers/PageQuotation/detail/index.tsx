@@ -17,7 +17,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
     const titlePage = useTitlePage('detail')
     const [currentTab, setCurrentTab] = React.useState('1')
     const router = useRouter()
-    const data = useDetail('/dummy/detail-quotation.json')
+    const data = useDetail(`https://dist-system.nabatisnack.co.id:3001/v1/quotations/${router.query.id}/detail`)
 
     return (
         <Col>
@@ -27,6 +27,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
+                        cursor: 'pointer',
                     }}
                     onClick={() => {
                         router.push('/quotation')

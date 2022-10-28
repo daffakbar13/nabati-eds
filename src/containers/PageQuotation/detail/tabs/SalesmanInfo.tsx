@@ -13,12 +13,16 @@ export default function SalesmanInfo(props: SalesmanInfoProps) {
     const { data } = props
 
     const generalInformation = [
-        CreateDataList('Employee Name', data.customer_name),
+        CreateDataList('Employee Name', data.salesman.name),
+        // FIXME Employee Name
         CreateDataList('Division Name', data.division_name),
         CreateDataList('Branch', data.branch_name),
-        CreateDataList('ID Card Number', data.id_card_number),
+        CreateDataList('ID Card Number', data.salesman.employee_id),
+        // FIXME Mobile Number
         CreateDataList('Mobile Number', data.customer_phone),
+        // FIXME Email
         CreateDataList('Email', data.customer_email),
+        // FIXME External Code
         CreateDataList('External Code', data.external_code),
     ]
 

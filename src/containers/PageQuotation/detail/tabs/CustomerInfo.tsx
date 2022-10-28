@@ -17,13 +17,18 @@ export default function CustomerInfo(props: CustomerInfoProps) {
 
     const customerInformation = [
         CreateDataList('Name', data.customer.name),
+        // FIXME Active Customer
         CreateDataList('Active Customer', data.customer.active),
+        // FIXME Short Name
         CreateDataList('Short Name', data.customer.short_name),
+        // FIXME KTP
         CreateDataList('KTP', data.customer.id),
         CreateDataList('Phone Number', data.customer.phone),
+        // FIXME EMAIL
         CreateDataList('Email', data.customer.email),
     ]
 
+    // FIXME Customer Group
     const customerGroupInformation = [
         CreateDataList('Customer Group', data.customer_group.name),
         CreateDataList('Customer Group 1', data.customer_group_1?.name),
@@ -37,6 +42,7 @@ export default function CustomerInfo(props: CustomerInfoProps) {
         CreateDataList('Sales Organization', data.sales_org_name),
         CreateDataList('Company', data.company),
         CreateDataList('Branch', data.branch_name),
+        // FIXME Sloc
         CreateDataList('Sloc', data.sloc),
         CreateDataList('Sales Office', data.sales_office_id),
         CreateDataList('Sales Division', data.division_id),
@@ -44,6 +50,7 @@ export default function CustomerInfo(props: CustomerInfoProps) {
         CreateDataList('Sales Group', data.sales_group_id),
     ]
 
+    // FIXME Payment / Credit Limit
     const paymentInformation = [
         CreateDataList('Term of Payment', data.term_id),
         CreateDataList('Method of Payment', data.method),

@@ -7,12 +7,13 @@ interface haveCheckBox {
 
 interface useTableProps {
   api: string,
+  bodyApi?: any,
   haveCheckbox?: haveCheckBox | 'All',
   columns: any[]
 }
 
 export default function useTable(props: useTableProps) {
-  const { api, haveCheckbox } = props
+  const { api, bodyApi, haveCheckbox } = props
   const [data, setData] = React.useState([])
   const [columns, setColumns] = React.useState(props.columns)
   const [rowSelection, setRowSelection] = React.useState({})
@@ -57,7 +58,7 @@ export default function useTable(props: useTableProps) {
   React.useEffect(() => {
     if (haveCheckbox) { setRowSelection(defineRowSelection) }
     async function getApi() {
-      fetch(api)
+      fetch(api, { method: 'post', body: { ...bodyApi } })
         .then((response) => response.json())
         .then((result) => updateData(result.data.result))
         .catch((_) => updateData([]))

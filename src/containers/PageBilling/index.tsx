@@ -5,7 +5,7 @@ import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
 import { ICFilter } from 'src/assets/icons'
-import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
+import { Table, Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -75,7 +75,7 @@ export default function PageBilling(props: PageBillingProps) {
                             nameIcon="SearchOutlined"
                             placeholder="Search Menu Design Name"
                             colorIcon={colors.grey.regular}
-                            onChange={() => {}}
+                            onChange={() => { }}
                         />
                         <Button
                             size="big"
@@ -92,7 +92,7 @@ export default function PageBilling(props: PageBillingProps) {
                         </Button>
                     </Row>
                     <Row gap="16px">
-                        <Button size="big" variant="secondary" onClick={() => {}}>
+                        <Button size="big" variant="secondary" onClick={() => { }}>
                             Download
                         </Button>
                         <Button
@@ -133,7 +133,7 @@ export default function PageBilling(props: PageBillingProps) {
 
             <HeadFIlterModal
                 visible={showFilter}
-                onOk={() => {}}
+                onOk={() => { }}
                 onCancel={() => setShowFilter(false)}
                 title="Filter"
             />

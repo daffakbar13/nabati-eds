@@ -100,9 +100,9 @@ p {
     background: transparent; /* Optional: just make scrollbar invisible */
 }
 
-th.ant-table-cell::before {
+/* th.ant-table-cell::before {
     display: none;
-}
+} */
 
 .ant-tabs-ink-bar {
     border-bottom: 4px solid #2bbecb;

@@ -2,27 +2,36 @@ import React from 'react'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
+import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
+import Popup from 'src/components/Popup'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
+    console.log(total, range)
+
     const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
     return <p>{text}</p>
 }
 
 export default function PageQuotation(props: PageQuotationProps) {
     const table = useTable({
-        api: '/dummy/list-quotation.json',
+        api: 'https://dist-system.nabatisnack.co.id:3001/v1/quotations/list',
+        bodyApi: {
+            filters: [],
+            limit: 5,
+            page: 1,
+        },
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
         columns: TableQuotation,
     })
     const titlePage = useTitlePage('list')
+    const [showConfirm, setShowConfirm] = React.useState('')
 
     const content = (
         <>
@@ -54,7 +63,9 @@ export default function PageQuotation(props: PageQuotationProps) {
             content={content}
             trigger="click"
         >
+            <span style={{ color: '#f0f0f0' }}>___</span>
             <MoreOutlined />
+            <span style={{ color: '#f0f0f0' }}>___</span>
         </Popover>
     )
 
@@ -69,13 +80,13 @@ export default function PageQuotation(props: PageQuotationProps) {
                         nameIcon="SearchOutlined"
                         placeholder="Search Menu Design Name"
                         colorIcon={colors.grey.regular}
-                        onChange={() => {}}
+                        onChange={() => { }}
                     />
                     <Row gap="16px">
-                        <Button size="big" variant="secondary" onClick={() => {}}>
+                        <Button size="big" variant="secondary" onClick={() => { }}>
                             Download
                         </Button>
-                        <Button size="big" variant="primary" onClick={() => {}}>
+                        <Button size="big" variant="primary" onClick={() => { }}>
                             Create
                         </Button>
                     </Row>
@@ -92,9 +103,9 @@ export default function PageQuotation(props: PageQuotationProps) {
                         showSorterTooltip={false}
                         rowSelection={table.rowSelection}
                         rowKey={'id'}
-                        // pagination={false}
-                        // onChange={(_, __, sorter) => console.log(sorter)}
-                        // style={{ overflow: 'scroll' }}
+                    // pagination={false}
+                    // onChange={(_, __, sorter) => console.log(sorter)}
+                    // style={{ overflow: 'scroll' }}
                     />
                 </div>
                 <Pagination
@@ -107,21 +118,53 @@ export default function PageQuotation(props: PageQuotationProps) {
                     total={table.data.length}
                     showTotal={showTotal}
                 />
-                { table.selected.length > 0 && 
+                {table.selected.length > 0 && (
                     <FloatAction>
-                        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center',
+                            }}
+                        >
                             <b>{table.selected.length} Document Quotation are Selected</b>
                         </div>
-                        <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-                            <Button size="big" variant="tertiary" onClick={() => {}}>
+                        <div
+                            style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}
+                        >
+                            <Button size="big" variant="tertiary" onClick={() => { }}>
                                 Cancel
                             </Button>
-                            <Button size="big" variant="primary" onClick={() => {}}>
+                            <Button
+                                size="big"
+                                variant="primary"
+                                onClick={() => {
+                                    setShowConfirm('submit')
+                                }}
+                            >
                                 Submit
                             </Button>
                         </div>
                     </FloatAction>
-                }
+                )}
+                {showConfirm === 'submit' && (
+                    <Popup>
+                        <Typography.Title level={3} style={{ margin: 0 }}>
+                            Confirm Submit
+                        </Typography.Title>
+                        <Typography.Title level={5} style={{ margin: 0 }}>
+                            Are you sure to submit quotation {table.selected.join(', ')} ?
+                        </Typography.Title>
+                        <div>
+                            <Button size="big" variant="secondary" onClick={() => { }}>
+                                Download
+                            </Button>
+                            <Button size="big" variant="primary" onClick={() => { }}>
+                                Create
+                            </Button>
+                        </div>
+                    </Popup>
+                )}
             </Card>
         </Col>
     )
