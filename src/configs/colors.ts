@@ -6,7 +6,7 @@ const CreateColors = (
   dark: string,
   darker: string,
   darkest: string,
-) => ({ lightest, lighter, light, regular, dark, darker, darkest, })
+) => ({ lightest, lighter, light, regular, dark, darker, darkest })
 
 export const colors = {
   blue: CreateColors('#F4FBFC', '#D5FAFD', '#AAE5EA', '#2BBECB', '#1E858E', '#1A727A', '#165F66'),

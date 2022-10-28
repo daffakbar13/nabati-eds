@@ -26,10 +26,7 @@ function DefineSelectOptionModal({ visible, onCancel, onOk }) {
       content={
         <>
           <HeaderList>
-            <Text
-              variant="headingLarge"
-              style={{ fontSize: 16, justifySelf: 'center' }}
-            >
+            <Text variant="headingLarge" style={{ fontSize: 16, justifySelf: 'center' }}>
               Selection
             </Text>
             <Text variant="headingLarge" style={{ fontSize: 16 }}>
@@ -37,18 +34,12 @@ function DefineSelectOptionModal({ visible, onCancel, onOk }) {
             </Text>
           </HeaderList>
           {Object.values(FILTER_TYPES).map((type) => (
-            <List
-              key={type.code}
-              active={type.code === value}
-              onClick={() => setValue(type.code)}
-            >
+            <List key={type.code} active={type.code === value} onClick={() => setValue(type.code)}>
               <div style={{ justifySelf: 'center' }}>{type.icon}</div>
               <Text variant="headingSmall" style={{ fontSize: 16 }}>
                 {type.label}
               </Text>
-              {type.code === value && (
-                <CheckCircleFilled style={{ color: '#00d458' }} />
-              )}
+              {type.code === value && <CheckCircleFilled style={{ color: '#00d458' }} />}
             </List>
           ))}
         </>

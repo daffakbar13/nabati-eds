@@ -1,5 +1,5 @@
-export interface TotalProps{
-    label:string
-    value:number
-    largeSize?:boolean
+export interface TotalProps {
+  label: string
+  value: number
+  largeSize?: boolean
 }

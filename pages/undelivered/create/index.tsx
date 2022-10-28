@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface UndeliveredCreateProps {
-
-}
+interface UndeliveredCreateProps {}
 
 export default function UndeliveredCreate(props: UndeliveredCreateProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>UndeliveredCreate</div>
-    )
+  return <div>UndeliveredCreate</div>
 }

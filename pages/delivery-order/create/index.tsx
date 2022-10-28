@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface DeliveryOrderCreateProps {
-
-}
+interface DeliveryOrderCreateProps {}
 
 export default function DeliveryOrderCreate(props: DeliveryOrderCreateProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>DeliveryOrderCreate</div>
-    )
+  return <div>DeliveryOrderCreate</div>
 }

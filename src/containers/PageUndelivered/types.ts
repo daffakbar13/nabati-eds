@@ -1,3 +1,1 @@
-export interface PageUndeliveredProps{
-
-}
+export interface PageUndeliveredProps {}

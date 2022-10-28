@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface BillingEditProps {
-
-}
+interface BillingEditProps {}
 
 export default function BillingEdit(props: BillingEditProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>BillingEdit</div>
-    )
+  return <div>BillingEdit</div>
 }

@@ -4,7 +4,7 @@ import PageShipmentDetail from 'src/containers/PageShipment/detail'
 interface ShipmentDetailProps {}
 
 export default function ShipmentDetail(props: ShipmentDetailProps) {
-    const {} = props
+  const {} = props
 
-    return <PageShipmentDetail />
+  return <PageShipmentDetail />
 }

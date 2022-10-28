@@ -1,14 +1,10 @@
 import React from 'react'
 import PageQuotation from 'src/containers/PageQuotation'
 
-interface QuotationProps {
-
-}
+interface QuotationProps {}
 
 export default function Quotation(props: QuotationProps) {
-  const { } = props
+  const {} = props
 
-  return (
-        <PageQuotation/>
-  )
+  return <PageQuotation />
 }

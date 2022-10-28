@@ -4,7 +4,7 @@ import PageDeliveryOrderDetail from 'src/containers/PageDeliveryOrder/detail'
 interface DeliveryOrderDetailProps {}
 
 export default function DeliveryOrderDetail(props: DeliveryOrderDetailProps) {
-    const {} = props
+  const {} = props
 
-    return <PageDeliveryOrderDetail />
+  return <PageDeliveryOrderDetail />
 }

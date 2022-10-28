@@ -22,9 +22,7 @@ function OptionIcon({ option, onChange, ...props }) {
           color="#F4FBFC"
           title="Define Select Option"
         >
-          <div onClick={() => setDefineSelectModal(true)}>
-            {FILTER_TYPES[iconType].icon}
-          </div>
+          <div onClick={() => setDefineSelectModal(true)}>{FILTER_TYPES[iconType].icon}</div>
         </Tooltip>
       </Pane>
       <DefineSelectOptionModal

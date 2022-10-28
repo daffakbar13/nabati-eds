@@ -6,7 +6,7 @@ interface PromotionListProps {}
 const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function PromotionList(props: PromotionListProps) {
-    const {} = props
+  const {} = props
 
-    return <></>
+  return <></>
 }

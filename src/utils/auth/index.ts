@@ -6,10 +6,7 @@ import { logout } from 'src/api/user'
 import { AuthUserInfo, SignInInputTypes } from './types'
 
 export const auth = {
-  authenticate: (
-    signInInput: SignInInputTypes,
-    signInResponse: SignInApiResponse,
-  ): void => {
+  authenticate: (signInInput: SignInInputTypes, signInResponse: SignInApiResponse): void => {
     const userInfo: AuthUserInfo = {
       email: signInInput.email,
       name: signInInput.name,

@@ -1,3 +1,1 @@
-export interface PageApprovalProps {
-
-}
+export interface PageApprovalProps {}

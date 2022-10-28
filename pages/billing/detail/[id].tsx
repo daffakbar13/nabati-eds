@@ -1,12 +1,10 @@
 import React from 'react'
 import PageBillingDetail from 'src/containers/PageBilling/detail'
 
-interface BillingDetailProps {
-
-}
+interface BillingDetailProps {}
 
 export default function BillingDetail(props: BillingDetailProps) {
-    const { } = props
+  const {} = props
 
-    return <PageBillingDetail />
+  return <PageBillingDetail />
 }

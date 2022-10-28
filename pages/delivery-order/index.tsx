@@ -1,14 +1,10 @@
 import React from 'react'
 import PageDeliveryOrder from 'src/containers/PageDeliveryOrder'
 
-interface DeliveryOrderProps {
-
-}
+interface DeliveryOrderProps {}
 
 export default function DeliveryOrder(props: DeliveryOrderProps) {
-  const { } = props
+  const {} = props
 
-  return (
-        <PageDeliveryOrder/>
-  )
+  return <PageDeliveryOrder />
 }

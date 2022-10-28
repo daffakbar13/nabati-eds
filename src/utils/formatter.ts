@@ -1,12 +1,7 @@
 import { snakeCase, camelCase } from 'lodash'
 
 export function toCamelCase<T>(obj: any): T {
-  if (
-    typeof obj !== 'object' ||
-    typeof obj === 'undefined' ||
-    obj === null ||
-    obj === ''
-  ) {
+  if (typeof obj !== 'object' || typeof obj === 'undefined' || obj === null || obj === '') {
     return obj
   }
   if (Array.isArray(obj)) {
@@ -23,12 +18,7 @@ export function toCamelCase<T>(obj: any): T {
 }
 
 export function toSnakeCase<T>(obj: any): T {
-  if (
-    typeof obj !== 'object' ||
-    typeof obj === 'undefined' ||
-    obj === null ||
-    obj === ''
-  ) {
+  if (typeof obj !== 'object' || typeof obj === 'undefined' || obj === null || obj === '') {
     return obj
   }
   if (Array.isArray(obj)) {

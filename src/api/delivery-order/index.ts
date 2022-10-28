@@ -1,10 +1,6 @@
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
-import {
-  CommonListParams,
-  CommonListResponse,
-  CommonDetailParams,
-} from 'src/api/types'
+import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
 import { DeliveryOrder } from './types'
 
 const subUrl = 'v1/delivery-order'

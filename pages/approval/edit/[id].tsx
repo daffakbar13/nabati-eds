@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface ApprovalEditProps {
-
-}
+interface ApprovalEditProps {}
 
 export default function ApprovalEdit(props: ApprovalEditProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>ApprovalEdit</div>
-    )
+  return <div>ApprovalEdit</div>
 }

@@ -1,10 +1,16 @@
-import CreateColumns from 'src/utils/createColumns';
-import { useRouter } from 'next/router';
+import CreateColumns from 'src/utils/createColumns'
+import { useRouter } from 'next/router'
 
 function Action({ link }: { link: string }) {
   const router = useRouter()
-  const navigate = () => { router.push(`/billing/detail/${link}`) }
-  return <h4 onClick={navigate} style={{ cursor: 'pointer' }} >View Detail</h4>
+  const navigate = () => {
+    router.push(`/billing/detail/${link}`)
+  }
+  return (
+    <h4 onClick={navigate} style={{ cursor: 'pointer' }}>
+      View Detail
+    </h4>
+  )
 }
 
 // export const TableBilling = CreateColumns([

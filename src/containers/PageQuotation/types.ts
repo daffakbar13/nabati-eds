@@ -1,3 +1,1 @@
-export interface PageQuotationProps{
-
-}
+export interface PageQuotationProps {}

@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface UndeliveredEditProps {
-
-}
+interface UndeliveredEditProps {}
 
 export default function UndeliveredEdit(props: UndeliveredEditProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>UndeliveredEdit</div>
-    )
+  return <div>UndeliveredEdit</div>
 }

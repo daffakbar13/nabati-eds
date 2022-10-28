@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface ShipmentCreateProps {
-
-}
+interface ShipmentCreateProps {}
 
 export default function ShipmentCreate(props: ShipmentCreateProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>ShipmentCreate</div>
-    )
+  return <div>ShipmentCreate</div>
 }

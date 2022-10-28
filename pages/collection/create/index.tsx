@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface CollectionCreateProps {
-
-}
+interface CollectionCreateProps {}
 
 export default function CollectionCreate(props: CollectionCreateProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>CollectionCreate</div>
-    )
+  return <div>CollectionCreate</div>
 }

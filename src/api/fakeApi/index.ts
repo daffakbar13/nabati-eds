@@ -12,10 +12,7 @@ export const fakeApi = async (username: string): Promise<UserValue[]> => {
       (body) =>
         // eslint-disable-next-line implicit-arrow-linebreak
         body.results.map(
-          (user: {
-            name: { first: string; last: string }
-            login: { username: string }
-          }) => ({
+          (user: { name: { first: string; last: string }; login: { username: string } }) => ({
             label: `${user.name.first} ${user.name.last}`,
             value: user.login.username,
           }),

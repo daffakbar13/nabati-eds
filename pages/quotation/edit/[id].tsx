@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface QuotationEditProps {
-
-}
+interface QuotationEditProps {}
 
 export default function QuotationEdit(props: QuotationEditProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>QuotationEdit</div>
-    )
+  return <div>QuotationEdit</div>
 }

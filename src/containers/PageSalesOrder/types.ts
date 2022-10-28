@@ -1,3 +1,1 @@
-export interface PageSalesOrderProps{
-
-}
+export interface PageSalesOrderProps {}
