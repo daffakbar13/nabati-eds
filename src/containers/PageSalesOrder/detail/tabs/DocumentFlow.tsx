@@ -4,12 +4,12 @@ import useTable from 'src/hooks/useTable'
 import { TableDocumentFlow } from '../columns'
 
 interface DocumentFlowProps {
-  data: any
+    data: any
 }
 
 export default function DocumentFlow(props: DocumentFlowProps) {
-  const {} = props
-  const table = useTable({ api: '', columns: TableDocumentFlow })
+    const { } = props
+    const table = useTable({ api: '', columns: TableDocumentFlow })
 
-  return <Table columns={table.columns} dataSource={[]} />
+    return <Table columns={table.columns} dataSource={[]} />
 }

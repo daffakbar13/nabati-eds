@@ -16,6 +16,7 @@ interface useTableProps {
 export default function useTable(props: useTableProps) {
   const { api, bodyApi, haveCheckbox, funcApi } = props
   const [data, setData] = React.useState([])
+  const [total, setTotal] = React.useState(0)
   const [columns, setColumns] = React.useState(props.columns)
   const [rowSelection, setRowSelection] = React.useState({})
   const [loading, setLoading] = React.useState(true)
@@ -78,6 +79,7 @@ export default function useTable(props: useTableProps) {
 
   return {
     data,
+    total,
     selected,
     rowSelection,
     loading,

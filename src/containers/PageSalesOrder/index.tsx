@@ -12,99 +12,99 @@ import { TableSalesOrder } from './columns'
 import { getSalesOrder } from 'src/api/sales-order'
 
 function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
+    const ranges = range.join('-')
+    const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
+    return <p>{text}</p>
 }
 
 export default function PageSalesOrder(props: PageSalesOrderProps) {
-  const table = useTable({
-    api: '',
-    funcApi: getSalesOrder,
-    haveCheckbox: { headCell: 'status_name', member: ['New'] },
-    columns: TableSalesOrder,
-  })
-  const titlePage = useTitlePage('list')
+    const table = useTable({
+        api: '',
+        funcApi: getSalesOrder,
+        haveCheckbox: { headCell: 'status_name', member: ['New'] },
+        columns: TableSalesOrder,
+    })
+    const titlePage = useTitlePage('list')
 
-  const content = (
-    <>
-      {TableSalesOrder.map(({ title }, index) => (
-        <div key={index}>
-          <Checkbox
-            defaultChecked={!table.hiddenColumns.includes(title)}
-            onChange={(event) => {
-              table.handleHideShowColumns(event.target, title)
-            }}
-          />{' '}
-          {title}
-        </div>
-      ))}
-      <Divider />
-      <h4
-        onClick={table.handleResetHideShowColumns}
-        style={{ textAlign: 'center', cursor: 'pointer' }}
-      >
-        Reset
-      </h4>
-    </>
-  )
+    const content = (
+        <>
+            {TableSalesOrder.map(({ title }, index) => (
+                <div key={index}>
+                    <Checkbox
+                        defaultChecked={!table.hiddenColumns.includes(title)}
+                        onChange={(event) => {
+                            table.handleHideShowColumns(event.target, title)
+                        }}
+                    />{' '}
+                    {title}
+                </div>
+            ))}
+            <Divider />
+            <h4
+                onClick={table.handleResetHideShowColumns}
+                style={{ textAlign: 'center', cursor: 'pointer' }}
+            >
+                Reset
+            </h4>
+        </>
+    )
 
-  const HideShowColumns = () => (
-    <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-      <span style={{ color: '#f0f0f0' }}>___</span>
-      <MoreOutlined />
-      <span style={{ color: '#f0f0f0' }}>___</span>
-    </Popover>
-  )
+    const HideShowColumns = () => (
+        <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
+            <span style={{ color: '#f0f0f0' }}>___</span>
+            <MoreOutlined />
+            <span style={{ color: '#f0f0f0' }}>___</span>
+        </Popover>
+    )
 
-  return (
-    <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
-      <Spacer size={20} />
-      <Card>
-        <Row justifyContent="space-between">
-          <Search
-            width="380px"
-            nameIcon="SearchOutlined"
-            placeholder="Search Menu Design Name"
-            colorIcon={colors.grey.regular}
-            onChange={() => {}}
-          />
-          <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => {}}>
-              Download
-            </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
-              Create
-            </Button>
-          </Row>
-        </Row>
-      </Card>
-      <Spacer size={10} />
-      <Card style={{ padding: '16px 20px' }}>
-        <div style={{ overflow: 'scroll' }}>
-          <Table
-            loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns /> }]}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'id'}
-            pagination={false}
-            onChange={(_, __, sorter) => console.log(sorter)}
-          />
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.data.length}
-            showTotal={showTotal}
-          />
-        </div>
-      </Card>
-    </Col>
-  )
+    return (
+        <Col>
+            <Text variant={'h4'}>{titlePage}</Text>
+            <Spacer size={20} />
+            <Card>
+                <Row justifyContent="space-between">
+                    <Search
+                        width="380px"
+                        nameIcon="SearchOutlined"
+                        placeholder="Search Menu Design Name"
+                        colorIcon={colors.grey.regular}
+                        onChange={() => { }}
+                    />
+                    <Row gap="16px">
+                        <Button size="big" variant="secondary" onClick={() => { }}>
+                            Download
+                        </Button>
+                        <Button size="big" variant="primary" onClick={() => { }}>
+                            Create
+                        </Button>
+                    </Row>
+                </Row>
+            </Card>
+            <Spacer size={10} />
+            <Card style={{ padding: '16px 20px' }}>
+                <div style={{ overflow: 'scroll' }}>
+                    <Table
+                        loading={table.loading}
+                        columns={[...table.columns, { title: <HideShowColumns /> }]}
+                        dataSource={table.data}
+                        showSorterTooltip={false}
+                        rowSelection={table.rowSelection}
+                        rowKey={'id'}
+                        pagination={false}
+                        onChange={(_, __, sorter) => console.log(sorter)}
+                    />
+                    <Pagination
+                        defaultPageSize={20}
+                        pageSizeOptions={[20, 50, 100]}
+                        showLessItems
+                        showSizeChanger
+                        showQuickJumper
+                        responsive
+                        total={table.data.length}
+                        showTotal={showTotal}
+                    />
+                </div>
+            </Card>
+        </Col>
+    )
 }
