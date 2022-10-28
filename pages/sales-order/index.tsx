@@ -1,14 +1,10 @@
 import React from 'react'
 import PageSalesOrder from 'src/containers/PageSalesOrder'
 
-interface SalesOrderProps {
-
-}
+interface SalesOrderProps {}
 
 export default function SalesOrder(props: SalesOrderProps) {
-  const { } = props
+  const {} = props
 
-  return (
-        <PageSalesOrder/>
-  )
+  return <PageSalesOrder />
 }

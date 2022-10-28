@@ -1,14 +1,10 @@
 import React from 'react'
 import PageApproval from 'src/containers/PageApproval'
 
-interface ApprovalProps {
-
-}
+interface ApprovalProps {}
 
 export default function Approval(props: ApprovalProps) {
-  const { } = props
+  const {} = props
 
-  return (
-        <PageApproval/>
-  )
+  return <PageApproval />
 }

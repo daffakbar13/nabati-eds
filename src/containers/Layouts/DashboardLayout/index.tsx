@@ -6,15 +6,8 @@ import HeaderSection from './HeaderSection'
 export default function DashboardLayout(page: PropsWithChildren<{}>) {
   return (
     <Layout style={{ height: '100vh' }}>
-      <Sidebar
-        logo="/icons/logo-nabati.svg"
-        menu={menu}
-        defaultMenu={'dashboard'}
-      />
-      <Layout
-        className="site-layout"
-        style={{ height: '100vh', overflow: 'auto' }}
-      >
+      <Sidebar logo="/icons/logo-nabati.svg" menu={menu} defaultMenu={'dashboard'} />
+      <Layout className="site-layout" style={{ height: '100vh', overflow: 'auto' }}>
         <HeaderSection />
         <main>
           <div style={{ padding: '20px' }}>

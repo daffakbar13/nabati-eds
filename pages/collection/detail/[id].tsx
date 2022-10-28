@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface CollectionDetailProps {
-
-}
+interface CollectionDetailProps {}
 
 export default function CollectionDetail(props: CollectionDetailProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>CollectionDetail</div>
-    )
+  return <div>CollectionDetail</div>
 }

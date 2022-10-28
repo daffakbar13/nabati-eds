@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "airbnb-base"
-  ],
+  "extends": ["next/core-web-vitals", "airbnb-base"],
   "rules": {
     "import/no-cycle": "off",
     "import/named": "off",

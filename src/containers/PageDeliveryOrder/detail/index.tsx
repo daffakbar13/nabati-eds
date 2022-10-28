@@ -11,36 +11,36 @@ import CustomerInfo from './tabs/CustomerInfo'
 import SalesmanInfo from './tabs/SalesmanInfo'
 
 export default function PageDeliveryOrderDetail(props: PageDeliveryOrderDetailProps) {
-    const titlePage = useTitlePage('detail')
-    const [currentTab, setCurrentTab] = React.useState('1')
+  const titlePage = useTitlePage('detail')
+  const [currentTab, setCurrentTab] = React.useState('1')
 
-    return (
-        <Col>
-            <div style={{ display: 'flex' }}>
-                <Text variant={'h4'}>{titlePage}</Text>
-                <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
-                    <Button>asd</Button>
-                    <ButtonPinkLava size="big" variant="secondary" onClick={() => {}}>
-                        Edit
-                    </ButtonPinkLava>
-                    <ButtonPinkLava size="big" variant="primary" onClick={() => {}}>
-                        Order Again
-                    </ButtonPinkLava>
-                </div>
-            </div>
-            <Spacer size={20} />
-            <Card style={{ padding: '16px 20px' }}>
-                <Tabs
-                    defaultActiveKey="1"
-                    onChange={(asd) => {
-                        setCurrentTab(asd)
-                    }}
-                    items={AllTabs}
-                />
-                {currentTab === '1' && <Quotation />}
-                {currentTab === '2' && <DocumentFlow />} {currentTab === '3' && <CustomerInfo />}{' '}
-                {currentTab === '4' && <SalesmanInfo />}
-            </Card>
-        </Col>
-    )
+  return (
+    <Col>
+      <div style={{ display: 'flex' }}>
+        <Text variant={'h4'}>{titlePage}</Text>
+        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
+          <Button>asd</Button>
+          <ButtonPinkLava size="big" variant="secondary" onClick={() => {}}>
+            Edit
+          </ButtonPinkLava>
+          <ButtonPinkLava size="big" variant="primary" onClick={() => {}}>
+            Order Again
+          </ButtonPinkLava>
+        </div>
+      </div>
+      <Spacer size={20} />
+      <Card style={{ padding: '16px 20px' }}>
+        <Tabs
+          defaultActiveKey="1"
+          onChange={(asd) => {
+            setCurrentTab(asd)
+          }}
+          items={AllTabs}
+        />
+        {currentTab === '1' && <Quotation />}
+        {currentTab === '2' && <DocumentFlow />} {currentTab === '3' && <CustomerInfo />}{' '}
+        {currentTab === '4' && <SalesmanInfo />}
+      </Card>
+    </Col>
+  )
 }

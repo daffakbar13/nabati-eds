@@ -1,4 +1,4 @@
-import CreateColumns from 'src/utils/createColumns';
+import CreateColumns from 'src/utils/createColumns'
 
 export const TableQuotation = [
   CreateColumns('No', 'no'),

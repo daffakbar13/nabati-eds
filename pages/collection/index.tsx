@@ -1,14 +1,10 @@
 import React from 'react'
 import PageCollection from 'src/containers/PageCollection'
 
-interface CollectionProps {
-
-}
+interface CollectionProps {}
 
 export default function Collection(props: CollectionProps) {
-  const { } = props
+  const {} = props
 
-  return (
-        <PageCollection/>
-  )
+  return <PageCollection />
 }

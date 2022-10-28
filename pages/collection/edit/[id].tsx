@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface CollectionEditProps {
-
-}
+interface CollectionEditProps {}
 
 export default function CollectionEdit(props: CollectionEditProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>CollectionEdit</div>
-    )
+  return <div>CollectionEdit</div>
 }

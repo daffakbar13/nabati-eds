@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface ApprovalCreateProps {
-
-}
+interface ApprovalCreateProps {}
 
 export default function ApprovalCreate(props: ApprovalCreateProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>ApprovalCreate</div>
-    )
+  return <div>ApprovalCreate</div>
 }

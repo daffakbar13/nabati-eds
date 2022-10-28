@@ -1,3 +1,3 @@
 export interface Examples {
-  id: string;
+  id: string
 }

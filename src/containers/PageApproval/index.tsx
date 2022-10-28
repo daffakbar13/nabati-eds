@@ -3,10 +3,10 @@ import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd';
-import useTable from 'src/hooks/useTable';
-import { MoreOutlined } from '@ant-design/icons';
-import useTitlePage from 'src/hooks/useTitlePage';
+import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
+import useTable from 'src/hooks/useTable'
+import { MoreOutlined } from '@ant-design/icons'
+import useTitlePage from 'src/hooks/useTitlePage'
 import { PageApprovalProps } from './types'
 import { TableBilling } from './columns'
 
@@ -29,7 +29,7 @@ const columns = [
     dataIndex: 'key',
     render: (text: string) => <a>{text}</a>,
   },
-];
+]
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -38,7 +38,11 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageApproval(props: PageApprovalProps) {
-  const table = useTable({ api: '', haveCheckbox: { headCell: 'status', member: ['new'] }, columns: TableBilling })
+  const table = useTable({
+    api: '',
+    haveCheckbox: { headCell: 'status', member: ['new'] },
+    columns: TableBilling,
+  })
   const titlePage = useTitlePage('list')
 
   const content = (
@@ -47,16 +51,22 @@ export default function PageApproval(props: PageApprovalProps) {
         <div key={index}>
           <Checkbox
             defaultChecked={!table.hiddenColumns.includes(title)}
-            onChange={(event) => { table.handleHideShowColumns(event.target, title) }}
-          /> {title}
+            onChange={(event) => {
+              table.handleHideShowColumns(event.target, title)
+            }}
+          />{' '}
+          {title}
         </div>
       ))}
       <Divider />
-      <h4 onClick={table.handleResetHideShowColumns} style={{ textAlign: 'center', cursor: 'pointer' }}>
+      <h4
+        onClick={table.handleResetHideShowColumns}
+        style={{ textAlign: 'center', cursor: 'pointer' }}
+      >
         Reset
       </h4>
     </>
-  );
+  )
 
   const HideShowColumns = () => (
     <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
@@ -75,13 +85,13 @@ export default function PageApproval(props: PageApprovalProps) {
             nameIcon="SearchOutlined"
             placeholder="Search Menu Design Name"
             colorIcon={colors.grey.regular}
-            onChange={() => { }}
+            onChange={() => {}}
           />
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => { }}>
+            <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
-            <Button size="big" variant="primary" onClick={() => { }}>
+            <Button size="big" variant="primary" onClick={() => {}}>
               Create
             </Button>
           </Row>

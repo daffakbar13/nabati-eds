@@ -1,3 +1,1 @@
-export interface PageShipmentProps{
-
-}
+export interface PageShipmentProps {}

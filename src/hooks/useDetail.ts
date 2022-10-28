@@ -1,17 +1,21 @@
 import React from 'react'
+import { CommonDetailParams } from 'src/api/types'
 
-export default function useDetail(api: string) {
-    const [data, setData] = React.useState({})
+export default function useDetail(
+  api?: string,
+  funcApi?: (params: CommonDetailParams) => Promise<any>,
+  params?: CommonDetailParams,
+) {
+  const [data, setData] = React.useState({})
 
-    React.useEffect(() => {
-        async function getApi() {
-            fetch(api)
-                .then((response) => response.json())
-                .then((results) => setData(results.data.result))
-                .catch((_) => setData({}))
-        }
-        getApi()
-    }, [])
+  React.useEffect(() => {
+    async function getApi() {
+      funcApi(params)
+        .then((results) => setData(results.data.result))
+        .catch((_) => setData({}))
+    }
+    getApi()
+  }, [])
 
-    return data
+  return data
 }

@@ -10,18 +10,12 @@ import snakeCase from 'lodash.snakecase'
 const convertCase = (oldObject, converterFunction) => {
   let newObject
 
-  if (
-    !oldObject ||
-    typeof oldObject !== 'object' ||
-    !Object.keys(oldObject).length
-  ) {
+  if (!oldObject || typeof oldObject !== 'object' || !Object.keys(oldObject).length) {
     return oldObject
   }
 
   if (Array.isArray(oldObject)) {
-    newObject = oldObject?.map((element) =>
-      convertCase(element, converterFunction),
-    )
+    newObject = oldObject?.map((element) => convertCase(element, converterFunction))
   } else {
     newObject = {}
     Object.keys(oldObject).forEach((oldKey) => {

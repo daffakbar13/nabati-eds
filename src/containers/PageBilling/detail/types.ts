@@ -1,3 +1,1 @@
-export interface PageBillingDetailProps {
-
-}
+export interface PageBillingDetailProps {}

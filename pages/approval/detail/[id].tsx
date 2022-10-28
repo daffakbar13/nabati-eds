@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface ApprovalDetailProps {
-
-}
+interface ApprovalDetailProps {}
 
 export default function ApprovalDetail(props: ApprovalDetailProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>ApprovalDetail</div>
-    )
+  return <div>ApprovalDetail</div>
 }

@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface SalesOrderEditProps {
-
-}
+interface SalesOrderEditProps {}
 
 export default function SalesOrderEdit(props: SalesOrderEditProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>SalesOrderEdit</div>
-    )
+  return <div>SalesOrderEdit</div>
 }

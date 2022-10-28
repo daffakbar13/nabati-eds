@@ -1,3 +1,3 @@
-export interface TitleDataListProps{
-    title: string
+export interface TitleDataListProps {
+  title: string
 }

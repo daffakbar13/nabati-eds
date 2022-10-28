@@ -1,4 +1,4 @@
-export interface DataListProps{
-    label: string
-    value: string
+export interface DataListProps {
+  label: string
+  value: string
 }

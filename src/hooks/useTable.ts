@@ -6,21 +6,23 @@ interface haveCheckBox {
 }
 
 interface useTableProps {
-  api: string,
-  bodyApi?: any,
-  haveCheckbox?: haveCheckBox | 'All',
+  api: string
+  funcApi?: () => Promise<any>
+  bodyApi?: any
+  haveCheckbox?: haveCheckBox | 'All'
   columns: any[]
 }
 
 export default function useTable(props: useTableProps) {
-  const { api, bodyApi, haveCheckbox } = props
+  const { api, bodyApi, haveCheckbox, funcApi } = props
   const [data, setData] = React.useState([])
   const [columns, setColumns] = React.useState(props.columns)
   const [rowSelection, setRowSelection] = React.useState({})
   const [loading, setLoading] = React.useState(true)
   const [selected, setSelected] = React.useState([])
   const [hiddenColumns, setHiddenColumns] = React.useState([])
-  const isHaveCheckbox = (key: string) => haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
+  const isHaveCheckbox = (key: string) =>
+    haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
 
   const updateData = (newData: any[]) => {
     setLoading(true)
@@ -53,15 +55,18 @@ export default function useTable(props: useTableProps) {
     }),
     fixed: true,
     preserveSelectedRowKeys: true,
-  };
+  }
 
   React.useEffect(() => {
-    if (haveCheckbox) { setRowSelection(defineRowSelection) }
+    if (haveCheckbox) {
+      setRowSelection(defineRowSelection)
+    }
     async function getApi() {
-      fetch(api, { method: 'post', body: { ...bodyApi } })
-        .then((response) => response.json())
-        .then((result) => updateData(result.data.result))
-        .catch((_) => updateData([]))
+      if (funcApi) {
+        funcApi()
+          .then((response) => updateData(response.data.result))
+          .catch((_) => updateData([]))
+      }
     }
 
     getApi()

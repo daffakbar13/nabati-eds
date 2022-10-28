@@ -1,6 +1,5 @@
 export const HTTP_ERROR = 'ERROR'
-export const HTTP_LOGIN_ERROR =
-  'Incorrect Username or password , please login again'
+export const HTTP_LOGIN_ERROR = 'Incorrect Username or password , please login again'
 export const HTTP_SESSION_EXPIRED = 'Expired session, please login again'
 export const HTTP_UNAUTHORIZED_ACTION = 'Your Action Unauthorized!'
 export const HTTP_INTERNAL_SERVER_ERROR = 'Internal server error'

@@ -1,3 +1,1 @@
-export interface PageDeliveryOrderDetailProps {
-
-}
+export interface PageDeliveryOrderDetailProps {}

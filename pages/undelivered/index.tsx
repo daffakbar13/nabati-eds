@@ -1,14 +1,10 @@
 import React from 'react'
 import PageUndelivered from 'src/containers/PageUndelivered'
 
-interface UndeliveredProps {
-
-}
+interface UndeliveredProps {}
 
 export default function Undelivered(props: UndeliveredProps) {
-  const { } = props
+  const {} = props
 
-  return (
-        <PageUndelivered/>
-  )
+  return <PageUndelivered />
 }

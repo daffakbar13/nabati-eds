@@ -1,3 +1,1 @@
-export interface PageCollectionProps {
-
-}
+export interface PageCollectionProps {}

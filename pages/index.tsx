@@ -29,11 +29,7 @@ import {
 } from 'pink-lava-ui'
 
 const Page: NextPageWithLayout = () => {
-  return (
-    <Layout style={{ height: '100vh' }}>
-      {/* <Radio>Text</Radio> */}
-    </Layout>
-  )
+  return <Layout style={{ height: '100vh' }}>{/* <Radio>Text</Radio> */}</Layout>
 }
 
 // Page.getLayout = (page) => page

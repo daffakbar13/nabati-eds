@@ -6,81 +6,81 @@ import { Select } from 'antd'
 import { DebounceSelectProps } from './types'
 
 function DebounceSelect<
-    ValueType extends {
-        key?: string
-        label: React.ReactNode
-        value: string | number
-    } = any,
+  ValueType extends {
+    key?: string
+    label: React.ReactNode
+    value: string | number
+  } = any,
 >({
-    fetchOptions,
-    debounceTimeout = 800,
-    style = {},
-    label,
-    ...props
+  fetchOptions,
+  debounceTimeout = 800,
+  style = {},
+  label,
+  ...props
 }: DebounceSelectProps<ValueType>) {
-    const [fetching, setFetching] = useState(false)
-    const [options, setOptions] = useState<ValueType[]>([])
-    const fetchRef = useRef(0)
+  const [fetching, setFetching] = useState(false)
+  const [options, setOptions] = useState<ValueType[]>([])
+  const fetchRef = useRef(0)
 
-    const debounceFetcher = useMemo(() => {
-        const loadOptions = (value: string) => {
-            fetchRef.current += 1
-            const fetchId = fetchRef.current
-            setOptions([])
-            setFetching(true)
+  const debounceFetcher = useMemo(() => {
+    const loadOptions = (value: string) => {
+      fetchRef.current += 1
+      const fetchId = fetchRef.current
+      setOptions([])
+      setFetching(true)
 
-            fetchOptions(value).then((newOptions) => {
-                if (fetchId !== fetchRef.current) {
-                    // for fetch callback order
-                    return
-                }
-
-                setOptions(newOptions)
-                setFetching(false)
-            })
+      fetchOptions(value).then((newOptions) => {
+        if (fetchId !== fetchRef.current) {
+          // for fetch callback order
+          return
         }
 
-        return debounce(loadOptions, debounceTimeout)
-    }, [fetchOptions, debounceTimeout])
-
-    const mainComponent = (
-        <Select
-            showSearch
-            labelInValue
-            filterOption={false}
-            onSearch={debounceFetcher}
-            notFoundContent={fetching ? <Spin size="small" /> : null}
-            placeholder="Type To Search"
-            {...props}
-            options={options}
-            size="large"
-            style={{
-                border: '1px solid #AAAAAA',
-                borderRadius: 8,
-                height: 48,
-                display: 'flex',
-                alignItems: 'center',
-                ...style,
-            }}
-        />
-    )
-
-    if (label) {
-        return (
-            <div>
-                <Text
-                    variant="headingSmall"
-                    textAlign="center"
-                    style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
-                >
-                    {label}
-                </Text>
-                {mainComponent}
-            </div>
-        )
+        setOptions(newOptions)
+        setFetching(false)
+      })
     }
 
-    return mainComponent
+    return debounce(loadOptions, debounceTimeout)
+  }, [fetchOptions, debounceTimeout])
+
+  const mainComponent = (
+    <Select
+      showSearch
+      labelInValue
+      filterOption={false}
+      onSearch={debounceFetcher}
+      notFoundContent={fetching ? <Spin size="small" /> : null}
+      placeholder="Type To Search"
+      {...props}
+      options={options}
+      size="large"
+      style={{
+        border: '1px solid #AAAAAA',
+        borderRadius: 8,
+        height: 48,
+        display: 'flex',
+        alignItems: 'center',
+        ...style,
+      }}
+    />
+  )
+
+  if (label) {
+    return (
+      <div>
+        <Text
+          variant="headingSmall"
+          textAlign="center"
+          style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          {label}
+        </Text>
+        {mainComponent}
+      </div>
+    )
+  }
+
+  return mainComponent
 }
 
 export default DebounceSelect

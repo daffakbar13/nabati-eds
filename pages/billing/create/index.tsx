@@ -4,7 +4,7 @@ import CreatePage from 'src/containers/PageBilling/create'
 interface BillingCreateProps {}
 
 export default function BillingCreate(props: BillingCreateProps) {
-    const {} = props
+  const {} = props
 
-    return <CreatePage />
+  return <CreatePage />
 }

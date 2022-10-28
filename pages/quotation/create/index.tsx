@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface QuotationCreateProps {
-
-}
+interface QuotationCreateProps {}
 
 export default function QuotationCreate(props: QuotationCreateProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>QuotationCreate</div>
-    )
+  return <div>QuotationCreate</div>
 }

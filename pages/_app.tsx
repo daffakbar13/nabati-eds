@@ -25,11 +25,11 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <>
-    <Head>
-      <title>EDS - {title}</title>
-      <style></style>
-    </Head>
-    {getLayout(<Component {...pageProps} />)}
+      <Head>
+        <title>EDS - {title}</title>
+        <style></style>
+      </Head>
+      {getLayout(<Component {...pageProps} />)}
     </>
   )
 }

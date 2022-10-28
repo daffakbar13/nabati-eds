@@ -9,17 +9,7 @@ import {
 } from 'src/assets'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 
-export type OptionTypes =
-  | 'EQ'
-  | 'BT'
-  | 'CP'
-  | 'LE'
-  | 'GE'
-  | 'NE'
-  | 'NB'
-  | 'NP'
-  | 'GT'
-  | 'LT'
+export type OptionTypes = 'EQ' | 'BT' | 'CP' | 'LE' | 'GE' | 'NE' | 'NB' | 'NP' | 'GT' | 'LT'
 
 export type DataTypes = 'S' | 'N' | 'D' | 'T'
 

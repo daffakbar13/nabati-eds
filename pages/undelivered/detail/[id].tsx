@@ -1,13 +1,9 @@
 import React from 'react'
 
-interface UndeliveredDetailProps {
-
-}
+interface UndeliveredDetailProps {}
 
 export default function UndeliveredDetail(props: UndeliveredDetailProps) {
-    const { } = props
+  const {} = props
 
-    return (
-        <div>UndeliveredDetail</div>
-    )
+  return <div>UndeliveredDetail</div>
 }

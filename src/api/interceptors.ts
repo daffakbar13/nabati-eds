@@ -8,7 +8,7 @@ const LOGIN_SUB_URL = 'login'
 
 export const responseInterceptor = (response: AxiosResponse) => ({
   ...response,
-  ...(response.data && { data: toCamelCase(response.data) }),
+  // ...(response.data && { data: toCamelCase(response.data) }),
 })
 
 export const errorInterceptor = (err: AxiosError): Promise<never> => {
