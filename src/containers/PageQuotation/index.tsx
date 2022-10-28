@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -7,7 +8,8 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import Popup from 'src/components/Popup'
+import { getQuotation } from 'src/api/quotation'
+import { getCompany } from 'src/api/master-data'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
@@ -20,6 +22,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageQuotation(props: PageQuotationProps) {
+    const [data, setData] = useState(null)
     const table = useTable({
         api: 'https://dist-system.nabatisnack.co.id:3001/v1/quotations/list',
         bodyApi: {
@@ -68,6 +71,31 @@ export default function PageQuotation(props: PageQuotationProps) {
             <span style={{ color: '#f0f0f0' }}>___</span>
         </Popover>
     )
+
+    useEffect(() => {
+        const fetchData = async () => {
+            // const res2 = await getCompany({ page: 1 })
+            // console.log('company', res2)
+
+            await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', {
+                method: 'POST',
+            })
+                .then((res) => res.json())
+                .then((data) => console.log(data))
+
+            axios
+                .post('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list')
+                // .then((res) => res.json())
+                .then((data) => console.log(data))
+
+            const res = await getQuotation()
+            console.log('res', res)
+            setData(res.data)
+        }
+        fetchData()
+    }, [])
+
+    console.log('data', data)
 
     return (
         <Col>
@@ -121,16 +149,24 @@ export default function PageQuotation(props: PageQuotationProps) {
                 {table.selected.length > 0 && (
                     <FloatAction>
                         <div
+                           
                             style={{
+                               
                                 display: 'flex',
+                               
                                 flexDirection: 'column',
+                               
                                 justifyContent: 'center',
+                           ,
                             }}
+                        
                         >
                             <b>{table.selected.length} Document Quotation are Selected</b>
                         </div>
                         <div
+                           
                             style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}
+                        
                         >
                             <Button size="big" variant="tertiary" onClick={() => { }}>
                                 Cancel
@@ -146,26 +182,26 @@ export default function PageQuotation(props: PageQuotationProps) {
                             </Button>
                         </div>
                     </FloatAction>
-                )}
-                {showConfirm === 'submit' && (
-                    <Popup>
-                        <Typography.Title level={3} style={{ margin: 0 }}>
-                            Confirm Submit
-                        </Typography.Title>
-                        <Typography.Title level={5} style={{ margin: 0 }}>
-                            Are you sure to submit quotation {table.selected.join(', ')} ?
-                        </Typography.Title>
-                        <div>
-                            <Button size="big" variant="secondary" onClick={() => { }}>
-                                Download
-                            </Button>
-                            <Button size="big" variant="primary" onClick={() => { }}>
-                                Create
-                            </Button>
-                        </div>
-                    </Popup>
-                )}
-            </Card>
-        </Col>
+                ))}
+            {showConfirm === 'submit' && (
+                <Popup>
+                    <Typography.Title level={3} style={{ margin: 0 }}>
+                        Confirm Submit
+                    </Typography.Title>
+                    <Typography.Title level={5} style={{ margin: 0 }}>
+                        Are you sure to submit quotation {table.selected.join(', ')} ?
+                    </Typography.Title>
+                    <div>
+                        <Button size="big" variant="secondary" onClick={() => { }}>
+                            Download
+                        </Button>
+                        <Button size="big" variant="primary" onClick={() => { }}>
+                            Create
+                        </Button>
+                    </div>
+                </Popup>
+            )}
+        </Card>
+        </Col >
     )
 }

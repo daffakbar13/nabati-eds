@@ -133,7 +133,7 @@ export default function PageBilling(props: PageBillingProps) {
 
             <HeadFIlterModal
                 visible={showFilter}
-                onOk={() => { }}
+                onOk={(res) => console.log('res', res)}
                 onCancel={() => setShowFilter(false)}
                 title="Filter"
             />
