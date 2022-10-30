@@ -1,5 +1,6 @@
 import Router from 'next/router'
 import * as NabatiIcons from 'src/assets'
+import { PATH } from '../path'
 
 const CreateMenu = (
     key?: string,
@@ -27,7 +28,7 @@ export const menuSales = [
         null,
         NabatiIcons.ICInventory,
         () => 'Dashboard',
-        () => Router.push('/dashboard'),
+        () => Router.push(PATH.DASHBOARD),
     ),
     CreateMenu('sales', 'Sales', 'title'),
     CreateMenu('order-to-cash', 'Order To Cash', null, NabatiIcons.ICDollar, null, null, [
@@ -37,7 +38,7 @@ export const menuSales = [
             null,
             null,
             () => 'Quotation',
-            () => Router.push('/sales/quotation'),
+            () => Router.push(`${PATH.SALES}/quotation`),
         ),
         CreateMenu(
             'sales-order',
@@ -45,7 +46,7 @@ export const menuSales = [
             null,
             null,
             () => 'Sales Order',
-            () => Router.push('/sales/sales-order'),
+            () => Router.push(`${PATH.SALES}/sales-order`),
         ),
         CreateMenu(
             'delivery-order',
@@ -53,7 +54,7 @@ export const menuSales = [
             null,
             null,
             () => 'Delivery Order',
-            () => Router.push('/sales/delivery-order'),
+            () => Router.push(`${PATH.SALES}/delivery-order`),
         ),
         CreateMenu(
             'shipment',
@@ -61,7 +62,7 @@ export const menuSales = [
             null,
             null,
             () => 'Shipment',
-            () => Router.push('/sales/shipment'),
+            () => Router.push(`${PATH.SALES}/shipment`),
         ),
         CreateMenu(
             'billing',
@@ -69,7 +70,7 @@ export const menuSales = [
             null,
             null,
             () => 'Billing',
-            () => Router.push('/sales/billing'),
+            () => Router.push(`${PATH.SALES}/billing`),
         ),
         CreateMenu(
             'collection',
@@ -77,7 +78,7 @@ export const menuSales = [
             null,
             null,
             () => 'Collection',
-            () => Router.push('/sales/collection'),
+            () => Router.push(`${PATH.SALES}/collection`),
         ),
         CreateMenu(
             'undelivered',
@@ -85,7 +86,7 @@ export const menuSales = [
             null,
             null,
             () => 'Undelivered',
-            () => Router.push('/sales/undelivered'),
+            () => Router.push(`${PATH.SALES}/undelivered`),
         ),
         CreateMenu(
             'approval',
@@ -93,7 +94,7 @@ export const menuSales = [
             null,
             null,
             () => 'Approval',
-            () => Router.push('/sales/approval'),
+            () => Router.push(`${PATH.SALES}/approval`),
         ),
     ]),
 ]

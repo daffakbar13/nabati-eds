@@ -1,3 +1,3 @@
 export * from './headerMenu'
-export * from './menu'
+export * from './menuSidebar'
 export * from './notifIcationtems'

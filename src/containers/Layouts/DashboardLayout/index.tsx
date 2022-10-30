@@ -9,7 +9,7 @@ import ICChangeLanguage from 'src/assets/icons/ic-globe.svg'
 import ICLogout from 'src/assets/icons/ic-logout.svg'
 import ICArrowBottom from 'src/assets/icons/ic-arrow-bottom.svg'
 
-import { menu, headerMenu, notificationItems, setMenu } from 'src/configs/menus'
+import { headerMenu, notificationItems, setMenu } from 'src/configs/menus'
 import {
   WrapeprProfile,
   WrapperMenuLogout,
@@ -30,7 +30,7 @@ const flexStyles = {
 export default function DashboardLayout(page: PropsWithChildren<{}>) {
   const [current, setCurrent] = useState('0')
   const router = useRouter()
-  const currentModulePath = router.asPath.split('/')[1]
+  const currentModulePath = `/${router.asPath.split('/')[1]}`
 
   const handleCLickTabNav = (e: any) => {
     setCurrent(e.key)
