@@ -1,4 +1,5 @@
 import React from 'react'
+import { CommonListParams } from 'src/api/types'
 
 interface haveCheckBox {
   headCell: string
@@ -7,7 +8,7 @@ interface haveCheckBox {
 
 interface useTableProps {
   api: string
-  funcApi?: () => Promise<any>
+  funcApi?: (a: CommonListParams) => Promise<any>
   bodyApi?: any
   haveCheckbox?: haveCheckBox | 'All'
   columns: any[]
@@ -22,8 +23,7 @@ export default function useTable(props: useTableProps) {
   const [loading, setLoading] = React.useState(true)
   const [selected, setSelected] = React.useState([])
   const [hiddenColumns, setHiddenColumns] = React.useState([])
-  const isHaveCheckbox = (key: string) =>
-    haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
+  const isHaveCheckbox = (key: string) => haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
 
   const updateData = (newData: any[]) => {
     setLoading(true)
@@ -64,7 +64,7 @@ export default function useTable(props: useTableProps) {
     }
     async function getApi() {
       if (funcApi) {
-        funcApi()
+        funcApi(bodyApi)
           .then((response) => updateData(response.data.result))
           .catch((_) => updateData([]))
       }

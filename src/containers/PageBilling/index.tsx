@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { MoreOutlined } from '@ant-design/icons'
 import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -7,7 +8,6 @@ import { colors } from 'src/configs/colors'
 import { ICFilter } from 'src/assets/icons'
 import { Table, Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
@@ -70,7 +70,7 @@ export default function PageBilling(props: PageBillingProps) {
               nameIcon="SearchOutlined"
               placeholder="Search Menu Design Name"
               colorIcon={colors.grey.regular}
-              onChange={() => {}}
+              onChange={() => { }}
             />
             <Button
               size="big"
@@ -87,7 +87,7 @@ export default function PageBilling(props: PageBillingProps) {
             </Button>
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => {}}>
+            <Button size="big" variant="secondary" onClick={() => { }}>
               Download
             </Button>
             <Button size="big" variant="primary" onClick={() => router.push('/billing/create')}>
