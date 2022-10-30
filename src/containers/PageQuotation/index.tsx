@@ -10,9 +10,9 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
+
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
-import Popup from 'src/components/Popup'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
@@ -74,16 +74,14 @@ export default function PageQuotation(props: PageQuotationProps) {
             // const res2 = await getCompany({ page: 1 })
             // console.log('company', res2)
 
-            await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', {
-                method: 'POST',
-            })
+            await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', { method: 'POST' })
                 .then((res) => res.json())
-                .then((data) => console.log(data))
+                .then((dt) => console.log(dt))
 
             axios
                 .post('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list')
                 // .then((res) => res.json())
-                .then((data) => console.log(data))
+                .then((dt) => console.log(dt))
 
             const res = await getQuotation()
             console.log('res', res)
