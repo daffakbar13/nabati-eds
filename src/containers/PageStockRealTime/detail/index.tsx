@@ -3,9 +3,6 @@ import { Button as ButtonPinkLava, Col, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Button, Tabs } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import useDetail from 'src/hooks/useDetail'
-import { getDetailSalesOrder } from 'src/api/sales-order'
-import { useRouter } from 'next/router'
 import { PageSalesOrderDetailProps } from './types'
 import AllTabs from './tabs'
 import SalesOrder from './tabs/SalesOrder'
@@ -14,8 +11,11 @@ import PromotionList from './tabs/PromotionList'
 import DocumentFlow from './tabs/DocumentFlow'
 import CustomerInfo from './tabs/CustomerInfo'
 import SalesmanInfo from './tabs/SalesmanInfo'
+import useDetail from 'src/hooks/useDetail'
+import { getDetailSalesOrder } from 'src/api/sales-order'
+import { useRouter } from 'next/router'
 
-export default function PageStockRealTimeDetail(props: PageSalesOrderDetailProps) {
+export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
     const titlePage = useTitlePage('detail')
     const [currentTab, setCurrentTab] = React.useState('1')
     const router = useRouter()

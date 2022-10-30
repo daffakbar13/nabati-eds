@@ -69,26 +69,26 @@ export default function PageQuotation(props: PageQuotationProps) {
         </Popover>
     )
 
-    useEffect(() => {
-        const fetchData = async () => {
-            // const res2 = await getCompany({ page: 1 })
-            // console.log('company', res2)
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         // const res2 = await getCompany({ page: 1 })
+    //         // console.log('company', res2)
 
-            await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', { method: 'POST' })
-                .then((res) => res.json())
-                .then((dt) => console.log(dt))
+    //         await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', { method: 'POST' })
+    //             .then((res) => res.json())
+    //             .then((dt) => console.log(dt))
 
-            axios
-                .post('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list')
-                // .then((res) => res.json())
-                .then((dt) => console.log(dt))
+    //         axios
+    //             .post('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list')
+    //             // .then((res) => res.json())
+    //             .then((dt) => console.log(dt))
 
-            const res = await getQuotation()
-            console.log('res', res)
-            setData(res.data)
-        }
-        fetchData()
-    }, [])
+    //         const res = await getQuotation()
+    //         console.log('res', res)
+    //         setData(res.data)
+    //     }
+    //     fetchData()
+    // }, [])
 
     console.log('data', data)
 

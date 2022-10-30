@@ -9,7 +9,9 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { StockRealTime } from './types'
 
-const url = 'v1/stocks'
+// const url = 'v1/stocks'
+const url = 'v1/sales-orders'
+
 const overrideBaseUrl = API_BASE_URL_2
 
 export const getStockRealtimeList = async (
@@ -18,7 +20,7 @@ export const getStockRealtimeList = async (
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}/list`,
-    overrideBaseUrl,
+    // overrideBaseUrl,
     data: params,
   })
   return response.data
@@ -29,8 +31,8 @@ export const getDetailStockRealTime = async (
 ): Promise<CommonDetailResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${url}/list`,
-    overrideBaseUrl,
+    subUrl: `${url}/${params.id}/detail`,
+    // overrideBaseUrl,
   })
   return response.data
 }

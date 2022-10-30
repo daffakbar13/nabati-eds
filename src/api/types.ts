@@ -27,5 +27,5 @@ export interface CommonDetailParams {
 export interface CommonListParams {
   page?: number
   limit?: number
-  filter?: any[]
+  filters?: any[]
 }

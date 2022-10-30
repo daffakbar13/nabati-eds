@@ -36,18 +36,22 @@ function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
   )
 }
 
+const res = {
+  company_id: 'PP01',
+  branch_id: 'P104',
+  product_id: '300006',
+  sloc_id: 'GS00',
+  unrestricted_use: 1000,
+  booking: 0,
+  reservation: 0,
+}
+
 export const StockRealTimeColumns = [
-  CreateColumns('Quotation ', 'id', true, (link: string) => <Linked link={link} type="id" />),
-  CreateColumns('Order Type', 'order_type_id', true),
-  CreateColumns('Order Date', 'order_date', true),
-  CreateColumns('Sales Org.', 'sales_org_id', true),
-  CreateColumns('Branch', 'branch_id', true),
-  CreateColumns('Sold To Customer', 'sold_to_customer_name', true),
-  CreateColumns('Ship To Customer', 'ship_to_customer_name', true),
-  CreateColumns('Salesman', 'salesman_id', true),
-  CreateColumns('Total Amount', 'total_amount', true),
-  CreateColumns('Create From', 'created_from', true),
-  CreateColumns('Status', 'status_name', true),
-  CreateColumns('Status Process', 'dfg', true),
-  CreateColumns('Action', 'id', false, (link: string) => <Linked link={link} type="action" />),
+  CreateColumns('Branch ', 'branch_id', true),
+  CreateColumns('Sloc', 'slocId', true),
+  CreateColumns('Material', 'dfg', true),
+  CreateColumns('Large', 'dfg', true),
+  CreateColumns('Middle', 'dfg', true),
+  CreateColumns('Small', 'dfg', true),
+  CreateColumns('Total', 'dfg', true),
 ]

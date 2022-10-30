@@ -11,36 +11,20 @@ import { ICFilter } from 'src/assets/icons'
 import { colors } from 'src/configs/colors'
 
 import { getStockRealtimeList } from 'src/api/stock-real-time'
+
 import { PageRealTimeProps } from './types'
 import { StockRealTimeColumns } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
-    console.log(total, range)
-
     const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
     return <p>{text}</p>
 }
 
 export default function PageRealTime(props: PageRealTimeProps) {
-    const [data, setData] = useState(null)
     const [showFilter, setShowFilter] = React.useState(false)
-
     const table = useTable({
         api: '',
-        bodyApi: {
-            filters: [
-                {
-                    field: 'product_id',
-                    option: 'BT',
-                    from_value: '300006',
-                    to_value: '300007',
-                    data_type: 'S',
-                },
-            ],
-            limit: 8,
-            page: 1,
-        },
         funcApi: getStockRealtimeList,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
         columns: StockRealTimeColumns,
@@ -79,28 +63,38 @@ export default function PageRealTime(props: PageRealTimeProps) {
         </Popover>
     )
 
-    useEffect(() => {
-        const fetchData = async () => {
-            // const res2 = await getCompany({ page: 1 })
-            // console.log('company', res2)
+    // useEffect(() => {
+    //     const fetchData = () => {
+    //         const myHeaders = new Headers();
+    //         myHeaders.append('Content-Type', 'application/json');
 
-            await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', { method: 'POST' })
-                .then((res) => res.json())
-                .then((dt) => console.log(dt))
+    //         const raw = JSON.stringify({
+    //             filters: [
+    //                 {
+    //                     field: 'product_id',
+    //                     option: 'BT',
+    //                     from_value: '300006',
+    //                     to_value: '300007',
+    //                     data_type: 'S',
+    //                 },
+    //             ],
+    //             limit: 8,
+    //             page: 1,
+    //         });
 
-            axios
-                .post('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list')
-                // .then((res) => res.json())
-                .then((dt) => console.log(dt))
+    //         fetch('https://dist-system.nabatisnack.co.id:3002/v1/stocks/list', {
+    //             method: 'POST',
+    //             headers: myHeaders,
+    //             body: raw,
+    //             redirect: 'follow',
+    //         })
+    //             .then((response) => response.text())
+    //             .then((result) => console.log(result))
+    //             .catch((error) => console.log('error', error));
+    //     }
 
-            const res = await getStockRealtimeList()
-            console.log('res', res)
-            setData(res.data)
-        }
-        fetchData()
-    }, [])
-
-    console.log('data', data)
+    //     fetchData()
+    // }, [])
 
     return (
         <Col>
@@ -139,20 +133,13 @@ export default function PageRealTime(props: PageRealTimeProps) {
             </Card>
             <Spacer size={10} />
             <Card style={{ padding: '16px 20px' }}>
-                <div style={{ display: 'flex', overflow: 'scroll' }}>
-                    <Table
-                        // sticky
-                        // loading={table.loading}
-                        columns={[...table.columns, { title: <HideShowColumns /> }]}
-                        data={table.data}
-                        showSorterTooltip={false}
-                        rowSelection={table.rowSelection}
-                        rowKey={'id'}
-                    // pagination={false}
-                    // onChange={(_, __, sorter) => console.log(sorter)}
-                    // style={{ overflow: 'scroll' }}
-                    />
-                </div>
+                <Table
+                    loading={table.loading}
+                    columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
+                    dataSource={table.data}
+                    showSorterTooltip={false}
+                    pagination={false}
+                />
                 <Pagination
                     defaultPageSize={20}
                     pageSizeOptions={[20, 50, 100]}
