@@ -26,6 +26,8 @@ export { default as ICCopy } from './ic-copy.svg'
 export { default as ICPackage } from './ic-package.svg'
 export { default as ICArrowRight } from './ic-arrow-right.svg'
 export { default as ICFilter } from './ic_filter.svg'
+export { default as ICGridMenu } from './grid-menu-icon.svg'
+export { default as ICNewTab } from './ic_new tab.svg'
 
 // Filter Icon
 export { default as ICFilterAddFolder } from './Filter-addFolder.svg'
