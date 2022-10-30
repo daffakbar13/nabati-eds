@@ -2,11 +2,12 @@ import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
+import { PATH } from 'src/configs/menus'
 
 function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
     const router = useRouter()
     const navigate = () => {
-        router.push(`/sales-order/detail/${link}`)
+        router.push(`${PATH.SALES}/sales-order/detail/${link}`)
     }
     const [hover, setHover] = React.useState(false)
 

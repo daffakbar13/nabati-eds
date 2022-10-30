@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useState } from 'react'
+import React, { PropsWithChildren, useState, useEffect } from 'react'
 import { Sidebar, Layout, Header, MenuLogout, Notification, Spacer } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
 
@@ -32,17 +32,15 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
   const router = useRouter()
   const currentModulePath = `/${router.asPath.split('/')[1]}`
 
-  const handleCLickTabNav = (e: any) => {
-    setCurrent(e.key)
-  }
-
   const handleLogout = (e: any) => {
     localStorage.clear()
     window.location.href = '/login'
   }
 
-  console.log('current', current)
-  console.log('currentModulePath', currentModulePath)
+  useEffect(() => {
+    const menuIndex = headerMenu.findIndex((i) => i.path === currentModulePath)
+    setCurrent(menuIndex.toString())
+  }, [currentModulePath])
 
   return (
     <Layout style={{ height: '100vh' }}>
@@ -50,7 +48,6 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
       <Layout className="site-layout" style={{ height: '100vh', overflow: 'auto' }}>
         <Header
           mode="horizontal"
-          onClick={handleCLickTabNav}
           selectedKeys={[current]}
           items={headerMenu}
         >
