@@ -11,7 +11,7 @@ import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
-import HeadFIlterModal from './modals/headFIlter'
+import HeadFilterModal from './modals/headFilter'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -122,7 +122,7 @@ export default function PageBilling(props: PageBillingProps) {
         </div>
       </Card>
 
-      <HeadFIlterModal
+      <HeadFilterModal
         visible={showFilter}
         onOk={(res) => console.log('res', res)}
         onCancel={() => setShowFilter(false)}

@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { MoreOutlined } from '@ant-design/icons'
-import axios from 'axios'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 
 import { Card, FloatAction, Popup } from 'src/components'
 import { useTable, useTitlePage } from 'src/hooks'
-
-import { ICFilter } from 'src/assets/icons'
 import { colors } from 'src/configs/colors'
 
 import { getStockRealtimeList } from 'src/api/stock-real-time'
 
+import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PageRealTimeProps } from './types'
 import { StockRealTimeColumns } from './columns'
 
@@ -22,7 +20,14 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageRealTime(props: PageRealTimeProps) {
-    const [showFilter, setShowFilter] = React.useState(false)
+    const [filters, setFilters] = useSmartFilters([
+        FILTER.SALES_ORG,
+        FILTER.BRANCH,
+        FILTER.SOLD_TO_CUSTOMER,
+        FILTER.SHIP_TO_CUSTOMER,
+        FILTER.ORDER_TYPE,
+        FILTER.ORDER_DATE])
+
     const table = useTable({
         api: '',
         funcApi: getStockRealtimeList,
@@ -110,19 +115,7 @@ export default function PageRealTime(props: PageRealTimeProps) {
                             colorIcon={colors.grey.regular}
                             onChange={() => { }}
                         />
-                        <Button
-                            size="big"
-                            variant="tertiary"
-                            onClick={() => setShowFilter(true)}
-                            style={{
-                                border: '1px solid #888888',
-                                color: '#888888',
-                                justifyContent: 'flex-start',
-                                gap: 16,
-                            }}
-                        >
-                            <ICFilter /> Filter
-                        </Button>
+                        <SmartFilter onOk={setFilters} filters={filters} />
                     </Row>
                     <Row gap="16px">
                         <Button size="big" variant="secondary" onClick={() => { }}>
@@ -196,13 +189,6 @@ export default function PageRealTime(props: PageRealTimeProps) {
                     </Popup>
                 )}
             </Card>
-
-            {/* <HeadFIlterModal
-                visible={showFilter}
-                onOk={(res) => console.log('res', res)}
-                onCancel={() => setShowFilter(false)}
-                title="Filter"
-            /> */}
         </Col>
     )
 }
