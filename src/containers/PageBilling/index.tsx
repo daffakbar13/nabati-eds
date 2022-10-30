@@ -5,13 +5,12 @@ import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { ICFilter } from 'src/assets/icons'
 import { Table, Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
+import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
-import HeadFilterModal from './modals/headFilter'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -20,7 +19,14 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageBilling(props: PageBillingProps) {
-  const [showFilter, setShowFilter] = React.useState(false)
+  const [filters, setFilters] = useSmartFilters([
+    FILTER.SALES_ORG,
+    FILTER.BRANCH,
+    FILTER.SOLD_TO_CUSTOMER,
+    FILTER.SHIP_TO_CUSTOMER,
+    FILTER.ORDER_TYPE,
+    FILTER.ORDER_DATE])
+
   const router = useRouter()
   const table = useTable({
     api: '',
@@ -72,19 +78,8 @@ export default function PageBilling(props: PageBillingProps) {
               colorIcon={colors.grey.regular}
               onChange={() => { }}
             />
-            <Button
-              size="big"
-              variant="tertiary"
-              onClick={() => setShowFilter(true)}
-              style={{
-                border: '1px solid #888888',
-                color: '#888888',
-                justifyContent: 'flex-start',
-                gap: 16,
-              }}
-            >
-              <ICFilter /> Filter
-            </Button>
+            <SmartFilter onOk={setFilters} filters={filters} />
+
           </Row>
           <Row gap="16px">
             <Button size="big" variant="secondary" onClick={() => { }}>
@@ -122,12 +117,6 @@ export default function PageBilling(props: PageBillingProps) {
         </div>
       </Card>
 
-      <HeadFilterModal
-        visible={showFilter}
-        onOk={(res) => console.log('res', res)}
-        onCancel={() => setShowFilter(false)}
-        title="Filter"
-      />
     </Col>
   )
 }
