@@ -11,7 +11,7 @@ import { getStockRealtimeList } from 'src/api/stock-real-time'
 
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PageRealTimeProps } from './types'
-import { StockRealTimeColumns } from './columns'
+import { columns } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
@@ -32,14 +32,14 @@ export default function PageAvailabilityOverview(props: PageRealTimeProps) {
         api: '',
         funcApi: getStockRealtimeList,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
-        columns: StockRealTimeColumns,
+        columns: columns,
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
 
     const content = (
         <>
-            {StockRealTimeColumns.map(({ title }, index) => (
+            {columns.map(({ title }, index) => (
                 <div key={index}>
                     <Checkbox
                         defaultChecked={!table.hiddenColumns.includes(title)}
