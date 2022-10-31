@@ -1,10 +1,10 @@
 import React from 'react'
-import PageStockRealTime from 'src/containers/PageStockRealTime'
+import PageListSwapHandling from 'src/containers/PageListSwapHandling'
 
-interface RealTimeProps { }
+interface Props { }
 
-export default function RealTime(props: RealTimeProps) {
+export default function ListSwapHandling(props: Props) {
   const { } = props
 
-  return <PageStockRealTime />
+  return <PageListSwapHandling />
 }
