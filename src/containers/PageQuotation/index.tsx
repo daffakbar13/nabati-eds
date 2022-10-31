@@ -12,7 +12,6 @@ import { getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
-import Popup from 'src/components/Popup'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')

@@ -12,14 +12,13 @@ import Quotation from './tabs/Quotation'
 import DocumentFlow from './tabs/DocumentFlow'
 import CustomerInfo from './tabs/CustomerInfo'
 import SalesmanInfo from './tabs/SalesmanInfo'
+import { getDetailQuotation } from 'src/api/quotation'
 
 export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
-  const data = useDetail(
-    `https://dist-system.nabatisnack.co.id:3001/v1/quotations/${router.query.id}/detail`,
-  )
+  const data = useDetail(``,getDetailQuotation, {id:router.query.id as string})
 
   return (
     <Col>

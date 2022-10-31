@@ -21,6 +21,6 @@ export const getQuotation = async (
 export const getDetailQuotation = async (
   params: CommonDetailParams,
 ): Promise<CommonDetailResponse<QuotationItem>> => {
-  const response = await call({ method: METHODS.GET, overrideBaseUrl, subUrl, data: params })
+  const response = await call({ method: METHODS.GET, overrideBaseUrl, subUrl: 'v1/quotations/' +params.id + '/detail'})
   return response.data
 }
