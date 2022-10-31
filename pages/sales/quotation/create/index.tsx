@@ -1,9 +1,10 @@
 import React from 'react'
+import CreatePage from 'src/containers/PageQuotation/create'
 
-interface QuotationCreateProps {}
+interface Props { }
 
-export default function QuotationCreate(props: QuotationCreateProps) {
-  const {} = props
+export default function BillingCreate(props: Props) {
+  const { } = props
 
-  return <div>QuotationCreate</div>
+  return <CreatePage />
 }

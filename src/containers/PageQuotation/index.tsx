@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -37,6 +37,7 @@ export default function PageQuotation(props: PageQuotationProps) {
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
+    const router = useRouter()
 
     const content = (
         <>
@@ -109,7 +110,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                         <Button size="big" variant="secondary" onClick={() => { }}>
                             Download
                         </Button>
-                        <Button size="big" variant="primary" onClick={() => { }}>
+                        <Button size="big" variant="primary" onClick={() => router.push(`${router.pathname}/create`)}>
                             Create
                         </Button>
                     </Row>
