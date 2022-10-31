@@ -6,10 +6,8 @@ import CreateColumns from 'src/utils/createColumns'
 
 export const StockRealTimeColumns = [
   CreateColumns('Branch ', 'branch_id', true),
-  CreateColumns('Sloc', 'slocId', true),
   CreateColumns('Material', 'dfg', true),
-  CreateColumns('Large', 'dfg', true),
-  CreateColumns('Middle', 'dfg', true),
-  CreateColumns('Small', 'dfg', true),
-  CreateColumns('Total', 'dfg', true),
+  CreateColumns('Sloc', 'slocId', true),
+  CreateColumns('Status Data', 'dfg', true),
+  CreateColumns('L', 'dfg', true),
 ]
