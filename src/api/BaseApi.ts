@@ -2,7 +2,7 @@ import axios, { AxiosPromise, AxiosRequestConfig, Method } from 'axios'
 
 import { METHODS } from 'src/api/methods'
 import { errorInterceptor, responseInterceptor } from 'src/api/interceptors'
-import { API_URL } from 'src/configs/env'
+import { API_BASE_URL_1 } from 'src/configs/env'
 import { auth } from 'src/utils/auth'
 import { toSnakeCase } from 'src/utils/formatter'
 
@@ -31,7 +31,7 @@ export function call({
   const token = auth.getToken()
   const config: AxiosRequestConfig = {
     ...options,
-    baseURL: overrideBaseUrl || API_URL,
+    baseURL: overrideBaseUrl || API_BASE_URL_1,
     // withCredentials: true,
     method,
     url: subUrl,

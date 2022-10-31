@@ -26,6 +26,8 @@ export { default as ICCopy } from './ic-copy.svg'
 export { default as ICPackage } from './ic-package.svg'
 export { default as ICArrowRight } from './ic-arrow-right.svg'
 export { default as ICFilter } from './ic_filter.svg'
+export { default as ICGridMenu } from './grid-menu-icon.svg'
+export { default as ICNewTab } from './ic_new tab.svg'
 
 // Filter Icon
 export { default as ICFilterAddFolder } from './Filter-addFolder.svg'
@@ -36,3 +38,14 @@ export { default as ICFilterNotEqual } from './Filter-not-equal.svg'
 export { default as ICFilterSelect } from './Filter-select.svg'
 export { default as ICFilterLessEqual } from './Filter-smaller-equal.svg'
 export { default as ICFilterLess } from './Filter-smaller.svg'
+
+// Logistic Menu Filter
+export { default as LogisticIcInventory } from './logistic-ic-inventory.svg'
+export { default as LogisticIcGr } from './logistic-ic-gr.svg'
+export { default as LogisticIcIntraBranch } from './logistic-ic-intra-plant.svg'
+export { default as LogisticIcIntraChannel } from './logistic-ic-intra-channel.svg'
+export { default as LogisticIcIntraSloc } from './logistic-ic-intra-sloc.svg'
+export { default as LogisticIcCanvas } from './logistic-ic-canvas.svg'
+export { default as LogisticIcBadStock } from './logistic-ic-bad-stock.svg'
+export { default as LogisticIcSwapHandling } from './logistic-ic-swap-handling.svg'
+export { default as LogisticIcStockAdjustment } from './logistic-ic-stock-adjustment.svg'

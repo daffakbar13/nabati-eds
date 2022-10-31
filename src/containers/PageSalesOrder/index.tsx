@@ -7,9 +7,9 @@ import { Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
+import { getSalesOrder } from 'src/api/sales-order'
 import { PageSalesOrderProps } from './types'
 import { TableSalesOrder } from './columns'
-import { getSalesOrder } from 'src/api/sales-order'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
