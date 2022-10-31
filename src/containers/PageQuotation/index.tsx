@@ -10,6 +10,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
+import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
@@ -24,6 +25,14 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageQuotation(props: PageQuotationProps) {
     const [data, setData] = useState(null)
+    const [filters, setFilters] = useSmartFilters([
+        FILTER.SALES_ORG,
+        FILTER.BRANCH,
+        FILTER.SOLD_TO_CUSTOMER,
+        FILTER.SHIP_TO_CUSTOMER,
+        FILTER.ORDER_TYPE,
+        FILTER.ORDER_DATE])
+
     const table = useTable({
         api: 'https://dist-system.nabatisnack.co.id:3001/v1/quotations/list',
         bodyApi: {
@@ -97,15 +106,18 @@ export default function PageQuotation(props: PageQuotationProps) {
         <Col>
             <Text variant={'h4'}>{titlePage}</Text>
             <Spacer size={20} />
-            <Card>
+            <Card style={{ overflow: 'unset' }}>
                 <Row justifyContent="space-between">
-                    <Search
-                        width="380px"
-                        nameIcon="SearchOutlined"
-                        placeholder="Search Menu Design Name"
-                        colorIcon={colors.grey.regular}
-                        onChange={() => { }}
-                    />
+                    <Row gap="16px">
+                        <Search
+                            width="380px"
+                            nameIcon="SearchOutlined"
+                            placeholder="Search Menu Design Name"
+                            colorIcon={colors.grey.regular}
+                            onChange={() => { }}
+                        />
+                        <SmartFilter onOk={setFilters} filters={filters} />
+                    </Row>
                     <Row gap="16px">
                         <Button size="big" variant="secondary" onClick={() => { }}>
                             Download
