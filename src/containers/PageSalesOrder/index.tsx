@@ -1,4 +1,6 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -25,6 +27,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         columns: TableSalesOrder,
     })
     const titlePage = useTitlePage('list')
+    const router = useRouter()
 
     const content = (
         <>
@@ -74,7 +77,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
                         <Button size="big" variant="secondary" onClick={() => { }}>
                             Download
                         </Button>
-                        <Button size="big" variant="primary" onClick={() => { }}>
+                        <Button size="big" variant="primary" onClick={() => router.push(`${router.pathname}/create`)}>
                             Create
                         </Button>
                     </Row>
