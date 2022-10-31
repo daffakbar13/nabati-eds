@@ -30,22 +30,31 @@ export const TableCustomerInfo = [
 
 export const TablePricingCondition = [
     CreateColumns('No', 'Process'),
-    CreateColumns('Item ID', 'Doc. Number'),
-    CreateColumns('Item Category', 'Doc. Number'),
+    CreateColumns('Item ID', 'order_id'),
+    CreateColumns('Item Category', 'item_category_id'),
+    // FIXME Promotion Type
     CreateColumns('Promotion Type', 'Doc. Number'),
-    CreateColumns('Name', 'Doc. Number'),
-    CreateColumns('Uom', 'Doc. Number'),
-    CreateColumns('Quantity', 'Doc. Number'),
-    CreateColumns('Based Price', 'Doc. Number'),
-    CreateColumns('Gross', 'Doc. Number'),
-    CreateColumns('Disc 1', 'Doc. Number'),
-    CreateColumns('Net 1', 'Doc. Number'),
-    CreateColumns('Disc 2', 'Doc. Number'),
-    CreateColumns('Net 2', 'Doc. Number'),
-    CreateColumns('Disc 3', 'Doc. Number'),
-    CreateColumns('Net 3', 'Doc. Number'),
-    CreateColumns('Disc 4', 'Doc. Number'),
-    CreateColumns('Net 4', 'Doc. Number'),
+    CreateColumns('Name', 'product_id'),
+    CreateColumns('Uom', 'uom_id'),
+    CreateColumns('Quantity', 'order_qty'),
+    CreateColumns('Based Price', 'price'),
+    CreateColumns('Gross', 'gross_value'),
+    // FIXME Disc 1
+    CreateColumns('Disc 1', 'discount_value'),
+    // FIXME Net 1
+    CreateColumns('Net 1', 'Doc'),
+    // FIXME Disc 2
+    CreateColumns('Disc 2', 'Doc'),
+    // FIXME Net 2
+    CreateColumns('Net 2', 'Doc'),
+    // FIXME Disc 3
+    CreateColumns('Disc 3', 'Doc'),
+    // FIXME Net 3
+    CreateColumns('Net 3', 'Doc'),
+    // FIXME Disc 4
+    CreateColumns('Disc 4', 'Doc'),
+    // FIXME Net 4
+    CreateColumns('Net 4', 'Doc'),
 ]
 
 export const TablePromotionList = [

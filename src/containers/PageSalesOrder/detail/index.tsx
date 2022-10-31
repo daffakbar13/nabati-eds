@@ -14,6 +14,7 @@ import SalesmanInfo from './tabs/SalesmanInfo'
 import useDetail from 'src/hooks/useDetail'
 import { getDetailSalesOrder } from 'src/api/sales-order'
 import { useRouter } from 'next/router'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 
 export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
     const titlePage = useTitlePage('detail')
@@ -23,7 +24,20 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
 
     return (
         <Col>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', gap: 5 }}>
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                        router.push('/sales-order')
+                    }}
+                >
+                    <ArrowLeftOutlined style={{ fontSize: 25 }} />
+                </div>
                 <Text variant={'h4'}>{titlePage}</Text>
                 <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
                     <Button>asd</Button>

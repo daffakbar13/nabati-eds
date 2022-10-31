@@ -14,19 +14,19 @@ interface PricingConditionProps {
 const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function PricingCondition(props: PricingConditionProps) {
-  const {} = props
+  const { data } = props
   const table = useTable({ api: '', columns: TablePricingCondition })
 
   return (
     <>
       <Row gutter={8}>
         <Col span={8}>
-          <DataList label="Pricing Date" value="12 April 2022" />
+          <DataList label="Pricing Date" value={data.pricing_date} />
         </Col>
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={table.columns} dataSource={[]} />
+        <Table columns={table.columns} dataSource={data.items} />
       </div>
       <Spacer size={30} />
       <Row>
