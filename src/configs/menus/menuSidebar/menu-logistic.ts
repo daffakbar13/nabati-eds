@@ -63,7 +63,7 @@ export const menuLogistic = [
                 key: 'wh-stock-mutation',
                 title: 'WH Stock Mutation',
                 content: () => 'WH Stock Mutation',
-                onClick: () => Router.push(`${PATH.LOGISTIC}/wh-stock-mutation`),
+                onClick: () => Router.push(`${PATH.LOGISTIC}/warehouse-stock-mutation`),
             },
         ],
     },
