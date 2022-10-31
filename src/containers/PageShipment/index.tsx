@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -9,27 +10,6 @@ import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { PageShipmentProps } from './types'
 import { TableBilling } from './columns'
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    render: (text: string) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-  },
-  {
-    title: 'Action',
-    dataIndex: 'key',
-    render: (text: string) => <a>{text}</a>,
-  },
-]
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -44,6 +24,7 @@ export default function PageShipment(props: PageShipmentProps) {
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
+  const router = useRouter()
 
   const content = (
     <>
@@ -85,13 +66,13 @@ export default function PageShipment(props: PageShipmentProps) {
             nameIcon="SearchOutlined"
             placeholder="Search Menu Design Name"
             colorIcon={colors.grey.regular}
-            onChange={() => {}}
+            onChange={() => { }}
           />
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => {}}>
+            <Button size="big" variant="secondary" onClick={() => { }}>
               Download
             </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button size="big" variant="primary" onClick={() => router.push(`${router.pathname}/create`)}>
               Create
             </Button>
           </Row>
