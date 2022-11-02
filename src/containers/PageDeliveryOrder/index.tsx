@@ -1,14 +1,16 @@
 import React from 'react'
-import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
+import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableDeliveryOrder } from 'src/data/tables'
-import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
+import { Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { PageDeliveryOrderProps } from './types'
 import { TableDeliveryOrder } from './columns'
+import { getDeliveryOrderList } from 'src/api/delivery-order'
+import axios from 'axios'
 
 const columns = [
   {
@@ -39,11 +41,23 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   const table = useTable({
-    api: '',
+    api: 'https://dist-system.nabatisnack.co.id:3001/v1/delivery-orders/list',
+    funcApi: getDeliveryOrderList,
+    bodyApi: {
+      "filters": [],
+      "limit": 10,
+      "page": 1
+    },
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableDeliveryOrder,
   })
   const titlePage = useTitlePage('list')
+
+  React.useEffect(() => {
+    axios.post('https://dist-system.nabatisnack.co.id:3001/v1/delivery-orders/list')
+      .then(res => console.log(res))
+      .catch(err => console.log('err'))
+  }, [])
 
   const content = (
     <>
@@ -103,10 +117,10 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           <Table
             loading={table.loading}
             columns={[...table.columns, { title: <HideShowColumns /> }]}
-            dataSource={table.data}
+            data={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}
-            rowKey={'shipment_id'}
+            rowKey={'id'}
             pagination={false}
             onChange={(_, __, sorter) => console.log(sorter)}
           />

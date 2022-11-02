@@ -33,7 +33,7 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
                         cursor: 'pointer',
                     }}
                     onClick={() => {
-                        router.push('/sales-order')
+                        router.push('/sales/sales-order')
                     }}
                 >
                     <ArrowLeftOutlined style={{ fontSize: 25 }} />

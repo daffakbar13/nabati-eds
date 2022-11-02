@@ -5,62 +5,70 @@ import TitleDataList from 'src/components/TitleDataList'
 import useTable from 'src/hooks/useTable'
 import { TableCustomerInfo } from '../columns'
 
-interface CustomerInfoProps {}
+interface CustomerInfoProps {
+  data: any
+}
 
 const CreateDataList = (label: string, value: string) => ({ label, value })
 
 export default function CustomerInfo(props: CustomerInfoProps) {
-  const {} = props
+  const { data } = props
   const table = useTable({ api: '', columns: TableCustomerInfo })
 
   const customerInformation = [
-    CreateDataList('Name', 'Test123'),
-    CreateDataList('Active Customer', 'Test123'),
-    CreateDataList('Short Name', 'Test123'),
-    CreateDataList('KTP', 'Test123'),
-    CreateDataList('Phone Number', 'Test123'),
-    CreateDataList('Email', 'Test123'),
+    CreateDataList('Name', data.customer.name),
+    // FIXME Active Customer
+    CreateDataList('Active Customer', data.customer.active),
+    // FIXME Short Name
+    CreateDataList('Short Name', data.customer.short_name),
+    // FIXME KTP
+    CreateDataList('KTP', data.customer.id),
+    CreateDataList('Phone Number', data.customer.phone),
+    // FIXME EMAIL
+    CreateDataList('Email', data.customer.email),
   ]
 
   const customerGroupInformation = [
-    CreateDataList('Customer Group', 'Test123'),
-    CreateDataList('Customer Group 1', 'Test123'),
-    CreateDataList('Customer Group 2', 'Test123'),
-    CreateDataList('Customer Group 3', 'Test123'),
-    CreateDataList('Customer Group 4', 'Test123'),
-    CreateDataList('Customer Group 5', 'Test123'),
+    CreateDataList('Customer Group', data.customer_group.name),
+    CreateDataList('Customer Group 1', data.customer_group_1?.name),
+    CreateDataList('Customer Group 2', data.customer_group_2?.name),
+    CreateDataList('Customer Group 3', data.customer_group_3?.name),
+    CreateDataList('Customer Group 4', data.customer_group_4?.name),
+    CreateDataList('Customer Group 5', data.customer_group_5?.name),
   ]
 
   const companyInformation = [
-    CreateDataList('Sales Organization', 'Test123'),
-    CreateDataList('Company', 'Test123'),
-    CreateDataList('Branch', 'Test123'),
-    CreateDataList('Sloc', 'Test123'),
-    CreateDataList('Sales Office', 'Test123'),
-    CreateDataList('Sales Division', 'Test123'),
-    CreateDataList('Sales Channel', 'Test123'),
-    CreateDataList('Sales Group', 'Test123'),
+    CreateDataList('Sales Organization', data.sales_org_name),
+    CreateDataList('Company', data.company),
+    CreateDataList('Branch', data.branch_name),
+    // FIXME Sloc
+    CreateDataList('Sloc', data.sloc),
+    CreateDataList('Sales Office', data.sales_office_id),
+    CreateDataList('Sales Division', data.division_id),
+    CreateDataList('Sales Channel', data.channel_id),
+    CreateDataList('Sales Group', data.sales_group_id),
   ]
 
+  // FIXME Payment / Credit Limit
   const paymentInformation = [
-    CreateDataList('Term of Payment', 'Test123'),
-    CreateDataList('Method of Payment', 'Test123'),
-    CreateDataList('Block', 'Test123'),
-    CreateDataList('Credit Limit', 'Test123'),
-    CreateDataList('Credit Limit Valid To', 'Test123'),
-    CreateDataList('Remaining Credit Limit', 'Test123'),
-    CreateDataList('Status Overdue', 'Test123'),
-    CreateDataList('Price Group', 'Test123'),
-    CreateDataList('Taxable Enter Num. (SPPKP)', 'Test123'),
-    CreateDataList('Risk Class', 'Test123'),
-    CreateDataList('Modified Date', 'Test123'),
-    CreateDataList('Price List', 'Test123'),
-    CreateDataList('Tax Subject', 'Test123'),
-    CreateDataList('Tax Reg Num. (NPWP)', 'Test123'),
-    CreateDataList('Rules', 'Test123'),
-    CreateDataList('Check Rule', 'Test123'),
-    CreateDataList('Inco 1', 'Test123'),
-    CreateDataList('Inco 2', 'Test123'),
+    CreateDataList('Term of Payment', data.term_id),
+    CreateDataList('Method of Payment', data.method),
+    CreateDataList('Block', data.status_block_id),
+    CreateDataList('Credit Limit', data.credit_limit),
+    CreateDataList('Credit Limit Valid To', data.credit_limit_valid_to),
+    CreateDataList('Remaining Credit Limit', data.remaining_credit_limit),
+    CreateDataList('Status Overdue', data.status_overdue),
+    CreateDataList('Price Group', data.price_group),
+    CreateDataList('Taxable Enter Num. (SPPKP)', data.tax_enter_num),
+    CreateDataList('Risk Class', data.risk_class),
+    CreateDataList('Modified Date', data.modified_at),
+    CreateDataList('Price List', data.price_list),
+    CreateDataList('Tax Subject', data.tax_subject),
+    CreateDataList('Tax Reg Num. (NPWP)', data.tax_reg_num),
+    CreateDataList('Rules', data.rules),
+    CreateDataList('Check Rule', data.check_rule),
+    CreateDataList('Inco 1', data.inco_1),
+    CreateDataList('Inco 2', data.inco_2),
   ]
 
   const dataList = [

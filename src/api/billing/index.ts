@@ -6,21 +6,21 @@ import {
   CommonListParams,
   CommonDetailParams,
 } from 'src/api/types'
-import { QuotationItem } from './types'
+import { BillingItem } from './types'
 
-const subUrl = 'v1/quotations/list'
+const subUrl = 'v1/billing/list'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
-export const getQuotation = async (
+export const getBilling = async (
   params: CommonListParams = {},
-): Promise<CommonListResponse<QuotationItem>> => {
+): Promise<CommonListResponse<BillingItem>> => {
   const response = await call({ method: METHODS.POST, overrideBaseUrl, subUrl })
   return response.data
 }
 
-export const getDetailQuotation = async (
+export const getDetailBilling = async (
   params: CommonDetailParams,
-): Promise<CommonDetailResponse<QuotationItem>> => {
-  const response = await call({ method: METHODS.GET, overrideBaseUrl, subUrl: 'v1/quotations/' +params.id + '/detail'})
+): Promise<CommonDetailResponse<BillingItem>> => {
+  const response = await call({ method: METHODS.GET, overrideBaseUrl, subUrl: 'v1/billing/' + params.id + '/detail' })
   return response.data
 }

@@ -57,6 +57,8 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         </Popover>
     )
 
+    const hasNoData = table.data.length === 0
+
     return (
         <Col>
             <Text variant={'h4'}>{titlePage}</Text>
@@ -93,6 +95,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
                         pagination={false}
                         onChange={(_, __, sorter) => console.log(sorter)}
                     />
+                    {!hasNoData &&
                     <Pagination
                         defaultPageSize={20}
                         pageSizeOptions={[20, 50, 100]}
@@ -103,6 +106,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
                         total={table.data.length}
                         showTotal={showTotal}
                     />
+                    }
                 </div>
             </Card>
         </Col>

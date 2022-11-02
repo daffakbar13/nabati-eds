@@ -11,6 +11,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
+import { getBilling } from 'src/api/billing'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -30,6 +31,7 @@ export default function PageBilling(props: PageBillingProps) {
   const router = useRouter()
   const table = useTable({
     api: '',
+    funcApi: getBilling,
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })

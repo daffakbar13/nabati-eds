@@ -3,7 +3,9 @@ import React from 'react'
 import DataList from 'src/components/DataList'
 import TitleDataList from 'src/components/TitleDataList'
 
-interface SalesmanInfoProps {}
+interface SalesmanInfoProps {
+  data: any
+}
 
 const CreateDataList = (label: string, value: string) => ({ label, value })
 

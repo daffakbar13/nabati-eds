@@ -5,7 +5,9 @@ import TitleDataList from 'src/components/TitleDataList'
 import useTable from 'src/hooks/useTable'
 import { TableCustomerInfo } from '../columns'
 
-interface CustomerInfoProps {}
+interface CustomerInfoProps {
+  data: any
+}
 
 const CreateDataList = (label: string, value: string) => ({ label, value })
 

@@ -9,14 +9,16 @@ import {
 import { SalesOrderItem } from './types'
 
 const url = 'v1/sales-orders'
+const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getSalesOrder = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<SalesOrderItem>> => {
   const response = await call({
     method: METHODS.POST,
+    overrideBaseUrl,
     subUrl: `${url}/list`,
-    data: params,
+    // data: params,
   })
   return response.data
 }
@@ -26,6 +28,7 @@ export const getDetailSalesOrder = async (
 ): Promise<CommonDetailResponse<SalesOrderItem>> => {
   const response = await call({
     method: METHODS.GET,
+    overrideBaseUrl,
     subUrl: `${url}/${params.id}/detail`,
   })
   return response.data

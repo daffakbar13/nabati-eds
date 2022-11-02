@@ -37,6 +37,7 @@ export default function PageQuotation(props: PageQuotationProps) {
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
+    const hasNoData = table.data.length === 0
 
     const content = (
         <>
@@ -131,6 +132,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                     // style={{ overflow: 'scroll' }}
                     />
                 </div>
+                {!hasNoData &&
                 <Pagination
                     defaultPageSize={20}
                     pageSizeOptions={[20, 50, 100]}
@@ -141,6 +143,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                     total={table.data.length}
                     showTotal={showTotal}
                 />
+                }
                 {table.selected.length > 0 && (
                     <FloatAction>
                         <div

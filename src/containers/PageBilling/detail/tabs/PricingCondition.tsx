@@ -7,7 +7,9 @@ import useTable from 'src/hooks/useTable'
 
 import { TablePricingCondition } from '../columns'
 
-interface PricingConditionProps {}
+interface PricingConditionProps {
+  data: any
+}
 
 const createDataList = (label: string, value: string) => ({ label, value })
 

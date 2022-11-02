@@ -31,7 +31,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
             cursor: 'pointer',
           }}
           onClick={() => {
-            router.push('/quotation')
+            router.push('/sales/quotation')
           }}
         >
           <ArrowLeftOutlined style={{ fontSize: 25 }} />

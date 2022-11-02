@@ -6,7 +6,9 @@ import useTable from 'src/hooks/useTable'
 import { Spacer } from 'pink-lava-ui'
 import { TableBilling } from '../columns'
 
-interface BillingProps {}
+interface BillingProps {
+  data: any
+}
 
 const createDataList = (label: string, value: string) => ({ label, value })
 

@@ -6,7 +6,9 @@ import useTable from 'src/hooks/useTable'
 import { Spacer } from 'pink-lava-ui'
 import { TableDeliveryOrder } from '../columns'
 
-interface DeliveryOrderProps {}
+interface DeliveryOrderProps {
+  data: any
+}
 
 const createDataList = (label: string, value: string) => ({ label, value })
 
@@ -31,6 +33,7 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
 
   return (
     <>
+
       <Row gutter={8}>
         <Col span={8}>
           {dataList.slice(0, 5).map(({ label, value }, i) => (

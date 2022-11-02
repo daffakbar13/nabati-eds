@@ -3,7 +3,9 @@ import React from 'react'
 import useTable from 'src/hooks/useTable'
 import { TableDocumentFlow } from '../columns'
 
-interface DocumentFlowProps {}
+interface DocumentFlowProps {
+  data: any
+}
 
 export default function DocumentFlow(props: DocumentFlowProps) {
   const {} = props

@@ -9,10 +9,15 @@ import Quotation from './tabs/DeliveryOrder'
 import DocumentFlow from './tabs/DocumentFlow'
 import CustomerInfo from './tabs/CustomerInfo'
 import SalesmanInfo from './tabs/SalesmanInfo'
+import { useDetail } from 'src/hooks'
+import { getDeliveryOrderDetail } from 'src/api/delivery-order'
+import { useRouter } from 'next/router'
 
 export default function PageDeliveryOrderDetail(props: PageDeliveryOrderDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
+  const router = useRouter()
+  const data = useDetail('', getDeliveryOrderDetail, { id: router.query.id as string })
 
   return (
     <Col>
@@ -37,9 +42,10 @@ export default function PageDeliveryOrderDetail(props: PageDeliveryOrderDetailPr
           }}
           items={AllTabs}
         />
-        {currentTab === '1' && <Quotation />}
-        {currentTab === '2' && <DocumentFlow />} {currentTab === '3' && <CustomerInfo />}{' '}
-        {currentTab === '4' && <SalesmanInfo />}
+        {currentTab === '1' && <Quotation data={data} />}
+        {currentTab === '2' && <DocumentFlow data={data} />}
+        {currentTab === '3' && <CustomerInfo data={data} />}
+        {currentTab === '4' && <SalesmanInfo data={data} />}
       </Card>
     </Col>
   )

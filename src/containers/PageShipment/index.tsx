@@ -9,6 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { PageShipmentProps } from './types'
 import { TableBilling } from './columns'
+import { getShipment } from 'src/api/shipment'
 
 const columns = [
   {
@@ -40,6 +41,7 @@ function showTotal(total: number, range: number[]) {
 export default function PageShipment(props: PageShipmentProps) {
   const table = useTable({
     api: '',
+    funcApi: getShipment,
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })
