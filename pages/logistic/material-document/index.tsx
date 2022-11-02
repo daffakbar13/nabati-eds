@@ -1,10 +1,10 @@
 import React from 'react'
-import PageStockRealTime from 'src/containers/PageStockRealTime'
+import PageMaterialDocument from 'src/containers/PageMaterialDocument'
 
-interface RealTimeProps { }
+interface Props { }
 
-export default function RealTime(props: RealTimeProps) {
+export default function MaterialDocument(props: Props) {
   const { } = props
 
-  return <PageStockRealTime />
+  return <PageMaterialDocument />
 }

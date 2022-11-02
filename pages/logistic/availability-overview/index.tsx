@@ -1,10 +1,10 @@
 import React from 'react'
-import PageStockRealTime from 'src/containers/PageStockRealTime'
+import PageAvailabilityOverview from 'src/containers/PageAvailabilityOverview'
 
-interface RealTimeProps { }
+interface Props { }
 
-export default function RealTime(props: RealTimeProps) {
+export default function AvailabilityOverview(props: Props) {
   const { } = props
 
-  return <PageStockRealTime />
+  return <PageAvailabilityOverview />
 }

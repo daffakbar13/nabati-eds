@@ -1,9 +1,10 @@
 import React from 'react'
+import CreatePage from 'src/containers/PageDeliveryOrder/create'
 
-interface DeliveryOrderCreateProps {}
+interface Props { }
 
-export default function DeliveryOrderCreate(props: DeliveryOrderCreateProps) {
-  const {} = props
+export default function BillingCreate(props: Props) {
+  const { } = props
 
-  return <div>DeliveryOrderCreate</div>
+  return <CreatePage />
 }

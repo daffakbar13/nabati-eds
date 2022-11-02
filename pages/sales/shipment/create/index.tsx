@@ -1,9 +1,10 @@
 import React from 'react'
+import CreatePage from 'src/containers/PageShipment/create'
 
-interface ShipmentCreateProps {}
+interface Props { }
 
-export default function ShipmentCreate(props: ShipmentCreateProps) {
-  const {} = props
+export default function BillingCreate(props: Props) {
+  const { } = props
 
-  return <div>ShipmentCreate</div>
+  return <CreatePage />
 }

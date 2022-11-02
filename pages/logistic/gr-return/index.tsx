@@ -1,10 +1,10 @@
 import React from 'react'
-import PageGoodsReceipt from 'src/containers/PageGoodsReceipt'
+import PageGrReturn from 'src/containers/PageGrReturn'
 
-interface RealTimeProps { }
+interface Props { }
 
-export default function GrReturn(props: RealTimeProps) {
+export default function GrReturn(props: Props) {
   const { } = props
 
-  return <PageGoodsReceipt />
+  return <PageGrReturn />
 }

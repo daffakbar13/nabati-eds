@@ -1,4 +1,6 @@
 import React from 'react'
+import { useRouter } from 'next/router'
+
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -8,6 +10,7 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getSalesOrder } from 'src/api/sales-order'
+import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PageSalesOrderProps } from './types'
 import { TableSalesOrder } from './columns'
 
@@ -18,6 +21,14 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageSalesOrder(props: PageSalesOrderProps) {
+    const [filters, setFilters] = useSmartFilters([
+        FILTER.SALES_ORG,
+        FILTER.BRANCH,
+        FILTER.SOLD_TO_CUSTOMER,
+        FILTER.SHIP_TO_CUSTOMER,
+        FILTER.ORDER_TYPE,
+        FILTER.ORDER_DATE])
+
     const table = useTable({
         api: '',
         funcApi: getSalesOrder,
@@ -25,6 +36,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         columns: TableSalesOrder,
     })
     const titlePage = useTitlePage('list')
+    const router = useRouter()
 
     const content = (
         <>
@@ -63,20 +75,23 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         <Col>
             <Text variant={'h4'}>{titlePage}</Text>
             <Spacer size={20} />
-            <Card>
+            <Card style={{ overflow: 'unset' }}>
                 <Row justifyContent="space-between">
-                    <Search
-                        width="380px"
-                        nameIcon="SearchOutlined"
-                        placeholder="Search Menu Design Name"
-                        colorIcon={colors.grey.regular}
-                        onChange={() => { }}
-                    />
+                    <Row gap="16px">
+                        <Search
+                            width="380px"
+                            nameIcon="SearchOutlined"
+                            placeholder="Search Menu Design Name"
+                            colorIcon={colors.grey.regular}
+                            onChange={() => { }}
+                        />
+                        <SmartFilter onOk={setFilters} filters={filters} />
+                    </Row>
                     <Row gap="16px">
                         <Button size="big" variant="secondary" onClick={() => { }}>
                             Download
                         </Button>
-                        <Button size="big" variant="primary" onClick={() => { }}>
+                        <Button size="big" variant="primary" onClick={() => router.push(`${router.pathname}/create`)}>
                             Create
                         </Button>
                     </Row>

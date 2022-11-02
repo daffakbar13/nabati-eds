@@ -63,7 +63,7 @@ export const menuLogistic = [
                 key: 'wh-stock-mutation',
                 title: 'WH Stock Mutation',
                 content: () => 'WH Stock Mutation',
-                onClick: () => Router.push(`${PATH.LOGISTIC}/wh-stock-mutation`),
+                onClick: () => Router.push(`${PATH.LOGISTIC}/warehouse-stock-mutation`),
             },
         ],
     },
@@ -116,10 +116,10 @@ export const menuLogistic = [
                 onClick: () => Router.push(`${PATH.LOGISTIC}/good-issue`),
             },
             {
-                key: 'goods-receipt',
+                key: 'good-receipt-intra-branch',
                 title: 'Goods Receipt',
                 content: () => 'Goods Receipt',
-                onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt`),
+                onClick: () => Router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch`),
             },
             {
                 key: 'sync-gr-from-sap',

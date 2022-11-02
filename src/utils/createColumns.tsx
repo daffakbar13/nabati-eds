@@ -18,3 +18,12 @@ export default function CreateColumns(
     render,
   }
 }
+
+export function dataIndexWithSorter(
+  dataIndex: string,
+) {
+  return {
+    dataIndex,
+    sorter: { compare: (a: any, b: any) => a[dataIndex] - b[dataIndex] },
+  }
+}
