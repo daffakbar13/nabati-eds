@@ -1,35 +1,13 @@
 import React from 'react'
-import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
+import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Table, Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
+import { Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { PageUndeliveredProps } from './types'
 import { TableBilling } from './columns'
-
-const columns = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    render: (text: string) => <a>{text}</a>,
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-  },
-  {
-    title: 'Action',
-    dataIndex: 'key',
-    render: (text: string) => <a>{text}</a>,
-  },
-]
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -37,7 +15,7 @@ function showTotal(total: number, range: number[]) {
   return <p>{text}</p>
 }
 
-export default function PageUndelivered(props: PageUndeliveredProps) {
+export default function PageUndelivered() {
   const table = useTable({
     api: '',
     haveCheckbox: { headCell: 'status', member: ['new'] },
@@ -54,7 +32,7 @@ export default function PageUndelivered(props: PageUndeliveredProps) {
             onChange={(event) => {
               table.handleHideShowColumns(event.target, title)
             }}
-          />{' '}
+          />
           {title}
         </div>
       ))}

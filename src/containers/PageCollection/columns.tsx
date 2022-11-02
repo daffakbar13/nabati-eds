@@ -13,30 +13,14 @@ function Action({ link }: { link: string }) {
   )
 }
 
-// export const TableBilling = CreateColumns([
-//   ['Billing Number', 'shipment_id'],
-//   ['Order Type', 'vehicle_id'],
-//   ['Order Date', 'driver_name'],
-//   ['Sales Org.', 'created_date'],
-//   ['Branch', 'total_do'],
-//   ['Ship To Customer', 'sales_org_name'],
-//   ['Shipment Number', 'branch_name'],
-//   ['Salesman', 'branch_type'],
-//   ['Total Amount', 'branch_type'],
-//   ['Status', 'status'],
-//   ['Action', 'key', (text:string) => <Action text={text} />],
-// ])
-
 export const TableBilling = [
-  CreateColumns('Billing Number', 'shipment_id', true),
-  CreateColumns('Order Type', 'vehicle_id'),
-  CreateColumns('Order Date', 'driver_name'),
-  CreateColumns('Sales Org.', 'created_date'),
-  CreateColumns('Branch', 'total_do'),
-  CreateColumns('Ship To Customer', 'sales_org_name'),
-  CreateColumns('Shipment Number', 'branch_name'),
-  CreateColumns('Salesman', 'branch_type'),
-  CreateColumns('Total Amount', 'branch_type'),
+  CreateColumns('Shipment', 'shipment_id', true),
+  CreateColumns('Vehicle Number', 'vehicle_id'),
+  CreateColumns('Driver', 'driver_name'),
+  CreateColumns('Created Date', 'created_date'),
+  CreateColumns('Total DO', 'total_do'),
+  CreateColumns('Sales Org.', 'sales_org_name'),
+  CreateColumns('Branch', 'branch_name'),
   CreateColumns('Status', 'status'),
   CreateColumns('Action', 'shipment_id', false, (link: string) => <Action link={link} />),
 ]

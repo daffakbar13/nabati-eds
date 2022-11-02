@@ -13,30 +13,19 @@ function Action({ link }: { link: string }) {
   )
 }
 
-// export const TableBilling = CreateColumns([
-//   ['Billing Number', 'shipment_id'],
-//   ['Order Type', 'vehicle_id'],
-//   ['Order Date', 'driver_name'],
-//   ['Sales Org.', 'created_date'],
-//   ['Branch', 'total_do'],
-//   ['Ship To Customer', 'sales_org_name'],
-//   ['Shipment Number', 'branch_name'],
-//   ['Salesman', 'branch_type'],
-//   ['Total Amount', 'branch_type'],
-//   ['Status', 'status'],
-//   ['Action', 'key', (text:string) => <Action text={text} />],
-// ])
-
 export const TableBilling = [
-  CreateColumns('Billing Number', 'shipment_id', true),
+  CreateColumns('Sales Order', 'shipment_id', true),
   CreateColumns('Order Type', 'vehicle_id'),
   CreateColumns('Order Date', 'driver_name'),
+  CreateColumns('Delivery Date', 'driver_name'),
   CreateColumns('Sales Org.', 'created_date'),
   CreateColumns('Branch', 'total_do'),
+  CreateColumns('Sold To Customer', 'sales_org_name'),
   CreateColumns('Ship To Customer', 'sales_org_name'),
-  CreateColumns('Shipment Number', 'branch_name'),
   CreateColumns('Salesman', 'branch_type'),
   CreateColumns('Total Amount', 'branch_type'),
   CreateColumns('Status', 'status'),
+  CreateColumns('Block Status', 'status'),
+  CreateColumns('Status Approval', 'status'),
   CreateColumns('Action', 'shipment_id', false, (link: string) => <Action link={link} />),
 ]
