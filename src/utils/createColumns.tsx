@@ -7,7 +7,7 @@ export default function CreateColumns(
   title: string | React.ReactNode,
   dataIndex: string,
   sorter?: boolean,
-  render?: (text: string) => React.ReactNode,
+  render?: (text: string, record?: any) => React.ReactNode,
   // type: TableType,
   // data:DataTableList[],
 ) {
@@ -19,9 +19,7 @@ export default function CreateColumns(
   }
 }
 
-export function dataIndexWithSorter(
-  dataIndex: string,
-) {
+export function dataIndexWithSorter(dataIndex: string) {
   return {
     dataIndex,
     sorter: { compare: (a: any, b: any) => a[dataIndex] - b[dataIndex] },

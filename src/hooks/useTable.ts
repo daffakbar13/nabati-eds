@@ -7,16 +7,19 @@ interface haveCheckBox {
 }
 
 interface useTableProps {
-  api: string
-  funcApi?: (a: CommonListParams) => Promise<any>
-  bodyApi?: any
+  funcApi?: (body: any) => Promise<any>
   haveCheckbox?: haveCheckBox | 'All'
   columns: any[]
 }
 
 export default function useTable(props: useTableProps) {
-  const { api, bodyApi, haveCheckbox, funcApi } = props
+  const { haveCheckbox, funcApi } = props
   const [data, setData] = React.useState([])
+  const [body, setBody] = React.useState({
+    filters: [],
+    limit: 20,
+    page: 1,
+  })
   const [total, setTotal] = React.useState(0)
   const [columns, setColumns] = React.useState(props.columns)
   const [rowSelection, setRowSelection] = React.useState({})
@@ -42,6 +45,10 @@ export default function useTable(props: useTableProps) {
     setHiddenColumns([])
   }
 
+  const handlePagination = (page: number) => {
+    setBody((current) => ({ ...current, page }))
+  }
+
   const defineRowSelection = {
     onChange: (selectedRowKeys) => {
       setSelected(selectedRowKeys)
@@ -64,14 +71,20 @@ export default function useTable(props: useTableProps) {
     }
     async function getApi() {
       if (funcApi) {
-        funcApi(bodyApi)
-          .then((response) => updateData(response.data.result))
+        funcApi(body)
+          .then((response) => {
+            updateData(response.data.results)
+            setTotal(response.data.total_rows)
+          })
           .catch((_) => updateData([]))
       }
     }
 
     getApi()
-  }, [])
+  }, [body])
+
+  console.log(data);
+
 
   React.useEffect(() => {
     setColumns(props.columns.filter((e) => !hiddenColumns.includes(e.title)))
@@ -88,5 +101,6 @@ export default function useTable(props: useTableProps) {
     handleHideShowColumns,
     columns,
     handleResetHideShowColumns,
+    handlePagination
   }
 }

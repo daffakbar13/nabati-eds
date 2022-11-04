@@ -1,31 +1,68 @@
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
+import { Button } from 'pink-lava-ui'
+import { PATH } from 'src/configs/menus';
+import React from 'react';
 
-function Action({ link }: { link: string }) {
+function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    router.push(`/billing/detail/${link}`)
+    status === 'Draft'
+      ? router.push(`${PATH.SALES}/delivery-order/edit/${link}`)
+      : router.push(`${PATH.SALES}/delivery-order/detail/${link}?status=${status}`)
   }
+  const [hover, setHover] = React.useState(false)
+
   return (
-    <h4 onClick={navigate} style={{ cursor: 'pointer' }}>
-      View Detail
-    </h4>
+    <>
+      {type === 'id' ? (
+        <div
+          onClick={navigate}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
+          style={{
+            cursor: 'pointer',
+            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
+          }}
+        >
+          {link}
+        </div>
+      ) : (
+        <Button size="big" variant="tertiary" onClick={navigate}>
+          View Detail
+        </Button>
+      )}
+    </>
   )
 }
 
 export const TableDeliveryOrder = [
-  CreateColumns('Delivery Order ', 'shipment_id', true),
-  CreateColumns('Order Type', 'vehicle_id', true),
-  CreateColumns('Order Date', 'driver_name', true),
-  CreateColumns('Sales Org.', 'created_date', true),
-  CreateColumns('Branch', 'total_do', true),
-  CreateColumns('Sold To Customer', 'sales_org_name', true),
-  CreateColumns('Ship To Customer', 'asd', true),
-  CreateColumns('Salesman', 'qweqwe', true),
-  CreateColumns('Total Amount', 'qwe', true),
-  CreateColumns('Create From', 'zxc', true),
-  CreateColumns('Availibility', 'asdasd', true),
-  CreateColumns('Status', 'status', true),
-  CreateColumns('Status Process', 'dfg', true),
-  CreateColumns('Action', 'cvb', false, (link: string) => <Action link={link} />),
+  CreateColumns(
+    'Delivery Order ',
+    'delivery_order_id',
+    true,
+    (link, record) => <Linked link={link} type='id' status={record.status_name} />
+  ),
+  CreateColumns('Order Type', 'order_type_id', true),
+  CreateColumns('Order Date', 'order_date', true),
+  CreateColumns('Sales Org.', 'sales_org_id', true),
+  CreateColumns('Branch', 'branch_id', true),
+  CreateColumns('Sold To Customer', 'sold_to_customer', true),
+  CreateColumns('Ship To Customer', 'ship_to_customer', true),
+  CreateColumns('Salesman', 'salesman_id', true),
+  CreateColumns('Total Amount', 'total_amount', true),
+  CreateColumns('Create From', 'create_from', true),
+  CreateColumns('Availibility', 'availablity', true),
+  CreateColumns('Status', 'status_name', true),
+  CreateColumns('Status Process', 'status_process', true),
+  CreateColumns(
+    'Action',
+    'delivery_order_id',
+    false,
+    (link, record) => <Linked link={link} type='action' status={record.status_name} />
+  ),
 ]

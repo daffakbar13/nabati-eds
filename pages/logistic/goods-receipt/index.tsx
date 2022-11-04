@@ -1,10 +1,10 @@
 import React from 'react'
 import PageGoodsReceipt from 'src/containers/PageGoodsReceipt'
 
-interface RealTimeProps { }
+interface RealTimeProps {}
 
 export default function GoodReceipt(props: RealTimeProps) {
-  const { } = props
+  const {} = props
 
   return <PageGoodsReceipt />
 }

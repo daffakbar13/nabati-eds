@@ -1,10 +1,10 @@
 import React from 'react'
 import PageStockRealTime from 'src/containers/PageStockRealTime'
 
-interface RealTimeProps { }
+interface RealTimeProps {}
 
 export default function RealTime(props: RealTimeProps) {
-  const { } = props
+  const {} = props
 
   return <PageStockRealTime />
 }

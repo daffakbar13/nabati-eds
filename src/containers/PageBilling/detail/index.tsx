@@ -3,6 +3,10 @@ import { Button as ButtonPinkLava, Col, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Button, Tabs } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
+import { useRouter } from 'next/router'
+import { useDetail } from 'src/hooks'
+import { getDetailBilling } from 'src/api/billing'
+import axios from 'axios'
 import { PageBillingDetailProps } from './types'
 import AllTabs from './tabs'
 import DocumentFlow from './tabs/DocumentFlow'
@@ -10,10 +14,6 @@ import CustomerInfo from './tabs/CustomerInfo'
 import SalesmanInfo from './tabs/SalesmanInfo'
 import Billing from './tabs/Billing'
 import PricingCondition from './tabs/PricingCondition'
-import { useRouter } from 'next/router'
-import { useDetail } from 'src/hooks'
-import { getDetailBilling } from 'src/api/billing'
-import axios from 'axios'
 
 export default function PageBillingDetail(props: PageBillingDetailProps) {
   const titlePage = useTitlePage('detail')
@@ -22,9 +22,10 @@ export default function PageBillingDetail(props: PageBillingDetailProps) {
   const data = useDetail('', getDetailBilling, { id: router.query.id as string })
 
   React.useEffect(() => {
-    axios.post('https://dist-system.nabatisnack.co.id:3001/v1/billing/list', { id: router.query.id })
-      .then(res => console.log(res))
-      .then(e => console.log('asd'))
+    axios
+      .post('https://dist-system.nabatisnack.co.id:3001/v1/billing/list', { id: router.query.id })
+      .then((res) => console.log(res))
+      .then((e) => console.log('asd'))
   }, [])
 
   return (

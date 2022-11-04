@@ -32,13 +32,13 @@ export default function CreateSalesOrder() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button size="big" variant="tertiary" onClick={() => { }}>
+            <Button size="big" variant="tertiary" onClick={() => {}}>
               Cancel
             </Button>
-            <Button size="big" variant="secondary" onClick={() => { }}>
+            <Button size="big" variant="secondary" onClick={() => {}}>
               Save As Draft
             </Button>
-            <Button size="big" variant="primary" onClick={() => { }}>
+            <Button size="big" variant="primary" onClick={() => {}}>
               Submit
             </Button>
           </Row>
@@ -47,35 +47,35 @@ export default function CreateSalesOrder() {
       <Spacer size={10} />
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect label="Order Type" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Order Type" fetchOptions={fakeApi} onChange={() => {}} />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={() => {}}
             label="GI Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Customer" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Customer" fetchOptions={fakeApi} onChange={() => {}} />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={() => {}}
             label="Document Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Sales Organization" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Sales Organization" fetchOptions={fakeApi} onChange={() => {}} />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={() => {}}
             label="Delivery Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Branch" fetchOptions={fakeApi} onChange={() => { }} />
-          <DebounceSelect label="Reference" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Branch" fetchOptions={fakeApi} onChange={() => {}} />
+          <DebounceSelect label="Reference" fetchOptions={fakeApi} onChange={() => {}} />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <TableEditable data={data} setData={setData} columns={columns()} />

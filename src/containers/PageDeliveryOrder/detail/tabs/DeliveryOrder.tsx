@@ -13,27 +13,27 @@ interface DeliveryOrderProps {
 const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function DeliveryOrder(props: DeliveryOrderProps) {
-  const {} = props
-  const table = useTable({ api: '', columns: TableDeliveryOrder })
+  const { data } = props
+  // const table = useTable({ api: '', columns: TableDeliveryOrder })
   const dataList = [
-    createDataList('Sales Order', 'ZOP1'),
-    createDataList('Customer', 'ZOP1'),
-    createDataList('Sales Org.', 'ZOP1'),
-    createDataList('Plant', 'ZOP1'),
-    createDataList('Salesman', 'ZOP1'),
-    createDataList('Doc. Date', 'ZOP1'),
-    createDataList('Delivery Date', 'ZOP1'),
-    createDataList('Quotation', 'ZOP1'),
-    createDataList('Reference', 'ZOP1'),
-    createDataList('Created On', 'ZOP1'),
-    createDataList('Created By', 'ZOP1'),
-    createDataList('Modified On', 'ZOP1'),
-    createDataList('Modified By', 'ZOP1'),
+    createDataList('Order Type', data.order_type),
+    createDataList('Customer', data.customer),
+    createDataList('Sales Org.', data.sales_org),
+    // FIXME Plant
+    createDataList('Plant', data.plant),
+    createDataList('Salesman', data.salesman),
+    createDataList('Doc. Date', data.document_date),
+    createDataList('Delivery Date', data.delivery_date),
+    createDataList('Quotation', data.quotation_id),
+    createDataList('Reference', data.reference),
+    createDataList('Created On', data.created_at),
+    createDataList('Created By', data.created_by),
+    createDataList('Modified On', data.modified_at),
+    createDataList('Modified By', data.modified_by),
   ]
 
   return (
     <>
-
       <Row gutter={8}>
         <Col span={8}>
           {dataList.slice(0, 5).map(({ label, value }, i) => (
@@ -53,7 +53,7 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={table.columns} dataSource={[]} />
+        <Table columns={TableDeliveryOrder} dataSource={data.items} />
       </div>
       <Spacer size={30} />
       <Row>

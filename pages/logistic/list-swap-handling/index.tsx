@@ -1,10 +1,10 @@
 import React from 'react'
 import PageListSwapHandling from 'src/containers/PageListSwapHandling'
 
-interface Props { }
+interface Props {}
 
 export default function ListSwapHandling(props: Props) {
-  const { } = props
+  const {} = props
 
   return <PageListSwapHandling />
 }

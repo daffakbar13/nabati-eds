@@ -9,16 +9,25 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { PageDeliveryOrderProps } from './types'
-import { TableDeliveryOrder } from './columns'
 import { getDeliveryOrderList } from 'src/api/delivery-order'
 import axios from 'axios'
+import { PageDeliveryOrderProps } from './types'
+import { TableDeliveryOrder } from './columns'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
   const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
   return <p>{text}</p>
 }
+
+const api = (data: any) => axios
+  .post('https://dist-system.nabatisnack.co.id:3001/v1/delivery-orders/list', data, {
+    headers: {
+      Authorization:
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgwNTY2ODMsImlzcyI6InNhbGVzLWVkcy1hcGkiLCJ1c2VyX2lkIjoiMSIsImVtYWlsIjoicmV5Z2FfdmlyZ2lhd2FuQG5hYmF0aXNuYWNrLmNvLmlkIiwiY29tcGFueV9pZCI6IlBQMDEifQ.nRSrclvhE2YmHZyI9bNn5wgWgBW0-cobM8f6Bx8yXos',
+    },
+  })
+  .then((result) => result.data)
 
 export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   const [filters, setFilters] = useSmartFilters([
@@ -27,27 +36,18 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
     FILTER.SOLD_TO_CUSTOMER,
     FILTER.SHIP_TO_CUSTOMER,
     FILTER.ORDER_TYPE,
-    FILTER.ORDER_DATE])
+    FILTER.ORDER_DATE,
+  ])
 
   const table = useTable({
-    api: 'https://dist-system.nabatisnack.co.id:3001/v1/delivery-orders/list',
     funcApi: getDeliveryOrderList,
-    bodyApi: {
-      "filters": [],
-      "limit": 10,
-      "page": 1
-    },
-    haveCheckbox: { headCell: 'status', member: ['new'] },
+    haveCheckbox: { headCell: 'status_name', member: ['New', 'Draft'] },
     columns: TableDeliveryOrder,
   })
   const titlePage = useTitlePage('list')
   const router = useRouter()
 
-  React.useEffect(() => {
-    axios.post('https://dist-system.nabatisnack.co.id:3001/v1/delivery-orders/list')
-      .then(res => console.log(res))
-      .catch(err => console.log('err'))
-  }, [])
+  const hasData = table.total > 0
 
   const content = (
     <>
@@ -98,7 +98,11 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
             <Button size="big" variant="secondary" onClick={() => { }}>
               Download
             </Button>
-            <Button size="big" variant="primary" onClick={() => router.push(`${router.pathname}/create`)}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => router.push(`${router.pathname}/create`)}
+            >
               Create
             </Button>
           </Row>
@@ -113,20 +117,22 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
             data={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}
-            rowKey={'id'}
-            pagination={false}
-            onChange={(_, __, sorter) => console.log(sorter)}
+            rowKey={'delivery_order_id'}
+            // pagination={false}
+            // onChange={(_, __, sorter) => console.log(sorter)}
           />
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.data.length}
+          {hasData &&
+            <Pagination
+              defaultPageSize={20}
+              pageSizeOptions={[20, 50, 100]}
+              showLessItems
+              showSizeChanger
+              showQuickJumper
+              responsive
+            total={table.total}
             showTotal={showTotal}
           />
+          }
         </div>
       </Card>
     </Col>

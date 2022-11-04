@@ -1,10 +1,10 @@
 import React from 'react'
 import PageIntraBranchApproval from 'src/containers/PageIntraBranchApproval'
 
-interface Props { }
+interface Props {}
 
 export default function Approval(props: Props) {
-  const { } = props
+  const {} = props
 
   return <PageIntraBranchApproval />
 }

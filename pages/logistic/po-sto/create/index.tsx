@@ -1,10 +1,10 @@
 import React from 'react'
 import CreatePage from 'src/containers/PagePoSto/create'
 
-interface CreateProps { }
+interface CreateProps {}
 
 export default function PoStoCreate(props: CreateProps) {
-  const { } = props
+  const {} = props
 
   return <CreatePage />
 }

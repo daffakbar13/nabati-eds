@@ -1,1 +1,1 @@
-export interface PageGoodReceiptProps { }
+export interface PageGoodReceiptProps {}

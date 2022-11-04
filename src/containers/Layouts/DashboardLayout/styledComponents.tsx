@@ -8,7 +8,7 @@ export const WrapeprProfile = styled.div`
   padding-bottom: 1rem;
   margin-bottom: 1rem;
   cursor: pointer;
-`;
+`
 
 export const WrapperMenuLogout = styled.div`
   width: 200px;
@@ -17,7 +17,7 @@ export const WrapperMenuLogout = styled.div`
   box-shadow: 0px 4px 16px rgba(170, 170, 170, 0.15);
   border-radius: 16px;
   padding: 20px;
-`;
+`
 
 export const MenuDropdown = styled.div`
   border: 1.5px solid #aaaaaa;
@@ -29,14 +29,14 @@ export const MenuDropdown = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-`;
+`
 
 export const TextName = styled.p`
   margin: 0;
   font-size: '16px';
   font-weight: 600;
   color: #000000;
-`;
+`
 
 export const TextRole = styled.p`
   font-style: normal;
@@ -45,7 +45,7 @@ export const TextRole = styled.p`
   line-height: 24px;
   margin: 0;
   color: #666666;
-`;
+`
 
 export const LanguageOption = styled.div`
   top: 1rem;
@@ -57,4 +57,4 @@ export const LanguageOption = styled.div`
   box-shadow: 0px 4px 16px rgba(170, 170, 170, 0.15);
   border-radius: 16px;
   padding: 20px;
-`;
+`

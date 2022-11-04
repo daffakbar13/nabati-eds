@@ -12,6 +12,7 @@ import { getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 
+import axios from 'axios'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
@@ -24,30 +25,34 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageQuotation(props: PageQuotationProps) {
-    const [data, setData] = useState(null)
     const [filters, setFilters] = useSmartFilters([
         FILTER.SALES_ORG,
         FILTER.BRANCH,
         FILTER.SOLD_TO_CUSTOMER,
         FILTER.SHIP_TO_CUSTOMER,
         FILTER.ORDER_TYPE,
-        FILTER.ORDER_DATE])
+        FILTER.ORDER_DATE,
+    ])
 
     const table = useTable({
-        api: 'https://dist-system.nabatisnack.co.id:3001/v1/quotations/list',
-        bodyApi: {
-            filters: [],
-            limit: 5,
-            page: 1,
-        },
         funcApi: getQuotation,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
         columns: TableQuotation,
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
-    const hasNoData = table.data.length === 0
+    const hasNoData = table.total === 0
     const router = useRouter()
+
+    console.log(table.data);
+
+
+    // table.data.push(
+    //     ...[
+    //         { id: '1041000000061', status_name: 'Draft' },
+    //         { id: '1041000000062', status_name: 'Completed' },
+    //     ],
+    // )
 
     const content = (
         <>
@@ -80,29 +85,6 @@ export default function PageQuotation(props: PageQuotationProps) {
         </Popover>
     )
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         // const res2 = await getCompany({ page: 1 })
-    //         // console.log('company', res2)
-
-    //         await fetch('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list', { method: 'POST' })
-    //             .then((res) => res.json())
-    //             .then((dt) => console.log(dt))
-
-    //         axios
-    //             .post('https://dist-system.nabatisnack.co.id:3001/v1/quotations/list')
-    //             // .then((res) => res.json())
-    //             .then((dt) => console.log(dt))
-
-    //         const res = await getQuotation()
-    //         console.log('res', res)
-    //         setData(res.data)
-    //     }
-    //     fetchData()
-    // }, [])
-
-    console.log('data', data)
-
     return (
         <Col>
             <Text variant={'h4'}>{titlePage}</Text>
@@ -123,7 +105,11 @@ export default function PageQuotation(props: PageQuotationProps) {
                         <Button size="big" variant="secondary" onClick={() => { }}>
                             Download
                         </Button>
-                        <Button size="big" variant="primary" onClick={() => router.push(`${router.pathname}/create`)}>
+                        <Button
+                            size="big"
+                            variant="primary"
+                            onClick={() => router.push(`${router.pathname}/create`)}
+                        >
                             Create
                         </Button>
                     </Row>
@@ -131,32 +117,31 @@ export default function PageQuotation(props: PageQuotationProps) {
             </Card>
             <Spacer size={10} />
             <Card style={{ padding: '16px 20px' }}>
-                <div style={{ display: 'flex', overflow: 'scroll' }}>
-                    <Table
-                        // sticky
-                        // loading={table.loading}
-                        columns={[...table.columns, { title: <HideShowColumns /> }]}
-                        data={table.data}
-                        showSorterTooltip={false}
-                        rowSelection={table.rowSelection}
-                        rowKey={'id'}
-                    // pagination={false}
-                    // onChange={(_, __, sorter) => console.log(sorter)}
-                    // style={{ overflow: 'scroll' }}
-                    />
-                </div>
-                {!hasNoData &&
-                <Pagination
-                    defaultPageSize={20}
-                    pageSizeOptions={[20, 50, 100]}
-                    showLessItems
-                    showSizeChanger
-                    showQuickJumper
-                    responsive
-                    total={table.data.length}
-                    showTotal={showTotal}
+                <Table
+                    // sticky
+                    // loading={table.loading}
+                    columns={[...table.columns, { title: <HideShowColumns /> }]}
+                    data={table.data}
+                    showSorterTooltip={false}
+                    rowSelection={table.rowSelection}
+                    rowKey={'id'}
+                // pagination={false}
+                // onChange={(_, __, sorter) => console.log(sorter)}
+                // style={{ overflow: 'scroll' }}
                 />
-                }
+                {!hasNoData && (
+                    <Pagination
+                        defaultPageSize={20}
+                        pageSizeOptions={[20, 50, 100]}
+                        showLessItems
+                        showSizeChanger
+                        showQuickJumper
+                        responsive
+                        total={table.total}
+                        showTotal={showTotal}
+                        onChange={(page) => { table.handlePagination(page) }}
+                    />
+                )}
                 {table.selected.length > 0 && (
                     <FloatAction>
                         <div

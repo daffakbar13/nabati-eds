@@ -59,9 +59,8 @@ export const columns = [
     ...dataIndexWithSorter('branch_id'),
     width: '200px',
     render: (text: any, record: any) => (
-      <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
-        {text}
-      </div>),
+      <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>{text}</div>
+    ),
   },
   {
     title: 'Unit of Entry',
@@ -91,5 +90,4 @@ export const columns = [
     title: 'Item Autometically Created',
     ...dataIndexWithSorter('branch_id'),
   },
-
 ]

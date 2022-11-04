@@ -11,8 +11,11 @@ export default function useDetail(
   React.useEffect(() => {
     async function getApi() {
       funcApi(params)
-        .then((results) => setData(results.data.result))
-        .catch((_) => setData({}))
+        .then((results) => setData(results.data))
+        .catch((err) => {
+          console.log(err);
+          setData({})
+        })
     }
     getApi()
   }, [])

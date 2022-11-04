@@ -1,7 +1,5 @@
 import React from 'react'
 
 export default function useSmartFilter() {
-    return (
-        <div>useSmartFilter</div>
-    )
+  return <div>useSmartFilter</div>
 }

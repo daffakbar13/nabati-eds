@@ -1,1 +1,1 @@
-export interface PageRealTimeProps { }
+export interface PageRealTimeProps {}

@@ -1,10 +1,10 @@
 import React from 'react'
 import PageAvailabilityOverview from 'src/containers/PageAvailabilityOverview'
 
-interface Props { }
+interface Props {}
 
 export default function AvailabilityOverview(props: Props) {
-  const { } = props
+  const {} = props
 
   return <PageAvailabilityOverview />
 }

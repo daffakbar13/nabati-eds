@@ -1,10 +1,10 @@
 import React from 'react'
 import PageMaterialInTransit from 'src/containers/PageMaterialInTransit'
 
-interface RealTimeProps { }
+interface RealTimeProps {}
 
 export default function MaterialInTransit(props: RealTimeProps) {
-  const { } = props
+  const {} = props
 
   return <PageMaterialInTransit />
 }

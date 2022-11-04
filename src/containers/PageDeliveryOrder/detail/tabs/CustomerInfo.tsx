@@ -13,12 +13,12 @@ const CreateDataList = (label: string, value: string) => ({ label, value })
 
 export default function CustomerInfo(props: CustomerInfoProps) {
   const { data } = props
-  const table = useTable({ api: '', columns: TableCustomerInfo })
+  // const table = useTable({ api: '', columns: TableCustomerInfo })
 
   const customerInformation = [
-    CreateDataList('Name', data.customer.name),
+    CreateDataList('Name', data.order_type),
     // FIXME Active Customer
-    CreateDataList('Active Customer', data.customer.active),
+    CreateDataList('Active Customer', data.active),
     // FIXME Short Name
     CreateDataList('Short Name', data.customer.short_name),
     // FIXME KTP
@@ -29,7 +29,7 @@ export default function CustomerInfo(props: CustomerInfoProps) {
   ]
 
   const customerGroupInformation = [
-    CreateDataList('Customer Group', data.customer_group.name),
+    CreateDataList('Customer Group', data.customer_group?.name),
     CreateDataList('Customer Group 1', data.customer_group_1?.name),
     CreateDataList('Customer Group 2', data.customer_group_2?.name),
     CreateDataList('Customer Group 3', data.customer_group_3?.name),
@@ -100,7 +100,7 @@ export default function CustomerInfo(props: CustomerInfoProps) {
           <Divider />
         </>
       ))}
-      <Table dataSource={[]} columns={table.columns} />
+      <Table dataSource={data.items} columns={TableCustomerInfo} />
     </>
   )
 }

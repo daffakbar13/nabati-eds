@@ -18,7 +18,7 @@ export const getSalesOrder = async (
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${url}/list`,
-    // data: params,
+    data: params,
   })
   return response.data
 }

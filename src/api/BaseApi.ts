@@ -28,32 +28,33 @@ export function call({
   options,
   overrideBaseUrl,
 }: CallOptions): AxiosPromise {
-  const token = auth.getToken()
+  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgwNTY2ODMsImlzcyI6InNhbGVzLWVkcy1hcGkiLCJ1c2VyX2lkIjoiMSIsImVtYWlsIjoicmV5Z2FfdmlyZ2lhd2FuQG5hYmF0aXNuYWNrLmNvLmlkIiwiY29tcGFueV9pZCI6IlBQMDEifQ.nRSrclvhE2YmHZyI9bNn5wgWgBW0-cobM8f6Bx8yXos'
   const config: AxiosRequestConfig = {
     ...options,
     baseURL: overrideBaseUrl || API_BASE_URL_1,
     // withCredentials: true,
     method,
     url: subUrl,
-    // headers: {
-    //   ...(options && options.headers ? options.headers : {}),
-    //   'Content-Type': 'application/json',
-    //   Authorization: `Bearer ${token}`,
-    // },
+    headers: {
+      ...(options && options.headers ? options.headers : {}),
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    data,
   }
-  const payload = { ...data }
-  if (method === METHODS.GET) {
-    if (!isObjectEmpty(payload)) {
-      Object.keys(payload).forEach((key) => {
-        if (payload[key] === null || payload[key] === '') {
-          delete payload[key]
-        }
-      })
-      config.params = toSnakeCase(payload)
-    }
-  } else if (!isObjectEmpty(payload)) {
-    config.data = toSnakeCase(payload)
-  }
+  // const payload = { ...data }
+  // if (method === METHODS.GET) {
+  //   if (!isObjectEmpty(payload)) {
+  //     Object.keys(payload).forEach((key) => {
+  //       if (payload[key] === null || payload[key] === '') {
+  //         delete payload[key]
+  //       }
+  //     })
+  //     config.params = toSnakeCase(payload)
+  //   }
+  // } else if (!isObjectEmpty(payload)) {
+  //   config.data = toSnakeCase(payload)
+  // }
 
   console.log('config', config)
   return instance.request(config)

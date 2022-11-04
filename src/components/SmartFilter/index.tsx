@@ -5,12 +5,12 @@ import { ICFilter } from 'src/assets'
 import SingleFilter from './SingleFilter'
 
 interface FILTER_TYPE {
-  SALES_ORG?: 'sales_org',
-  BRANCH?: 'branch',
-  SOLD_TO_CUSTOMER?: 'sold_to_customer',
-  SHIP_TO_CUSTOMER?: 'ship_to_customer',
-  ORDER_TYPE?: 'order_type',
-  ORDER_DATE?: 'order_date',
+  SALES_ORG?: 'sales_org'
+  BRANCH?: 'branch'
+  SOLD_TO_CUSTOMER?: 'sold_to_customer'
+  SHIP_TO_CUSTOMER?: 'ship_to_customer'
+  ORDER_TYPE?: 'order_type'
+  ORDER_DATE?: 'order_date'
 }
 export const FILTER: FILTER_TYPE = {
   SALES_ORG: 'sales_org',
@@ -104,18 +104,20 @@ function SmartFilter({ filters, onOk }) {
     setShowFilter(false)
   }
 
-  const content = <div style={{ paddingBottom: 20 }}>
-    {currentValue.map((opt: FilterOption) => (
-      <SingleFilter key={opt.fields} option={opt} onChange={onChangeOption} />
-    ))}
+  const content = (
+    <div style={{ paddingBottom: 20 }}>
+      {currentValue.map((opt: FilterOption) => (
+        <SingleFilter key={opt.fields} option={opt} onChange={onChangeOption} />
+      ))}
 
-    <Row gap="16px" reverse>
-      <Button onClick={handleApply}>Apply</Button>
-      <Button variant="tertiary" onClick={clearAllValue}>
-        Clear All
-      </Button>
-    </Row>
-  </div>
+      <Row gap="16px" reverse>
+        <Button onClick={handleApply}>Apply</Button>
+        <Button variant="tertiary" onClick={clearAllValue}>
+          Clear All
+        </Button>
+      </Row>
+    </div>
+  )
 
   return (
     <>
@@ -135,7 +137,7 @@ function SmartFilter({ filters, onOk }) {
       </Button>
       <Modal
         visible={showFilter}
-        title='Filter'
+        title="Filter"
         onCancel={close}
         width={880}
         footer={false}

@@ -21,6 +21,10 @@ export const getBilling = async (
 export const getDetailBilling = async (
   params: CommonDetailParams,
 ): Promise<CommonDetailResponse<BillingItem>> => {
-  const response = await call({ method: METHODS.GET, overrideBaseUrl, subUrl: 'v1/billing/' + params.id + '/detail' })
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `v1/billing/${params.id}/detail`,
+  })
   return response.data
 }

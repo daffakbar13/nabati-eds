@@ -9,9 +9,9 @@ import { Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
+import { getBilling } from 'src/api/billing'
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
-import { getBilling } from 'src/api/billing'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -26,7 +26,8 @@ export default function PageBilling(props: PageBillingProps) {
     FILTER.SOLD_TO_CUSTOMER,
     FILTER.SHIP_TO_CUSTOMER,
     FILTER.ORDER_TYPE,
-    FILTER.ORDER_DATE])
+    FILTER.ORDER_DATE,
+  ])
 
   const router = useRouter()
   const table = useTable({
@@ -78,16 +79,19 @@ export default function PageBilling(props: PageBillingProps) {
               nameIcon="SearchOutlined"
               placeholder="Search Menu Design Name"
               colorIcon={colors.grey.regular}
-              onChange={() => { }}
+              onChange={() => {}}
             />
             <SmartFilter onOk={setFilters} filters={filters} />
-
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => { }}>
+            <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
-            <Button size="big" variant="primary" onClick={() => router.push(`${router.pathname}/create`)}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => router.push(`${router.pathname}/create`)}
+            >
               Create
             </Button>
           </Row>
@@ -118,7 +122,6 @@ export default function PageBilling(props: PageBillingProps) {
           />
         </div>
       </Card>
-
     </Col>
   )
 }

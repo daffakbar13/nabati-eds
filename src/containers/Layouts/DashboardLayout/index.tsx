@@ -44,13 +44,13 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
 
   return (
     <Layout style={{ height: '100vh' }}>
-      <Sidebar logo="/icons/logo-nabati.svg" menu={setMenu(currentModulePath)} defaultMenu={'dashboard'} />
+      <Sidebar
+        logo="/icons/logo-nabati.svg"
+        menu={setMenu(currentModulePath)}
+        defaultMenu={'dashboard'}
+      />
       <Layout className="site-layout" style={{ height: '100vh', overflow: 'auto' }}>
-        <Header
-          mode="horizontal"
-          selectedKeys={[current]}
-          items={headerMenu}
-        >
+        <Header mode="horizontal" selectedKeys={[current]} items={headerMenu}>
           <div
             style={{
               display: 'flex',

@@ -1,10 +1,10 @@
 import React from 'react'
 import PageGrReturn from 'src/containers/PageGrReturn'
 
-interface Props { }
+interface Props {}
 
 export default function GrReturn(props: Props) {
-  const { } = props
+  const {} = props
 
   return <PageGrReturn />
 }

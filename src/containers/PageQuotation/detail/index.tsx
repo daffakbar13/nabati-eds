@@ -1,24 +1,24 @@
 import React from 'react'
-import { Button as ButtonPinkLava, Col, Spacer, Text } from 'pink-lava-ui'
+import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
-import { Button, Tabs } from 'antd'
+import { Tabs } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
+import { getDetailQuotation } from 'src/api/quotation'
 import { PageQuotationDetailProps } from './types'
 import AllTabs from './tabs'
 import Quotation from './tabs/Quotation'
 import DocumentFlow from './tabs/DocumentFlow'
 import CustomerInfo from './tabs/CustomerInfo'
 import SalesmanInfo from './tabs/SalesmanInfo'
-import { getDetailQuotation } from 'src/api/quotation'
 
 export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
-  const data = useDetail(``,getDetailQuotation, {id:router.query.id as string})
+  const data = useDetail('', getDetailQuotation, { id: router.query.id as string })
 
   return (
     <Col>
@@ -37,14 +37,20 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
           <ArrowLeftOutlined style={{ fontSize: 25 }} />
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
-        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
-          <Button>asd</Button>
-          <ButtonPinkLava size="big" variant="secondary" onClick={() => {}}>
-            Edit
-          </ButtonPinkLava>
-          <ButtonPinkLava size="big" variant="primary" onClick={() => {}}>
+        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
+          {router.query.status === 'New' && (
+            <>
+              <Button size="big" variant="tertiary">
+                Cancel Process
+              </Button>
+              <Button size="big" variant="secondary" onClick={() => { }}>
+                Edit
+              </Button>
+            </>
+          )}
+          <Button size="big" variant="primary" onClick={() => { }}>
             Order Again
-          </ButtonPinkLava>
+          </Button>
         </div>
       </div>
       <Spacer size={20} />
