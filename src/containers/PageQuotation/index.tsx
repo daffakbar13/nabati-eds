@@ -11,8 +11,6 @@ import FloatAction from 'src/components/FloatAction'
 import { getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-
-import axios from 'axios'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
@@ -44,7 +42,7 @@ export default function PageQuotation(props: PageQuotationProps) {
     const hasNoData = table.total === 0
     const router = useRouter()
 
-    console.log(table.data);
+    console.log(table.data.length);
 
 
     // table.data.push(
@@ -119,7 +117,7 @@ export default function PageQuotation(props: PageQuotationProps) {
             <Card style={{ padding: '16px 20px' }}>
                 <Table
                     // sticky
-                    // loading={table.loading}
+                    loading={table.loading}
                     columns={[...table.columns, { title: <HideShowColumns /> }]}
                     data={table.data}
                     showSorterTooltip={false}
@@ -139,7 +137,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                         responsive
                         total={table.total}
                         showTotal={showTotal}
-                        onChange={(page) => { table.handlePagination(page) }}
+                        onChange={(page, limit) => { table.handlePagination(page, limit) }}
                     />
                 )}
                 {table.selected.length > 0 && (

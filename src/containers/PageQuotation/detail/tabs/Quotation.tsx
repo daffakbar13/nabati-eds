@@ -4,7 +4,8 @@ import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import { Spacer, Table } from 'pink-lava-ui'
 import useDetail from 'src/hooks/useDetail'
-import { TableQuotation } from '../columns'
+import { ColumnsQuotation } from '../columns'
+import dateFormat from 'src/utils/dateFormat'
 
 interface QuotationProps {
   data: any
@@ -14,6 +15,7 @@ const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function Quotation(props: QuotationProps) {
   const { data } = props
+  const format = 'DD MMMM YYYY'
 
   const dataList = [
     createDataList('Quotation', data.id),
@@ -22,14 +24,14 @@ export default function Quotation(props: QuotationProps) {
     createDataList('Plant', data.branch_id),
     createDataList('Salesman', data.salesman_id),
     // FIXME Doc. Date
-    createDataList('Doc. Date', data.doc_date),
-    createDataList('Valid From', data.valid_from),
-    createDataList('Valid To', data.valid_to),
-    createDataList('Delivery Date', data.delivery_date),
+    createDataList('Doc. Date', dateFormat(data.doc_date, format)),
+    createDataList('Valid From', dateFormat(data.valid_from, format)),
+    createDataList('Valid To', dateFormat(data.valid_to, format)),
+    createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
     createDataList('Reference', data.customer_ref),
-    createDataList('Created On', data.created_at),
+    createDataList('Created On', dateFormat(data.created_at, format)),
     createDataList('Created By', data.created_by),
-    createDataList('Modified On', data.modified_at),
+    createDataList('Modified On', dateFormat(data.modified_at, format)),
     createDataList('Modified By', data.modified_by),
     // FIXME Created From
     createDataList('Created From', data.created_from),
@@ -40,16 +42,6 @@ export default function Quotation(props: QuotationProps) {
       Object.assign(obj, { no: index + 1, sub_total: obj.order_qty * obj.price })
     })
   }
-  // if (data.items) {
-  //     data.items.map((obj, index) => ({
-  //         ...obj,
-  //         no: index + 1,
-  //         sub_total: obj.order_qty * obj.price,
-  //     }))
-  //     data.items.map((obj) => {
-  //         setTotal(obj.order_qty * obj.price)
-  //     })
-  // }
 
   return (
     <>
@@ -72,7 +64,7 @@ export default function Quotation(props: QuotationProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TableQuotation} data={data.items} />
+        <Table columns={ColumnsQuotation} data={data.items} />
       </div>
       <Spacer size={30} />
       <Row>

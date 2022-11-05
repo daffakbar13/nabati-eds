@@ -1,8 +1,8 @@
 import CreateColumns from 'src/utils/createColumns'
 
-export const TableQuotation = [
+export const ColumnsQuotation = [
   CreateColumns('No', 'no'),
-  CreateColumns('Item', 'product_id'),
+  CreateColumns('Item', 'description'),
   CreateColumns('Item Category', 'item_category_id'),
   CreateColumns('Uom', 'uom_id'),
   CreateColumns('Quantity', 'order_qty'),
@@ -12,7 +12,7 @@ export const TableQuotation = [
   CreateColumns('Remarks', 'remarks'),
 ]
 
-export const TableDocumentFlow = [
+export const ColumnsDocumentFlow = [
   CreateColumns('Process', 'Process'),
   CreateColumns('Doc. Number', 'Doc. Number'),
   CreateColumns('Created Date', 'Created Date'),
@@ -22,7 +22,7 @@ export const TableDocumentFlow = [
   CreateColumns('Status', 'Status'),
 ]
 
-export const TableCustomerInfo = [
+export const ColumnsCustomerInfo = [
   CreateColumns('Salesman', 'Process'),
   CreateColumns('Salesman Group', 'Doc. Number'),
 ]

@@ -11,19 +11,20 @@ const CreateDataList = (label: string, value: string) => ({ label, value })
 
 export default function SalesmanInfo(props: SalesmanInfoProps) {
   const { data } = props
+  const salesman = data.salesman
 
   const generalInformation = [
-    CreateDataList('Employee Name', data.salesman.name),
+    CreateDataList('Employee Name', salesman.name),
     // FIXME Employee Name
-    CreateDataList('Division Name', data.division_name),
-    CreateDataList('Branch', data.branch_name),
-    CreateDataList('ID Card Number', data.salesman.employee_id),
+    CreateDataList('Division Name', salesman.division_name),
+    CreateDataList('Branch', salesman.branch_name),
+    CreateDataList('ID Card Number', salesman.employee_id),
     // FIXME Mobile Number
-    CreateDataList('Mobile Number', data.customer_phone),
+    CreateDataList('Mobile Number', salesman.mobile_number),
     // FIXME Email
-    CreateDataList('Email', data.customer_email),
+    CreateDataList('Email', salesman.email),
     // FIXME External Code
-    CreateDataList('External Code', data.external_code),
+    CreateDataList('External Code', salesman.external_number),
   ]
 
   return (

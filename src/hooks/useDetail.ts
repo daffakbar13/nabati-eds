@@ -7,13 +7,14 @@ export default function useDetail(
   params?: CommonDetailParams,
 ) {
   const [data, setData] = React.useState({})
+  console.log(data);
+
 
   React.useEffect(() => {
     async function getApi() {
       funcApi(params)
-        .then((results) => setData(results.data))
-        .catch((err) => {
-          console.log(err);
+        .then((results) => setData(results.data.result))
+        .catch((_) => {
           setData({})
         })
     }

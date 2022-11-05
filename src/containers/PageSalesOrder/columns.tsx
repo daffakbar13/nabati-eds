@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
+import DateFormat from 'src/components/DateFormat'
 
 function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -41,7 +42,7 @@ function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
 export const TableSalesOrder = [
   CreateColumns('Sales Order ', 'id', true, (link: string) => <Linked link={link} type="id" />),
   CreateColumns('Order Type', 'order_type_id', true),
-  CreateColumns('Order Date', 'order_date', true),
+  CreateColumns('Order Date', 'order_date', true, (date) => <DateFormat date={date} format='DD-MM-YYYY' />),
   CreateColumns('Sales Org.', 'sales_org_id', true),
   CreateColumns('Branch', 'branch_id', true),
   CreateColumns('Sold To Customer', 'sold_to_customer_name', true),

@@ -30,6 +30,7 @@ export default function useTable(props: useTableProps) {
 
   const updateData = (newData: any[]) => {
     setLoading(true)
+    setData([])
     setData(newData)
     setLoading(false)
   }
@@ -45,8 +46,8 @@ export default function useTable(props: useTableProps) {
     setHiddenColumns([])
   }
 
-  const handlePagination = (page: number) => {
-    setBody((current) => ({ ...current, page }))
+  const handlePagination = (page: number, limit: number) => {
+    setBody((current) => ({ ...current, page, limit }))
   }
 
   const defineRowSelection = {
@@ -73,7 +74,7 @@ export default function useTable(props: useTableProps) {
       if (funcApi) {
         funcApi(body)
           .then((response) => {
-            updateData(response.data.results)
+            updateData(response.data.result)
             setTotal(response.data.total_rows)
           })
           .catch((_) => updateData([]))
