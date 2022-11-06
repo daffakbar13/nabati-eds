@@ -9,11 +9,11 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { StockRealTime } from './types'
 
-const url = 'v1/stocks'
+const url = 'v1/inventory/swap_handling'
 
 const overrideBaseUrl = API_BASE_URL_2
 
-export const getStockRealtimeList = async (
+export const getListSwapHandling = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
@@ -25,7 +25,7 @@ export const getStockRealtimeList = async (
   return response.data
 }
 
-export const exportExcelStockRealTime = async (
+export const exportExcelListSwapHandling = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({

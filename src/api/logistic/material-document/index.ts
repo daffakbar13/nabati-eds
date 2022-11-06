@@ -9,23 +9,23 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { StockRealTime } from './types'
 
-const url = 'v1/stocks'
+const url = 'v1/inventory/material_document'
 
 const overrideBaseUrl = API_BASE_URL_2
 
-export const getStockRealtimeList = async (
+export const getMaterialDocumentList = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/list`,
+    subUrl: `${url}`,
     overrideBaseUrl,
     data: params,
   })
   return response.data
 }
 
-export const exportExcelStockRealTime = async (
+export const exportExcelMaterialDocument = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
