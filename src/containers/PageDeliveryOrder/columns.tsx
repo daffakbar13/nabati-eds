@@ -47,18 +47,67 @@ export const TableDeliveryOrder = [
     true,
     (link, record) => <Linked link={link} type='id' status={record.status_name} />
   ),
-  CreateColumns('Order Type', 'order_type_id', true),
-  CreateColumns('Order Date', 'order_date', true),
-  CreateColumns('Sales Org.', 'sales_org_id', true),
-  CreateColumns('Branch', 'branch_id', true),
-  CreateColumns('Sold To Customer', 'sold_to_customer', true),
-  CreateColumns('Ship To Customer', 'ship_to_customer', true),
-  CreateColumns('Salesman', 'salesman_id', true),
-  CreateColumns('Total Amount', 'total_amount', true),
-  CreateColumns('Create From', 'create_from', true),
-  CreateColumns('Availibility', 'availablity', true),
-  CreateColumns('Status', 'status_name', true),
-  CreateColumns('Status Process', 'status_process', true),
+  CreateColumns(
+    'Order Type',
+    'order_type',
+    true,
+    (order_type) => <span>{order_type}</span>
+  ),
+  CreateColumns(
+    'Order Date',
+    'order_date',
+    true
+  ),
+  CreateColumns(
+    'Sales Org.',
+    'sales_org_id',
+    true
+  ),
+  CreateColumns(
+    'Branch',
+    'branch_id',
+    true
+  ),
+  CreateColumns(
+    'Sold To Customer',
+    'sold_to_customer',
+    true
+  ),
+  CreateColumns(
+    'Ship To Customer',
+    'ship_to_customer',
+    true
+  ),
+  CreateColumns(
+    'Salesman',
+    'salesman_id',
+    true
+  ),
+  CreateColumns(
+    'Total Amount',
+    'total_amount',
+    true
+  ),
+  CreateColumns(
+    'Create From',
+    'create_from',
+    true
+  ),
+  CreateColumns(
+    'Availibility',
+    'availablity',
+    true
+  ),
+  CreateColumns(
+    'Status',
+    'status_name',
+    true
+  ),
+  CreateColumns(
+    'Status Process',
+    'status_process',
+    true
+  ),
   CreateColumns(
     'Action',
     'delivery_order_id',

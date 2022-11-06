@@ -22,6 +22,7 @@ export interface CommonDetailResponse<T> {
 
 export interface CommonDetailParams {
   id?: string
+  shipment_id?: string
 }
 
 export interface CommonListParams {

@@ -2,7 +2,6 @@ import React from 'react'
 import { CommonDetailParams } from 'src/api/types'
 
 export default function useDetail(
-  api?: string,
   funcApi?: (params: CommonDetailParams) => Promise<any>,
   params?: CommonDetailParams,
 ) {
@@ -13,7 +12,9 @@ export default function useDetail(
   React.useEffect(() => {
     async function getApi() {
       funcApi(params)
-        .then((results) => setData(results.data.result))
+        .then((results) => {
+          results.data.result ? setData(results.data.result) : setData(results.data)
+        })
         .catch((_) => {
           setData({})
         })

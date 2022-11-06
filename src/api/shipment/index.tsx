@@ -8,7 +8,7 @@ import {
 } from 'src/api/types'
 import { ShipmentItem } from './types'
 
-const subUrl = 'v1/shipments/list'
+const subUrl = 'v1/shipments/lists'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getShipment = async (

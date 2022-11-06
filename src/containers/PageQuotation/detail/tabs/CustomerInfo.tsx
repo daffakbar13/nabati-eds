@@ -2,7 +2,6 @@ import { Col, Divider, Row, Table } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import TitleDataList from 'src/components/TitleDataList'
-import useTable from 'src/hooks/useTable'
 import dateFormat from 'src/utils/dateFormat'
 import { ColumnsCustomerInfo } from '../columns'
 

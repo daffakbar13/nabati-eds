@@ -7,10 +7,15 @@ import { PageShipmentDetailProps } from './types'
 import AllTabs from './tabs'
 import DocumentHeader from './tabs/DocumentHeader'
 import BPB from './tabs/BPB'
+import { useDetail } from 'src/hooks'
+import { getDetailShipment } from 'src/api/shipment'
+import { useRouter } from 'next/router'
 
 export default function PageShipmentDetail(props: PageShipmentDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
+  const router = useRouter()
+  const data = useDetail(getDetailShipment, router.query)
 
   return (
     <Col>
@@ -30,12 +35,12 @@ export default function PageShipmentDetail(props: PageShipmentDetailProps) {
       <Card style={{ padding: '16px 20px' }}>
         <Tabs
           defaultActiveKey="1"
-          onChange={(asd) => {
-            setCurrentTab(asd)
+          onChange={(current) => {
+            setCurrentTab(current)
           }}
           items={AllTabs}
         />
-        {currentTab === '1' && <DocumentHeader />}
+        {currentTab === '1' && <DocumentHeader data={data} />}
         {currentTab === '2' && <BPB />}
       </Card>
     </Col>

@@ -31,9 +31,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
   ])
 
   const table = useTable({
-    api: '',
     funcApi: getSalesOrder,
-    bodyApi: {},
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns: TableSalesOrder,
   })

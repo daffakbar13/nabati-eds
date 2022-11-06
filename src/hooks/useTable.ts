@@ -29,7 +29,6 @@ export default function useTable(props: useTableProps) {
   const isHaveCheckbox = (key: string) => haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
 
   const updateData = (newData: any[]) => {
-    setLoading(true)
     setData([])
     setData(newData)
     setLoading(false)
@@ -72,9 +71,10 @@ export default function useTable(props: useTableProps) {
     }
     async function getApi() {
       if (funcApi) {
+        setLoading(true)
         funcApi(body)
           .then((response) => {
-            updateData(response.data.result)
+            response.data.result ? updateData(response.data.result) : updateData(response.data.results)
             setTotal(response.data.total_rows)
           })
           .catch((_) => updateData([]))

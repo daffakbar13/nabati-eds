@@ -39,49 +39,38 @@ export default function PageQuotation(props: PageQuotationProps) {
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
-    const hasNoData = table.total === 0
+    const hasData = table.total > 0
     const router = useRouter()
 
-    console.log(table.data.length);
-
-
-    // table.data.push(
-    //     ...[
-    //         { id: '1041000000061', status_name: 'Draft' },
-    //         { id: '1041000000062', status_name: 'Completed' },
-    //     ],
-    // )
-
-    const content = (
-        <>
-            {TableQuotation.map(({ title }, index) => (
-                <div key={index}>
-                    <Checkbox
-                        defaultChecked={!table.hiddenColumns.includes(title)}
-                        onChange={(event) => {
-                            table.handleHideShowColumns(event.target, title)
-                        }}
-                    />{' '}
-                    {title}
-                </div>
-            ))}
-            <Divider />
-            <h4
-                onClick={table.handleResetHideShowColumns}
-                style={{ textAlign: 'center', cursor: 'pointer' }}
-            >
-                Reset
-            </h4>
-        </>
-    )
-
-    const HideShowColumns = () => (
-        <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-            <span style={{ color: '#f0f0f0' }}>___</span>
-            <MoreOutlined />
-            <span style={{ color: '#f0f0f0' }}>___</span>
-        </Popover>
-    )
+    const HideShowColumns = () => {
+        const content = (
+            <>
+                {TableQuotation.map(({ title }, index) => (
+                    <div key={index}>
+                        <Checkbox
+                            defaultChecked={!table.hiddenColumns.includes(title)}
+                            onChange={(event) => {
+                                table.handleHideShowColumns(event.target, title)
+                            }}
+                        />{' '}
+                        {title}
+                    </div>
+                ))}
+                <Divider />
+                <h4
+                    onClick={table.handleResetHideShowColumns}
+                    style={{ textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
+                >
+                    Reset
+                </h4>
+            </>
+        )
+        return (
+            <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
+                <MoreOutlined style={{ cursor: 'pointer' }} />
+            </Popover>
+        )
+    }
 
     return (
         <Col>
@@ -116,18 +105,14 @@ export default function PageQuotation(props: PageQuotationProps) {
             <Spacer size={10} />
             <Card style={{ padding: '16px 20px' }}>
                 <Table
-                    // sticky
                     loading={table.loading}
-                    columns={[...table.columns, { title: <HideShowColumns /> }]}
-                    data={table.data}
+                    columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
+                    dataSource={table.data}
                     showSorterTooltip={false}
                     rowSelection={table.rowSelection}
                     rowKey={'id'}
-                // pagination={false}
-                // onChange={(_, __, sorter) => console.log(sorter)}
-                // style={{ overflow: 'scroll' }}
                 />
-                {!hasNoData && (
+                {hasData && (
                     <Pagination
                         defaultPageSize={20}
                         pageSizeOptions={[20, 50, 100]}

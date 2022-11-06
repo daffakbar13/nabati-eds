@@ -2,13 +2,15 @@ import CreateColumns from 'src/utils/createColumns'
 
 export const TableDocumentHeader = [
   CreateColumns('No', 'no'),
-  CreateColumns('Item', 'item'),
-  CreateColumns('Item Category', 'item_category'),
-  CreateColumns('Uom', 'uom'),
-  CreateColumns('Quantity', 'quantity'),
-  CreateColumns('Based Price', 'based_price'),
-  CreateColumns('Sub Total', 'sub_total'),
-  CreateColumns('Remarks', 'remarks'),
+  CreateColumns('Delivery Order', 'delivery_order_id'),
+  CreateColumns('Order Type', 'order_type'),
+  CreateColumns('Order Date', 'order_date'),
+  CreateColumns('Delivery Date', 'delivery_date'),
+  CreateColumns('Sales Org.', 'sales_org_name'),
+  CreateColumns('Plant', 'plant_name'),
+  CreateColumns('Ship To Customer', 'ship_to_customer'),
+  CreateColumns('Salesman', 'salesman_name'),
+  CreateColumns('Status', 'status'),
 ]
 
 export const TableDocumentFlow = [

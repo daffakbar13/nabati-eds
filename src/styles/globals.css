@@ -111,3 +111,8 @@ p {
 .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
   color: #2bbecb;
 }
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #2bbecb;
+  border-color: #2bbecb;
+}

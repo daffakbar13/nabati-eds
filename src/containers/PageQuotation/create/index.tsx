@@ -7,7 +7,10 @@ import { Card, TableEditable } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { fakeApi } from 'src/api/fakeApi'
 import { CommonSelectValue } from 'src/configs/commonTypes'
+import { createQuotation } from 'src/api/quotation'
+import { getCustomerByCompany } from 'src/api/master-data'
 import { columns } from './columns'
+import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from './fetches'
 
 interface Item {
   key: string
@@ -30,11 +33,50 @@ const originData: Item[] = [
 ]
 
 export default function CreateQuotation() {
+  const now = new Date().toISOString()
   const [data, setData] = useState<Item[]>(originData)
-  const [dataForm, setDataForm] = React.useState({})
+  const [dataForm, setDataForm] = React.useState({
+    company_id: 'PP01',
+    branch_id: 'P174',
+    source_id: 'Z01',
+    order_date: now,
+    delivery_date: now,
+    pricing_date: now,
+    order_type_id: 'ZQP1',
+    customer_id: 'C1624002',
+    ship_to_id: 'C1624001',
+    salesman_id: '131603',
+    sales_org_id: 'PID1',
+    valid_from: now,
+    valid_to: now,
+    term_id: 'Z007',
+    customer_ref: 'PO0001',
+    customer_ref_date: now,
+    currency_id: 'IDR',
+    status_name: 'Draft',
+    items: [
+      {
+        product_id: '300007',
+        order_qty: 2,
+        uom_id: 'CTN',
+        item_type_id: 'ZP01',
+        price: 1200,
+        remarks: 'test desc',
+      },
+      {
+        product_id: '300011',
+        order_qty: 3,
+        uom_id: 'CTN',
+        item_type_id: 'ZP01',
+        price: 1200,
+        remarks: 'test desc',
+      },
+    ],
+  })
+
   const titlePage = useTitlePage('create')
 
-  const onChangeForm = (form: string, value: string) => {
+  const onChangeForm = (form: string, value: any) => {
     const newValue = Object.assign(dataForm, { [form]: value })
 
     setDataForm(newValue)
@@ -44,6 +86,8 @@ export default function CreateQuotation() {
   React.useEffect(() => {
     console.log(dataForm)
   }, [dataForm])
+
+  console.log(new Date().toISOString());
 
   return (
     <Col>
@@ -58,7 +102,7 @@ export default function CreateQuotation() {
             <Button size="big" variant="secondary" onClick={() => {}}>
               Save As Draft
             </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button size="big" variant="primary" onClick={() => { createQuotation(dataForm).then((e) => console.log(e)).catch((e) => console.log(e)) }}>
               Submit
             </Button>
           </Row>
@@ -70,52 +114,56 @@ export default function CreateQuotation() {
           <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
             <DebounceSelect
               label="Quotation Type"
-              fetchOptions={fakeApi}
-              onChange={(e) => {
-                onChangeForm('order_type_id', e.label)
+              fetchOptions={fieldQuotationType}
+              onChange={(val: any) => {
+                onChangeForm('order_type_id', val.label.split(' - ')[0])
               }}
             />
             <DebounceSelect
               label="Sold To Customer"
-              fetchOptions={fakeApi}
-              onChange={(e) => {
-                onChangeForm('customer_id', e.label)
+              fetchOptions={fieldSoldToCustomer}
+              onChange={(val: any) => {
+                onChangeForm('customer_id', val.label)
               }}
             />
             <DebounceSelect
               label="Ship To Customer"
-              fetchOptions={fakeApi}
-              onChange={(e) => {
-                onChangeForm('ship_to_id', e.label)
+              fetchOptions={fieldShipToCustomer}
+              onChange={(val: any) => {
+                onChangeForm('ship_to_id', val.label)
               }}
             />
             <DebounceSelect
               label="Sales Organization"
-              fetchOptions={fakeApi}
-              onChange={(e) => {
-                onChangeForm('sales_org_id', e.label)
+              fetchOptions={fieldSalesOrg}
+              value={'PID1'}
+              disabled
+              onChange={(val: any) => {
+                onChangeForm('sales_org_id', val.label)
               }}
             />
             <DebounceSelect
               label="Branch"
-              fetchOptions={fakeApi}
-              onChange={(e) => {
-                onChangeForm('branch_id', e.label)
+              fetchOptions={fieldBranch}
+              value={'P174'}
+              disabled
+              onChange={(val: any) => {
+                onChangeForm('branch_id', val.label)
               }}
             />
             <DebounceSelect
               label="Salesman"
-              fetchOptions={fakeApi}
-              onChange={(e) => {
-                onChangeForm('salesman_id', e.label)
+              fetchOptions={fieldSalesman}
+              onChange={(val: any) => {
+                onChangeForm('salesman_id', val.label)
               }}
             />
           </div>
           <div style={{ display: 'flex', gap: 10, flexDirection: 'column', flexGrow: 1 }}>
             <DatePickerInput
               fullWidth
-              onChange={(e) => {
-                console.log(new Date(e._d))
+              onChange={(val: any) => {
+                onChangeForm('order_date', new Date(moment(val).format()).toISOString())
               }}
               label="Document Date"
               defaultValue={moment()}
@@ -124,8 +172,8 @@ export default function CreateQuotation() {
             />
             <DatePickerInput
               fullWidth
-              onChange={(e) => {
-                onChangeForm('', e.value)
+              onChange={(val: any) => {
+                onChangeForm('valid_from', new Date(moment(val).format()).toISOString())
               }}
               label="Valid From"
               defaultValue={moment()}
@@ -134,8 +182,8 @@ export default function CreateQuotation() {
             />
             <DatePickerInput
               fullWidth
-              onChange={(e) => {
-                onChangeForm('', e.value)
+              onChange={(val: any) => {
+                onChangeForm('valid_to', new Date(moment(val).format()).toISOString())
               }}
               label="Valid To"
               defaultValue={moment()}
@@ -144,7 +192,10 @@ export default function CreateQuotation() {
             />
             <DatePickerInput
               fullWidth
-              onChange={() => {}}
+              onChange={(val: any) => {
+                onChangeForm('delivery_date', new Date(moment(val).format()).toISOString())
+                onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
+              }}
               label="Delivery Date"
               defaultValue={moment()}
               format={'DD/MM/YYYY'}
@@ -153,8 +204,8 @@ export default function CreateQuotation() {
             <DebounceSelect
               label="Reference"
               fetchOptions={fakeApi}
-              onChange={(e) => {
-                onChangeForm('salesman_id', e.label)
+              onChange={(val: any) => {
+                onChangeForm('customer_ref', val.label)
               }}
             />
           </div>

@@ -30,7 +30,6 @@ export default function PageRealTime(props: PageRealTimeProps) {
   ])
 
   const table = useTable({
-    api: '',
     funcApi: getStockRealtimeList,
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns: StockRealTimeColumns,

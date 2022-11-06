@@ -18,7 +18,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
-  const data = useDetail('', getDetailQuotation, { id: router.query.id as string })
+  const data = useDetail(getDetailQuotation, { id: router.query.id as string })
 
   return (
     <Col>

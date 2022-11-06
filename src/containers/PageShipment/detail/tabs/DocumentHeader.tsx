@@ -1,58 +1,59 @@
-import { Col, Row, Table, Divider } from 'antd'
+import { Col, Row, Divider } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import useTable from 'src/hooks/useTable'
+import { Table } from 'pink-lava-ui';
 import { Spacer } from 'pink-lava-ui'
 import { TableDocumentHeader } from '../columns'
 
-interface DocumentHeaderProps {}
+interface DocumentHeaderProps {
+  data: any
+}
 
 const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function DocumentHeader(props: DocumentHeaderProps) {
-  const {} = props
-  const table = useTable({ api: '', columns: TableDocumentHeader })
+  const { data } = props
+  const { shipment_detail, shipment_items_detail } = data
+
   const dataList = [
-    createDataList('DocumentHeader', 'ZOP1'),
-    createDataList('Customer', 'ZOP1'),
-    createDataList('Sales Org.', 'ZOP1'),
-    createDataList('Plant', 'ZOP1'),
-    createDataList('Salesman', 'ZOP1'),
-    createDataList('Doc. Date', 'ZOP1'),
-    createDataList('Valid From', 'ZOP1'),
-    createDataList('Valid To', 'ZOP1'),
-    createDataList('Delivery Date', 'ZOP1'),
-    createDataList('Reference', 'ZOP1'),
-    createDataList('Created On', 'ZOP1'),
-    createDataList('Created By', 'ZOP1'),
-    createDataList('Modified On', 'ZOP1'),
-    createDataList('Modified By', 'ZOP1'),
-    createDataList('Created From', 'ZOP1'),
+    createDataList('Sales Org.', shipment_detail?.sales_org_name),
+    createDataList('Plant', shipment_detail?.plant_name),
+    createDataList('Vehicle', shipment_detail?.vehicle_id),
+    createDataList('Driver', shipment_detail?.driver_name),
+    createDataList('Loading Date', shipment_detail?.loading_date),
+    createDataList('Posting Date', shipment_detail?.posting_date),
+    createDataList('Actual Delivery Date', shipment_detail?.actual_delivery_date),
+    createDataList('Created On', shipment_detail?.created_date),
+    createDataList('Created By', shipment_detail?.created_by),
+    createDataList('Modified On', shipment_detail?.modified_at),
+    createDataList('Modified By', shipment_detail?.modified_by),
   ]
+
+  shipment_items_detail?.map((obj, index) => Object.assign(obj, { no: ++index }))
 
   return (
     <>
       <Row gutter={8}>
         <Col span={8}>
-          {dataList.slice(0, 5).map(({ label, value }, i) => (
+          {dataList.slice(0, 4).map(({ label, value }, i) => (
             <DataList key={i} label={label} value={value} />
           ))}
         </Col>
         <Col span={8}>
-          {dataList.slice(5, 10).map(({ label, value }, i) => (
+          {dataList.slice(4, 7).map(({ label, value }, i) => (
             <DataList key={i} label={label} value={value} />
           ))}
         </Col>
         <Col span={8}>
-          {dataList.slice(10).map(({ label, value }, i) => (
+          {dataList.slice(7).map(({ label, value }, i) => (
             <DataList key={i} label={label} value={value} />
           ))}
         </Col>
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={table.columns} dataSource={[]} />
+        <Table columns={TableDocumentHeader} dataSource={shipment_items_detail} />
       </div>
       <Spacer size={30} />
       <Row>

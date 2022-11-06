@@ -30,13 +30,13 @@ export default function PageShipment(props: PageShipmentProps) {
   ])
 
   const table = useTable({
-    api: '',
     funcApi: getShipment,
-    haveCheckbox: { headCell: 'status', member: ['new'] },
+    haveCheckbox: 'All',
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
   const router = useRouter()
+  const hasData = table.total > 0
 
   const content = (
     <>
@@ -110,6 +110,7 @@ export default function PageShipment(props: PageShipmentProps) {
             pagination={false}
             onChange={(_, __, sorter) => console.log(sorter)}
           />
+          {hasData &&
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
@@ -120,6 +121,7 @@ export default function PageShipment(props: PageShipmentProps) {
             total={table.data.length}
             showTotal={showTotal}
           />
+          }
         </div>
       </Card>
     </Col>

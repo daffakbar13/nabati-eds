@@ -20,15 +20,6 @@ function showTotal(total: number, range: number[]) {
   return <p>{text}</p>
 }
 
-const api = (data: any) => axios
-  .post('https://dist-system.nabatisnack.co.id:3001/v1/delivery-orders/list', data, {
-    headers: {
-      Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgwNTY2ODMsImlzcyI6InNhbGVzLWVkcy1hcGkiLCJ1c2VyX2lkIjoiMSIsImVtYWlsIjoicmV5Z2FfdmlyZ2lhd2FuQG5hYmF0aXNuYWNrLmNvLmlkIiwiY29tcGFueV9pZCI6IlBQMDEifQ.nRSrclvhE2YmHZyI9bNn5wgWgBW0-cobM8f6Bx8yXos',
-    },
-  })
-  .then((result) => result.data)
-
 export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   const [filters, setFilters] = useSmartFilters([
     FILTER.SALES_ORG,
@@ -74,7 +65,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
 
   const HideShowColumns = () => (
     <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-      <MoreOutlined />
+      <MoreOutlined style={{ cursor: 'pointer' }} />
     </Popover>
   )
 
@@ -110,30 +101,26 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
-        <div style={{ overflow: 'scroll' }}>
-          <Table
-            loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns /> }]}
-            data={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'delivery_order_id'}
-            // pagination={false}
-            // onChange={(_, __, sorter) => console.log(sorter)}
-          />
-          {hasData &&
-            <Pagination
-              defaultPageSize={20}
-              pageSizeOptions={[20, 50, 100]}
-              showLessItems
-              showSizeChanger
-              showQuickJumper
-              responsive
+        <Table
+          loading={table.loading}
+          columns={[...table.columns, { title: <HideShowColumns /> }]}
+          dataSource={table.data}
+          showSorterTooltip={false}
+          rowSelection={table.rowSelection}
+          rowKey={'delivery_order_id'}
+        />
+        {hasData &&
+          <Pagination
+            defaultPageSize={20}
+            pageSizeOptions={[20, 50, 100]}
+            showLessItems
+            showSizeChanger
+            showQuickJumper
+            responsive
             total={table.total}
             showTotal={showTotal}
           />
-          }
-        </div>
+        }
       </Card>
     </Col>
   )

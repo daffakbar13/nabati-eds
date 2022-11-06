@@ -4,6 +4,7 @@ import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
+import { Tag } from 'antd'
 
 function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -40,9 +41,19 @@ function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
 }
 
 export const TableSalesOrder = [
-  CreateColumns('Sales Order ', 'id', true, (link: string) => <Linked link={link} type="id" />),
+  CreateColumns(
+    'Sales Order ',
+    'id',
+    true,
+    (link: string) => <Linked link={link} type="id" />
+  ),
   CreateColumns('Order Type', 'order_type_id', true),
-  CreateColumns('Order Date', 'order_date', true, (date) => <DateFormat date={date} format='DD-MM-YYYY' />),
+  CreateColumns(
+    'Order Date',
+    'order_date',
+    true,
+    (date) => <DateFormat date={date} format='DD-MM-YYYY' />
+  ),
   CreateColumns('Sales Org.', 'sales_org_id', true),
   CreateColumns('Branch', 'branch_id', true),
   CreateColumns('Sold To Customer', 'sold_to_customer_name', true),
@@ -51,7 +62,12 @@ export const TableSalesOrder = [
   CreateColumns('Total Amount', 'total_amount', true),
   CreateColumns('Create From', 'created_from', true),
   CreateColumns('Availibility', 'asdasd', true),
-  CreateColumns('Status', 'status_name', true),
+  CreateColumns(
+    'Status',
+    'status_name',
+    true,
+    (status) => <Tag {...(status === 'Completed' && { color: 'green' })} > {status}</Tag>
+  ),
   CreateColumns('Status Process', 'dfg', true),
   CreateColumns('Action', 'id', false, (link: string) => <Linked link={link} type="action" />),
 ]

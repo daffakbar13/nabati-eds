@@ -8,7 +8,7 @@ import {
 } from 'src/api/types'
 import { QuotationItem } from './types'
 
-const subUrl = 'v1/quotations/list'
+const subUrl = 'v1/quotations'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getQuotation = async (
@@ -17,7 +17,7 @@ export const getQuotation = async (
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
-    subUrl,
+    subUrl: `${subUrl}/list`,
     data: params,
   })
   return response.data
@@ -30,6 +30,15 @@ export const getDetailQuotation = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `v1/quotations/${params.id}/detail`,
+  })
+  return response.data
+}
+
+export const createQuotation = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${subUrl}/create`,
+    data: payload,
   })
   return response.data
 }

@@ -13,7 +13,7 @@ export const getDeliveryOrderList = async (
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${subUrl}/list`,
-    data: params
+    data: params,
   })
   return response.data
 }
