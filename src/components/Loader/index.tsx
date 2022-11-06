@@ -6,7 +6,10 @@ export default function Loader() {
     return (
         <div style={{ display: 'grid', placeItems: 'center', minHeight: 'calc(100vh - 70px)' }}>
             {/* <div className={style.spinner} /> */}
-            <Spin />
+            <div style={{ display: 'grid', placeItems: 'center', gap: 5 }}>
+                <Spin />
+                <p>Loading Page...</p>
+            </div>
         </div>
     )
 }
