@@ -1,13 +1,16 @@
+import { useState, useEffect } from 'react'
 import type { ReactElement, ReactNode } from 'react'
-import type { NextPage } from 'next'
+import Head from 'next/head'
 import type { AppProps } from 'next/app'
+import Router, { useRouter } from 'next/router'
+import type { NextPage } from 'next'
 import DashboardLayout from 'src/containers/Layouts/DashboardLayout'
 import 'pink-lava-ui/index.css'
 import 'src/styles/globals.css'
-import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { menu } from 'src/configs/menus'
+// import { menu } from 'src/configs/menus'
 import { useTitle } from 'src/hooks'
+
+import Loader from 'src/components/Loader';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   // eslint-disable-next-line no-unused-vars
@@ -19,9 +22,32 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+
   // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout || DashboardLayout
   const title = useTitle()
+
+  const handleStart = (url: string) => {
+    setLoading(true)
+  }
+
+  const handleStop = () => {
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleStop)
+    router.events.on('routeChangeError', handleStop)
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart)
+      router.events.off('routeChangeComplete', handleStop)
+      router.events.off('routeChangeError', handleStop)
+    }
+  }, [router])
 
   return (
     <>
@@ -29,7 +55,11 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <title>EDS - {title}</title>
         <style></style>
       </Head>
-      {getLayout(<Component {...pageProps} />)}
+      <>
+        {/* <Loader /> */}
+        {loading && getLayout(<Loader />)}
+        {!loading && getLayout(<Component {...pageProps} />)}
+      </>
     </>
   )
 }

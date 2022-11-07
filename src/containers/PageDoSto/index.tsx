@@ -8,7 +8,7 @@ import { Card, FloatAction, Popup } from 'src/components'
 import { useTable, useTitlePage } from 'src/hooks'
 import { colors } from 'src/configs/colors'
 
-import { getStockRealtimeList } from 'src/api/stock-real-time'
+import { getStockRealtimeList } from 'src/api/logistic/stock-real-time'
 
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { Props } from './types'
@@ -85,7 +85,7 @@ export default function PageDoSto(props: Props) {
               nameIcon="SearchOutlined"
               placeholder="Search Menu Design Name"
               colorIcon={colors.grey.regular}
-              onChange={() => {}}
+              onChange={() => { }}
             />
             <SmartFilter onOk={setFilters} filters={filters} />
           </Row>
@@ -134,7 +134,7 @@ export default function PageDoSto(props: Props) {
               <b>{table.selected.length} Document Quotation are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => {}}>
+              <Button size="big" variant="tertiary" onClick={() => { }}>
                 Cancel
               </Button>
               <Button
@@ -158,10 +158,10 @@ export default function PageDoSto(props: Props) {
               Are you sure to submit quotation {table.selected.join(', ')} ?
             </Typography.Title>
             <div>
-              <Button size="big" variant="secondary" onClick={() => {}}>
+              <Button size="big" variant="secondary" onClick={() => { }}>
                 Download
               </Button>
-              <Button size="big" variant="primary" onClick={() => {}}>
+              <Button size="big" variant="primary" onClick={() => { }}>
                 Create
               </Button>
             </div>

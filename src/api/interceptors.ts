@@ -1,7 +1,9 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import Router from 'next/router'
+import { message } from 'antd'
 import { toCamelCase } from 'src/utils/formatter'
 import { PUBLIC_URL } from 'src/configs/env'
+import yell from 'src/components/yell'
 import {
   HTTP_ERROR,
   HTTP_UNAUTHORIZED_ACTION,
@@ -26,25 +28,25 @@ export const errorInterceptor = (err: AxiosError): Promise<never> => {
   if (response) {
     const url: string = response?.config?.url || ''
     if (response.status === 401 && url.includes(LOGIN_SUB_URL)) {
-      alert(HTTP_LOGIN_ERROR)
+      yell(HTTP_LOGIN_ERROR)
       localStorage.clear()
     } else if (response.status === 401) {
-      alert(HTTP_SESSION_EXPIRED)
+      yell(HTTP_SESSION_EXPIRED)
       window.setTimeout(() => {
         localStorage.clear()
         window.location.href = `${PUBLIC_URL}/login`
       }, 1500)
     } else if (response.status === 403) {
-      alert(HTTP_UNAUTHORIZED_ACTION)
+      yell(HTTP_UNAUTHORIZED_ACTION)
     } else if (response.status === 500) {
-      alert(HTTP_INTERNAL_SERVER_ERROR)
+      yell(HTTP_INTERNAL_SERVER_ERROR)
     } else if (response.status === 503) {
       Router.push('/maintenance')
     } else {
-      alert(HTTP_NETWORK_ISSUE_ERROR)
+      yell(HTTP_NETWORK_ISSUE_ERROR)
     }
   } else {
-    alert(HTTP_NETWORK_ERROR)
+    yell(HTTP_NETWORK_ERROR)
   }
   return Promise.reject(err)
 }

@@ -12,9 +12,8 @@ const nextConfig = {
 
     return config
   },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  typescript: { ignoreBuildErrors: true },
+  devIndicators: { buildActivity: false },
 }
 
 module.exports = nextConfig
