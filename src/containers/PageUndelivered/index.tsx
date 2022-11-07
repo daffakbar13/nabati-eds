@@ -7,6 +7,7 @@ import { Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
+import { getUndeliveredList } from 'src/api/undelivered'
 import { TableBilling } from './columns'
 
 function showTotal(total: number, range: number[]) {
@@ -17,7 +18,7 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageUndelivered() {
   const table = useTable({
-    api: '',
+    funcApi: getUndeliveredList,
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })

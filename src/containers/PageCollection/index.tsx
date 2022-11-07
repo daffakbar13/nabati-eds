@@ -7,6 +7,7 @@ import { Pagination, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
+import { getCollectionList } from 'src/api/collection'
 import { PageCollectionProps } from './types'
 import { TableBilling } from './columns'
 
@@ -18,7 +19,7 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageCollection(props: PageCollectionProps) {
   const table = useTable({
-    funcApi: ,
+    funcApi: getCollectionList,
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })

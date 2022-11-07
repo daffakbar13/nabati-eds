@@ -7,6 +7,7 @@ import { Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'a
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
+import { getApprovalList } from 'src/api/approval'
 import { PageApprovalProps } from './types'
 import { TableBilling } from './columns'
 
@@ -39,7 +40,7 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageApproval(props: PageApprovalProps) {
   const table = useTable({
-    api: '',
+    funcApi: getApprovalList,
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })
