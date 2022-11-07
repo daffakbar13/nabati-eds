@@ -2,7 +2,6 @@ import { Col, Row, Table, Divider } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import useTable from 'src/hooks/useTable'
 import { Spacer } from 'pink-lava-ui'
 import { TableBilling } from '../columns'
 
@@ -13,22 +12,23 @@ interface BillingProps {
 const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function Billing(props: BillingProps) {
-  const {} = props
-  const table = useTable({ api: '', columns: TableBilling })
+  const { data } = props
   const dataList = [
-    createDataList('Sales Order', 'ZOP1'),
-    createDataList('Customer', 'ZOP1'),
-    createDataList('Sales Org.', 'ZOP1'),
-    createDataList('Plant', 'ZOP1'),
-    createDataList('Salesman', 'ZOP1'),
-    createDataList('Doc. Date', 'ZOP1'),
-    createDataList('Delivery Date', 'ZOP1'),
-    createDataList('Quotation', 'ZOP1'),
-    createDataList('Reference', 'ZOP1'),
-    createDataList('Created On', 'ZOP1'),
-    createDataList('Created By', 'ZOP1'),
-    createDataList('Modified On', 'ZOP1'),
-    createDataList('Modified By', 'ZOP1'),
+    createDataList('Order Type', data.billing_type_id),
+    createDataList('Customer', data.customer_id),
+    createDataList('Sales Org.', data.sales_org_id),
+    createDataList('Plant', data.plant),
+    createDataList('Salesman', data.salesman),
+    createDataList('Doc. Date', data.billing_date),
+    createDataList('GI Date', data.billing_date),
+    createDataList('Delivery Date', data.billing_date),
+    createDataList('SO Number', data.delivery_id),
+    createDataList('DO Number', data.delivery_id),
+    createDataList('Reference', data.customer_ref),
+    createDataList('Created On', data.created_at.Time),
+    createDataList('Created By', data.created_at.Valid),
+    createDataList('Modified On', data.modified_at.Time),
+    createDataList('Modified By', data.modified_at.Valid),
   ]
 
   return (
@@ -52,7 +52,7 @@ export default function Billing(props: BillingProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={table.columns} dataSource={[]} />
+        <Table columns={TableBilling} dataSource={[]} />
       </div>
       <Spacer size={30} />
       <Row>
