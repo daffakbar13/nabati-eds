@@ -20,7 +20,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageShipment(props: PageShipmentProps) {
-  const [filters, setFilters] = useSmartFilters([
+  const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
     FILTER.SOLD_TO_CUSTOMER,
@@ -110,18 +110,19 @@ export default function PageShipment(props: PageShipmentProps) {
             pagination={false}
             onChange={(_, __, sorter) => console.log(sorter)}
           />
-          {hasData &&
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.data.length}
-            showTotal={showTotal}
-          />
-          }
+          {hasData && (
+            <Pagination
+              defaultPageSize={20}
+              pageSizeOptions={[20, 50, 100]}
+              showLessItems
+              showSizeChanger
+              showQuickJumper
+              responsive
+              total={table.total}
+              showTotal={showTotal}
+              onChange={(page, limit) => { table.handlePagination(page, limit) }}
+            />
+          )}
         </div>
       </Card>
     </Col>

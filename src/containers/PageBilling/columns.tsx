@@ -1,28 +1,102 @@
+/* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
+import { Button } from 'pink-lava-ui';
+import { PATH } from 'src/configs/menus';
+import React from 'react';
 
-function Action({ link }: { link: string }) {
+function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    router.push(`/billing/detail/${link}`)
+    status === 'Draft'
+      ? router.push(`${PATH.SALES}/billing/edit/${link}`)
+      : router.push(`${PATH.SALES}/billing/detail/${link}?status=${status}`)
   }
+  const [hover, setHover] = React.useState(false)
+
   return (
-    <h4 onClick={navigate} style={{ cursor: 'pointer' }}>
-      View Detail
-    </h4>
+    <>
+      {type === 'id' ? (
+        <div
+          onClick={navigate}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
+          style={{
+            cursor: 'pointer',
+            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
+          }}
+        >
+          {link}
+        </div>
+      ) : (
+        <Button size="big" variant="tertiary" onClick={navigate}>
+          View Detail
+        </Button>
+      )}
+    </>
   )
 }
 
 export const TableBilling = [
-  CreateColumns('Billing Number', 'shipment_id', true),
-  CreateColumns('Order Type', 'vehicle_id', true),
-  CreateColumns('Order Date', 'driver_name', true),
-  CreateColumns('Sales Org.', 'created_date', true),
-  CreateColumns('Branch', 'total_do', true),
-  CreateColumns('Ship To Customer', 'sales_org_name', true),
-  CreateColumns('Shipment Number', 'branch_name', true),
-  CreateColumns('Salesman', 'branch_type', true),
-  CreateColumns('Total Amount', 'branch_type', true),
-  CreateColumns('Status', 'status', true),
-  CreateColumns('Action', 'shipment_id', false, (link: string) => <Action link={link} />),
+  CreateColumns(
+    'Billing Number',
+    'billing_number',
+    true,
+    (link, record) => <Linked link={link} status={record.status} type='id' />,
+  ),
+  CreateColumns(
+    'Order Type',
+    'order_type',
+    true,
+  ),
+  CreateColumns(
+    'Order Date',
+    'order_date',
+    true,
+  ),
+  CreateColumns(
+    'Sales Org.',
+    'sales_org',
+    true,
+  ),
+  CreateColumns(
+    'Branch',
+    'branch',
+    true,
+  ),
+  CreateColumns(
+    'Ship To Customer',
+    'ship_to_customer',
+    true,
+  ),
+  CreateColumns(
+    'Shipment Number',
+    'shipment_number',
+    true,
+  ),
+  CreateColumns(
+    'Salesman',
+    'salesman',
+    true,
+  ),
+  CreateColumns(
+    'Total Amount',
+    'total_amount',
+    true,
+  ),
+  CreateColumns(
+    'Status',
+    'status',
+    true,
+  ),
+  CreateColumns(
+    'Action',
+    'billing_number',
+    false,
+    (link, record) => <Linked link={link} status={record.status} type='action' />,
+  ),
 ]

@@ -3,13 +3,13 @@ import { Button as ButtonPinkLava, Col, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Button, Tabs } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
+import { useDetail } from 'src/hooks'
+import { getDetailShipment } from 'src/api/shipment'
+import { useRouter } from 'next/router'
 import { PageShipmentDetailProps } from './types'
 import AllTabs from './tabs'
 import DocumentHeader from './tabs/DocumentHeader'
 import BPB from './tabs/BPB'
-import { useDetail } from 'src/hooks'
-import { getDetailShipment } from 'src/api/shipment'
-import { useRouter } from 'next/router'
 
 export default function PageShipmentDetail(props: PageShipmentDetailProps) {
   const titlePage = useTitlePage('detail')

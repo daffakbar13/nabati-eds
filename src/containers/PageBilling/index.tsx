@@ -20,7 +20,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageBilling(props: PageBillingProps) {
-  const [filters, setFilters] = useSmartFilters([
+  const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
     FILTER.SOLD_TO_CUSTOMER,
@@ -28,15 +28,14 @@ export default function PageBilling(props: PageBillingProps) {
     FILTER.ORDER_TYPE,
     FILTER.ORDER_DATE,
   ])
-
   const router = useRouter()
   const table = useTable({
-    api: '',
     funcApi: getBilling,
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
+  const hasData = table.total > 0
 
   const content = (
     <>
@@ -110,16 +109,19 @@ export default function PageBilling(props: PageBillingProps) {
             pagination={false}
             onChange={(_, __, sorter) => console.log(sorter)}
           />
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.data.length}
-            showTotal={showTotal}
-          />
+          {hasData && (
+            <Pagination
+              defaultPageSize={20}
+              pageSizeOptions={[20, 50, 100]}
+              showLessItems
+              showSizeChanger
+              showQuickJumper
+              responsive
+              total={table.total}
+              showTotal={showTotal}
+              onChange={(page, limit) => { table.handlePagination(page, limit) }}
+            />
+          )}
         </div>
       </Card>
     </Col>

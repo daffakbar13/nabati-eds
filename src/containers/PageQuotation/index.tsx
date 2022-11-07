@@ -11,6 +11,7 @@ import FloatAction from 'src/components/FloatAction'
 import { getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
+import { PATH } from 'src/configs/menus'
 import { PageQuotationProps } from './types'
 import { TableQuotation } from './columns'
 
@@ -23,7 +24,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageQuotation(props: PageQuotationProps) {
-    const [filters, setFilters] = useSmartFilters([
+    const { filters, setFilters } = useSmartFilters([
         FILTER.SALES_ORG,
         FILTER.BRANCH,
         FILTER.SOLD_TO_CUSTOMER,
@@ -31,6 +32,8 @@ export default function PageQuotation(props: PageQuotationProps) {
         FILTER.ORDER_TYPE,
         FILTER.ORDER_DATE,
     ])
+
+    const [filtered, setFiltered] = React.useState([])
 
     const table = useTable({
         funcApi: getQuotation,
@@ -86,7 +89,22 @@ export default function PageQuotation(props: PageQuotationProps) {
                             colorIcon={colors.grey.regular}
                             onChange={() => { }}
                         />
-                        <SmartFilter onOk={setFilters} filters={filters} />
+                        <SmartFilter
+                            onOk={(newVal) => {
+                                const newFiltered = newVal
+                                    .filter((obj) => obj.fromValue)
+                                    .map((obj) => ({
+                                        field: `eds_order.${obj.field}`,
+                                        option: obj.option,
+                                        from_value: obj.fromValue.value,
+                                        to_value: obj.toValue?.value,
+                                    }))
+                                setFilters(newVal)
+                                table.handleFilter(newFiltered)
+                                // setFiltered(newFiltered)
+                                console.log('newVal', newVal)
+                            }}
+                            filters={filters} />
                     </Row>
                     <Row gap="16px">
                         <Button size="big" variant="secondary" onClick={() => { }}>
@@ -104,6 +122,7 @@ export default function PageQuotation(props: PageQuotationProps) {
             </Card>
             <Spacer size={10} />
             <Card style={{ padding: '16px 20px' }}>
+                <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
                 <Table
                     loading={table.loading}
                     columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
@@ -112,6 +131,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                     rowSelection={table.rowSelection}
                     rowKey={'id'}
                 />
+                </div>
                 {hasData && (
                     <Pagination
                         defaultPageSize={20}
@@ -160,12 +180,12 @@ export default function PageQuotation(props: PageQuotationProps) {
                         <Typography.Title level={5} style={{ margin: 0 }}>
                             Are you sure to submit quotation {table.selected.join(', ')} ?
                         </Typography.Title>
-                        <div>
-                            <Button size="big" variant="secondary" onClick={() => { }}>
-                                Download
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            <Button size="big" style={{ flexGrow: 1 }} variant="secondary" onClick={() => { router.reload() }}>
+                                Cancel Proccess
                             </Button>
-                            <Button size="big" variant="primary" onClick={() => { }}>
-                                Create
+                            <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={() => { router.reload() }}>
+                                Submit
                             </Button>
                         </div>
                     </Popup>

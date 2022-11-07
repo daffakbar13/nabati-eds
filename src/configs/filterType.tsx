@@ -14,12 +14,14 @@ export type OptionTypes = 'EQ' | 'BT' | 'CP' | 'LE' | 'GE' | 'NE' | 'NB' | 'NP' 
 export type DataTypes = 'S' | 'N' | 'D' | 'T'
 
 export interface FilterOption {
-  fields: string
+  field: string
   label: string
   option: OptionTypes
   dataType: DataTypes
   fromValue?: CommonSelectValue
-  toValue?: CommonSelectValue
+  toValue?: CommonSelectValue,
+  searchApi?: (search: string) => Promise<any>,
+  isDate?: boolean
 }
 
 export const FILTER_TYPES = {

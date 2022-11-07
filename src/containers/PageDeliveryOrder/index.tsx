@@ -21,7 +21,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
-  const [filters, setFilters] = useSmartFilters([
+  const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
     FILTER.SOLD_TO_CUSTOMER,
@@ -109,8 +109,8 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           rowSelection={table.rowSelection}
           rowKey={'delivery_order_id'}
         />
-        {hasData &&
-          <Pagination
+        {hasData
+          && <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
             showLessItems

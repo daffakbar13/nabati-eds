@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react'
 import { Text, Spin } from 'pink-lava-ui'
 import { debounce } from 'lodash'
-import { Select } from 'antd'
+import { Form, Select } from 'antd'
 
 import { DebounceSelectProps } from './types'
 
@@ -16,6 +16,7 @@ function DebounceSelect<
   debounceTimeout = 800,
   style = {},
   label,
+  required,
   ...props
 }: DebounceSelectProps<ValueType>) {
   const [fetching, setFetching] = useState(false)
@@ -46,6 +47,7 @@ function DebounceSelect<
   const mainComponent = (
     <Select
       showSearch
+      aria-required={'true'}
       labelInValue
       filterOption={false}
       onSearch={debounceFetcher}
@@ -74,6 +76,9 @@ function DebounceSelect<
           style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
         >
           {label}
+          {required
+            && <span style={{ color: 'red' }}> *</span>
+          }
         </Text>
         {mainComponent}
       </div>

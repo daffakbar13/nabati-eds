@@ -1,8 +1,8 @@
-import { Form, Popconfirm, Table, Typography } from 'antd'
+import { Form, Popconfirm, Typography } from 'antd'
 import React, { useState } from 'react'
 import { antdColumns } from 'src/configs/commonTypes'
 import { NoDataFallback } from 'src/components'
-import { Button } from 'pink-lava-ui'
+import { Button, Table } from 'pink-lava-ui'
 
 // import { columns as rawColumns } from './columns'
 import { ICEdit, ICDelete, ICSave, ICPlusWhite } from 'src/assets'

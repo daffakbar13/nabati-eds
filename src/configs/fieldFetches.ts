@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getUom } from 'src/api/master-data';
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -73,6 +73,30 @@ export function fieldBranch(search: string) {
 
 export function fieldSalesman(search: string) {
     return getSalesmanByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
+                // .splice(0, 5)
+                .map(({ id }) => ({
+                    label: id,
+                    value: id,
+                })))
+}
+
+export function fieldItem(search: string) {
+    return getProductByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ name }) => name.toLowerCase().includes(search.toLowerCase()))
+                // .splice(0, 5)
+                .map(({ name, product_id }) => ({
+                    label: name,
+                    value: product_id,
+                })))
+}
+
+export function fieldUom(search: string) {
+    return getUom()
         .then((result) =>
             result.data
                 .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))

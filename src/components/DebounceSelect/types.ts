@@ -6,4 +6,5 @@ export interface DebounceSelectProps<ValueType = any>
   fetchOptions: (search: string) => Promise<ValueType[]>
   debounceTimeout?: number
   label?: React.ReactNode
+  required?: boolean
 }

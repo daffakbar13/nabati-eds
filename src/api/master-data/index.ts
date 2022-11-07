@@ -13,6 +13,8 @@ const subUrl = {
   getCustomerByCompany: 'v1/master/get-customer/PP01',
   getSalesOrgByCompany: 'v1/master/get-sales-org/PP01',
   getSalesmanByCompany: 'v1/master/get-salesman/PP01',
+  getProductByCompany: 'v1/master/get-product/PP01',
+  getUom: 'v1/master/get-uom',
 }
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
@@ -41,6 +43,26 @@ export const getSalesmanByCompany = async (): Promise<CommonDetailResponse<any>>
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getSalesmanByCompany,
+  })
+
+  return response.data
+}
+
+export const getProductByCompany = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getProductByCompany,
+  })
+
+  return response.data
+}
+
+export const getUom = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getUom,
   })
 
   return response.data
