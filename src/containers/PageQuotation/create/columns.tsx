@@ -1,9 +1,9 @@
 import React from 'react'
 import { Text } from 'pink-lava-ui'
-import { InputNumber, Input } from 'antd'
+import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { CommonSelectValue } from 'src/configs/commonTypes'
-import { fakeApi } from 'src/api/fakeApi'
+import { fieldItem, fieldUom } from 'src/configs/fieldFetches'
 
 export const columns = () => [
   {
@@ -12,10 +12,10 @@ export const columns = () => [
         Item
       </Text>
     ),
-    dataIndex: 'item',
-    key: 'item',
+    dataIndex: 'product_id',
+    key: 'product_id',
     editable: true,
-    inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
+    inputNode: <DebounceSelect allowClear fetchOptions={fieldItem} />,
     render: (obj: CommonSelectValue) => obj?.label,
   },
   {
@@ -24,10 +24,10 @@ export const columns = () => [
         Uom
       </Text>
     ),
-    dataIndex: 'uom',
-    key: 'uom',
+    dataIndex: 'uom_id',
+    key: 'uom_id',
     editable: true,
-    inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
+    inputNode: <DebounceSelect allowClear fetchOptions={fieldUom} />,
     render: (obj: CommonSelectValue) => obj?.label,
   },
   {
@@ -36,15 +36,15 @@ export const columns = () => [
         Quantity
       </Text>
     ),
-    dataIndex: 'qty',
-    key: 'qty',
+    dataIndex: 'order_qty',
+    key: 'order_qty',
     editable: true,
     inputNode: <InputNumber />,
   },
   {
     title: (
       <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Base Price
+        Based Price
       </Text>
     ),
     dataIndex: 'price',
@@ -55,11 +55,11 @@ export const columns = () => [
   {
     title: (
       <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Gross
+        Sub Total
       </Text>
     ),
-    dataIndex: 'gross',
-    key: 'gross',
+    dataIndex: 'sub_total',
+    key: 'sub_total',
     editable: true,
     inputNode: <InputNumber />,
   },

@@ -14,7 +14,7 @@ const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 export const getBilling = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<BillingItem>> => {
-  const response = await call({ method: METHODS.POST, overrideBaseUrl, subUrl })
+  const response = await call({ method: METHODS.POST, overrideBaseUrl, subUrl, data: params })
   return response.data
 }
 

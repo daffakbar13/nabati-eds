@@ -2,88 +2,102 @@ import React, { useState, useCallback, useRef, useMemo } from 'react'
 import { FilterOption } from 'src/configs/filterType'
 import { Button, Row, Modal } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
+import { fieldBranch, fieldQuotationType, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import SingleFilter from './SingleFilter'
 
 interface FILTER_TYPE {
-  SALES_ORG?: 'sales_org'
-  BRANCH?: 'branch'
-  SOLD_TO_CUSTOMER?: 'sold_to_customer'
-  SHIP_TO_CUSTOMER?: 'ship_to_customer'
-  ORDER_TYPE?: 'order_type'
+  SALES_ORG?: 'sales_org_id'
+  BRANCH?: 'branch_id'
+  SOLD_TO_CUSTOMER?: 'sold_to_customer_id'
+  SHIP_TO_CUSTOMER?: 'ship_to_customer_id'
+  ORDER_TYPE?: 'order_type_id'
   ORDER_DATE?: 'order_date'
 }
 export const FILTER: FILTER_TYPE = {
-  SALES_ORG: 'sales_org',
-  BRANCH: 'branch',
-  SOLD_TO_CUSTOMER: 'sold_to_customer',
-  SHIP_TO_CUSTOMER: 'ship_to_customer',
-  ORDER_TYPE: 'order_type',
+  SALES_ORG: 'sales_org_id',
+  BRANCH: 'branch_id',
+  SOLD_TO_CUSTOMER: 'sold_to_customer_id',
+  SHIP_TO_CUSTOMER: 'ship_to_customer_id',
+  ORDER_TYPE: 'order_type_id',
   ORDER_DATE: 'order_date',
 }
 
 const defaultFilterOptions: FilterOption[] = [
   {
-    fields: 'sales_org',
+    field: 'sales_org_id',
     label: 'Sales Organization',
     option: 'LE',
     dataType: 'S',
+    searchApi: fieldSalesOrg,
   },
   {
-    fields: 'branch',
+    field: 'branch_id',
     label: 'Branch',
     option: 'EQ',
     dataType: 'S',
+    searchApi: fieldBranch,
   },
   {
-    fields: 'sold_to_customer',
+    field: 'sold_to_customer_id',
     label: 'Sold to Customer',
     option: 'LE',
     dataType: 'S',
+    searchApi: fieldSoldToCustomer,
   },
   {
-    fields: 'ship_to_customer',
+    field: 'ship_to_customer_id',
     label: 'Ship to Customer',
     option: 'LT',
     dataType: 'S',
+    searchApi: fieldShipToCustomer,
   },
   {
-    fields: 'order_type',
+    field: 'order_type_id',
     label: 'Order type',
     option: 'GT',
     dataType: 'S',
+    searchApi: fieldQuotationType,
   },
   {
-    fields: 'order_date',
+    field: 'order_date',
     label: 'Order Date',
     option: 'GE',
     dataType: 'S',
+    isDate: true,
   },
 ]
 
 const getFiltersConfig = (a: string[]) => {
-  const res = a.map((current) => defaultFilterOptions.find((opt) => opt.fields === current))
+  const res = a.map((current) => defaultFilterOptions.find((opt) => opt.field === current))
   return res
 }
 
 export const useSmartFilters = (configs: string[]) => {
   const [filters, setFilters] = useState(getFiltersConfig(configs))
-  return [filters, setFilters]
+  return { filters, setFilters }
 }
 
 function SmartFilter({ filters, onOk }) {
   const previousValue = useMemo(() => [...filters], [filters])
   const [currentValue, setCurrentFilter] = useState<FilterOption[]>(filters)
+  const [filtered, setFiltered] = React.useState({})
 
   const [showFilter, setShowFilter] = useState(false)
 
   const onChangeOption = useCallback(
     (newObj: FilterOption) => {
-      const index = currentValue.findIndex((o) => o.fields === newObj.fields)
+      const index = currentValue.findIndex((o) => o.field === newObj.field)
       const newOptions = [...currentValue]
       newOptions[index] = { ...newOptions[index], ...newObj }
       setCurrentFilter(newOptions)
+      // setFiltered({
+      //   ...filtered,
+      //   field: `eds_order.${newObj.field}`,
+      //   option: newObj.option,
+      //   from_value: newObj.fromValue,
+      // })
     },
-    [currentValue],
+    [currentValue, filtered],
   )
 
   const handleApply = () => {
@@ -96,6 +110,7 @@ function SmartFilter({ filters, onOk }) {
   }
 
   const clearAllValue = () => {
+    onOk(currentValue)
     setCurrentFilter(currentValue.map((f) => ({ ...f, fromValue: null, toValue: null })))
   }
 
@@ -107,7 +122,13 @@ function SmartFilter({ filters, onOk }) {
   const content = (
     <div style={{ paddingBottom: 20 }}>
       {currentValue.map((opt: FilterOption) => (
-        <SingleFilter key={opt.fields} option={opt} onChange={onChangeOption} />
+        <SingleFilter
+          key={opt.field}
+          option={opt}
+          onChange={onChangeOption}
+          funcApi={opt.searchApi}
+          isDate={opt?.isDate}
+        />
       ))}
 
       <Row gap="16px" reverse>

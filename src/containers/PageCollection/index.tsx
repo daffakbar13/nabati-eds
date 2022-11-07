@@ -18,7 +18,7 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageCollection(props: PageCollectionProps) {
   const table = useTable({
-    api: '',
+    funcApi: ,
     haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })
@@ -96,7 +96,7 @@ export default function PageCollection(props: PageCollectionProps) {
             showSizeChanger
             showQuickJumper
             responsive
-            total={table.data.length}
+            total={table.total}
             showTotal={showTotal}
           />
         </div>

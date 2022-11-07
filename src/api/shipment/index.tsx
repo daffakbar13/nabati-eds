@@ -14,7 +14,7 @@ const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 export const getShipment = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<ShipmentItem>> => {
-  const response = await call({ method: METHODS.POST, overrideBaseUrl, subUrl })
+  const response = await call({ method: METHODS.POST, overrideBaseUrl, subUrl, data: params })
   return response.data
 }
 

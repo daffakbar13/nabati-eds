@@ -19,14 +19,7 @@ export default function PageBillingDetail(props: PageBillingDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
-  const data = useDetail('', getDetailBilling, { id: router.query.id as string })
-
-  React.useEffect(() => {
-    axios
-      .post('https://dist-system.nabatisnack.co.id:3001/v1/billing/list', { id: router.query.id })
-      .then((res) => console.log(res))
-      .then((e) => console.log('asd'))
-  }, [])
+  const data = useDetail(getDetailBilling, { id: router.query.id as string })
 
   return (
     <Col>

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Text } from 'pink-lava-ui'
+import { Text, DatePickerInput } from 'pink-lava-ui'
 import { ICFilterAddFolder } from 'src/assets'
-import { fakeApi } from 'src/api/fakeApi'
 import { FilterOption, OptionTypes } from 'src/configs/filterType'
 import { CommonSelectValue } from 'src/configs/commonTypes'
+import moment from 'moment'
 import DebounceSelect from '../DebounceSelect'
 import { Container } from './styledComponent'
 import OptionTypeIcon from './OptionIcon'
 
-export default function SingleFilter({ option: opt, onChange }) {
-  const [fromValue, setFromValue] = useState<CommonSelectValue>(opt.fromValue)
-  const [toValue, setToValue] = useState<CommonSelectValue>(opt.toValue)
-  const [optionType, setOptionType] = useState<OptionTypes>(opt.option)
+export default function SingleFilter({ option: opt, onChange, funcApi, isDate }) {
+  const [fromValue, setFromValue] = useState<CommonSelectValue>(opt?.fromValue)
+  const [toValue, setToValue] = useState<CommonSelectValue>(opt?.toValue)
+  const [optionType, setOptionType] = useState<OptionTypes>(opt?.option)
 
   const onChangeTypeIcon = (icon: OptionTypes) => setOptionType(icon)
   const onChangeFromValue = (e: CommonSelectValue) => {
@@ -36,22 +36,45 @@ export default function SingleFilter({ option: opt, onChange }) {
         {opt.label}
       </Text>
       <OptionTypeIcon option={opt.option} onChange={onChangeTypeIcon} />
-      <DebounceSelect
-        allowClear
-        value={opt.fromValue}
-        placeholder="Type To Search"
-        fetchOptions={fakeApi}
-        onChange={onChangeFromValue}
-      />
+      {isDate
+        ? <DatePickerInput
+          fullWidth
+          onChange={(val: any) => {
+            setFromValue({ key: val, label: val, value: val })
+          }}
+          label={''}
+          defaultValue={moment(opt.fromValue)}
+          format={'DD-MMM-YYYY'}
+        />
+        : <DebounceSelect
+          allowClear
+          value={opt.fromValue}
+          placeholder="Type To Search"
+          {...(funcApi && { fetchOptions: funcApi })}
+          onChange={onChangeFromValue}
+        />
+      }
       <Text width="fluid" variant="headingSmall" textAlign="center" style={{ fontSize: 16 }}>
         to
       </Text>
-      <DebounceSelect
-        value={opt.toValue}
-        placeholder="Type To Search"
-        fetchOptions={fakeApi}
-        onChange={onChangeToValue}
-      />
+      {isDate
+        ? <DatePickerInput
+          fullWidth
+          onChange={(val: any) => {
+            setToValue({ key: val, label: val, value: val })
+          }}
+          label={''}
+          defaultValue={moment(opt.toValue)}
+          format={'DD-MMM-YYYY'}
+        />
+        : <DebounceSelect
+          allowClear
+          value={opt.toValue}
+          placeholder="Type To Search"
+          {...(funcApi && { fetchOptions: funcApi })}
+          onChange={onChangeToValue}
+        />
+      }
       <ICFilterAddFolder />
     </Container>
   )

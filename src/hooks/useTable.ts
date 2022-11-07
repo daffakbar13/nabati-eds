@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React from 'react'
 import { CommonListParams } from 'src/api/types'
 
@@ -49,6 +50,10 @@ export default function useTable(props: useTableProps) {
     setBody((current) => ({ ...current, page, limit }))
   }
 
+  const handleFilter = (newBody: any[]) => {
+    setBody((current) => ({ ...current, filters: newBody, page: 1 }))
+  }
+
   const defineRowSelection = {
     onChange: (selectedRowKeys) => {
       setSelected(selectedRowKeys)
@@ -74,7 +79,9 @@ export default function useTable(props: useTableProps) {
         setLoading(true)
         funcApi(body)
           .then((response) => {
-            response.data.result ? updateData(response.data.result) : updateData(response.data.results)
+            response.data.result
+              ? updateData(response.data.result)
+              : updateData(response.data.results)
             setTotal(response.data.total_rows)
           })
           .catch((_) => updateData([]))
@@ -83,9 +90,6 @@ export default function useTable(props: useTableProps) {
 
     getApi()
   }, [body])
-
-  console.log(data);
-
 
   React.useEffect(() => {
     setColumns(props.columns.filter((e) => !hiddenColumns.includes(e.title)))
@@ -102,6 +106,7 @@ export default function useTable(props: useTableProps) {
     handleHideShowColumns,
     columns,
     handleResetHideShowColumns,
-    handlePagination
+    handlePagination,
+    handleFilter,
   }
 }

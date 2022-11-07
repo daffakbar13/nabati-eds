@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus';
@@ -45,21 +46,57 @@ export const TableBilling = [
     'Shipment',
     'shipment_id',
     true,
-    (link, record) => <Linked link={link} status={record.status} type='id' />
+    (link, record) => <Linked link={link} status={record.status} type='id' />,
   ),
-  CreateColumns('Vehicle Number', 'vehicle_id'),
-  CreateColumns('Driver', 'driver_name'),
-  CreateColumns('Created Date', 'created_at'),
-  CreateColumns('Total DO', 'total_do'),
-  CreateColumns('Sales Org.', 'sales_org_name'),
-  CreateColumns('Branch', 'branch_name'),
-  CreateColumns('Branch Type', 'branch_type'),
-  CreateColumns('Status', 'status'),
-  CreateColumns('Status Process', 'status_process'),
+  CreateColumns(
+    'Vehicle Number',
+    'vehicle_id',
+    true,
+  ),
+  CreateColumns(
+    'Driver',
+    'driver_name',
+    true,
+  ),
+  CreateColumns(
+    'Created Date',
+    'created_at',
+    true,
+  ),
+  CreateColumns(
+    'Total DO',
+    'total_do',
+    true,
+  ),
+  CreateColumns(
+    'Sales Org.',
+    'sales_org_name',
+    true,
+  ),
+  CreateColumns(
+    'Branch',
+    'branch_name',
+    true,
+  ),
+  CreateColumns(
+    'Branch Type',
+    'branch_type',
+    true,
+  ),
+  CreateColumns(
+    'Status',
+    'status',
+    true,
+  ),
+  CreateColumns(
+    'Status Process',
+    'status_process',
+    true,
+  ),
   CreateColumns(
     'Action',
     'shipment_id',
     false,
-    (link, record) => <Linked link={link} status={record.status} type='action' />
+    (link, record) => <Linked link={link} status={record.status} type='action' />,
   ),
 ]

@@ -21,7 +21,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageSalesOrder(props: PageSalesOrderProps) {
-  const [filters, setFilters] = useSmartFilters([
+  const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
     FILTER.SOLD_TO_CUSTOMER,

@@ -108,7 +108,7 @@ export const TableQuotation = [
     'Status Process',
     'status_process_id',
     true,
-    (status_process) => <Tag> {status_process}</Tag>,
+    (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
   ),
   CreateColumns(
     'Action',
