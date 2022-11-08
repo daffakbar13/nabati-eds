@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
+import { Pagination, Checkbox, Popover, Divider, Typography, Tooltip } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -44,6 +44,17 @@ export default function PageQuotation(props: PageQuotationProps) {
     const [showConfirm, setShowConfirm] = React.useState('')
     const hasData = table.total > 0
     const router = useRouter()
+    const oneSelected = table.selected.length === 1
+    const firstSelected = table.selected[0]
+
+    const selectedQuotation = {
+        text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
+        content: (
+            <div style={{ textAlign: 'center' }}>
+                {table.selected.join(', ')}
+            </div>
+        ),
+    }
 
     const HideShowColumns = () => {
         const content = (
@@ -67,13 +78,13 @@ export default function PageQuotation(props: PageQuotationProps) {
                     Reset
                 </h4>
             </>
-        )
-        return (
+      )
+      return (
             <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
                 <MoreOutlined style={{ cursor: 'pointer' }} />
             </Popover>
-        )
-    }
+      )
+  }
 
     return (
         <Col>
@@ -91,18 +102,18 @@ export default function PageQuotation(props: PageQuotationProps) {
                         />
                         <SmartFilter
                             onOk={(newVal) => {
-                                const newFiltered = newVal
-                                    .filter((obj) => obj.fromValue)
-                                    .map((obj) => ({
-                                        field: `eds_order.${obj.field}`,
-                                        option: obj.option,
-                                        from_value: obj.fromValue.value,
-                                        to_value: obj.toValue?.value,
-                                    }))
-                                setFilters(newVal)
-                                table.handleFilter(newFiltered)
-                                // setFiltered(newFiltered)
-                                console.log('newVal', newVal)
+                              const newFiltered = newVal
+                                  .filter((obj) => obj.fromValue)
+                                  .map((obj) => ({
+                                      field: `eds_order.${obj.field}`,
+                                      option: obj.option,
+                                      from_value: obj.fromValue.value,
+                                      to_value: obj.toValue?.value,
+                                  }))
+                              setFilters(newVal)
+                              table.handleFilter(newFiltered)
+                              // setFiltered(newFiltered)
+                              console.log('newVal', newVal)
                             }}
                             filters={filters} />
                     </Row>
@@ -123,14 +134,14 @@ export default function PageQuotation(props: PageQuotationProps) {
             <Spacer size={10} />
             <Card style={{ padding: '16px 20px' }}>
                 <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-                <Table
-                    loading={table.loading}
-                    columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
-                    dataSource={table.data}
-                    showSorterTooltip={false}
-                    rowSelection={table.rowSelection}
-                    rowKey={'id'}
-                />
+                  <Table
+                      loading={table.loading}
+                      columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
+                      dataSource={table.data}
+                      showSorterTooltip={false}
+                      rowSelection={table.rowSelection}
+                      rowKey={'id'}
+                  />
                 </div>
                 {hasData && (
                     <Pagination
@@ -149,16 +160,16 @@ export default function PageQuotation(props: PageQuotationProps) {
                     <FloatAction>
                         <div
                             style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              justifyContent: 'center',
                             }}
                         >
                             <b>{table.selected.length} Document Quotation are Selected</b>
                         </div>
                         <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
                             <Button size="big" variant="tertiary" onClick={() => { }}>
-                                Cancel
+                              Cancel Process
                             </Button>
                             <Button
                                 size="big"
@@ -173,12 +184,18 @@ export default function PageQuotation(props: PageQuotationProps) {
                     </FloatAction>
                 )}
                 {showConfirm === 'submit' && (
-                    <Popup>
+                  <Popup onOutsideClick={() => { setShowConfirm('') }}>
                         <Typography.Title level={3} style={{ margin: 0 }}>
                             Confirm Submit
                         </Typography.Title>
                         <Typography.Title level={5} style={{ margin: 0 }}>
-                            Are you sure to submit quotation {table.selected.join(', ')} ?
+                          Are you sure to submit quotation
+                          {oneSelected
+                              ? ` ${selectedQuotation.text} ?`
+                              : <Popover content={selectedQuotation.content}>
+                                  {` ${selectedQuotation.text} ?`}
+                              </Popover>
+                          }
                         </Typography.Title>
                         <div style={{ display: 'flex', gap: 10 }}>
                             <Button size="big" style={{ flexGrow: 1 }} variant="secondary" onClick={() => { router.reload() }}>
@@ -192,5 +209,5 @@ export default function PageQuotation(props: PageQuotationProps) {
                 )}
             </Card>
         </Col>
-    )
+  )
 }

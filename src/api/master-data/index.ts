@@ -15,6 +15,8 @@ const subUrl = {
   getSalesmanByCompany: 'v1/master/get-salesman/PP01',
   getProductByCompany: 'v1/master/get-product/PP01',
   getUom: 'v1/master/get-uom',
+  getProductById: '/v1/master/get-product/PP01/',
+  getPricingByIdAndUom: 'v1/master/get-pricing-group/PP01',
 }
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
@@ -58,11 +60,25 @@ export const getProductByCompany = async (): Promise<CommonDetailResponse<any>> 
   return response.data
 }
 
-export const getUom = async (): Promise<CommonDetailResponse<any>> => {
+export const getProductById = async (id: string): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: subUrl.getUom,
+    subUrl: subUrl.getProductById + id,
+  })
+
+  return response.data
+}
+
+export const getPricingByIdAndUom = async (
+  product_id: string,
+  uom_id: string,
+): Promise<CommonDetailResponse<any>> => {
+  const now = new Date().toISOString()
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getPricingByIdAndUom}/${product_id}/15/${uom_id}/${now}`,
   })
 
   return response.data

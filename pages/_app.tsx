@@ -2,14 +2,12 @@ import { useState, useEffect } from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import DashboardLayout from 'src/containers/Layouts/DashboardLayout'
 import 'pink-lava-ui/index.css'
 import 'src/styles/globals.css'
-// import { menu } from 'src/configs/menus'
 import { useTitle } from 'src/hooks'
-
 import Loader from 'src/components/Loader';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -56,7 +54,6 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <style></style>
       </Head>
       <>
-        {/* <Loader /> */}
         {loading && getLayout(<Loader />)}
         {!loading && getLayout(<Component {...pageProps} />)}
       </>

@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getUom } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById } from 'src/api/master-data';
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -95,14 +95,18 @@ export function fieldItem(search: string) {
                 })))
 }
 
-export function fieldUom(search: string) {
-    return getUom()
-        .then((result) =>
-            result.data
-                .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
-                // .splice(0, 5)
-                .map(({ id }) => ({
-                    label: id,
-                    value: id,
-                })))
+export function fieldUom(search: string, product_id: string): Promise<any> {
+    return getProductById(product_id)
+        .then((result) => result.data)
+        .then(({ base_uom_id, middle_uom_id, high_uom_id }) => [
+            { label: base_uom_id, value: base_uom_id },
+            { label: middle_uom_id, value: middle_uom_id },
+            { label: high_uom_id, value: high_uom_id },
+        ])
+        .then((data) => data.filter(({ label }) => label?.toLowerCase().includes(search.toLowerCase())))
+}
+
+export function fieldPrice(product_id: string, uom: string) {
+    return getPricingByIdAndUom(product_id, uom)
+        .then((result) => result.data?.price)
 }

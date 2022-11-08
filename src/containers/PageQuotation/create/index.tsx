@@ -9,10 +9,10 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { fakeApi } from 'src/api/fakeApi'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import { createQuotation } from 'src/api/quotation'
-import { getCustomerByCompany } from 'src/api/master-data'
+import { getCustomerByCompany, getProductByCompany } from 'src/api/master-data'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { columns } from './columns'
+import { useColumns } from './columns'
 import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from '../../../configs/fieldFetches'
 
 export default function CreateQuotation() {
@@ -62,6 +62,16 @@ export default function CreateQuotation() {
   }
 
   React.useEffect(() => {
+    function fieldPrice(search: string) {
+      return getProductByCompany()
+        .then((result) =>
+          // eslint-disable-next-line implicit-arrow-linebreak
+          result.data
+            .find(({ name }) => name.toLowerCase().includes(search.toLowerCase())))
+    }
+
+    fieldPrice('NABATI RICHEESE 320g MT (6k)').then((e) => console.log(e))
+
     console.log(dataForm)
   }, [dataForm])
 
@@ -199,7 +209,7 @@ export default function CreateQuotation() {
           </div>
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <TableEditable data={data} setData={setData} columns={columns()} />
+        <TableEditable data={data} setData={setData} columns={useColumns()} />
       </Card>
       {
         (newQuotation || draftQuotation || cancel)

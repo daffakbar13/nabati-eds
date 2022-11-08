@@ -1,11 +1,25 @@
 import React from 'react'
 
 interface PopupProps {
-  children?: React.ReactNode
+  children?: React.ReactNode,
+  onOutsideClick?: () => void
+}
+
+const useOutsideClick = (ref, handleOutsideClick) => {
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        handleOutsideClick()
+      }
+    }
+    document.addEventListener('click', handleClickOutside);
+  }, [handleOutsideClick, ref])
 }
 
 export default function Popup(props: PopupProps) {
-  const { children } = props
+  const { children, onOutsideClick } = props
+  const wrapper = React.useRef(null)
+  useOutsideClick(wrapper, onOutsideClick)
 
   return (
     <div
@@ -33,6 +47,7 @@ export default function Popup(props: PopupProps) {
           borderRadius: 8,
           // width: 780,
         }}
+        ref={wrapper}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{children}</div>
       </div>
