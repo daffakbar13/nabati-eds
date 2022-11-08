@@ -26,9 +26,10 @@ export default function CreateColumns(
   }
 }
 
-export function dataIndexWithSorter(dataIndex: string) {
+export function dataIndexWithSorter(dataIndex: string, options: any = {}) {
   return {
     dataIndex,
     sorter: { compare: (a: any, b: any) => a[dataIndex] - b[dataIndex] },
+    ...options,
   }
 }
