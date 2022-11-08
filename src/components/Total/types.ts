@@ -1,5 +1,5 @@
 export interface TotalProps {
   label: string
-  value: number
+  value: number | string
   largeSize?: boolean
 }

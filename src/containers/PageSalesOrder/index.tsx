@@ -63,9 +63,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
 
   const HideShowColumns = () => (
     <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-      <span style={{ color: '#f0f0f0' }}>___</span>
       <MoreOutlined />
-      <span style={{ color: '#f0f0f0' }}>___</span>
     </Popover>
   )
 

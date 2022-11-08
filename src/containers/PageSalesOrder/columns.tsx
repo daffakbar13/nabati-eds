@@ -45,19 +45,19 @@ export const TableSalesOrder = [
     'Sales Order ',
     'id',
     true,
-    (link: string) => <Linked link={link} type="id" />
+    (link: string) => <Linked link={link} type="id" />,
   ),
   CreateColumns('Order Type', 'order_type_id', true),
   CreateColumns(
     'Order Date',
     'order_date',
     true,
-    (date) => <DateFormat date={date} format='DD-MM-YYYY' />
+    (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
   ),
   CreateColumns('Sales Org.', 'sales_org_id', true),
   CreateColumns('Branch', 'branch_id', true),
-  CreateColumns('Sold To Customer', 'sold_to_customer_name', true),
-  CreateColumns('Ship To Customer', 'ship_to_customer_name', true),
+  CreateColumns('Sold To Customer', 'sold_to_customer_id', true),
+  CreateColumns('Ship To Customer', 'ship_to_customer_id', true),
   CreateColumns('Salesman', 'salesman_id', true),
   CreateColumns('Total Amount', 'total_amount', true),
   CreateColumns('Create From', 'created_from', true),
@@ -66,7 +66,7 @@ export const TableSalesOrder = [
     'Status',
     'status_name',
     true,
-    (status) => <Tag {...(status === 'Completed' && { color: 'green' })} > {status}</Tag>
+    (status) => <Tag {...(status === 'Completed' && { color: 'green' })} > {status}</Tag>,
   ),
   CreateColumns('Status Process', 'dfg', true),
   CreateColumns('Action', 'id', false, (link: string) => <Linked link={link} type="action" />),

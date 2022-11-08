@@ -1,9 +1,11 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui';
 import { PATH } from 'src/configs/menus';
 import React from 'react';
+import DateFormat from 'src/components/DateFormat';
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -57,6 +59,7 @@ export const TableBilling = [
     'Order Date',
     'order_date',
     true,
+    (order_date) => <DateFormat date={order_date} format='DD-MM-YYYY' />,
   ),
   CreateColumns(
     'Sales Org.',

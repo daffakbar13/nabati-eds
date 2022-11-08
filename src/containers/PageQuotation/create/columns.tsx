@@ -78,7 +78,7 @@ export const useColumns = () => {
       ),
       dataIndex: 'price',
       key: 'price',
-      render: () => <InputNumber disabled value={basedPrice.toLocaleString() || 0} />,
+      render: () => <InputNumber disabled value={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(basedPrice) || 0} />,
     },
     {
       title: (
@@ -88,7 +88,19 @@ export const useColumns = () => {
       ),
       dataIndex: 'sub_total',
       key: 'sub_total',
-      render: () => <InputNumber disabled value={price.toLocaleString() || 0} />,
+      render: () => <InputNumber disabled value={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price) || 0
+      } />,
+    },
+    {
+      title: (
+        <Text variant="headingRegular" style={{ fontWeight: 600 }}>
+          Remarks
+        </Text>
+      ),
+      dataIndex: 'sub_total',
+      key: 'sub_total',
+      render: () => <InputNumber disabled value={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price) || 0
+      } />,
     },
   ]
 }

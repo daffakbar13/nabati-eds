@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react'
 import { Text, Spin } from 'pink-lava-ui'
 import { debounce } from 'lodash'
-import { Form, Select } from 'antd'
+import { Select } from 'antd'
 
 import { DebounceSelectProps } from './types'
 
@@ -46,7 +46,7 @@ function DebounceSelect<
 
   const mainComponent = (
     <Select
-      showSearch
+      // showSearch
       aria-required={'true'}
       labelInValue
       filterOption={false}

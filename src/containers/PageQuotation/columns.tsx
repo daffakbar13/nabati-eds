@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
@@ -92,6 +93,7 @@ export const TableQuotation = [
     'Total Amount',
     'total_amount',
     true,
+    (total_amount) => parseInt(total_amount).toLocaleString(),
   ),
   CreateColumns(
     'Create From',

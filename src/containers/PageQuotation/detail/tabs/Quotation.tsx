@@ -3,9 +3,8 @@ import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import { Spacer, Table } from 'pink-lava-ui'
-import useDetail from 'src/hooks/useDetail'
-import { ColumnsQuotation } from '../columns'
 import dateFormat from 'src/utils/dateFormat'
+import { ColumnsQuotation } from '../columns'
 
 interface QuotationProps {
   data: any
@@ -37,11 +36,12 @@ export default function Quotation(props: QuotationProps) {
     createDataList('Created From', data.created_from),
   ]
 
-  if (data.items) {
-    data.items.forEach((obj, index) => {
-      Object.assign(obj, { no: index + 1, sub_total: obj.order_qty * obj.price })
-    })
-  }
+  const arrSubTotal = data.items?.map(({ price }) => price)
+
+  let totalAmount = 0
+  arrSubTotal?.forEach((element) => {
+    totalAmount += element
+  });
 
   return (
     <>
@@ -69,7 +69,7 @@ export default function Quotation(props: QuotationProps) {
       <Spacer size={30} />
       <Row>
         <Col span={12} offset={12}>
-          <Total label="Total Amount" value={data.total_amount} />
+          <Total label="Total Amount" value={totalAmount.toLocaleString()} />
         </Col>
       </Row>
     </>
