@@ -7,6 +7,7 @@ export default function CreateColumns(
   dataIndex: string,
   sorter?: boolean,
   render?: (text: string, record?: any, index?: number) => React.ReactNode,
+  width: number = 200,
 ) {
   return {
     title,
@@ -20,7 +21,7 @@ export default function CreateColumns(
     } : false,
     render,
     ellipsis: true,
-    width: 200,
+    width,
     minWidth: 200,
   }
 }
