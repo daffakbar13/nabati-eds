@@ -1,3 +1,5 @@
+import moment from 'moment'
+import React from 'react'
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 // import { useRouter } from 'next/router'
 // import React from 'react'
@@ -5,89 +7,119 @@ import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 // import { PATH } from 'src/configs/menus'
 
 export const columns = [
-  {
-    title: 'No',
-    ...dataIndexWithSorter('branch_id'),
-    render: (text, record, index) => <>{index + 1}</>,
-  },
-  {
-    title: 'Material Document',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Material',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Doc. Header Text',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Posting Date',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Movement Type',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Reservation',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Purchase Order',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Time of Entry',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'SLoc',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Customer',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Debt/Credit',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Qty in Unit of Entry',
-    ...dataIndexWithSorter('branch_id'),
-    width: '200px',
-    render: (text: any, record: any) => (
-      <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>{text}</div>
-    ),
-  },
-  {
-    title: 'Unit of Entry',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Quantity',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Base UoM',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Branch',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Document Date',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'User Name',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Item Autometically Created',
-    ...dataIndexWithSorter('branch_id'),
-  },
+  CreateColumns(
+    'No',
+    'sloc_id',
+    true,
+    (text, record, index) => <>{index + 1}</>,
+    100,
+  ),
+  CreateColumns(
+    'Material Document',
+    'material_document',
+    true,
+  ),
+  CreateColumns(
+    'Material',
+    'product_id',
+    true,
+    (productId, record) => <>{`${productId} - ${record.product_description}`}</>,
+    400,
+  ),
+  CreateColumns(
+    'Doc. Header Text',
+    'doc_header_text',
+    true,
+  ),
+  CreateColumns(
+    'Posting Date',
+    'posting_date',
+    true,
+    (text) => <>{moment(text).format('DD-MMM-YYYY')}</>,
+  ),
+  CreateColumns(
+    'Movement Type',
+    'movement_type_id',
+    true,
+  ),
+  CreateColumns(
+    'Reservation',
+    'reservation',
+    true,
+  ),
+  CreateColumns(
+    'Purchase Order',
+    'purchase_order',
+    true,
+  ),
+  CreateColumns(
+    'Time of Entry',
+    'time_of_entry',
+    true,
+  ),
+  CreateColumns(
+    'SLoc',
+    'sloc',
+    true,
+  ),
+  CreateColumns(
+    'Customer',
+    'customer_id',
+    true,
+    (text, record) => <>{`${text} - ${record.customer_name}`}</>,
+    400,
+  ),
+  CreateColumns(
+    'Debt/Credit',
+    'debet_credit',
+    true,
+  ),
+  CreateColumns(
+    'Qty in Unit of Entry',
+    'qty_unit_of_entry',
+    true,
+  ),
+  CreateColumns(
+    'Qty in Unit of Entry',
+    'qty_unit_of_entry',
+    true,
+  ),
+  CreateColumns(
+    'Unit of Entry',
+    'unit_of_entry',
+    true,
+  ),
+  CreateColumns(
+    'Quantity',
+    'quantity',
+    true,
+  ),
+  CreateColumns(
+    'Base UoM',
+    'base_uom',
+    true,
+  ),
+  CreateColumns(
+    'Branch',
+    'branch_id',
+    true,
+    (branchId, record) => <>{`${branchId} - ${record.branch_name}`}</>,
+    300,
+  ),
+  CreateColumns(
+    'Document Date',
+    'document_date',
+    true,
+    (text) => <>{moment(text).format('DD-MMM-YYYY')}</>,
+  ),
+  CreateColumns(
+    'User Name',
+    'user_name',
+    true,
+  ),
+  CreateColumns(
+    'Item Autometically Created',
+    'item_automatically_created',
+    true,
+  ),
 ]

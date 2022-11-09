@@ -20,7 +20,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageGoodReceiptIntraBranch(props: PageRealTimeProps) {
-  const [filters, setFilters] = useSmartFilters([
+  const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
     FILTER.SOLD_TO_CUSTOMER,

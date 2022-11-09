@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { MoreOutlined } from '@ant-design/icons'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 
-import { Card, FloatAction, Popup } from 'src/components'
+import { Card } from 'src/components'
 import { useTable, useTitlePage } from 'src/hooks'
 import { colors } from 'src/configs/colors'
 
-import { getStockRealtimeList } from 'src/api/logistic/stock-real-time'
+import { getAvailabilityOverview } from 'src/api/logistic/availability-overview'
 
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PageRealTimeProps } from './types'
@@ -19,8 +19,8 @@ function showTotal(total: number, range: number[]) {
   return <p>{text}</p>
 }
 
-export default function PageAvailabilityOverview(props: PageRealTimeProps) {
-  const [filters, setFilters] = useSmartFilters([
+export default function PageRealTime(props: PageRealTimeProps) {
+  const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
     FILTER.SOLD_TO_CUSTOMER,
@@ -30,77 +30,42 @@ export default function PageAvailabilityOverview(props: PageRealTimeProps) {
   ])
 
   const table = useTable({
-    api: '',
-    funcApi: getStockRealtimeList,
+    funcApi: getAvailabilityOverview,
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns,
   })
   const titlePage = useTitlePage('list')
-  const [showConfirm, setShowConfirm] = React.useState('')
-
-  const content = (
-    <>
-      {columns.map(({ title }, index) => (
-        <div key={index}>
-          <Checkbox
-            defaultChecked={!table.hiddenColumns.includes(title)}
-            onChange={(event) => {
-              table.handleHideShowColumns(event.target, title)
-            }}
-          />{' '}
-          {title}
-        </div>
-      ))}
-      <Divider />
-      <h4
-        onClick={table.handleResetHideShowColumns}
-        style={{ textAlign: 'center', cursor: 'pointer' }}
-      >
-        Reset
-      </h4>
-    </>
-  )
-
-  const HideShowColumns = () => (
-    <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-      <span style={{ color: '#f0f0f0' }}>___</span>
-      <MoreOutlined />
-      <span style={{ color: '#f0f0f0' }}>___</span>
-    </Popover>
-  )
-
-  // useEffect(() => {
-  //     const fetchData = () => {
-  //         const myHeaders = new Headers();
-  //         myHeaders.append('Content-Type', 'application/json');
-
-  //         const raw = JSON.stringify({
-  //             filters: [
-  //                 {
-  //                     field: 'product_id',
-  //                     option: 'BT',
-  //                     from_value: '300006',
-  //                     to_value: '300007',
-  //                     data_type: 'S',
-  //                 },
-  //             ],
-  //             limit: 8,
-  //             page: 1,
-  //         });
-
-  //         fetch('https://dist-system.nabatisnack.co.id:3002/v1/stocks/list', {
-  //             method: 'POST',
-  //             headers: myHeaders,
-  //             body: raw,
-  //             redirect: 'follow',
-  //         })
-  //             .then((response) => response.text())
-  //             .then((result) => console.log(result))
-  //             .catch((error) => console.log('error', error));
-  //     }
-
-  //     fetchData()
-  // }, [])
+  const hasData = table.total > 0
+  // const HideShowColumns = () => {
+  //   const content = (
+  //     <>
+  //       {columns.map(({ title }, index) => (
+  //         <div key={index}>
+  //           <Checkbox
+  //             defaultChecked={!table.hiddenColumns.includes(title)}
+  //             onChange={(event) => {
+  //               table.handleHideShowColumns(event.target, title)
+  //             }}
+  //           />{' '}
+  //           {title}
+  //         </div>
+  //       ))}
+  //       <Divider />
+  //       <h4
+  //         onClick={table.handleResetHideShowColumns}
+  //         style={{ textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
+  //       >
+  //         Reset
+  //       </h4>
+  //     </>
+  //   )
+  //   return (
+  //     <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content}
+  // trigger = "click" >
+  //       <MoreOutlined style={{ cursor: 'pointer' }} />
+  //     </Popover>
+  //   )
+  // }
 
   return (
     <Col>
@@ -127,67 +92,28 @@ export default function PageAvailabilityOverview(props: PageRealTimeProps) {
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
-        <Table
-          loading={table.loading}
-          columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
-          dataSource={table.data}
-          showSorterTooltip={false}
-          pagination={false}
-        />
-        <Pagination
-          defaultPageSize={20}
-          pageSizeOptions={[20, 50, 100]}
-          showLessItems
-          showSizeChanger
-          showQuickJumper
-          responsive
-          total={table.data.length}
-          showTotal={showTotal}
-        />
-        {table.selected.length > 0 && (
-          <FloatAction>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <b>{table.selected.length} Document Quotation are Selected</b>
-            </div>
-            <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => { }}>
-                Cancel
-              </Button>
-              <Button
-                size="big"
-                variant="primary"
-                onClick={() => {
-                  setShowConfirm('submit')
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </FloatAction>
-        )}
-        {showConfirm === 'submit' && (
-          <Popup>
-            <Typography.Title level={3} style={{ margin: 0 }}>
-              Confirm Submit
-            </Typography.Title>
-            <Typography.Title level={5} style={{ margin: 0 }}>
-              Are you sure to submit quotation {table.selected.join(', ')} ?
-            </Typography.Title>
-            <div>
-              <Button size="big" variant="secondary" onClick={() => { }}>
-                Download
-              </Button>
-              <Button size="big" variant="primary" onClick={() => { }}>
-                Create
-              </Button>
-            </div>
-          </Popup>
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table
+            loading={table.loading}
+            columns={[...table.columns,
+              // { title: <HideShowColumns />, width: 500 }
+            ]}
+            dataSource={table.data}
+            showSorterTooltip={false}
+          />
+        </div>
+        {hasData && (
+          <Pagination
+            defaultPageSize={20}
+            pageSizeOptions={[20, 50, 100]}
+            showLessItems
+            showSizeChanger
+            showQuickJumper
+            responsive
+            total={table.total}
+            showTotal={showTotal}
+            onChange={(page, limit) => { table.handlePagination(page, limit) }}
+          />
         )}
       </Card>
     </Col>
