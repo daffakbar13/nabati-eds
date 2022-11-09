@@ -1,9 +1,9 @@
 import React from 'react'
 import PageIntraChannelRequest from 'src/containers/PageIntraChannelRequest'
 
-interface IntraChannelRequestProps { }
+interface RequestIntraChannelProps { }
 
-export default function Quotation(props: IntraChannelRequestProps) {
+export default function RequestIntraChannel(props: RequestIntraChannelProps) {
     const { } = props
 
     return <PageIntraChannelRequest />
