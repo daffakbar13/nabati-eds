@@ -29,8 +29,9 @@ export const columns = [
   ),
   CreateColumns(
     'Material',
-    'item',
+    'product_id',
     true,
+    (branchId, record) => <>{`${record.product_id} - ${record.product_description}`}</>,
   ),
   CreateColumns(
     'Receiving Branch',
@@ -40,8 +41,9 @@ export const columns = [
   CreateColumns(
     'Supplying Branch',
     'supplying_branch_id',
-    // (branchId, record) => <>{`${branchId} - ${record.branch_name}`}</>,
     true,
+    (branchId, record) => <>{`${branchId} - ${record.supplying_branch_name}`}</>,
+    250,
   ),
   CreateColumns(
     'Large',
