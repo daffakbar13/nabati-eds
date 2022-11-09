@@ -1,106 +1,149 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable camelcase */
 import React from 'react'
-import { Text } from 'pink-lava-ui'
 import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { CommonSelectValue } from 'src/configs/commonTypes'
-import { fieldItem, fieldPrice, fieldUom } from 'src/configs/fieldFetches'
+import { fieldItem, fieldUom } from 'src/configs/fieldFetches'
+import { MinusCircleFilled } from '@ant-design/icons';
+import CreateColumns from 'src/utils/createColumns'
 
-export const useColumns = () => {
-  const [basedPrice, setBasedPrice] = React.useState(0)
-  const [price, setPrice] = React.useState(0)
-  const [quantity, setQuantity] = React.useState(0)
-  const [product, setProduct] = React.useState('')
-  const [uom, setUom] = React.useState('')
+export const useTableAddItem = () => {
+  const initialValue = {
+    product_id: '',
+    uom_id: '',
+    order_qty: 0,
+    price: 0,
+    sub_total: 0,
+    remarks: '',
+  }
+  const [data, setData] = React.useState([initialValue])
+  const [optionsUom, setOptionsUom] = React.useState([])
 
-  React.useEffect(() => {
-    if (product !== '' && uom !== '') {
-      fieldPrice(product, uom).then((val) => { if (!Number.isNaN(val)) setBasedPrice(val) })
+  function handleChangeData(key: string, value: string, index: number) {
+    setData(data.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
+  }
+
+  function isNullProductId(index: number) {
+    return data.find((___, i) => i === index).product_id === ''
+  }
+
+  function handleDeleteRows(index: number) {
+    if (data.length !== 1) {
+      setData(data.filter((_, i) => i !== index))
     }
-  }, [product, uom])
+  }
+
+  function handleAddItem() {
+    setData([...data, initialValue])
+  }
+
+  const styleInputNumber = {
+    border: '1px solid #AAAAAA',
+    borderRadius: 8,
+    height: 46,
+    display: 'flex',
+    alignItems: 'center',
+  }
+
+  const columns = [
+    CreateColumns(
+      '',
+      'action',
+      false,
+      (_, __, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <MinusCircleFilled
+          style={{ color: 'red', margin: 'auto' }}
+          onClick={() => { handleDeleteRows(index) }}
+        />
+      </div>,
+      55,
+    ),
+    CreateColumns(
+      'Item',
+      'product_id',
+      false,
+      (_, __, index) => <DebounceSelect
+        type='select'
+        fetchOptions={fieldItem}
+        onChange={(e) => { handleChangeData('product_id', e.value, index) }}
+      />,
+      400,
+    ),
+    CreateColumns(
+      'Uom',
+      'uom_id',
+      false,
+      (_, __, index) => <DebounceSelect
+        type='select'
+        defaultValue={optionsUom[index]}
+        options={optionsUom[index] || []}
+        disabled={isNullProductId(index)}
+        onChange={(e) => { handleChangeData('uom_id', e.value, index); }}
+      />,
+      150,
+    ),
+    CreateColumns(
+      'Quantity',
+      'order_qty',
+      false,
+      (_, __, index) => <InputNumber
+        disabled={isNullProductId(index)}
+        defaultValue={data[index].order_qty.toLocaleString()}
+        style={styleInputNumber}
+      />,
+      130,
+    ),
+    CreateColumns(
+      'Based Price',
+      'price',
+      false,
+      (_, __, index) => <InputNumber
+        disabled
+        size='large'
+        defaultValue={data[index].price.toLocaleString()}
+        style={styleInputNumber}
+      />,
+      130,
+    ),
+    CreateColumns(
+      'Sub Total',
+      'product_id',
+      false,
+      (_, __, index) => <InputNumber
+        disabled
+        size='large'
+        defaultValue={data[index].sub_total.toLocaleString()}
+        style={styleInputNumber}
+      />,
+    ), CreateColumns(
+      'Remarks',
+      'product_id',
+      false,
+      (_, __, index) => <DebounceSelect
+        type='input'
+        placeholder='e.g Testing'
+        onChange={(e) => { handleChangeData('remarks', e.target.value, index) }}
+      />,
+    ),
+  ]
 
   React.useEffect(() => {
-    setPrice(basedPrice * quantity)
-  }, [basedPrice, price, quantity])
+    data.forEach(({ product_id }, index) => {
+      if (product_id !== '') {
+        fieldUom(product_id)
+          .then((value) => {
+            const newOptionsUom = []
+            newOptionsUom.push(value)
+            setOptionsUom(newOptionsUom)
+            handleChangeData('uom_id', value[2].value, index)
+          })
+      }
+    })
+  }, [data])
 
-  return [
-    {
-      title: (
-      <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Item
-      </Text>
-      ),
-      dataIndex: 'product_id',
-      key: 'product_id',
-      editable: true,
-      inputNode: (
-        <DebounceSelect
-          allowClear
-          fetchOptions={fieldItem}
-          onChange={(val) => setProduct(val.value)} />
-      ),
-      render: (obj: CommonSelectValue) => obj?.label,
-    },
-    {
-      title: (
-      <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Uom
-      </Text>
-      ),
-      dataIndex: 'uom_id',
-      key: 'uom_id',
-      editable: true,
-      inputNode: (
-        <DebounceSelect
-          allowClear
-          disabled={product === ''}
-          fetchOptions={(search) => fieldUom(search, product)}
-          onChange={(val) => setUom(val.value)}
-        />
-      ),
-      render: (obj: CommonSelectValue) => obj?.label,
-    },
-    {
-      title: (
-      <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Quantity
-      </Text>
-      ),
-      dataIndex: 'order_qty',
-      key: 'order_qty',
-      editable: true,
-      inputNode: <InputNumber min={1} onChange={(val: number) => setQuantity(val)} />,
-    },
-    {
-      title: (
-      <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Based Price
-      </Text>
-      ),
-      dataIndex: 'price',
-      key: 'price',
-      render: () => <InputNumber disabled value={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(basedPrice) || 0} />,
-    },
-    {
-      title: (
-      <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Sub Total
-      </Text>
-      ),
-      dataIndex: 'sub_total',
-      key: 'sub_total',
-      render: () => <InputNumber disabled value={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price) || 0
-      } />,
-    },
-    {
-      title: (
-        <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-          Remarks
-        </Text>
-      ),
-      dataIndex: 'sub_total',
-      key: 'sub_total',
-      render: () => <InputNumber disabled value={new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(price) || 0
-      } />,
-    },
-  ]
+  return {
+    data,
+    handleAddItem,
+    columns,
+  }
 }

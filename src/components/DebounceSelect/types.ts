@@ -3,8 +3,10 @@ import React from 'react'
 
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType | ValueType[]>, 'options' | 'children'> {
-  fetchOptions: (search: string) => Promise<ValueType[]>
+  fetchOptions?: (search: string) => Promise<ValueType[]>
   debounceTimeout?: number
   label?: React.ReactNode
   required?: boolean
+  type?: 'select' | 'input',
+  options?: any[]
 }

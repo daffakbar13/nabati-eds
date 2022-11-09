@@ -46,70 +46,88 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
   )
 }
 
-export const TableQuotation = [
+export const TableQuotation = () => {
+  const [width, setWidth] = React.useState({
+    id: [],
+    order_type_id: [],
+    order_date: [],
+    sales_org_id: [],
+    branch_id: [],
+    sold_to_customer_id: [],
+    ship_to_customer_id: [],
+    salesman_id: [],
+    total_amount: [],
+    created_from: [],
+    status_name: [],
+    status_process_id: [],
+  })
+  return [
   CreateColumns(
     'Quotation',
     'id',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" status={record.status_name} />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    200,
   ),
   CreateColumns(
     'Order Type',
     'order_type_id',
-    true,
+    false,
+    undefined,
+    150,
   ),
   CreateColumns(
     'Order Date',
     'order_date',
-    true,
+    false,
     (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
   ),
   CreateColumns(
     'Sales Org.',
     'sales_org_id',
-    true,
+    false,
   ),
   CreateColumns(
     'Branch',
     'branch_id',
-    true,
+    false,
   ),
   CreateColumns(
     'Sold To Customer',
     'sold_to_customer_id',
-    true,
+    false,
   ),
   CreateColumns(
     'Ship To Customer',
     'ship_to_customer_id',
-    true,
+    false,
   ),
   CreateColumns(
     'Salesman',
     'salesman_id',
-    true,
+    false,
   ),
   CreateColumns(
     'Total Amount',
     'total_amount',
-    true,
+    false,
     (total_amount) => parseInt(total_amount).toLocaleString(),
   ),
   CreateColumns(
     'Create From',
     'created_from',
-    true,
+    false,
   ),
   CreateColumns(
     'Status',
     'status_name',
-    true,
+    false,
     (status) => <Tag {...(status === 'Complete' && { color: 'green' })} > {status}</Tag>,
   ),
   CreateColumns(
     'Status Process',
     'status_process_id',
-    true,
+    false,
     (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
   ),
   CreateColumns(
@@ -119,3 +137,4 @@ export const TableQuotation = [
     (link, record) => <Linked link={link} type="action" status={record.status_name} />,
   ),
 ]
+}

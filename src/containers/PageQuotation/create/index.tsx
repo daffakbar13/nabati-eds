@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
-import { Button, Col, Row, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup, TableEditable } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -11,17 +11,18 @@ import { createQuotation } from 'src/api/quotation'
 import { getProductByCompany } from 'src/api/master-data'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { useColumns } from './columns'
+import { table } from 'console'
+import { useTableAddItem } from './columns'
 import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from '../../../configs/fieldFetches'
 
 export default function CreateQuotation() {
   const now = new Date().toISOString()
-  const [data, setData] = useState<any[]>([])
   const [dataForm, setDataForm] = React.useState({})
   const [newQuotation, setNewQuotation] = React.useState()
   const [draftQuotation, setDraftQuotation] = React.useState()
   const [cancel, setCancel] = React.useState(false)
   const router = useRouter()
+  const tableAddItems = useTableAddItem()
 
   const initialValue = {
     company_id: 'PP01',
@@ -41,14 +42,7 @@ export default function CreateQuotation() {
     customer_ref: 'PO0001',
     customer_ref_date: now,
     currency_id: 'IDR',
-    items: data.map(({ product_id, order_qty, uom_id, price }) => ({
-      product_id: product_id?.value,
-      order_qty,
-      uom_id: uom_id?.value,
-      item_type_id: 'ZP01',
-      price,
-      remarks: 'test desc',
-    })),
+    items: tableAddItems.data,
   }
 
   const titlePage = useTitlePage('create')
@@ -57,24 +51,7 @@ export default function CreateQuotation() {
     const newValue = Object.assign(dataForm, { [form]: value })
 
     setDataForm(newValue)
-    console.log(dataForm)
   }
-
-  React.useEffect(() => {
-    function fieldPrice(search: string) {
-      return getProductByCompany()
-        .then((result) =>
-          // eslint-disable-next-line implicit-arrow-linebreak
-          result.data
-            .find(({ name }) => name.toLowerCase().includes(search.toLowerCase())))
-    }
-
-    fieldPrice('NABATI RICHEESE 320g MT (6k)').then((e) => console.log(e))
-
-    console.log(dataForm)
-  }, [dataForm])
-
-  console.log(new Date().toISOString());
 
   return (
     <Col>
@@ -87,14 +64,14 @@ export default function CreateQuotation() {
               Cancel
             </Button>
             <Button size="big" variant="secondary" onClick={() => {
-              createQuotation({ ...initialValue, ...dataForm, status_id: 'Draft' })
+              createQuotation({ ...initialValue, ...dataForm, status_id: 6 })
                 .then((response) => setDraftQuotation(response.data.id))
                 .catch((e) => console.log(e))
             }}>
               Save As Draft
             </Button>
             <Button size="big" variant="primary" onClick={() => {
-              createQuotation({ ...initialValue, ...dataForm })
+              createQuotation({ ...initialValue, ...dataForm, status_id: 1 })
                 .then((response) => setNewQuotation(response.data.id))
                 .catch((e) => console.log(e))
             }}>
@@ -107,7 +84,9 @@ export default function CreateQuotation() {
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
         <div style={{ display: 'flex', gap: 20 }}>
           <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
+            {/* FIXME progress buat api */}
             <DebounceSelect
+              type='select'
               label="Quotation Type"
               required
               fetchOptions={fieldQuotationType}
@@ -116,14 +95,16 @@ export default function CreateQuotation() {
               }}
             />
             <DebounceSelect
+              type='select'
               label="Sold To Customer"
               required
               fetchOptions={fieldSoldToCustomer}
               onChange={(val: any) => {
-                onChangeForm('customer_id', val.label)
+                onChangeForm('customer_id', val.value)
               }}
             />
             <DebounceSelect
+              type='select'
               label="Ship To Customer"
               fetchOptions={fieldShipToCustomer}
               onChange={(val: any) => {
@@ -131,24 +112,24 @@ export default function CreateQuotation() {
               }}
             />
             <DebounceSelect
+              type='select'
               label="Sales Organization"
               fetchOptions={fieldSalesOrg}
-              value={'PID1'}
-              disabled
+              // disabled
               onChange={(val: any) => {
                 onChangeForm('sales_org_id', val.label)
               }}
             />
             <DebounceSelect
+              type='select'
               label="Branch"
               fetchOptions={fieldBranch}
-              value={'P174'}
-              disabled
               onChange={(val: any) => {
                 onChangeForm('branch_id', val.label)
               }}
             />
             <DebounceSelect
+              type='select'
               label="Salesman"
               fetchOptions={fieldSalesman}
               onChange={(val: any) => {
@@ -199,16 +180,24 @@ export default function CreateQuotation() {
               required
             />
             <DebounceSelect
+              type='input'
               label="Reference"
-              fetchOptions={fakeApi}
-              onChange={(val: any) => {
-                onChangeForm('customer_ref', val.label)
+              // fetchOptions={fakeApi}
+              onChange={(e: any) => {
+                onChangeForm('customer_ref', e.target.value)
+                console.log('reference', e.target.value)
               }}
             />
           </div>
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <TableEditable data={data} setData={setData} columns={useColumns()} />
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table data={tableAddItems.data} columns={tableAddItems.columns} />
+        </div>
+        <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
+          Add Item
+        </Button>
+        {/* <TableEditable data={data} setData={setData} columns={useColumns()} /> */}
       </Card>
       {
         (newQuotation || draftQuotation || cancel)

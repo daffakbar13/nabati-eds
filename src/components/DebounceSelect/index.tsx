@@ -1,8 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react'
 import { Text, Spin } from 'pink-lava-ui'
 import { debounce } from 'lodash'
-import { Select } from 'antd'
-
+import { Input, Select } from 'antd'
 import { DebounceSelectProps } from './types'
 
 function DebounceSelect<
@@ -17,54 +16,93 @@ function DebounceSelect<
   style = {},
   label,
   required,
+  type,
+  options,
   ...props
 }: DebounceSelectProps<ValueType>) {
   const [fetching, setFetching] = useState(false)
-  const [options, setOptions] = useState<ValueType[]>([])
+  const [optionsFromFetch, setOptions] = useState<ValueType[]>(options)
   const fetchRef = useRef(0)
 
   const debounceFetcher = useMemo(() => {
     const loadOptions = (value: string) => {
+      if (fetchOptions) {
       fetchRef.current += 1
       const fetchId = fetchRef.current
       setOptions([])
       setFetching(true)
 
-      fetchOptions(value).then((newOptions) => {
-        if (fetchId !== fetchRef.current) {
-          // for fetch callback order
-          return
-        }
-
-        setOptions(newOptions)
-        setFetching(false)
-      })
+        fetchOptions(value).then((newOptions) => {
+          if (fetchId !== fetchRef.current) {
+            // for fetch callback order
+            return
+          }
+          setOptions(newOptions)
+          setFetching(false)
+        })
+      }
     }
 
     return debounce(loadOptions, debounceTimeout)
   }, [fetchOptions, debounceTimeout])
 
   const mainComponent = (
-    <Select
-      // showSearch
-      aria-required={'true'}
-      labelInValue
-      filterOption={false}
-      onSearch={debounceFetcher}
-      notFoundContent={fetching ? <Spin size="small" /> : null}
-      placeholder="Type To Search"
-      {...props}
-      options={options}
-      size="large"
-      style={{
-        border: '1px solid #AAAAAA',
-        borderRadius: 8,
-        height: 48,
-        display: 'flex',
-        alignItems: 'center',
-        ...style,
-      }}
-    />
+    <>
+      {type === 'select'
+        && <>
+          {!options
+            ? <Select
+              showSearch
+              aria-required={'true'}
+              labelInValue
+              filterOption={false}
+              onSearch={debounceFetcher}
+              notFoundContent={fetching ? <Spin size="small" /> : null}
+              placeholder="Type To Search"
+              {...props}
+            options={optionsFromFetch}
+            size="large"
+            style={{
+              border: '1px solid #AAAAAA',
+              borderRadius: 8,
+              height: 48,
+              display: 'flex',
+              alignItems: 'center',
+              ...style,
+            }}
+          />
+          : <Select
+            aria-required={'true'}
+            labelInValue
+            options={options}
+              {...props}
+              size="large"
+              style={{
+                border: '1px solid #AAAAAA',
+                borderRadius: 8,
+                height: 48,
+                display: 'flex',
+                alignItems: 'center',
+                ...style,
+              }}
+            />
+          }
+        </>
+      }
+      {type === 'input'
+        && <Input
+        size="large"
+        style={{
+          border: '1px solid #AAAAAA',
+          borderRadius: 8,
+          height: 48,
+          display: 'flex',
+          alignItems: 'center',
+          ...style,
+        }}
+      />
+      }
+    </>
   )
 
   if (label) {
@@ -76,9 +114,7 @@ function DebounceSelect<
           style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
         >
           {label}
-          {required
-            && <span style={{ color: 'red' }}> *</span>
-          }
+          {required && <span style={{ color: 'red' }}> *</span>}
         </Text>
         {mainComponent}
       </div>
