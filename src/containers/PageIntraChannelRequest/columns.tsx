@@ -55,18 +55,18 @@ export const TableIntraChannelRequest = [
     ),
     CreateColumns(
         'Posting Date',
-        'order_date',
+        'posting_date',
         true,
         (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
     ),
     CreateColumns(
         'Company',
-        'sold_to_customer_id',
+        'company_id',
         true,
     ),
     CreateColumns(
         'Supplying Branch',
-        'sales_org_id',
+        'supply_branch_name',
         true,
     ),
     CreateColumns(
