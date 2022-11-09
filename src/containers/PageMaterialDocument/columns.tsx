@@ -1,3 +1,4 @@
+import React from 'react'
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 // import { useRouter } from 'next/router'
 // import React from 'react'
@@ -5,15 +6,20 @@ import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 // import { PATH } from 'src/configs/menus'
 
 export const columns = [
-  {
-    title: 'No',
-    ...dataIndexWithSorter('branch_id'),
-    render: (text, record, index) => <>{index + 1}</>,
-  },
-  {
-    title: 'Material Document',
-    ...dataIndexWithSorter('branch_id'),
-  },
+  CreateColumns(
+    'No',
+    'sloc_id',
+    true,
+    (text, record, index) => <>{index + 1}</>,
+    100,
+  ),
+  CreateColumns(
+    'Material Document',
+    'product_document',
+    true,
+    (productId, record) => <>{`${productId} - ${record.product_name}`}</>,
+    400,
+  ),
   {
     title: 'Material',
     ...dataIndexWithSorter('branch_id'),
