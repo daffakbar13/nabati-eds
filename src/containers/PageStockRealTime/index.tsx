@@ -10,8 +10,8 @@ import { colors } from 'src/configs/colors'
 import { getStockRealtimeList } from 'src/api/logistic/stock-real-time'
 
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { PageRealTimeProps } from './types'
-import { StockRealTimeColumns } from './columns'
+import { Props } from './types'
+import { columns } from './columns'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -19,7 +19,7 @@ function showTotal(total: number, range: number[]) {
   return <p>{text}</p>
 }
 
-export default function PageRealTime(props: PageRealTimeProps) {
+export default function PageRealTime(props: Props) {
   const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
@@ -32,14 +32,14 @@ export default function PageRealTime(props: PageRealTimeProps) {
   const table = useTable({
     funcApi: getStockRealtimeList,
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
-    columns: StockRealTimeColumns,
+    columns,
   })
   const titlePage = useTitlePage('list')
   const hasData = table.total > 0
   const HideShowColumns = () => {
     const content = (
       <>
-        {StockRealTimeColumns.map(({ title }, index) => (
+        {columns.map(({ title }, index) => (
           <div key={index}>
             <Checkbox
               defaultChecked={!table.hiddenColumns.includes(title)}

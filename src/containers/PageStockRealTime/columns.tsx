@@ -1,7 +1,7 @@
 import React from 'react'
 import CreateColumns from 'src/utils/createColumns'
 
-export const StockRealTimeColumns = [
+export const columns = [
   CreateColumns(
     'Branch',
     'branch_id',
