@@ -1,4 +1,6 @@
+import React from 'react'
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import moment from 'moment'
 // import { useRouter } from 'next/router'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'
@@ -10,40 +12,67 @@ export const columns = [
     ...dataIndexWithSorter('branch_id'),
     render: (text, record, index) => <>{index + 1}</>,
   },
-  {
-    title: 'Branch',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Material',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'SLoc',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Date From',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Date To',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Stock Awal',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Total Stock Out',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Last Stock',
-    ...dataIndexWithSorter('branch_id'),
-  },
-  {
-    title: 'Uom',
-    ...dataIndexWithSorter('branch_id'),
-  },
+  CreateColumns(
+    'Branch',
+    'branch_id',
+    true,
+    (branchId, record) => <>{`${branchId} - ${record.branch_name}`}</>,
+    300,
+  ),
+  CreateColumns(
+    'Branch',
+    'branch_id',
+    true,
+    (branchId, record) => <>{`${branchId} - ${record.branch_name}`}</>,
+    300,
+  ),
+  CreateColumns(
+    'Material',
+    'product_id',
+    true,
+    (text, record) => <>{`${text} - ${record.product_description}`}</>,
+    400,
+  ),
+  CreateColumns(
+    'Sloc',
+    'sloc',
+    true,
+  ),
+  CreateColumns(
+    'Date From',
+    'date_from',
+    true,
+    (text) => <>{moment(text).format('DD-MMM-YYYY')}</>,
+  ),
+  CreateColumns(
+    'Date To',
+    'date_to',
+    true,
+    (text) => <>{moment(text).format('DD-MMM-YYYY')}</>,
+  ),
+  CreateColumns(
+    'Stock Awal',
+    'first_stock',
+    true,
+  ),
+  CreateColumns(
+    'Total GoodS Received',
+    'total_good_received',
+    true,
+  ),
+  CreateColumns(
+    'Total Stock Out',
+    'total_stock_out',
+    true,
+  ),
+  CreateColumns(
+    'Last Stock',
+    'last_stock',
+    true,
+  ),
+  CreateColumns(
+    'UOM',
+    'uom_id',
+    true,
+  ),
 ]
