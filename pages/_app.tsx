@@ -51,7 +51,6 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <>
       <Head>
         <title>EDS - {title}</title>
-        <style></style>
       </Head>
       <>
         {loading && getLayout(<Loader />)}

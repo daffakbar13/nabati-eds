@@ -33,12 +33,10 @@ export default function PageQuotation(props: PageQuotationProps) {
         FILTER.ORDER_DATE,
     ])
 
-    const [filtered, setFiltered] = React.useState([])
-
     const table = useTable({
         funcApi: getQuotation,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
-        columns: TableQuotation,
+        columns: TableQuotation(),
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
@@ -59,7 +57,7 @@ export default function PageQuotation(props: PageQuotationProps) {
     const HideShowColumns = () => {
         const content = (
             <>
-                {TableQuotation.map(({ title }, index) => (
+                {TableQuotation().map(({ title }, index) => (
                     <div key={index}>
                         <Checkbox
                             defaultChecked={!table.hiddenColumns.includes(title)}
