@@ -1,13 +1,13 @@
 import moment from 'moment'
 import React from 'react'
-import DateFormat from 'src/components/DateFormat'
 
 export default function CreateColumns(
   title: string | React.ReactNode,
   dataIndex: string,
   sorter?: boolean,
   render?: (text: string, record?: any, index?: number) => React.ReactNode,
-  width: number = 200,
+  width?: number,
+  fixed?: boolean | 'left' | 'right',
 ) {
   return {
     title,
@@ -20,9 +20,9 @@ export default function CreateColumns(
       },
     } : false,
     render,
+    fixed,
     ellipsis: true,
-    width,
-    minWidth: 200,
+    width: width || 180,
   }
 }
 

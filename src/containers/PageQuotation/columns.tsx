@@ -46,35 +46,21 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
   )
 }
 
-export const TableQuotation = () => {
-  const [width, setWidth] = React.useState({
-    id: [],
-    order_type_id: [],
-    order_date: [],
-    sales_org_id: [],
-    branch_id: [],
-    sold_to_customer_id: [],
-    ship_to_customer_id: [],
-    salesman_id: [],
-    total_amount: [],
-    created_from: [],
-    status_name: [],
-    status_process_id: [],
-  })
-  return [
+export const ColumnQuoatation = [
   CreateColumns(
     'Quotation',
     'id',
     true,
     (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    200,
+    180,
+    'left',
   ),
   CreateColumns(
     'Order Type',
     'order_type_id',
     false,
     undefined,
-    150,
+    120,
   ),
   CreateColumns(
     'Order Date',
@@ -137,4 +123,3 @@ export const TableQuotation = () => {
     (link, record) => <Linked link={link} type="action" status={record.status_name} />,
   ),
 ]
-}

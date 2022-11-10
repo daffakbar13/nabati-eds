@@ -1,9 +1,11 @@
+/* eslint-disable radix */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
 import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldItem, fieldUom } from 'src/configs/fieldFetches'
+import { fieldItem, fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons';
 import CreateColumns from 'src/utils/createColumns'
 
@@ -18,9 +20,11 @@ export const useTableAddItem = () => {
   }
   const [data, setData] = React.useState([initialValue])
   const [optionsUom, setOptionsUom] = React.useState([])
+  const [fetching, setFetching] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
-  function handleChangeData(key: string, value: string, index: number) {
-    setData(data.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
+  function handleChangeData(key: string, value: string | number, index: number) {
+    setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
   }
 
   function isNullProductId(index: number) {
@@ -28,9 +32,7 @@ export const useTableAddItem = () => {
   }
 
   function handleDeleteRows(index: number) {
-    if (data.length !== 1) {
-      setData(data.filter((_, i) => i !== index))
-    }
+    setData(data.filter((_, i) => i !== index))
   }
 
   function handleAddItem() {
@@ -53,7 +55,7 @@ export const useTableAddItem = () => {
       (_, __, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
         <MinusCircleFilled
           style={{ color: 'red', margin: 'auto' }}
-          onClick={() => { handleDeleteRows(index) }}
+          onClick={() => { handleDeleteRows(index); console.log('delete', index) }}
         />
       </div>,
       55,
@@ -62,10 +64,14 @@ export const useTableAddItem = () => {
       'Item',
       'product_id',
       false,
-      (_, __, index) => <DebounceSelect
+      (product_id, __, index) => <DebounceSelect
         type='select'
+        value={product_id as any}
         fetchOptions={fieldItem}
-        onChange={(e) => { handleChangeData('product_id', e.value, index) }}
+        onChange={(e) => {
+          handleChangeData('product_id', e.value, index)
+          setFetching(true)
+        }}
       />,
       400,
     ),
@@ -73,12 +79,15 @@ export const useTableAddItem = () => {
       'Uom',
       'uom_id',
       false,
-      (_, __, index) => <DebounceSelect
+      (uom_id, __, index) => <DebounceSelect
         type='select'
-        defaultValue={optionsUom[index]}
+        value={uom_id as any}
         options={optionsUom[index] || []}
         disabled={isNullProductId(index)}
-        onChange={(e) => { handleChangeData('uom_id', e.value, index); }}
+        onChange={(e) => {
+          handleChangeData('uom_id', e.value, index)
+          setFetching(true)
+        }}
       />,
       150,
     ),
@@ -86,9 +95,13 @@ export const useTableAddItem = () => {
       'Quantity',
       'order_qty',
       false,
-      (_, __, index) => <InputNumber
+      (order_qty, record, index) => <InputNumber
         disabled={isNullProductId(index)}
-        defaultValue={data[index].order_qty.toLocaleString()}
+        value={order_qty.toLocaleString()}
+        onChange={(newVal) => {
+          handleChangeData('order_qty', newVal, index)
+          handleChangeData('sub_total', parseInt(newVal) * record.price, index)
+        }}
         style={styleInputNumber}
       />,
       130,
@@ -97,53 +110,87 @@ export const useTableAddItem = () => {
       'Based Price',
       'price',
       false,
-      (_, __, index) => <InputNumber
+      (price) => <InputNumber
         disabled
-        size='large'
-        defaultValue={data[index].price.toLocaleString()}
+        value={price.toLocaleString()}
         style={styleInputNumber}
       />,
       130,
     ),
     CreateColumns(
       'Sub Total',
-      'product_id',
+      'sub_total',
       false,
-      (_, __, index) => <InputNumber
+      (sub_total) => <InputNumber
         disabled
-        size='large'
-        defaultValue={data[index].sub_total.toLocaleString()}
+        value={sub_total.toLocaleString()}
         style={styleInputNumber}
       />,
     ), CreateColumns(
       'Remarks',
-      'product_id',
+      '',
       false,
       (_, __, index) => <DebounceSelect
         type='input'
         placeholder='e.g Testing'
-        onChange={(e) => { handleChangeData('remarks', e.target.value, index) }}
+        onChange={(e) => {
+          console.log(e);
+          handleChangeData('remarks', e.target.value, index)
+        }}
       />,
     ),
   ]
 
   React.useEffect(() => {
-    data.forEach(({ product_id }, index) => {
-      if (product_id !== '') {
+    if (fetching) {
+      data.forEach(({ product_id, uom_id, order_qty }, index) => {
+        if (product_id !== '') {
         fieldUom(product_id)
           .then((value) => {
-            const newOptionsUom = []
-            newOptionsUom.push(value)
+            const newOptionsUom = [...optionsUom]
+            const newUom = uom_id === '' ? value[2].value : uom_id
+            newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
-            handleChangeData('uom_id', value[2].value, index)
+            handleChangeData('uom_id', newUom, index)
+            fieldPrice(product_id, newUom)
+              .then((price) => {
+                if (order_qty === 0) {
+                  handleChangeData('sub_total', price, index)
+                  handleChangeData('order_qty', 1, index)
+                } else {
+                  handleChangeData('sub_total', price * order_qty, index)
+                }
+                handleChangeData('price', price, index)
+              })
           })
-      }
-    })
-  }, [data])
+        }
+      })
+      setFetching(false)
+    }
+  }, [fetching])
+
+  console.log(data);
+
+  // React.useEffect(() => {
+  //   data.forEach(({ product_id, uom_id, order_qty }, index) => {
+  //     if (product_id !== '' && uom_id !== '') {
+  //       if (order_qty === 0) {
+  //         handleChangeData('order_qty', 1, index)
+  //         fieldPrice(product_id, uom_id)
+  //           .then((price) => {
+  //             const subTotal = price * order_qty
+  //             handleChangeData('price', price, index)
+  //             handleChangeData('sub_total', subTotal, index)
+  //           })
+  //       }
+  //     }
+  //   })
+  // }, [])
 
   return {
     data,
     handleAddItem,
     columns,
+    loading,
   }
 }

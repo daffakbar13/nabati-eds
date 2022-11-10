@@ -7,6 +7,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
 import { getDetailQuotation } from 'src/api/quotation'
+import { PATH } from 'src/configs/menus'
 import { PageQuotationDetailProps } from './types'
 import AllTabs from './tabs'
 import Quotation from './tabs/Quotation'
@@ -43,7 +44,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
               <Button size="big" variant="tertiary">
                 Cancel Process
               </Button>
-              <Button size="big" variant="secondary" onClick={() => { }}>
+              <Button size="big" variant="secondary" onClick={() => { router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`) }}>
                 Edit
               </Button>
             </>

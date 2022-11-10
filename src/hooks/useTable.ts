@@ -66,8 +66,8 @@ export default function useTable(props: useTableProps) {
         name: record[haveCheckbox.headCell],
       }),
     }),
-    fixed: true,
-    preserveSelectedRowKeys: true,
+    // fixed: 'left',
+    // preserveSelectedRowKeys: true,
   }
 
   React.useEffect(() => {
