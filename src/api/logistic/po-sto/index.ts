@@ -9,11 +9,11 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { StockRealTime } from './types'
 
-const url = 'v1/sto-delivery'
+const url = 'v1/sto-purchase'
 
 const overrideBaseUrl = API_BASE_URL_2
 
-export const getListDoSto = async (
+export const getListPoSto = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
