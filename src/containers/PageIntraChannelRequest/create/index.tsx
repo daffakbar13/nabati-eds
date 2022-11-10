@@ -1,0 +1,232 @@
+/* eslint-disable camelcase */
+import React from 'react'
+import moment from 'moment'
+import { Divider, Typography } from 'antd'
+import { Button, Col, Row, Spacer, Text, DatePickerInput, Table, Input } from 'pink-lava-ui'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { Card, Popup } from 'src/components'
+import useTitlePage from 'src/hooks/useTitlePage'
+import { createQuotation } from 'src/api/quotation'
+import { useRouter } from 'next/router'
+import { PATH } from 'src/configs/menus'
+import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import { useTableAddItem } from './columns'
+
+export default function PageCreateQuotation() {
+    const now = new Date().toISOString()
+    const [dataForm, setDataForm] = React.useState({})
+    const [newQuotation, setNewQuotation] = React.useState()
+    const [draftQuotation, setDraftQuotation] = React.useState()
+    const [cancel, setCancel] = React.useState(false)
+    const router = useRouter()
+    const tableAddItems = useTableAddItem()
+    const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
+
+    const initialValue = {
+        company_id: 'PP01',
+        branch_id: 'P174',
+        source_id: 'Z01',
+        order_date: now,
+        delivery_date: now,
+        pricing_date: now,
+        order_type_id: 'ZQP1',
+        customer_id: 'C1624002',
+        ship_to_id: 'C1624001',
+        salesman_id: '131603',
+        sales_org_id: 'PID1',
+        valid_from: now,
+        valid_to: now,
+        term_id: 'Z007',
+        customer_ref: 'PO0001',
+        customer_ref_date: now,
+        currency_id: 'IDR',
+        items: tableAddItems.data,
+    }
+
+    const titlePage = useTitlePage(isCreatePage ? 'create' : 'edit')
+
+    const onChangeForm = (form: string, value: any) => {
+        const newValue = Object.assign(dataForm, { [form]: value })
+
+        setDataForm(newValue)
+    }
+
+    return (
+        <Col>
+            <Text variant={'h4'}>{titlePage}</Text>
+            <Spacer size={20} />
+            <Card style={{ overflow: 'unset' }}>
+                <Row justifyContent="space-between" reverse>
+                    <Row gap="16px">
+                        <Button size="big" variant="tertiary" onClick={() => { setCancel(true); console.log('cancel', cancel) }}>
+                            Cancel
+                        </Button>
+                        <Button size="big" variant="primary" onClick={() => {
+                            createQuotation({ ...initialValue, ...dataForm, status_id: 1 })
+                                .then((response) => setNewQuotation(response.data.id))
+                                .catch((e) => console.log(e))
+                        }}>
+                            Submit
+                        </Button>
+                    </Row>
+                </Row>
+            </Card>
+            <Spacer size={10} />
+            <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
+                <div style={{ display: 'flex', gap: 20 }}>
+                    <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
+                        <DebounceSelect
+                            type='select'
+                            label="Supplying Branch"
+                            required
+                            fetchOptions={fieldQuotationType}
+                            onChange={(val: any) => {
+                                onChangeForm('order_type_id', val.label.split(' - ')[0])
+                            }}
+                        />
+                        <Input
+                            type="text"
+                            label="From Channel"
+                            disabled
+                            value={"GT"}
+                        />
+                        <Input
+                            type="text"
+                            label="From Sloc"
+                            disabled
+                            value={"GS00"}
+                        />
+                        <Input
+                            type="text"
+                            label="Header Text"
+                            placeholder="Type here..."
+                        />
+                    </div>
+                    <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
+                        <DebounceSelect
+                            type='select'
+                            label="Receiving Branch"
+                            required
+                            fetchOptions={fieldQuotationType}
+                            onChange={(val: any) => {
+                                onChangeForm('order_type_id', val.label.split(' - ')[0])
+                            }}
+                        />
+                        <Input
+                            type="text"
+                            label="To Channel"
+                            disabled
+                            value={"MT"}
+                        />
+                        <Input
+                            type="text"
+                            label="To Sloc"
+                            disabled
+                            value={"BS00"}
+                        />
+                        <DatePickerInput
+                            fullWidth
+                            onChange={(val: any) => {
+                                onChangeForm('document_date', new Date(moment(val).format()).toISOString())
+                            }}
+                            label="Document Date"
+                            defaultValue={moment()}
+                            format={'DD-MMM-YYYY'}
+                            required
+                        />
+                        <DatePickerInput
+                            fullWidth
+                            onChange={(val: any) => {
+                                onChangeForm('posting_date', new Date(moment(val).format()).toISOString())
+                            }}
+                            label="Posting Date"
+                            defaultValue={moment()}
+                            format={'DD-MMM-YYYY'}
+                            required
+                        />
+                    </div>
+                </div>
+                <Divider style={{ borderColor: '#AAAAAA' }} />
+                <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
+                    + Add Item
+                </Button>
+                <Spacer size={20} />
+                <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+                    <Table
+                        editable
+                        data={tableAddItems.data}
+                        columns={tableAddItems.columns}
+                        loading={tableAddItems.loading}
+                    />
+                </div>
+                {/* <TableEditable data={data} setData={setData} columns={useColumns()} /> */}
+            </Card>
+            {
+                (newQuotation || draftQuotation || cancel)
+                && <Popup>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Text
+                            variant="headingSmall"
+                            textAlign="center"
+                            style={{ ...(!cancel && { color: 'green' }), fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
+                        >
+                            {cancel ? 'Confirm Cancellation' : 'Success'}
+                        </Text>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                        {cancel
+                            ? 'Are you sure want to cancel? Change you made so far will not saved'
+                            : <>
+                                New Quotation
+                                <Typography.Text copyable> {newQuotation || draftQuotation}</Typography.Text>
+                                has been
+                            </>
+                        }
+                    </div>
+                    {!cancel
+                        && <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            successfully created
+                        </div>
+                    }
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+                        {cancel
+                            && <>
+                                <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
+                                    setCancel(false)
+                                }}>
+                                    No
+                                </Button>
+                                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                                    router.push(`${PATH.SALES}/quotation`)
+                                }}>
+                                    Yes
+                                </Button>
+                            </>
+                        }
+                        {newQuotation
+                            && <>
+                                <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
+                                    router.push(`${PATH.SALES}/quotation`)
+                                }}>
+                                    Back To List
+                                </Button>
+                                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                                    router.push(`${PATH.SALES}/sales-order`)
+                                }}>
+                                    Next Proccess
+                                </Button>
+                            </>
+                        }
+                        {draftQuotation
+                            && <Button size="big" variant="primary" style={{ flexGrow: 1 }} onClick={() => {
+                                router.push(`${PATH.SALES}/quotation`)
+                            }}>
+                                OK
+                            </Button>
+                        }
+                    </div>
+                </Popup>
+            }
+        </Col>
+    )
+}

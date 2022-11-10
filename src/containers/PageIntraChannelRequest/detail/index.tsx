@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, Spacer, Text, Table } from 'pink-lava-ui'
+import { Button, Spacer, Text, Table, Row } from 'pink-lava-ui'
 import { Card } from 'src/components'
-import { Row, Col, Divider } from 'antd'
+import { Col, Divider } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
@@ -58,10 +58,14 @@ export default function PageQuotationDetail() {
                 </div>
                 <Text variant={'h4'}>{titlePage}</Text>
             </div>
-            <Card style={{ padding: '16px 20px' }}>
-                <Button size="big" variant="primary" onClick={() => { }}>
-                    Cancel Process
-                </Button>
+            <Card style={{ overflow: 'unset' }}>
+                <Row justifyContent="space-between" reverse>
+                    <Row gap="16px">
+                        <Button size="big" variant="tertiary">
+                            Cancel Process
+                        </Button>
+                    </Row>
+                </Row>
             </Card>
             <Spacer size={20} />
             <Card style={{ padding: '16px 20px' }}>
