@@ -1,21 +1,18 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react'
+import React from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Card, Popup, TableEditable } from 'src/components'
+import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { fakeApi } from 'src/api/fakeApi'
 import { createQuotation } from 'src/api/quotation'
-import { getProductByCompany } from 'src/api/master-data'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { table } from 'console'
+import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
-import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from '../../../configs/fieldFetches'
 
-export default function CreateQuotation() {
+export default function PageCreateQuotation() {
   const now = new Date().toISOString()
   const [dataForm, setDataForm] = React.useState({})
   const [newQuotation, setNewQuotation] = React.useState()
@@ -23,6 +20,7 @@ export default function CreateQuotation() {
   const [cancel, setCancel] = React.useState(false)
   const router = useRouter()
   const tableAddItems = useTableAddItem()
+  const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
 
   const initialValue = {
     company_id: 'PP01',
@@ -45,7 +43,7 @@ export default function CreateQuotation() {
     items: tableAddItems.data,
   }
 
-  const titlePage = useTitlePage('create')
+  const titlePage = useTitlePage(isCreatePage ? 'create' : 'edit')
 
   const onChangeForm = (form: string, value: any) => {
     const newValue = Object.assign(dataForm, { [form]: value })
@@ -192,7 +190,12 @@ export default function CreateQuotation() {
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table data={tableAddItems.data} columns={tableAddItems.columns} />
+          <Table
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+          />
         </div>
         <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
           Add Item

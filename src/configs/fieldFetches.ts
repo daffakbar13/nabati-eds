@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany } from 'src/api/master-data';
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -83,7 +83,7 @@ export function fieldSalesman(search: string) {
 }
 
 export function fieldItem(search: string) {
-    return getProductByCompany()
+    return getPricingByCompany()
         .then((result) => result.data
             .map(({ product_id }) => product_id))
         .then((havePricing) => getProductByCompany()

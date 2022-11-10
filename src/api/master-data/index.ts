@@ -17,6 +17,7 @@ const subUrl = {
   getProductByCompany: 'v1/master/get-product/PP01',
   getUom: 'v1/master/get-uom',
   getProductById: '/v1/master/get-product/PP01/',
+  getPricingByCompany: 'v1/master/get-pricing-group/PP01',
   getPricingByIdAndUom: 'v1/master/get-pricing-group/PP01',
   getOrderType: 'v1/master/get-order-type/PP01',
 }
@@ -87,6 +88,16 @@ export const getProductById = async (id: string): Promise<CommonDetailResponse<a
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getProductById + id,
+  })
+
+  return response.data
+}
+
+export const getPricingByCompany = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getPricingByCompany,
   })
 
   return response.data

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Pagination, Checkbox, Popover, Divider, Typography, Tooltip } from 'antd'
+import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -11,9 +11,8 @@ import FloatAction from 'src/components/FloatAction'
 import { getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { PATH } from 'src/configs/menus'
 import { PageQuotationProps } from './types'
-import { TableQuotation } from './columns'
+import { ColumnQuoatation } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
@@ -32,11 +31,10 @@ export default function PageQuotation(props: PageQuotationProps) {
         FILTER.ORDER_TYPE,
         FILTER.ORDER_DATE,
     ])
-
     const table = useTable({
         funcApi: getQuotation,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
-        columns: TableQuotation(),
+        columns: ColumnQuoatation,
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
@@ -57,7 +55,7 @@ export default function PageQuotation(props: PageQuotationProps) {
     const HideShowColumns = () => {
         const content = (
             <>
-                {TableQuotation().map(({ title }, index) => (
+                {ColumnQuoatation.map(({ title }, index) => (
                     <div key={index}>
                         <Checkbox
                             defaultChecked={!table.hiddenColumns.includes(title)}
