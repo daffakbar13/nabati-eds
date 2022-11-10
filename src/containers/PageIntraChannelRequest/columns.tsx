@@ -15,7 +15,7 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
     const navigate = () => {
         status === 'Draft'
             ? router.push(`${PATH.SALES}/quotation/edit/${link}`)
-            : router.push(`${PATH.SALES}/quotation/detail/${link}?status=${status}`)
+            : router.push(`${PATH.LOGISTIC}/request-intra-channel/detail/${link}`)
     }
     const [hover, setHover] = React.useState(false)
 
@@ -55,18 +55,18 @@ export const TableIntraChannelRequest = [
     ),
     CreateColumns(
         'Posting Date',
-        'order_date',
+        'posting_date',
         true,
         (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
     ),
     CreateColumns(
         'Company',
-        'sold_to_customer_id',
+        'company_id',
         true,
     ),
     CreateColumns(
         'Supplying Branch',
-        'sales_org_id',
+        'supply_branch_name',
         true,
     ),
     CreateColumns(
@@ -85,5 +85,46 @@ export const TableIntraChannelRequest = [
         'id',
         false,
         (link, record) => <Linked link={link} type="action" status={record.status_name} />,
+    ),
+]
+
+export const TableIntraChannelRequestDetail = [
+    CreateColumns(
+        'No',
+        'id',
+        true,
+        (text: string, record: any, index: number) => index + 1,
+    ),
+    CreateColumns(
+        'Item Sender',
+        'product_sender_id',
+        true,
+        (text: string, record: any) => `${record.product_sender_id} - ${record.product_sender_name}`,
+    ),
+    CreateColumns(
+        'Item Receiver',
+        'product_receiver_id',
+        true,
+        (text: string, record: any) => `${record.product_receiver_id} - ${record.product_receiver_name}`,
+    ),
+    CreateColumns(
+        'Qty',
+        'qty',
+        true,
+    ),
+    CreateColumns(
+        'UoM',
+        'uom_id',
+        true,
+    ),
+    CreateColumns(
+        'Batch',
+        'batch',
+        true,
+    ),
+    CreateColumns(
+        'Remarks',
+        'remarks',
+        true,
     ),
 ]

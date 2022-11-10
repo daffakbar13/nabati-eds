@@ -8,7 +8,7 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { getQuotation } from 'src/api/quotation'
+import { getRequestIntraChannel } from 'src/api/request-intra-channel'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PATH } from 'src/configs/menus'
@@ -36,7 +36,7 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
     const [filtered, setFiltered] = React.useState([])
 
     const table = useTable({
-        funcApi: getQuotation,
+        funcApi: getRequestIntraChannel,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
         columns: TableIntraChannelRequest,
     })
