@@ -50,7 +50,7 @@ function Linked({ link, linkType, type }: { link: string; linkType: string; type
     )
 }
 
-export const TableIntraChannelRequest = [
+export const TableIntraChannelGoodReceipt = [
     CreateColumns(
         'Request Number',
         'delivery_number',
@@ -65,7 +65,7 @@ export const TableIntraChannelRequest = [
     ),
     CreateColumns(
         'GR Number',
-        'sold_to_customer_id',
+        'id',
         true,
         (link: string, record: any) => <Linked link={link} type="id" linkType='id' />,
     ),
@@ -91,7 +91,7 @@ export const TableIntraChannelRequest = [
         'Receiving Plant',
         'receive_plant_id',
         true,
-        (text: string, record: any) => `${record.receive_plant_id} - ${record.receive_plant_name}`,   
+        (text: string, record: any) => `${record.receive_plant_id} - ${record.receive_plant_name}`,
     ),
     CreateColumns(
         'Mov. Type',
@@ -110,5 +110,47 @@ export const TableIntraChannelRequest = [
         'id',
         false,
         (link, record) => <Linked link={link} type="action" linkType='id' />,
+    ),
+]
+
+
+export const TableIntraChannelGoodReceiptDetail = [
+    CreateColumns(
+        'No',
+        'id',
+        true,
+        (text: string, record: any, index: number) => index + 1,
+    ),
+    CreateColumns(
+        'Item Sender',
+        'material_doc_id',
+        true,
+        (text: string, record: any) => `${record.material_doc_id || ''} - ${record.material_doc_id || ''}`,
+    ),
+    CreateColumns(
+        'Item Receiver',
+        'product_id',
+        true,
+        (text: string, record: any) => `${record.product_id || ''} - ${record.product_id || ''}`,
+    ),
+    CreateColumns(
+        'Qty',
+        'qty',
+        true,
+    ),
+    CreateColumns(
+        'UoM',
+        'uom_id',
+        true,
+    ),
+    CreateColumns(
+        'Batch',
+        'batch',
+        true,
+    ),
+    CreateColumns(
+        'Remarks',
+        'remarks',
+        true,
     ),
 ]

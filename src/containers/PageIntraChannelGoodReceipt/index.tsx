@@ -13,7 +13,7 @@ import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PATH } from 'src/configs/menus'
 import { PageQuotationProps } from './types'
-import { TableIntraChannelRequest } from './columns'
+import { TableIntraChannelGoodReceipt } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
@@ -38,7 +38,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
     const table = useTable({
         funcApi: getGoodReceiptIntraChannel,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
-        columns: TableIntraChannelRequest,
+        columns: TableIntraChannelGoodReceipt,
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
@@ -59,7 +59,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
     const HideShowColumns = () => {
         const content = (
             <>
-                {TableIntraChannelRequest.map(({ title }, index) => (
+                {TableIntraChannelGoodReceipt.map(({ title }, index) => (
                     <div key={index}>
                         <Checkbox
                             defaultChecked={!table.hiddenColumns.includes(title)}

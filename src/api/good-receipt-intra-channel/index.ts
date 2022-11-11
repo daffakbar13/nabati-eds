@@ -6,7 +6,7 @@ import {
     CommonListParams,
     CommonDetailParams,
 } from 'src/api/types'
-import { GoodReceiptIntraChannelItem } from './types'
+import { GoodReceiptIntraChannelItem, GoodReceiptIntraChannelItemDetail } from './types'
 
 const subUrl = 'v1/material-doc'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
@@ -23,13 +23,13 @@ export const getGoodReceiptIntraChannel = async (
     return response.data
 }
 
-// export const getDetailRequestIntraChannel = async (
-//   params: CommonDetailParams,
-// ): Promise<CommonDetailResponse<RequestIntraChannelItemDetail>> => {
-//   const response = await call({
-//     method: METHODS.GET,
-//     overrideBaseUrl,
-//     subUrl: `${subUrl}/${params.id}/detail`,
-//   })
-//   return response.data
-// }
+export const getGoodReceiptIntraChannelDetail = async (
+    params: CommonDetailParams,
+): Promise<CommonDetailResponse<GoodReceiptIntraChannelItemDetail>> => {
+    const response = await call({
+        method: METHODS.GET,
+        overrideBaseUrl,
+        subUrl: `${subUrl}/intra-channel/receipt/${params.id}/detail`,
+    })
+    return response.data
+}
