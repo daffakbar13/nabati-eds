@@ -66,7 +66,7 @@ export default function useTable(props: useTableProps) {
         name: record[haveCheckbox.headCell],
       }),
     }),
-    // fixed: 'left',
+    fixed: 'left',
     // preserveSelectedRowKeys: true,
   }
 

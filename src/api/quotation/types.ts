@@ -18,6 +18,7 @@ export interface QuotationDetailResult {
   readonly company_id: string
   readonly order_type_id: string
   readonly customer_id: string
+  readonly customer_name: string
   readonly customer_group_id: string
   readonly ship_to_id: string
   readonly salesman_id: string

@@ -6,7 +6,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getDetailQuotation } from 'src/api/quotation'
+import { cancelOrder, getDetailQuotation } from 'src/api/quotation'
 import { PATH } from 'src/configs/menus'
 import { PageQuotationDetailProps } from './types'
 import AllTabs from './tabs'
@@ -41,15 +41,34 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
           {router.query.status === 'New' && (
             <>
-              <Button size="big" variant="tertiary">
+              <Button
+                size="big"
+                variant="tertiary"
+                onClick={() => {
+                  cancelOrder(router.query.id as string)
+                    .then(() => router.push(`${PATH.SALES}/quotation`))
+                }}
+              >
                 Cancel Process
               </Button>
-              <Button size="big" variant="secondary" onClick={() => { router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`) }}>
+              <Button
+                size="big"
+                variant="secondary"
+                onClick={() => {
+                  router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`)
+                }}
+              >
                 Edit
               </Button>
             </>
           )}
-          <Button size="big" variant="primary" onClick={() => { }}>
+          <Button
+            size="big"
+            variant="primary"
+            onClick={() => {
+              router.push(`${PATH.SALES}/quotation/create?id=${router.query.id}`)
+            }}
+          >
             Order Again
           </Button>
         </div>

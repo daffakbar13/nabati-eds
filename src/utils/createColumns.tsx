@@ -22,7 +22,7 @@ export default function CreateColumns(
     render,
     fixed,
     ellipsis: true,
-    width: width || 180,
+    width: width || 170,
   }
 }
 

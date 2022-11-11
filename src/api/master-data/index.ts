@@ -33,6 +33,16 @@ export const getCustomerByCompany = async (): Promise<CommonDetailResponse<any>>
   return response.data
 }
 
+export const getCustomerById = async (id: string): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getCustomerByCompany}/${id}`,
+  })
+
+  return response.data
+}
+
 export const getOrderTypeByCompany = async (): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
@@ -111,7 +121,7 @@ export const getPricingByIdAndUom = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl.getPricingByIdAndUom}/${product_id}/15/${uom_id}/${now}`,
+    subUrl: `${subUrl.getPricingByIdAndUom}/${product_id}/z2/${uom_id}/${now}`,
   })
 
   return response.data

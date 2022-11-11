@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useTitle } from './useTitle'
 
-type TitleType = 'list' | 'create' | 'detail' | 'edit'
+type TitleType = 'list' | 'create' | 'detail' | 'edit' | 'order-again'
 
 export default function useTitlePage(type: TitleType) {
   const router = useRouter()
@@ -16,6 +16,9 @@ export default function useTitlePage(type: TitleType) {
 
     case 'edit':
       return `${title} ${router.query.id}`
+
+    case 'order-again':
+      return `Order Again from ${title} ${router.query.id}`
 
     case 'list':
       return title
