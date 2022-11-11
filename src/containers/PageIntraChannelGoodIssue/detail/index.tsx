@@ -20,9 +20,9 @@ export default function PageIntraChannelGoodIssueDetail() {
 
     const dataList = [
         //row 1
-        createDataList('Request Number', data.delivery_number),
-        createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name}`),
-        createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name}`),
+        createDataList('Request Number', data.delivery_number || '-'),
+        createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
+        createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name  || ''}`),
         createDataList('From Channel', '-'),
         createDataList('To Channel', '-'),
 

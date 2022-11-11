@@ -63,16 +63,19 @@ export const TableIntraChannelRequest = [
         'Company',
         'company_id',
         true,
+        (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
     ),
     CreateColumns(
         'Supplying Branch',
         'supply_branch_name',
         true,
+        (text: string, record: any) => `${record.suppl_branch_id || ''} - ${record.supply_branch_name || ''}`,
     ),
     CreateColumns(
         'Receiving Branch',
-        'branch_id',
+        'receive_plant_id',
         true,
+        (text: string, record: any) => `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
     ),
     CreateColumns(
         'Status',

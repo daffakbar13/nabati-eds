@@ -71,24 +71,25 @@ export const TableIntraChannelGoodIssue = [
         'Company',
         'company_id',
         true,
+        (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
     ),
     CreateColumns(
         'Supplying Plant',
         'suppl_branch_id',
         true,
-        (text: string, record: any) => `${record.suppl_branch_id} - ${record.suppl_branch_name}`,
+        (text: string, record: any) => `${record.suppl_branch_id || ''} - ${record.suppl_branch_name || ''}`,
     ),
     CreateColumns(
         'Receiving Plant',
         'branch_id',
         true,
-        (text: string, record: any) => `${record.receive_plant_id} - ${record.receive_plant_name}`,
+        (text: string, record: any) => `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
     ),
     CreateColumns(
         'Mov. Type',
         'branch_id',
         true,
-        (text: string, record: any) => `${record.movement_type_id} - ${record.movement_type_name}`,
+        (text: string, record: any) => `${record.movement_type_id || ''} - ${record.movement_type_name || ''}`,
     ),
     CreateColumns(
         'Status',
