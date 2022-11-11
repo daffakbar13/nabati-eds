@@ -1,10 +1,10 @@
 import React from 'react'
-import PageGoodIssue from 'src/containers/PageGoodIssue'
+import PageGoodIssue from 'src/containers/PageGoodReceiptIntraBranch'
 
-interface Props {}
+interface Props { }
 
 export default function GoodIssue(props: Props) {
-  const {} = props
+  const { } = props
 
   return <PageGoodIssue />
 }
