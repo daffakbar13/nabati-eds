@@ -27,7 +27,7 @@ export function fieldSoldToCustomer(search: string) {
                     || name.toLowerCase().includes(search.toLowerCase()))
                 .splice(0, 10)
                 .map(({ sold_to_customer_id, name }) => ({
-                    label: [sold_to_customer_id, '-', name].join(''),
+                    label: [sold_to_customer_id, name].join('-'),
                     value: sold_to_customer_id,
                 })))
 }
@@ -102,11 +102,14 @@ export function fieldItem(search: string) {
 export function fieldUom(product_id: string): Promise<any> {
     return getProductById(product_id)
         .then((result) => result.data)
-        .then(({ base_uom_id, middle_uom_id, high_uom_id }) => ([
-            { label: base_uom_id, value: base_uom_id },
-            { label: middle_uom_id, value: middle_uom_id },
-            { label: high_uom_id, value: high_uom_id },
-        ]))
+        .then(({ base_uom_id, middle_uom_id, high_uom_id }) => {
+            const arr = [...new Set([
+                base_uom_id,
+                middle_uom_id,
+                high_uom_id,
+            ])]
+            return arr.map((val) => ({ label: val, value: val }))
+        })
 }
 
 export function fieldPrice(product_id: string, uom: string) {

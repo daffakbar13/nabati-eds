@@ -53,7 +53,6 @@ export const ColumnQuoatation = [
     true,
     (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
     180,
-    'left',
   ),
   CreateColumns(
     'Order Type',

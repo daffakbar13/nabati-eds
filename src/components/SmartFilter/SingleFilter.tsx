@@ -47,7 +47,7 @@ export default function SingleFilter({ option: opt, onChange, funcApi, isDate })
           format={'DD-MMM-YYYY'}
         />
         : <DebounceSelect
-          allowClear
+          type='select'
           value={opt.fromValue}
           placeholder="Type To Search"
           {...(funcApi && { fetchOptions: funcApi })}
@@ -68,7 +68,7 @@ export default function SingleFilter({ option: opt, onChange, funcApi, isDate })
           format={'DD-MMM-YYYY'}
         />
         : <DebounceSelect
-          allowClear
+          type='select'
           value={opt.toValue}
           placeholder="Type To Search"
           {...(funcApi && { fetchOptions: funcApi })}

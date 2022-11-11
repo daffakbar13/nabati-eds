@@ -1,3 +1,5 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
@@ -6,50 +8,66 @@ import { Button, Col, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lav
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { createQuotation } from 'src/api/quotation'
+import { createQuotation, getDetailQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import { useDetail } from 'src/hooks'
+import { getCustomerById } from 'src/api/master-data'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateQuotation() {
-  const now = new Date().toISOString()
-  const [dataForm, setDataForm] = React.useState({})
+  const router = useRouter()
+  const tableAddItems = useTableAddItem()
+  const [dataForm, setDataForm] = React.useState<any>({})
   const [newQuotation, setNewQuotation] = React.useState()
   const [draftQuotation, setDraftQuotation] = React.useState()
   const [cancel, setCancel] = React.useState(false)
-  const router = useRouter()
-  const tableAddItems = useTableAddItem()
-  const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
-
-  const initialValue = {
-    company_id: 'PP01',
-    branch_id: 'P174',
-    source_id: 'Z01',
-    order_date: now,
-    delivery_date: now,
-    pricing_date: now,
-    order_type_id: 'ZQP1',
-    customer_id: 'C1624002',
-    ship_to_id: 'C1624001',
-    salesman_id: '131603',
-    sales_org_id: 'PID1',
-    valid_from: now,
-    valid_to: now,
-    term_id: 'Z007',
-    customer_ref: 'PO0001',
-    customer_ref_date: now,
-    currency_id: 'IDR',
-    items: tableAddItems.data,
-  }
-
-  const titlePage = useTitlePage(isCreatePage ? 'create' : 'edit')
+  const isCreatePage = router.asPath.split('/').includes('create')
+  const isEditPage = router.asPath.split('/').includes('edit')
+  const isOrderAgainPage = !isCreatePage && !isEditPage
+  const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
 
   const onChangeForm = (form: string, value: any) => {
-    const newValue = Object.assign(dataForm, { [form]: value })
-
-    setDataForm(newValue)
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
+
+  React.useEffect(() => {
+    async function runApi() {
+      if (router.query.id) {
+        getDetailQuotation({ id: router.query.id as string })
+          .then((response) => response.data)
+          .then((data) => {
+            const initialValue = {
+              company_id: 'PP01',
+              branch_id: data.branch_id,
+              source_id: 'Z01',
+              order_date: data.order_date,
+              delivery_date: data.delivery_date,
+              pricing_date: data.pricing_date,
+              order_type_id: data.order_type_id,
+              customer_id: data.customer_id,
+              ship_to_id: data.ship_to_id,
+              salesman_id: data.salesman_id,
+              sales_org_id: data.sales_org_id,
+              valid_from: data.valid_from,
+              valid_to: data.valid_to,
+              term_id: data.term_id,
+              customer_ref: data.customer_ref,
+              customer_ref_date: data.customer_ref_date,
+              currency_id: 'IDR',
+              items: tableAddItems.data,
+            }
+            setDataForm(initialValue)
+            // getCustomerById(data.customer_id)
+            //   .then((response2) => onChangeForm('sold_to_name', response2.data.name))
+            // getCustomerById(data.ship_to_id)
+            //   .then((response3) => onChangeForm('ship_to_name', response3.data.name))
+          })
+      }
+    }
+    runApi()
+  }, [router])
 
   return (
     <Col>
@@ -61,19 +79,22 @@ export default function PageCreateQuotation() {
             <Button size="big" variant="tertiary" onClick={() => { setCancel(true); console.log('cancel', cancel) }}>
               Cancel
             </Button>
-            <Button size="big" variant="secondary" onClick={() => {
-              createQuotation({ ...initialValue, ...dataForm, status_id: 6 })
-                .then((response) => setDraftQuotation(response.data.id))
-                .catch((e) => console.log(e))
+            {(isCreatePage || isOrderAgainPage)
+              && <Button size="big" variant="secondary" onClick={() => {
+                createQuotation({ ...dataForm, status_id: 6 })
+                  .then((response) => setDraftQuotation(response.data.id))
             }}>
               Save As Draft
             </Button>
+            }
             <Button size="big" variant="primary" onClick={() => {
-              createQuotation({ ...initialValue, ...dataForm, status_id: 1 })
-                .then((response) => setNewQuotation(response.data.id))
-                .catch((e) => console.log(e))
+              (isCreatePage || isOrderAgainPage)
+                ? createQuotation({ ...dataForm, status_id: 1 })
+                  .then((response) => setNewQuotation(response.data.id))
+                : updateQuotation({ ...dataForm, status_id: 1 }, titlePage.split(' ').reverse()[0])
+                  .then((response) => setNewQuotation(response.data.id))
             }}>
-              Submit
+              {(isCreatePage || isOrderAgainPage) ? 'Submit' : 'Save'}
             </Button>
           </Row>
         </Row>
@@ -87,33 +108,36 @@ export default function PageCreateQuotation() {
               type='select'
               label="Quotation Type"
               required
+              value={dataForm.order_type_id}
               fetchOptions={fieldQuotationType}
-              onChange={(val: any) => {
-                onChangeForm('order_type_id', val.label.split(' - ')[0])
+              onChange={(e: any) => {
+                onChangeForm('order_type_id', e.label.split('-')[0])
               }}
             />
             <DebounceSelect
               type='select'
               label="Sold To Customer"
               required
+              value={dataForm.customer_id}
               fetchOptions={fieldSoldToCustomer}
-              onChange={(val: any) => {
-                onChangeForm('customer_id', val.value)
+              onChange={(e: any) => {
+                onChangeForm('customer_id', e.value)
               }}
             />
             <DebounceSelect
               type='select'
               label="Ship To Customer"
+              value={dataForm.ship_to_id}
               fetchOptions={fieldShipToCustomer}
-              onChange={(val: any) => {
-                onChangeForm('ship_to_id', val.label)
+              onChange={(e: any) => {
+                onChangeForm('ship_to_id', e.value)
               }}
             />
             <DebounceSelect
               type='select'
               label="Sales Organization"
+              value={dataForm.sales_org_id}
               fetchOptions={fieldSalesOrg}
-              // disabled
               onChange={(val: any) => {
                 onChangeForm('sales_org_id', val.label)
               }}
@@ -121,6 +145,7 @@ export default function PageCreateQuotation() {
             <DebounceSelect
               type='select'
               label="Branch"
+              value={dataForm.branch_id}
               fetchOptions={fieldBranch}
               onChange={(val: any) => {
                 onChangeForm('branch_id', val.label)
@@ -129,6 +154,7 @@ export default function PageCreateQuotation() {
             <DebounceSelect
               type='select'
               label="Salesman"
+              value={dataForm.salesman_id}
               fetchOptions={fieldSalesman}
               onChange={(val: any) => {
                 onChangeForm('salesman_id', val.label)
@@ -142,7 +168,9 @@ export default function PageCreateQuotation() {
                 onChangeForm('order_date', new Date(moment(val).format()).toISOString())
               }}
               label="Document Date"
-              defaultValue={moment()}
+              // defaultValue={moment()}
+              // defaultValue={moment(dataForm.order_date)}
+              value={moment(dataForm.order_date)}
               format={'DD-MMM-YYYY'}
               required
             />
@@ -152,7 +180,8 @@ export default function PageCreateQuotation() {
                 onChangeForm('valid_from', new Date(moment(val).format()).toISOString())
               }}
               label="Valid From"
-              defaultValue={moment()}
+              // defaultValue={moment()}
+              value={moment(dataForm.valid_from)}
               format={'DD-MMM-YYYY'}
               required
             />
@@ -162,7 +191,8 @@ export default function PageCreateQuotation() {
                 onChangeForm('valid_to', new Date(moment(val).format()).toISOString())
               }}
               label="Valid To"
-              defaultValue={moment()}
+              // defaultValue={moment()}
+              value={moment(dataForm.valid_to)}
               format={'DD-MMM-YYYY'}
               required
             />
@@ -173,14 +203,14 @@ export default function PageCreateQuotation() {
                 onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
               }}
               label="Delivery Date"
-              defaultValue={moment()}
+              // defaultValue={moment()}
+              value={moment(dataForm.delivery_date)}
               format={'DD-MMM-YYYY'}
               required
             />
             <DebounceSelect
               type='input'
               label="Reference"
-              // fetchOptions={fakeApi}
               onChange={(e: any) => {
                 onChangeForm('customer_ref', e.target.value)
                 console.log('reference', e.target.value)
@@ -191,10 +221,8 @@ export default function PageCreateQuotation() {
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
-            editable
             data={tableAddItems.data}
             columns={tableAddItems.columns}
-            loading={tableAddItems.loading}
           />
         </div>
         <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>

@@ -47,7 +47,7 @@ export default function Popup(props: PopupProps) {
           borderRadius: 8,
           // width: 780,
         }}
-        ref={wrapper}
+        {...(onOutsideClick && { ref: wrapper })}
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{children}</div>
       </div>

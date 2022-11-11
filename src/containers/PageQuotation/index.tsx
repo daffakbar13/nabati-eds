@@ -8,7 +8,7 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { getQuotation } from 'src/api/quotation'
+import { cancelBatchOrder, getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PageQuotationProps } from './types'
@@ -164,7 +164,16 @@ export default function PageQuotation(props: PageQuotationProps) {
                             <b>{table.selected.length} Document Quotation are Selected</b>
                         </div>
                         <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-                            <Button size="big" variant="tertiary" onClick={() => { }}>
+                            <Button size="big" variant="tertiary" onClick={() => {
+                                console.log('oke');
+
+                                cancelBatchOrder({
+                                    order_list:
+                                        table.selected.map((id) => ({ id })),
+                                })
+                                    .then(() => router.reload())
+                                    .catch((err) => console.log(err))
+                            }}>
                               Cancel Process
                             </Button>
                             <Button
@@ -194,11 +203,20 @@ export default function PageQuotation(props: PageQuotationProps) {
                           }
                         </Typography.Title>
                         <div style={{ display: 'flex', gap: 10 }}>
-                            <Button size="big" style={{ flexGrow: 1 }} variant="secondary" onClick={() => { router.reload() }}>
-                                Cancel Proccess
+                            <Button
+                                size="big"
+                                style={{ flexGrow: 1 }}
+                                variant="secondary"
+                                onClick={() => { setShowConfirm('') }}>
+                                No
                             </Button>
-                            <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={() => { router.reload() }}>
-                                Submit
+                            <Button
+                                size="big"
+                                style={{ flexGrow: 1 }}
+                                variant="primary"
+                                onClick={() => { router.reload() }}
+                            >
+                                Yes
                             </Button>
                         </div>
                     </Popup>

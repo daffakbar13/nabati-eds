@@ -8,6 +8,8 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldItem, fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons';
 import CreateColumns from 'src/utils/createColumns'
+import { useRouter } from 'next/router';
+import { getDetailQuotation } from 'src/api/quotation';
 
 export const useTableAddItem = () => {
   const initialValue = {
@@ -21,7 +23,7 @@ export const useTableAddItem = () => {
   const [data, setData] = React.useState([initialValue])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
+  const router = useRouter()
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
@@ -55,7 +57,7 @@ export const useTableAddItem = () => {
       (_, __, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
         <MinusCircleFilled
           style={{ color: 'red', margin: 'auto' }}
-          onClick={() => { handleDeleteRows(index); console.log('delete', index) }}
+          onClick={() => { handleDeleteRows(index) }}
         />
       </div>,
       55,
@@ -97,6 +99,7 @@ export const useTableAddItem = () => {
       false,
       (order_qty, record, index) => <InputNumber
         disabled={isNullProductId(index)}
+        min={'0'}
         value={order_qty.toLocaleString()}
         onChange={(newVal) => {
           handleChangeData('order_qty', newVal, index)
@@ -134,7 +137,6 @@ export const useTableAddItem = () => {
         type='input'
         placeholder='e.g Testing'
         onChange={(e) => {
-          console.log(e);
           handleChangeData('remarks', e.target.value, index)
         }}
       />,
@@ -148,19 +150,18 @@ export const useTableAddItem = () => {
         fieldUom(product_id)
           .then((value) => {
             const newOptionsUom = [...optionsUom]
-            const newUom = uom_id === '' ? value[2].value : uom_id
+            const newUom = uom_id === '' ? value.reverse()[0].value : uom_id
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
             handleChangeData('uom_id', newUom, index)
             fieldPrice(product_id, newUom)
               .then((price) => {
+                handleChangeData('sub_total', price * order_qty, index)
+                handleChangeData('price', price, index)
                 if (order_qty === 0) {
                   handleChangeData('sub_total', price, index)
                   handleChangeData('order_qty', 1, index)
-                } else {
-                  handleChangeData('sub_total', price * order_qty, index)
                 }
-                handleChangeData('price', price, index)
               })
           })
         }
@@ -169,28 +170,22 @@ export const useTableAddItem = () => {
     }
   }, [fetching])
 
-  console.log(data);
-
-  // React.useEffect(() => {
-  //   data.forEach(({ product_id, uom_id, order_qty }, index) => {
-  //     if (product_id !== '' && uom_id !== '') {
-  //       if (order_qty === 0) {
-  //         handleChangeData('order_qty', 1, index)
-  //         fieldPrice(product_id, uom_id)
-  //           .then((price) => {
-  //             const subTotal = price * order_qty
-  //             handleChangeData('price', price, index)
-  //             handleChangeData('sub_total', subTotal, index)
-  //           })
-  //       }
-  //     }
-  //   })
-  // }, [])
+  React.useEffect(() => {
+    if (router.query.id) {
+      getDetailQuotation({ id: router.query.id as string })
+        .then((response) => setData(
+          response.data.items.map((items) => ({
+            ...items,
+            sub_total: parseInt(items.order_qty) * parseInt(items.price),
+            product_id: items.description,
+          })) as any,
+        ))
+    }
+  }, [router])
 
   return {
     data,
     handleAddItem,
     columns,
-    loading,
   }
 }
