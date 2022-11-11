@@ -29,7 +29,7 @@ export default function PageIntraChannelGoodIssueDetail() {
         //row 2
         createDataList('GI Number', data.id),
         createDataList('From Sloc', `${data.from_sloc} - ${data.from_sloc_name || ''}`),
-        createDataList('To Sloc', `${data.to_sloc} - ${data.to_sloc || ''}`),
+        createDataList('To Sloc', `${data.to_sloc} - ${data.to_sloc_name || ''}`),
         createDataList('Doc Date', dateFormat(data.document_date, format)),
         createDataList('Posting Date', dateFormat(data.posting_date, format)),
         createDataList('Remarks', ((data.remarks != '' && data.remarks != null) ? data.remarks : '-')),
