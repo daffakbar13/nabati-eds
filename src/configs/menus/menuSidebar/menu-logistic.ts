@@ -108,7 +108,7 @@ export const menuLogistic = [
         key: 'goods-receipt',
         title: 'Goods Receipt',
         content: () => 'Goods Receipt',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channe`),
+        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel`),
       },
     ],
   },
