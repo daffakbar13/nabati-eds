@@ -87,12 +87,12 @@ export const TableSalesOrder = [
   ),
   CreateColumns(
     'Availibility',
-    'asdasd',
+    'status_availability_name',
   ),
   CreateColumns(
     'Status',
     'status_name',
-    true,
+    false,
     (status) => <Tag {...(status === 'Completed' && { color: 'green' })} > {status}</Tag>,
   ),
   CreateColumns(

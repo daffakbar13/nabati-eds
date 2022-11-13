@@ -14,6 +14,9 @@ export interface QuotationItem {
 }
 
 export interface QuotationDetailResult {
+  branch_name: string
+  sales_org_name: any
+  salesman_name: any
   readonly id: string
   readonly company_id: string
   readonly order_type_id: string

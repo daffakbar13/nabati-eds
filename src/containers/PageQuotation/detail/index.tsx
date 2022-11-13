@@ -25,6 +25,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const [optionsReason, setOptionsReason] = React.useState([])
   const router = useRouter()
   const data = useDetail(getDetailQuotation, { id: router.query.id as string })
+  const hasData = Object.keys(data).length > 0
 
   React.useEffect(() => {
     fieldReason()
@@ -92,10 +93,10 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
           }}
           items={AllTabs}
         />
-        {currentTab === '1' && <Quotation data={data} />}
-        {currentTab === '2' && <DocumentFlow data={data} />}
-        {currentTab === '3' && <CustomerInfo data={data} />}
-        {currentTab === '4' && <SalesmanInfo data={data} />}
+        {currentTab === '1' && hasData && <Quotation data={data} />}
+        {currentTab === '2' && hasData && <DocumentFlow data={data} />}
+        {currentTab === '3' && hasData && <CustomerInfo data={data} />}
+        {currentTab === '4' && hasData && <SalesmanInfo data={data} />}
       </Card>
       {showConfirm === 'cancel' && (
         <Popup>

@@ -14,7 +14,8 @@ import { PATH } from 'src/configs/menus'
 import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import { useDetail } from 'src/hooks'
 import { CheckCircleFilled } from '@ant-design/icons';
-import { getCustomerByFilter, getCustomerById, getOrderTypeByCompany } from 'src/api/master-data'
+import { getCustomerByFilter, getCustomerById, getDocTypeByCategory, getOrderTypeByCompany } from 'src/api/master-data'
+import { createSalesOrder } from 'src/api/sales-order'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateSalesOrder() {
@@ -123,11 +124,12 @@ export default function PageCreateSalesOrder() {
   }, [fetching])
 
   React.useEffect(() => {
-    getOrderTypeByCompany()
+    getDocTypeByCategory('C')
       .then((result) => result.data
-        .map(({ order_type_id, doc_type_name }) => ({
-          label: [order_type_id, doc_type_name.split('-').join(' - ')].join(' - '),
-          value: order_type_id,
+        // .filter(({ id }) => id === 'ZQP1')
+        .map(({ id, name }) => ({
+          label: [id, name.split('-').join(' - ')].join(' - '),
+          value: id,
         })))
       .then((data) => setOptionsOrderType(data))
   }, [])
@@ -144,7 +146,7 @@ export default function PageCreateSalesOrder() {
             </Button>
             {(isCreatePage || isOrderAgainPage)
               && <Button size="big" variant="secondary" onClick={() => {
-                createQuotation({ ...initialValue, ...dataForm, status_id: '6' })
+                createSalesOrder({ ...initialValue, ...dataForm, status_id: '6' })
                   .then((response) => setDraftQuotation(response.data.id))
             }}>
               Save As Draft
@@ -152,7 +154,7 @@ export default function PageCreateSalesOrder() {
             }
             <Button size="big" variant="primary" onClick={() => {
               (isCreatePage || isOrderAgainPage)
-                ? createQuotation({ ...initialValue, ...dataForm, status_id: '1' })
+                ? createSalesOrder({ ...initialValue, ...dataForm, status_id: '1' })
                   .then((response) => setNewQuotation(response.data.id))
                 : updateQuotation({ ...dataForm, status_id: '1' }, titlePage.split(' ').reverse()[0])
                   .then((response) => setNewQuotation(response.data.id))
@@ -339,12 +341,12 @@ export default function PageCreateSalesOrder() {
             {newQuotation
               && <>
                 <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
-                  router.push(`${PATH.SALES}/quotation`)
+                  router.push(`${PATH.SALES}/sales-order`)
                 }}>
                   Back To List
                 </Button>
                 <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                  router.push(`${PATH.SALES}/sales-order`)
+                  router.push(`${PATH.SALES}/delivery-order`)
                 }}>
                   Next Proccess
                 </Button>
@@ -352,7 +354,7 @@ export default function PageCreateSalesOrder() {
             }
             {draftQuotation
               && <Button size="big" variant="primary" style={{ flexGrow: 1 }} onClick={() => {
-                router.push(`${PATH.SALES}/quotation`)
+                  router.push(`${PATH.SALES}/sales-order`)
               }}>
                 OK
               </Button>

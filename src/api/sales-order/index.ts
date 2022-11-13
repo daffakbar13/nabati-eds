@@ -33,3 +33,12 @@ export const getDetailSalesOrder = async (
   })
   return response.data
 }
+
+export const createSalesOrder = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/create`,
+    data: payload,
+  })
+  return response.data
+}

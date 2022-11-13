@@ -35,6 +35,13 @@ export default function PageCreateQuotation() {
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
   const now = new Date().toISOString()
 
+  const concatString = (data: string[]) => (data.join(' - '))
+
+  const splitString = (data: string) => {
+    const [result] = data.split(' - ')
+    return result
+  }
+
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
@@ -52,6 +59,16 @@ export default function PageCreateQuotation() {
     currency_id: 'IDR',
   }
 
+  const dataSubmited = () => ({
+    ...initialValue,
+    ...dataForm,
+    customer_id: splitString(dataForm.customer_id),
+    ship_to_id: splitString(dataForm.ship_to_id),
+    sales_org_id: splitString(dataForm.sales_org_id),
+    branch_id: splitString(dataForm.branch_id),
+    customer_id: splitString(dataForm.customer_id),
+  })
+
   React.useEffect(() => {
     async function runApi() {
       if (router.query.id) {
@@ -60,16 +77,16 @@ export default function PageCreateQuotation() {
           .then((data) => {
             const initFromDetail = {
               company_id: 'PP01',
-              branch_id: data.branch_id,
+              branch_id: concatString([data.branch_id, data.branch_name]),
               source_id: 'Z02',
               order_date: data.order_date,
               delivery_date: data.delivery_date,
               pricing_date: data.pricing_date || now,
               order_type_id: data.order_type_id,
-              customer_id: data.customer_id,
-              ship_to_id: data.ship_to_id === '' ? data.customer_id : data.ship_to_id,
-              salesman_id: data.salesman_id,
-              sales_org_id: data.sales_org_id,
+              customer_id: concatString([data.customer_id, data.customer_id]),
+              ship_to_id: data.ship_to_id === '' ? concatString([data.customer_id, data.customer_id]) : data.ship_to_id,
+              salesman_id: concatString([data.salesman_id, data.salesman_name]),
+              sales_org_id: concatString([data.sales_org_id, data.sales_org_name]),
               valid_from: data.valid_from,
               valid_to: data.valid_to,
               term_id: data.term_id || 'Z007',
@@ -79,10 +96,6 @@ export default function PageCreateQuotation() {
               items: tableAddItems.data,
             }
             setDataForm(initFromDetail)
-            // getCustomerById(data.customer_id)
-            //   .then((response2) => onChangeForm('sold_to_name', response2.data.name))
-            // getCustomerById(data.ship_to_id)
-            //   .then((response3) => onChangeForm('ship_to_name', response3.data.name))
           })
       }
     }
@@ -106,16 +119,16 @@ export default function PageCreateQuotation() {
         .then((data) => {
           const [firstData] = data
           setOptionsBranch([{
-            label: [firstData.branch_id, firstData.branch_name].join(' - '),
-            value: firstData.branch_id,
+            label: concatString([firstData.branch_id, firstData.branch_name]),
+            value: concatString([firstData.branch_id, firstData.branch_name]),
           }])
           setOptionsSalesOrg([{
-            label: [firstData.sales_org_id, firstData.sales_org_name].join(' - '),
-            value: firstData.sales_org_id,
+            label: concatString([firstData.sales_org_id, firstData.sales_org_name]),
+            value: concatString([firstData.sales_org_id, firstData.sales_org_name]),
           }])
           setOptionsSalesman(data.map(({ salesman_id, salesman_name }) => ({
-            label: [salesman_id, salesman_name].join(' - '),
-            value: salesman_id,
+            label: concatString([salesman_id, salesman_name]),
+            value: concatString([salesman_id, salesman_name]),
           })))
         })
     }
@@ -127,7 +140,7 @@ export default function PageCreateQuotation() {
       .then((result) => result.data
         .map(({ id, name }) => ({
           label: [id, name.split('-').join(' - ')].join(' - '),
-          value: id,
+          value: [id, name.split('-').join(' - ')].join(' - '),
         })))
       .then((data) => setOptionsOrderType(data))
   }, [])
@@ -202,6 +215,7 @@ export default function PageCreateQuotation() {
               type='select'
               label="Sales Organization"
               placeholder={'Select'}
+              value={dataForm.sales_org_id}
               options={optionsSalesOrg}
               onChange={(e: any) => {
                 onChangeForm('sales_org_id', e.value)
@@ -211,6 +225,7 @@ export default function PageCreateQuotation() {
               type='select'
               label="Branch"
               placeholder={'Select'}
+              value={dataForm.branch_id}
               options={optionsBranch}
               onChange={(e: any) => {
                 onChangeForm('branch_id', e.value)
@@ -220,6 +235,7 @@ export default function PageCreateQuotation() {
               type='select'
               label="Salesman"
               placeholder='Select'
+              value={dataForm.salesman_id}
               options={optionsSalesman}
               onChange={(e: any) => {
                 onChangeForm('salesman_id', e.value)
@@ -278,6 +294,7 @@ export default function PageCreateQuotation() {
             <DebounceSelect
               type='input'
               label="Reference"
+              value={dataForm.customer_ref}
               onChange={(e: any) => {
                 onChangeForm('customer_ref', e.target.value)
               }}
