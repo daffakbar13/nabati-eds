@@ -1,71 +1,136 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
-import React, { useState } from 'react'
+import React from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
-import { Button, Col, Row, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Card, FloatAction, Popup, TableEditable } from 'src/components'
+import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { fakeApi } from 'src/api/fakeApi'
-import { CommonSelectValue } from 'src/configs/commonTypes'
-import { createQuotation } from 'src/api/quotation'
-import { getCustomerByCompany } from 'src/api/master-data'
+import { createQuotation, getDetailQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { columns } from './columns'
-import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from '../../../configs/fieldFetches'
+import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import { useDetail } from 'src/hooks'
+import { CheckCircleFilled } from '@ant-design/icons';
+import { getCustomerByFilter, getCustomerById, getOrderTypeByCompany } from 'src/api/master-data'
+import { useTableAddItem } from './columns'
 
-export default function CreateQuotation() {
-  const now = new Date().toISOString()
-  const [data, setData] = useState<any[]>([])
-  const [dataForm, setDataForm] = React.useState({})
+export default function PageCreateSalesOrder() {
+  const router = useRouter()
+  const tableAddItems = useTableAddItem()
+  const [dataForm, setDataForm] = React.useState<any>({})
   const [newQuotation, setNewQuotation] = React.useState()
   const [draftQuotation, setDraftQuotation] = React.useState()
   const [cancel, setCancel] = React.useState(false)
-  const router = useRouter()
+  const [optionsOrderType, setOptionsOrderType] = React.useState([])
+  const [optionsSalesman, setOptionsSalesman] = React.useState([])
+  const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
+  const [optionsBranch, setOptionsBranch] = React.useState([])
+  const [fetching, setFetching] = React.useState('')
+  const isCreatePage = router.asPath.split('/').includes('create')
+  const isEditPage = router.asPath.split('/').includes('edit')
+  const isOrderAgainPage = !isCreatePage && !isEditPage
+  const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
+  const now = new Date().toISOString()
+
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
 
   const initialValue = {
     company_id: 'PP01',
-    branch_id: 'P174',
-    source_id: 'Z01',
+    source_id: 'Z02',
     order_date: now,
     delivery_date: now,
     pricing_date: now,
-    order_type_id: 'ZQP1',
-    customer_id: 'C1624002',
-    ship_to_id: 'C1624001',
-    salesman_id: '131603',
-    sales_org_id: 'PID1',
     valid_from: now,
     valid_to: now,
     term_id: 'Z007',
-    customer_ref: 'PO0001',
-    customer_ref_date: now,
+    customer_ref: 'test',
     currency_id: 'IDR',
-    items: data.map(({ product_id, order_qty, uom_id, price }) => ({
-      product_id: product_id?.value,
-      order_qty,
-      uom_id: uom_id?.value,
-      item_type_id: 'ZP01',
-      price,
-      remarks: 'test desc',
-    })),
-  }
-
-  const titlePage = useTitlePage('create')
-
-  const onChangeForm = (form: string, value: any) => {
-    const newValue = Object.assign(dataForm, { [form]: value })
-
-    setDataForm(newValue)
-    console.log(dataForm)
   }
 
   React.useEffect(() => {
-    console.log(dataForm)
-  }, [dataForm])
+    async function runApi() {
+      if (router.query.id) {
+        getDetailQuotation({ id: router.query.id as string })
+          .then((response) => response.data)
+          .then((data) => {
+            const initFromDetail = {
+              company_id: 'PP01',
+              branch_id: data.branch_id,
+              source_id: 'Z02',
+              order_date: data.order_date,
+              delivery_date: data.delivery_date,
+              pricing_date: data.pricing_date || now,
+              order_type_id: data.order_type_id,
+              customer_id: data.customer_id,
+              ship_to_id: data.ship_to_id === '' ? data.customer_id : data.ship_to_id,
+              salesman_id: data.salesman_id,
+              sales_org_id: data.sales_org_id,
+              valid_from: data.valid_from,
+              valid_to: data.valid_to,
+              term_id: data.term_id || 'Z007',
+              customer_ref: data.customer_ref,
+              customer_ref_date: data.customer_ref_date || now,
+              currency_id: 'IDR',
+              items: tableAddItems.data,
+            }
+            setDataForm(initFromDetail)
+            // getCustomerById(data.customer_id)
+            //   .then((response2) => onChangeForm('sold_to_name', response2.data.name))
+            // getCustomerById(data.ship_to_id)
+            //   .then((response3) => onChangeForm('ship_to_name', response3.data.name))
+          })
+      }
+    }
+    runApi()
+  }, [router, tableAddItems.data])
 
-  console.log(new Date().toISOString());
+  React.useEffect(() => {
+    onChangeForm('items', tableAddItems.data)
+  }, [tableAddItems.data])
+
+  React.useEffect(() => {
+    if (fetching === 'customer') {
+      const { customer_id } = dataForm
+      getCustomerByFilter({
+        branch_id: '',
+        customer_id,
+        sales_org_id: '',
+        salesman_id: '',
+      })
+        .then((res) => res.data)
+        .then((data) => {
+          const [firstData] = data
+          setOptionsBranch([{
+            label: [firstData.branch_id, firstData.branch_name].join(' - '),
+            value: firstData.branch_id,
+          }])
+          setOptionsSalesOrg([{
+            label: [firstData.sales_org_id, firstData.sales_org_name].join(' - '),
+            value: firstData.sales_org_id,
+          }])
+          setOptionsSalesman(data.map(({ salesman_id, salesman_name }) => ({
+            label: [salesman_id, salesman_name].join(' - '),
+            value: salesman_id,
+          })))
+        })
+    }
+    setFetching('')
+  }, [fetching])
+
+  React.useEffect(() => {
+    getOrderTypeByCompany()
+      .then((result) => result.data
+        .map(({ order_type_id, doc_type_name }) => ({
+          label: [order_type_id, doc_type_name.split('-').join(' - ')].join(' - '),
+          value: order_type_id,
+        })))
+      .then((data) => setOptionsOrderType(data))
+  }, [])
 
   return (
     <Col>
@@ -74,22 +139,25 @@ export default function CreateQuotation() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button size="big" variant="tertiary" onClick={() => { setCancel(true); console.log('cancel', cancel) }}>
+            <Button size="big" variant="tertiary" onClick={() => { setCancel(true) }}>
               Cancel
             </Button>
-            <Button size="big" variant="secondary" onClick={() => {
-              createQuotation({ ...initialValue, ...dataForm, status_id: 'Draft' })
-                .then((response) => setDraftQuotation(response.data.id))
-                .catch((e) => console.log(e))
+            {(isCreatePage || isOrderAgainPage)
+              && <Button size="big" variant="secondary" onClick={() => {
+                createQuotation({ ...initialValue, ...dataForm, status_id: '6' })
+                  .then((response) => setDraftQuotation(response.data.id))
             }}>
               Save As Draft
             </Button>
+            }
             <Button size="big" variant="primary" onClick={() => {
-              createQuotation({ ...initialValue, ...dataForm })
-                .then((response) => setNewQuotation(response.data.id))
-                .catch((e) => console.log(e))
+              (isCreatePage || isOrderAgainPage)
+                ? createQuotation({ ...initialValue, ...dataForm, status_id: '1' })
+                  .then((response) => setNewQuotation(response.data.id))
+                : updateQuotation({ ...dataForm, status_id: '1' }, titlePage.split(' ').reverse()[0])
+                  .then((response) => setNewQuotation(response.data.id))
             }}>
-              Submit
+              {(isCreatePage || isOrderAgainPage) ? 'Submit' : 'Save'}
             </Button>
           </Row>
         </Row>
@@ -98,52 +166,63 @@ export default function CreateQuotation() {
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
         <div style={{ display: 'flex', gap: 20 }}>
           <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
+            {/* FIXME progress buat api */}
             <DebounceSelect
-              label="Quotation Type"
+              type='select'
               required
-              fetchOptions={fieldQuotationType}
-              onChange={(val: any) => {
-                onChangeForm('order_type_id', val.label.split(' - ')[0])
+              label="Order Type"
+              placeholder={'Select'}
+              value={dataForm.order_type_id}
+              options={optionsOrderType}
+              onChange={(e: any) => {
+                onChangeForm('order_type_id', e.value)
               }}
             />
             <DebounceSelect
+              type='select'
               label="Sold To Customer"
               required
+              value={dataForm.customer_id}
               fetchOptions={fieldSoldToCustomer}
-              onChange={(val: any) => {
-                onChangeForm('customer_id', val.label)
+              onChange={(e: any) => {
+                onChangeForm('customer_id', e.value)
+                setFetching('customer')
               }}
             />
             <DebounceSelect
+              type='select'
               label="Ship To Customer"
+              value={dataForm.ship_to_id}
               fetchOptions={fieldShipToCustomer}
-              onChange={(val: any) => {
-                onChangeForm('ship_to_id', val.label)
+              onChange={(e: any) => {
+                onChangeForm('ship_to_id', e.value)
               }}
             />
             <DebounceSelect
+              type='select'
               label="Sales Organization"
-              fetchOptions={fieldSalesOrg}
-              value={'PID1'}
-              disabled
-              onChange={(val: any) => {
-                onChangeForm('sales_org_id', val.label)
+              placeholder={'Select'}
+              options={optionsSalesOrg}
+              onChange={(e: any) => {
+                onChangeForm('sales_org_id', e.value)
               }}
             />
             <DebounceSelect
+              type='select'
               label="Branch"
-              fetchOptions={fieldBranch}
-              value={'P174'}
-              disabled
-              onChange={(val: any) => {
-                onChangeForm('branch_id', val.label)
+              placeholder={'Select'}
+              options={optionsBranch}
+              onChange={(e: any) => {
+                onChangeForm('branch_id', e.value)
               }}
             />
             <DebounceSelect
+              type='select'
               label="Salesman"
-              fetchOptions={fieldSalesman}
-              onChange={(val: any) => {
-                onChangeForm('salesman_id', val.label)
+              placeholder='Select'
+              options={optionsSalesman}
+              onChange={(e: any) => {
+                onChangeForm('salesman_id', e.value)
               }}
             />
           </div>
@@ -154,7 +233,8 @@ export default function CreateQuotation() {
                 onChangeForm('order_date', new Date(moment(val).format()).toISOString())
               }}
               label="Document Date"
-              defaultValue={moment()}
+              disabledDate={(current) => current < moment().startOf('day')}
+              value={moment(dataForm.order_date)}
               format={'DD-MMM-YYYY'}
               required
             />
@@ -164,7 +244,9 @@ export default function CreateQuotation() {
                 onChangeForm('valid_from', new Date(moment(val).format()).toISOString())
               }}
               label="Valid From"
-              defaultValue={moment()}
+              // defaultValue={moment()}
+              disabledDate={(current) => current < moment().startOf('day')}
+              value={moment(dataForm.valid_from)}
               format={'DD-MMM-YYYY'}
               required
             />
@@ -174,7 +256,9 @@ export default function CreateQuotation() {
                 onChangeForm('valid_to', new Date(moment(val).format()).toISOString())
               }}
               label="Valid To"
-              defaultValue={moment()}
+              disabledDate={(current) => current < moment().startOf('day')}
+              // defaultValue={moment()}
+              value={moment(dataForm.valid_to)}
               format={'DD-MMM-YYYY'}
               required
             />
@@ -185,32 +269,41 @@ export default function CreateQuotation() {
                 onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
               }}
               label="Delivery Date"
-              defaultValue={moment()}
+              disabledDate={(current) => current < moment().startOf('day')}
+              // defaultValue={moment()}
+              value={moment(dataForm.delivery_date)}
               format={'DD-MMM-YYYY'}
               required
             />
             <DebounceSelect
+              type='input'
               label="Reference"
-              fetchOptions={fakeApi}
-              onChange={(val: any) => {
-                onChangeForm('customer_ref', val.label)
+              onChange={(e: any) => {
+                onChangeForm('customer_ref', e.target.value)
               }}
             />
           </div>
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <TableEditable data={data} setData={setData} columns={columns()} />
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+          />
+        </div>
+        <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
+          Add Item
+        </Button>
       </Card>
       {
         (newQuotation || draftQuotation || cancel)
         && <Popup>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              variant="headingSmall"
+              <Text
               textAlign="center"
-              style={{ ...(!cancel && { color: 'green' }), fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
+                style={{ ...(!cancel && { color: '#00C572' }), fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
             >
-              {cancel ? 'Confirm Cancellation' : 'Success'}
+                {cancel ? 'Confirm Cancellation' : <><CheckCircleFilled /> Success</>}
             </Text>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
@@ -218,23 +311,39 @@ export default function CreateQuotation() {
               ? 'Are you sure want to cancel? Change you made so far will not saved'
               : <>
                 New Quotation
-                <Typography.Text copyable> {newQuotation || draftQuotation}</Typography.Text>
+                  <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
                 has been
               </>
             }
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            successfully created
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+            {!cancel
+              && <div style={{ display: 'flex', justifyContent: 'center' }}>
+                successfully {newQuotation ? 'created' : 'saved'}
+              </div>
+            }
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+              {cancel
+                && <>
+                  <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
+                    setCancel(false)
+                  }}>
+                    No
+                  </Button>
+                  <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                    router.push(`${PATH.SALES}/sales-order`)
+                  }}>
+                    Yes
+                  </Button>
+                </>
+              }
             {newQuotation
               && <>
-                <Button size="big" variant="tertiary" onClick={() => {
+                <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
                   router.push(`${PATH.SALES}/quotation`)
                 }}>
                   Back To List
                 </Button>
-                <Button size="big" variant="primary" onClick={() => {
+                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
                   router.push(`${PATH.SALES}/sales-order`)
                 }}>
                   Next Proccess

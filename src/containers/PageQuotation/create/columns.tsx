@@ -22,7 +22,7 @@ export const useTableAddItem = () => {
   }
   const [data, setData] = React.useState([initialValue])
   const [optionsUom, setOptionsUom] = React.useState([])
-  const [fetching, setFetching] = React.useState(false)
+  const [fetching, setFetching] = React.useState('')
   const router = useRouter()
 
   function handleChangeData(key: string, value: string | number, index: number) {
@@ -66,13 +66,14 @@ export const useTableAddItem = () => {
       'Item',
       'product_id',
       false,
-      (product_id, __, index) => <DebounceSelect
+      (_, { description }, index) => <DebounceSelect
         type='select'
-        value={product_id as any}
+        value={description as any}
         fetchOptions={fieldItem}
         onChange={(e) => {
           handleChangeData('product_id', e.value, index)
-          setFetching(true)
+          handleChangeData('description', e.label, index)
+          setFetching('product')
         }}
       />,
       400,
@@ -88,7 +89,7 @@ export const useTableAddItem = () => {
         disabled={isNullProductId(index)}
         onChange={(e) => {
           handleChangeData('uom_id', e.value, index)
-          setFetching(true)
+          setFetching('uom')
         }}
       />,
       150,
@@ -100,7 +101,7 @@ export const useTableAddItem = () => {
       (order_qty, record, index) => <InputNumber
         disabled={isNullProductId(index)}
         min={'0'}
-        value={order_qty.toLocaleString()}
+        value={order_qty?.toLocaleString()}
         onChange={(newVal) => {
           handleChangeData('order_qty', newVal, index)
           handleChangeData('sub_total', parseInt(newVal) * record.price, index)
@@ -115,7 +116,7 @@ export const useTableAddItem = () => {
       false,
       (price) => <InputNumber
         disabled
-        value={price.toLocaleString()}
+        value={price?.toLocaleString()}
         style={styleInputNumber}
       />,
       130,
@@ -126,7 +127,7 @@ export const useTableAddItem = () => {
       false,
       (sub_total) => <InputNumber
         disabled
-        value={sub_total.toLocaleString()}
+        value={sub_total?.toLocaleString()}
         style={styleInputNumber}
       />,
     ), CreateColumns(
@@ -144,14 +145,24 @@ export const useTableAddItem = () => {
   ]
 
   React.useEffect(() => {
-    if (fetching) {
+    if (fetching !== '') {
       data.forEach(({ product_id, uom_id, order_qty }, index) => {
         if (product_id !== '') {
         fieldUom(product_id)
-          .then((value) => {
+          .then((arr) => {
             const newOptionsUom = [...optionsUom]
-            const newUom = uom_id === '' ? value.reverse()[0].value : uom_id
-            newOptionsUom[index] = value
+            newOptionsUom[index] = arr
+            let newUom
+            switch (fetching) {
+              case 'product':
+                newUom = arr[0].value
+                break;
+              case 'uom':
+                newUom = uom_id
+                break;
+              default:
+                break;
+            }
             setOptionsUom(newOptionsUom)
             handleChangeData('uom_id', newUom, index)
             fieldPrice(product_id, newUom)
@@ -166,7 +177,7 @@ export const useTableAddItem = () => {
           })
         }
       })
-      setFetching(false)
+      setFetching('')
     }
   }, [fetching])
 
@@ -177,7 +188,7 @@ export const useTableAddItem = () => {
           response.data.items.map((items) => ({
             ...items,
             sub_total: parseInt(items.order_qty) * parseInt(items.price),
-            product_id: items.description,
+            product_id: items.product_id,
           })) as any,
         ))
     }

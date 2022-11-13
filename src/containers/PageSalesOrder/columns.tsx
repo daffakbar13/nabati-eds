@@ -47,27 +47,62 @@ export const TableSalesOrder = [
     true,
     (link: string) => <Linked link={link} type="id" />,
   ),
-  CreateColumns('Order Type', 'order_type_id', true),
+  CreateColumns(
+    'Order Type',
+    'order_type_id',
+  ),
   CreateColumns(
     'Order Date',
     'order_date',
-    true,
+    false,
     (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
   ),
-  CreateColumns('Sales Org.', 'sales_org_id', true),
-  CreateColumns('Branch', 'branch_id', true),
-  CreateColumns('Sold To Customer', 'sold_to_customer_id', true),
-  CreateColumns('Ship To Customer', 'ship_to_customer_id', true),
-  CreateColumns('Salesman', 'salesman_id', true),
-  CreateColumns('Total Amount', 'total_amount', true),
-  CreateColumns('Create From', 'created_from', true),
-  CreateColumns('Availibility', 'asdasd', true),
+  CreateColumns(
+    'Sales Org.',
+    'sales_org_id',
+  ),
+  CreateColumns(
+    'Branch',
+    'branch_id',
+  ),
+  CreateColumns(
+    'Sold To Customer',
+    'sold_to_customer_id',
+  ),
+  CreateColumns(
+    'Ship To Customer',
+    'ship_to_customer_id',
+  ),
+  CreateColumns(
+    'Salesman',
+    'salesman_id',
+  ),
+  CreateColumns(
+    'Total Amount',
+    'total_amount',
+  ),
+  CreateColumns(
+    'Create From',
+    'created_from',
+  ),
+  CreateColumns(
+    'Availibility',
+    'asdasd',
+  ),
   CreateColumns(
     'Status',
     'status_name',
     true,
     (status) => <Tag {...(status === 'Completed' && { color: 'green' })} > {status}</Tag>,
   ),
-  CreateColumns('Status Process', 'dfg', true),
-  CreateColumns('Action', 'id', false, (link: string) => <Linked link={link} type="action" />),
+  CreateColumns(
+    'Status Process',
+    'dfg',
+  ),
+  CreateColumns(
+    'Action',
+    'id',
+    false,
+    (link: string) => <Linked link={link} type="action" />,
+  ),
 ]

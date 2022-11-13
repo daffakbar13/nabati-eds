@@ -20,7 +20,7 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
-  const data = useDetail('', getDetailSalesOrder, { id: router.query.id as string })
+  const data = useDetail(getDetailSalesOrder, { id: router.query.id as string })
 
   return (
     <Col>

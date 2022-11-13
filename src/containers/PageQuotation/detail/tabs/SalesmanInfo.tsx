@@ -11,7 +11,7 @@ const CreateDataList = (label: string, value: string) => ({ label, value })
 
 export default function SalesmanInfo(props: SalesmanInfoProps) {
   const { data } = props
-  const salesman = data.salesman
+  const { salesman } = data
 
   const generalInformation = [
     CreateDataList('Employee Name', salesman.name),
