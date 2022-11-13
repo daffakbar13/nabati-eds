@@ -114,13 +114,15 @@ export const TableIntraChannelGoodIssueDetail = [
     ),
     CreateColumns(
         'Item Sender',
-        'company_id',
+        'product_id',
         true,
+        (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
     ),
     CreateColumns(
         'Item Receiver',
-        'material_doc_id',
+        'product_receiver_id',
         true,
+        (text: string, record: any) => `${record.product_receiver_id || ''} - ${record.product_receiver_name || ''}`,
     ),
     CreateColumns(
         'Qty',
