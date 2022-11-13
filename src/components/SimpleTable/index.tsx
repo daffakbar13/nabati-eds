@@ -15,7 +15,7 @@ export default function SimpleTable({ table, initialColumns }) {
     return <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
         <Table
             loading={table.loading}
-            // columns={[...table.columns]}
+            // columns={[...table.columns]} // TO DO NEXT
             columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
             dataSource={table.data}
             showSorterTooltip={false}
