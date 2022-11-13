@@ -8,7 +8,7 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { getQuotation } from 'src/api/quotation'
+import { getListGrReturn } from 'src/api/logistic/good-return'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { Props } from './types'
@@ -32,7 +32,7 @@ export default function PageGrReturn(props: Props) {
     FILTER.ORDER_DATE,
   ])
   const table = useTable({
-    funcApi: getQuotation,
+    funcApi: getListGrReturn,
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns,
   })
