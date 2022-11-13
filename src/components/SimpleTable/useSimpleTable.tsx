@@ -20,19 +20,24 @@ export default function useSimpleTable({ columns, funcApi }) {
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true)
-            const res = await funcApi({
-                filters: [],
-                search: router.query.search,
-                limit: +router.query.limit || DEFAULT_LIMIT,
-                page: +router.query.page || 1,
-            })
-            setData(res?.data?.result ?? res?.data?.results ?? [])
-            setPagination((prev) => ({
-                ...prev,
-                total: res.data.total_rows,
-            }))
-            setLoading(false)
+            try {
+                setLoading(true)
+                const res = await funcApi({
+                    filters: [],
+                    search: router.query.search,
+                    limit: +router.query.limit || DEFAULT_LIMIT,
+                    page: +router.query.page || 1,
+                })
+                setData(res?.data?.result ?? res?.data?.results ?? [])
+                setPagination((prev) => ({
+                    ...prev,
+                    total: res.data.total_rows,
+                }))
+                setLoading(false)
+            } catch (error) {
+                setLoading(false)
+                console.error(error)
+            }
         }
 
         fetchData()
