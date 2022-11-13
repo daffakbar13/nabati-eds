@@ -123,15 +123,15 @@ export const TableIntraChannelGoodReceiptDetail = [
     ),
     CreateColumns(
         'Item Sender',
-        'material_doc_id',
+        'product_id',
         true,
-        (text: string, record: any) => `${record.material_doc_id || ''} - ${record.material_doc_id || ''}`,
+        (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
     ),
     CreateColumns(
         'Item Receiver',
-        'product_id',
+        'product_receiver_id',
         true,
-        (text: string, record: any) => `${record.product_id || ''} - ${record.product_id || ''}`,
+        (text: string, record: any) => `${record.product_receiver_id || ''} - ${record.product_receiver_name || ''}`,
     ),
     CreateColumns(
         'Qty',

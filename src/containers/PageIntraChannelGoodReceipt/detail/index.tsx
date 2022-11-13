@@ -17,19 +17,19 @@ export default function PageIntraChannelGoodReceiptDetail() {
     const data: any = useDetail(getGoodReceiptIntraChannelDetail, { id: router.query.id as string })
     const createDataList = (label: string, value: string) => ({ label, value })
     const format = 'DD MMMM YYYY'
-    
+
     const dataList = [
         //row 1
         createDataList('Request Number', data.id || '-'),
-        createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
-        createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name || ''}`),
-        createDataList('From Channel', '-'),
-        createDataList('To Channel', '-'),
+        createDataList('Supplying Branch', `${data.suppl_branch_id || ''} - ${data.suppl_branch_name || ''}`),
+        createDataList('Receiving Branch', `${data.receive_plant_id || ''} - ${data.receive_plant_name || ''}`),
+        createDataList('From Channel', data.from_channel || '-'),
+        createDataList('To Channel', data.to_channel || '-'),
 
         //row 2
         createDataList('GI Number', data.gi_number),
-        createDataList('From Sloc', `${data.suppl_sloc_id} - ${data.suppl_sloc_name}`),
-        createDataList('To Sloc', `${data.receive_sloc_id} - ${data.receive_sloc_name}`),
+        createDataList('From Sloc', `${data.from_sloc || ''} - ${data.from_sloc_name || ''}`),
+        createDataList('To Sloc', `${data.to_sloc || ''} - ${data.to_sloc_name || ''}`),
         createDataList('Doc Date', dateFormat(data.document_date, format)),
         createDataList('Posting Date', dateFormat(data.posting_date, format)),
         createDataList('Remarks', ((data.remarks != '' && data.remarks != null) ? data.remarks : '-')),
@@ -59,9 +59,6 @@ export default function PageIntraChannelGoodReceiptDetail() {
                 </div>
                 <Text variant={'h4'}>{titlePage}</Text>
             </div>
-            <Card style={{ padding: '16px 20px' }}>
-                Done
-            </Card>
             <Spacer size={20} />
             <Card style={{ padding: '16px 20px' }}>
                 <Row gutter={8}>
