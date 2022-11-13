@@ -29,7 +29,7 @@ export const getGoodIssueIntraChannelDetail = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl}/goodIssue/${params.id}/detail?doc_type=${params.doc_type}`,
+    subUrl: `${subUrl}/intra-channel/issue/${params.id}/detail?doc_type=${params.doc_type}`,
   })
   return response.data
 }

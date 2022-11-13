@@ -51,6 +51,9 @@ export interface GoodIssueIntraChannelItemDetailItems {
     readonly id: string
     readonly material_doc_id: string
     readonly product_id: string
+    readonly product_name: string
+    readonly product_receiver_id: string
+    readonly product_receiver_name: string
     readonly qty: string
     readonly uom_id: string
     readonly base_qty: string

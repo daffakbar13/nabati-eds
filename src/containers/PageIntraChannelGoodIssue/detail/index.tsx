@@ -23,13 +23,13 @@ export default function PageIntraChannelGoodIssueDetail() {
         createDataList('Request Number', data.delivery_number || '-'),
         createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
         createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name || ''}`),
-        createDataList('From Channel', '-'),
-        createDataList('To Channel', '-'),
+        createDataList('From Channel', data.from_channel || '-'),
+        createDataList('To Channel', data.to_channel || '-'),
 
         //row 2
-        createDataList('GI Number', data.id),
-        createDataList('From Sloc', `${data.from_sloc} - ${data.from_sloc_name || ''}`),
-        createDataList('To Sloc', `${data.to_sloc} - ${data.to_sloc_name || ''}`),
+        createDataList('GI Number', data.id || '-'),
+        createDataList('From Sloc', `${data.from_sloc || ''} - ${data.from_sloc_name || ''}`),
+        createDataList('To Sloc', `${data.to_sloc || ''} - ${data.to_sloc_name || ''}`),
         createDataList('Doc Date', dateFormat(data.document_date, format)),
         createDataList('Posting Date', dateFormat(data.posting_date, format)),
         createDataList('Remarks', ((data.remarks != '' && data.remarks != null) ? data.remarks : '-')),
