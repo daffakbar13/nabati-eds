@@ -7,6 +7,7 @@ import {
   CommonListParams,
   CommonDetailParams,
 } from 'src/api/types'
+import { getCustomerByFilterProps } from './types'
 // import { QuotationItem } from './types'
 
 const subUrl = {
@@ -17,9 +18,11 @@ const subUrl = {
   getProductByCompany: 'v1/master/get-product/PP01',
   getUom: 'v1/master/get-uom',
   getProductById: '/v1/master/get-product/PP01/',
-  getPricingByCompany: 'v1/master/get-pricing-group/PP01',
-  getPricingByIdAndUom: 'v1/master/get-pricing-group/PP01',
+  getPricing: 'v1/master/get-pricing-group/PP01',
   getOrderType: 'v1/master/get-order-type/PP01',
+  getReason: 'v1/master/get-reason/PP01/B',
+  getCustomerByFilter: 'v1/master/get-customer-branch-salesman-salesorg/PP01',
+  getDocTypeByCategory: 'v1/master/get-doc-type/category',
 }
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
@@ -107,7 +110,19 @@ export const getPricingByCompany = async (): Promise<CommonDetailResponse<any>> 
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: subUrl.getPricingByCompany,
+    subUrl: subUrl.getPricing,
+  })
+
+  return response.data
+}
+
+export const getPricingByProductId = async (
+  product_id: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getPricing}/z2/${product_id}`,
   })
 
   return response.data
@@ -121,7 +136,42 @@ export const getPricingByIdAndUom = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl.getPricingByIdAndUom}/${product_id}/z2/${uom_id}/${now}`,
+    subUrl: `${subUrl.getPricing}/${product_id}/z2/${uom_id}/${now}`,
+  })
+
+  return response.data
+}
+
+export const getReason = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getReason,
+  })
+
+  return response.data
+}
+
+export const getCustomerByFilter = async (
+  payload: getCustomerByFilterProps,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: subUrl.getCustomerByFilter,
+    data: payload,
+  })
+
+  return response.data
+}
+
+export const getDocTypeByCategory = async (
+  category_id: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getDocTypeByCategory}/${category_id}`,
   })
 
   return response.data

@@ -55,6 +55,8 @@ export interface QuotationDetailResult {
   readonly modified_by: string
   readonly items: [
     {
+      customer_id: any
+      ship_to_id: string
       readonly id: string
       readonly company_id: string
       readonly order_id: string

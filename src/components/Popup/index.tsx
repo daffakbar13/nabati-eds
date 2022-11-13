@@ -3,6 +3,7 @@ import React from 'react'
 interface PopupProps {
   children?: React.ReactNode,
   onOutsideClick?: () => void
+  gap?: number
 }
 
 const useOutsideClick = (ref, handleOutsideClick) => {
@@ -17,7 +18,7 @@ const useOutsideClick = (ref, handleOutsideClick) => {
 }
 
 export default function Popup(props: PopupProps) {
-  const { children, onOutsideClick } = props
+  const { children, onOutsideClick, gap } = props
   const wrapper = React.useRef(null)
   useOutsideClick(wrapper, onOutsideClick)
 
@@ -49,7 +50,7 @@ export default function Popup(props: PopupProps) {
         }}
         {...(onOutsideClick && { ref: wrapper })}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{children}</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: gap || 10 }}>{children}</div>
       </div>
     </div>
   )

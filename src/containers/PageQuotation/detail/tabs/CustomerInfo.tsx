@@ -1,4 +1,6 @@
-import { Col, Divider, Row, Table } from 'antd'
+/* eslint-disable camelcase */
+import { Col, Divider, Row } from 'antd'
+import { Table } from 'pink-lava-ui';
 import React from 'react'
 import DataList from 'src/components/DataList'
 import TitleDataList from 'src/components/TitleDataList'
@@ -14,12 +16,12 @@ const CreateDataList = (label: string, value: string) => ({ label, value })
 export default function CustomerInfo(props: CustomerInfoProps) {
   const { data } = props
   // const table = useTable({ api: '', columns: ColumnsCustomerInfo })
-  const customer_sales = data.customer_sales
+  const { customer_sales, salesman } = data
 
   const customerInformation = [
-    CreateDataList('Name', customer_sales.company_id),
+    CreateDataList('Name', customer_sales.customer_id),
     // FIXME Active Customer
-    CreateDataList('Active Customer', customer_sales.is_active),
+    CreateDataList('Active Customer', customer_sales.is_active ? 'Yes' : 'No'),
     // FIXME Short Name
     CreateDataList('Short Name', customer_sales.short_name),
     // FIXME KTP
@@ -102,7 +104,7 @@ export default function CustomerInfo(props: CustomerInfoProps) {
           <Divider />
         </>
       ))}
-      <Table dataSource={[]} columns={ColumnsCustomerInfo} />
+      <Table dataSource={[salesman]} columns={ColumnsCustomerInfo} />
     </>
   )
 }

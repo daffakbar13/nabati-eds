@@ -67,7 +67,6 @@ export default function useTable(props: useTableProps) {
       }),
     }),
     fixed: 'left',
-    // preserveSelectedRowKeys: true,
   }
 
   React.useEffect(() => {

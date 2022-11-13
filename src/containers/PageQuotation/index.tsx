@@ -11,6 +11,8 @@ import FloatAction from 'src/components/FloatAction'
 import { cancelBatchOrder, getQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldReason } from 'src/configs/fieldFetches'
 import { PageQuotationProps } from './types'
 import { ColumnQuoatation } from './columns'
 
@@ -38,6 +40,8 @@ export default function PageQuotation(props: PageQuotationProps) {
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
+    const [reason, setReason] = React.useState('')
+    const [optionsReason, setOptionsReason] = React.useState([])
     const hasData = table.total > 0
     const router = useRouter()
     const oneSelected = table.selected.length === 1
@@ -62,7 +66,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                             onChange={(event) => {
                                 table.handleHideShowColumns(event.target, title)
                             }}
-                        />{' '}
+                        />
                         {title}
                     </div>
                 ))}
@@ -82,6 +86,14 @@ export default function PageQuotation(props: PageQuotationProps) {
       )
   }
 
+    React.useEffect(() => {
+        fieldReason()
+            .then((data) => {
+                setOptionsReason(data)
+                setReason(data[0].value)
+            })
+    }, [])
+
     return (
         <Col>
             <Text variant={'h4'}>{titlePage}</Text>
@@ -94,7 +106,19 @@ export default function PageQuotation(props: PageQuotationProps) {
                             nameIcon="SearchOutlined"
                             placeholder="Search Menu Design Name"
                             colorIcon={colors.grey.regular}
-                            onChange={() => { }}
+                            onChange={(e) => {
+                                const { value } = e.target
+                                if (value === '') {
+                                    table.handleFilter([])
+                                } else {
+                                    table.handleFilter([{
+                                        field: 'eds_order.id',
+                                        option: 'EQ',
+                                        from_value: e.target.value,
+                                        to_value: e.target.value,
+                                    }])
+                                }
+                            }}
                         />
                         <SmartFilter
                             onOk={(newVal) => {
@@ -107,9 +131,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                                       to_value: obj.toValue?.value,
                                   }))
                               setFilters(newVal)
-                              table.handleFilter(newFiltered)
-                              // setFiltered(newFiltered)
-                              console.log('newVal', newVal)
+                                table.handleFilter(newFiltered)
                             }}
                             filters={filters} />
                     </Row>
@@ -165,14 +187,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                         </div>
                         <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
                             <Button size="big" variant="tertiary" onClick={() => {
-                                console.log('oke');
-
-                                cancelBatchOrder({
-                                    order_list:
-                                        table.selected.map((id) => ({ id })),
-                                })
-                                    .then(() => router.reload())
-                                    .catch((err) => console.log(err))
+                                setShowConfirm('cancel')
                             }}>
                               Cancel Process
                             </Button>
@@ -215,6 +230,45 @@ export default function PageQuotation(props: PageQuotationProps) {
                                 style={{ flexGrow: 1 }}
                                 variant="primary"
                                 onClick={() => { router.reload() }}
+                            >
+                                Yes
+                            </Button>
+                        </div>
+                    </Popup>
+                )}
+                {showConfirm === 'cancel' && (
+                    <Popup>
+                        <Typography.Title level={3} style={{ margin: 0 }}>
+                            Confirm Cancellation
+                        </Typography.Title>
+                        <DebounceSelect
+                            type='select'
+                            value={optionsReason.find(({ value }) => reason === value)?.label}
+                            label={'Reason Cancel Process Quotation'}
+                            required
+                            options={optionsReason}
+                            onChange={({ value }) => setReason(value)}
+                        />
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            <Button
+                                size="big"
+                                style={{ flexGrow: 1 }}
+                                variant="secondary"
+                                onClick={() => { setShowConfirm('') }}>
+                                No
+                            </Button>
+                            <Button
+                                size="big"
+                                style={{ flexGrow: 1 }}
+                                variant="primary"
+                                onClick={() => {
+                                    cancelBatchOrder({
+                                        order_list:
+                                            table.selected.map((id) => ({ id })),
+                                        cancel_reason_id: reason,
+                                    })
+                                        .then(() => router.reload())
+                                }}
                             >
                                 Yes
                             </Button>

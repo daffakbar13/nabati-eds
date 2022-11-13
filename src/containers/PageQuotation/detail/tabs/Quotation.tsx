@@ -20,7 +20,7 @@ export default function Quotation(props: QuotationProps) {
     createDataList('Quotation', data.id),
     createDataList('Customer', data.customer_name),
     createDataList('Sales Org.', data.sales_org_id),
-    createDataList('Plant', data.branch_id),
+    createDataList('Branch', data.branch_id),
     createDataList('Salesman', data.salesman_id),
     // FIXME Doc. Date
     createDataList('Doc. Date', dateFormat(data.doc_date, format)),

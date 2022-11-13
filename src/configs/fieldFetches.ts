@@ -1,4 +1,5 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter } from 'src/api/master-data';
+import { getCustomerByFilterProps } from 'src/api/master-data/types';
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -22,12 +23,13 @@ export function fieldSoldToCustomer(search: string) {
     return getCustomerByCompany()
         .then((result) =>
             result.data
-                .filter(({ sold_to_customer_id, name }) =>
-                    sold_to_customer_id.toLowerCase().includes(search.toLowerCase())
-                    || name.toLowerCase().includes(search.toLowerCase()))
+                .filter(({ sold_to_customer_id, name, branch_id }) =>
+                (sold_to_customer_id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase())))
+                    // && branch === branch_id)
                 .splice(0, 10)
                 .map(({ sold_to_customer_id, name }) => ({
-                    label: [sold_to_customer_id, name].join('-'),
+                    label: [sold_to_customer_id, name].join(' - '),
                     value: sold_to_customer_id,
                 })))
 }
@@ -36,12 +38,13 @@ export function fieldShipToCustomer(search: string) {
     return getCustomerByCompany()
         .then((result) =>
             result.data
-                .filter(({ ship_to_customer_id, name }) =>
-                    ship_to_customer_id.toLowerCase().includes(search.toLowerCase())
-                    || name.toLowerCase().includes(search.toLowerCase()))
+                .filter(({ ship_to_customer_id, name, branch_id }) =>
+                (ship_to_customer_id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase())))
+                    // && branch === branch_id)
                 .splice(0, 10)
                 .map(({ ship_to_customer_id, name }) => ({
-                    label: [ship_to_customer_id, '-', name].join(''),
+                    label: [ship_to_customer_id, name].join(' - '),
                     value: ship_to_customer_id,
                 })))
 }
@@ -52,67 +55,86 @@ export function fieldSalesOrg(search: string) {
             result.data
                 .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
                 .splice(0, 10)
-                .map(({ id }) => ({
-                    label: id,
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
                     value: id,
                 })))
 }
 
-export function fieldBranch(search: string) {
-    return getBranch()
-        .then((result) =>
-            result.data
-                .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
-                .splice(0, 10)
-                .map(({ id }) => ({
-                    label: id,
-                    value: id,
-                })))
+export function fieldBranch(payload: getCustomerByFilterProps) {
+    return getCustomerByFilter(payload)
+        .then((res) => res.data)
+    // return getBranch()
+    //     .then((result) =>
+    //         result.data
+    //             .filter(({ id, name }) =>
+    //                 id.toLowerCase().includes(search.toLowerCase())
+    //                 || name.toLowerCase().includes(search.toLowerCase()))
+    //             .splice(0, 10)
+    //             .map(({ id, name }) => ({
+    //                 label: [id, name].join(' - '),
+    //                 value: id,
+    //             })))
 }
 
-export function fieldSalesman(search: string) {
+export function fieldSalesman(search: string, branch: string) {
     return getSalesmanByCompany()
         .then((result) =>
             result.data
-                .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
+                .filter(({ id, name, branch_id }) =>
+                    (id.toLowerCase().includes(search.toLowerCase())
+                        || name.toLowerCase().includes(search.toLowerCase()))
+                    && branch_id === branch)
                 .splice(0, 10)
-                .map(({ id }) => ({
-                    label: id,
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
                     value: id,
                 })))
 }
 
 export function fieldItem(search: string) {
+    const now = new Date().toISOString()
     return getPricingByCompany()
         .then((result) => result.data
+            .filter(({ valid_from, valid_to }) => now > valid_from && now < valid_to)
             .map(({ product_id }) => product_id))
-        .then((havePricing) => getProductByCompany()
-        .then((result) =>
-            result.data
-                .filter(({ name, product_id }) =>
-                    name.toLowerCase().includes(search.toLowerCase())
-                    && havePricing.includes(product_id))
-                .splice(0, 10)
-                .map(({ name, product_id }) => ({
-                    label: name,
-                    value: product_id,
-                }))))
+        .then((allPricng) => getProductByCompany()
+            .then((result) =>
+                result.data
+                    .filter(({ name, product_id }) =>
+                        (name.toLowerCase().includes(search.toLowerCase())
+                            || product_id.toLowerCase().includes(search.toLowerCase()))
+                        && allPricng.includes(product_id))
+                    .splice(0, 10)
+                    .map(({ name, product_id }) => ({
+                        label: name,
+                        value: product_id,
+                    }))))
 }
 
 export function fieldUom(product_id: string): Promise<any> {
-    return getProductById(product_id)
+    const now = new Date().toISOString()
+    return getPricingByProductId(product_id)
         .then((result) => result.data)
-        .then(({ base_uom_id, middle_uom_id, high_uom_id }) => {
-            const arr = [...new Set([
-                base_uom_id,
-                middle_uom_id,
-                high_uom_id,
-            ])]
-            return arr.map((val) => ({ label: val, value: val }))
-        })
+        .then((data) => data
+            .filter(({ valid_from, valid_to }) => now >= valid_from && now <= valid_to)
+            .map(({ uom_id }) => ({
+                label: uom_id,
+                value: uom_id,
+            })))
 }
 
 export function fieldPrice(product_id: string, uom: string) {
     return getPricingByIdAndUom(product_id, uom)
         .then((result) => result.data?.price)
+}
+
+export function fieldReason(): Promise<any> {
+    return getReason()
+        .then((result) => result.data)
+        .then((data) => data
+            .map(({ Name, ID }) => ({
+                label: Name,
+                value: ID,
+            })))
 }

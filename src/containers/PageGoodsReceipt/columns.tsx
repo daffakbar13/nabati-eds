@@ -76,7 +76,7 @@ export const columns = [
     'Posting Date',
     'posting_date',
     true,
-    (date) => <>{moment(date).format('YYYY-MM-DD HH:mm')}</>,
+    (date) => <>{moment(date).isValid ?? moment(date).format('YYYY-MM-DD HH:mm')}</>,
     180,
   ),
   CreateColumns(
@@ -88,11 +88,15 @@ export const columns = [
     'Branch',
     'branch_id',
     true,
+    (branch, rec) => <>{`${branch} - ${rec.branch_name}`}</>,
+    250,
   ),
   CreateColumns(
     'Vendor',
     'vendor_id',
     true,
+    (vendor, rec) => <>{`${vendor} - ${rec.vendor_name}`}</>,
+    250,
   ),
   CreateColumns(
     'Move Type',
