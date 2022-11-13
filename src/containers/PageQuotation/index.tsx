@@ -5,7 +5,7 @@ import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { cancelBatchOrder, getQuotation } from 'src/api/quotation'
@@ -18,8 +18,6 @@ import { ColumnQuoatation } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
-    console.log(total, range)
-
     const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
     return <p>{text}</p>
 }
@@ -92,6 +90,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                 setOptionsReason(data)
                 setReason(data[0].value)
             })
+            .catch((err) => console.log(err))
     }, [])
 
     return (
@@ -232,6 +231,35 @@ export default function PageQuotation(props: PageQuotationProps) {
                                 onClick={() => { router.reload() }}
                             >
                                 Yes
+                            </Button>
+                        </div>
+                    </Popup>
+                )}
+                {showConfirm === 'success-submit' && (
+                    <Popup>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <Text
+                                textAlign="center"
+                                style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+                            >
+                                <><CheckCircleFilled /> Success</>
+                            </Text>
+                        </div>
+                        <div style={{ display: 'flex', gap: 10 }}>
+                            <Button
+                                size="big"
+                                style={{ flexGrow: 1 }}
+                                variant="secondary"
+                                onClick={() => { setShowConfirm('') }}>
+                                Back To List
+                            </Button>
+                            <Button
+                                size="big"
+                                style={{ flexGrow: 1 }}
+                                variant="primary"
+                                onClick={() => { router.reload() }}
+                            >
+                                Next Process
                             </Button>
                         </div>
                     </Popup>

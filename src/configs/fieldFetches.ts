@@ -30,7 +30,7 @@ export function fieldSoldToCustomer(search: string) {
                 .splice(0, 10)
                 .map(({ sold_to_customer_id, name }) => ({
                     label: [sold_to_customer_id, name].join(' - '),
-                    value: sold_to_customer_id,
+                    value: [sold_to_customer_id, name].join(' - '),
                 })))
 }
 
@@ -45,7 +45,7 @@ export function fieldShipToCustomer(search: string) {
                 .splice(0, 10)
                 .map(({ ship_to_customer_id, name }) => ({
                     label: [ship_to_customer_id, name].join(' - '),
-                    value: ship_to_customer_id,
+                    value: [ship_to_customer_id, name].join(' - '),
                 })))
 }
 
@@ -57,7 +57,7 @@ export function fieldSalesOrg(search: string) {
                 .splice(0, 10)
                 .map(({ id, name }) => ({
                     label: [id, name].join(' - '),
-                    value: id,
+                    value: [id, name].join(' - '),
                 })))
 }
 
@@ -98,13 +98,13 @@ export function fieldItem(search: string) {
         .then((result) => result.data
             .filter(({ valid_from, valid_to }) => now > valid_from && now < valid_to)
             .map(({ product_id }) => product_id))
-        .then((allPricng) => getProductByCompany()
+        .then((allPricing) => getProductByCompany()
             .then((result) =>
                 result.data
                     .filter(({ name, product_id }) =>
                         (name.toLowerCase().includes(search.toLowerCase())
                             || product_id.toLowerCase().includes(search.toLowerCase()))
-                        && allPricng.includes(product_id))
+                        && allPricing.includes(product_id))
                     .splice(0, 10)
                     .map(({ name, product_id }) => ({
                         label: name,

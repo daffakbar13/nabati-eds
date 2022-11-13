@@ -19,11 +19,11 @@ export default function CustomerInfo(props: CustomerInfoProps) {
   const { customer_sales, salesman } = data
 
   const customerInformation = [
-    CreateDataList('Name', customer_sales.customer_id),
+    CreateDataList('Name', [data.customer_id, data.customer_name].join(' - ')),
     // FIXME Active Customer
     CreateDataList('Active Customer', customer_sales.is_active ? 'Yes' : 'No'),
     // FIXME Short Name
-    CreateDataList('Short Name', customer_sales.short_name),
+    CreateDataList('Short Name', data.customer_short_name),
     // FIXME KTP
     CreateDataList('KTP', customer_sales.id),
     CreateDataList('Phone Number', customer_sales.phone),
