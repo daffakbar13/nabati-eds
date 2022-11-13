@@ -8,7 +8,7 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import moment from 'moment'
 import DateFormat from 'src/components/DateFormat'
-import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
     const router = useRouter()
@@ -79,9 +79,9 @@ export const TableIntraChannelRequest = [
     ),
     CreateColumns(
         'Status',
-        'status_name',
+        'status',
         true,
-        (status) => <Tag {...(status === 'Complete' && { color: 'green' })} > {status}</Tag>,
+        (status) => <TaggedStatus status={status} />,
     ),
     CreateColumns(
         'Action',
