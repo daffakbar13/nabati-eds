@@ -68,3 +68,12 @@ export const cancelOrder = async (id: string) => {
   })
   return response.data
 }
+
+export const multipleSubmitQuotation = async (payload: { order_list: { id: string }[] }) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: 'v1/sales-orders/submit',
+    data: payload,
+  })
+  return response.data
+}

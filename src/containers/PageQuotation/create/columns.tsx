@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
-import { InputNumber } from 'antd'
+import { Input, InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldItem, fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons';
@@ -130,17 +130,19 @@ export const useTableAddItem = () => {
         value={sub_total?.toLocaleString()}
         style={styleInputNumber}
       />,
-    ), CreateColumns(
+    ),
+    CreateColumns(
       'Remarks',
       '',
       false,
-      (_, __, index) => <DebounceSelect
-        type='input'
-        placeholder='e.g Testing'
-        onChange={(e) => {
-          handleChangeData('remarks', e.target.value, index)
-        }}
-      />,
+      // (_, __, index) => <DebounceSelect
+      //   type='input'
+      //   placeholder='e.g Testing'
+      //   onChange={(e) => {
+      //     handleChangeData('remarks', e.target.value, index)
+      //   }}
+      // />,
+      (_, __, index) => <Input.TextArea style={styleInputNumber} rows={2} />,
     ),
   ]
 

@@ -37,6 +37,11 @@ export default function PageCreateQuotation() {
 
   const concatString = (data: string[]) => (data.join(' - '))
 
+  const splitString = (data: string) => {
+    const [result] = data.split(' - ')
+    return result
+  }
+
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
@@ -53,6 +58,16 @@ export default function PageCreateQuotation() {
     customer_ref: 'test',
     currency_id: 'IDR',
   }
+
+  const dataSubmited = () => ({
+    ...initialValue,
+    ...dataForm,
+    customer_id: splitString(dataForm.customer_id),
+    ship_to_id: splitString(dataForm.ship_to_id),
+    sales_org_id: splitString(dataForm.sales_org_id),
+    branch_id: splitString(dataForm.branch_id),
+    customer_id: splitString(dataForm.customer_id),
+  })
 
   React.useEffect(() => {
     async function runApi() {

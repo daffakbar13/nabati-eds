@@ -18,10 +18,10 @@ export default function Quotation(props: QuotationProps) {
 
   const dataList = [
     createDataList('Quotation', data.id),
-    createDataList('Customer', data.customer_name),
-    createDataList('Sales Org.', data.sales_org_id),
-    createDataList('Branch', data.branch_id),
-    createDataList('Salesman', data.salesman_id),
+    createDataList('Customer', [data.customer_id, data.customer_name].join(' - ')),
+    createDataList('Sales Org.', [data.sales_org_id, data.sales_org_name].join(' - ')),
+    createDataList('Branch', [data.branch_id, data.branch_name].join(' - ')),
+    createDataList('Salesman', [data.salesman_id, data.salesman_name].join(' - ')),
     // FIXME Doc. Date
     createDataList('Doc. Date', dateFormat(data.doc_date, format)),
     createDataList('Valid From', dateFormat(data.valid_from, format)),
