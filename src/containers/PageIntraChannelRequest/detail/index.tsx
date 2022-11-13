@@ -59,12 +59,38 @@ export default function PageQuotationDetail() {
                 <Text variant={'h4'}>{titlePage}</Text>
             </div>
             <Card style={{ overflow: 'unset' }}>
+
                 <Row justifyContent="space-between" reverse>
-                    <Row gap="16px">
-                        <Button size="big" variant="tertiary">
-                            Cancel Process
-                        </Button>
-                    </Row>
+                    {(() => {
+                        if (data.status == 'Done') {
+                            return (
+                                <>
+                                    <Row gap="16px">
+                                        <Button size="big" variant="tertiary">
+                                            Cancel Process
+                                        </Button>
+                                    </Row>
+                                </>
+                            );
+                        } else if (data.status == 'Pending') {
+                            return (
+                                <>
+                                    <Row gap="16px">
+                                        <Button size="big" variant="tertiary">
+                                            Reject
+                                        </Button>
+                                        <Button size="big" variant="primary">
+                                            Approve
+                                        </Button>
+                                    </Row>
+                                </>
+                            );
+                        } else if (data.status == 'Canceled') {
+                            return (
+                                <></>
+                            );
+                        }
+                    })()}
                 </Row>
             </Card>
             <Spacer size={20} />

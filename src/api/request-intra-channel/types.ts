@@ -60,3 +60,10 @@ export interface RequestIntraChannelItemDetailList {
     readonly batch: string
     readonly remarks: string
 }
+
+export interface slocList {
+    readonly company_id: string
+    readonly branch_id: string | number
+    readonly doc_type_id: string
+    readonly sloc_id: string
+}
