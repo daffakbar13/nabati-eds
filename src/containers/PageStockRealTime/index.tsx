@@ -7,10 +7,9 @@ import { Card } from 'src/components'
 import { useTable, useTitlePage } from 'src/hooks'
 import { colors } from 'src/configs/colors'
 
-import { getStockRealtimeList } from 'src/api/logistic/stock-real-time'
+import { getStockRealtimeList, exportExcelStockRealTime } from 'src/api/logistic/stock-real-time'
 
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { Props } from './types'
 import { columns } from './columns'
 
 function showTotal(total: number, range: number[]) {
@@ -19,7 +18,7 @@ function showTotal(total: number, range: number[]) {
   return <p>{text}</p>
 }
 
-export default function PageRealTime(props: Props) {
+export default function PageRealTime() {
   const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
@@ -66,6 +65,14 @@ export default function PageRealTime(props: Props) {
     )
   }
 
+  const handleDownload = async () => {
+    try {
+      await exportExcelStockRealTime()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
@@ -83,7 +90,7 @@ export default function PageRealTime(props: Props) {
             <SmartFilter onOk={setFilters} filters={filters} />
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => { }}>
+            <Button size="big" variant="secondary" onClick={handleDownload}>
               Download
             </Button>
           </Row>
