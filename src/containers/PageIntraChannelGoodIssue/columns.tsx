@@ -10,12 +10,14 @@ import moment from 'moment'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+function Linked({ link, linkType, type }: { link: string; linkType: string; type: 'id' | 'action' }) {
     const router = useRouter()
     const navigate = () => {
-        status === 'Draft'
-            ? router.push(`${PATH.LOGISTIC}/quotation/edit/${link}`)
-            : router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel/detail/${link}`)
+        if (linkType == 'id') {
+            router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel/detail/${link}`)
+        } else if (linkType == 'deliveryNumber') {
+            router.push(`${PATH.LOGISTIC}/request-intra-channel/detail/${link}`)
+        }
     }
     const [hover, setHover] = React.useState(false)
 
@@ -51,13 +53,13 @@ export const TableIntraChannelGoodIssue = [
         'Request Number',
         'delivery_number',
         true,
-        // (link: string, record: any) => <Linked link={link} type="id" status={record.delivery_number} />,
+        (link: string, record: any) => <Linked link={link} type="id" linkType='deliveryNumber' />,
     ),
     CreateColumns(
         'GI Number',
         'id',
         true,
-        (link: string, record: any) => <Linked link={link} type="id" status={record.id} />,
+        (link: string, record: any) => <Linked link={link} type="id" linkType='id' />,
     ),
     CreateColumns(
         'Posting Date',
@@ -69,24 +71,25 @@ export const TableIntraChannelGoodIssue = [
         'Company',
         'company_id',
         true,
+        (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
     ),
     CreateColumns(
         'Supplying Plant',
         'suppl_branch_id',
         true,
-        (text: string, record: any) => `${record.suppl_branch_id} - ${record.suppl_branch_name}`,
+        (text: string, record: any) => `${record.suppl_branch_id || ''} - ${record.suppl_branch_name || ''}`,
     ),
     CreateColumns(
         'Receiving Plant',
         'branch_id',
         true,
-        (text: string, record: any) => `${record.receive_plant_id} - ${record.receive_plant_name}`,
+        (text: string, record: any) => `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
     ),
     CreateColumns(
         'Mov. Type',
         'branch_id',
         true,
-        (text: string, record: any) => `${record.movement_type_id} - ${record.movement_type_name}`,
+        (text: string, record: any) => `${record.movement_type_id || ''} - ${record.movement_type_name || ''}`,
     ),
     CreateColumns(
         'Status',
@@ -98,7 +101,7 @@ export const TableIntraChannelGoodIssue = [
         'Action',
         'id',
         false,
-        (link, record) => <Linked link={link} type="action" status={record.status_name} />,
+        (link, record) => <Linked link={link} type="action" linkType='id' />,
     ),
 ]
 

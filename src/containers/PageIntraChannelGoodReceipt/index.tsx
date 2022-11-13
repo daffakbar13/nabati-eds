@@ -8,12 +8,12 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { getQuotation } from 'src/api/quotation'
+import { getGoodReceiptIntraChannel } from 'src/api/good-receipt-intra-channel'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { PATH } from 'src/configs/menus'
 import { PageQuotationProps } from './types'
-import { TableIntraChannelRequest } from './columns'
+import { TableIntraChannelGoodReceipt } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
@@ -36,9 +36,9 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
     const [filtered, setFiltered] = React.useState([])
 
     const table = useTable({
-        funcApi: getQuotation,
+        funcApi: getGoodReceiptIntraChannel,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
-        columns: TableIntraChannelRequest,
+        columns: TableIntraChannelGoodReceipt,
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
@@ -59,7 +59,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
     const HideShowColumns = () => {
         const content = (
             <>
-                {TableIntraChannelRequest.map(({ title }, index) => (
+                {TableIntraChannelGoodReceipt.map(({ title }, index) => (
                     <div key={index}>
                         <Checkbox
                             defaultChecked={!table.hiddenColumns.includes(title)}
@@ -116,15 +116,6 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
                                 console.log('newVal', newVal)
                             }}
                             filters={filters} />
-                    </Row>
-                    <Row gap="16px">
-                        <Button
-                            size="big"
-                            variant="primary"
-                            onClick={() => router.push(`${router.pathname}/create`)}
-                        >
-                            Create
-                        </Button>
                     </Row>
                 </Row>
             </Card>

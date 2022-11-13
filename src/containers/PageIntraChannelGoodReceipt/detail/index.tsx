@@ -6,30 +6,30 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getGoodIssueIntraChannelDetail } from 'src/api/good-issue-intra-channel'
+import { getGoodReceiptIntraChannelDetail } from 'src/api/good-receipt-intra-channel/index'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
-import { TableIntraChannelGoodIssueDetail } from '../columns'
+import { TableIntraChannelGoodReceiptDetail } from '../columns'
 
-export default function PageIntraChannelGoodIssueDetail() {
+export default function PageIntraChannelGoodReceiptDetail() {
     const titlePage = useTitlePage('detail')
     const router = useRouter()
-    const data: any = useDetail(getGoodIssueIntraChannelDetail, { id: router.query.id as string, doc_type: 'WA' as string })
+    const data: any = useDetail(getGoodReceiptIntraChannelDetail, { id: router.query.id as string })
     const createDataList = (label: string, value: string) => ({ label, value })
     const format = 'DD MMMM YYYY'
-
+    
     const dataList = [
         //row 1
-        createDataList('Request Number', data.delivery_number || '-'),
+        createDataList('Request Number', data.id || '-'),
         createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
         createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name || ''}`),
         createDataList('From Channel', '-'),
         createDataList('To Channel', '-'),
 
         //row 2
-        createDataList('GI Number', data.id),
-        createDataList('From Sloc', `${data.from_sloc} - ${data.from_sloc_name || ''}`),
-        createDataList('To Sloc', `${data.to_sloc} - ${data.to_sloc_name || ''}`),
+        createDataList('GI Number', data.gi_number),
+        createDataList('From Sloc', `${data.suppl_sloc_id} - ${data.suppl_sloc_name}`),
+        createDataList('To Sloc', `${data.receive_sloc_id} - ${data.receive_sloc_name}`),
         createDataList('Doc Date', dateFormat(data.document_date, format)),
         createDataList('Posting Date', dateFormat(data.posting_date, format)),
         createDataList('Remarks', ((data.remarks != '' && data.remarks != null) ? data.remarks : '-')),
@@ -52,7 +52,7 @@ export default function PageIntraChannelGoodIssueDetail() {
                         cursor: 'pointer',
                     }}
                     onClick={() => {
-                        router.push('/logistic/goods-issue-intra-channel')
+                        router.push('/logistic/goods-receipt-intra-channel')
                     }}
                 >
                     <ArrowLeftOutlined style={{ fontSize: 25 }} />
@@ -83,7 +83,7 @@ export default function PageIntraChannelGoodIssueDetail() {
                 </Row>
                 <Divider />
                 <div style={{ overflow: 'scroll' }}>
-                    <Table columns={TableIntraChannelGoodIssueDetail} data={data.items} />
+                    <Table columns={TableIntraChannelGoodReceiptDetail} data={data.items} />
                 </div>
             </Card>
         </Col>

@@ -1,6 +1,7 @@
-export interface GoodIssueIntraChannelItem {
+export interface GoodReceiptIntraChannelItem {
     readonly company_id: string
     readonly id: string
+    readonly gi_number: string
     readonly po_number: string
     readonly delivery_number: string
     readonly suppl_branch_id: string
@@ -19,10 +20,11 @@ export interface GoodIssueIntraChannelItem {
     readonly modified_by: string
 }
 
-export interface GoodIssueIntraChannelItemDetail {
+export interface GoodReceiptIntraChannelItemDetail {
     readonly company_id: string
     readonly company_name: string
     readonly id: string
+    readonly gi_number: string
     readonly po_number: string
     readonly delivery_number: string
     readonly suppl_branch_id: string
@@ -35,18 +37,15 @@ export interface GoodIssueIntraChannelItemDetail {
     readonly movement_type_id: string
     readonly movement_type_name: string
     readonly remarks: string
-    readonly from_sloc: string
-    readonly to_sloc: string
     readonly status_id: string
-    readonly status: string
     readonly created_at: string
     readonly created_by: string
     readonly modified_at: string
     readonly modified_by: string
-    readonly items: Array<GoodIssueIntraChannelItemDetailItems>
+    readonly items: Array<GoodReceiptIntraChannelItemDetailItems>
 }
 
-export interface GoodIssueIntraChannelItemDetailItems {
+export interface GoodReceiptIntraChannelItemDetailItems {
     readonly company_id: string
     readonly id: string
     readonly material_doc_id: string
