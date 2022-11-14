@@ -23,6 +23,7 @@ const subUrl = {
   getReason: 'v1/master/get-reason/PP01/B',
   getCustomerByFilter: 'v1/master/get-customer-branch-salesman-salesorg/PP01',
   getDocTypeByCategory: 'v1/master/get-doc-type/category',
+  getConfigSloc: 'v1/master/get-config-sloc/PP01',
 }
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
@@ -172,6 +173,17 @@ export const getDocTypeByCategory = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getDocTypeByCategory}/${category_id}`,
+  })
+
+  return response.data
+}
+
+export const getConfigSloc = async (
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getConfigSloc}`,
   })
 
   return response.data

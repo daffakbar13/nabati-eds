@@ -56,31 +56,31 @@ export const TableIntraChannelRequest = [
     CreateColumns(
         'Posting Date',
         'posting_date',
-        true,
+        false,
         (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
     ),
     CreateColumns(
         'Company',
         'company_id',
-        true,
+        false,
         (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
     ),
     CreateColumns(
         'Supplying Branch',
         'supply_branch_name',
-        true,
+        false,
         (text: string, record: any) => `${record.suppl_branch_id || ''} - ${record.supply_branch_name || ''}`,
     ),
     CreateColumns(
         'Receiving Branch',
         'receive_plant_id',
-        true,
+        false,
         (text: string, record: any) => `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
     ),
     CreateColumns(
         'Status',
         'status',
-        true,
+        false,
         (status) => <TaggedStatus status={status} />,
     ),
     CreateColumns(
@@ -95,39 +95,39 @@ export const TableIntraChannelRequestDetail = [
     CreateColumns(
         'No',
         'id',
-        true,
+        false,
         (text: string, record: any, index: number) => index + 1,
     ),
     CreateColumns(
         'Item Sender',
         'product_sender_id',
-        true,
+        false,
         (text: string, record: any) => `${record.product_sender_id} - ${record.product_sender_name}`,
     ),
     CreateColumns(
         'Item Receiver',
         'product_receiver_id',
-        true,
+        false,
         (text: string, record: any) => `${record.product_receiver_id} - ${record.product_receiver_name}`,
     ),
     CreateColumns(
         'Qty',
         'qty',
-        true,
+        false,
     ),
     CreateColumns(
         'UoM',
         'uom_id',
-        true,
+        false,
     ),
     CreateColumns(
         'Batch',
         'batch',
-        true,
+        false,
     ),
     CreateColumns(
         'Remarks',
         'remarks',
-        true,
+        false,
     ),
 ]

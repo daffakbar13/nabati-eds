@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 
 /* eslint-disable implicit-arrow-linebreak */
@@ -26,7 +26,7 @@ export function fieldSoldToCustomer(search: string) {
                 .filter(({ sold_to_customer_id, name, branch_id }) =>
                 (sold_to_customer_id.toLowerCase().includes(search.toLowerCase())
                     || name.toLowerCase().includes(search.toLowerCase())))
-                    // && branch === branch_id)
+                // && branch === branch_id)
                 .splice(0, 10)
                 .map(({ sold_to_customer_id, name }) => ({
                     label: [sold_to_customer_id, name].join(' - '),
@@ -41,7 +41,7 @@ export function fieldShipToCustomer(search: string) {
                 .filter(({ ship_to_customer_id, name, branch_id }) =>
                 (ship_to_customer_id.toLowerCase().includes(search.toLowerCase())
                     || name.toLowerCase().includes(search.toLowerCase())))
-                    // && branch === branch_id)
+                // && branch === branch_id)
                 .splice(0, 10)
                 .map(({ ship_to_customer_id, name }) => ({
                     label: [ship_to_customer_id, name].join(' - '),
@@ -137,4 +137,50 @@ export function fieldReason(): Promise<any> {
                 label: Name,
                 value: ID,
             })))
+}
+
+export function fieldBranchAll(search: string) {
+    return getBranch()
+        .then((result) =>
+            result.data
+                .filter(({ id, name }) =>
+                    id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase()))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
+                    value: id,
+                })))
+}
+
+export function fieldBranchSupply(search: string, channel = '') {
+    return getConfigSloc()
+        .then((result) => result.data
+            .map(({ branch_id }) => branch_id))
+        .then((allbranch) => getBranch()
+            .then((result) =>
+                result.data
+                    .filter(({ name, id, branch_type }) =>
+                        (name.toLowerCase().includes(search.toLowerCase())
+                            || id.toLowerCase().includes(search.toLowerCase()))
+                        && allbranch.includes(id) && branch_type != channel)
+                    .splice(0, 10)
+                    .map(({ id, name, branch_type }) => ({
+                        label: [id, name].join(' - '),
+                        value: id,
+                        key: branch_type,
+                    }))))
+    // return getBranch()
+    //     .then((result) =>
+    //         result.data
+    //             .filter(({ id, name, branch_type }) =>
+    //                 (id.toLowerCase().includes(search.toLowerCase())
+    //                     || name.toLowerCase().includes(search.toLowerCase())) && branch_type != channel
+    //                 && id == 'P100' || id == 'P104')
+    //             .splice(0, 10)
+    //             .map(({ id, name, branch_type }) => ({
+    //                 label: [id, name].join(' - '),
+    //                 value: id,
+    //                 key: branch_type,
+    //             })))
 }

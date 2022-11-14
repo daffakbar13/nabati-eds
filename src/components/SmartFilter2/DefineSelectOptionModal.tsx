@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { Text, Modal, Button } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
-
 import { FILTER_TYPES } from 'src/configs/filterType'
 import { FooterPane, List, HeaderList } from './styledComponent'
 
-function DefineSelectOptionModal({ visible, onCancel, onOk }) {
+function DefineSelectOptionModal({ visible, onCancel, onOk, option = ['EQ', 'CP'] }) {
   const [value, setValue] = useState<string>()
 
   const onClickSave = () => {
@@ -33,15 +32,17 @@ function DefineSelectOptionModal({ visible, onCancel, onOk }) {
               Description
             </Text>
           </HeaderList>
-          {Object.values(FILTER_TYPES).map((type) => (
-            <List key={type.code} active={type.code === value} onClick={() => setValue(type.code)}>
-              <div style={{ justifySelf: 'center' }}>{type.icon}</div>
-              <Text variant="headingSmall" style={{ fontSize: 16 }}>
-                {type.label}
-              </Text>
-              {type.code === value && <CheckCircleFilled style={{ color: '#00d458' }} />}
-            </List>
-          ))}
+          {option.map((opt) => FILTER_TYPES[opt]).map((type) => <List
+            key={type.code}
+            active={type.code === value}
+            onClick={() => setValue(type.code)}
+          >
+            <div style={{ justifySelf: 'center' }}>{type.icon}</div>
+            <Text variant="headingSmall" style={{ fontSize: 16 }}>
+              {type.label}
+            </Text>
+            {type.code === value && <CheckCircleFilled style={{ color: '#00d458' }} />}
+          </List>)}
         </>
       }
     />

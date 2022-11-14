@@ -5,6 +5,7 @@ import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 import { Pagination, Checkbox, Popover, Divider, Typography, Tooltip } from 'antd'
 import useTable from 'src/hooks/useTable'
+import SimpleTable, { useSimpleTable } from 'src/components/SimpleTable';
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
@@ -25,19 +26,13 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageIntraChannelRequest(props: PageQuotationProps) {
     const { filters, setFilters } = useSmartFilters([
-        FILTER.SALES_ORG,
-        FILTER.BRANCH,
-        FILTER.SOLD_TO_CUSTOMER,
-        FILTER.SHIP_TO_CUSTOMER,
-        FILTER.ORDER_TYPE,
-        FILTER.ORDER_DATE,
+        FILTER.POSTING_DATE,
     ])
 
     const [filtered, setFiltered] = React.useState([])
 
     const table = useTable({
         funcApi: getRequestIntraChannel,
-        haveCheckbox: { headCell: 'status_name', member: ['New'] },
         columns: TableIntraChannelRequest,
     })
     const titlePage = useTitlePage('list')
@@ -105,10 +100,11 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                                 const newFiltered = newVal
                                     .filter((obj) => obj.fromValue)
                                     .map((obj) => ({
-                                        field: `eds_order.${obj.field}`,
+                                        field: `${obj.field}`,
                                         option: obj.option,
                                         from_value: obj.fromValue.value,
                                         to_value: obj.toValue?.value,
+                                        data_type: "D",
                                     }))
                                 setFilters(newVal)
                                 table.handleFilter(newFiltered)
@@ -136,7 +132,6 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                         columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
                         dataSource={table.data}
                         showSorterTooltip={false}
-                        rowSelection={table.rowSelection}
                         rowKey={'id'}
                     />
                 </div>

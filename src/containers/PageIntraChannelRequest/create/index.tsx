@@ -6,11 +6,12 @@ import { Button, Col, Row, Spacer, Text, DatePickerInput, Table, Input } from 'p
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { createQuotation } from 'src/api/quotation'
+import { createRequestIntraChannel } from 'src/api/request-intra-channel'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import { fieldBranchSupply } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
+import { getSloc } from 'src/api/request-intra-channel'
 
 export default function PageCreateQuotation() {
     const now = new Date().toISOString()
@@ -21,35 +22,64 @@ export default function PageCreateQuotation() {
     const router = useRouter()
     const tableAddItems = useTableAddItem()
     const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
+    const [fromCH, setFromCH] = React.useState('')
+    const [toCH, setToCH] = React.useState('')
+    const [fromsloc, setFromsloc] = React.useState('')
+    const [toSloc, setToSloc] = React.useState('')
+    const [oldCH, setOldCH] = React.useState('')
+    const [allSloc, setAllScloc] = React.useState([])
 
     const initialValue = {
-        company_id: 'PP01',
-        branch_id: 'P174',
-        source_id: 'Z01',
-        order_date: now,
-        delivery_date: now,
-        pricing_date: now,
-        order_type_id: 'ZQP1',
-        customer_id: 'C1624002',
-        ship_to_id: 'C1624001',
-        salesman_id: '131603',
-        sales_org_id: 'PID1',
-        valid_from: now,
-        valid_to: now,
-        term_id: 'Z007',
-        customer_ref: 'PO0001',
-        customer_ref_date: now,
-        currency_id: 'IDR',
+        document_type: 'ZINC',
+        planned_gi_date: moment(now).format('YYYY-MM-DD'),
+        suppl_branch_id: 'P100',
+        receive_plant_id: 'P104',
+        from_channel: 'MT',
+        to_channel: 'GT',
+        suppl_sloc_id: 'GS00',
+        receive_sloc_id: 'BS00',
+        status_id: '00',
+        document_date: moment(now).format('YYYY-MM-DD'),
+        posting_date: moment(now).format('YYYY-MM-DD'),
+        remarks: '',
         items: tableAddItems.data,
     }
 
     const titlePage = useTitlePage(isCreatePage ? 'create' : 'edit')
 
     const onChangeForm = (form: string, value: any) => {
-        const newValue = Object.assign(dataForm, { [form]: value })
-
-        setDataForm(newValue)
+        setDataForm((old) => ({ ...old, ...{ [form]: value } }))
     }
+
+    const onChangeBranch = (form: string, ch: any, branchid: any) => {
+        const sloc = allSloc.filter(({ doc_type_id, branch_id }) =>
+            branch_id == branchid && doc_type_id == 'ZINC')
+
+        if (form == 'from') {
+            setFromCH(ch);
+            setFromsloc(sloc[0]?.sloc_id || '')
+        } else {
+            setToCH(ch);
+            setToSloc(sloc[0]?.sloc_id || '')
+        }
+        setOldCH(ch)
+    }
+
+    React.useEffect(() => {
+        getSloc({ id: "PP01" })
+            .then((result) => setAllScloc(result.data))
+    }, [])
+
+    React.useEffect(() => {
+        console.log(dataForm)
+    }, [dataForm])
+
+    React.useEffect(() => {
+        onChangeForm('from_channel', fromCH)
+        onChangeForm('to_channel', toCH)
+        onChangeForm('suppl_sloc_id', fromsloc)
+        onChangeForm('receive_sloc_id', toSloc)
+    }, [fromCH, toCH, fromsloc, toSloc])
 
     return (
         <Col>
@@ -62,7 +92,7 @@ export default function PageCreateQuotation() {
                             Cancel
                         </Button>
                         <Button size="big" variant="primary" onClick={() => {
-                            createQuotation({ ...initialValue, ...dataForm, status_id: 1 })
+                            createRequestIntraChannel({ ...initialValue, ...dataForm })
                                 .then((response) => setNewQuotation(response.data.id))
                                 .catch((e) => console.log(e))
                         }}>
@@ -79,27 +109,31 @@ export default function PageCreateQuotation() {
                             type='select'
                             label="Supplying Branch"
                             required
-                            fetchOptions={fieldQuotationType}
+                            fetchOptions={(search) => fieldBranchSupply(search, oldCH)}
                             onChange={(val: any) => {
-                                onChangeForm('order_type_id', val.label.split(' - ')[0])
+                                onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
+                                onChangeBranch('from', val.key, val.value)
                             }}
                         />
                         <Input
                             type="text"
                             label="From Channel"
                             disabled
-                            value={"GT"}
+                            value={fromCH}
                         />
                         <Input
                             type="text"
                             label="From Sloc"
                             disabled
-                            value={"GS00"}
+                            value={fromsloc}
                         />
                         <Input
                             type="text"
                             label="Header Text"
                             placeholder="Type here..."
+                            onChange={(e: any) => {
+                                onChangeForm('remarks', e.value)
+                            }}
                         />
                     </div>
                     <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
@@ -107,27 +141,28 @@ export default function PageCreateQuotation() {
                             type='select'
                             label="Receiving Branch"
                             required
-                            fetchOptions={fieldQuotationType}
+                            fetchOptions={(search) => fieldBranchSupply(search, oldCH)}
                             onChange={(val: any) => {
-                                onChangeForm('order_type_id', val.label.split(' - ')[0])
+                                onChangeForm('receive_plant_id', val.label.split(' - ')[0])
+                                onChangeBranch('to', val.key, val.value)
                             }}
                         />
                         <Input
                             type="text"
                             label="To Channel"
                             disabled
-                            value={"MT"}
+                            value={toCH}
                         />
                         <Input
                             type="text"
                             label="To Sloc"
                             disabled
-                            value={"BS00"}
+                            value={toSloc}
                         />
                         <DatePickerInput
                             fullWidth
                             onChange={(val: any) => {
-                                onChangeForm('document_date', new Date(moment(val).format()).toISOString())
+                                onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
                             }}
                             label="Document Date"
                             defaultValue={moment()}
@@ -137,7 +172,7 @@ export default function PageCreateQuotation() {
                         <DatePickerInput
                             fullWidth
                             onChange={(val: any) => {
-                                onChangeForm('posting_date', new Date(moment(val).format()).toISOString())
+                                onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
                             }}
                             label="Posting Date"
                             defaultValue={moment()}
@@ -177,7 +212,7 @@ export default function PageCreateQuotation() {
                         {cancel
                             ? 'Are you sure want to cancel? Change you made so far will not saved'
                             : <>
-                                New Quotation
+                                Request Number
                                 <Typography.Text copyable> {newQuotation || draftQuotation}</Typography.Text>
                                 has been
                             </>
@@ -197,7 +232,7 @@ export default function PageCreateQuotation() {
                                     No
                                 </Button>
                                 <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                                    router.push(`${PATH.SALES}/quotation`)
+                                    router.push(`${PATH.LOGISTIC}/request-intra-channel`)
                                 }}>
                                     Yes
                                 </Button>
@@ -205,24 +240,12 @@ export default function PageCreateQuotation() {
                         }
                         {newQuotation
                             && <>
-                                <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
-                                    router.push(`${PATH.SALES}/quotation`)
-                                }}>
-                                    Back To List
-                                </Button>
                                 <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                                    router.push(`${PATH.SALES}/sales-order`)
+                                    router.push(`${PATH.LOGISTIC}/request-intra-channel`)
                                 }}>
-                                    Next Proccess
+                                    OK
                                 </Button>
                             </>
-                        }
-                        {draftQuotation
-                            && <Button size="big" variant="primary" style={{ flexGrow: 1 }} onClick={() => {
-                                router.push(`${PATH.SALES}/quotation`)
-                            }}>
-                                OK
-                            </Button>
                         }
                     </div>
                 </Popup>

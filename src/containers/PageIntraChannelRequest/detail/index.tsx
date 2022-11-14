@@ -23,8 +23,8 @@ export default function PageQuotationDetail() {
         createDataList('Request Number', data.id),
         createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.supply_branch_name}`),
         createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name}`),
-        createDataList('From Channel', '-'),
-        createDataList('To Channel', '-'),
+        createDataList('From Channel', data.from_channel || '-'),
+        createDataList('To Channel', data.to_channel || '-'),
 
         //row 2
         createDataList('From Sloc', `${data.suppl_sloc_id} - ${data.suppl_sloc_name}`),
@@ -59,12 +59,38 @@ export default function PageQuotationDetail() {
                 <Text variant={'h4'}>{titlePage}</Text>
             </div>
             <Card style={{ overflow: 'unset' }}>
+
                 <Row justifyContent="space-between" reverse>
-                    <Row gap="16px">
-                        <Button size="big" variant="tertiary">
-                            Cancel Process
-                        </Button>
-                    </Row>
+                    {(() => {
+                        if (data.status == 'Done') {
+                            return (
+                                <>
+                                    <Row gap="16px">
+                                        <Button size="big" variant="tertiary">
+                                            Cancel Process
+                                        </Button>
+                                    </Row>
+                                </>
+                            );
+                        } else if (data.status == 'Pending') {
+                            return (
+                                <>
+                                    <Row gap="16px">
+                                        <Button size="big" variant="tertiary">
+                                            Reject
+                                        </Button>
+                                        <Button size="big" variant="primary">
+                                            Approve
+                                        </Button>
+                                    </Row>
+                                </>
+                            );
+                        } else if (data.status == 'Canceled') {
+                            return (
+                                <></>
+                            );
+                        }
+                    })()}
                 </Row>
             </Card>
             <Spacer size={20} />

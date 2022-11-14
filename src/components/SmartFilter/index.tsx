@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef, useMemo } from 'react'
 import { FilterOption } from 'src/configs/filterType'
 import { Button, Row, Modal } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
-import { fieldBranch, fieldQuotationType, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldQuotationType, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import SingleFilter from './SingleFilter'
 
 interface FILTER_TYPE {
@@ -12,6 +12,7 @@ interface FILTER_TYPE {
   SHIP_TO_CUSTOMER?: 'ship_to_customer_id'
   ORDER_TYPE?: 'order_type_id'
   ORDER_DATE?: 'order_date'
+  POSTING_DATE?: 'posting_date'
 }
 export const FILTER: FILTER_TYPE = {
   SALES_ORG: 'sales_org_id',
@@ -20,6 +21,7 @@ export const FILTER: FILTER_TYPE = {
   SHIP_TO_CUSTOMER: 'ship_to_customer_id',
   ORDER_TYPE: 'order_type_id',
   ORDER_DATE: 'order_date',
+  POSTING_DATE: 'posting_date',
 }
 
 const defaultFilterOptions: FilterOption[] = [
@@ -35,7 +37,7 @@ const defaultFilterOptions: FilterOption[] = [
     label: 'Branch',
     option: 'EQ',
     dataType: 'S',
-    searchApi: fieldBranch,
+    searchApi: fieldBranchAll,
   },
   {
     field: 'sold_to_customer_id',
@@ -61,6 +63,13 @@ const defaultFilterOptions: FilterOption[] = [
   {
     field: 'order_date',
     label: 'Order Date',
+    option: 'GE',
+    dataType: 'S',
+    isDate: true,
+  },
+  {
+    field: 'posting_date',
+    label: 'Posting Date',
     option: 'GE',
     dataType: 'S',
     isDate: true,

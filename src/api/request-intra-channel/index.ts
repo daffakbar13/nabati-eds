@@ -6,10 +6,12 @@ import {
   CommonListParams,
   CommonDetailParams,
 } from 'src/api/types'
-import { RequestIntraChannelItem, RequestIntraChannelItemDetail } from './types'
+import { RequestIntraChannelItem, RequestIntraChannelItemDetail, slocList } from './types'
 
 const subUrl = 'v1/intra-channel'
+const subUrlMaster = 'v1/master'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
+const overrideBaseUrlMaster = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getRequestIntraChannel = async (
   params: CommonListParams = {},
@@ -30,6 +32,26 @@ export const getDetailRequestIntraChannel = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl}/${params.id}/detail`,
+  })
+  return response.data
+}
+
+export const getSloc = async (
+  params: CommonDetailParams,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${overrideBaseUrlMaster}${subUrlMaster}/get-config-sloc/${params.id}`,
+  })
+  return response.data
+}
+
+export const createRequestIntraChannel = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${subUrl}`,
+    data: payload,
   })
   return response.data
 }
