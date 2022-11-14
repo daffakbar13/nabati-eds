@@ -37,7 +37,6 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
 
     const table = useTable({
         funcApi: getGoodReceiptIntraChannel,
-        haveCheckbox: { headCell: 'status_name', member: ['New'] },
         columns: TableIntraChannelGoodReceipt,
     })
     const titlePage = useTitlePage('list')
@@ -127,7 +126,6 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
                         columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
                         dataSource={table.data}
                         showSorterTooltip={false}
-                        rowSelection={table.rowSelection}
                         rowKey={'id'}
                     />
                 </div>

@@ -5,6 +5,7 @@ import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 import { Pagination, Checkbox, Popover, Divider, Typography, Tooltip } from 'antd'
 import useTable from 'src/hooks/useTable'
+import SimpleTable, { useSimpleTable } from 'src/components/SimpleTable';
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
@@ -37,7 +38,6 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
 
     const table = useTable({
         funcApi: getRequestIntraChannel,
-        haveCheckbox: { headCell: 'status_name', member: ['New'] },
         columns: TableIntraChannelRequest,
     })
     const titlePage = useTitlePage('list')
@@ -136,7 +136,6 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                         columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
                         dataSource={table.data}
                         showSorterTooltip={false}
-                        rowSelection={table.rowSelection}
                         rowKey={'id'}
                     />
                 </div>
