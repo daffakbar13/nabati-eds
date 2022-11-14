@@ -56,6 +56,6 @@ export function call({
   //   config.data = toSnakeCase(payload)
   // }
 
-  console.log('config', config)
+  // console.log('config', config)
   return instance.request(config)
 }

@@ -1,158 +1,83 @@
-import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react'
-import { FilterOption } from 'src/configs/filterType'
+import React, { useState, useRef } from 'react'
 import { Button, Row, Modal } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
-import { fieldBranch, fieldQuotationType, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import { Moment } from 'moment';
 import Field from './Field'
 
-interface FILTER_TYPE {
-  SALES_ORG?: 'sales_org_id'
-  BRANCH?: 'branch_id'
-  SOLD_TO_CUSTOMER?: 'sold_to_customer_id'
-  SHIP_TO_CUSTOMER?: 'ship_to_customer_id'
-  ORDER_TYPE?: 'order_type_id'
-  ORDER_DATE?: 'order_date'
+interface FilterValueObj {
+  field: string,
+  option?: string,
+  arrayValues?: string[],
+  fromValue?: string | Moment | [],
+  toValue?: string | Moment | [],
 }
-export const FILTER: FILTER_TYPE = {
-  SALES_ORG: 'sales_org_id',
-  BRANCH: 'branch_id',
-  SOLD_TO_CUSTOMER: 'sold_to_customer_id',
-  SHIP_TO_CUSTOMER: 'ship_to_customer_id',
-  ORDER_TYPE: 'order_type_id',
-  ORDER_DATE: 'order_date',
-}
+function SmartFilter({ onOk, children }) {
+  const [showFilter, setShowFilter] = useState<boolean>(false)
+  const [filterValues, setFilterValues] = useState<FilterValueObj[]>([])
+  const prevValues = useRef<FilterValueObj[]>(filterValues)
 
-const defaultFilterOptions: FilterOption[] = [
-  {
-    field: 'sales_org_id',
-    label: 'Sales Organization',
-    option: 'LE',
-    dataType: 'S',
-    searchApi: fieldSalesOrg,
-  },
-  {
-    field: 'branch_id',
-    label: 'Branch',
-    option: 'EQ',
-    dataType: 'S',
-    // searchApi: fieldBranch,
-  },
-  {
-    field: 'sold_to_customer_id',
-    label: 'Sold to Customer',
-    option: 'LE',
-    dataType: 'S',
-    searchApi: fieldSoldToCustomer,
-  },
-  {
-    field: 'ship_to_customer_id',
-    label: 'Ship to Customer',
-    option: 'LT',
-    dataType: 'S',
-    searchApi: fieldShipToCustomer,
-  },
-  {
-    field: 'order_type_id',
-    label: 'Order type',
-    option: 'GT',
-    dataType: 'S',
-    searchApi: fieldQuotationType,
-  },
-  {
-    field: 'order_date',
-    label: 'Order Date',
-    option: 'GE',
-    dataType: 'S',
-    isDate: true,
-  },
-]
-
-const getFiltersConfig = (a: string[]) => {
-  const res = a.map((current) => defaultFilterOptions.find((opt) => opt.field === current))
-  return res
-}
-
-export const useSmartFilters = () => {
-  const [filterValues, onChange] = useState()
-
-  console.log('filterValues', filterValues);
-
-  return { filterValues, onChange }
-}
-
-function FilterButton({ onClick }) {
-  return (<Button size="big" variant="tertiary" onClick={onClick} style={{
-    border: '1px solid #888888',
-    color: '#888888',
-    backgroundColor: 'white',
-    justifyContent: 'flex-start',
-    gap: 16,
-  }}>
-    <ICFilter /> Filter
-  </Button>);
-}
-
-function SmartFilter({ filterValues, onChange, children }) {
-  const initialValues = children.length ? children.map((c) => c.props).map((c) => ({
-    field: c.field,
-    fromValue: '',
-    toValue: '',
-    option: c.options[0],
-    dataType: c.dataType,
-  })) : ''
-
-  const [showFilter, setShowFilter] = useState(false)
-  const [temporaryValues, setTemporaryValues] = useState(initialValues)
-
-  const handleApply = () => {
-
+  const handleChange = (changedFiledObj: FilterValueObj) => {
+    const currentValues = [...filterValues]
+    // check is already in the box
+    // if not exist, push
+    // if exist, update
+    const isExist = currentValues.find((f) => f.field === changedFiledObj.field)
+    if (!isExist) return setFilterValues([...currentValues, changedFiledObj])
+    const updatedValues = currentValues.map((f) => {
+      if (f.field === changedFiledObj.field) return { ...f, ...changedFiledObj }
+      return ({ ...f })
+    })
+    return setFilterValues(updatedValues)
   }
 
-  const resetToPrevious = () => {
+  const handleApply = () => {
+    prevValues.current = filterValues
+    onOk(filterValues)
+    setShowFilter(false)
   }
 
   const clearAllValue = () => {
+    setFilterValues([])
   }
 
-  const close = () => {
+  const closeAndSetToPrevValues = () => {
     setShowFilter(false)
+    setFilterValues(prevValues.current)
   }
 
   const content = (
     <div style={{ paddingBottom: 20 }}>
-      {/* {children} */}
-      {
-        React.Children.map(children, (
-          child,
-        ) => React.cloneElement(child, {
-          fromValue: 'adasds',
-          toValue: 'ads',
-          option: 'asd',
-          className: `${child.props.className} img-special-class`,
-        }))
-      }
+      {React.Children.map(children, (child) => React.cloneElement(child, {
+        ...child.props,
+        value: filterValues.find((f) => f.field === child.props.field),
+        handleChange,
+      }))}
       <Row gap="16px" reverse>
-        <Button onClick={() => { }}>Apply</Button>
-        <Button variant="tertiary" onClick={() => { }}>
+        <Button onClick={handleApply}>Apply</Button>
+        <Button variant="tertiary" onClick={clearAllValue}>
           Clear All
         </Button>
       </Row>
     </div>
   )
 
-  useEffect(() => {
-    if (filterValues) return
-    onChange(initialValues)
-  }, [filterValues, initialValues, onChange])
-
   return (
     <>
-      <FilterButton onClick={() => setShowFilter(true)} />
+      <Button size="big" variant="tertiary" onClick={() => setShowFilter(true)}
+        style={{
+          border: '1px solid #888888',
+          color: '#888888',
+          backgroundColor: 'white',
+          justifyContent: 'flex-start',
+          gap: 16,
+        }}>
+        <ICFilter /> Filter
+      </Button>
       <Modal
         destroyOnClose
         visible={showFilter}
         title="Filter"
-        onCancel={close}
+        onCancel={closeAndSetToPrevValues}
         width={880}
         footer={false}
         content={content}

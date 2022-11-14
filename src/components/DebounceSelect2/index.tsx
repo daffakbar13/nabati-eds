@@ -14,6 +14,7 @@ function DebounceSelect<
     fetchOptions,
     debounceTimeout = 800,
     style,
+    placeholder = 'Type to search',
     ...props
 }: DebounceSelectProps<ValueType>) {
     const [fetching, setFetching] = useState(false)
@@ -48,6 +49,7 @@ function DebounceSelect<
             filterOption={false}
             onSearch={debounceFetcher}
             notFoundContent={fetching ? <Spin size="small" /> : null}
+            placeholder={placeholder}
             {...props}
             options={options}
             size="large"
