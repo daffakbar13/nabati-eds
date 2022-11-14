@@ -23,20 +23,41 @@ export default function SingleField({
 
   const onFromValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
-    handleChange({ field, dataType, fromValue: isEvent ? val.target.value : val })
+    handleChange({
+      field,
+      dataType,
+      fromValue: isEvent ? val.target.value : val,
+      option: value?.option ?? options[0],
+    })
   }
 
   const onToValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
-    handleChange({ field, dataType, toValue: isEvent ? val.target.value : val })
+    handleChange({
+      field,
+      dataType,
+      toValue: isEvent ? val.target.value : val,
+      option: value?.option ?? options[0],
+    })
   }
+
+  const onOptionChange = (val: any) => {
+    handleChange({ field, dataType, option: val })
+  }
+
+  console.log('value', value)
 
   return (
     <Container>
       <Text width="fluid" variant="headingSmall" textAlign="right" style={{ fontSize: 16 }}>
         {label}
       </Text>
-      <SelectOptionIcon options={options} onChange={() => { }} />
+      <SelectOptionIcon
+        options={options}
+        onChange={onOptionChange}
+        value={value?.option}
+      />
+
       {hasOneChildren && React.cloneElement(children, {
         ...children.props,
         style: { ...children.props.style, gridColumnStart: 'span 3' },

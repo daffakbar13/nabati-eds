@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Tooltip } from 'pink-lava-ui'
 
-import { FILTER_TYPES, OptionTypes } from 'src/configs/filterType'
+import { FILTER_TYPES, OptionType } from 'src/configs/filterType'
 import DefineSelectOptionModal from './DefineSelectOptionModal'
 import { Pane } from './styledComponent'
 
 function OptionIcon({ option, onChange, ...props }) {
   const [showDefineSelectModal, setDefineSelectModal] = useState(false)
-  const [iconType, setIconType] = useState<OptionTypes>(option)
+  const [iconType, setIconType] = useState<OptionType>(option)
 
   useEffect(() => {
     onChange(iconType)
@@ -28,7 +28,7 @@ function OptionIcon({ option, onChange, ...props }) {
       <DefineSelectOptionModal
         visible={showDefineSelectModal}
         onCancel={() => setDefineSelectModal(false)}
-        onOk={(type: OptionTypes) => setIconType(type)}
+        onOk={(type: OptionType) => setIconType(type)}
       />
     </>
   )

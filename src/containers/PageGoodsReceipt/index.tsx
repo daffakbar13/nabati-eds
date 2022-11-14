@@ -33,6 +33,40 @@ export default function PageGoodsReceipt(props: Props) {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field='statusId' dataType='S' label='Status' options={['LE', 'EQ', 'CP', 'BT']} >
+                <Select
+                  placeholder='Select'
+                  style={{
+                    border: '1px solid #AAAAAA',
+                    borderRadius: 8,
+                    height: 48,
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}>
+                  <Select.Option value='ok'>
+                    OK
+                  </Select.Option>
+                  <Select.Option value='not ok'>
+                    Not OK
+                  </Select.Option>
+                </Select>
+                <Select
+                  placeholder='Select'
+                  style={{
+                    border: '1px solid #AAAAAA',
+                    borderRadius: 8,
+                    height: 48,
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}>
+                  <Select.Option value='ok'>
+                    OK
+                  </Select.Option>
+                  <Select.Option value='not ok'>
+                    Not OK
+                  </Select.Option>
+                </Select>
+              </SmartFilter.Field>
               <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['EQ', 'CP']} >
                 <DebounceSelect fetchOptions={fakeApi} mode='multiple' />
               </SmartFilter.Field>
@@ -58,24 +92,7 @@ export default function PageGoodsReceipt(props: Props) {
                   placeholder='Posting Date'
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field='status' dataType='S' label='Status' options={['EQ', 'CP']} >
-                <Select
-                  placeholder='Select'
-                  style={{
-                    border: '1px solid #AAAAAA',
-                    borderRadius: 8,
-                    height: 48,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}>
-                  <Select.Option value='ok'>
-                    OK
-                  </Select.Option>
-                  <Select.Option value='not ok'>
-                    Not OK
-                  </Select.Option>
-                </Select>
-              </SmartFilter.Field>
+
             </SmartFilter>
           </Row>
           <Row gap="16px">

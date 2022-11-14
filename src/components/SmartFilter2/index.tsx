@@ -18,12 +18,14 @@ function SmartFilter({ onOk, children }) {
   const prevValues = useRef<FilterValueObj[]>(filterValues)
 
   const handleChange = (changedFiledObj: FilterValueObj) => {
+    console.log('changedFiledObj', changedFiledObj)
+
     const currentValues = [...filterValues]
     // check is already in the box
-    // if not exist, push
-    // if exist, update
     const isExist = currentValues.find((f) => f.field === changedFiledObj.field)
+    // if not exist, push
     if (!isExist) return setFilterValues([...currentValues, changedFiledObj])
+    // if exist, update
     const updatedValues = currentValues.map((f) => {
       if (f.field === changedFiledObj.field) return { ...f, ...changedFiledObj }
       return ({ ...f })
@@ -45,8 +47,6 @@ function SmartFilter({ onOk, children }) {
     setShowFilter(false)
     setFilterValues(prevValues.current)
   }
-
-  console.log('children', children);
 
   const content = (
     <div style={{ paddingBottom: 20 }}>
