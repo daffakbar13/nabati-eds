@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Text } from 'pink-lava-ui'
 import { Container } from './styledComponent'
 import SelectOptionIcon from './OptionIcon'
 
-const checkIsEvent = (obj: any) => !!obj.target
+const checkIsEvent = (obj: any) => !!obj?.target
 
 // Jika hanya 1 children, maka hanya return from_value
 // Jika ada 2 children, maka children pertama return from_value, children kedua return to_value
@@ -15,19 +15,20 @@ export default function SingleField({
   children,
   handleChange,
   value,
-  ...props
+  field,
+  dataType,
 }) {
   const hasMultipleChildren = Array.isArray(children)
   const hasOneChildren = !hasMultipleChildren
 
   const onFromValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
-    handleChange({ field: props.field, fromValue: isEvent ? val.target.value : val })
+    handleChange({ field, dataType, fromValue: isEvent ? val.target.value : val })
   }
 
   const onToValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
-    handleChange({ field: props.field, toValue: isEvent ? val.target.value : val })
+    handleChange({ field, dataType, toValue: isEvent ? val.target.value : val })
   }
 
   return (
@@ -38,7 +39,7 @@ export default function SingleField({
       <SelectOptionIcon options={options} onChange={() => { }} />
       {hasOneChildren && React.cloneElement(children, {
         ...children.props,
-        style: { gridColumnStart: 'span 3' },
+        style: { ...children.props.style, gridColumnStart: 'span 3' },
         onChange: onFromValueChange,
         value: value?.fromValue || undefined,
       })}

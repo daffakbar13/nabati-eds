@@ -4,45 +4,24 @@ import { Button, Col, Row, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
 import SmartFilter from 'src/components/SmartFilter2'
-import Select, { Option } from 'src/components/SmartFilter2/Select'
 import SimpleTable, { useSimpleTable } from 'src/components/SimpleTable';
 import SearchQueryParams from 'src/components/SearchQueryParams';
-import { Input } from 'antd'
+import { Input, Select } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect2'
 import { fakeApi } from 'src/api/fakeApi'
 import { Props } from './types'
 import { columns } from './columns'
 
-interface UserValue {
-  label: string;
-  value: string;
-}
-
-async function fetchUserList(username: string): Promise<UserValue[]> {
-  console.log('fetching user', username);
-
-  return fetch('https://randomuser.me/api/?results=5')
-    .then((response) => response.json())
-    .then((body) => body.results.map(
-      (user: { name: { first: string; last: string }; login: { username: string } }) => ({
-        label: `${user.name.first} ${user.name.last}`,
-        value: user.login.username,
-      }),
-    )).catch((e) => {
-      console.error(e)
-    })
-}
-
 export default function PageGoodsReceipt(props: Props) {
   const router = useRouter()
-  const [filters, setFilters] = useState()
+  const [filters, setFilters] = useState([])
 
   const table2 = useSimpleTable({
     funcApi: getGoodReceiptList,
     columns,
+    filters,
   })
 
-  // console.log('table2', table2);
   console.log('filters', filters)
 
   return (
@@ -55,11 +34,11 @@ export default function PageGoodsReceipt(props: Props) {
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['EQ', 'CP']} >
-                <DebounceSelect fetchOptions={fetchUserList} mode='multiple' />
+                <DebounceSelect fetchOptions={fakeApi} mode='multiple' />
               </SmartFilter.Field>
               <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'CP']} >
-                <DebounceSelect fetchOptions={fetchUserList} />
-                <DebounceSelect fetchOptions={fetchUserList} />
+                <DebounceSelect fetchOptions={fakeApi} />
+                <DebounceSelect fetchOptions={fakeApi} />
               </SmartFilter.Field>
               <SmartFilter.Field field='company_aja' dataType='S' label='Company aja ID' options={['EQ', 'CP']} >
                 <Input placeholder='hihih' />
@@ -78,6 +57,24 @@ export default function PageGoodsReceipt(props: Props) {
                   format={'DD-MMM-YYYY'}
                   placeholder='Posting Date'
                 />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='status' dataType='S' label='Status' options={['EQ', 'CP']} >
+                <Select
+                  placeholder='Select'
+                  style={{
+                    border: '1px solid #AAAAAA',
+                    borderRadius: 8,
+                    height: 48,
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}>
+                  <Select.Option value='ok'>
+                    OK
+                  </Select.Option>
+                  <Select.Option value='not ok'>
+                    Not OK
+                  </Select.Option>
+                </Select>
               </SmartFilter.Field>
             </SmartFilter>
           </Row>

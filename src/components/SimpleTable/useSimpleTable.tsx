@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 
 const DEFAULT_LIMIT = 20
-export default function useSimpleTable({ columns, funcApi }) {
+export default function useSimpleTable({ columns, funcApi, filters }) {
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
     const [pagination, setPagination] = useState({ total: 0 })
@@ -23,7 +23,23 @@ export default function useSimpleTable({ columns, funcApi }) {
             try {
                 setLoading(true)
                 const res = await funcApi({
-                    filters: [],
+                    filters: filters.map((f) => ({
+                        field: f.field,
+                        option: f.option,
+                        data_type: f.dataType,
+                        from_value: (() => {
+                            if (!f.fromValue) return null
+                            if (typeof f.fromValue === 'string') return f.fromValue
+                            if (Array.isArray(f.fromValue)) return f.fromValue.map((i) => i.value)
+                            return f.fromValue.value
+                        })(),
+                        to_value: (() => {
+                            if (!f.toValue) return null
+                            if (typeof f.toValue === 'string') return f.toValue
+                            if (Array.isArray(f.toValue)) return f.toValue.map((i) => i.value)
+                            return f.toValue.value
+                        })(),
+                    })),
                     search: router.query.search,
                     limit: +router.query.limit || DEFAULT_LIMIT,
                     page: +router.query.page || 1,
@@ -41,7 +57,7 @@ export default function useSimpleTable({ columns, funcApi }) {
         }
 
         fetchData()
-    }, [funcApi, router.query.limit, router.query.page, router.query.search])
+    }, [funcApi, router.query.limit, router.query.page, router.query.search, filters])
 
     return (
         {

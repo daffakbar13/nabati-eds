@@ -10,6 +10,7 @@ interface FilterValueObj {
   arrayValues?: string[],
   fromValue?: string | Moment | [],
   toValue?: string | Moment | [],
+  dataType?: string
 }
 function SmartFilter({ onOk, children }) {
   const [showFilter, setShowFilter] = useState<boolean>(false)
@@ -45,10 +46,13 @@ function SmartFilter({ onOk, children }) {
     setFilterValues(prevValues.current)
   }
 
+  console.log('children', children);
+
   const content = (
     <div style={{ paddingBottom: 20 }}>
       {React.Children.map(children, (child) => React.cloneElement(child, {
         ...child.props,
+        key: child.field,
         value: filterValues.find((f) => f.field === child.props.field),
         handleChange,
       }))}
