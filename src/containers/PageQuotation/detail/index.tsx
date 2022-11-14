@@ -6,7 +6,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { cancelBatchOrder, cancelOrder, getDetailQuotation } from 'src/api/quotation'
+import { cancelBatchOrder, getDetailQuotation } from 'src/api/quotation'
 import { PATH } from 'src/configs/menus'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
@@ -33,6 +33,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
         setOptionsReason(res)
         setReason(res[0].value)
       })
+      .catch(() => setOptionsReason([]))
   }, [])
 
   return (

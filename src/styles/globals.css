@@ -116,3 +116,12 @@ p {
   background-color: #2bbecb;
   border-color: #2bbecb;
 }
+
+.ant-table-cell.ant-table-selection-column {
+  z-index: 4 !important;
+}
+
+.ant-table-cell-fix-left.ant-table-cell-ellipsis.have-checkbox  {
+  z-index: 3;
+  left: 32px !important;
+}

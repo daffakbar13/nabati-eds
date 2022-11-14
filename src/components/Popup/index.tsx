@@ -29,7 +29,7 @@ export default function Popup(props: PopupProps) {
         bottom: 0,
         right: 0,
         left: 0,
-        position: 'absolute',
+        position: 'fixed',
         backgroundColor: '#00000073',
         zIndex: 999,
       }}

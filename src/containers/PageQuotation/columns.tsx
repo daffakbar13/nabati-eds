@@ -6,7 +6,6 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import moment from 'moment'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 
@@ -46,13 +45,15 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
   )
 }
 
-export const ColumnQuoatation = [
+export const useColumnQuotation = [
   CreateColumns(
     'Quotation',
     'id',
     true,
     (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
+    170,
+    true,
+    'have-checkbox',
   ),
   CreateColumns(
     'Order Type',
@@ -60,54 +61,74 @@ export const ColumnQuoatation = [
     false,
     undefined,
     120,
+    // true,
   ),
   CreateColumns(
     'Order Date',
     'order_date',
     false,
     (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
+    120,
   ),
   CreateColumns(
     'Sales Org.',
     'sales_org_id',
     false,
+    undefined,
+    110,
   ),
   CreateColumns(
     'Branch',
     'branch_id',
     false,
+    undefined,
+    90,
   ),
   CreateColumns(
     'Sold To Customer',
     'sold_to_customer_id',
     false,
+    (id, { customer_name }) => [id, customer_name].join(' - '),
+    250,
+
   ),
   CreateColumns(
     'Ship To Customer',
     'ship_to_customer_id',
     false,
+    (id, { customer_name }) => [id, customer_name].join(' - '),
+    250,
+
   ),
   CreateColumns(
     'Salesman',
     'salesman_id',
     false,
+    undefined,
+    150,
+
   ),
   CreateColumns(
     'Total Amount',
     'total_amount',
     false,
     (total_amount) => parseInt(total_amount).toLocaleString(),
+    150,
+
   ),
   CreateColumns(
     'Create From',
     'created_from',
     false,
+    undefined,
+    125,
   ),
   CreateColumns(
     'Status',
     'status_name',
     false,
     (status) => <Tag {...(status === 'Complete' && { color: 'green' })} > {status}</Tag>,
+    110,
   ),
   CreateColumns(
     'Status Process',

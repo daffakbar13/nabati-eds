@@ -1,4 +1,18 @@
 export interface SalesOrderItem {
+  items: any
+  delivery_date: any
+  pricing_date: string
+  customer_id: string
+  customer_name: string
+  ship_to_id: string
+  salesman_name: string
+  sales_org_name: string
+  valid_from: any
+  valid_to: any
+  term_id: string
+  customer_ref: any
+  customer_ref_date: string
+  branch_name: string
   readonly id: string
   readonly order_type_id: string
   readonly order_date: string

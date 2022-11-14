@@ -10,6 +10,8 @@ import { MinusCircleFilled } from '@ant-design/icons';
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router';
 import { getDetailQuotation } from 'src/api/quotation';
+import { Popup } from 'src/components';
+import { Text, Button } from 'pink-lava-ui';
 
 export const useTableAddItem = () => {
   const initialValue = {
@@ -23,7 +25,11 @@ export const useTableAddItem = () => {
   const [data, setData] = React.useState([initialValue])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState('')
+  const [showConfirm, setShowConfirm] = React.useState('')
   const router = useRouter()
+  const total_amount = data
+    .map(({ sub_total }) => sub_total)
+    .reduce((accumulator, value) => accumulator + value, 0);
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
@@ -45,6 +51,7 @@ export const useTableAddItem = () => {
     border: '1px solid #AAAAAA',
     borderRadius: 8,
     height: 46,
+    minHeight: 46,
     display: 'flex',
     alignItems: 'center',
   }
@@ -54,13 +61,45 @@ export const useTableAddItem = () => {
       '',
       'action',
       false,
-      (_, __, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
+      (_, { product_id }, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
         <MinusCircleFilled
           style={{ color: 'red', margin: 'auto' }}
-          onClick={() => { handleDeleteRows(index) }}
+          onClick={() => {
+            isNullProductId(index)
+              ? handleDeleteRows(index)
+              : setShowConfirm(product_id)
+          }}
         />
+        {showConfirm === product_id && !isNullProductId(index)
+          && <Popup>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Text
+                textAlign="center"
+                style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+              >
+                Confirm Delete
+              </Text>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 4, fontWeight: 'bold' }}>
+              Are you sure want to delete item {showConfirm} ?
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 10 }}>
+              <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
+                setShowConfirm('')
+              }}>
+                No
+              </Button>
+              <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                handleDeleteRows(index)
+              }}>
+                Yes
+              </Button>
+            </div>
+          </Popup>
+        }
       </div>,
       55,
+      true,
     ),
     CreateColumns(
       'Item',
@@ -130,10 +169,11 @@ export const useTableAddItem = () => {
         value={sub_total?.toLocaleString()}
         style={styleInputNumber}
       />,
+      130,
     ),
     CreateColumns(
       'Remarks',
-      '',
+      'remarks',
       false,
       // (_, __, index) => <DebounceSelect
       //   type='input'
@@ -142,7 +182,13 @@ export const useTableAddItem = () => {
       //     handleChangeData('remarks', e.target.value, index)
       //   }}
       // />,
-      (_, __, index) => <Input.TextArea style={styleInputNumber} rows={2} />,
+      (_, __, index) => <Input.TextArea
+        style={styleInputNumber}
+        rows={2}
+        onChange={(e) => {
+          handleChangeData('remarks', e.target.value, index)
+        }}
+      />,
     ),
   ]
 
@@ -200,5 +246,6 @@ export const useTableAddItem = () => {
     data,
     handleAddItem,
     columns,
+    total_amount,
   }
 }

@@ -8,6 +8,7 @@ export default function CreateColumns(
   render?: (text: string, record?: any, index?: number) => React.ReactNode,
   width?: number,
   fixed?: boolean | 'left' | 'right',
+  className?: string,
 ) {
   return {
     title,
@@ -23,6 +24,7 @@ export default function CreateColumns(
     fixed,
     ellipsis: true,
     width: width || 170,
+    className,
   }
 }
 

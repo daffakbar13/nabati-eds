@@ -11,10 +11,10 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { createQuotation, getDetailQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
-import { useDetail } from 'src/hooks'
+import { fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import { CheckCircleFilled } from '@ant-design/icons';
-import { getCustomerByFilter, getCustomerById, getDocTypeByCategory, getOrderTypeByCompany } from 'src/api/master-data'
+import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
+import Total from 'src/components/Total'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateQuotation() {
@@ -34,6 +34,35 @@ export default function PageCreateQuotation() {
   const isOrderAgainPage = !isCreatePage && !isEditPage
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
   const now = new Date().toISOString()
+
+  const canSave = () => {
+    const requiredFields = [
+      'company_id',
+      'branch_id',
+      'source_id',
+      'order_date',
+      'delivery_date',
+      'pricing_date',
+      'order_type_id',
+      'customer_id',
+      'ship_to_id',
+      'salesman_id',
+      'sales_org_id',
+      'valid_from',
+      'valid_to',
+      'term_id',
+      'customer_ref',
+      'currency_id',
+      'status_id',
+      'items',
+    ]
+    const filledFields = Object.keys(dataForm)
+    console.log('filled', filledFields);
+
+    return filledFields
+      .filter((filled) => requiredFields.find((required) => required === filled))
+      .length === requiredFields.length
+  }
 
   const concatString = (data: string[]) => (data.join(' - '))
 
@@ -59,14 +88,16 @@ export default function PageCreateQuotation() {
     currency_id: 'IDR',
   }
 
-  const dataSubmited = () => ({
+  const dataSubmited = (status_id: number) => ({
     ...initialValue,
     ...dataForm,
+    order_type_id: splitString(dataForm.order_type_id),
     customer_id: splitString(dataForm.customer_id),
     ship_to_id: splitString(dataForm.ship_to_id),
     sales_org_id: splitString(dataForm.sales_org_id),
     branch_id: splitString(dataForm.branch_id),
-    customer_id: splitString(dataForm.customer_id),
+    salesman_id: splitString(dataForm.salesman_id),
+    status_id: status_id.toString(),
   })
 
   React.useEffect(() => {
@@ -83,8 +114,8 @@ export default function PageCreateQuotation() {
               delivery_date: data.delivery_date,
               pricing_date: data.pricing_date || now,
               order_type_id: data.order_type_id,
-              customer_id: concatString([data.customer_id, data.customer_id]),
-              ship_to_id: data.ship_to_id === '' ? concatString([data.customer_id, data.customer_id]) : data.ship_to_id,
+              customer_id: concatString([data.customer_id, data.customer_name]),
+              ship_to_id: data.ship_to_id === '' ? concatString([data.customer_id, data.customer_name]) : data.ship_to_id,
               salesman_id: concatString([data.salesman_id, data.salesman_name]),
               sales_org_id: concatString([data.sales_org_id, data.sales_org_name]),
               valid_from: data.valid_from,
@@ -111,13 +142,16 @@ export default function PageCreateQuotation() {
       const { customer_id } = dataForm
       getCustomerByFilter({
         branch_id: '',
-        customer_id,
+        customer_id: splitString(customer_id),
         sales_org_id: '',
         salesman_id: '',
       })
         .then((res) => res.data)
         .then((data) => {
           const [firstData] = data
+          onChangeForm('branch_id', '')
+          onChangeForm('sales_org_id', '')
+          onChangeForm('salesman_id', '')
           setOptionsBranch([{
             label: concatString([firstData.branch_id, firstData.branch_name]),
             value: concatString([firstData.branch_id, firstData.branch_name]),
@@ -156,20 +190,30 @@ export default function PageCreateQuotation() {
               Cancel
             </Button>
             {(isCreatePage || isOrderAgainPage)
-              && <Button size="big" variant="secondary" onClick={() => {
-                createQuotation({ ...initialValue, ...dataForm, status_id: '6' })
+              && <Button
+                size="big"
+                variant="secondary"
+                // disabled={!canSave()}
+                onClick={() => {
+                  createQuotation(dataSubmited(6))
                   .then((response) => setDraftQuotation(response.data.id))
-            }}>
+                }}
+              >
               Save As Draft
             </Button>
             }
-            <Button size="big" variant="primary" onClick={() => {
+            <Button
+              size="big"
+              variant="primary"
+              // disabled={!canSave()}
+              onClick={() => {
               (isCreatePage || isOrderAgainPage)
-                ? createQuotation({ ...initialValue, ...dataForm, status_id: '1' })
+                ? createQuotation(dataSubmited(1))
                   .then((response) => setNewQuotation(response.data.id))
-                : updateQuotation({ ...dataForm, status_id: '1' }, titlePage.split(' ').reverse()[0])
+                : updateQuotation(dataSubmited(1), titlePage.split(' ').reverse()[0])
                   .then((response) => setNewQuotation(response.data.id))
-            }}>
+              }}
+            >
               {(isCreatePage || isOrderAgainPage) ? 'Submit' : 'Save'}
             </Button>
           </Row>
@@ -311,6 +355,9 @@ export default function PageCreateQuotation() {
         <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
           Add Item
         </Button>
+        <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'row-reverse' }}>
+          <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
+        </div>
       </Card>
       {
         (newQuotation || draftQuotation || cancel)

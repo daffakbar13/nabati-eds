@@ -61,6 +61,15 @@ export const cancelBatchOrder = async (payload: any) => {
   return response.data
 }
 
+export const downloadTemplateQuotation = async () => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${subUrl}/export-excel`,
+    // data: payload,
+  })
+  return response.data
+}
+
 export const cancelOrder = async (id: string) => {
   const response = await call({
     method: METHODS.PATCH,

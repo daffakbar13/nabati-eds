@@ -4,6 +4,7 @@ import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import useTable from 'src/hooks/useTable'
+import dateFormat from 'src/utils/dateFormat'
 
 import { TablePricingCondition } from '../columns'
 
@@ -15,18 +16,17 @@ const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function PricingCondition(props: PricingConditionProps) {
   const { data } = props
-  const table = useTable({ api: '', columns: TablePricingCondition })
 
   return (
     <>
       <Row gutter={8}>
         <Col span={8}>
-          <DataList label="Pricing Date" value={data.pricing_date} />
+          <DataList label="Pricing Date" value={dateFormat(data.pricing_date, 'DD MMMM YYYY')} />
         </Col>
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={table.columns} dataSource={data.items} />
+        <Table columns={TablePricingCondition} dataSource={data.items} />
       </div>
       <Spacer size={30} />
       <Row>

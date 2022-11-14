@@ -15,13 +15,14 @@ const createDataList = (label: string, value: string) => ({ label, value })
 export default function Quotation(props: QuotationProps) {
   const { data } = props
   const format = 'DD MMMM YYYY'
+  const concatString = (str: string[]) => (str.join(' - '))
 
   const dataList = [
     createDataList('Quotation', data.id),
-    createDataList('Customer', [data.customer_id, data.customer_name].join(' - ')),
-    createDataList('Sales Org.', [data.sales_org_id, data.sales_org_name].join(' - ')),
-    createDataList('Branch', [data.branch_id, data.branch_name].join(' - ')),
-    createDataList('Salesman', [data.salesman_id, data.salesman_name].join(' - ')),
+    createDataList('Customer', concatString([data.customer_id, data.customer_name])),
+    createDataList('Sales Org.', concatString([data.sales_org_id, data.sales_org_name])),
+    createDataList('Branch', concatString([data.branch_id, data.branch_name])),
+    createDataList('Salesman', concatString([data.salesman_id, data.salesman_name])),
     // FIXME Doc. Date
     createDataList('Doc. Date', dateFormat(data.doc_date, format)),
     createDataList('Valid From', dateFormat(data.valid_from, format)),

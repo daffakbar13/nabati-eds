@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable radix */
+/* eslint-disable camelcase */
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -6,10 +9,12 @@ import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 
-function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
+function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    router.push(`${PATH.SALES}/sales-order/detail/${link}`)
+    status === 'Draft'
+      ? router.push(`${PATH.SALES}/sales-order/edit/${link}`)
+      : router.push(`${PATH.SALES}/sales-order/detail/${link}?status=${status}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -45,11 +50,14 @@ export const TableSalesOrder = [
     'Sales Order ',
     'id',
     true,
-    (link: string) => <Linked link={link} type="id" />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
   ),
   CreateColumns(
     'Order Type',
     'order_type_id',
+    false,
+    undefined,
+    120,
   ),
   CreateColumns(
     'Order Date',
@@ -80,6 +88,8 @@ export const TableSalesOrder = [
   CreateColumns(
     'Total Amount',
     'total_amount',
+    false,
+    (total_amount) => parseInt(total_amount).toLocaleString(),
   ),
   CreateColumns(
     'Create From',
@@ -103,6 +113,6 @@ export const TableSalesOrder = [
     'Action',
     'id',
     false,
-    (link: string) => <Linked link={link} type="action" />,
+    (link, record) => <Linked link={link} type="action" status={record.status_name} />,
   ),
 ]

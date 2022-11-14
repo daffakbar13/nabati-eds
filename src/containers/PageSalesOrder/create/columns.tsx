@@ -3,13 +3,14 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
-import { InputNumber } from 'antd'
+import { Input, InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldItem, fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons';
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router';
 import { getDetailQuotation } from 'src/api/quotation';
+import { getDetailSalesOrder } from 'src/api/sales-order';
 
 export const useTableAddItem = () => {
   const initialValue = {
@@ -24,6 +25,9 @@ export const useTableAddItem = () => {
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState('')
   const router = useRouter()
+  const total_amount = data
+    .map(({ sub_total }) => sub_total)
+    .reduce((accumulator, value) => accumulator + value, 0);
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
@@ -100,7 +104,7 @@ export const useTableAddItem = () => {
       false,
       (order_qty, record, index) => <InputNumber
         disabled={isNullProductId(index)}
-        min={isNullProductId(index) ? '0' : '1'}
+        min={'0'}
         value={order_qty?.toLocaleString()}
         onChange={(newVal) => {
           handleChangeData('order_qty', newVal, index)
@@ -130,17 +134,20 @@ export const useTableAddItem = () => {
         value={sub_total?.toLocaleString()}
         style={styleInputNumber}
       />,
-    ), CreateColumns(
+      130,
+    ),
+    CreateColumns(
       'Remarks',
       '',
       false,
-      (_, __, index) => <DebounceSelect
-        type='input'
-        placeholder='e.g Testing'
-        onChange={(e) => {
-          handleChangeData('remarks', e.target.value, index)
-        }}
-      />,
+      // (_, __, index) => <DebounceSelect
+      //   type='input'
+      //   placeholder='e.g Testing'
+      //   onChange={(e) => {
+      //     handleChangeData('remarks', e.target.value, index)
+      //   }}
+      // />,
+      (_, __, index) => <Input.TextArea style={styleInputNumber} rows={2} />,
     ),
   ]
 
@@ -183,7 +190,7 @@ export const useTableAddItem = () => {
 
   React.useEffect(() => {
     if (router.query.id) {
-      getDetailQuotation({ id: router.query.id as string })
+      getDetailSalesOrder({ id: router.query.id as string })
         .then((response) => setData(
           response.data.items.map((items) => ({
             ...items,
@@ -198,5 +205,6 @@ export const useTableAddItem = () => {
     data,
     handleAddItem,
     columns,
+    total_amount,
   }
 }

@@ -58,7 +58,7 @@ export default function useTable(props: useTableProps) {
     onChange: (selectedRowKeys) => {
       setSelected(selectedRowKeys)
     },
-    ...(haveCheckbox && haveCheckbox !== 'All' && {
+    ...(haveCheckbox !== 'All' && {
       getCheckboxProps: (record) => ({
         style: { ...(isHaveCheckbox(record[haveCheckbox.headCell]) && { display: 'none' }), p: 5 },
         disabled: isHaveCheckbox(record[haveCheckbox.headCell]),

@@ -42,3 +42,30 @@ export const createSalesOrder = async (payload: any) => {
   })
   return response.data
 }
+
+export const updateSalesOrder = async (payload: any, id: string) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/${id}/update`,
+    data: payload,
+  })
+  return response.data
+}
+
+export const downloadTemplateSalesOrder = async () => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/export-excel`,
+    // data: payload,
+  })
+  return response.data
+}
+
+export const cancelSalesOrder = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/cancel-batch-order`,
+    data: payload,
+  })
+  return response.data
+}

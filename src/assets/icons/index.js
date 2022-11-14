@@ -28,6 +28,9 @@ export { default as ICArrowRight } from './ic-arrow-right.svg'
 export { default as ICFilter } from './ic_filter.svg'
 export { default as ICGridMenu } from './grid-menu-icon.svg'
 export { default as ICNewTab } from './ic_new tab.svg'
+export { default as ICDownloadTemplate } from './download-template.svg'
+export { default as ICUploadTemplate } from './upload-template.svg'
+export { default as ICSyncData } from './sync-data.svg'
 
 // Filter Icon
 export { default as ICFilterAddFolder } from './Filter-addFolder.svg'

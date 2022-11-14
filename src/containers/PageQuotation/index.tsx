@@ -5,16 +5,18 @@ import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
+import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { cancelBatchOrder, getQuotation } from 'src/api/quotation'
+import { cancelBatchOrder, downloadTemplateQuotation, getQuotation, multipleSubmitQuotation } from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
+import { PATH } from 'src/configs/menus'
+import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { PageQuotationProps } from './types'
-import { ColumnQuoatation } from './columns'
+import { useColumnQuotation } from './columns'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
@@ -34,19 +36,20 @@ export default function PageQuotation(props: PageQuotationProps) {
     const table = useTable({
         funcApi: getQuotation,
         haveCheckbox: { headCell: 'status_name', member: ['New'] },
-        columns: ColumnQuoatation,
+        columns: useColumnQuotation,
     })
     const titlePage = useTitlePage('list')
     const [showConfirm, setShowConfirm] = React.useState('')
     const [reason, setReason] = React.useState('')
     const [optionsReason, setOptionsReason] = React.useState([])
+    const [submittedQuotation, setSubmittedQuotation] = React.useState([])
     const hasData = table.total > 0
     const router = useRouter()
     const oneSelected = table.selected.length === 1
     const firstSelected = table.selected[0]
 
     const selectedQuotation = {
-        text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
+        text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
         content: (
             <div style={{ textAlign: 'center' }}>
                 {table.selected.join(', ')}
@@ -54,11 +57,37 @@ export default function PageQuotation(props: PageQuotationProps) {
         ),
     }
 
+    const moreContent = () => (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 15,
+                fontWeight: 'bold',
+                // padding: 5,
+            }}
+        >
+            <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
+                <ICDownloadTemplate /> Download Template
+            </div>
+            <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
+                <ICUploadTemplate /> Upload Template
+            </div>
+            <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
+                <ICSyncData /> Sync Data
+            </div>
+        </div>
+    )
+
     const HideShowColumns = () => {
         const content = (
-            <>
-                {ColumnQuoatation.map(({ title }, index) => (
-                    <div key={index}>
+            <div style={{ fontWeight: 'bold' }}>
+                <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>
+                    Hide/Show Columns
+                </h4>
+                <Divider style={{ margin: '10px 0' }} />
+                {useColumnQuotation.map(({ title }, index) => (
+                    <div key={index} style={{ display: 'flex', gap: 10 }}>
                         <Checkbox
                             defaultChecked={!table.hiddenColumns.includes(title)}
                             onChange={(event) => {
@@ -68,17 +97,17 @@ export default function PageQuotation(props: PageQuotationProps) {
                         {title}
                     </div>
                 ))}
-                <Divider />
+                <Divider style={{ margin: '10px 0' }} />
                 <h4
                     onClick={table.handleResetHideShowColumns}
-                    style={{ textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
+                    style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
                 >
                     Reset
                 </h4>
-            </>
+            </div>
       )
       return (
-            <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
+          <Popover placement="bottomRight" content={content} trigger="click">
                 <MoreOutlined style={{ cursor: 'pointer' }} />
             </Popover>
       )
@@ -103,7 +132,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                         <Search
                             width="380px"
                             nameIcon="SearchOutlined"
-                            placeholder="Search Menu Design Name"
+                            placeholder="Search Quotation ID"
                             colorIcon={colors.grey.regular}
                             onChange={(e) => {
                                 const { value } = e.target
@@ -135,9 +164,16 @@ export default function PageQuotation(props: PageQuotationProps) {
                             filters={filters} />
                     </Row>
                     <Row gap="16px">
-                        <Button size="big" variant="secondary" onClick={() => { }}>
-                            Download
+                        <Popover placement="bottom" content={moreContent} trigger="click">
+                            <Button
+                                size="big"
+                                variant="secondary"
+                                onClick={downloadTemplateQuotation}
+                                style={{ gap: 5 }}
+                            >
+                                More <DownOutlined />
                         </Button>
+                        </Popover>
                         <Button
                             size="big"
                             variant="primary"
@@ -153,7 +189,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                 <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
                   <Table
                       loading={table.loading}
-                      columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
+                        columns={[...table.columns, { title: <HideShowColumns />, fixed: 'right', width: 50 }]}
                       dataSource={table.data}
                       showSorterTooltip={false}
                       rowSelection={table.rowSelection}
@@ -207,14 +243,21 @@ export default function PageQuotation(props: PageQuotationProps) {
                         <Typography.Title level={3} style={{ margin: 0 }}>
                             Confirm Submit
                         </Typography.Title>
-                        <Typography.Title level={5} style={{ margin: 0 }}>
+                        <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
                           Are you sure to submit quotation
+                            <Typography.Text
+                                copyable={{
+                                    text: oneSelected
+                                        ? selectedQuotation.text
+                                        : table.selected.join(', '),
+                                }}>
                           {oneSelected
                               ? ` ${selectedQuotation.text} ?`
                               : <Popover content={selectedQuotation.content}>
                                   {` ${selectedQuotation.text} ?`}
                               </Popover>
                           }
+                            </Typography.Text>
                         </Typography.Title>
                         <div style={{ display: 'flex', gap: 10 }}>
                             <Button
@@ -228,7 +271,18 @@ export default function PageQuotation(props: PageQuotationProps) {
                                 size="big"
                                 style={{ flexGrow: 1 }}
                                 variant="primary"
-                                onClick={() => { router.reload() }}
+                                onClick={() => {
+                                    multipleSubmitQuotation({
+                                        order_list: table.selected
+                                            .map((id) => ({ id })),
+                                    })
+                                        .then((response) => response.data)
+                                        .then((data) => {
+                                            setShowConfirm('success-submit')
+                                            setSubmittedQuotation(data.results.map(({ id }) => id))
+                                        })
+                                        .catch((err) => console.log(err))
+                                }}
                             >
                                 Yes
                             </Button>
@@ -242,22 +296,52 @@ export default function PageQuotation(props: PageQuotationProps) {
                                 textAlign="center"
                                 style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
                             >
-                                <><CheckCircleFilled /> Success</>
+                                <><CheckCircleFilled /> Submit Success</>
                             </Text>
+                        </div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                gap: 4,
+                                fontWeight: 'bold',
+                                flexDirection: 'column',
+                                textAlign: 'center',
+                            }}>
+                            <div>
+                                New Sales Order
+                                <Typography.Text
+                                    copyable={{
+                                        text: oneSelected
+                                            ? submittedQuotation[0]
+                                            : submittedQuotation.join(', '),
+                                    }}
+                                >
+                                    {oneSelected
+                                        ? ` ${submittedQuotation[0]}`
+                                        : <Popover content={submittedQuotation.join(', ')}>
+                                            {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
+                                        </Popover>
+                                    }
+                                </Typography.Text>
+                                has been
+                            </div>
+                            <div>
+                                successfully submitted
+                            </div>
                         </div>
                         <div style={{ display: 'flex', gap: 10 }}>
                             <Button
                                 size="big"
                                 style={{ flexGrow: 1 }}
                                 variant="secondary"
-                                onClick={() => { setShowConfirm('') }}>
+                                onClick={() => { router.reload() }}>
                                 Back To List
                             </Button>
                             <Button
                                 size="big"
                                 style={{ flexGrow: 1 }}
                                 variant="primary"
-                                onClick={() => { router.reload() }}
+                                onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}
                             >
                                 Next Process
                             </Button>

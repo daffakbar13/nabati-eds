@@ -11,11 +11,11 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { createQuotation, getDetailQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldBranch, fieldQuotationType, fieldSalesman, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
-import { useDetail } from 'src/hooks'
+import { fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import { CheckCircleFilled } from '@ant-design/icons';
-import { getCustomerByFilter, getCustomerById, getDocTypeByCategory, getOrderTypeByCompany } from 'src/api/master-data'
-import { createSalesOrder } from 'src/api/sales-order'
+import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
+import Total from 'src/components/Total'
+import { createSalesOrder, getDetailSalesOrder, updateSalesOrder } from 'src/api/sales-order'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateSalesOrder() {
@@ -36,6 +36,13 @@ export default function PageCreateSalesOrder() {
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
   const now = new Date().toISOString()
 
+  const concatString = (data: string[]) => (data.join(' - '))
+
+  const splitString = (data: string) => {
+    const [result] = data.split(' - ')
+    return result
+  }
+
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
@@ -53,24 +60,36 @@ export default function PageCreateSalesOrder() {
     currency_id: 'IDR',
   }
 
+  const dataSubmited = (status_id: number) => ({
+    ...initialValue,
+    ...dataForm,
+    order_type_id: splitString(dataForm.order_type_id),
+    customer_id: splitString(dataForm.customer_id),
+    ship_to_id: splitString(dataForm.ship_to_id),
+    sales_org_id: splitString(dataForm.sales_org_id),
+    branch_id: splitString(dataForm.branch_id),
+    salesman_id: splitString(dataForm.salesman_id),
+    status_id: status_id.toString(),
+  })
+
   React.useEffect(() => {
     async function runApi() {
       if (router.query.id) {
-        getDetailQuotation({ id: router.query.id as string })
+        getDetailSalesOrder({ id: router.query.id as string })
           .then((response) => response.data)
           .then((data) => {
             const initFromDetail = {
               company_id: 'PP01',
-              branch_id: data.branch_id,
+              branch_id: concatString([data.branch_id, data.branch_name]),
               source_id: 'Z02',
               order_date: data.order_date,
               delivery_date: data.delivery_date,
               pricing_date: data.pricing_date || now,
               order_type_id: data.order_type_id,
-              customer_id: data.customer_id,
-              ship_to_id: data.ship_to_id === '' ? data.customer_id : data.ship_to_id,
-              salesman_id: data.salesman_id,
-              sales_org_id: data.sales_org_id,
+              customer_id: concatString([data.customer_id, data.customer_name]),
+              ship_to_id: data.ship_to_id === '' ? concatString([data.customer_id, data.customer_name]) : data.ship_to_id,
+              salesman_id: concatString([data.salesman_id, data.salesman_name]),
+              sales_org_id: concatString([data.sales_org_id, data.sales_org_name]),
               valid_from: data.valid_from,
               valid_to: data.valid_to,
               term_id: data.term_id || 'Z007',
@@ -80,10 +99,6 @@ export default function PageCreateSalesOrder() {
               items: tableAddItems.data,
             }
             setDataForm(initFromDetail)
-            // getCustomerById(data.customer_id)
-            //   .then((response2) => onChangeForm('sold_to_name', response2.data.name))
-            // getCustomerById(data.ship_to_id)
-            //   .then((response3) => onChangeForm('ship_to_name', response3.data.name))
           })
       }
     }
@@ -99,24 +114,27 @@ export default function PageCreateSalesOrder() {
       const { customer_id } = dataForm
       getCustomerByFilter({
         branch_id: '',
-        customer_id,
+        customer_id: splitString(customer_id),
         sales_org_id: '',
         salesman_id: '',
       })
         .then((res) => res.data)
         .then((data) => {
           const [firstData] = data
+          onChangeForm('branch_id', '')
+          onChangeForm('sales_org_id', '')
+          onChangeForm('salesman_id', '')
           setOptionsBranch([{
-            label: [firstData.branch_id, firstData.branch_name].join(' - '),
-            value: firstData.branch_id,
+            label: concatString([firstData.branch_id, firstData.branch_name]),
+            value: concatString([firstData.branch_id, firstData.branch_name]),
           }])
           setOptionsSalesOrg([{
-            label: [firstData.sales_org_id, firstData.sales_org_name].join(' - '),
-            value: firstData.sales_org_id,
+            label: concatString([firstData.sales_org_id, firstData.sales_org_name]),
+            value: concatString([firstData.sales_org_id, firstData.sales_org_name]),
           }])
           setOptionsSalesman(data.map(({ salesman_id, salesman_name }) => ({
-            label: [salesman_id, salesman_name].join(' - '),
-            value: salesman_id,
+            label: concatString([salesman_id, salesman_name]),
+            value: concatString([salesman_id, salesman_name]),
           })))
         })
     }
@@ -126,10 +144,9 @@ export default function PageCreateSalesOrder() {
   React.useEffect(() => {
     getDocTypeByCategory('C')
       .then((result) => result.data
-        // .filter(({ id }) => id === 'ZQP1')
         .map(({ id, name }) => ({
           label: [id, name.split('-').join(' - ')].join(' - '),
-          value: id,
+          value: [id, name.split('-').join(' - ')].join(' - '),
         })))
       .then((data) => setOptionsOrderType(data))
   }, [])
@@ -146,7 +163,7 @@ export default function PageCreateSalesOrder() {
             </Button>
             {(isCreatePage || isOrderAgainPage)
               && <Button size="big" variant="secondary" onClick={() => {
-                createSalesOrder({ ...initialValue, ...dataForm, status_id: '6' })
+                createSalesOrder(dataSubmited(6))
                   .then((response) => setDraftQuotation(response.data.id))
             }}>
               Save As Draft
@@ -154,9 +171,9 @@ export default function PageCreateSalesOrder() {
             }
             <Button size="big" variant="primary" onClick={() => {
               (isCreatePage || isOrderAgainPage)
-                ? createSalesOrder({ ...initialValue, ...dataForm, status_id: '1' })
+                ? createSalesOrder(dataSubmited(1))
                   .then((response) => setNewQuotation(response.data.id))
-                : updateQuotation({ ...dataForm, status_id: '1' }, titlePage.split(' ').reverse()[0])
+                : updateSalesOrder(dataSubmited(1), titlePage.split(' ').reverse()[0])
                   .then((response) => setNewQuotation(response.data.id))
             }}>
               {(isCreatePage || isOrderAgainPage) ? 'Submit' : 'Save'}
@@ -204,6 +221,7 @@ export default function PageCreateSalesOrder() {
               type='select'
               label="Sales Organization"
               placeholder={'Select'}
+              value={dataForm.sales_org_id}
               options={optionsSalesOrg}
               onChange={(e: any) => {
                 onChangeForm('sales_org_id', e.value)
@@ -213,6 +231,7 @@ export default function PageCreateSalesOrder() {
               type='select'
               label="Branch"
               placeholder={'Select'}
+              value={dataForm.branch_id}
               options={optionsBranch}
               onChange={(e: any) => {
                 onChangeForm('branch_id', e.value)
@@ -222,6 +241,7 @@ export default function PageCreateSalesOrder() {
               type='select'
               label="Salesman"
               placeholder='Select'
+              value={dataForm.salesman_id}
               options={optionsSalesman}
               onChange={(e: any) => {
                 onChangeForm('salesman_id', e.value)
@@ -280,6 +300,7 @@ export default function PageCreateSalesOrder() {
             <DebounceSelect
               type='input'
               label="Reference"
+              value={dataForm.customer_ref}
               onChange={(e: any) => {
                 onChangeForm('customer_ref', e.target.value)
               }}
@@ -296,6 +317,9 @@ export default function PageCreateSalesOrder() {
         <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
           Add Item
         </Button>
+        <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'row-reverse' }}>
+          <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
+        </div>
       </Card>
       {
         (newQuotation || draftQuotation || cancel)
@@ -332,7 +356,7 @@ export default function PageCreateSalesOrder() {
                     No
                   </Button>
                   <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                    router.push(`${PATH.SALES}/sales-order`)
+                  router.push(`${PATH.SALES}/sales-order`)
                   }}>
                     Yes
                   </Button>

@@ -20,7 +20,7 @@ function showTotal(total: number, range: number[]) {
 export default function PageCollection(props: PageCollectionProps) {
   const table = useTable({
     funcApi: getCollectionList,
-    haveCheckbox: { headCell: 'status', member: ['new'] },
+    // haveCheckbox: { headCell: 'status', member: ['new'] },
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
