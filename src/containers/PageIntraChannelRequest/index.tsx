@@ -26,12 +26,7 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageIntraChannelRequest(props: PageQuotationProps) {
     const { filters, setFilters } = useSmartFilters([
-        FILTER.SALES_ORG,
-        FILTER.BRANCH,
-        FILTER.SOLD_TO_CUSTOMER,
-        FILTER.SHIP_TO_CUSTOMER,
-        FILTER.ORDER_TYPE,
-        FILTER.ORDER_DATE,
+        FILTER.POSTING_DATE,
     ])
 
     const [filtered, setFiltered] = React.useState([])
@@ -105,10 +100,11 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                                 const newFiltered = newVal
                                     .filter((obj) => obj.fromValue)
                                     .map((obj) => ({
-                                        field: `eds_order.${obj.field}`,
+                                        field: `${obj.field}`,
                                         option: obj.option,
                                         from_value: obj.fromValue.value,
                                         to_value: obj.toValue?.value,
+                                        data_type: "D",
                                     }))
                                 setFilters(newVal)
                                 table.handleFilter(newFiltered)
