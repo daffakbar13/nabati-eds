@@ -23,8 +23,8 @@ export default function PageQuotationDetail() {
         createDataList('Request Number', data.id),
         createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.supply_branch_name}`),
         createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name}`),
-        createDataList('From Channel', '-'),
-        createDataList('To Channel', '-'),
+        createDataList('From Channel', data.from_channel || '-'),
+        createDataList('To Channel', data.to_channel || '-'),
 
         //row 2
         createDataList('From Sloc', `${data.suppl_sloc_id} - ${data.suppl_sloc_name}`),
