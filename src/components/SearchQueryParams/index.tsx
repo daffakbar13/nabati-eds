@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Search, Spacer, Text } from 'pink-lava-ui'
+import { Search } from 'pink-lava-ui'
 import { colors } from 'src/configs/colors'
 import { debounce } from 'src/utils/debounce';
 
@@ -10,16 +10,14 @@ function SearchQueryParams() {
     const inputRef = useRef(null);
 
     const onChange = (word: string) => {
-        router.push(
-            {
-                ...router,
-                query: { ...router.query, search: word },
-            },
-        )
+        router.push({
+            ...router,
+            query: { ...router.query, search: word },
+        })
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    const debounceSearch = useCallback(debounce(onChange, 1000), [])
+    const debounceSearch = useCallback(debounce(onChange, 500), [])
 
     const changeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)

@@ -1,20 +1,18 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
-import { Card } from 'src/components'
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
-import SmartFilter from 'src/components/SmartFilter2'
+import { Input } from 'antd'
+import { Button, Row, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Card, SearchQueryParams, SmartFilter, DebounceSelect } from 'src/components'
+
 import SimpleTable, { useSimpleTable } from 'src/components/SimpleTable';
-import SearchQueryParams from 'src/components/SearchQueryParams';
-import { Input, Select } from 'antd'
-import DebounceSelect from 'src/components/DebounceSelect2'
+import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
 import { fakeApi } from 'src/api/fakeApi'
 import { Props } from './types'
 import { columns } from './columns'
 
 export default function PageGoodsReceipt(props: Props) {
-  const router = useRouter()
   const [filters, setFilters] = useState([])
+  const router = useRouter()
 
   const table2 = useSimpleTable({
     funcApi: getGoodReceiptList,
@@ -22,10 +20,8 @@ export default function PageGoodsReceipt(props: Props) {
     filters,
   })
 
-  console.log('filters', filters)
-
   return (
-    <Col>
+    <>
       <Text variant={'h4'}>Goods Receipt</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -33,52 +29,18 @@ export default function PageGoodsReceipt(props: Props) {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='statusId' dataType='S' label='Status' options={['LE', 'EQ', 'CP', 'BT']} >
-                <Select
-                  placeholder='Select'
-                  style={{
-                    border: '1px solid #AAAAAA',
-                    borderRadius: 8,
-                    height: 48,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}>
-                  <Select.Option value='ok'>
-                    OK
-                  </Select.Option>
-                  <Select.Option value='not ok'>
-                    Not OK
-                  </Select.Option>
-                </Select>
-                <Select
-                  placeholder='Select'
-                  style={{
-                    border: '1px solid #AAAAAA',
-                    borderRadius: 8,
-                    height: 48,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}>
-                  <Select.Option value='ok'>
-                    OK
-                  </Select.Option>
-                  <Select.Option value='not ok'>
-                    Not OK
-                  </Select.Option>
-                </Select>
-              </SmartFilter.Field>
-              <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['EQ', 'CP']} >
+              <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['NB', 'NP', 'GT', 'LT']} >
                 <DebounceSelect fetchOptions={fakeApi} mode='multiple' />
               </SmartFilter.Field>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'CP']} >
+              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['NP', 'GT']} >
                 <DebounceSelect fetchOptions={fakeApi} />
                 <DebounceSelect fetchOptions={fakeApi} />
               </SmartFilter.Field>
-              <SmartFilter.Field field='company_aja' dataType='S' label='Company aja ID' options={['EQ', 'CP']} >
+              <SmartFilter.Field field='company_aja' dataType='S' label='Company aja ID' options={['EQ']} >
                 <Input placeholder='hihih' />
                 <Input placeholder='hihih' />
               </SmartFilter.Field>
-              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Date Aja' options={['EQ', 'CP']} >
+              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Date Aja' options={['GT', 'LT', 'EQ', 'CP']} >
                 <DatePickerInput
                   label={''}
                   fullWidth
@@ -92,7 +54,6 @@ export default function PageGoodsReceipt(props: Props) {
                   placeholder='Posting Date'
                 />
               </SmartFilter.Field>
-
             </SmartFilter>
           </Row>
           <Row gap="16px">
@@ -113,6 +74,6 @@ export default function PageGoodsReceipt(props: Props) {
       <Card style={{ padding: '16px 20px' }}>
         <SimpleTable table={table2} initialColumns={columns} />
       </Card>
-    </Col >
+    </ >
   )
 }

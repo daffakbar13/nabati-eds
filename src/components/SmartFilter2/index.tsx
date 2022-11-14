@@ -18,8 +18,6 @@ function SmartFilter({ onOk, children }) {
   const prevValues = useRef<FilterValueObj[]>(filterValues)
 
   const handleChange = (changedFiledObj: FilterValueObj) => {
-    console.log('changedFiledObj', changedFiledObj)
-
     const currentValues = [...filterValues]
     // check is already in the box
     const isExist = currentValues.find((f) => f.field === changedFiledObj.field)

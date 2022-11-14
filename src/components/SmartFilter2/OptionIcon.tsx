@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import { Tooltip, Text, Modal, Button } from 'pink-lava-ui'
 
 import { CheckCircleFilled } from '@ant-design/icons'
@@ -12,7 +12,7 @@ function SelectOptionIcon({ options, onChange, value }) {
   const prevValue = useRef(value)
 
   const onCancel = () => {
-    setCurValue(prevValue.current)
+    setCurValue(prevValue.current ?? options[0])
     setDefineSelectModal(false)
   }
 

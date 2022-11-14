@@ -9,41 +9,49 @@ export default function useSimpleTable({ columns, funcApi, filters }) {
     const router = useRouter();
 
     const onChangePage = (page: number, limit: number) => {
-        router.push(
-            {
-                ...router,
-                query: { ...router.query, page, limit },
-            },
-
-        )
+        router.push({
+            ...router,
+            query: { ...router.query, page, limit },
+        })
     }
 
     useEffect(() => {
         const fetchData = async () => {
+            const payload = {
+                filters: filters.map((f: any) => ({
+                    field: f.field,
+                    option: f.option,
+                    data_type: f.dataType,
+                    from_value: (() => {
+                        if (!f.fromValue) return null
+                        if (typeof f.fromValue === 'string') return f.fromValue
+                        if (Array.isArray(f.fromValue)) return f.fromValue.map((i) => i.value)
+                        return f.fromValue.value
+                    })(),
+                    to_value: (() => {
+                        if (!f.toValue) return null
+                        if (typeof f.toValue === 'string') return f.toValue
+                        if (Array.isArray(f.toValue)) return f.toValue.map((i) => i.value)
+                        return f.toValue.value
+                    })(),
+                })),
+                limit: +router.query.limit || DEFAULT_LIMIT,
+                page: +router.query.page || 1,
+            }
+
+            if (router.query.search) {
+                // Jika ada search value
+                payload.filters.push({
+                    field: 'eds_order.id',
+                    option: 'EQ',
+                    from_value: router.query.search,
+                    to_value: router.query.search,
+                })
+            }
+
             try {
                 setLoading(true)
-                const res = await funcApi({
-                    filters: filters.map((f) => ({
-                        field: f.field,
-                        option: f.option,
-                        data_type: f.dataType,
-                        from_value: (() => {
-                            if (!f.fromValue) return null
-                            if (typeof f.fromValue === 'string') return f.fromValue
-                            if (Array.isArray(f.fromValue)) return f.fromValue.map((i) => i.value)
-                            return f.fromValue.value
-                        })(),
-                        to_value: (() => {
-                            if (!f.toValue) return null
-                            if (typeof f.toValue === 'string') return f.toValue
-                            if (Array.isArray(f.toValue)) return f.toValue.map((i) => i.value)
-                            return f.toValue.value
-                        })(),
-                    })),
-                    search: router.query.search,
-                    limit: +router.query.limit || DEFAULT_LIMIT,
-                    page: +router.query.page || 1,
-                })
+                const res = await funcApi(payload)
                 setData(res?.data?.result ?? res?.data?.results ?? [])
                 setPagination((prev) => ({
                     ...prev,

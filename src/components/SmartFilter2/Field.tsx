@@ -20,6 +20,9 @@ export default function SingleField({
 }) {
   const hasMultipleChildren = Array.isArray(children)
   const hasOneChildren = !hasMultipleChildren
+  const hasNoChildren = !!children
+
+  if (!hasNoChildren) throw new Error('Smart FIlter wajib memiliki children Input, Select, TextArea, atau Date picker')
 
   const onFromValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
