@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { Input } from 'antd'
-import { Button, Row, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Button, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter, DebounceSelect } from 'src/components'
 
 import SimpleTable, { useSimpleTable } from 'src/components/SimpleTable';
@@ -14,7 +14,7 @@ export default function PageGoodsReceipt(props: Props) {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
-  const table2 = useSimpleTable({
+  const tableProps = useSimpleTable({
     funcApi: getGoodReceiptList,
     columns,
     filters,
@@ -71,8 +71,10 @@ export default function PageGoodsReceipt(props: Props) {
         </Row>
       </Card>
       <Spacer size={10} />
-      <Card style={{ padding: '16px 20px' }}>
-        <SimpleTable table={table2} initialColumns={columns} />
+      <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table {...tableProps} />
+        </div>
       </Card>
     </ >
   )
