@@ -9,13 +9,14 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
       ? router.push(`${PATH.LOGISTIC}/po-sto/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}?status=${status}`)
+      : router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -58,7 +59,7 @@ export const columns = [
   CreateColumns(
     'Posting Date',
     'created_at',
-    true,
+    false,
     (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
     180,
     'left',
@@ -66,19 +67,20 @@ export const columns = [
   CreateColumns(
     'Company',
     'company_id',
-    true,
+    false,
+    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
   ),
   CreateColumns(
     'Supplying Branch',
     'suppl_branch_id',
-    true,
+    false,
     (branch, rec) => <>{`${branch} - ${rec.suppl_branch_name}`}</>,
     250,
   ),
   CreateColumns(
     'Receiving Branch',
     'receive_plant_id',
-    true,
+    false,
     (branch, rec) => <>{`${branch} - ${rec.receive_plant_name}`}</>,
     250,
   ),
@@ -86,7 +88,7 @@ export const columns = [
     'Status',
     'status',
     false,
-    (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
+    (status) => <TaggedStatus status={status} />,
   ),
   CreateColumns(
     'Action',

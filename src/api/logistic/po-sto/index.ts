@@ -11,7 +11,7 @@ import { StockRealTime } from './types'
 
 const url = 'v1/sto-purchase'
 
-const overrideBaseUrl = API_BASE_URL_2
+const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
 
 export const getListPoSto = async (
   params: CommonListParams = {},
@@ -26,12 +26,11 @@ export const getListPoSto = async (
 }
 
 export const getPoStoDetail = async (
-  id: string,
-  params: CommonListParams = {},
-): Promise<CommonListResponse<StockRealTime>> => {
+  params: CommonDetailParams = {},
+): Promise<CommonDetailResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/${id}/detail`,
+    method: METHODS.GET,
+    subUrl: `${url}/${params.id}/detail`,
     overrideBaseUrl,
     data: params,
   })

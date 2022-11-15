@@ -33,7 +33,6 @@ export default function PagePoSto(props: Props) {
   ])
   const table = useTable({
     funcApi: getListPoSto,
-    haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns,
   })
   const titlePage = `${useTitlePage('list')} Intra Branch`
@@ -84,7 +83,7 @@ export default function PagePoSto(props: Props) {
 
   return (
     <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
+      <Text variant={'h4'}>PO STO Intra Branch</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
@@ -135,7 +134,6 @@ export default function PagePoSto(props: Props) {
             columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
             dataSource={table.data}
             showSorterTooltip={false}
-            rowSelection={table.rowSelection}
             rowKey={'id'}
           />
         </div>

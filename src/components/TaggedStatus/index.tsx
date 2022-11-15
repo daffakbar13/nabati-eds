@@ -11,6 +11,8 @@ export default function TaggedStatus(props: TaggedStatus) {
         color = 'green';
     } else if (props.status == 'Canceled') {
         color = 'red';
+    } else if (props.status == 'Aprroved') {
+        color = 'blue';
     }
 
     return (
