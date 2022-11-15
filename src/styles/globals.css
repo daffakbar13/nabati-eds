@@ -125,3 +125,6 @@ p {
   z-index: 3;
   left: 32px !important;
 }
+.ant-spin-dot-item {
+  background-color: #2bbecb;
+}

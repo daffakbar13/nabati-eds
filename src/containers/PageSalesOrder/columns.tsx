@@ -51,6 +51,9 @@ export const TableSalesOrder = [
     'id',
     true,
     (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    170,
+    true,
+    'have-checkbox',
   ),
   CreateColumns(
     'Order Type',

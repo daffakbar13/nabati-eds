@@ -9,6 +9,7 @@ export default function useDetail(
 ) {
   const [data, setData] = React.useState<any>({})
   const router = useRouter()
+  const backPage = router.asPath.split('/').splice(0, 3).join('/')
 
   React.useEffect(() => {
     async function getApi() {
@@ -16,7 +17,7 @@ export default function useDetail(
         .then((results) => setData(results.data))
         .catch((err) => {
           // setData({})
-          router.back()
+          router.push(backPage)
         })
     }
     getApi()

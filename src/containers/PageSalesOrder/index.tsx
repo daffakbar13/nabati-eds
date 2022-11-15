@@ -1,10 +1,8 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card, FloatAction, Popup } from 'src/components'
 import { colors } from 'src/configs/colors'
-// import { TableSalesOrder } from 'src/data/tables'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
@@ -13,7 +11,6 @@ import { cancelSalesOrder, downloadTemplateSalesOrder, getSalesOrder } from 'src
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { fieldReason } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { cancelBatchOrder } from 'src/api/quotation'
 import { PATH } from 'src/configs/menus'
 import { PageSalesOrderProps } from './types'
 import { TableSalesOrder } from './columns'
@@ -46,7 +43,6 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
   const hasData = table.total > 0
   const router = useRouter()
   const oneSelected = table.selected.length === 1
-  const hasNoData = table.data.length === 0
   const firstSelected = table.selected[0]
 
   const selectedSalesOrder = {
@@ -98,6 +94,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
 
   return (
     <Col>
+
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -145,7 +142,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         <div style={{ overflow: 'scroll' }}>
           <Table
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns /> }]}
+            columns={[...table.columns, { title: <HideShowColumns />, width: 50, fixed: 'right' }]}
             dataSource={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}

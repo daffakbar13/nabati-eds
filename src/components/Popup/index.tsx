@@ -31,7 +31,7 @@ export default function Popup(props: PopupProps) {
         left: 0,
         position: 'fixed',
         backgroundColor: '#00000073',
-        zIndex: 999,
+        zIndex: 800,
       }}
     >
       <div
@@ -42,7 +42,7 @@ export default function Popup(props: PopupProps) {
           // right: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          zIndex: 1000,
+          zIndex: 900,
           backgroundColor: 'white',
           padding: 20,
           borderRadius: 8,

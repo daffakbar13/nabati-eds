@@ -1,48 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
-import { Checkbox, Popover, Divider, message } from 'antd'
-import { MoreOutlined } from '@ant-design/icons'
-
-const HideShowColumns = ({ initialColumns, toggleTable, resetColumns }) => {
-    const content = (
-        <div style={{ fontWeight: 'bold' }}>
-            <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>
-                Hide/Show Columns
-            </h4>
-            {initialColumns.map(({ title, active }, ind: number) => (
-                <div key={ind} style={{ display: 'flex', gap: 10 }}>
-                    <Checkbox
-                        checked={active}
-                        onChange={(e) => toggleTable(ind, e.target.checked)}
-                    />
-                    <p
-                        style={{ cursor: 'pointer' }}
-                        onClick={(e) => toggleTable(ind, !active)}>{title}</p>
-                </div>
-            ))}
-            <Divider style={{ margin: '10px 0' }} />
-            <h4
-                onClick={resetColumns}
-                style={{
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    cursor: 'pointer',
-                    color: '#EB008B',
-                }}
-
-            >
-                Reset
-            </h4>
-        </div>
-    )
-    return (
-        <Popover placement="bottomRight" content={content} trigger="click">
-            <div style={{ width: 30, marginLeft: 'auto', cursor: 'pointer' }}>
-                <MoreOutlined />
-            </div>
-        </Popover>
-    )
-}
+import { message } from 'antd'
+import HideShowColumns from './HideShowColumns'
 
 const DEFAULT_LIMIT = 20
 export default function useSimpleTable({ columns, funcApi, filters }) {
@@ -69,7 +28,7 @@ export default function useSimpleTable({ columns, funcApi, filters }) {
         const isOnlyOneLeft = currentColumns.filter((c: any) => c.active).length === 1
         if (isOnlyOneLeft && !checked) return message.warning('You can not hide all column');
 
-        setCurrentColumns(currentColumns.map((currColumn: any, ind: number) => {
+        return setCurrentColumns(currentColumns.map((currColumn: any, ind: number) => {
             if (columnIndex === ind) return { ...currColumn, active: checked }
             return currColumn
         }))
@@ -81,23 +40,7 @@ export default function useSimpleTable({ columns, funcApi, filters }) {
     useEffect(() => {
         const fetchData = async () => {
             const payload = {
-                filters: filters.map((f: any) => ({
-                    field: f.field,
-                    option: f.option,
-                    data_type: f.dataType,
-                    from_value: (() => {
-                        if (!f.fromValue) return null
-                        if (typeof f.fromValue === 'string') return f.fromValue
-                        if (Array.isArray(f.fromValue)) return f.fromValue.map((i) => i.value)
-                        return f.fromValue.value
-                    })(),
-                    to_value: (() => {
-                        if (!f.toValue) return null
-                        if (typeof f.toValue === 'string') return f.toValue
-                        if (Array.isArray(f.toValue)) return f.toValue.map((i) => i.value)
-                        return f.toValue.value
-                    })(),
-                })),
+                filters,
                 limit: +router.query.limit || DEFAULT_LIMIT,
                 page: +router.query.page || 1,
             }

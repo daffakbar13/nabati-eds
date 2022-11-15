@@ -10,6 +10,7 @@ import { cancelBatchOrder, getDetailQuotation } from 'src/api/quotation'
 import { PATH } from 'src/configs/menus'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
+import Loader from 'src/components/Loader'
 import { PageQuotationDetailProps } from './types'
 import AllTabs from './tabs'
 import Quotation from './tabs/Quotation'
@@ -38,6 +39,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
 
   return (
     <Col>
+      {!hasData && <Loader type='process' text='Wait for get data' />}
       <div style={{ display: 'flex', gap: 5 }}>
         <div
           style={{
