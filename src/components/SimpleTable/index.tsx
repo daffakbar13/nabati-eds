@@ -11,18 +11,19 @@ const HideShowColumns = () => (
 )
 
 export { useSimpleTable }
-export default function SimpleTable({ table, initialColumns }) {
+export default function SimpleTable({ ...props }) {
+    console.log('props', props);
     return <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
         <Table
-            loading={table.loading}
-            // columns={[...table.columns]} // TO DO NEXT
-            columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'id'}
-            pagination={table.pagination}
-
+            {...props}
+        // rowKey={'id'}
+        // loading={table.loading}
+        // columns={[...table.columns]} // TO DO NEXT
+        // dataSource={table.data}
+        // showSorterTooltip={false}
+        // rowSelection={table.rowSelection}
+        // pagination={table.pagination}
+        // columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
         />
     </div>
 }
