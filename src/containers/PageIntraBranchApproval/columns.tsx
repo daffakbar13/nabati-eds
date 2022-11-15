@@ -6,16 +6,15 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import moment from 'moment'
 import DateFormat from 'src/components/DateFormat'
-import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
       ? router.push(`${PATH.LOGISTIC}/approval/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/approval/detail/${link}?status=${status}`)
+      : router.push(`${PATH.LOGISTIC}/approval/detail/${link}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -53,7 +52,7 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 export const columns = [
   CreateColumns(
     'PO Number',
-    'po_number',
+    'id',
     true,
     (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
     180,
@@ -67,13 +66,9 @@ export const columns = [
   ),
   CreateColumns(
     'Company ',
-    'comapny_id',
+    'company_id',
     false,
-  ),
-  CreateColumns(
-    'Company ',
-    'comapny_id',
-    false,
+    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
   ),
   CreateColumns(
     'Supplying Branch',
@@ -93,7 +88,7 @@ export const columns = [
     'Status',
     'status',
     false,
-    (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
+    (status) => <TaggedStatus status={status} />,
   ),
   CreateColumns(
     'Action',

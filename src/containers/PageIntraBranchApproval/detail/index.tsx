@@ -6,40 +6,34 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getDetailRequestIntraChannel, ChangeStatus } from 'src/api/request-intra-channel'
+import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/po-sto'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
-import { TableIntraChannelRequestDetail } from '../columns'
-import { PATH } from 'src/configs/menus'
+import { columns } from './column'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { PATH } from 'src/configs/menus'
 
-export default function PageQuotationDetail() {
-    const titlePage = useTitlePage('detail')
+export default function PageApprovalDetail() {
     const router = useRouter()
-    const data: any = useDetail(getDetailRequestIntraChannel, { id: router.query.id as string })
+    const data: any = useDetail(getPoStoDetail, { id: router.query.id as string })
     const createDataList = (label: string, value: string) => ({ label, value })
     const format = 'DD MMMM YYYY'
     const [approve, setApprove] = React.useState(false);
     const [reject, setReject] = React.useState(false);
 
     const changedStatus = (status: string) => {
-        ChangeStatus({ id: data.id, status_id: status })
+        updateStatusPoSto({ id: data.id, status_id: status })
         if (status == '02') {
-            router.push(`${PATH.LOGISTIC}/request-intra-channel`)
+            router.push(`${PATH.LOGISTIC}/approval`)
         }
     }
 
     const dataList = [
         //row 1
-        createDataList('Request Number', data.id),
-        createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.supply_branch_name}`),
-        createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name}`),
-        createDataList('From Channel', data.from_channel || '-'),
-        createDataList('To Channel', data.to_channel || '-'),
+        createDataList('Receiving Branch', `${data.receive_plant_id || ''} - ${data.receive_plant_name || ''}`),
+        createDataList('Supplying Branch', `${data.suppl_branch_id || ''} - ${data.suppl_branch_name || ''}`),
 
         //row 2
-        createDataList('From Sloc', `${data.suppl_sloc_id} - ${data.suppl_sloc_name}`),
-        createDataList('To Sloc', `${data.receive_sloc_id} - ${data.receive_sloc_name}`),
         createDataList('Doc Date', dateFormat(data.document_date, format)),
         createDataList('Posting Date', dateFormat(data.posting_date, format)),
         createDataList('Remarks', ((data.remarks != '' && data.remarks != null) ? data.remarks : '-')),
@@ -62,29 +56,19 @@ export default function PageQuotationDetail() {
                         cursor: 'pointer',
                     }}
                     onClick={() => {
-                        router.push('/logistic/request-intra-channel')
+                        router.push('/logistic/approval')
                     }}
                 >
                     <ArrowLeftOutlined style={{ fontSize: 25 }} />
                 </div>
-                <Text variant={'h4'}>{titlePage}</Text>
+                <Text variant={'h4'}>View Approval PO STO - {router.query.id}</Text>
             </div>
+            <Spacer size={20} />
             <Card style={{ overflow: 'unset' }}>
-                {data.status == 'Canceled' ? <Text variant={'h5'}><TaggedStatus status={data.status} size="h5" /></Text> : ''}
+                {data.status == 'Rejected' || data.status == 'Approved' ? <Text variant={'h5'}><TaggedStatus status={data.status} size="h5" /></Text> : ''}
                 <Row justifyContent="space-between" reverse>
                     {(() => {
-                        if (data.status == 'Done') {
-                            return (
-                                <>
-                                    <Row gap="16px">
-                                        <Button size="big" variant="tertiary">
-                                            Cancel Process
-                                        </Button>
-                                    </Row>
-                                    <Text variant={'h5'}><TaggedStatus status={data.status} size="h5" /></Text>
-                                </>
-                            );
-                        } else if (data.status == 'Pending') {
+                        if (data.status == 'Wait For Approval') {
                             return (
                                 <>
                                     <Row gap="16px">
@@ -98,10 +82,6 @@ export default function PageQuotationDetail() {
                                     <Text variant={'h5'}><TaggedStatus status={data.status} size="h5" /></Text>
                                 </>
                             );
-                        } else if (data.status == 'Canceled') {
-                            return (
-                                <></>
-                            );
                         }
                     })()}
                 </Row>
@@ -110,27 +90,26 @@ export default function PageQuotationDetail() {
             <Card style={{ padding: '16px 20px' }}>
                 <Row gutter={8}>
                     <Col span={8}>
-                        {dataList.slice(0, 5).map(({ label, value }, i) => (
+                        {dataList.slice(0, 2).map(({ label, value }, i) => (
                             <DataList key={i} label={label} value={value} />
                         ))}
                     </Col>
                     <Col span={8}>
-                        {dataList.slice(5, 10).map(({ label, value }, i) => (
+                        {dataList.slice(2, 5).map(({ label, value }, i) => (
                             <DataList key={i} label={label} value={value} />
                         ))}
                     </Col>
                     <Col span={8}>
-                        {dataList.slice(10).map(({ label, value }, i) => (
+                        {dataList.slice(5).map(({ label, value }, i) => (
                             <DataList key={i} label={label} value={value} />
                         ))}
                     </Col>
                 </Row>
                 <Divider />
                 <div style={{ overflow: 'scroll' }}>
-                    <Table columns={TableIntraChannelRequestDetail} data={data.items} />
+                    <Table columns={columns} data={data.items} />
                 </div>
             </Card>
-
             {
                 (reject || approve)
                 && <Popup>
@@ -144,7 +123,7 @@ export default function PageQuotationDetail() {
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                         {reject
-                            ? `Are you sure want to Reject Request Intra Channel <strong>${data.id}</strong>?`
+                            ? `Are you sure want to Reject PO STO Intra Branch ${data.id}?`
                             : <>
                                 Request Number
                                 <Typography.Text copyable> {data.id}</Typography.Text>
@@ -179,7 +158,7 @@ export default function PageQuotationDetail() {
                             &&
                             <>
                                 <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                                    router.push(`${PATH.LOGISTIC}/request-intra-channel`)
+                                    router.push(`${PATH.LOGISTIC}/approval`)
                                 }}>
                                     Ok
                                 </Button>

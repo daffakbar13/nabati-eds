@@ -50,14 +50,15 @@ export const createPoSto = async (
 }
 
 export const updateStatusPoSto = async (
-  id: string,
-  params: CommonListParams = {},
+  params: any = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/${id}`,
+    subUrl: `${url}/edit/${params.id}`,
     overrideBaseUrl,
-    data: params,
+    data: {
+      status_id: params.status_id
+    },
   })
   return response.data
 }

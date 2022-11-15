@@ -11,7 +11,7 @@ import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import { columns } from './column'
 
-export default function PageQuotationDetail() {
+export default function PagePoSToDetail() {
     const titlePage = useTitlePage('detail')
     const router = useRouter()
     const data: any = useDetail(getPoStoDetail, { id: router.query.id as string })
