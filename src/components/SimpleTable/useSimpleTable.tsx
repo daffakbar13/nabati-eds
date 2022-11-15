@@ -1,33 +1,63 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
+import { message } from 'antd'
+import HideShowColumns from './HideShowColumns'
 
 const DEFAULT_LIMIT = 20
-export default function useSimpleTable({ columns, funcApi }) {
+export default function useSimpleTable({ columns, funcApi, filters }) {
     const [loading, setLoading] = useState(false)
-    const [data, setData] = useState([])
-    const [pagination, setPagination] = useState({ total: 0 })
+    const [dataSource, setData] = useState([])
     const router = useRouter();
 
+    // Pagination
+    const [pagination, setPagination] = useState({ total: 0 })
     const onChangePage = (page: number, limit: number) => {
-        router.push(
-            {
-                ...router,
-                query: { ...router.query, page, limit },
-            },
-
-        )
+        router.push({
+            ...router,
+            query: { ...router.query, page, limit },
+        })
     }
 
+    // Columns
+    const initialColumns = useRef(columns.map((c: any) => ({ ...c, active: true })))
+    // const prevColumns = useRef(columns)
+    const [currentColumns, setCurrentColumns] = useState(initialColumns.current)
+
+    const toggleTable = (columnIndex: number, checked: boolean) => {
+        // Prevent user to hides all column
+        const isOnlyOneLeft = currentColumns.filter((c: any) => c.active).length === 1
+        if (isOnlyOneLeft && !checked) return message.warning('You can not hide all column');
+
+        return setCurrentColumns(currentColumns.map((currColumn: any, ind: number) => {
+            if (columnIndex === ind) return { ...currColumn, active: checked }
+            return currColumn
+        }))
+    }
+
+    const resetColumns = () => setCurrentColumns(initialColumns.current)
+
+    // Fetch Data
     useEffect(() => {
         const fetchData = async () => {
+            const payload = {
+                filters,
+                limit: +router.query.limit || DEFAULT_LIMIT,
+                page: +router.query.page || 1,
+            }
+
+            if (router.query.search) {
+                // Jika ada search value
+                payload.filters.push({
+                    field: 'eds_order.id',
+                    option: 'EQ',
+                    from_value: router.query.search,
+                    to_value: router.query.search,
+                })
+            }
+
             try {
                 setLoading(true)
-                const res = await funcApi({
-                    filters: [],
-                    search: router.query.search,
-                    limit: +router.query.limit || DEFAULT_LIMIT,
-                    page: +router.query.page || 1,
-                })
+                const res = await funcApi(payload)
                 setData(res?.data?.result ?? res?.data?.results ?? [])
                 setPagination((prev) => ({
                     ...prev,
@@ -41,13 +71,22 @@ export default function useSimpleTable({ columns, funcApi }) {
         }
 
         fetchData()
-    }, [funcApi, router.query.limit, router.query.page, router.query.search])
+    }, [funcApi, router.query.limit, router.query.page, router.query.search, filters])
+
+    const additionalColumns = {
+        title: <HideShowColumns
+            initialColumns={currentColumns}
+            toggleTable={toggleTable}
+            resetColumns={resetColumns} />,
+        fixed: 'right',
+        width: 50,
+    }
 
     return (
         {
             loading,
-            data,
-            columns: [...columns],
+            dataSource,
+            columns: [...currentColumns.filter((c: any) => c.active), additionalColumns],
             pagination: {
                 current: router.query.page ? +router.query.page : 1,
                 defaultPageSize: router.query.limit ? +router.query.limit : DEFAULT_LIMIT,

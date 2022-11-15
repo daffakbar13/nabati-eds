@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Text, DatePickerInput } from 'pink-lava-ui'
 import { ICFilterAddFolder } from 'src/assets'
-import { FilterOption, OptionTypes } from 'src/configs/filterType'
+import { FilterOption, OptionType } from 'src/configs/filterType'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import moment from 'moment'
 import DebounceSelect from '../DebounceSelect'
@@ -11,9 +11,9 @@ import OptionTypeIcon from './OptionIcon'
 export default function SingleFilter({ option: opt, onChange, funcApi, isDate }) {
   const [fromValue, setFromValue] = useState<CommonSelectValue>(opt?.fromValue)
   const [toValue, setToValue] = useState<CommonSelectValue>(opt?.toValue)
-  const [optionType, setOptionType] = useState<OptionTypes>(opt?.option)
+  const [optionType, setOptionType] = useState<OptionType>(opt?.option)
 
-  const onChangeTypeIcon = (icon: OptionTypes) => setOptionType(icon)
+  const onChangeTypeIcon = (icon: OptionType) => setOptionType(icon)
   const onChangeFromValue = (e: CommonSelectValue) => {
     const label = e?.label
     const value = e?.value

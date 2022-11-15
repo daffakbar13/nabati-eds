@@ -1,35 +1,73 @@
-import React, { useState, useEffect } from 'react'
-import { Tooltip } from 'pink-lava-ui'
+import React, { useState, useRef } from 'react'
+import { Tooltip, Text, Modal, Button } from 'pink-lava-ui'
 
-import { FILTER_TYPES, OptionTypes } from 'src/configs/filterType'
-import DefineSelectOptionModal from './DefineSelectOptionModal'
-import { Pane } from './styledComponent'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { FILTER_TYPES, FilterTypesInterface, OptionType } from 'src/configs/filterType'
+import { FooterPane, List, HeaderList, Pane } from './styledComponent'
 
-function SelectOptionIcon({ options, onChange, ...props }) {
+function SelectOptionIcon({ options, onChange, value }) {
   const [showDefineSelectModal, setDefineSelectModal] = useState(false)
-  const [iconType, setIconType] = useState<OptionTypes>(options[0])
 
-  useEffect(() => {
-    onChange(iconType)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [iconType])
+  const [curValue, setCurValue] = useState<OptionType>(value ?? options[0])
+  const prevValue = useRef(value)
+
+  const onCancel = () => {
+    setCurValue(prevValue.current ?? options[0])
+    setDefineSelectModal(false)
+  }
+
+  const onClickSave = () => {
+    prevValue.current = curValue
+    onChange(curValue)
+    setDefineSelectModal(false)
+  }
 
   return (
     <>
-      <Pane {...props}>
+      <Pane>
         <Tooltip
           overlayInnerStyle={{ width: 'fit-content' }}
           color="#F4FBFC"
           title="Define Select Option"
         >
-          <div onClick={() => setDefineSelectModal(true)}>{FILTER_TYPES[iconType].icon}</div>
+          <div onClick={() => setDefineSelectModal(true)}>{FILTER_TYPES[curValue].icon}</div>
         </Tooltip>
       </Pane>
-      <DefineSelectOptionModal
+      <Modal
+        destroyOnClose
+        title="Define Select Option"
         visible={showDefineSelectModal}
-        onCancel={() => setDefineSelectModal(false)}
-        onOk={(type: OptionTypes) => setIconType(type)}
-        options={options}
+        onCancel={onCancel}
+        content={
+          <>
+            <HeaderList>
+              <Text variant="headingLarge" style={{ fontSize: 16, justifySelf: 'center' }}>
+                Selection
+              </Text>
+              <Text variant="headingLarge" style={{ fontSize: 16 }}>
+                Description
+              </Text>
+            </HeaderList>
+            {options.map((opt: OptionType) => FILTER_TYPES[opt])
+              .map((type: FilterTypesInterface) => <List
+                key={type.code}
+                active={type.code === curValue}
+                onClick={() => setCurValue(type.code)}
+              >
+                <div style={{ justifySelf: 'center' }}>{type.icon}</div>
+                <Text variant="headingSmall" style={{ fontSize: 16 }}>
+                  {type.label}
+                </Text>
+                {type.code === curValue && <CheckCircleFilled style={{ color: '#00d458' }} />}
+              </List>)}
+          </>
+        }
+        footer={
+          <FooterPane>
+            <Button onClick={onCancel} variant="tertiary">Cancel</Button>
+            <Button onClick={onClickSave}>Save</Button>
+          </FooterPane>
+        }
       />
     </>
   )
