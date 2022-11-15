@@ -4,7 +4,11 @@ import { Search } from 'pink-lava-ui'
 import { colors } from 'src/configs/colors'
 import { debounce } from 'src/utils/debounce';
 
-function SearchQueryParams() {
+interface CustomField {
+    placeholder?: string;
+}
+
+function SearchQueryParams(props: CustomField) {
     const router = useRouter();
     const [searchValue, setSearch] = useState(router.query.search)
     const inputRef = useRef(null);
@@ -34,7 +38,7 @@ function SearchQueryParams() {
             ref={inputRef}
             width={'380px'}
             nameIcon="SearchOutlined"
-            placeholder="Search Menu Design Name"
+            placeholder={props.placeholder ?? "Search Menu Design Name"}
             colorIcon={colors.grey.regular}
             onChange={changeKeyword}
             value={searchValue ?? ''}

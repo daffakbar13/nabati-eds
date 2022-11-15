@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card } from 'src/components'
-import { colors } from 'src/configs/colors'
-import { Pagination, Checkbox, Popover, Divider, Typography, Tooltip } from 'antd'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Card, SearchQueryParams, SmartFilter, DebounceSelect } from 'src/components'
+import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import SimpleTable, { useSimpleTable } from 'src/components/SimpleTable';
 import { MoreOutlined } from '@ant-design/icons'
-import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { getRequestIntraChannel } from 'src/api/request-intra-channel'
 import Popup from 'src/components/Popup'
-import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { PATH } from 'src/configs/menus'
 import { PageQuotationProps } from './types'
 import { TableIntraChannelRequest } from './columns'
+import { fieldBranchAll } from 'src/configs/fieldFetches'
 
 function showTotal(total: number, range: number[]) {
     const ranges = range.join('-')
@@ -25,9 +21,6 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageIntraChannelRequest(props: PageQuotationProps) {
-    const { filters, setFilters } = useSmartFilters([
-        FILTER.POSTING_DATE,
-    ])
 
     const [filtered, setFiltered] = React.useState([])
 
@@ -35,7 +28,7 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
         funcApi: getRequestIntraChannel,
         columns: TableIntraChannelRequest,
     })
-    const titlePage = useTitlePage('list')
+
     const [showConfirm, setShowConfirm] = React.useState('')
     const hasData = table.total > 0
     const router = useRouter()
@@ -50,6 +43,18 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
             </div>
         ),
     }
+
+    const statusOption = [
+        { value: '', label: 'All' },
+        { value: 'Pending', label: 'Pending' },
+        { value: 'Done', label: 'Done' },
+        { value: 'Done', label: 'Done' }
+    ]
+
+    useEffect(() => {
+        // table.handleFilter(filtered)
+        console.log(filtered);
+    }, [filtered])
 
     const HideShowColumns = () => {
         const content = (
@@ -83,35 +88,39 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
 
     return (
         <Col>
-            <Text variant={'h4'}>{titlePage}</Text>
+            <Text variant={'h4'}>Request Intra Channel</Text>
             <Spacer size={20} />
             <Card style={{ overflow: 'unset' }}>
                 <Row justifyContent="space-between">
                     <Row gap="16px">
-                        <Search
-                            width="380px"
-                            nameIcon="SearchOutlined"
-                            placeholder="Search by Request Number"
-                            colorIcon={colors.grey.regular}
-                            onChange={() => { }}
-                        />
-                        <SmartFilter
-                            onOk={(newVal) => {
-                                const newFiltered = newVal
-                                    .filter((obj) => obj.fromValue)
-                                    .map((obj) => ({
-                                        field: `${obj.field}`,
-                                        option: obj.option,
-                                        from_value: obj.fromValue.value,
-                                        to_value: obj.toValue?.value,
-                                        data_type: "D",
-                                    }))
-                                setFilters(newVal)
-                                table.handleFilter(newFiltered)
-                                // setFiltered(newFiltered)
-                                console.log('newVal', newVal)
-                            }}
-                            filters={filters} />
+                        <SearchQueryParams placeholder='Search by Request Number' key="id" />
+                        <SmartFilter onOk={setFiltered}>
+                            <SmartFilter.Field placeholder='Supplying Branch' field='suppl_sloc_id' dataType='S' label='Posting Date' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
+                                <DebounceSelect fetchOptions={fieldBranchAll} />
+                                <DebounceSelect fetchOptions={fieldBranchAll} />
+                            </SmartFilter.Field>
+                            <SmartFilter.Field placeholder='Receiving Branch' field='receive_plant_id' dataType='S' label='Posting Date' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
+                                <DebounceSelect fetchOptions={fieldBranchAll} />
+                                <DebounceSelect fetchOptions={fieldBranchAll} />
+                            </SmartFilter.Field>
+                            <SmartFilter.Field placeholder='Posting Date' field='posting_date' dataType='S' label='Posting Date' options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}>
+                                <DatePickerInput
+                                    label={''}
+                                    fullWidth
+                                    format={'DD-MMM-YYYY'}
+                                    placeholder='Posting Date'
+                                />
+                                <DatePickerInput
+                                    fullWidth
+                                    label={''}
+                                    format={'DD-MMM-YYYY'}
+                                    placeholder='Posting Date'
+                                />
+                            </SmartFilter.Field>
+                            <SmartFilter.Field placeholder='Status' field='status' dataType='S' label='Posting Date' options={['EQ']} >
+                                <DebounceSelect fetchOptions={fieldBranchAll} />
+                            </SmartFilter.Field>
+                        </SmartFilter>
                     </Row>
                     <Row gap="16px">
                         <Button
