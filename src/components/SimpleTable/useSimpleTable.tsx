@@ -81,23 +81,7 @@ export default function useSimpleTable({ columns, funcApi, filters }) {
     useEffect(() => {
         const fetchData = async () => {
             const payload = {
-                filters: filters.map((f: any) => ({
-                    field: f.field,
-                    option: f.option,
-                    data_type: f.dataType,
-                    from_value: (() => {
-                        if (!f.fromValue) return null
-                        if (typeof f.fromValue === 'string') return f.fromValue
-                        if (Array.isArray(f.fromValue)) return f.fromValue.map((i) => i.value)
-                        return f.fromValue.value
-                    })(),
-                    to_value: (() => {
-                        if (!f.toValue) return null
-                        if (typeof f.toValue === 'string') return f.toValue
-                        if (Array.isArray(f.toValue)) return f.toValue.map((i) => i.value)
-                        return f.toValue.value
-                    })(),
-                })),
+                filters,
                 limit: +router.query.limit || DEFAULT_LIMIT,
                 page: +router.query.page || 1,
             }

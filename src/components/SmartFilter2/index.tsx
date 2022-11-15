@@ -2,15 +2,17 @@ import React, { useState, useRef } from 'react'
 import { Button, Row, Modal } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
 import { Moment } from 'moment';
+import { generateFilterBody } from 'src/utils/misc'
 import Field from './Field'
 
-interface FilterValueObj {
+export interface FilterValueObj {
   field: string,
   option?: string,
   arrayValues?: string[],
   fromValue?: string | Moment | [],
   toValue?: string | Moment | [],
-  dataType?: string
+  dataType?: string,
+  value?: any
 }
 function SmartFilter({ onOk, children }) {
   const [showFilter, setShowFilter] = useState<boolean>(false)
@@ -33,7 +35,7 @@ function SmartFilter({ onOk, children }) {
 
   const handleApply = () => {
     prevValues.current = filterValues
-    onOk(filterValues)
+    onOk(generateFilterBody(filterValues))
     setShowFilter(false)
   }
 
