@@ -1,15 +1,16 @@
 import React from 'react'
 import { Button, Spacer, Text, Table, Row } from 'pink-lava-ui'
-import { Card } from 'src/components'
-import { Col, Divider } from 'antd'
+import { Card, Popup } from 'src/components'
+import { Col, Divider, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getDetailRequestIntraChannel } from 'src/api/request-intra-channel'
+import { getDetailRequestIntraChannel, ChangeStatus } from 'src/api/request-intra-channel'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import { TableIntraChannelRequestDetail } from '../columns'
+import { PATH } from 'src/configs/menus'
 
 export default function PageQuotationDetail() {
     const titlePage = useTitlePage('detail')
@@ -17,6 +18,15 @@ export default function PageQuotationDetail() {
     const data: any = useDetail(getDetailRequestIntraChannel, { id: router.query.id as string })
     const createDataList = (label: string, value: string) => ({ label, value })
     const format = 'DD MMMM YYYY'
+    const [approve, setApprove] = React.useState(false);
+    const [reject, setReject] = React.useState(false);
+
+    const changedStatus = (status: string) => {
+        ChangeStatus({ id: data.id, status_id: status })
+        if (status == '02') {
+            router.push(`${PATH.LOGISTIC}/request-intra-channel`)
+        }
+    }
 
     const dataList = [
         //row 1
@@ -76,10 +86,10 @@ export default function PageQuotationDetail() {
                             return (
                                 <>
                                     <Row gap="16px">
-                                        <Button size="big" variant="tertiary">
+                                        <Button size="big" variant="tertiary" onClick={() => { setReject(true); }}>
                                             Reject
                                         </Button>
-                                        <Button size="big" variant="primary">
+                                        <Button size="big" variant="primary" onClick={() => { setApprove(true); changedStatus('01') }}>
                                             Approve
                                         </Button>
                                     </Row>
@@ -117,6 +127,64 @@ export default function PageQuotationDetail() {
                     <Table columns={TableIntraChannelRequestDetail} data={data.items} />
                 </div>
             </Card>
+
+            {
+                (reject || approve)
+                && <Popup>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <Text
+                            variant="headingSmall"
+                            textAlign="center"
+                        >
+                            {reject ? 'Confirm Cancellation' : 'Success'}
+                        </Text>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                        {reject
+                            ? `Are you sure want to Reject Request Intra Channel <strong>${data.id}</strong>?`
+                            : <>
+                                Request Number
+                                <Typography.Text copyable> {data.id}</Typography.Text>
+                                has been
+                            </>
+                        }
+                    </div>
+                    {approve
+                        && <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            successfully approved
+                        </div>
+                    }
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+                        {
+                            (reject)
+                            &&
+                            <>
+                                <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
+                                    setReject(false)
+                                }}>
+                                    No
+                                </Button>
+                                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                                    changedStatus('02')
+                                }}>
+                                    Yes
+                                </Button>
+                            </>
+                        }
+                        {
+                            (approve)
+                            &&
+                            <>
+                                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                                    router.push(`${PATH.LOGISTIC}/request-intra-channel`)
+                                }}>
+                                    Ok
+                                </Button>
+                            </>
+                        }
+                    </div>
+                </Popup>
+            }
         </Col>
     )
 }

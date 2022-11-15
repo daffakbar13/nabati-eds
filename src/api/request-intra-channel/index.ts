@@ -55,3 +55,15 @@ export const createRequestIntraChannel = async (payload: any) => {
   })
   return response.data
 }
+
+export const ChangeStatus = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${subUrl}/edit/${payload.id}`,
+    data: {
+      status_id: payload.status_id
+    },
+  })
+  return response.data
+}
