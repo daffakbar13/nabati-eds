@@ -19,7 +19,7 @@ export default function FloatAction(props: FloatActionProps) {
         borderRadius: 16,
         border: '2px solid #2BBECB',
         width: 780,
-        zIndex: 999,
+        zIndex: 700,
       }}
     >
       <div style={{ display: 'flex' }}>{children}</div>

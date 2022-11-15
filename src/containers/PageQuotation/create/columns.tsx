@@ -26,6 +26,7 @@ export const useTableAddItem = () => {
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState('')
   const [showConfirm, setShowConfirm] = React.useState('')
+  const isLoading = fetching !== ''
   const router = useRouter()
   const total_amount = data
     .map(({ sub_total }) => sub_total)
@@ -40,7 +41,7 @@ export const useTableAddItem = () => {
   }
 
   function handleDeleteRows(index: number) {
-    setData(data.filter((_, i) => i !== index))
+    data.length > 1 && setData(data.filter((_, i) => i !== index))
   }
 
   function handleAddItem() {
@@ -247,5 +248,6 @@ export const useTableAddItem = () => {
     handleAddItem,
     columns,
     total_amount,
+    isLoading,
   }
 }
