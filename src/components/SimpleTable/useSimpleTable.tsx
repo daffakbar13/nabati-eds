@@ -9,7 +9,6 @@ const HideShowColumns = ({ initialColumns, toggleTable, resetColumns }) => {
             <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>
                 Hide/Show Columns
             </h4>
-            {/* <Divider style={{ margin: '10px 0' }} /> */}
             {initialColumns.map(({ title, active }, ind: number) => (
                 <div key={ind} style={{ display: 'flex', gap: 10 }}>
                     <Checkbox
@@ -24,7 +23,13 @@ const HideShowColumns = ({ initialColumns, toggleTable, resetColumns }) => {
             <Divider style={{ margin: '10px 0' }} />
             <h4
                 onClick={resetColumns}
-                style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
+                style={{
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    cursor: 'pointer',
+                    color: '#EB008B',
+                }}
+
             >
                 Reset
             </h4>
@@ -71,8 +76,6 @@ export default function useSimpleTable({ columns, funcApi, filters }) {
     }
 
     const resetColumns = () => setCurrentColumns(initialColumns.current)
-
-    console.log('currentColumns', currentColumns)
 
     // Fetch Data
     useEffect(() => {
