@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import moment from 'moment'
-import { Divider, Table } from 'antd'
-import { Button, Col, Row, Search, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
-import { ICPlusWhite } from 'src/assets/icons'
+import { Divider, Typography } from 'antd'
+import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Card, TableEditable } from 'src/components'
+import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { fakeApi } from 'src/api/fakeApi'
-import { CommonSelectValue, antdColumns } from 'src/configs/commonTypes'
-import { columns } from './columns'
+import { CommonSelectValue } from 'src/configs/commonTypes'
+import { useTableAddItem } from './columns'
+import { PATH } from 'src/configs/menus'
+import { useRouter } from 'next/router'
 
 interface Item {
   key: string
@@ -31,8 +32,12 @@ const originData: Item[] = [
 ]
 
 export default function CreateBilling() {
+  const router = useRouter()
   const [data, setData] = useState<Item[]>(originData)
   const titlePage = useTitlePage('create')
+  const [cancel, setCancel] = useState(false);
+  const [newPoSTO, setNewPoSTO] = useState()
+  const tableAddItems = useTableAddItem();
 
   return (
     <Col>
@@ -41,13 +46,10 @@ export default function CreateBilling() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button size="big" variant="tertiary" onClick={() => {}}>
+            <Button size="big" variant="tertiary" onClick={() => { setCancel(true) }}>
               Cancel
             </Button>
-            {/* <Button size="big" variant="secondary" onClick={() => {}}>
-              Save As Draft
-            </Button> */}
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button size="big" variant="primary" onClick={() => { }}>
               Submit
             </Button>
           </Row>
@@ -56,39 +58,104 @@ export default function CreateBilling() {
       <Spacer size={10} />
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect label="Order Type" fetchOptions={fakeApi} onChange={() => {}} />
+          <DebounceSelect type='select' label="Order Type" fetchOptions={fakeApi} onChange={() => { }} />
           <DatePickerInput
             fullWidth
-            onChange={() => {}}
+            onChange={() => { }}
             label="GI Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Customer" fetchOptions={fakeApi} onChange={() => {}} />
+          <DebounceSelect type='select' label="Customer" fetchOptions={fakeApi} onChange={() => { }} />
           <DatePickerInput
             fullWidth
-            onChange={() => {}}
+            onChange={() => { }}
             label="Document Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Sales Organization" fetchOptions={fakeApi} onChange={() => {}} />
+          <DebounceSelect label="Sales Organization" fetchOptions={fakeApi} onChange={() => { }} />
           <DatePickerInput
             fullWidth
-            onChange={() => {}}
+            onChange={() => { }}
             label="Delivery Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Branch" fetchOptions={fakeApi} onChange={() => {}} />
-          <DebounceSelect label="Reference" fetchOptions={fakeApi} onChange={() => {}} />
+          <DebounceSelect label="Branch" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Reference" fetchOptions={fakeApi} onChange={() => { }} />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <TableEditable data={data} setData={setData} columns={columns()} />
+        <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
+          + Add Item
+        </Button>
+        <Spacer size={20} />
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+          />
+        </div>
       </Card>
+      {
+        (newPoSTO || cancel)
+        && <Popup>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Text
+              variant="headingSmall"
+              textAlign="center"
+              style={{ ...(!cancel && { color: 'green' }), fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
+            >
+              {cancel ? 'Confirm Cancellation' : 'Success'}
+            </Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+            {cancel
+              ? 'Are you sure want to cancel? Change you made so far will not saved'
+              : <>
+                Request Number
+                <Typography.Text copyable> {newPoSTO}</Typography.Text>
+                has been
+              </>
+            }
+          </div>
+          {!cancel
+            && <div style={{ display: 'flex', justifyContent: 'center' }}>
+              successfully created
+            </div>
+          }
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+            {cancel
+              && <>
+                <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
+                  setCancel(false)
+                }}>
+                  No
+                </Button>
+                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                  router.push(`${PATH.LOGISTIC}/do-sto`)
+                }}>
+                  Yes
+                </Button>
+              </>
+            }
+            {newPoSTO
+              && <>
+                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                  router.push(`${PATH.LOGISTIC}/do-sto`)
+                }}>
+                  OK
+                </Button>
+              </>
+            }
+          </div>
+        </Popup>
+      }
     </Col>
   )
 }
