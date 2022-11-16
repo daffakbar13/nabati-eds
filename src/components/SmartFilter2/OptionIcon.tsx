@@ -8,7 +8,7 @@ import { FooterPane, List, HeaderList, Pane } from './styledComponent'
 function SelectOptionIcon({ options, onChange, value }) {
   const [showDefineSelectModal, setDefineSelectModal] = useState(false)
 
-  const [curValue, setCurValue] = useState<OptionType>(value ?? options[0])
+  const [curValue, setCurValue] = useState<OptionType>(value || options[0])
   const prevValue = useRef(value)
 
   const onCancel = () => {

@@ -1,13 +1,12 @@
 import {
   ICFilterEqual,
-  ICFilterGreaterEqual,
   ICFilterGreater,
-  ICFilterNotEqual,
-  ICFilterLessEqual,
+  ICFilterGreaterEqual,
   ICFilterLess,
+  ICFilterLessEqual,
+  ICFilterNotEqual,
   ICFilterSelect,
 } from 'src/assets'
-import { CommonSelectValue } from 'src/configs/commonTypes'
 
 export type OptionType = 'EQ' | 'BT' | 'CP' | 'LE' | 'GE' | 'NE' | 'NB' | 'NP' | 'GT' | 'LT'
 // ['EQ', 'BT', 'CP', 'LE', 'GE', 'NE', 'NB', 'NP', 'GT', 'LT']

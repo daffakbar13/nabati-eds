@@ -25,13 +25,15 @@ export default function PageRealTime() {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
+              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ']} >
                 <SelectMasterData type='PLANT' />
               </SmartFilter.Field>
-              <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
+              <SmartFilter.Field field='sloc_id'
+                dataType='S' label='Sloc' options={['EQ', 'NB']} >
                 <SelectMasterData type='SLOC' />
               </SmartFilter.Field>
-              <SmartFilter.Field field='product_id' dataType='S' label='Material' options={['EQ', 'CP']} >
+              <SmartFilter.Field
+                field='product_id' dataType='S' label='Material' options={['EQ', 'CP']} >
                 <SelectMasterData type='MATERIAL' />
               </SmartFilter.Field>
             </SmartFilter>

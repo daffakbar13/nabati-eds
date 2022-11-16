@@ -35,6 +35,7 @@ export default function SelectMasterData({ type, style = {}, ...props }: Props) 
             style={{ ...style }} // !DON'T DELETE THIS. Because there is style injection in SmartFilter by React.clone method. It would cause styling error at SmartFilter
         >
             <Select
+                className='masterDataSelect'
                 labelInValue
                 allowClear
                 showSearch
