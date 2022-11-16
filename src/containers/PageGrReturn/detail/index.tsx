@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react'
 import { Card, GoBackArrow, Tabs } from 'src/components'
 
 import { useRouter } from 'next/router'
-import { getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
+import { getGrReturnDetail } from 'src/api/logistic/good-return'
 import { PATH } from 'src/configs/menus'
 
 import DocumentHeader from './Tabs/DocumentHeader'
-import Lpb from './Tabs/Lpb'
+import Lrb from './Tabs/Lrb'
 
-export default function DetailGR() {
+export default function DetailGrReturn() {
     const [loading, setLoading] = useState(false)
     const [details, setDetails] = useState<{ items: [] }>({ items: [] })
     const router = useRouter()
@@ -20,7 +20,7 @@ export default function DetailGR() {
         const fetchData = async () => {
             try {
                 setLoading(true)
-                const res = await getGoodReceiptDetail(id)
+                const res = await getGrReturnDetail(id)
                 setDetails(res.data)
                 setLoading(false)
             } catch (error) {
@@ -36,8 +36,8 @@ export default function DetailGR() {
     return (
         <Col>
             <div style={{ display: 'flex', gap: 5 }}>
-                <GoBackArrow to={`${PATH.LOGISTIC}/goods-receipt`} />
-                <Text variant={'h4'}>View GR From Principal {`${router.query.id}`}</Text>
+                <GoBackArrow to={`${PATH.LOGISTIC}/gr-return`} />
+                <Text variant={'h4'}>View GR Return From Principal {`${router.query.id}`}</Text>
                 <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
                     <Button
                         size="big"
@@ -59,8 +59,8 @@ export default function DetailGR() {
                     },
                     {
                         key: '2',
-                        tab: 'LPB',
-                        children: <Lpb details={details} />,
+                        tab: 'LRB',
+                        children: <Lrb details={details} />,
                     },
                 ]
                 } />

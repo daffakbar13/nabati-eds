@@ -2,6 +2,7 @@ import { useRouter } from 'next/router'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
+import { PATH } from 'src/configs/menus'
 
 import { getListGrReturn } from 'src/api/logistic/good-return'
 import { useSimpleTable } from 'src/hooks'
@@ -11,9 +12,11 @@ export default function PageGrReturn() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
+  const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/gr-return/detail/${id}`)
+
   const tableProps = useSimpleTable({
     funcApi: getListGrReturn,
-    columns,
+    columns: columns(goToDetailPage),
     filters,
   })
 
@@ -38,7 +41,7 @@ export default function PageGrReturn() {
               <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
                 <SelectMasterData type='SLOC' />
               </SmartFilter.Field>
-              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Posting Date' options={['GT', 'LT', 'EQ', 'CP']} >
+              <SmartFilter.Field field='date_aja' dataType='S' label='Posting Date' options={['GT', 'LT', 'EQ', 'CP']} >
                 <DatePickerInput
                   label={''}
                   fullWidth
