@@ -40,10 +40,10 @@ export const createGoodReceipt = async (
 export const getGoodReceiptDetail = async (
   id: string,
   params: CommonListParams = {},
-): Promise<CommonListResponse<StockRealTime>> => {
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/${id}/detail_return`,
+    method: METHODS.GET,
+    subUrl: `${url}/${id}/detail`,
     overrideBaseUrl,
     data: params,
   })

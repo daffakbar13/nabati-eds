@@ -21,3 +21,5 @@ export default function DataList(props: DataListProps) {
     </Row>
   )
 }
+
+DataList.createDataList = (label: string, value: string) => ({ label, value })

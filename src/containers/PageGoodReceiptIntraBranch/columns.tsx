@@ -7,16 +7,22 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import moment from 'moment'
 import DateFormat from 'src/components/DateFormat'
-import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+function Linked({ link, linkType, type }: { link: string; linkType: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    status === 'Draft'
-      ? router.push(`${PATH.LOGISTIC}/good-issue/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}?status=${status}`)
+    if (linkType == 'id') {
+      router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel/detail/${link}`)
+    } else if (linkType == 'PO') {
+      router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
+    } else if (linkType == 'DO') {
+      router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
+    } else if (linkType == 'GI') {
+      router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}`)
+    }
   }
   const [hover, setHover] = React.useState(false)
 
@@ -50,25 +56,25 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 export const columns = [
   CreateColumns(
     'PO Number',
-    'id',
+    'po_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='PO' />,
     180,
     'left',
   ),
   CreateColumns(
     'DO Number',
-    'id',
+    'delivery_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='DO' />,
     180,
     'left',
   ),
   CreateColumns(
     'GI Number',
-    'id',
+    'gi_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='GI' />,
     180,
     'left',
   ),
@@ -76,14 +82,14 @@ export const columns = [
     'GR Number',
     'id',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='id' />,
     180,
     'left',
   ),
   CreateColumns(
     'Posting Date',
-    'created_at',
-    true,
+    'posting_date',
+    false,
     (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
     180,
     'left',
@@ -91,37 +97,38 @@ export const columns = [
   CreateColumns(
     'Company',
     'company_id',
-    true,
+    false,
+    (company_id, rec) => <>{`${company_id} - ${rec.company_name}`}</>,
   ),
   CreateColumns(
     'Supplying Branch',
     'suppl_branch_id',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.suppl_branch_name}`}</>,
+    false,
+    (suppl_branch_id, rec) => <>{`${suppl_branch_id} - ${rec.suppl_branch_name}`}</>,
     250,
   ),
   CreateColumns(
     'Receiving Branch',
     'receive_plant_id',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.receive_plant_name}`}</>,
+    false,
+    (receive_plant_id, rec) => <>{`${receive_plant_id} - ${rec.receive_plant_name}`}</>,
     250,
   ),
   CreateColumns(
     'Mov. Type',
-    'company_id',
-    true,
+    'movement_type_id',
+    false,
   ),
   CreateColumns(
     'Status',
     'status',
     false,
-    (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
+    (status) => <TaggedStatus status={status} />,
   ),
   CreateColumns(
     'Action',
     'id',
     false,
-    (link, record) => <Linked link={link} type="action" status={record.status_name} />,
+    (link, record) => <Linked link={link} type="action" linkType='id' />,
   ),
 ]

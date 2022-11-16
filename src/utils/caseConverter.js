@@ -1,5 +1,7 @@
-import camelCase from 'lodash.camelcase'
-import snakeCase from 'lodash.snakecase'
+/* eslint-disable import/no-unresolved */
+import _ from 'lodash'
+
+const { camelCase, snakeCase } = _
 
 /**
  * deeply converts keys of an object from one case to another
@@ -34,3 +36,8 @@ const convertCase = (oldObject, converterFunction) => {
 
 export const toCamelCase = (obj) => convertCase(obj, camelCase)
 export const toSnakeCase = (obj) => convertCase(obj, snakeCase)
+
+export function toTitleCase(str) {
+  if (!str) return ''
+  return str.toLowerCase().replace(/(^|\s)\S/g, (L) => L.toUpperCase())
+}

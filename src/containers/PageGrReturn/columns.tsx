@@ -1,15 +1,15 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import React from 'react'
 import moment from 'moment'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import React from 'react'
+import CreateColumns from 'src/utils/createColumns'
+import Link from 'src/components/Link'
 
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 
-import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
@@ -47,12 +47,20 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
     </>
   )
 }
-export const columns = [
+export const columns = (goToDetail) => [
+  CreateColumns(
+    'Doc. Number',
+    'doc_number',
+    true,
+    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
+    180,
+    'left',
+  ),
   CreateColumns(
     'GR Number',
     'gr_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (text: string, rec: any) => <Link onClick={() => goToDetail(rec.doc_number)}>{text}</Link>,
     180,
     'left',
   ),

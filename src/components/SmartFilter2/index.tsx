@@ -91,7 +91,5 @@ function SmartFilter({ onOk, children }) {
   )
 }
 
-const Single = (props: any) => <Field {...props} />
-
-SmartFilter.Field = Single
+SmartFilter.Field = Field
 export default SmartFilter

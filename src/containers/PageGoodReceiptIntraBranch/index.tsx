@@ -8,7 +8,7 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { getQuotation } from 'src/api/quotation'
+import { getGoodReceiptList } from 'src/api/logistic/good-receipt-intra-branch'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { Props } from './types'
@@ -32,11 +32,10 @@ export default function PageGoodsIssue(props: Props) {
     FILTER.ORDER_DATE,
   ])
   const table = useTable({
-    funcApi: getQuotation,
+    funcApi: getGoodReceiptList,
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns,
   })
-  const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.total > 0
   const router = useRouter()
@@ -84,7 +83,7 @@ export default function PageGoodsIssue(props: Props) {
 
   return (
     <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
+      <Text variant={'h4'}>Good Receipt Intra Branch</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

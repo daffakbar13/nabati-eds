@@ -25,12 +25,25 @@ export const getListGrReturn = async (
   return response.data
 }
 
+// export const getGrReturnDetail = async (
+//   id: string,
+//   params: CommonListParams = {},
+// ): Promise<CommonListResponse<StockRealTime>> => {
+//   const response = await call({
+//     method: METHODS.POST,
+//     subUrl: `${url}/${id}/detail_return`,
+//     overrideBaseUrl,
+//     data: params,
+//   })
+//   return response.data
+// }
+
 export const getGrReturnDetail = async (
   id: string,
   params: CommonListParams = {},
-): Promise<CommonListResponse<StockRealTime>> => {
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
-    method: METHODS.POST,
+    method: METHODS.GET,
     subUrl: `${url}/${id}/detail_return`,
     overrideBaseUrl,
     data: params,

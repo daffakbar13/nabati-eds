@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState, forwardRef } from 'react'
 import { debounce } from 'lodash'
 import { Select } from 'antd'
 import { Spin } from 'pink-lava-ui'
+
 import { DebounceSelectProps } from './types'
 
 function DebounceSelect<
@@ -44,6 +45,7 @@ function DebounceSelect<
 
     return (
         <Select
+            allowClear
             showSearch
             labelInValue
             filterOption={false}

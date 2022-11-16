@@ -28,6 +28,16 @@ const subUrl = {
 }
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
+export const getCompanies = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: '/v1/master/get-company',
+  })
+
+  return response.data
+}
+
 export const getCustomerByCompany = async (): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,

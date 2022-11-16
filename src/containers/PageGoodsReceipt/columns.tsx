@@ -1,58 +1,15 @@
-/* eslint-disable radix */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-expressions */
-import React from 'react'
 import moment from 'moment'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
-
-import { useRouter } from 'next/router'
+import CreateColumns from 'src/utils/createColumns'
 import { Button } from 'pink-lava-ui'
-import { PATH } from 'src/configs/menus'
-
-import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
+import Link from 'src/components/Link'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
-  const router = useRouter()
-  const navigate = () => {
-    status === 'Draft'
-      ? router.push(`${PATH.LOGISTIC}/goods-receipt/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${link}?status=${status}`)
-  }
-  const [hover, setHover] = React.useState(false)
-
-  return (
-    <>
-      {type === 'id' ? (
-        <div
-          onClick={navigate}
-          onMouseEnter={() => {
-            setHover(true)
-          }}
-          onMouseLeave={() => {
-            setHover(false)
-          }}
-          style={{
-            cursor: 'pointer',
-            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
-          }}
-        >
-          {link}
-        </div>
-      ) : (
-        <Button size="big" variant="tertiary" onClick={navigate}>
-          View Detail
-        </Button>
-      )}
-    </>
-  )
-}
-export const columns = [
+export const columns = (goToDetail: (id: string) => {}) => [
   CreateColumns(
     'GR Number',
     'gr_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
     180,
     'left',
   ),
@@ -60,17 +17,11 @@ export const columns = [
     'PO Number',
     'po_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
-    'left',
   ),
   CreateColumns(
     'GI Number',
     'gi_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
-    'left',
   ),
   CreateColumns(
     'Posting Date',
@@ -121,8 +72,10 @@ export const columns = [
   ),
   CreateColumns(
     'Action',
-    'id',
+    'gr_number',
     false,
-    (link, record) => <Linked link={link} type="action" status={record.status_id} />,
+    (text) => <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
+      View Detail
+    </Button>,
   ),
 ]
