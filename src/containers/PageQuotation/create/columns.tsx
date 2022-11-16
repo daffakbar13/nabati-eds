@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { getDetailQuotation } from 'src/api/quotation';
 import { Popup } from 'src/components';
 import { Text, Button } from 'pink-lava-ui';
+import { PATH } from 'src/configs/menus';
 
 export const useTableAddItem = () => {
   const initialValue = {
@@ -55,6 +56,13 @@ export const useTableAddItem = () => {
     minHeight: 46,
     display: 'flex',
     alignItems: 'center',
+  }
+
+  const styleDisabledInput: React.CSSProperties = {
+    ...styleInputNumber,
+    flexDirection: 'row-reverse',
+    backgroundColor: '#F4F4F4F4',
+    padding: 10,
   }
 
   const columns = [
@@ -154,22 +162,14 @@ export const useTableAddItem = () => {
       'Based Price',
       'price',
       false,
-      (price) => <InputNumber
-        disabled
-        value={price?.toLocaleString()}
-        style={styleInputNumber}
-      />,
+      (price) => <div style={styleDisabledInput}>{price?.toLocaleString()}</div>,
       130,
     ),
     CreateColumns(
       'Sub Total',
       'sub_total',
       false,
-      (sub_total) => <InputNumber
-        disabled
-        value={sub_total?.toLocaleString()}
-        style={styleInputNumber}
-      />,
+      (sub_total) => <div style={styleDisabledInput}>{sub_total?.toLocaleString()}</div>,
       130,
     ),
     CreateColumns(
@@ -183,9 +183,11 @@ export const useTableAddItem = () => {
       //     handleChangeData('remarks', e.target.value, index)
       //   }}
       // />,
-      (_, __, index) => <Input.TextArea
+      (remarks, _, index) => <Input.TextArea
         style={styleInputNumber}
         rows={2}
+        autoSize={{ minRows: 2 }}
+        value={remarks}
         onChange={(e) => {
           handleChangeData('remarks', e.target.value, index)
         }}
@@ -197,11 +199,14 @@ export const useTableAddItem = () => {
     if (fetching !== '') {
       data.forEach(({ product_id, uom_id, order_qty }, index) => {
         if (product_id !== '') {
+          const lastIndex = (data.length - 1) === index
         fieldUom(product_id)
           .then((arr) => {
-            const newOptionsUom = [...optionsUom]
+            const newOptionsUom = optionsUom
             newOptionsUom[index] = arr
             let newUom
+            console.log('index prod', index);
+
             switch (fetching) {
               case 'product':
                 newUom = arr[0].value
@@ -222,24 +227,29 @@ export const useTableAddItem = () => {
                   handleChangeData('sub_total', price, index)
                   handleChangeData('order_qty', 1, index)
                 }
+                lastIndex && setFetching('')
               })
           })
         }
       })
-      setFetching('')
     }
   }, [fetching])
 
   React.useEffect(() => {
     if (router.query.id) {
       getDetailQuotation({ id: router.query.id as string })
-        .then((response) => setData(
+        .then((response) => {
+          setData(
           response.data.items.map((items) => ({
             ...items,
             sub_total: parseInt(items.order_qty) * parseInt(items.price),
             product_id: items.product_id,
           })) as any,
-        ))
+          )
+          setFetching('uom')
+        })
+        // .then(() => setFetching('uom'))
+        .catch(() => router.push(`${PATH.SALES}/quotation`))
     }
   }, [router])
 

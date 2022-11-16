@@ -61,7 +61,6 @@ export const useColumnQuotation = [
     false,
     undefined,
     120,
-    // true,
   ),
   CreateColumns(
     'Order Date',
@@ -105,7 +104,7 @@ export const useColumnQuotation = [
     'salesman_id',
     false,
     undefined,
-    150,
+    105,
 
   ),
   CreateColumns(
@@ -113,7 +112,7 @@ export const useColumnQuotation = [
     'total_amount',
     false,
     (total_amount) => parseInt(total_amount).toLocaleString(),
-    150,
+    140,
 
   ),
   CreateColumns(

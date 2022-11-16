@@ -5,13 +5,15 @@ import { Card, FloatAction, Popup } from 'src/components'
 import { colors } from 'src/configs/colors'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
+import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { cancelSalesOrder, downloadTemplateSalesOrder, getSalesOrder } from 'src/api/sales-order'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { fieldReason } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { PATH } from 'src/configs/menus'
+import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
+import Loader from 'src/components/Loader'
 import { PageSalesOrderProps } from './types'
 import { TableSalesOrder } from './columns'
 
@@ -40,6 +42,9 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
+  const [submittedQuotation, setSubmittedQuotation] = React.useState([])
+  const [processing, setProcessing] = React.useState('')
+  const onProcess = processing !== ''
   const hasData = table.total > 0
   const router = useRouter()
   const oneSelected = table.selected.length === 1
@@ -54,33 +59,267 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
     ),
   }
 
-  const content = (
-    <>
-      {TableSalesOrder.map(({ title }, index) => (
-        <div key={index}>
-          <Checkbox
-            defaultChecked={!table.hiddenColumns.includes(title)}
-            onChange={(event) => {
-              table.handleHideShowColumns(event.target, title)
-            }}
-          />{' '}
-          {title}
-        </div>
-      ))}
-      <Divider />
-      <h4
-        onClick={table.handleResetHideShowColumns}
-        style={{ textAlign: 'center', cursor: 'pointer' }}
-      >
-        Reset
-      </h4>
-    </>
+  const moreContent = () => (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 15,
+        fontWeight: 'bold',
+        // padding: 5,
+      }}
+    >
+      <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
+        <ICDownloadTemplate /> Download Template
+      </div>
+      <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
+        <ICUploadTemplate /> Upload Template
+      </div>
+      <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
+        <ICSyncData /> Sync Data
+      </div>
+    </div>
   )
 
-  const HideShowColumns = () => (
+  const HideShowColumns = () => {
+    const content = (
+      <>
+        {TableSalesOrder.map(({ title }, index) => (
+          <div key={index}>
+            <Checkbox
+              defaultChecked={!table.hiddenColumns.includes(title)}
+              onChange={(event) => {
+                table.handleHideShowColumns(event.target, title)
+              }}
+            />{' '}
+            {title}
+          </div>
+        ))}
+        <Divider />
+        <h4
+          onClick={table.handleResetHideShowColumns}
+          style={{ textAlign: 'center', cursor: 'pointer' }}
+        >
+          Reset
+        </h4>
+      </>
+    )
+    return (
     <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
       <MoreOutlined />
     </Popover>
+  )
+  }
+
+  const ConfirmSubmit = () => (
+    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Submit
+      </Typography.Title>
+      <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
+        Are you sure to submit sales order
+        <Typography.Text
+          copyable={{
+            text: oneSelected
+              ? selectedSalesOrder.text
+              : table.selected.join(', '),
+          }}>
+          {oneSelected
+            ? ` ${selectedSalesOrder.text} ?`
+            : <Popover content={selectedSalesOrder.content}>
+              {` ${selectedSalesOrder.text} ?`}
+            </Popover>
+          }
+        </Typography.Text>
+      </Typography.Title>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => { setShowConfirm('') }}>
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            // setProcessing('Wait for submitting Quotation')
+            // multipleSubmitQuotation({
+            //   order_list: table.selected
+            //     .map((id) => ({ id })),
+            // })
+            //   .then((response) => response.data)
+            //   .then((data) => {
+            //     setShowConfirm('success-submit')
+            //     setSubmittedQuotation(data.results.map(({ id }) => id))
+            //     setProcessing('')
+            //   })
+            //   .catch(() => setProcessing(''))
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmSuccessSubmit = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <><CheckCircleFilled /> Submit Success</>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}>
+        <div>
+          New Delivery Order
+          <Typography.Text
+            copyable={{
+              text: oneSelected
+                ? submittedQuotation[0]
+                : submittedQuotation.join(', '),
+            }}
+          >
+            {oneSelected
+              ? ` ${submittedQuotation[0]}`
+              : <Popover content={submittedQuotation.join(', ')}>
+                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
+              </Popover>
+            }
+          </Typography.Text>
+          has been
+        </div>
+        <div>
+          successfully submitted
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}>
+          Back To List
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => { router.push(`${PATH.SALES}/delivery-order`) }}
+        >
+          Next Process
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmCancel = () => (
+    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Cancellation
+      </Typography.Title>
+      <DebounceSelect
+        type='select'
+        value={optionsReason.find(({ value }) => reason === value)?.label}
+        label={'Reason Cancel Process Sales Order'}
+        required
+        options={optionsReason}
+        onChange={({ value }) => setReason(value)}
+      />
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => { setShowConfirm('') }}>
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            setProcessing('Wait for cancelling Sales Order')
+            cancelSalesOrder({
+              order_list:
+                table.selected.map((id) => ({ id })),
+              cancel_reason_id: reason,
+            })
+              .then(() => {
+                setShowConfirm('success-cancel')
+                setProcessing('')
+              })
+              .catch((err) => console.log(err))
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmSuccessCancel = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <><CheckCircleFilled /> Cancel Success</>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}>
+        <div>
+          Sales Order
+          <Typography.Text
+            copyable={{
+              text: oneSelected
+                ? selectedSalesOrder.text
+                : table.selected.join(', '),
+            }}>
+            {oneSelected
+              ? ` ${selectedSalesOrder.text}`
+              : <Popover content={selectedSalesOrder.content}>
+                {` ${selectedSalesOrder.text}`}
+              </Popover>
+            }
+          </Typography.Text>
+          {' '}
+          has been
+        </div>
+        <div>
+          successfully canceled
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}>
+          OK
+        </Button>
+      </div>
+    </Popup>
   )
 
   React.useEffect(() => {
@@ -94,7 +333,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
 
   return (
     <Col>
-
+      {onProcess && <Loader type='process' text={processing} />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -112,9 +351,8 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
                 } else {
                   table.handleFilter([{
                     field: 'eds_order.id',
-                    option: 'EQ',
-                    from_value: e.target.value,
-                    to_value: e.target.value,
+                    option: 'CP',
+                    from_value: `%${e.target.value}%`,
                   }])
                 }
               }}
@@ -122,11 +360,16 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
             <SmartFilter onOk={setFilters} filters={filters} />
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => {
-              downloadTemplateSalesOrder()
-            }}>
-              Download
-            </Button>
+            <Popover placement="bottom" content={moreContent} trigger="click">
+              <Button
+                size="big"
+                variant="secondary"
+                // onClick={downloadTemplateQuotation}
+                style={{ gap: 5 }}
+              >
+                More <DownOutlined />
+              </Button>
+            </Popover>
             <Button
               size="big"
               variant="primary"
@@ -147,10 +390,9 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
             showSorterTooltip={false}
             rowSelection={table.rowSelection}
             rowKey={'id'}
-            pagination={false}
-            onChange={(_, __, sorter) => console.log(sorter)}
           />
-          {hasData && (
+        </div>
+        {hasData && (
             <Pagination
               defaultPageSize={20}
               pageSizeOptions={[20, 50, 100]}
@@ -161,8 +403,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
               total={table.data.length}
               showTotal={showTotal}
             />
-          )}
-        </div>
+        )}
       </Card>
       {table.selected.length > 0 && (
         <FloatAction>
@@ -193,107 +434,10 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           </div>
         </FloatAction>
       )}
-      {showConfirm === 'submit' && (
-        <Popup onOutsideClick={() => { setShowConfirm('') }}>
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Confirm Submit
-          </Typography.Title>
-          <Typography.Title level={5} style={{ margin: 0 }}>
-            Are you sure to submit quotation
-            {oneSelected
-              ? ` ${selectedSalesOrder.text} ?`
-              : <Popover content={selectedSalesOrder.content}>
-                {` ${selectedSalesOrder.text} ?`}
-              </Popover>
-            }
-          </Typography.Title>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="secondary"
-              onClick={() => { setShowConfirm('') }}>
-              No
-            </Button>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="primary"
-              onClick={() => { router.reload() }}
-            >
-              Yes
-            </Button>
-          </div>
-        </Popup>
-      )}
-      {showConfirm === 'success-submit' && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              textAlign="center"
-              style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-            >
-              <><CheckCircleFilled /> Success</>
-            </Text>
-          </div>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="secondary"
-              onClick={() => { setShowConfirm('') }}>
-              Back To List
-            </Button>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="primary"
-              onClick={() => { router.push(`${PATH.SALES}/delivery-order`) }}
-            >
-              Next Process
-            </Button>
-          </div>
-        </Popup>
-      )}
-      {showConfirm === 'cancel' && (
-        <Popup>
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Confirm Cancellation
-          </Typography.Title>
-          <DebounceSelect
-            type='select'
-            value={optionsReason.find(({ value }) => reason === value)?.label}
-            label={'Reason Cancel Process Sales Order'}
-            required
-            options={optionsReason}
-            onChange={({ value }) => setReason(value)}
-          />
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="secondary"
-              onClick={() => { setShowConfirm('') }}>
-              No
-            </Button>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="primary"
-              onClick={() => {
-                cancelSalesOrder({
-                  order_list:
-                    table.selected.map((id) => ({ id })),
-                  cancel_reason_id: reason,
-                })
-                  .then(() => router.reload())
-              }}
-            >
-              Yes
-            </Button>
-          </div>
-        </Popup>
-      )}
+      {showConfirm === 'submit' && <ConfirmSubmit />}
+      {showConfirm === 'success-submit' && <ConfirmSuccessSubmit />}
+      {showConfirm === 'cancel' && <ConfirmCancel />}
+      {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
     </Col>
   )
 }

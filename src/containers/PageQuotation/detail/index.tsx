@@ -3,7 +3,7 @@ import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
 import { Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { ArrowLeftOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
 import { cancelBatchOrder, getDetailQuotation } from 'src/api/quotation'
@@ -24,9 +24,97 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
+  const [proccessing, setProccessing] = React.useState('')
+  const onProcess = proccessing !== ''
   const router = useRouter()
   const data = useDetail(getDetailQuotation, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
+
+  const ConfirmCancel = () => (
+    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Cancellation
+      </Typography.Title>
+      <DebounceSelect
+        type='select'
+        value={optionsReason.find(({ value }) => reason === value)?.label}
+        label={'Reason Cancel Process Quotation'}
+        required
+        options={optionsReason}
+        onChange={({ value }) => setReason(value)}
+      />
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => { setShowConfirm('') }}>
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            setProccessing('Wait for cancelling Quotation')
+            cancelBatchOrder({
+              order_list: [{ id: router.query.id }],
+              cancel_reason_id: reason,
+            })
+              .then(() => {
+                setShowConfirm('success-cancel')
+                setProccessing('')
+              })
+              .catch((err) => console.log(err))
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmSuccessCancel = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <><CheckCircleFilled /> Cancel Success</>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}>
+        <div>
+          Quoatation
+          <Typography.Text
+            copyable={{ text: router.query.id as string }}>
+            {` ${router.query.id} `}
+          </Typography.Text>
+          has been
+        </div>
+        <div>
+          successfully canceled
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => { router.push(`${PATH.SALES}/quotation`) }}>
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
 
   React.useEffect(() => {
     fieldReason()
@@ -40,6 +128,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   return (
     <Col>
       {!hasData && <Loader type='process' text='Wait for get data' />}
+      {onProcess && <Loader type='process' text={proccessing} />}
       <div style={{ display: 'flex', gap: 5 }}>
         <div
           style={{
@@ -101,44 +190,8 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
         {currentTab === '3' && hasData && <CustomerInfo data={data} />}
         {currentTab === '4' && hasData && <SalesmanInfo data={data} />}
       </Card>
-      {showConfirm === 'cancel' && (
-        <Popup>
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Confirm Cancellation
-          </Typography.Title>
-          <DebounceSelect
-            type='select'
-            value={optionsReason.find(({ value }) => reason === value)?.label}
-            label={'Reason Cancel Process Quotation'}
-            required
-            options={optionsReason}
-            onChange={({ value }) => setReason(value)}
-          />
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="secondary"
-              onClick={() => { setShowConfirm('') }}>
-              No
-            </Button>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="primary"
-              onClick={() => {
-                cancelBatchOrder({
-                  order_list: [{ id: router.query.id }],
-                  cancel_reason_id: reason,
-                })
-                  .then(() => router.push(`${PATH.SALES}/quotation`))
-              }}
-            >
-              Yes
-            </Button>
-          </div>
-        </Popup>
-      )}
+      {showConfirm === 'cancel' && <ConfirmCancel />}
+      {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
     </Col>
   )
 }

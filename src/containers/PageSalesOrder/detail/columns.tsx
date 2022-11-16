@@ -11,6 +11,7 @@ export const TableSalesOrder = [
     false,
     (_, __, index) => ++index,
     60,
+    true,
   ),
   CreateColumns(
     'Item',
@@ -24,14 +25,14 @@ export const TableSalesOrder = [
     'item_category_id',
     false,
     undefined,
-    150,
+    137,
   ),
   CreateColumns(
     'Uom',
     'uom_id',
     false,
     undefined,
-    100,
+    70,
   ),
   CreateColumns(
     'Quantity',
@@ -53,32 +54,28 @@ export const TableSalesOrder = [
     'gross_value',
     false,
     (gross_value) => parseInt(gross_value).toLocaleString(),
-    120,
+    80,
   ),
   CreateColumns(
     'Discount',
     'discount_value',
     false,
     (discount_value) => parseInt(discount_value).toLocaleString(),
-    120,
-  ),
-  CreateColumns(
-    'Sub Total',
-    'sub_total',
-    false,
-    (sub_total) => parseInt(sub_total).toLocaleString(),
-    120,
-  ),
-  CreateColumns(
-    'Sub Total',
-    'sub_total',
-    false,
-    (_, record) => (record.price * record.order_qty).toLocaleString(),
     100,
+  ),
+  CreateColumns(
+    'Sub Total',
+    'sub_total',
+    false,
+    (sub_total, { price, order_qty }) => (parseInt(price) * parseInt(order_qty)).toLocaleString(),
+    110,
   ),
   CreateColumns(
     'Remarks',
     'remarks',
+    false,
+    undefined,
+    120,
   ),
 ]
 
@@ -104,79 +101,128 @@ export const TablePricingCondition = [
     false,
     (_, __, index) => ++index,
     60,
+    true,
   ),
   CreateColumns(
     'Item ID',
-    'order_id',
+    'product_id',
+    false,
+    undefined,
+    85,
   ),
   CreateColumns(
     'Item Category',
     'item_category_id',
+    false,
+    undefined,
+    140,
   ),
   // FIXME Promotion Type
   CreateColumns(
     'Promotion Type',
     'Doc. Number',
+    false,
+    undefined,
+    150,
   ),
   CreateColumns(
     'Name',
-    'product_id',
+    'description',
+    false,
+    undefined,
+    250,
   ),
   CreateColumns(
     'Uom',
     'uom_id',
+    false,
+    undefined,
+    80,
   ),
   CreateColumns(
     'Quantity',
     'order_qty',
+    false,
+    undefined,
+    100,
   ),
   CreateColumns(
     'Based Price',
     'price',
+    false,
+    (price) => parseInt(price).toLocaleString(),
+    120,
   ),
   CreateColumns(
     'Gross',
     'gross_value',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Disc 1
   CreateColumns(
     'Disc 1',
-    'discount_value',
+    'discount_base_calc1',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Net 1
   CreateColumns(
     'Net 1',
-    'Doc',
+    'net1',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Disc 2
   CreateColumns(
     'Disc 2',
-    'Doc',
+    'discount_base_calc2',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Net 2
   CreateColumns(
     'Net 2',
-    'Doc',
+    'net2',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Disc 3
   CreateColumns(
     'Disc 3',
-    'Doc',
+    'discount_base_calc3',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Net 3
   CreateColumns(
     'Net 3',
-    'Doc',
+    'net3',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Disc 4
   CreateColumns(
     'Disc 4',
-    'Doc',
+    'discount_base_calc4',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
   // FIXME Net 4
   CreateColumns(
     'Net 4',
-    'Doc',
+    'net4',
+    false,
+    (gross_value) => parseInt(gross_value).toLocaleString(),
+    85,
   ),
 ]
 

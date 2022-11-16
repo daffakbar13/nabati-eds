@@ -9,8 +9,10 @@ import { fieldItem, fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons';
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router';
-import { getDetailQuotation } from 'src/api/quotation';
 import { getDetailSalesOrder } from 'src/api/sales-order';
+import { PATH } from 'src/configs/menus';
+import { Popup } from 'src/components';
+import { Text, Button } from 'pink-lava-ui';
 
 export const useTableAddItem = () => {
   const initialValue = {
@@ -24,6 +26,8 @@ export const useTableAddItem = () => {
   const [data, setData] = React.useState([initialValue])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState('')
+  const [showConfirm, setShowConfirm] = React.useState('')
+  const isLoading = fetching !== ''
   const router = useRouter()
   const total_amount = data
     .map(({ sub_total }) => sub_total)
@@ -38,7 +42,7 @@ export const useTableAddItem = () => {
   }
 
   function handleDeleteRows(index: number) {
-    setData(data.filter((_, i) => i !== index))
+    data.length > 1 && setData(data.filter((_, i) => i !== index))
   }
 
   function handleAddItem() {
@@ -49,8 +53,16 @@ export const useTableAddItem = () => {
     border: '1px solid #AAAAAA',
     borderRadius: 8,
     height: 46,
+    minHeight: 46,
     display: 'flex',
     alignItems: 'center',
+  }
+
+  const styleDisabledInput: React.CSSProperties = {
+    ...styleInputNumber,
+    flexDirection: 'row-reverse',
+    backgroundColor: '#F4F4F4F4',
+    padding: 10,
   }
 
   const columns = [
@@ -58,13 +70,45 @@ export const useTableAddItem = () => {
       '',
       'action',
       false,
-      (_, __, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
+      (_, { product_id }, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
         <MinusCircleFilled
           style={{ color: 'red', margin: 'auto' }}
-          onClick={() => { handleDeleteRows(index) }}
+          onClick={() => {
+            isNullProductId(index)
+              ? handleDeleteRows(index)
+              : setShowConfirm(product_id)
+          }}
         />
+        {showConfirm === product_id && !isNullProductId(index)
+          && <Popup>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Text
+                textAlign="center"
+                style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+              >
+                Confirm Delete
+              </Text>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 4, fontWeight: 'bold' }}>
+              Are you sure want to delete item {showConfirm} ?
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 10 }}>
+              <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
+                setShowConfirm('')
+              }}>
+                No
+              </Button>
+              <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                handleDeleteRows(index)
+              }}>
+                Yes
+              </Button>
+            </div>
+          </Popup>
+        }
       </div>,
       55,
+      true,
     ),
     CreateColumns(
       'Item',
@@ -118,27 +162,19 @@ export const useTableAddItem = () => {
       'Based Price',
       'price',
       false,
-      (price) => <InputNumber
-        disabled
-        value={price?.toLocaleString()}
-        style={styleInputNumber}
-      />,
+      (price) => <div style={styleDisabledInput}>{price?.toLocaleString()}</div>,
       130,
     ),
     CreateColumns(
       'Sub Total',
       'sub_total',
       false,
-      (sub_total) => <InputNumber
-        disabled
-        value={sub_total?.toLocaleString()}
-        style={styleInputNumber}
-      />,
+      (sub_total) => <div style={styleDisabledInput}>{sub_total?.toLocaleString()}</div>,
       130,
     ),
     CreateColumns(
       'Remarks',
-      '',
+      'remarks',
       false,
       // (_, __, index) => <DebounceSelect
       //   type='input'
@@ -147,7 +183,15 @@ export const useTableAddItem = () => {
       //     handleChangeData('remarks', e.target.value, index)
       //   }}
       // />,
-      (_, __, index) => <Input.TextArea style={styleInputNumber} rows={2} />,
+      (remarks, _, index) => <Input.TextArea
+        style={styleInputNumber}
+        rows={2}
+        autoSize={{ minRows: 2 }}
+        value={remarks}
+        onChange={(e) => {
+          handleChangeData('remarks', e.target.value, index)
+        }}
+      />,
     ),
   ]
 
@@ -155,11 +199,14 @@ export const useTableAddItem = () => {
     if (fetching !== '') {
       data.forEach(({ product_id, uom_id, order_qty }, index) => {
         if (product_id !== '') {
+          const lastIndex = (data.length - 1) === index
           fieldUom(product_id)
             .then((arr) => {
-              const newOptionsUom = [...optionsUom]
+              const newOptionsUom = optionsUom
               newOptionsUom[index] = arr
               let newUom
+              console.log('index prod', index);
+
               switch (fetching) {
                 case 'product':
                   newUom = arr[0].value
@@ -180,24 +227,29 @@ export const useTableAddItem = () => {
                     handleChangeData('sub_total', price, index)
                     handleChangeData('order_qty', 1, index)
                   }
-                })
+                lastIndex && setFetching('')
+              })
             })
         }
       })
-      setFetching('')
     }
   }, [fetching])
 
   React.useEffect(() => {
     if (router.query.id) {
       getDetailSalesOrder({ id: router.query.id as string })
-        .then((response) => setData(
+        .then((response) => {
+          setData(
           response.data.items.map((items) => ({
             ...items,
             sub_total: parseInt(items.order_qty) * parseInt(items.price),
             product_id: items.product_id,
           })) as any,
-        ))
+          )
+          setFetching('uom')
+        })
+        // .then(() => setFetching('uom'))
+        .catch(() => router.push(`${PATH.SALES}/quotation`))
     }
   }, [router])
 
@@ -206,5 +258,6 @@ export const useTableAddItem = () => {
     handleAddItem,
     columns,
     total_amount,
+    isLoading,
   }
 }

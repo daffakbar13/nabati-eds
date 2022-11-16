@@ -15,7 +15,6 @@ const CreateDataList = (label: string, value: string) => ({ label, value })
 
 export default function CustomerInfo(props: CustomerInfoProps) {
   const { data } = props
-  // const table = useTable({ api: '', columns: ColumnsCustomerInfo })
   const { customer_sales, salesman } = data
 
   const customerInformation = [
