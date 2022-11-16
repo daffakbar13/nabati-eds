@@ -9,5 +9,6 @@ export { default as DebounceSelect } from './DebounceSelect2'
 export { default as DownloadButton } from './DownloadButton'
 export { default as SelectMasterData } from './SelectMasterData'
 export { default as Select } from './Select'
+export { default as GoBackArrow } from './GoBackArrow'
 
 export { Card } from './Card'
