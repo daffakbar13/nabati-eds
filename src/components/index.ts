@@ -11,5 +11,6 @@ export { default as SelectMasterData } from './SelectMasterData'
 export { default as Select } from './Select'
 export { default as GoBackArrow } from './GoBackArrow'
 export { default as Tabs } from './Tabs'
+export { default as DataList } from './DataList'
 
 export { Card } from './Card'

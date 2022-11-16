@@ -1,7 +1,7 @@
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 
-export default function GoBackButton() {
+export default function GoBackButton({ to = '' }) {
     const router = useRouter()
     return (
         <div
@@ -12,7 +12,8 @@ export default function GoBackButton() {
                 cursor: 'pointer',
             }}
             onClick={() => {
-                router.back()
+                if (to) return router.push(to)
+                return router.back()
             }}
         >
             <ArrowLeftOutlined style={{ fontSize: 25 }} />
