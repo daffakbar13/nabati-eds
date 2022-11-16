@@ -12,7 +12,8 @@ export default function SelectStyled(props: any) {
                 borderRadius: 8,
                 width: '100%',
                 minHeight: 48,
-                ...props.style,
+                // eslint-disable-next-line max-len
+                ...props.style, // !DON'T DELETE THIS. Because there is style injection in SmartFilter by React.clone method. It would cause styling error at SmartFilter
             }} />
     )
 }

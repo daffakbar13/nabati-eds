@@ -29,7 +29,11 @@ export default function SelectMasterData({ type, style = {}, ...props }: Props) 
     }, [type])
 
     return (
-        <div id='masterDataPlant' style={{ ...style }}>
+        <div
+            id='masterDataPlant'
+            // eslint-disable-next-line max-len
+            style={{ ...style }} // !DON'T DELETE THIS. Because there is style injection in SmartFilter by React.clone method. It would cause styling error at SmartFilter
+        >
             <Select
                 labelInValue
                 allowClear
