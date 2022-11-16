@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
-import { Input } from 'antd'
 import { Button, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter, DebounceSelect } from 'src/components'
 
-import SimpleTable, { useSimpleTable } from 'src/components/SimpleTable';
+import useSimpleTable from 'src/hooks/useSimpleTable';
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
 import { fakeApi } from 'src/api/fakeApi'
 import { Props } from './types'
@@ -35,10 +34,6 @@ export default function PageGoodsReceipt(props: Props) {
               <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['NP', 'GT']} >
                 <DebounceSelect fetchOptions={fakeApi} />
                 <DebounceSelect fetchOptions={fakeApi} />
-              </SmartFilter.Field>
-              <SmartFilter.Field field='company_aja' dataType='S' label='Company aja ID' options={['EQ']} >
-                <Input placeholder='hihih' />
-                <Input placeholder='hihih' />
               </SmartFilter.Field>
               <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Date Aja' options={['GT', 'LT', 'EQ', 'CP']} >
                 <DatePickerInput
