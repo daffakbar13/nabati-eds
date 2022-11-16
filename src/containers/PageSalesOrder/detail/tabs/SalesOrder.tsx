@@ -19,7 +19,6 @@ export default function SalesOrder(props: SalesOrderProps) {
   const format = 'DD MMMM YYYY'
   const concatString = (str: string[]) => (str.join(' - '))
 
-  // const table = useTable({ api: '', columns: TableSalesOrder })
   const dataList = [
     createDataList('Sales Order', data.id),
     createDataList('Customer', concatString([data.customer_id, data.customer_name])),
@@ -38,12 +37,6 @@ export default function SalesOrder(props: SalesOrderProps) {
     createDataList('Modified On', dateFormat(data.modified_at, format)),
     createDataList('Modified By', data.modified_by),
   ]
-
-  if (data.items) {
-    data.items.forEach((obj, index) => {
-      Object.assign(obj, { no: index + 1, sub_total: obj.order_qty * obj.price })
-    })
-  }
 
   return (
     <>

@@ -16,6 +16,7 @@ import { CheckCircleFilled } from '@ant-design/icons';
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
+import { useDetail } from 'src/hooks'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateQuotation() {
@@ -46,11 +47,13 @@ export default function PageCreateQuotation() {
   const [fetching, setFetching] = React.useState('')
   const [proccessing, setProccessing] = React.useState('')
   const [canSave, setCanSave] = React.useState(false)
+  const [warningFields, setWarningFields] = React.useState(false)
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
   const onProcess = proccessing !== ''
+  const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
   const concatString = (data: string[]) => data.join(' - ')
 
@@ -69,12 +72,11 @@ export default function PageCreateQuotation() {
     branch_id: splitString(dataForm.branch_id),
     salesman_id: splitString(dataForm.salesman_id),
     status_id: status_id.toString(),
-    customer_ref: (dataForm.customer_ref === '' || dataForm.customer_ref) ? 'no-ref' : dataForm.customer_ref,
+    customer_ref: (dataForm.customer_ref === '' || dataForm.customer_ref) ? '-' : dataForm.customer_ref,
   })
 
   React.useEffect(() => {
-    async function runApi() {
-      if (router.query.id) {
+    if (router.query.id && optionsOrderType.length > 0) {
         getDetailQuotation({ id: router.query.id as string })
           .then((response) => response.data)
           .then((data) => {
@@ -85,7 +87,8 @@ export default function PageCreateQuotation() {
               order_date: data.order_date,
               delivery_date: data.delivery_date,
               pricing_date: data.pricing_date || now,
-              order_type_id: data.order_type_id,
+              order_type_id: optionsOrderType
+                .find(({ value }) => value.includes(data.order_type_id))?.value,
               customer_id: concatString([data.customer_id, data.customer_name]),
               ship_to_id: data.ship_to_id === '' ? concatString([data.customer_id, data.customer_name]) : data.ship_to_id,
               salesman_id: concatString([data.salesman_id, data.salesman_name]),
@@ -96,14 +99,14 @@ export default function PageCreateQuotation() {
               customer_ref: data.customer_ref,
               customer_ref_date: data.customer_ref_date || now,
               currency_id: 'IDR',
-              items: tableAddItems.data,
+              // items: tableAddItems.data,
             }
             setDataForm(initFromDetail)
+            setFetching('customer')
           })
+          .catch(() => router.push(`${PATH.SALES}/quotation`))
       }
-    }
-    runApi()
-  }, [router, tableAddItems.data])
+  }, [router, optionsOrderType])
 
   React.useEffect(() => {
     onChangeForm('items', tableAddItems.data)
@@ -197,24 +200,30 @@ export default function PageCreateQuotation() {
               Cancel
             </Button>
             <Button
-                size="big"
-                variant="secondary"
+              size="big"
+              variant="secondary"
               disabled={!canSave}
-                onClick={() => {
-                  setProccessing('Wait for save Quotation');
-                  (isCreatePage || isOrderAgainPage)
+              onClick={() => {
+                if (canSave) {
+                  setProccessing('Wait for save Quotation')
+                  isCreateOrOrderAgain
                     ? createQuotation(dataSubmited(6))
                       .then((response) => {
                         setDraftQuotation(response.data.id)
                         setProccessing('')
                       })
+                      .catch(() => setProccessing(''))
                     : updateQuotation(dataSubmited(6), titlePage.split(' ').reverse()[0])
                       .then((response) => {
                         setDraftQuotation(response.data.id)
                         setProccessing('')
                       })
-                }}
-              >
+                      .catch(() => setProccessing(''))
+                } else {
+                  setWarningFields(true)
+                }
+              }}
+            >
               Save As Draft
             </Button>
             <Button
@@ -222,21 +231,27 @@ export default function PageCreateQuotation() {
               variant="primary"
               disabled={!canSave}
               onClick={() => {
-                setProccessing('Wait for save Quotation');
-                (isCreatePage || isOrderAgainPage)
-                ? createQuotation(dataSubmited(1))
-                    .then((response) => {
-                      setNewQuotation(response.data.id)
-                      setProccessing('')
-                    })
-                : updateQuotation(dataSubmited(1), titlePage.split(' ').reverse()[0])
-                    .then((response) => {
-                      setNewQuotation(response.data.id)
-                      setProccessing('')
-                    })
+                if (canSave) {
+                  setProccessing('Wait for save Quotation')
+                  isCreateOrOrderAgain
+                    ? createQuotation(dataSubmited(1))
+                      .then((response) => {
+                        setNewQuotation(response.data.id)
+                        setProccessing('')
+                      })
+                      .catch(() => setProccessing(''))
+                    : updateQuotation(dataSubmited(1), titlePage.split(' ').reverse()[0])
+                      .then((response) => {
+                        setNewQuotation(response.data.id)
+                        setProccessing('')
+                      })
+                      .catch(() => setProccessing(''))
+                } else {
+                  setWarningFields(true)
+                }
               }}
             >
-              {(isCreatePage || isOrderAgainPage) ? 'Submit' : 'Save'}
+              {isCreateOrOrderAgain ? 'Submit' : 'Save'}
             </Button>
           </Row>
         </Row>
@@ -373,9 +388,11 @@ export default function PageCreateQuotation() {
             columns={tableAddItems.columns}
           />
         </div>
-        <Button size="small" variant="primary" {...(dataForm.customer_id && { onClick: tableAddItems.handleAddItem })}>
+        {dataForm.customer_id
+          && <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
           Add Item
         </Button>
+        }
         <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'row-reverse' }}>
           <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
         </div>

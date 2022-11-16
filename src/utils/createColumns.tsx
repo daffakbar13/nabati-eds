@@ -10,6 +10,23 @@ export default function CreateColumns(
   fixed?: boolean | 'left' | 'right',
   className?: string,
 ) {
+  const rightAlign = [
+    'Total Amount',
+    'Based Price',
+    'Sub Total',
+    'Gross',
+    'Discount',
+    'Disc 1',
+    'Disc 2',
+    'Disc 3',
+    'Disc 4',
+    'Net 1',
+    'Net 2',
+    'Net 3',
+    'Net 4',
+  ]
+  const isRightAlign = typeof title === 'string' && rightAlign.includes(title)
+
   return {
     title,
     dataIndex,
@@ -25,6 +42,7 @@ export default function CreateColumns(
     ellipsis: true,
     width: width || 170,
     className,
+    align: isRightAlign ? 'right' : 'left',
   }
 }
 

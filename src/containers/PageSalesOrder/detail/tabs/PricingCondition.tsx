@@ -32,11 +32,11 @@ export default function PricingCondition(props: PricingConditionProps) {
       <Row>
         <Col span={12} offset={12}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-            <Total label="Total Gross" value={123} />
-            <Total label="Total DPP" value={123} />
-            <Total label="Total Disc" value={123} />
-            <Total label="Total Net" value={123} />
-            <Total label="Total Tax" value={123} />
+            <Total label="Total Gross" value={data.gross_total_amount} />
+            <Total label="Total DPP" value={data.dpp_total_amount} />
+            <Total label="Total Disc" value={data.discount_total_amount} />
+            <Total label="Total Net" value={data.net_total_amount} />
+            <Total label="Total Tax" value={data.tax_total_amount} />
           </div>
         </Col>
       </Row>

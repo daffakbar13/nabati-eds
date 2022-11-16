@@ -108,66 +108,67 @@ export default function PageQuotation(props: PageQuotationProps) {
                     Reset
                 </h4>
             </div>
-      )
-      return (
-          <Popover placement="bottomRight" content={content} trigger="click">
+        )
+        return (
+            <Popover placement="bottomRight" content={content} trigger="click">
                 <MoreOutlined style={{ cursor: 'pointer' }} />
             </Popover>
-      )
-  }
+        )
+    }
 
     const ConfirmSubmit = () => (
         <Popup onOutsideClick={() => { setShowConfirm('') }}>
-                        <Typography.Title level={3} style={{ margin: 0 }}>
-                            Confirm Submit
-                        </Typography.Title>
-                        <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
-                          Are you sure to submit quotation
-                            <Typography.Text
-                                copyable={{
-                                    text: oneSelected
-                                        ? selectedQuotation.text
-                                        : table.selected.join(', '),
-                                }}>
-                          {oneSelected
-                              ? ` ${selectedQuotation.text} ?`
-                              : <Popover content={selectedQuotation.content}>
-                                  {` ${selectedQuotation.text} ?`}
-                              </Popover>
-                          }
-                            </Typography.Text>
-                        </Typography.Title>
-                        <div style={{ display: 'flex', gap: 10 }}>
-                            <Button
-                                size="big"
-                                style={{ flexGrow: 1 }}
-                                variant="secondary"
-                                onClick={() => { setShowConfirm('') }}>
-                                No
-                            </Button>
-                            <Button
-                                size="big"
-                                style={{ flexGrow: 1 }}
-                                variant="primary"
-                                onClick={() => {
-                                    setProcessing('Wait for submitting Quotation')
-                                    multipleSubmitQuotation({
-                                        order_list: table.selected
-                                            .map((id) => ({ id })),
-                                    })
-                                        .then((response) => response.data)
-                                        .then((data) => {
-                                            setShowConfirm('success-submit')
-                                            setSubmittedQuotation(data.results.map(({ id }) => id))
-                                            setProcessing('')
-                                        })
-                                        .catch(() => setProcessing(''))
-                                }}
-                            >
-                                Yes
-                            </Button>
-                        </div>
-                    </Popup>
+            <Typography.Title level={3} style={{ margin: 0 }}>
+                Confirm Submit
+            </Typography.Title>
+            <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
+                Are you sure to submit quotation
+                <Typography.Text
+                    copyable={{
+                        text: oneSelected
+                            ? selectedQuotation.text
+                            : table.selected.join(', '),
+                    }}>
+                    {oneSelected
+                        ? ` ${selectedQuotation.text} `
+                        : <Popover content={selectedQuotation.content}>
+                            {` ${selectedQuotation.text} `}
+                        </Popover>
+                    }
+                </Typography.Text>
+                {' ?'}
+            </Typography.Title>
+            <div style={{ display: 'flex', gap: 10 }}>
+                <Button
+                    size="big"
+                    style={{ flexGrow: 1 }}
+                    variant="secondary"
+                    onClick={() => { setShowConfirm('') }}>
+                    No
+                </Button>
+                <Button
+                    size="big"
+                    style={{ flexGrow: 1 }}
+                    variant="primary"
+                    onClick={() => {
+                        setProcessing('Wait for submitting Quotation')
+                        multipleSubmitQuotation({
+                            order_list: table.selected
+                                .map((id) => ({ id })),
+                        })
+                            .then((response) => response.data)
+                            .then((data) => {
+                                setShowConfirm('success-submit')
+                                setSubmittedQuotation(data.results.map(({ id }) => id))
+                                setProcessing('')
+                            })
+                            .catch(() => setProcessing(''))
+                    }}
+                >
+                    Yes
+                </Button>
+            </div>
+        </Popup>
     )
 
     const ConfirmSuccessSubmit = () => (
@@ -198,9 +199,9 @@ export default function PageQuotation(props: PageQuotationProps) {
                         }}
                     >
                         {oneSelected
-                            ? ` ${submittedQuotation[0]}`
+                            ? ` ${submittedQuotation[0]} `
                             : <Popover content={submittedQuotation.join(', ')}>
-                                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
+                                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more `}
                             </Popover>
                         }
                     </Typography.Text>
@@ -458,5 +459,5 @@ export default function PageQuotation(props: PageQuotationProps) {
                 {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
             </Card>
         </Col>
-  )
+    )
 }
