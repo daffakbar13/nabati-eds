@@ -1,5 +1,4 @@
-import React from 'react'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import CreateColumns from 'src/utils/createColumns'
 // import { useRouter } from 'next/router'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'

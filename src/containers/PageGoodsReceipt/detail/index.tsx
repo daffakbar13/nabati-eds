@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Col, Spacer, Text } from 'pink-lava-ui'
-import { Card, Popup, GoBackArrow, Tabs, DataList } from 'src/components'
+import { Button, Col, Spacer, Text, Table } from 'pink-lava-ui'
+import { Card, Popup, GoBackArrow, Tabs } from 'src/components'
 
-import { Typography } from 'antd'
+import { Typography, Divider } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import useDetail from 'src/hooks/useDetail'
 import { getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
@@ -15,28 +15,30 @@ import Loader from 'src/components/Loader'
 
 import DocumentHeader from './Tabs/DocumentHeader'
 import Lpb from './Tabs/Lpb'
+import { columns } from './columns'
 
 export default function DetailGR() {
-    const [details, setDetails] = useState()
+    const [loading, setLoading] = useState(false)
+    const [details, setDetails] = useState<{ items: [] }>({ items: [] })
     const router = useRouter()
     const id = String(router.query.id) || ''
-
-    console.log('router', router);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true)
                 const res = await getGoodReceiptDetail(id)
                 setDetails(res.data)
-                console.log('res', res);
+                setLoading(false)
             } catch (error) {
+                setLoading(false)
                 console.error(error)
             }
         }
         fetchData()
     }, [id])
 
-    console.log('details', details);
+    console.log('details', details.items);
 
     return (
         <Col>
@@ -48,18 +50,19 @@ export default function DetailGR() {
                         size="big"
                         variant="tertiary"
                         onClick={() => { }}
+                        loading={loading}
                     >
                         Cancel Process
                     </Button>
                 </div>
             </div>
             <Spacer size={20} />
-            <Card style={{ padding: '16px 20px' }}>
+            <Card style={{ padding: 0 }}>
                 <Tabs items={[
                     {
                         key: '1',
                         tab: 'Document Header',
-                        children: <DocumentHeader details={details} />,
+                        children: <DocumentHeader loading={loading} details={details} />,
                     },
                     {
                         key: '2',
