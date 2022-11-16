@@ -1,15 +1,13 @@
-import React, { useState } from 'react'
-import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter, DebounceSelect } from 'src/components'
+import { useRouter } from 'next/router';
+import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui';
+import { useState } from 'react';
+import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components';
 
+import { getGoodReceiptList } from 'src/api/logistic/good-receipt';
 import { useSimpleTable } from 'src/hooks';
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
-import { fakeApi } from 'src/api/fakeApi'
-import { Props } from './types'
-import { columns } from './columns'
+import { columns } from './columns';
 
-export default function PageGoodsReceipt(props: Props) {
+export default function PageGoodsReceipt() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
@@ -28,14 +26,19 @@ export default function PageGoodsReceipt(props: Props) {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['NB', 'NP', 'GT', 'LT']} >
-                <DebounceSelect fetchOptions={fakeApi} mode='multiple' />
+              <SmartFilter.Field field='company_id' dataType='S' label='Company ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
+                <SelectMasterData type='COMPANY' />
               </SmartFilter.Field>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['NP', 'GT']} >
-                <DebounceSelect fetchOptions={fakeApi} />
-                <DebounceSelect fetchOptions={fakeApi} />
+              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
+                <SelectMasterData type='PLANT' />
               </SmartFilter.Field>
-              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Date Aja' options={['GT', 'LT', 'EQ', 'CP']} >
+              <SmartFilter.Field field='product_id' dataType='S' label='Material' options={['EQ', 'CP']} >
+                <SelectMasterData type='MATERIAL' />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
+                <SelectMasterData type='SLOC' />
+              </SmartFilter.Field>
+              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Posting Date' options={['GT', 'LT', 'EQ', 'CP']} >
                 <DatePickerInput
                   label={''}
                   fullWidth
@@ -48,6 +51,9 @@ export default function PageGoodsReceipt(props: Props) {
                   format={'DD-MMM-YYYY'}
                   placeholder='Posting Date'
                 />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='status_data' dataType='S' label='Status' options={['EQ']} >
+                <Select options={[{ label: 'YES', value: 'yes' }]} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>

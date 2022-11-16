@@ -1,16 +1,13 @@
 import { useRouter } from 'next/router'
-import { Button, Col, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, DebounceSelect, SearchQueryParams, SmartFilter, DownloadButton } from 'src/components'
+import { Card, DownloadButton, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 
-import { fakeApi } from 'src/api/fakeApi'
-import { exportExcelStockRealTime, getStockRealtimeList } from 'src/api/logistic/stock-real-time'
+import { exportExcelListSwapHandling, getListSwapHandling } from 'src/api/logistic/list-swap-handling'
 import { useSimpleTable } from 'src/hooks'
-import { getListSwapHandling, exportExcelListSwapHandling } from 'src/api/logistic/list-swap-handling'
-import { Props } from './types'
 import { columns } from './columns'
 
-export default function PageListSwapHandling(props: Props) {
+export default function PageListSwapHandling() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
@@ -29,26 +26,20 @@ export default function PageListSwapHandling(props: Props) {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['NB', 'NP', 'GT', 'LT']} >
-                <DebounceSelect fetchOptions={fakeApi} mode='multiple' />
+              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
+                <SelectMasterData type='PLANT' />
               </SmartFilter.Field>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['NP', 'GT']} >
-                <DebounceSelect fetchOptions={fakeApi} />
-                <DebounceSelect fetchOptions={fakeApi} />
+              <SmartFilter.Field field='product_id' dataType='S' label='Material' options={['EQ', 'CP']} >
+                <SelectMasterData type='MATERIAL' />
               </SmartFilter.Field>
-              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Date Aja' options={['GT', 'LT', 'EQ', 'CP']} >
-                <DatePickerInput
-                  label={''}
-                  fullWidth
-                  format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
-                />
-                <DatePickerInput
-                  fullWidth
-                  label={''}
-                  format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
-                />
+              <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
+                <SelectMasterData type='SLOC' />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='status_data' dataType='S' label='Status Data' options={['EQ']} >
+                <Select options={[{ label: 'YES', value: 'yes' }]} />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='status_data' dataType='S' label='Status' options={['EQ']} >
+                <Select options={[{ label: 'YES', value: 'yes' }]} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>

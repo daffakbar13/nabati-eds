@@ -2,6 +2,7 @@ import {
     getBranch,
     getConfigSloc,
     getProductByCompany,
+    getCompanies,
     getCustomerByCompany,
     getSalesOrgByCompany,
     getSalesmanByCompany,
@@ -15,6 +16,15 @@ import {
 } from 'src/api/master-data';
 
 export const MASTER_DATA_TYPES = {
+    COMPANY: {
+        api: getCompanies,
+        placeholder: 'Select Company',
+        responseHandler: (res) => res.data
+            .map(({ id, name }) => ({
+                label: [id, name].join(' - '),
+                value: id,
+            })),
+    },
     PLANT: {
         api: getBranch,
         placeholder: 'Select Plant',

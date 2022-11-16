@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { MASTER_DATA_TYPES } from './config';
 
 interface Props {
-    type: 'PLANT' | 'MATERIAL' | 'SLOC' // TO DO tambah lagi nanti..
+    type: 'PLANT' | 'MATERIAL' | 'SLOC' | 'COMPANY' // TO DO tambah lagi nanti..
     style?: any
 }
 
