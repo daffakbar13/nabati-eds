@@ -7,7 +7,7 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import moment from 'moment'
 import DateFormat from 'src/components/DateFormat'
-import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 
@@ -21,7 +21,7 @@ function Linked({ link, linkType, type }: { link: string; linkType: string; type
     } else if (linkType == 'DO') {
       router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
     } else if (linkType == 'GI') {
-      router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
+      router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}`)
     }
   }
   const [hover, setHover] = React.useState(false)
@@ -64,7 +64,7 @@ export const columns = [
   ),
   CreateColumns(
     'DO Number',
-    'gi_number',
+    'delivery_number',
     true,
     (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='DO' />,
     180,
@@ -123,7 +123,7 @@ export const columns = [
     'Status',
     'status',
     false,
-    (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
+    (status) => <TaggedStatus status={status} />,
   ),
   CreateColumns(
     'Action',

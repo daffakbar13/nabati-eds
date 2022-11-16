@@ -9,6 +9,7 @@ export default function CreateColumns(
   width?: number,
   fixed?: boolean | 'left' | 'right',
   className?: string,
+  children?: any,
 ) {
   const rightAlign = [
     'Total Amount',
@@ -43,6 +44,7 @@ export default function CreateColumns(
     width: width || 170,
     className,
     align: isRightAlign ? 'right' : 'left',
+    children: children,
   }
 }
 

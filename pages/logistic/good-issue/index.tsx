@@ -1,5 +1,5 @@
 import React from 'react'
-import PageGoodIssue from 'src/containers/PageGoodReceiptIntraBranch'
+import PageGoodIssue from 'src/containers/PageGoodIssue'
 
 interface Props { }
 
