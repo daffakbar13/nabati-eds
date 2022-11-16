@@ -8,7 +8,7 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { getQuotation } from 'src/api/quotation'
+import { getListPoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { Props } from './types'
@@ -32,7 +32,7 @@ export default function PageApproval(props: Props) {
     FILTER.ORDER_DATE,
   ])
   const table = useTable({
-    funcApi: getQuotation,
+    funcApi: getListPoSto,
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns,
   })
@@ -84,7 +84,7 @@ export default function PageApproval(props: Props) {
 
   return (
     <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
+      <Text variant={'h4'}>Approval PO STO Intra Branch</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

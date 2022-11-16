@@ -9,6 +9,7 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -66,7 +67,7 @@ export const columns = [
   CreateColumns(
     'Posting Date',
     'created_at',
-    true,
+    false,
     (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
     180,
     'left',
@@ -74,19 +75,20 @@ export const columns = [
   CreateColumns(
     'Company',
     'company_id',
-    true,
+    false,
+    (company_id, rec) => <>{`${company_id || ''} - ${rec.company_name || ''}`}</>,
   ),
   CreateColumns(
     'Supplying Branch',
     'supply_branch_id',
-    true,
+    false,
     (branch, rec) => <>{`${branch} - ${rec.supply_branch_name}`}</>,
     250,
   ),
   CreateColumns(
     'Receiving Branch',
     'receive_branch_id',
-    true,
+    false,
     (branch, rec) => <>{`${branch} - ${rec.receive_branch_name}`}</>,
     250,
   ),
@@ -94,7 +96,7 @@ export const columns = [
     'Status',
     'status',
     false,
-    (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
+    (status_process) => <TaggedStatus status={status_process} />,
   ),
   CreateColumns(
     'Action',
