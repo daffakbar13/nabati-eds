@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui';
 import { useState } from 'react';
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components';
+import { PATH } from 'src/configs/menus'
 
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt';
 import { useSimpleTable } from 'src/hooks';
@@ -11,9 +12,11 @@ export default function PageGoodsReceipt() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
+  const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${id}`)
+
   const tableProps = useSimpleTable({
     funcApi: getGoodReceiptList,
-    columns,
+    columns: columns(goToDetailPage),
     filters,
   })
 

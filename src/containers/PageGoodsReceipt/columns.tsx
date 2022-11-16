@@ -11,6 +11,7 @@ import { PATH } from 'src/configs/menus'
 
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
+import Link from 'src/components/Link'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -47,12 +48,13 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
     </>
   )
 }
-export const columns = [
+
+export const columns = (goToDetail: (id: string) => {}) => [
   CreateColumns(
     'GR Number',
     'gr_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
     180,
     'left',
   ),
@@ -60,17 +62,11 @@ export const columns = [
     'PO Number',
     'po_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
-    'left',
   ),
   CreateColumns(
     'GI Number',
     'gi_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
-    'left',
   ),
   CreateColumns(
     'Posting Date',
@@ -121,8 +117,10 @@ export const columns = [
   ),
   CreateColumns(
     'Action',
-    'id',
+    'gr_number',
     false,
-    (link, record) => <Linked link={link} type="action" status={record.status_id} />,
+    (text) => <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
+      View Detail
+    </Button>,
   ),
 ]

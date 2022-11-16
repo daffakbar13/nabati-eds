@@ -10,5 +10,6 @@ export { default as DownloadButton } from './DownloadButton'
 export { default as SelectMasterData } from './SelectMasterData'
 export { default as Select } from './Select'
 export { default as GoBackArrow } from './GoBackArrow'
+export { default as Tabs } from './Tabs'
 
 export { Card } from './Card'
