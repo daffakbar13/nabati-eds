@@ -45,13 +45,6 @@ export default function PageListSwapHandling() {
           </Row>
           <Row gap="16px">
             <DownloadButton downloadApi={exportExcelListSwapHandling} />
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
-            >
-              Create
-            </Button>
           </Row>
         </Row>
       </Card>

@@ -38,13 +38,6 @@ export default function PageRealTime() {
           </Row>
           <Row gap="16px">
             <DownloadButton downloadApi={exportExcelStockRealTime} />
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
-            >
-              Create
-            </Button>
           </Row>
         </Row>
       </Card>
