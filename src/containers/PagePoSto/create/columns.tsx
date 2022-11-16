@@ -15,25 +15,13 @@ export const columns = () => [
     dataIndex: 'item',
     key: 'item',
     editable: true,
-    inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
+    inputNode: <DebounceSelect allowClear type='select' fetchOptions={fakeApi} />,
     render: (obj: CommonSelectValue) => obj?.label,
   },
   {
     title: (
       <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Uom
-      </Text>
-    ),
-    dataIndex: 'uom',
-    key: 'uom',
-    editable: true,
-    inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
-    render: (obj: CommonSelectValue) => obj?.label,
-  },
-  {
-    title: (
-      <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Quantity
+        Qty
       </Text>
     ),
     dataIndex: 'qty',
@@ -44,23 +32,24 @@ export const columns = () => [
   {
     title: (
       <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Base Price
+        UoM
       </Text>
     ),
-    dataIndex: 'price',
-    key: 'price',
+    dataIndex: 'uom',
+    key: 'uom',
     editable: true,
-    inputNode: <InputNumber />,
+    inputNode: <DebounceSelect allowClear type='select' fetchOptions={fakeApi} />,
+    render: (obj: CommonSelectValue) => obj?.label,
   },
   {
     title: (
       <Text variant="headingRegular" style={{ fontWeight: 600 }}>
-        Gross
+        Batch
       </Text>
     ),
-    dataIndex: 'gross',
-    key: 'gross',
+    dataIndex: 'batch',
+    key: 'batch',
     editable: true,
-    inputNode: <InputNumber />,
+    inputNode: <Input type="text" />,
   },
 ]
