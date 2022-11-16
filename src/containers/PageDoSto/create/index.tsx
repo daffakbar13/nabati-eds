@@ -58,35 +58,34 @@ export default function CreateBilling() {
       <Spacer size={10} />
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect type='select' label="Order Type" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect type='select' label="Po Number" fetchOptions={fakeApi} onChange={() => { }} />
           <DatePickerInput
             fullWidth
             onChange={() => { }}
-            label="GI Date"
+            label="Posting Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect type='select' label="Customer" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Supplying Branch" type='input' disabled />
           <DatePickerInput
             fullWidth
             onChange={() => { }}
-            label="Document Date"
+            label="Planned GI Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Sales Organization" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Receiving Branch" type='input' disabled />
           <DatePickerInput
             fullWidth
             onChange={() => { }}
-            label="Delivery Date"
+            label="Doc Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Branch" fetchOptions={fakeApi} onChange={() => { }} />
-          <DebounceSelect label="Reference" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect label="Header Text" type='input' onChange={() => { }} />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
