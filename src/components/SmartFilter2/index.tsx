@@ -65,6 +65,7 @@ function SmartFilter({ onOk, children }) {
     </div>
   )
 
+  console.log('filterValues', filterValues);
   return (
     <>
       <Button size="big" variant="tertiary" onClick={() => setShowFilter(true)}
