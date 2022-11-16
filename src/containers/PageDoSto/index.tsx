@@ -135,7 +135,6 @@ export default function PageDoSto(props: Props) {
             columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
             dataSource={table.data}
             showSorterTooltip={false}
-            rowSelection={table.rowSelection}
             rowKey={'id'}
           />
         </div>

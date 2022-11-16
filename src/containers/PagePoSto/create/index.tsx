@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Divider, Table } from 'antd'
-import { Button, Col, Row, Search, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Divider } from 'antd'
+import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import { ICPlusWhite } from 'src/assets/icons'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, TableEditable } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { fakeApi } from 'src/api/fakeApi'
 import { CommonSelectValue, antdColumns } from 'src/configs/commonTypes'
-import { columns } from './columns'
+import { useTableAddItem } from './columns'
 
 interface Item {
   key: string
@@ -32,6 +32,7 @@ const originData: Item[] = [
 
 export default function CreateBilling() {
   const [data, setData] = useState<Item[]>(originData)
+  const tableAddItems = useTableAddItem()
 
   return (
     <Col>
@@ -82,7 +83,18 @@ export default function CreateBilling() {
           />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <TableEditable data={data} setData={setData} columns={columns()} />
+        <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
+          + Add Item
+        </Button>
+        <Spacer size={20} />
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+          />
+        </div>
       </Card>
     </Col>
   )
