@@ -57,7 +57,12 @@ function DebounceSelect<
               labelInValue
               filterOption={false}
               onSearch={debounceFetcher}
-              notFoundContent={fetching ? <Spin size="small" /> : null}
+            notFoundContent={fetching
+              ? <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Spin size="small" />
+              </div>
+              : null
+            }
               placeholder="Type To Search"
               {...props}
             options={optionsFromFetch}

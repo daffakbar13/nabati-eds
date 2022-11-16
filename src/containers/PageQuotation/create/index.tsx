@@ -11,12 +11,11 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { createQuotation, getDetailQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import { fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import { CheckCircleFilled } from '@ant-design/icons';
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
-import { useDetail } from 'src/hooks'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateQuotation() {
@@ -77,35 +76,35 @@ export default function PageCreateQuotation() {
 
   React.useEffect(() => {
     if (router.query.id && optionsOrderType.length > 0) {
-        getDetailQuotation({ id: router.query.id as string })
-          .then((response) => response.data)
-          .then((data) => {
-            const initFromDetail = {
-              company_id: 'PP01',
-              branch_id: concatString([data.branch_id, data.branch_name]),
-              source_id: 'Z02',
-              order_date: data.order_date,
-              delivery_date: data.delivery_date,
-              pricing_date: data.pricing_date || now,
-              order_type_id: optionsOrderType
-                .find(({ value }) => value.includes(data.order_type_id))?.value,
-              customer_id: concatString([data.customer_id, data.customer_name]),
-              ship_to_id: data.ship_to_id === '' ? concatString([data.customer_id, data.customer_name]) : data.ship_to_id,
-              salesman_id: concatString([data.salesman_id, data.salesman_name]),
-              sales_org_id: concatString([data.sales_org_id, data.sales_org_name]),
-              valid_from: data.valid_from,
-              valid_to: data.valid_to,
-              term_id: data.term_id || 'Z007',
-              customer_ref: data.customer_ref,
-              customer_ref_date: data.customer_ref_date || now,
-              currency_id: 'IDR',
-              // items: tableAddItems.data,
-            }
-            setDataForm(initFromDetail)
-            setFetching('customer')
-          })
-          .catch(() => router.push(`${PATH.SALES}/quotation`))
-      }
+      getDetailQuotation({ id: router.query.id as string })
+        .then((response) => response.data)
+        .then((data) => {
+          const initFromDetail = {
+            company_id: 'PP01',
+            branch_id: concatString([data.branch_id, data.branch_name]),
+            source_id: 'Z02',
+            order_date: data.order_date,
+            delivery_date: data.delivery_date,
+            pricing_date: data.pricing_date || now,
+            order_type_id: optionsOrderType
+              .find(({ value }) => value.includes(data.order_type_id))?.value,
+            customer_id: concatString([data.customer_id, data.customer_name]),
+            ship_to_id: data.ship_to_id === '' ? concatString([data.customer_id, data.customer_name]) : data.ship_to_id,
+            salesman_id: concatString([data.salesman_id, data.salesman_name]),
+            sales_org_id: concatString([data.sales_org_id, data.sales_org_name]),
+            valid_from: data.valid_from,
+            valid_to: data.valid_to,
+            term_id: data.term_id || 'Z007',
+            customer_ref: data.customer_ref,
+            customer_ref_date: data.customer_ref_date || now,
+            currency_id: 'IDR',
+            // items: tableAddItems.data,
+          }
+          setDataForm(initFromDetail)
+          setFetching('customer')
+        })
+        .catch(() => router.push(`${PATH.SALES}/quotation`))
+    }
   }, [router, optionsOrderType])
 
   React.useEffect(() => {
@@ -114,7 +113,7 @@ export default function PageCreateQuotation() {
 
   React.useEffect(() => {
     if (fetching === 'customer') {
-      const { customer_id, customer_name } = dataForm
+      const { customer_id } = dataForm
       setProccessing('Wait for proccess')
       getCustomerByFilter({
         branch_id: '',
@@ -126,18 +125,17 @@ export default function PageCreateQuotation() {
         .then((data) => {
           setProccessing('')
           const [firstData] = data
-          const dataCustomer = concatString([customer_id, customer_name])
           const dataBranch = concatString([firstData.branch_id, firstData.branch_name])
           const dataSalesOrg = concatString([firstData.sales_org_id, firstData.sales_org_name])
           const dataSalesman = concatString([firstData.salesman_id, firstData.salesman_name])
 
-          onChangeForm('ship_to_id', dataCustomer)
+          onChangeForm('ship_to_id', customer_id)
           onChangeForm('branch_id', dataBranch)
           onChangeForm('sales_org_id', dataSalesOrg)
           onChangeForm('salesman_id', dataSalesman)
           setOptionsCustomerShipTo([{
-            label: dataCustomer,
-            value: dataCustomer,
+            label: customer_id,
+            value: customer_id,
           }])
           setOptionsBranch([{
             label: dataBranch,
@@ -189,8 +187,10 @@ export default function PageCreateQuotation() {
 
   return (
     <Col>
-      {onProcess && <Loader type='process' text={proccessing} />}
-      {tableAddItems.isLoading && <Loader type='process' text='Wait for get data' />}
+      {(onProcess || tableAddItems.isLoading)
+        && <Loader type='process' text={proccessing === '' ? 'Wait for get data' : proccessing} />
+      }
+      {/* {tableAddItems.isLoading && <Loader type='process' text='Wait for get data' />} */}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -390,8 +390,8 @@ export default function PageCreateQuotation() {
         </div>
         {dataForm.customer_id
           && <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
-          Add Item
-        </Button>
+            Add Item
+          </Button>
         }
         <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'row-reverse' }}>
           <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />

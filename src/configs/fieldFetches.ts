@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 
 /* eslint-disable implicit-arrow-linebreak */
@@ -163,7 +163,7 @@ export function fieldBranchSupply(search: string, channel = '') {
                     .filter(({ name, id, branch_type }) =>
                         (name.toLowerCase().includes(search.toLowerCase())
                             || id.toLowerCase().includes(search.toLowerCase()))
-                        && allbranch.includes(id) && branch_type != channel)
+                        && allbranch.includes(id) && branch_type !== channel)
                     .splice(0, 10)
                     .map(({ id, name, branch_type }) => ({
                         label: [id, name].join(' - '),
@@ -183,4 +183,18 @@ export function fieldBranchSupply(search: string, channel = '') {
     //                 value: id,
     //                 key: branch_type,
     //             })))
+}
+
+export function fieldRoute(search: string) {
+    return getRouteByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id, name }) =>
+                    id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase()))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
+                    value: [id, name].join(' - '),
+                })))
 }

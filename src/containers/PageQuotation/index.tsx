@@ -130,9 +130,9 @@ export default function PageQuotation(props: PageQuotationProps) {
                             : table.selected.join(', '),
                     }}>
                     {oneSelected
-                        ? ` ${selectedQuotation.text} `
+                        ? ` ${selectedQuotation.text}`
                         : <Popover content={selectedQuotation.content}>
-                            {` ${selectedQuotation.text} `}
+                            {` ${selectedQuotation.text}`}
                         </Popover>
                     }
                 </Typography.Text>
@@ -199,12 +199,12 @@ export default function PageQuotation(props: PageQuotationProps) {
                         }}
                     >
                         {oneSelected
-                            ? ` ${submittedQuotation[0]} `
+                            ? ` ${submittedQuotation[0]}`
                             : <Popover content={submittedQuotation.join(', ')}>
-                                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more `}
+                                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
                             </Popover>
                         }
-                    </Typography.Text>
+                    </Typography.Text>{' '}
                     has been
                 </div>
                 <div>
@@ -303,12 +303,12 @@ export default function PageQuotation(props: PageQuotationProps) {
                                 : table.selected.join(', '),
                         }}>
                         {oneSelected
-                            ? ` ${selectedQuotation.text} ?`
+                            ? ` ${selectedQuotation.text}`
                             : <Popover content={selectedQuotation.content}>
-                                {` ${selectedQuotation.text} ?`}
+                                {` ${selectedQuotation.text}`}
                             </Popover>
                         }
-                    </Typography.Text>
+                    </Typography.Text>{' '}
                     has been
                 </div>
                 <div>
@@ -358,7 +358,6 @@ export default function PageQuotation(props: PageQuotationProps) {
                                         field: 'eds_order.id',
                                         option: 'CP',
                                         from_value: `%${e.target.value}%`,
-                                        // to_value: `%${e.target.value}%`,
                                     }])
                                 }
                             }}

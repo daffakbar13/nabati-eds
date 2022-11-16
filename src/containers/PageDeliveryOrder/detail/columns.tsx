@@ -1,16 +1,65 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-plusplus */
+/* eslint-disable radix */
 import CreateColumns from 'src/utils/createColumns'
 
 export const TableDeliveryOrder = [
-  CreateColumns('No', 'no'),
-  CreateColumns('Item', 'item'),
-  CreateColumns('Item Category', 'item_category'),
-  CreateColumns('Uom', 'uom'),
-  CreateColumns('Quantity', 'quantity'),
-  CreateColumns('Based Price', 'based_price'),
-  CreateColumns('Gross', 'quantity'),
-  CreateColumns('Discount', 'quantity'),
-  CreateColumns('Sub Total', 'sub_total'),
-  CreateColumns('Remarks', 'remarks'),
+  CreateColumns(
+    'No',
+    'no',
+    false,
+    (_, __, index) => ++index,
+    60,
+    true,
+  ),
+  CreateColumns(
+    'Item',
+    'item',
+    false,
+    undefined,
+    380,
+  ),
+  CreateColumns(
+    'Item Category',
+    'item_category',
+    false,
+    undefined,
+    150,
+  ),
+  CreateColumns(
+    'Uom',
+    'uom',
+    false,
+    undefined,
+    100,
+  ),
+  CreateColumns(
+    'Quantity',
+    'qty',
+    false,
+    undefined,
+    100,
+  ),
+  CreateColumns(
+    'Based Price',
+    'base_price',
+    false,
+    (price) => parseInt(price).toLocaleString(),
+    120,
+  ),
+  // FIXME Sub Total
+  CreateColumns(
+    'Sub Total',
+    'sub_total',
+    false,
+    (sub_total) => parseInt(sub_total).toLocaleString(),
+    120,
+  ),
+  CreateColumns(
+    'Remarks',
+    'remarks',
+  ),
 ]
 
 export const TableDocumentFlow = [

@@ -1,9 +1,10 @@
-import { Col, Row, Table, Divider } from 'antd'
+/* eslint-disable radix */
+import { Col, Row, Divider } from 'antd'
 import React from 'react'
+import { Table, Spacer } from 'pink-lava-ui'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import useTable from 'src/hooks/useTable'
-import { Spacer } from 'pink-lava-ui'
+import dateFormat from 'src/utils/dateFormat'
 import { TableDeliveryOrder } from '../columns'
 
 interface DeliveryOrderProps {
@@ -14,21 +15,23 @@ const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function DeliveryOrder(props: DeliveryOrderProps) {
   const { data } = props
+  const format = 'DD MMMM YYYY'
+  // const concatString = (str: string[]) => (str.join(' - '))
+
   // const table = useTable({ api: '', columns: TableDeliveryOrder })
   const dataList = [
     createDataList('Order Type', data.order_type),
     createDataList('Customer', data.customer),
     createDataList('Sales Org.', data.sales_org),
-    // FIXME Plant
-    createDataList('Plant', data.plant),
+    createDataList('Branch', data.branch),
     createDataList('Salesman', data.salesman),
     createDataList('Doc. Date', data.document_date),
     createDataList('Delivery Date', data.delivery_date),
     createDataList('Quotation', data.quotation_id),
     createDataList('Reference', data.reference),
-    createDataList('Created On', data.created_at),
+    createDataList('Created On', dateFormat(data.created_at, format)),
     createDataList('Created By', data.created_by),
-    createDataList('Modified On', data.modified_at),
+    createDataList('Modified On', dateFormat(data.modified_at, format)),
     createDataList('Modified By', data.modified_by),
   ]
 
@@ -53,17 +56,17 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TableDeliveryOrder} dataSource={data.items} />
+        <Table columns={TableDeliveryOrder} dataSource={data.delivery_items} />
       </div>
       <Spacer size={30} />
       <Row>
         <Col span={12} offset={12}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
-            <Total label="Total Gross" value={123} />
-            <Total label="Total DPP" value={123} />
-            <Total label="Total Disc" value={123} />
-            <Total label="Total Net" value={123} />
-            <Total label="Total Tax" value={123} />
+            <Total label="Total Gross" value={parseInt(data.gross_total_amount).toLocaleString()} />
+            <Total label="Total DPP" value={parseInt(data.dpp_total_amount).toLocaleString()} />
+            <Total label="Total Disc" value={parseInt(data.discount_total_amount).toLocaleString()} />
+            <Total label="Total Net" value={parseInt(data.net_total_amount).toLocaleString()} />
+            <Total label="Total Tax" value={parseInt(data.tax_total_amount).toLocaleString()} />
           </div>
         </Col>
       </Row>

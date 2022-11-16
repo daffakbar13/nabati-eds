@@ -3,7 +3,7 @@ import { METHODS } from 'src/api/methods'
 import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
 import { Undelivered } from './types'
 
-const subUrl = 'v1/undelivered/list'
+const subUrl = 'v1/undelivered'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getUndeliveredList = async (

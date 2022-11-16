@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
@@ -48,69 +49,97 @@ export const TableDeliveryOrder = [
     'Delivery Order ',
     'delivery_order_id',
     true,
-    (link, record) => <Linked link={link} type='id' status={record.status_name} />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    170,
+    true,
+    'have-checkbox',
   ),
   CreateColumns(
     'Order Type',
     'order_type',
-    true,
-    (order_type) => <span>{order_type}</span>,
+    false,
+    undefined,
+    200,
   ),
   CreateColumns(
     'Order Date',
     'order_date',
-    true,
+    false,
+    undefined,
+    120,
   ),
   CreateColumns(
     'Sales Org.',
     'sales_org_id',
-    true,
+    false,
+    undefined,
+    110,
   ),
   CreateColumns(
     'Branch',
     'branch_id',
-    true,
+    false,
+    undefined,
+    90,
   ),
   CreateColumns(
     'Sold To Customer',
     'sold_to_customer',
-    true,
+    false,
+    undefined,
+    250,
+
   ),
   CreateColumns(
     'Ship To Customer',
     'ship_to_customer',
-    true,
+    false,
+    undefined,
+    250,
+
   ),
   CreateColumns(
     'Salesman',
     'salesman_id',
-    true,
+    false,
+    undefined,
+    360,
+
   ),
   CreateColumns(
     'Total Amount',
     'total_amount',
-    true,
+    false,
+    (total_amount) => parseInt(total_amount).toLocaleString(),
+    140,
+
   ),
   CreateColumns(
     'Create From',
     'create_from',
-    true,
+    false,
+    undefined,
+    125,
   ),
   CreateColumns(
     'Availibility',
     'availablity',
-    true,
+    false,
+    undefined,
+    190,
   ),
   CreateColumns(
     'Status',
     'status_name',
-    true,
+    false,
     (status) => <Tag {...(status === 'Complete' && { color: 'green' })} > {status}</Tag>,
   ),
   CreateColumns(
     'Status Process',
     'status_process',
-    true,
+    false,
+    undefined,
+    190,
   ),
   CreateColumns(
     'Action',

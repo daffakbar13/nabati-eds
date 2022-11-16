@@ -3,7 +3,7 @@ import { METHODS } from 'src/api/methods'
 import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
 import { DeliveryOrder } from './types'
 
-const subUrl = 'v1/delivery-orders'
+const url = 'v1/delivery-orders'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getDeliveryOrderList = async (
@@ -12,7 +12,7 @@ export const getDeliveryOrderList = async (
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
-    subUrl: `${subUrl}/list`,
+    subUrl: `${url}/list`,
     data: params,
   })
   return response.data
@@ -23,21 +23,25 @@ export const getDeliveryOrderDetail = async (
 ): Promise<CommonListResponse<DeliveryOrder>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${subUrl}/${params.id}/detail`,
+    subUrl: `${url}/${params.id}/detail`,
     // data: params
   })
   return response.data
 }
 
 export const createDeliveryOrder = async (payload: any) => {
-  const response = await call({ method: METHODS.POST, subUrl, data: payload })
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/create`,
+    data: payload,
+  })
   return response.data
 }
 
 export const editDeliveryOrder = async (payload: DeliveryOrder) => {
   const response = await call({
     method: METHODS.PATCH,
-    subUrl: `${subUrl}/${payload.id}`,
+    subUrl: `${url}/${payload.id}`,
     data: payload,
   })
   return response.data
