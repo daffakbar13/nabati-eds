@@ -10,11 +10,11 @@ const checkIsEvent = (obj: any) => !!obj?.target
 // Jika lebih dari 2 children, hanya 2 children yang di render
 
 export default function SingleField({
-  options,
-  label,
+  options = [],
+  label = '',
   children,
-  handleChange,
-  value,
+  handleChange = (a: any) => { },
+  value = { option: '', fromValue: '', toValue: '' },
   field,
   dataType,
 }) {
@@ -47,8 +47,6 @@ export default function SingleField({
   const onOptionChange = (val: any) => {
     handleChange({ field, dataType, option: val })
   }
-
-  console.log('value', value)
 
   return (
     <Container>

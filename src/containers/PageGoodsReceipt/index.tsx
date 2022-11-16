@@ -41,7 +41,7 @@ export default function PageGoodsReceipt() {
               <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
                 <SelectMasterData type='SLOC' />
               </SmartFilter.Field>
-              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Posting Date' options={['GT', 'LT', 'EQ', 'CP']} >
+              <SmartFilter.Field field='date_aja' dataType='S' label='Posting Date' options={['GT', 'LT', 'EQ', 'CP']} >
                 <DatePickerInput
                   label={''}
                   fullWidth
