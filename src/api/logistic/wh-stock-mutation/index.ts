@@ -18,7 +18,7 @@ export const getListSwapHandling = async (
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/list`,
+    subUrl: `${url}`,
     overrideBaseUrl,
     data: params,
   })

@@ -22,7 +22,7 @@ export default function PageWhStockMutation(props: Props) {
 
   return (
     <Col>
-      <Text variant={'h4'}>Stock Realtime</Text>
+      <Text variant={'h4'}>Warehouse Stock Mutation</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

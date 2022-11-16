@@ -6,6 +6,7 @@ import { Card, DebounceSelect, SearchQueryParams, SmartFilter, DownloadButton } 
 import { fakeApi } from 'src/api/fakeApi'
 import { exportExcelStockRealTime, getStockRealtimeList } from 'src/api/logistic/stock-real-time'
 import { useSimpleTable } from 'src/hooks'
+import { fieldBranchAll, fieldQuotationType, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import { columns } from './columns'
 
 export default function PageRealTime() {
@@ -27,26 +28,14 @@ export default function PageRealTime() {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['NB', 'NP', 'GT', 'LT']} >
-                <DebounceSelect fetchOptions={fakeApi} mode='multiple' />
+              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
+                <DebounceSelect fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['NP', 'GT']} >
-                <DebounceSelect fetchOptions={fakeApi} />
-                <DebounceSelect fetchOptions={fakeApi} />
+              <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['NP', 'GT']} >
+                <DebounceSelect fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
-              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Date Aja' options={['GT', 'LT', 'EQ', 'CP']} >
-                <DatePickerInput
-                  label={''}
-                  fullWidth
-                  format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
-                />
-                <DatePickerInput
-                  fullWidth
-                  label={''}
-                  format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
-                />
+              <SmartFilter.Field placeholder='material_id' field='date_aja' dataType='S' label='Material' options={['GT', 'LT', 'EQ', 'CP']} >
+                <DebounceSelect fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>
