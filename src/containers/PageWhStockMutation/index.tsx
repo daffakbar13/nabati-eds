@@ -1,90 +1,65 @@
-import React from 'react'
-import { MoreOutlined } from '@ant-design/icons'
-import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
+import { useRouter } from 'next/router'
+import { Button, Col, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { useState } from 'react'
+import { Card, DebounceSelect, SearchQueryParams, SmartFilter, DownloadButton } from 'src/components'
 
-import { Card } from 'src/components'
-import { useTable, useTitlePage } from 'src/hooks'
-import { colors } from 'src/configs/colors'
-
-import { getListSwapHandling } from 'src/api/logistic/wh-stock-mutation'
-
-import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { Props } from './types'
+import { fakeApi } from 'src/api/fakeApi'
+import { useSimpleTable } from 'src/hooks'
+import { getListSwapHandling, exportExcelListSwapHandling } from 'src/api/logistic/wh-stock-mutation'
 import { columns } from './columns'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
+import { Props } from './types'
 
-export default function PageRealTime(props: Props) {
-  const { filters, setFilters } = useSmartFilters([
-    FILTER.SALES_ORG,
-    FILTER.BRANCH,
-    FILTER.SOLD_TO_CUSTOMER,
-    FILTER.SHIP_TO_CUSTOMER,
-    FILTER.ORDER_TYPE,
-    FILTER.ORDER_DATE,
-  ])
+export default function PageWhStockMutation(props: Props) {
+  const [filters, setFilters] = useState([])
+  const router = useRouter()
 
-  const table = useTable({
+  const tableProps = useSimpleTable({
     funcApi: getListSwapHandling,
-    haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns,
+    filters,
   })
-  const titlePage = useTitlePage('list')
-  const hasData = table.total > 0
-  const HideShowColumns = () => {
-    const content = (
-      <>
-        {columns.map(({ title }, index) => (
-          <div key={index}>
-            <Checkbox
-              defaultChecked={!table.hiddenColumns.includes(title)}
-              onChange={(event) => {
-                table.handleHideShowColumns(event.target, title)
-              }}
-            />{' '}
-            {title}
-          </div>
-        ))}
-        <Divider />
-        <h4
-          onClick={table.handleResetHideShowColumns}
-          style={{ textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
-        >
-          Reset
-        </h4>
-      </>
-    )
-    return (
-      <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-        <MoreOutlined style={{ cursor: 'pointer' }} />
-      </Popover>
-    )
-  }
 
   return (
     <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
+      <Text variant={'h4'}>Warehouse Stock Mutation</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search Menu Design Name"
-              colorIcon={colors.grey.regular}
-              onChange={() => { }}
-            />
-            <SmartFilter onOk={setFilters} filters={filters} />
+            <SearchQueryParams />
+            <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field='sales_org_id' dataType='S' label='Sales Org ID' options={['NB', 'NP', 'GT', 'LT']} >
+                <DebounceSelect fetchOptions={fakeApi} mode='multiple' />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['NP', 'GT']} >
+                <DebounceSelect fetchOptions={fakeApi} />
+                <DebounceSelect fetchOptions={fakeApi} />
+              </SmartFilter.Field>
+              <SmartFilter.Field placeholder='Posting Date' field='date_aja' dataType='S' label='Date Aja' options={['GT', 'LT', 'EQ', 'CP']} >
+                <DatePickerInput
+                  label={''}
+                  fullWidth
+                  format={'DD-MMM-YYYY'}
+                  placeholder='Posting Date'
+                />
+                <DatePickerInput
+                  fullWidth
+                  label={''}
+                  format={'DD-MMM-YYYY'}
+                  placeholder='Posting Date'
+                />
+              </SmartFilter.Field>
+            </SmartFilter>
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => { }}>
-              Download
+            <DownloadButton downloadApi={exportExcelListSwapHandling} />
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => router.push(`${router.pathname}/create`)}
+            >
+              Create
             </Button>
           </Row>
         </Row>
@@ -92,26 +67,8 @@ export default function PageRealTime(props: Props) {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
-            dataSource={table.data}
-            showSorterTooltip={false}
-          />
+          <Table {...tableProps} />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.total}
-            showTotal={showTotal}
-            onChange={(page, limit) => { table.handlePagination(page, limit) }}
-          />
-        )}
       </Card>
     </Col>
   )

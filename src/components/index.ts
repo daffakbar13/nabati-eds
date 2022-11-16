@@ -6,5 +6,6 @@ export { default as Popup } from './Popup'
 export { default as SearchQueryParams } from './SearchQueryParams'
 export { default as SmartFilter } from './SmartFilter2'
 export { default as DebounceSelect } from './DebounceSelect2'
+export { default as DownloadButton } from './DownloadButton'
 
 export { Card } from './Card'

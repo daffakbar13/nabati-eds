@@ -7,17 +7,12 @@ import moment from 'moment'
 // import { PATH } from 'src/configs/menus'
 
 export const columns = [
-  {
-    title: 'No',
-    ...dataIndexWithSorter('branch_id'),
-    render: (text, record, index) => <>{index + 1}</>,
-  },
   CreateColumns(
-    'Branch',
+    'No',
     'branch_id',
     true,
-    (branchId, record) => <>{`${branchId} - ${record.branch_name}`}</>,
-    300,
+    (text, record, index) => <>{index + 1}</>,
+    100,
   ),
   CreateColumns(
     'Branch',

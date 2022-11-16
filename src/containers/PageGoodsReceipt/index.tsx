@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter, DebounceSelect } from 'src/components'
 
-import useSimpleTable from 'src/hooks/useSimpleTable';
+import { useSimpleTable } from 'src/hooks';
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
 import { fakeApi } from 'src/api/fakeApi'
 import { Props } from './types'
