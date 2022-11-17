@@ -99,13 +99,13 @@ export const menuLogistic = [
         onClick: () => Router.push(`${PATH.LOGISTIC}/request-intra-channel`),
       },
       {
-        key: 'goods-issue',
+        key: 'goods-issue-intra-channel',
         title: 'Goods Issue',
         content: () => 'Goods Issue',
         onClick: () => Router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel`),
       },
       {
-        key: 'goods-receipt',
+        key: 'goods-receipt-intra-channel',
         title: 'Goods Receipt',
         content: () => 'Goods Receipt',
         onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel`),
