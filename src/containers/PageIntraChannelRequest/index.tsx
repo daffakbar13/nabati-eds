@@ -22,7 +22,6 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageIntraChannelRequest(props: PageQuotationProps) {
-
     const [filters, setFilters] = useState([])
 
     const table = useTable({
@@ -62,7 +61,6 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                 field: 'id',
                 option: 'EQ',
                 from_value: router.query.search,
-                to_value: router.query.search,
                 data_type: 'S',
             })
         }
