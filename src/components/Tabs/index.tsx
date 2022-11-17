@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card } from 'antd';
-import 'antd/dist/antd.css';
+// import 'antd/dist/antd.css';
 
 interface Tab {
     key: string;
