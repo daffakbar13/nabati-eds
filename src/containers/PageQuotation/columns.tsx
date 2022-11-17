@@ -9,12 +9,28 @@ import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+interface LinkedProps {
+  link: string
+  status: string
+  type: 'id' | 'action'
+  page: string
+  limit: string
+}
+
+function Linked(props: LinkedProps) {
+  const { link, status, type, limit, page } = props
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
       ? router.push(`${PATH.SALES}/quotation/edit/${link}`)
-      : router.push(`${PATH.SALES}/quotation/detail/${link}?status=${status}`)
+      : router.push({
+        pathname: `${PATH.SALES}/quotation/detail/${link}`,
+        query: {
+          status,
+          page,
+          limit,
+        },
+      })
   }
   const [hover, setHover] = React.useState(false)
 
@@ -50,7 +66,13 @@ export const useColumnQuotation = [
     'Quotation',
     'id',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (link: string, { status_name, page, limit }: any) => <Linked
+      link={link}
+      type="id"
+      status={status_name}
+      page={page}
+      limit={limit}
+    />,
     170,
     true,
     'have-checkbox',
@@ -139,6 +161,12 @@ export const useColumnQuotation = [
     'Action',
     'id',
     false,
-    (link, record) => <Linked link={link} type="action" status={record.status_name} />,
+    (link, { status_name, page, limit }) => <Linked
+      link={link}
+      type="action"
+      status={status_name}
+      page={page}
+      limit={limit}
+    />,
   ),
 ]
