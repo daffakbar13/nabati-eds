@@ -1,6 +1,4 @@
-/* eslint-disable radix */
 /* eslint-disable no-unused-expressions */
-import { useRouter } from 'next/router'
 import React from 'react'
 import { CommonListParams } from 'src/api/types'
 
@@ -24,19 +22,17 @@ export default function useTable(props: useTableProps) {
     page: 1,
   })
   const [total, setTotal] = React.useState(0)
-  const [defaultPage, setDefaultPage] = React.useState(1)
-  const [defaultLimit, setDefaultLimit] = React.useState(20)
   const [columns, setColumns] = React.useState(props.columns)
   const [rowSelection, setRowSelection] = React.useState({})
   const [loading, setLoading] = React.useState(true)
   const [selected, setSelected] = React.useState([])
   const [hiddenColumns, setHiddenColumns] = React.useState([])
   const isHaveCheckbox = (key: string) => haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
-  const router = useRouter()
 
   const updateData = (newData: any[]) => {
     setData([])
     setData(newData)
+    setLoading(false)
   }
 
   const handleHideShowColumns = (event, newData: any) => {
@@ -64,53 +60,36 @@ export default function useTable(props: useTableProps) {
     },
     ...(haveCheckbox !== 'All' && {
       getCheckboxProps: (record) => ({
-        style: { ...(isHaveCheckbox(record[haveCheckbox.headCell]) && { display: 'none' }), p: 5 },
+        style: { ...(isHaveCheckbox(record[haveCheckbox.headCell]) && { display: 'none' }) },
         disabled: isHaveCheckbox(record[haveCheckbox.headCell]),
         // Column configuration not to be checked
         name: record[haveCheckbox.headCell],
       }),
     }),
     fixed: 'left',
+    // preserveSelectedRowKeys: true,
   }
 
   React.useEffect(() => {
-    setLoading(true)
     if (haveCheckbox) {
       setRowSelection(defineRowSelection)
     }
-    funcApi(body)
-      .then((res) => res.data)
-      .then((datas) => {
-        updateData(datas.results.map((obj) => ({
-          ...obj,
-          page: datas.current_page,
-          limit: datas.limit_per_page,
-        })))
-        setTotal(datas.total_rows)
-      })
-      .then(() => setLoading(false))
-      .catch((_) => updateData([]))
-  }, [body])
-
-  React.useEffect(() => {
-    if (router.query.page && router.query.limit) {
-      const { page, limit } = router.query as NodeJS.Dict<string>
-      // setData([])
-      setDefaultLimit(parseInt(limit))
-      setDefaultPage(parseInt(page))
+    async function getApi() {
+      if (funcApi) {
+        setLoading(true)
+        funcApi(body)
+          .then((response) => {
+            response.data.result
+              ? updateData(response.data.result)
+              : updateData(response.data.results)
+            setTotal(response.data.total_rows)
+          })
+          .catch((_) => updateData([]))
+      }
     }
-  }, [router])
 
-  React.useEffect(() => {
-    // if (defaultPage > 0 && defaultLimit > 0) {
-    setBody({
-      filters: [],
-      limit: defaultLimit,
-      page: defaultPage,
-    })
-    // handlePagination(defaultPage, defaultLimit)
-    // }
-  }, [defaultPage, defaultLimit])
+    getApi()
+  }, [body])
 
   React.useEffect(() => {
     setColumns(props.columns.filter((e) => !hiddenColumns.includes(e.title)))
@@ -128,8 +107,6 @@ export default function useTable(props: useTableProps) {
     columns,
     handleResetHideShowColumns,
     handlePagination,
-    defaultPage,
-    defaultLimit,
     handleFilter,
   }
 }
