@@ -30,7 +30,7 @@ export default function SingleField({
       field,
       dataType,
       fromValue: isEvent ? val.target.value : val,
-      option: value?.option ?? options[0],
+      option: value?.option || options[0],
     })
   }
 
@@ -40,7 +40,7 @@ export default function SingleField({
       field,
       dataType,
       toValue: isEvent ? val.target.value : val,
-      option: value?.option ?? options[0],
+      option: value?.option || options[0],
     })
   }
 

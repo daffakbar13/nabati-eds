@@ -95,15 +95,15 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                     <Row gap="16px">
                         <SearchQueryParams placeholder='Search by Request Number' key="id" />
                         <SmartFilter onOk={setFiltered}>
-                            <SmartFilter.Field placeholder='Supplying Branch' field='suppl_sloc_id' dataType='S' label='Posting Date' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
+                            <SmartFilter.Field field='suppl_sloc_id' dataType='S' label='Supplying Branch' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
                                 <DebounceSelect fetchOptions={fieldBranchAll} />
                                 <DebounceSelect fetchOptions={fieldBranchAll} />
                             </SmartFilter.Field>
-                            <SmartFilter.Field placeholder='Receiving Branch' field='receive_plant_id' dataType='S' label='Posting Date' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
+                            <SmartFilter.Field field='receive_plant_id' dataType='S' label='Receiving Branch' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
                                 <DebounceSelect fetchOptions={fieldBranchAll} />
                                 <DebounceSelect fetchOptions={fieldBranchAll} />
                             </SmartFilter.Field>
-                            <SmartFilter.Field placeholder='Posting Date' field='posting_date' dataType='S' label='Posting Date' options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}>
+                            <SmartFilter.Field field='posting_date' dataType='S' label='Posting Date' options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}>
                                 <DatePickerInput
                                     label={''}
                                     fullWidth
@@ -117,7 +117,7 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                                     placeholder='Posting Date'
                                 />
                             </SmartFilter.Field>
-                            <SmartFilter.Field placeholder='Status' field='status' dataType='S' label='Posting Date' options={['EQ']} >
+                            <SmartFilter.Field field='status' dataType='S' label='Status' options={['EQ']} >
                                 <DebounceSelect fetchOptions={fieldBranchAll} />
                             </SmartFilter.Field>
                         </SmartFilter>
