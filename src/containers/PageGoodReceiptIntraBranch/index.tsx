@@ -1,18 +1,17 @@
-import React, { } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card } from 'src/components'
-import { colors } from 'src/configs/colors'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import DebounceSelect from 'src/components/DebounceSelect'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
-import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt-intra-branch'
 import Popup from 'src/components/Popup'
-import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { Props } from './types'
 import { columns } from './columns'
+import { fieldBranchAll } from 'src/configs/fieldFetches'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -23,14 +22,7 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageGoodsIssue(props: Props) {
-  const { filters, setFilters } = useSmartFilters([
-    FILTER.SALES_ORG,
-    FILTER.BRANCH,
-    FILTER.SOLD_TO_CUSTOMER,
-    FILTER.SHIP_TO_CUSTOMER,
-    FILTER.ORDER_TYPE,
-    FILTER.ORDER_DATE,
-  ])
+  const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getGoodReceiptList,
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
@@ -50,6 +42,27 @@ export default function PageGoodsIssue(props: Props) {
       </div>
     ),
   }
+
+  const statusOption = [
+    { label: 'All', value: null },
+    { label: 'Done', value: 'Done' },
+    { label: 'Pending', value: 'Pending' },
+  ]
+
+  useEffect(() => {
+    table.handleFilter(filters)
+  }, [filters])
+
+  useEffect(() => {
+    if (router.query.search) {
+      filters.push({
+        field: 'e.id',
+        option: 'EQ',
+        from_value: router.query.search,
+        data_type: 'S',
+      })
+    }
+  }, [router.query.search])
 
   const HideShowColumns = () => {
     const content = (
@@ -88,29 +101,38 @@ export default function PageGoodsIssue(props: Props) {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search Menu Design Name"
-              colorIcon={colors.grey.regular}
-              onChange={() => { }}
-            />
-            <SmartFilter
-              onOk={(newVal) => {
-                const newFiltered = newVal
-                  .filter((obj) => obj.fromValue)
-                  .map((obj) => ({
-                    field: `eds_order.${obj.field}`,
-                    option: obj.option,
-                    from_value: obj.fromValue.value,
-                    to_value: obj.toValue?.value,
-                  }))
-                setFilters(newVal)
-                table.handleFilter(newFiltered)
-                // setFiltered(newFiltered)
-                console.log('newVal', newVal)
-              }}
-              filters={filters} />
+            <SearchQueryParams placeholder='Search by GR Number' />
+            <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field='suppl_sloc_id' dataType='S' label='Supplying Branch' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
+                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
+                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='receive_plant_id' dataType='S' label='Receiving Branch' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
+                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
+                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='posting_date' dataType='S' label='Posting Date' options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}>
+                <DatePickerInput
+                  label={''}
+                  fullWidth
+                  format={'DD-MMM-YYYY'}
+                  placeholder='Posting Date'
+                />
+                <DatePickerInput
+                  fullWidth
+                  label={''}
+                  format={'DD-MMM-YYYY'}
+                  placeholder='Posting Date'
+                />
+              </SmartFilter.Field>
+              <SmartFilter.Field field='status' dataType='S' label='Status' options={['EQ']} >
+                <DebounceSelect
+                  type='select'
+                  placeholder={'Select'}
+                  options={statusOption}
+                />
+              </SmartFilter.Field>
+            </SmartFilter>
           </Row>
           <Row gap="16px">
             <Button size="big" variant="secondary" onClick={() => { }}>
