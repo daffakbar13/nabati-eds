@@ -8,22 +8,20 @@ export interface TaggedStatus {
 export default function TaggedStatus(props: TaggedStatus) {
     let color = 'yellow'
 
-    if (props.status == 'Done') {
+    if (props.status === 'Done') {
         color = 'green';
-    } else if (props.status == 'Canceled' || props.status == 'Rejected') {
+    } else if (props.status === 'Canceled' || props.status === 'Rejected') {
         color = 'red';
-    } else if (props.status == 'Approved') {
+    } else if (props.status === 'Approved') {
         color = 'blue';
     }
-
-    if (props.size) {
-        return (
-            <Tag {...({ color: color })} ><Text variant={props.size} {...({ color: color })}>{props.status}</Text> </Tag>
-        )
-    } else {
-        return (
-            <Tag {...({ color: color })} >{props.status}</Tag>
-        )
-    }
-
+    return (
+        <Tag {...({ color: color })} >
+            {props.size ? (
+                <Text variant={props.size} {...({ color: color })}>{props.status}</Text>
+            ) : (
+                <>{props.status}</>
+            )}
+        </Tag>
+    )
 }
