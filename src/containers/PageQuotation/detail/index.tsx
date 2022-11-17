@@ -138,7 +138,13 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
             cursor: 'pointer',
           }}
           onClick={() => {
-            router.push('/sales/quotation')
+            router.push({
+              pathname: `${PATH.SALES}/quotation`,
+              query: {
+                page: router.query.page,
+                limit: router.query.limit,
+              },
+            })
           }}
         >
           <ArrowLeftOutlined style={{ fontSize: 25 }} />

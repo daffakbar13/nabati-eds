@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 import React, { } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
@@ -412,7 +413,8 @@ export default function PageQuotation(props: PageQuotationProps) {
                 </div>
                 {hasData && (
                     <Pagination
-                        defaultPageSize={20}
+                        defaultPageSize={table.defaultLimit}
+                        defaultCurrent={table.defaultPage}
                         pageSizeOptions={[20, 50, 100]}
                         showLessItems
                         showSizeChanger

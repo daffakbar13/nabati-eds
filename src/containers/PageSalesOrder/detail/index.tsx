@@ -140,7 +140,13 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
             cursor: 'pointer',
           }}
           onClick={() => {
-            router.push('/sales/sales-order')
+            router.push({
+              pathname: `${PATH.SALES}/sales-order`,
+              query: {
+                page: router.query.page,
+                limit: router.query.limit,
+              },
+            })
           }}
         >
           <ArrowLeftOutlined style={{ fontSize: 25 }} />
