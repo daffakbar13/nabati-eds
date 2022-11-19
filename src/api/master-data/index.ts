@@ -25,8 +25,10 @@ const subUrl = {
   getDocTypeByCategory: 'v1/master/get-doc-type/category',
   getConfigSloc: 'v1/master/get-config-sloc/PP01',
   getRouteByCompany: 'v1/master/get-route/PP01',
+  getRouteIntraChannel: 'v1/intra-channel',
 }
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
+const BaseUrl2 = 'https://dist-system.nabatisnack.co.id:3002/'
 
 export const getCompanies = async (): Promise<CommonDetailResponse<any>> => {
   const response = await call({
@@ -204,6 +206,28 @@ export const getRouteByCompany = async (): Promise<CommonDetailResponse<any>> =>
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getRouteByCompany}`,
+  })
+
+  return response.data
+}
+
+export const getProductByBranch = async (
+  idbranch: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${BaseUrl2}${subUrl.getRouteIntraChannel}/product-branch/${idbranch}/list`,
+  })
+
+  return response.data
+}
+
+export const getItemReceiver = async (
+  idProduct: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${BaseUrl2}${subUrl.getRouteIntraChannel}/product/${idProduct}/detail`,
   })
 
   return response.data

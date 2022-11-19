@@ -5,11 +5,16 @@
 import React from 'react'
 import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldItem, fieldUom } from 'src/configs/fieldFetches'
+import { productBranch, fieldUom, itemReceiver } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons';
 import CreateColumns from 'src/utils/createColumns'
 
-export const useTableAddItem = () => {
+interface propsUseTable {
+    idbranch: string,
+}
+
+
+export const useTableAddItem = (props: propsUseTable) => {
     const initialValue = {
         product_sender_id: '',
         product_receiver_id: '',
@@ -20,10 +25,16 @@ export const useTableAddItem = () => {
         batch: '',
         remarks: '',
     }
-    const [data, setData] = React.useState([initialValue])
+
+    const [data, setData] = React.useState([])
     const [optionsUom, setOptionsUom] = React.useState([])
+    const [valueItemSender, setValueItemSender] = React.useState([])
     const [fetching, setFetching] = React.useState(false)
     const [loading, setLoading] = React.useState(false)
+
+    React.useEffect(() => {
+        setData([initialValue]);
+    }, [props.idbranch])
 
     function handleChangeData(key: string, value: string | number, index: number) {
         setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
@@ -69,7 +80,7 @@ export const useTableAddItem = () => {
             (product_id, __, index) => <DebounceSelect
                 type='select'
                 value={product_id as any}
-                fetchOptions={fieldItem}
+                fetchOptions={(search) => productBranch(search, props.idbranch)}
                 onChange={(e) => {
                     handleChangeData('product_sender_id', e.value, index)
                     setFetching(true)
@@ -82,13 +93,9 @@ export const useTableAddItem = () => {
             'product_id',
             false,
             (product_id, __, index) => <DebounceSelect
-                type='select'
-                value={product_id as any}
-                fetchOptions={fieldItem}
-                onChange={(e) => {
-                    handleChangeData('product_receiver_id', e.value, index)
-                    setFetching(true)
-                }}
+                type='input'
+                disabled
+                value={valueItemSender[index] || ''}
             />,
             400,
         ),
@@ -159,25 +166,32 @@ export const useTableAddItem = () => {
                 if (product_sender_id !== '') {
                     fieldUom(product_sender_id)
                         .then((value) => {
-                            // console.log("value :");
-                            // console.log(value);
+                            // console.log("value :" + value);
                             const newOptionsUom = [...optionsUom]
-                            let newUom = uom_id
-                            if (value[2].value) {
+                            if (value[2]?.value) {
                                 let newUom = uom_id === '' ? value[2].value : uom_id
+                                handleChangeData('uom_id', newUom, index)
+                                handleChangeData('base_uom_id', newUom, index)
+                            } else {
+                                let newUom = uom_id
+                                handleChangeData('uom_id', newUom, index)
+                                handleChangeData('base_uom_id', newUom, index)
                             }
                             newOptionsUom[index] = value
                             setOptionsUom(newOptionsUom)
-                            handleChangeData('uom_id', newUom, index)
-                            handleChangeData('base_uom_id', newUom, index)
+                        })
+                    itemReceiver(product_sender_id)
+                        .then((response) => {
+                            const newValueItemSender = [...valueItemSender]
+                            handleChangeData('product_receiver_id', response.product_mt, index)
+                            newValueItemSender[index] = `${response.product_mt} - ${response.product_mt_name}`
+                            setValueItemSender(newValueItemSender)
                         })
                 }
             })
             setFetching(false)
         }
     }, [fetching])
-
-    console.log(data);
 
     return {
         data,
