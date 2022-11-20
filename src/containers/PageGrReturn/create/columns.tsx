@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text } from 'pink-lava-ui'
 import { InputNumber, Input } from 'antd'
-import DebounceSelect from 'src/components/DebounceSelect'
+import DebounceSelect from 'src/components/DebounceSelect2'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import { fakeApi } from 'src/api/fakeApi'
 
