@@ -9,33 +9,59 @@ import { CommonSelectValue } from 'src/configs/commonTypes'
 import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
+import { createPoSto } from 'src/api/logistic/po-sto'
+import { fieldBranchSupply } from 'src/configs/fieldFetches'
 
-interface Item {
-  key: string
-  item: CommonSelectValue
-  uom: CommonSelectValue
-  qty: number
-  price: number
-  gross: number
+interface ItemsState {
+  product_id: string,
+  description: string,
+  qty: number,
+  uom_id: string,
+  base_qty: number,
+  base_uom_id: string,
+  sloc_id: string,
+  remarks: string,
+  batch: string,
 }
 
-const originData: Item[] = [
-  {
-    key: '0',
-    item: { label: 'Rafik', value: 'Rafik' },
-    uom: { label: 'Hanigal', value: 'Hanigal' },
-    qty: 123,
-    price: 345,
-    gross: 345,
-  },
-]
+interface dataForm {
+  sto_doc_type: string,
+  document_date: string,
+  posting_date: string,
+  suppl_branch_id: string,
+  receive_plant_id: string,
+  sloc_id: string,
+  remarks: string,
+  status_id: string,
+  items: Array<ItemsState>,
+}
 
 export default function CreateBilling() {
+  const now = new Date().toISOString()
+
   const router = useRouter()
-  const [data, setData] = useState<Item[]>(originData);
-  const tableAddItems = useTableAddItem();
+  const [supplyingBranch, setSupplyingBranch] = React.useState('')
+  const [receivingBranch, setReceivingBranch] = React.useState('')
+  const tableAddItems = useTableAddItem({ idSupplyingBranch: supplyingBranch.split(' - ')[0] || '', idReceivingBranch: receivingBranch.split(' - ')[0] || '' });
   const [cancel, setCancel] = useState(false);
   const [newPoSTO, setNewPoSTO] = useState()
+  const [dataForm, setDataForm] = React.useState<dataForm>()
+
+  const initialValue = {
+    sto_doc_type: 'ZPST',
+    document_date: moment(now).format('YYYY-MM-DD'),
+    posting_date: moment(now).format('YYYY-MM-DD'),
+    suppl_branch_id: 'P100',
+    receive_plant_id: 'P104',
+    sloc_id: 'C1624021',
+    remarks: '',
+    status_id: '00',
+    items: tableAddItems.data,
+  }
+
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
 
   return (
     <Col>
@@ -47,7 +73,11 @@ export default function CreateBilling() {
             <Button size="big" variant="tertiary" onClick={() => { setCancel(true) }}>
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={() => { }}>
+            <Button size="big" variant="primary" onClick={() => {
+              createPoSto({ ...initialValue, ...dataForm })
+                .then((response) => setNewPoSTO(response.data.id))
+                .catch((e) => console.log(e))
+            }}>
               Submit
             </Button>
           </Row>
@@ -58,9 +88,14 @@ export default function CreateBilling() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           <DebounceSelect
             type='select'
-            label="Supplying Branch"
-            required fetchOptions={fakeApi}
-            onChange={() => { }}
+            label="Receiving Branch"
+            required
+            fetchOptions={(search) => fieldBranchSupply(search, '', receivingBranch)}
+            onChange={(val: any) => {
+              onChangeForm('receive_plant_id', val.label.split(' - ')[0]);
+              setReceivingBranch(val.label);
+            }}
+            value={receivingBranch}
           />
           <DatePickerInput
             fullWidth
@@ -73,8 +108,12 @@ export default function CreateBilling() {
           <DebounceSelect
             type='select'
             label="Supplying Branch"
-            fetchOptions={fakeApi}
-            onChange={() => { }}
+            fetchOptions={(search) => fieldBranchSupply(search, '', supplyingBranch)}
+            onChange={(val: any) => {
+              onChangeForm('suppl_branch_id', val.label.split(' - ')[0]);
+              setSupplyingBranch(val.label);
+            }}
+            value={supplyingBranch}
           />
           <DatePickerInput
             fullWidth
@@ -86,9 +125,7 @@ export default function CreateBilling() {
           />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-          + Add Item
-        </Button>
+        {dataForm?.suppl_branch_id || dataForm?.receive_plant_id ? <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>+ Add Item</Button> : ''}
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
@@ -135,7 +172,7 @@ export default function CreateBilling() {
                   No
                 </Button>
                 <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                  router.push(`${PATH.LOGISTIC}/request-intra-channel`)
+                  router.push(`${PATH.LOGISTIC}/po-sto`)
                 }}>
                   Yes
                 </Button>
@@ -144,7 +181,7 @@ export default function CreateBilling() {
             {newPoSTO
               && <>
                 <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                  router.push(`${PATH.LOGISTIC}/request-intra-channel`)
+                  router.push(`${PATH.LOGISTIC}/po-sto`)
                 }}>
                   OK
                 </Button>

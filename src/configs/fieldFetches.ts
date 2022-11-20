@@ -153,7 +153,7 @@ export function fieldBranchAll(search: string) {
                 })))
 }
 
-export function fieldBranchSupply(search: string, channel = '') {
+export function fieldBranchSupply(search: string, channel = '', supplybranch = '') {
     // return getConfigSloc()
     //     .then((result) => result.data
     //         .map(({ branch_id }) => branch_id))
@@ -175,7 +175,7 @@ export function fieldBranchSupply(search: string, channel = '') {
             result.data
                 .filter(({ id, name, branch_type }) =>
                     (id.toLowerCase().includes(search.toLowerCase())
-                        || name.toLowerCase().includes(search.toLowerCase())) && branch_type != channel)
+                        || name.toLowerCase().includes(search.toLowerCase())) && branch_type != channel && id != supplybranch)
                 .splice(0, 10)
                 .map(({ id, name, branch_type }) => ({
                     label: [id, name].join(' - '),

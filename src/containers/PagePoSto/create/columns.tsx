@@ -5,30 +5,44 @@
 import React from 'react'
 import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldItem, fieldUom } from 'src/configs/fieldFetches'
+import { productBranch, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons';
 import CreateColumns from 'src/utils/createColumns'
 
-export const useTableAddItem = () => {
+interface propsUseTable {
+  idSupplyingBranch: string,
+  idReceivingBranch: string,
+}
+
+export const useTableAddItem = (props: propsUseTable) => {
   const initialValue = {
-    product_sender_id: '',
+    product_id: '',
+    description: '',
     qty: 0,
-    base_qty: 0,
     uom_id: '',
+    base_qty: 0,
     base_uom_id: '',
+    sloc_id: '',
+    remarks: '',
     batch: '',
   }
-  const [data, setData] = React.useState([initialValue])
+  const [data, setData] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
+
+  React.useEffect(() => {
+    if (props.idSupplyingBranch != '' && props.idReceivingBranch != '') {
+      setData([initialValue]);
+    }
+  }, [props.idSupplyingBranch, props.idReceivingBranch])
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
   }
 
   function isNullProductId(index: number) {
-    return data.find((___, i) => i === index).product_sender_id === ''
+    return data.find((___, i) => i === index).product_id === ''
   }
 
   function handleDeleteRows(index: number) {
@@ -67,9 +81,11 @@ export const useTableAddItem = () => {
       (product_id, __, index) => <DebounceSelect
         type='select'
         value={product_id as any}
-        fetchOptions={fieldItem}
+        fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
         onChange={(e) => {
-          handleChangeData('product_sender_id', e.value, index)
+          handleChangeData('product_id', e.value, index)
+          handleChangeData('description', e.label.split(' - ')[1] || '', index)
+          handleChangeData('remarks', '', index)
           setFetching(true)
         }}
       />,
@@ -125,9 +141,9 @@ export const useTableAddItem = () => {
 
   React.useEffect(() => {
     if (fetching) {
-      data.forEach(({ product_sender_id, uom_id, qty }, index) => {
-        if (product_sender_id !== '') {
-          fieldUom(product_sender_id)
+      data.forEach(({ product_id, uom_id, qty }, index) => {
+        if (product_id !== '') {
+          fieldUom(product_id)
             .then((value) => {
               // console.log("value :");
               // console.log(value);

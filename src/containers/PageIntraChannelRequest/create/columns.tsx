@@ -13,7 +13,6 @@ interface propsUseTable {
     idbranch: string,
 }
 
-
 export const useTableAddItem = (props: propsUseTable) => {
     const initialValue = {
         product_sender_id: '',
