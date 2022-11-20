@@ -7,7 +7,7 @@ import {
   CommonDetailParams,
 } from 'src/api/types'
 import { API_BASE_URL_2 } from 'src/configs/env'
-import { StockRealTime } from './types'
+import { StockRealTime, StockRealTimeDetailResult } from './types'
 
 const url = 'v1/sto-purchase'
 
@@ -27,7 +27,7 @@ export const getListPoSto = async (
 
 export const getPoStoDetail = async (
   params: CommonDetailParams = {},
-): Promise<CommonDetailResponse<StockRealTime>> => {
+): Promise<CommonDetailResponse<StockRealTimeDetailResult>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${url}/${params.id}/detail`,

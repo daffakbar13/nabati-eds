@@ -7,6 +7,7 @@ export interface StockRealTime {
   readonly unrestrictedUse: string
   readonly booking: string
   readonly reservation: string
+  readonly purchase_id: string
 }
 
 export interface StockRealTimeDetailResult {

@@ -137,9 +137,6 @@ export default function PageDoSto(props: Props) {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => { }}>
-              Download
-            </Button>
             <Button
               size="big"
               variant="primary"

@@ -4,8 +4,6 @@ import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
-import { fakeApi } from 'src/api/fakeApi'
-import { CommonSelectValue } from 'src/configs/commonTypes'
 import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
@@ -99,7 +97,9 @@ export default function CreateBilling() {
           />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={(val: any) => {
+              onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
+            }}
             label="Doc Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
@@ -117,7 +117,9 @@ export default function CreateBilling() {
           />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={(val: any) => {
+              onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
+            }}
             label="Posting Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}

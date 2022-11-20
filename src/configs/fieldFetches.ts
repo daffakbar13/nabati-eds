@@ -1,5 +1,7 @@
 import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
+import { getListPoSto } from 'src/api/logistic/po-sto'
+import { getListDoSto } from 'src/api/logistic/do-sto'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -217,4 +219,31 @@ export function itemReceiver(productId: string) {
         .then((result) =>
             result.data
         )
+}
+
+export function fieldPoSto(search: string) {
+    return getListDoSto({ filters: [], limit: 20, page: 1 })
+        .then((result) => result.data.result
+            .map(({ purchase_id }) => purchase_id))
+        .then((allDo) => getListPoSto({ filters: [], limit: 20, page: 1 })
+            .then((result) =>
+                result.data.result
+                    .filter(({ id }) =>
+                        (id.toLowerCase().includes(search.toLowerCase()))
+                        && allDo.includes(id))
+                    .splice(0, 10)
+                    .map(({ id }) => ({
+                        label: id,
+                        value: id,
+                    }))))
+    // return getListPoSto()
+    //     .then((result) =>
+    //         result.data.result
+    //             .filter(({ id }) =>
+    //                 id.toLowerCase().includes(search.toLowerCase()))
+    //             .splice(0, 10)
+    //             .map(({ id }) => ({
+    //                 label: id,
+    //                 value: id,
+    //             })))
 }
