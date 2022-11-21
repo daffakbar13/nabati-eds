@@ -16,7 +16,7 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
   const navigate = () => {
     status === 'Draft'
       ? router.push(`${PATH.LOGISTIC}/do-sto/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}?status=${status}`)
+      : router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
   }
   const [hover, setHover] = React.useState(false)
 

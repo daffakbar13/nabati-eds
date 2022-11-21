@@ -12,6 +12,7 @@ import { Input } from 'pink-lava-ui'
 interface DataType {
   product_id: string
   description: string
+  description_show: string
   qty: number
   base_qty: number
   po_qty: number
@@ -28,6 +29,7 @@ export const useTableAddItem = (props: any) => {
     key: 0,
     product_id: '',
     description: '',
+    description_show: '',
     qty: 0,
     base_qty: 0,
     po_qty: 0,
@@ -61,7 +63,8 @@ export const useTableAddItem = (props: any) => {
       return {
         key: index,
         product_id: item.product_id,
-        description: `${item.product_id} - ${item.description}`,
+        description: item.description,
+        description_show: `${item.product_id} - ${item.description}`,
         qty: item.qty,
         base_qty: item.qty,
         po_qty: item.qty,
@@ -117,7 +120,7 @@ export const useTableAddItem = (props: any) => {
       'description',
       false,
       (description, __, index) => (
-        <DebounceSelect type="input" disabled value={data[index]?.description || ''} />
+        <DebounceSelect type="input" disabled value={data[index].description_show || ''} />
       ),
       400,
     ),
