@@ -11,16 +11,41 @@ import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { fieldBranchSupply } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
-import { getSloc } from 'src/api/request-intra-channel'
+import { getSloc, getBranchLocation } from 'src/api/request-intra-channel'
+
+interface ItemsState {
+    product_sender_id: string,
+    product_receiver_id: string,
+    qty: number,
+    base_qty: number,
+    uom_id: string,
+    base_uom_id: string,
+    batch: string,
+    remarks: string,
+}
+interface dataForm {
+    document_type: string,
+    planned_gi_date: string,
+    suppl_branch_id: string,
+    receive_plant_id: string,
+    from_channel: string,
+    to_channel: string,
+    suppl_sloc_id: string,
+    receive_sloc_id: string,
+    status_id: string,
+    document_date: string,
+    posting_date: string,
+    remarks: string,
+    items: Array<ItemsState>,
+}
 
 export default function PageCreateQuotation() {
     const now = new Date().toISOString()
-    const [dataForm, setDataForm] = React.useState({})
+    const [dataForm, setDataForm] = React.useState<dataForm>()
     const [newQuotation, setNewQuotation] = React.useState()
     const [draftQuotation, setDraftQuotation] = React.useState()
     const [cancel, setCancel] = React.useState(false)
     const router = useRouter()
-    const tableAddItems = useTableAddItem()
     const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
     const [fromCH, setFromCH] = React.useState('')
     const [toCH, setToCH] = React.useState('')
@@ -28,6 +53,9 @@ export default function PageCreateQuotation() {
     const [toSloc, setToSloc] = React.useState('')
     const [oldCH, setOldCH] = React.useState('')
     const [allSloc, setAllScloc] = React.useState([])
+    const [supplyingBranch, setSupplyingBranch] = React.useState('')
+    const [receivingBranch, setReceivingBranch] = React.useState('')
+    const tableAddItems = useTableAddItem({ idbranch: supplyingBranch.split(' - ')[0] || '', })
 
     const initialValue = {
         document_type: 'ZINC',
@@ -37,33 +65,55 @@ export default function PageCreateQuotation() {
         from_channel: 'MT',
         to_channel: 'GT',
         suppl_sloc_id: 'GS00',
-        receive_sloc_id: 'BS00',
+        receive_sloc_id: 'GS00',
         status_id: '00',
         document_date: moment(now).format('YYYY-MM-DD'),
         posting_date: moment(now).format('YYYY-MM-DD'),
         remarks: '',
         items: tableAddItems.data,
     }
-
     const titlePage = useTitlePage(isCreatePage ? 'create' : 'edit')
 
     const onChangeForm = (form: string, value: any) => {
         setDataForm((old) => ({ ...old, ...{ [form]: value } }))
     }
 
-    const onChangeBranch = (form: string, ch: any, branchid: any) => {
+    const onChangeBranch = (form: string, ch: any, branchid: any, label: string) => {
         const sloc = allSloc.filter(({ doc_type_id, branch_id }) =>
             branch_id == branchid && doc_type_id == 'ZINC')
 
         if (form == 'from') {
-            setFromCH(ch);
+            setSupplyingBranch(label);
+            getBranchLocation({ id: branchid })
+                .then(
+                    (result) => {
+                        setReceivingBranch(`${result.data.branch_to_id} - ${result.data.branch_to_name}`)
+                        const slocTo = allSloc.filter(({ doc_type_id, branch_id }) =>
+                            branch_id == result.data.branch_to_id && doc_type_id == 'ZINC')
+                        setToSloc(slocTo[0]?.sloc_id || '')
+                    }
+                )
+
             setFromsloc(sloc[0]?.sloc_id || '')
         } else {
-            setToCH(ch);
+            setReceivingBranch(label);
+            getBranchLocation({ id: branchid })
+                .then((result) => {
+                    setSupplyingBranch(`${result.data.branch_to_id} - ${result.data.branch_to_name}`)
+                    const slocForm = allSloc.filter(({ doc_type_id, branch_id }) =>
+                        branch_id == result.data.branch_to_id && doc_type_id == 'ZINC')
+                    setFromsloc(slocForm[0]?.sloc_id || '')
+                })
+
             setToSloc(sloc[0]?.sloc_id || '')
         }
+        const fromch = ch == "GT" ? ch : 'MT';
+        setFromCH(fromch);
+        setToCH(fromch == "GT" ? 'MT' : 'GT');
         setOldCH(ch)
     }
+
+
 
     React.useEffect(() => {
         getSloc({ id: "PP01" })
@@ -75,11 +125,25 @@ export default function PageCreateQuotation() {
     }, [dataForm])
 
     React.useEffect(() => {
-        onChangeForm('from_channel', fromCH)
-        onChangeForm('to_channel', toCH)
-        onChangeForm('suppl_sloc_id', fromsloc)
-        onChangeForm('receive_sloc_id', toSloc)
-    }, [fromCH, toCH, fromsloc, toSloc])
+        if (fromCH !== '') {
+            onChangeForm('from_channel', fromCH)
+        }
+        if (toCH !== '') {
+            onChangeForm('to_channel', toCH)
+        }
+        if (fromsloc !== '') {
+            onChangeForm('suppl_sloc_id', fromsloc)
+        }
+        if (toSloc !== '') {
+            onChangeForm('receive_sloc_id', toSloc)
+        }
+        if (supplyingBranch !== '') {
+            onChangeForm('suppl_branch_id', supplyingBranch.split(' - ')[0] || '')
+        }
+        if (receivingBranch !== '') {
+            onChangeForm('receive_plant_id', receivingBranch.split(' - ')[0] || '')
+        }
+    }, [fromCH, toCH, fromsloc, toSloc, supplyingBranch, receivingBranch])
 
     return (
         <Col>
@@ -112,8 +176,9 @@ export default function PageCreateQuotation() {
                             fetchOptions={(search) => fieldBranchSupply(search, oldCH)}
                             onChange={(val: any) => {
                                 onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
-                                onChangeBranch('from', val.key, val.value)
+                                onChangeBranch('from', val.key, val.value, val.label)
                             }}
+                            value={supplyingBranch}
                         />
                         <Input
                             type="text"
@@ -127,12 +192,12 @@ export default function PageCreateQuotation() {
                             disabled
                             value={fromsloc}
                         />
-                        <Input
-                            type="text"
+                        <DebounceSelect
+                            type='input'
                             label="Header Text"
-                            placeholder="Type here..."
+                            placeholder="Type Here..."
                             onChange={(e: any) => {
-                                onChangeForm('remarks', e.value)
+                                onChangeForm('remarks', e.target.value)
                             }}
                         />
                     </div>
@@ -144,8 +209,9 @@ export default function PageCreateQuotation() {
                             fetchOptions={(search) => fieldBranchSupply(search, oldCH)}
                             onChange={(val: any) => {
                                 onChangeForm('receive_plant_id', val.label.split(' - ')[0])
-                                onChangeBranch('to', val.key, val.value)
+                                onChangeBranch('to', val.key, val.value, val.label)
                             }}
+                            value={receivingBranch}
                         />
                         <Input
                             type="text"
@@ -182,9 +248,7 @@ export default function PageCreateQuotation() {
                     </div>
                 </div>
                 <Divider style={{ borderColor: '#AAAAAA' }} />
-                <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-                    + Add Item
-                </Button>
+                {dataForm?.suppl_branch_id || dataForm?.receive_plant_id ? <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>+ Add Item</Button> : ''}
                 <Spacer size={20} />
                 <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
                     <Table

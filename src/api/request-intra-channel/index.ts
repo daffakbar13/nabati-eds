@@ -67,3 +67,12 @@ export const ChangeStatus = async (payload: any) => {
   })
   return response.data
 }
+
+export const getBranchLocation = async (params: any) => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl}/branch/${params.id}/detail`,
+  })
+  return response.data
+}

@@ -16,11 +16,11 @@ export const columns = [
         'Item PO',
         'product_id',
         true,
-        (text, rec) => <>{`${text}-${rec.description}`}</>,
+        (text, rec) => <>{`${text}-${rec.product_name}`}</>,
         350,
     ),
     {
-        title: 'PO ??',
+        title: 'PO',
         children: [
             CreateColumns(
                 'Qty',
@@ -39,18 +39,18 @@ export const columns = [
         ],
     },
     {
-        title: 'Outstanding ??',
+        title: 'Outstanding',
         children: [
             CreateColumns(
                 'Qty',
-                'qty_po',
+                '-',
                 true,
                 (text) => <>{text}</>,
                 100,
             ),
             CreateColumns(
                 'UoM',
-                'uom_id',
+                '-',
                 true,
                 (text) => <>{text}</>,
                 100,
@@ -58,7 +58,7 @@ export const columns = [
         ],
     },
     {
-        title: 'Received ??',
+        title: 'Received',
         children: [
             CreateColumns(
                 'Qty',

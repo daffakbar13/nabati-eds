@@ -1,14 +1,11 @@
-import React, { useState } from 'react'
-import moment from 'moment'
-import { Divider, Table } from 'antd'
-import { Button, Col, Row, Search, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
-import { ICPlusWhite } from 'src/assets/icons'
-import DebounceSelect from 'src/components/DebounceSelect'
-import { Card, TableEditable } from 'src/components'
-import useTitlePage from 'src/hooks/useTitlePage'
-import { fakeApi } from 'src/api/fakeApi'
-import { CommonSelectValue, antdColumns } from 'src/configs/commonTypes'
+import { Divider, Form, message } from 'antd'
+import { Button, Col, DatePickerInput, Row, Spacer, Text as Title } from 'pink-lava-ui'
+import { useState } from 'react'
+import { Card, Input, SelectMasterData, TableEditable, Text } from 'src/components'
+import { CommonSelectValue } from 'src/configs/commonTypes'
 import { columns } from './columns'
+
+const { Label, LabelRequired } = Text
 
 interface Item {
   key: string
@@ -30,13 +27,24 @@ const originData: Item[] = [
   },
 ]
 
-export default function CreateBilling() {
+export default function CreateGrReturn() {
+  const [form] = Form.useForm()
   const [data, setData] = useState<Item[]>(originData)
-  const titlePage = useTitlePage('create')
+
+  console.log('form', form)
+
+  const submit = () => {
+    form.submit()
+  }
+
+  const onFinish = (values) => {
+    console.log('values', values)
+    message.success('Submit success!')
+  }
 
   return (
     <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
+      <Title variant={'h4'}>Create New GR Return</Title>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
@@ -44,10 +52,7 @@ export default function CreateBilling() {
             <Button size="big" variant="tertiary" onClick={() => {}}>
               Cancel
             </Button>
-            {/* <Button size="big" variant="secondary" onClick={() => {}}>
-              Save As Draft
-            </Button> */}
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button size="big" variant="primary" onClick={submit}>
               Submit
             </Button>
           </Row>
@@ -55,37 +60,97 @@ export default function CreateBilling() {
       </Card>
       <Spacer size={10} />
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect label="Order Type" fetchOptions={fakeApi} onChange={() => {}} />
-          <DatePickerInput
-            fullWidth
-            onChange={() => {}}
-            label="GI Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-          <DebounceSelect label="Customer" fetchOptions={fakeApi} onChange={() => {}} />
-          <DatePickerInput
-            fullWidth
-            onChange={() => {}}
-            label="Document Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-          <DebounceSelect label="Sales Organization" fetchOptions={fakeApi} onChange={() => {}} />
-          <DatePickerInput
-            fullWidth
-            onChange={() => {}}
-            label="Delivery Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-          <DebounceSelect label="Branch" fetchOptions={fakeApi} onChange={() => {}} />
-          <DebounceSelect label="Reference" fetchOptions={fakeApi} onChange={() => {}} />
-        </div>
+        <Form
+          form={form}
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          autoComplete="off"
+          requiredMark={false}
+          scrollToFirstError
+          onFinish={onFinish}
+        >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            <Form.Item
+              name="po_number"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<LabelRequired>PO Number</LabelRequired>}
+              rules={[{ required: true }]}
+            >
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+            </Form.Item>
+            <Form.Item
+              name="vendor"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Vendor</Label>}
+            >
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+            </Form.Item>
+            <Form.Item
+              name="delivery_number"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<LabelRequired>Delivery Number</LabelRequired>}
+              rules={[{ required: true }]}
+            >
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+            </Form.Item>
+            <Form.Item
+              name="branch"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Branch</Label>}
+            >
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+            </Form.Item>
+            <Form.Item
+              name="document_date"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Doc. Date</Label>}
+            >
+              <DatePickerInput
+                style={{ marginTop: -12 }}
+                placeholder="Select Date"
+                size="large"
+                label=""
+                fullWidth
+                format={'DD/MM/YYYY'}
+              />
+            </Form.Item>
+            <Form.Item
+              name="delivery_note"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Delivery Note</Label>}
+            >
+              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            </Form.Item>
+            <Form.Item
+              name="posting_date"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Posting Date</Label>}
+            >
+              <DatePickerInput
+                style={{ marginTop: -12 }}
+                placeholder="Select Date"
+                size="large"
+                label=""
+                fullWidth
+                format={'DD/MM/YYYY'}
+              />
+            </Form.Item>
+            <Form.Item
+              name="bill_of_lading"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Bill of Lading</Label>}
+            >
+              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            </Form.Item>
+            <Form.Item
+              name="remarks"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Remarks</Label>}
+            >
+              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            </Form.Item>
+          </div>
+        </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <TableEditable data={data} setData={setData} columns={columns()} />
       </Card>

@@ -12,5 +12,6 @@ export { default as Select } from './Select'
 export { default as GoBackArrow } from './GoBackArrow'
 export { default as Tabs } from './Tabs'
 export { default as DataList } from './DataList'
+export { default as Input } from './Input'
 
 export { Card } from './Card'

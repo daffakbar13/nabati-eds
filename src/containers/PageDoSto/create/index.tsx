@@ -1,43 +1,89 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
-import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Table, Spacer, Text, DatePickerInput, Input } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { fakeApi } from 'src/api/fakeApi'
-import { CommonSelectValue } from 'src/configs/commonTypes'
 import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
+import { fieldPoSto } from 'src/configs/fieldFetches'
+import { createDoSto } from 'src/api/logistic/do-sto'
+import useDetail from 'src/hooks/useDetail'
+import { getPoStoDetail } from 'src/api/logistic/po-sto'
 
-interface Item {
-  key: string
-  item: CommonSelectValue
-  uom: CommonSelectValue
-  qty: number
-  price: number
-  gross: number
+interface ItemsState {
+  product_id: string,
+  description: string,
+  qty: number,
+  uom_id: string,
+  base_qty: number,
+  base_uom_id: string,
+  sloc_id: string,
+  remarks: string,
+  batch: string,
 }
 
-const originData: Item[] = [
-  {
-    key: '0',
-    item: { label: 'Rafik', value: 'Rafik' },
-    uom: { label: 'Hanigal', value: 'Hanigal' },
-    qty: 123,
-    price: 345,
-    gross: 345,
-  },
-]
+interface dataForm {
+  sto_doc_type: string,
+  document_date: string,
+  posting_date: string,
+  planned_gi_date: string,
+  supply_branch_id: string,
+  receive_branch_id: string,
+  purchase_id: string,
+  header_text: string,
+  status_id: string,
+  items: Array<ItemsState>,
+}
 
 export default function CreateBilling() {
+  const now = new Date().toISOString()
+
   const router = useRouter()
-  const [data, setData] = useState<Item[]>(originData)
   const titlePage = useTitlePage('create')
   const [cancel, setCancel] = useState(false);
-  const [newPoSTO, setNewPoSTO] = useState()
+  const [newDoSTO, setNewDoSTO] = useState()
   const tableAddItems = useTableAddItem();
+  const [dataForm, setDataForm] = React.useState<dataForm>()
+  const [dataPo, setDataPo] = React.useState<any>({})
+  const [suplyingVal, setSuplyingVal] = React.useState('')
+  const [receivingVal, setReceivingVal] = React.useState('')
+
+  const initialValue = {
+    sto_doc_type: 'ZDST',
+    document_date: moment(now).format('YYYY-MM-DD'),
+    posting_date: moment(now).format('YYYY-MM-DD'),
+    planned_gi_date: moment(now).format('YYYY-MM-DD'),
+    supply_branch_id: 'P105',
+    receive_branch_id: 'P104',
+    purchase_id: '1041400000004',
+    header_text: '',
+    status_id: '00',
+    items: tableAddItems.data,
+  }
+
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
+  const onPoChange = (value: any) => {
+    getPoStoDetail({ id: value as string })
+      .then(
+        (response) => {
+          setDataPo(response.data)
+          onChangeForm('supply_branch_id', response.data.suppl_branch_id)
+          onChangeForm('receive_branch_id', response.data.receive_plant_id)
+          setSuplyingVal(`${response.data.suppl_branch_id} - ${response.data.suppl_branch_name}`)
+          setReceivingVal(`${response.data.receive_plant_id} - ${response.data.receive_plant_name}`)
+        }
+      )
+  }
+
+  useEffect(() => {
+    console.log(dataForm)
+  }, [dataForm])
 
   return (
     <Col>
@@ -49,7 +95,11 @@ export default function CreateBilling() {
             <Button size="big" variant="tertiary" onClick={() => { setCancel(true) }}>
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={() => { }}>
+            <Button size="big" variant="primary" onClick={() => {
+              createDoSto({ ...initialValue, ...dataForm })
+                .then((response) => setNewDoSTO(response.data.id))
+                .catch((e) => console.log(e))
+            }}>
               Submit
             </Button>
           </Row>
@@ -58,39 +108,66 @@ export default function CreateBilling() {
       <Spacer size={10} />
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect type='select' label="Po Number" fetchOptions={fakeApi} onChange={() => { }} />
+          <DebounceSelect
+            type='select'
+            label="Po Number"
+            fetchOptions={fieldPoSto}
+            onChange={(val: any) => {
+              onChangeForm('purchase_id', val.label.split(' - ')[0]);
+              onPoChange(val.label.split(' - ')[0]);
+            }}
+          />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={(val: any) => {
+              onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
+            }}
             label="Posting Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Supplying Branch" type='input' disabled />
+          <Input
+            type="text"
+            label="Supplying Branch"
+            disabled
+            value={suplyingVal}
+          />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={(val: any) => {
+              onChangeForm('planned_gi_date', moment(val).format('YYYY-MM-DD'))
+            }}
             label="Planned GI Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Receiving Branch" type='input' disabled />
+          <Input
+            type="text"
+            label="Receiving Branch"
+            disabled
+            value={receivingVal}
+          />
           <DatePickerInput
             fullWidth
-            onChange={() => { }}
+            onChange={(val: any) => {
+              onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
+            }}
             label="Doc Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Header Text" type='input' onChange={() => { }} />
+          <DebounceSelect
+            label="Header Text"
+            type='input'
+            onChange={(e: any) => {
+              onChangeForm('header_text',  e.target.value)
+            }}
+          />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-          + Add Item
-        </Button>
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
@@ -102,7 +179,7 @@ export default function CreateBilling() {
         </div>
       </Card>
       {
-        (newPoSTO || cancel)
+        (newDoSTO || cancel)
         && <Popup>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Text
@@ -118,7 +195,7 @@ export default function CreateBilling() {
               ? 'Are you sure want to cancel? Change you made so far will not saved'
               : <>
                 Request Number
-                <Typography.Text copyable> {newPoSTO}</Typography.Text>
+                <Typography.Text copyable> {newDoSTO}</Typography.Text>
                 has been
               </>
             }
@@ -143,7 +220,7 @@ export default function CreateBilling() {
                 </Button>
               </>
             }
-            {newPoSTO
+            {newDoSTO
               && <>
                 <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
                   router.push(`${PATH.LOGISTIC}/do-sto`)

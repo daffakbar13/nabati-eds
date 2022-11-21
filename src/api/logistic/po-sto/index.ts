@@ -7,7 +7,7 @@ import {
   CommonDetailParams,
 } from 'src/api/types'
 import { API_BASE_URL_2 } from 'src/configs/env'
-import { StockRealTime } from './types'
+import { StockRealTime, StockRealTimeDetailResult } from './types'
 
 const url = 'v1/sto-purchase'
 
@@ -27,7 +27,7 @@ export const getListPoSto = async (
 
 export const getPoStoDetail = async (
   params: CommonDetailParams = {},
-): Promise<CommonDetailResponse<StockRealTime>> => {
+): Promise<CommonDetailResponse<StockRealTimeDetailResult>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${url}/${params.id}/detail`,
@@ -37,14 +37,12 @@ export const getPoStoDetail = async (
   return response.data
 }
 
-export const createPoSto = async (
-  params: CommonListParams = {},
-): Promise<CommonListResponse<StockRealTime>> => {
+export const createPoSto = async (payload: any) => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}`,
     overrideBaseUrl,
-    data: params,
+    data: payload,
   })
   return response.data
 }
@@ -62,3 +60,4 @@ export const updateStatusPoSto = async (
   })
   return response.data
 }
+

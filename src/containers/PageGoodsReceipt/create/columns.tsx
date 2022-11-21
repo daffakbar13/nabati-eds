@@ -16,7 +16,7 @@ export const columns = () => [
     key: 'item',
     editable: true,
     inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
-    render: (obj: CommonSelectValue) => obj?.label,
+    // render: (obj: CommonSelectValue) => obj?.label,
   },
   {
     title: (
@@ -28,7 +28,7 @@ export const columns = () => [
     key: 'uom',
     editable: true,
     inputNode: <DebounceSelect allowClear fetchOptions={fakeApi} />,
-    render: (obj: CommonSelectValue) => obj?.label,
+    // render: (obj: CommonSelectValue) => obj?.label,
   },
   {
     title: (
