@@ -329,12 +329,12 @@ export default function PageQuotation(props: PageQuotationProps) {
     )
 
     React.useEffect(() => {
-        fieldReason()
-            .then((data) => {
-                setOptionsReason(data)
-                setReason(data[0].value)
-            })
-            .catch((err) => console.log(err))
+        fieldReason('B')
+          .then((data) => {
+            setOptionsReason(data)
+            setReason(data[0].value)
+          })
+          .catch((err) => console.log(err))
     }, [])
 
     return (

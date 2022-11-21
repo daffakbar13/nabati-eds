@@ -117,7 +117,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   )
 
   React.useEffect(() => {
-    fieldReason()
+    fieldReason('B')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)

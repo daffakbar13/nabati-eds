@@ -1,5 +1,6 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable radix */
-import React, { } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
@@ -9,7 +10,12 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { cancelBatchOrder, downloadTemplateQuotation, getQuotation, multipleSubmitQuotation } from 'src/api/quotation'
+import {
+  cancelBatchOrder,
+  downloadTemplateQuotation,
+  getQuotation,
+  multipleSubmitQuotation,
+} from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -17,7 +23,7 @@ import { fieldReason } from 'src/configs/fieldFetches'
 import { PATH } from 'src/configs/menus'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import Loader from 'src/components/Loader'
-import { downloadApproval, getApprovalList } from 'src/api/approval'
+import { downloadApproval, getApprovalList, multipleSubmitApproval } from 'src/api/approval'
 import { PageApprovalProps } from './types'
 import { useColumnApproval } from './columns'
 
@@ -55,11 +61,7 @@ export default function PageApproval(props: PageApprovalProps) {
 
   const selectedSalesOrder = {
     text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
-    content: (
-      <div style={{ textAlign: 'center' }}>
-        {table.selected.join(', ')}
-      </div>
-    ),
+    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
   const moreContent = () => (
@@ -90,9 +92,7 @@ export default function PageApproval(props: PageApprovalProps) {
   const HideShowColumns = () => {
     const content = (
       <div style={{ fontWeight: 'bold' }}>
-        <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>
-          Hide/Show Columns
-        </h4>
+        <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>Hide/Show Columns</h4>
         <Divider style={{ margin: '10px 0' }} />
         {useColumnApproval.map(({ title }, index) => (
           <div key={index} style={{ display: 'flex', gap: 10 }}>
@@ -121,25 +121,27 @@ export default function PageApproval(props: PageApprovalProps) {
     )
   }
 
-  const ConfirmSubmit = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+  const ConfirmApprove = () => (
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Submit
+        Confirm Approve
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
-        Are you sure to submit quotation
+        Are you sure to approve Sales Order
         <Typography.Text
           copyable={{
-            text: oneSelected
-              ? selectedSalesOrder.text
-              : table.selected.join(', '),
-          }}>
-          {oneSelected
-            ? ` ${selectedSalesOrder.text}`
-            : <Popover content={selectedSalesOrder.content}>
-              {` ${selectedSalesOrder.text}`}
-            </Popover>
-          }
+            text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
+          }}
+        >
+          {oneSelected ? (
+            ` ${selectedSalesOrder.text}`
+          ) : (
+            <Popover content={selectedSalesOrder.content}>{` ${selectedSalesOrder.text}`}</Popover>
+          )}
         </Typography.Text>
         {' ?'}
       </Typography.Title>
@@ -148,7 +150,10 @@ export default function PageApproval(props: PageApprovalProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -157,9 +162,9 @@ export default function PageApproval(props: PageApprovalProps) {
           variant="primary"
           onClick={() => {
             setProcessing('Wait for submitting Quotation')
-            multipleSubmitQuotation({
-              order_list: table.selected
-                .map((id) => ({ id })),
+            multipleSubmitApproval({
+              order_list: table.selected.map((id) => ({ id })),
+              status_approved_id: '01',
             })
               .then((response) => response.data)
               .then((data) => {
@@ -176,14 +181,16 @@ export default function PageApproval(props: PageApprovalProps) {
     </Popup>
   )
 
-  const ConfirmSuccessSubmit = () => (
+  const ConfirmSuccessApprove = () => (
     <Popup>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Text
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Submit Success</>
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
         </Text>
       </div>
       <div
@@ -193,58 +200,65 @@ export default function PageApproval(props: PageApprovalProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           New Sales Order
           <Typography.Text
             copyable={{
-              text: oneSelected
-                ? submittedQuotation[0]
-                : submittedQuotation.join(', '),
+              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
             }}
           >
-            {oneSelected
-              ? ` ${submittedQuotation[0]}`
-              : <Popover content={submittedQuotation.join(', ')}>
+            {oneSelected ? (
+              ` ${submittedQuotation[0]}`
+            ) : (
+              <Popover content={submittedQuotation.join(', ')}>
                 {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
               </Popover>
-            }
+            )}
           </Typography.Text>{' '}
           has been
         </div>
-        <div>
-          successfully submitted
-        </div>
+        <div>successfully approved</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { router.push(`${PATH.SALES}/quotation`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/approval`)
+          }}
+        >
           Back To List
         </Button>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order`)
+          }}
         >
-          Next Process
+          Go To Sales Order
         </Button>
       </div>
     </Popup>
   )
 
-  const ConfirmCancel = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+  const ConfirmReject = () => (
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Cancellation
+        Confirm Rejectation
       </Typography.Title>
       <DebounceSelect
-        type='select'
+        type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
-        label={'Reason Cancel Process Quotation'}
+        label={'Reason Reject Sales Order'}
         required
         options={optionsReason}
         onChange={({ value }) => setReason(value)}
@@ -254,7 +268,10 @@ export default function PageApproval(props: PageApprovalProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -262,14 +279,14 @@ export default function PageApproval(props: PageApprovalProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            setProcessing('Wait for cancelling Quotation')
-            cancelBatchOrder({
-              order_list:
-                table.selected.map((id) => ({ id })),
-              cancel_reason_id: reason,
+            setProcessing('Wait for rejecting Sales Order')
+            multipleSubmitApproval({
+              order_list: table.selected.map((id) => ({ id })),
+              status_approved_id: '02',
+              reject_reason_id: reason,
             })
               .then(() => {
-                setShowConfirm('success-cancel')
+                setShowConfirm('success-reject')
                 setProcessing('')
               })
               .catch((err) => console.log(err))
@@ -281,14 +298,16 @@ export default function PageApproval(props: PageApprovalProps) {
     </Popup>
   )
 
-  const ConfirmSuccessCancel = () => (
+  const ConfirmSuccessReject = () => (
     <Popup>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <Text
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Cancel Success</>
+          <>
+            <CheckCircleFilled /> Reject Success
+          </>
         </Text>
       </div>
       <div
@@ -298,34 +317,36 @@ export default function PageApproval(props: PageApprovalProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           Sales Order
           <Typography.Text
             copyable={{
-              text: oneSelected
-                ? selectedSalesOrder.text
-                : table.selected.join(', '),
-            }}>
-            {oneSelected
-              ? ` ${selectedSalesOrder.text}`
-              : <Popover content={selectedSalesOrder.content}>
+              text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
+            }}
+          >
+            {oneSelected ? (
+              ` ${selectedSalesOrder.text}`
+            ) : (
+              <Popover content={selectedSalesOrder.content}>
                 {` ${selectedSalesOrder.text}`}
               </Popover>
-            }
+            )}
           </Typography.Text>{' '}
           has been
         </div>
-        <div>
-          successfully canceled
-        </div>
+        <div>successfully rejected</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/quotation`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/approval`)
+          }}
+        >
           OK
         </Button>
       </div>
@@ -343,7 +364,7 @@ export default function PageApproval(props: PageApprovalProps) {
 
   return (
     <Col>
-      {onProcess && <Loader type='process' text={processing} />}
+      {onProcess && <Loader type="process" text={processing} />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -359,11 +380,13 @@ export default function PageApproval(props: PageApprovalProps) {
                 if (value === '') {
                   table.handleFilter([])
                 } else {
-                  table.handleFilter([{
-                    field: 'eds_order.id',
-                    option: 'CP',
-                    from_value: `%${e.target.value}%`,
-                  }])
+                  table.handleFilter([
+                    {
+                      field: 'eds_order.id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                    },
+                  ])
                 }
               }}
             />
@@ -380,19 +403,13 @@ export default function PageApproval(props: PageApprovalProps) {
                 setFilters(newVal)
                 table.handleFilter(newFiltered)
               }}
-              filters={filters} />
+              filters={filters}
+            />
           </Row>
           <Row gap="16px">
-            <Popover placement="bottom" content={moreContent} trigger="click">
-              <Button
-                size="big"
-                variant="secondary"
-                onClick={downloadTemplateQuotation}
-                style={{ gap: 5 }}
-              >
-                More <DownOutlined />
-              </Button>
-            </Popover>
+          <Button size="big" variant="secondary" onClick={() => { }}>
+              Download
+            </Button>
             <Button
               size="big"
               variant="primary"
@@ -425,7 +442,9 @@ export default function PageApproval(props: PageApprovalProps) {
             responsive
             total={table.total}
             showTotal={showTotal}
-            onChange={(page, limit) => { table.handlePagination(page, limit) }}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
           />
         )}
         {table.selected.length > 0 && (
@@ -437,30 +456,34 @@ export default function PageApproval(props: PageApprovalProps) {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.selected.length} Document Quotation are Selected</b>
+              <b>{table.selected.length} Document Sales Order are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => {
-                setShowConfirm('cancel')
-              }}>
-                Cancel Process
+              <Button
+                size="big"
+                variant="tertiary"
+                onClick={() => {
+                  setShowConfirm('reject')
+                }}
+              >
+                Reject
               </Button>
               <Button
                 size="big"
                 variant="primary"
                 onClick={() => {
-                  setShowConfirm('submit')
+                  setShowConfirm('approve')
                 }}
               >
-                Submit
+                Approve
               </Button>
             </div>
           </FloatAction>
         )}
-        {showConfirm === 'submit' && <ConfirmSubmit />}
-        {showConfirm === 'success-submit' && <ConfirmSuccessSubmit />}
-        {showConfirm === 'cancel' && <ConfirmCancel />}
-        {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
+        {showConfirm === 'approve' && <ConfirmApprove />}
+        {showConfirm === 'success-submit' && <ConfirmSuccessApprove />}
+        {showConfirm === 'reject' && <ConfirmReject />}
+        {showConfirm === 'success-reject' && <ConfirmSuccessReject />}
       </Card>
     </Col>
   )
