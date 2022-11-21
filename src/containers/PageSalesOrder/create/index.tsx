@@ -198,7 +198,7 @@ export default function PageCreateSalesOrder() {
             value: [id, name.split('-').join(' - ')].join(' - '),
           })))
         .then((data) => {
-          onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZQP1'))?.value)
+          onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZOP1'))?.value)
           setOptionsOrderType(data)
         })
       await getCustomerByCompany()
