@@ -11,11 +11,25 @@ import TaggedStatus from 'src/components/TaggedStatus'
 
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 
-function Linked({ link, linkType, type }: { link: string; linkType: string; type: 'id' | 'action' }) {
+function Linked({
+  link,
+  linkType,
+  type,
+  status,
+}: {
+  link: string
+  linkType: string
+  type: 'id' | 'action'
+  status?: string
+}) {
   const router = useRouter()
   const navigate = () => {
     if (linkType == 'id') {
-      router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel/detail/${link}`)
+      if (status == 'Pending') {
+        router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/edit/${link}`)
+      } else {
+        router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/detail/${link}`)
+      }
     } else if (linkType == 'PO') {
       router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
     } else if (linkType == 'DO') {
@@ -58,7 +72,7 @@ export const columns = [
     'PO Number',
     'po_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='PO' />,
+    (link: string, { status }: any) => <Linked link={link} type="id" linkType="PO" />,
     180,
     'left',
   ),
@@ -66,7 +80,7 @@ export const columns = [
     'DO Number',
     'delivery_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='DO' />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType="DO" />,
     180,
     'left',
   ),
@@ -74,7 +88,7 @@ export const columns = [
     'GI Number',
     'gi_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='GI' />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType="GI" />,
     180,
     'left',
   ),
@@ -82,7 +96,9 @@ export const columns = [
     'GR Number',
     'id',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='id' />,
+    (link: string, { status }: any) => (
+      <Linked link={link} type="id" linkType="id" status={status} />
+    ),
     180,
     'left',
   ),
@@ -90,16 +106,13 @@ export const columns = [
     'Posting Date',
     'posting_date',
     false,
-    (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
+    (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
     180,
     'left',
   ),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (company_id, rec) => <>{`${company_id} - ${rec.company_name}`}</>,
-  ),
+  CreateColumns('Company', 'company_id', false, (company_id, rec) => (
+    <>{`${company_id} - ${rec.company_name}`}</>
+  )),
   CreateColumns(
     'Supplying Branch',
     'suppl_branch_id',
@@ -114,21 +127,9 @@ export const columns = [
     (receive_plant_id, rec) => <>{`${receive_plant_id} - ${rec.receive_plant_name}`}</>,
     250,
   ),
-  CreateColumns(
-    'Mov. Type',
-    'movement_type_id',
-    false,
-  ),
-  CreateColumns(
-    'Status',
-    'status',
-    false,
-    (status) => <TaggedStatus status={status} />,
-  ),
-  CreateColumns(
-    'Action',
-    'id',
-    false,
-    (link, record) => <Linked link={link} type="action" linkType='id' />,
-  ),
+  CreateColumns('Mov. Type', 'movement_type_id', false),
+  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
+  CreateColumns('Action', 'id', false, (link, record) => (
+    <Linked link={link} type="action" linkType="id" status={record.status} />
+  )),
 ]
