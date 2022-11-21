@@ -3,7 +3,7 @@ import moment from 'moment';
 import List from 'src/components/List';
 import { toTitleCase } from 'src/utils/caseConverter';
 
-import { columns } from '../columns';
+import { columns } from '../../columns';
 
 const DATE_FORMAT = 'DD-MMM-YYYY'
 export default function DocumentHeader({ details, loading = false }) {
