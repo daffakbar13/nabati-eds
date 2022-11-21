@@ -10,32 +10,31 @@ import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { fieldPoSto } from 'src/configs/fieldFetches'
 import { createDoSto } from 'src/api/logistic/do-sto'
-import useDetail from 'src/hooks/useDetail'
 import { getPoStoDetail } from 'src/api/logistic/po-sto'
 
 interface ItemsState {
-  product_id: string,
-  description: string,
-  qty: number,
-  uom_id: string,
-  base_qty: number,
-  base_uom_id: string,
-  sloc_id: string,
-  remarks: string,
-  batch: string,
+  product_id: string
+  description: string
+  qty: number
+  uom_id: string
+  base_qty: number
+  base_uom_id: string
+  sloc_id: string
+  remarks: string
+  batch: string
 }
 
 interface dataForm {
-  sto_doc_type: string,
-  document_date: string,
-  posting_date: string,
-  planned_gi_date: string,
-  supply_branch_id: string,
-  receive_branch_id: string,
-  purchase_id: string,
-  header_text: string,
-  status_id: string,
-  items: Array<ItemsState>,
+  sto_doc_type: string
+  document_date: string
+  posting_date: string
+  planned_gi_date: string
+  supply_branch_id: string
+  receive_branch_id: string
+  purchase_id: string
+  header_text: string
+  status_id: string
+  items: Array<ItemsState>
 }
 
 export default function CreateBilling() {
@@ -43,13 +42,13 @@ export default function CreateBilling() {
 
   const router = useRouter()
   const titlePage = useTitlePage('create')
-  const [cancel, setCancel] = useState(false);
+  const [cancel, setCancel] = useState(false)
   const [newDoSTO, setNewDoSTO] = useState()
-  const tableAddItems = useTableAddItem();
   const [dataForm, setDataForm] = React.useState<dataForm>()
   const [dataPo, setDataPo] = React.useState<any>({})
   const [suplyingVal, setSuplyingVal] = React.useState('')
   const [receivingVal, setReceivingVal] = React.useState('')
+  const tableAddItems = useTableAddItem({ items: dataPo?.items } || { items: [] })
 
   const initialValue = {
     sto_doc_type: 'ZDST',
@@ -61,7 +60,7 @@ export default function CreateBilling() {
     purchase_id: '1041400000004',
     header_text: '',
     status_id: '00',
-    items: tableAddItems.data,
+    items: tableAddItems.dataSubmit,
   }
 
   const onChangeForm = (form: string, value: any) => {
@@ -69,21 +68,18 @@ export default function CreateBilling() {
   }
 
   const onPoChange = (value: any) => {
-    getPoStoDetail({ id: value as string })
-      .then(
-        (response) => {
-          setDataPo(response.data)
-          onChangeForm('supply_branch_id', response.data.suppl_branch_id)
-          onChangeForm('receive_branch_id', response.data.receive_plant_id)
-          setSuplyingVal(`${response.data.suppl_branch_id} - ${response.data.suppl_branch_name}`)
-          setReceivingVal(`${response.data.receive_plant_id} - ${response.data.receive_plant_name}`)
-        }
-      )
+    getPoStoDetail({ id: value as string }).then((response) => {
+      setDataPo(response.data)
+      onChangeForm('supply_branch_id', response.data.suppl_branch_id)
+      onChangeForm('receive_branch_id', response.data.receive_plant_id)
+      setSuplyingVal(`${response.data.suppl_branch_id} - ${response.data.suppl_branch_name}`)
+      setReceivingVal(`${response.data.receive_plant_id} - ${response.data.receive_plant_name}`)
+    })
   }
 
-  useEffect(() => {
-    console.log(dataForm)
-  }, [dataForm])
+  // useEffect(() => {
+  //   console.log(dataForm)
+  // }, [dataForm])
 
   return (
     <Col>
@@ -92,14 +88,24 @@ export default function CreateBilling() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button size="big" variant="tertiary" onClick={() => { setCancel(true) }}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => {
+                setCancel(true)
+              }}
+            >
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={() => {
-              createDoSto({ ...initialValue, ...dataForm })
-                .then((response) => setNewDoSTO(response.data.id))
-                .catch((e) => console.log(e))
-            }}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                createDoSto({ ...initialValue, ...dataForm })
+                  .then((response) => setNewDoSTO(response.data.id))
+                  .catch((e) => console.log(e))
+              }}
+            >
               Submit
             </Button>
           </Row>
@@ -109,12 +115,12 @@ export default function CreateBilling() {
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           <DebounceSelect
-            type='select'
+            type="select"
             label="Po Number"
             fetchOptions={fieldPoSto}
             onChange={(val: any) => {
-              onChangeForm('purchase_id', val.label.split(' - ')[0]);
-              onPoChange(val.label.split(' - ')[0]);
+              onChangeForm('purchase_id', val.label.split(' - ')[0])
+              onPoChange(val.label.split(' - ')[0])
             }}
           />
           <DatePickerInput
@@ -127,12 +133,7 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          <Input
-            type="text"
-            label="Supplying Branch"
-            disabled
-            value={suplyingVal}
-          />
+          <Input type="text" label="Supplying Branch" disabled value={suplyingVal} />
           <DatePickerInput
             fullWidth
             onChange={(val: any) => {
@@ -143,12 +144,7 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          <Input
-            type="text"
-            label="Receiving Branch"
-            disabled
-            value={receivingVal}
-          />
+          <Input type="text" label="Receiving Branch" disabled value={receivingVal} />
           <DatePickerInput
             fullWidth
             onChange={(val: any) => {
@@ -161,9 +157,9 @@ export default function CreateBilling() {
           />
           <DebounceSelect
             label="Header Text"
-            type='input'
+            type="input"
             onChange={(e: any) => {
-              onChangeForm('header_text',  e.target.value)
+              onChangeForm('header_text', e.target.value)
             }}
           />
         </div>
@@ -175,63 +171,82 @@ export default function CreateBilling() {
             data={tableAddItems.data}
             columns={tableAddItems.columns}
             loading={tableAddItems.loading}
+            rowSelection={tableAddItems.rowSelection}
           />
         </div>
       </Card>
-      {
-        (newDoSTO || cancel)
-        && <Popup>
+      {(newDoSTO || cancel) && (
+        <Popup>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Text
               variant="headingSmall"
               textAlign="center"
-              style={{ ...(!cancel && { color: 'green' }), fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
+              style={{
+                ...(!cancel && { color: 'green' }),
+                fontSize: 16,
+                fontWeight: 'bold',
+                marginBottom: 8,
+              }}
             >
               {cancel ? 'Confirm Cancellation' : 'Success'}
             </Text>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {cancel
-              ? 'Are you sure want to cancel? Change you made so far will not saved'
-              : <>
+            {cancel ? (
+              'Are you sure want to cancel? Change you made so far will not saved'
+            ) : (
+              <>
                 Request Number
                 <Typography.Text copyable> {newDoSTO}</Typography.Text>
                 has been
               </>
-            }
+            )}
           </div>
-          {!cancel
-            && <div style={{ display: 'flex', justifyContent: 'center' }}>
-              successfully created
-            </div>
-          }
+          {!cancel && (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully created</div>
+          )}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {cancel
-              && <>
-                <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
-                  setCancel(false)
-                }}>
+            {cancel && (
+              <>
+                <Button
+                  style={{ flexGrow: 1 }}
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    setCancel(false)
+                  }}
+                >
                   No
                 </Button>
-                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                  router.push(`${PATH.LOGISTIC}/do-sto`)
-                }}>
+                <Button
+                  style={{ flexGrow: 1 }}
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    router.push(`${PATH.LOGISTIC}/do-sto`)
+                  }}
+                >
                   Yes
                 </Button>
               </>
-            }
-            {newDoSTO
-              && <>
-                <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
-                  router.push(`${PATH.LOGISTIC}/do-sto`)
-                }}>
+            )}
+            {newDoSTO && (
+              <>
+                <Button
+                  style={{ flexGrow: 1 }}
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    router.push(`${PATH.LOGISTIC}/do-sto`)
+                  }}
+                >
                   OK
                 </Button>
               </>
-            }
+            )}
           </div>
         </Popup>
-      }
+      )}
     </Col>
   )
 }

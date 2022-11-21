@@ -247,3 +247,15 @@ export function fieldPoSto(search: string) {
     //                 value: id,
     //             })))
 }
+
+export function fieldSloc(doc_type: string) {
+    return getConfigSloc()
+        .then((result) =>
+            result.data
+                .filter(({ doc_type_id }) => doc_type_id == doc_type)
+                .splice(0, 10)
+                .map(({ sloc_id }) => ({
+                    label: sloc_id,
+                    value: sloc_id,
+                })))
+}
