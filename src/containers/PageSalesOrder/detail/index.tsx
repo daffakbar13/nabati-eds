@@ -119,7 +119,7 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
   )
 
   React.useEffect(() => {
-    fieldReason()
+    fieldReason('B')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)

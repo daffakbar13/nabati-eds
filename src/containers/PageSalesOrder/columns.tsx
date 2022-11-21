@@ -22,9 +22,9 @@ function Linked(props: LinkedProps) {
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
-      ? router.push(`${PATH.SALES}/quotation/edit/${link}`)
+      ? router.push(`${PATH.SALES}/sales-order/edit/${link}`)
       : router.push({
-        pathname: `${PATH.SALES}/quotation/detail/${link}`,
+        pathname: `${PATH.SALES}/sales-order/detail/${link}`,
         query: {
           status,
           page,

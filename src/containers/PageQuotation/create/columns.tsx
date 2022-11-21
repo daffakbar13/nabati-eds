@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-expressions */
@@ -13,6 +14,7 @@ import { getDetailQuotation } from 'src/api/quotation';
 import { Popup } from 'src/components';
 import { Text, Button } from 'pink-lava-ui';
 import { PATH } from 'src/configs/menus';
+import { getPricingByCompany, getProductByCompany } from 'src/api/master-data';
 
 export const useTableAddItem = () => {
   const initialValue = {
@@ -24,6 +26,7 @@ export const useTableAddItem = () => {
     remarks: '',
   }
   const [data, setData] = React.useState([initialValue])
+  const [optionsProduct, setOptionsProduct] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState('')
   const [showConfirm, setShowConfirm] = React.useState('')
@@ -74,12 +77,12 @@ export const useTableAddItem = () => {
         <MinusCircleFilled
           style={{ color: 'red', margin: 'auto' }}
           onClick={() => {
-            isNullProductId(index)
-              ? handleDeleteRows(index)
-              : setShowConfirm(product_id)
+            if (data.length > 1) {
+              isNullProductId(index) ? handleDeleteRows(index) : setShowConfirm(index.toString())
+            }
           }}
         />
-        {showConfirm === product_id && !isNullProductId(index)
+        {showConfirm === index.toString() && !isNullProductId(index)
           && <Popup>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Text
@@ -90,7 +93,7 @@ export const useTableAddItem = () => {
               </Text>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 4, fontWeight: 'bold' }}>
-              Are you sure want to delete item {showConfirm} ?
+              Are you sure want to delete item {product_id} ?
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 10 }}>
               <Button style={{ flexGrow: 1 }} size="big" variant="tertiary" onClick={() => {
@@ -99,6 +102,7 @@ export const useTableAddItem = () => {
                 No
               </Button>
               <Button style={{ flexGrow: 1 }} size="big" variant="primary" onClick={() => {
+                setShowConfirm('')
                 handleDeleteRows(index)
               }}>
                 Yes
@@ -117,7 +121,10 @@ export const useTableAddItem = () => {
       (_, { description }, index) => <DebounceSelect
         type='select'
         value={description as any}
-        fetchOptions={fieldItem}
+        fetchOptions={async (search) => optionsProduct
+          .filter(({ label }) => label.toLowerCase().includes(search.toLowerCase()))
+          .splice(0, 10)
+        }
         onChange={(e) => {
           handleChangeData('product_id', e.value, index)
           handleChangeData('description', e.label, index)
@@ -199,37 +206,42 @@ export const useTableAddItem = () => {
     if (fetching !== '') {
       data.forEach(({ product_id, uom_id, order_qty }, index) => {
         if (product_id !== '') {
+          const duplicateProduct = data
+            .filter((obj, idx) => product_id === obj.product_id && idx !== index)
           const lastIndex = (data.length - 1) === index
-        fieldUom(product_id)
-          .then((arr) => {
-            const newOptionsUom = optionsUom
-            newOptionsUom[index] = arr
-            let newUom
-            console.log('index prod', index);
+          fieldUom(product_id)
+            .then((arr) => {
+              const newOptionsUom = optionsUom
+              const filteredArr = arr.filter(({ label }) => !duplicateProduct
+                .map((obj) => obj.uom_id)
+                .includes(label))
+              newOptionsUom[index] = filteredArr
+              const newUom = uom_id === '' ? uom_id : filteredArr[0].value
 
-            switch (fetching) {
-              case 'product':
-                newUom = arr[0].value
-                break;
-              case 'uom':
-                newUom = uom_id
-                break;
-              default:
-                break;
-            }
-            setOptionsUom(newOptionsUom)
-            handleChangeData('uom_id', newUom, index)
-            fieldPrice(product_id, newUom)
-              .then((price) => {
-                handleChangeData('sub_total', price * order_qty, index)
-                handleChangeData('price', price, index)
-                if (order_qty === 0) {
-                  handleChangeData('sub_total', price, index)
-                  handleChangeData('order_qty', 1, index)
-                }
-                lastIndex && setFetching('')
-              })
-          })
+              handleChangeData('uom_id', newUom, index)
+              setOptionsUom(newOptionsUom)
+              setOptionsProduct(optionsProduct.map((obj) => ({ ...obj, show: true })))
+              if (filteredArr.length === 1) {
+                setOptionsProduct(optionsProduct
+                  .map((obj) => ({ ...obj, show: obj.value !== product_id })))
+              }
+              if (uom_id === '') {
+                setFetching('')
+                setFetching('product')
+                return
+              }
+
+              fieldPrice(product_id, newUom)
+                .then((price) => {
+                  handleChangeData('sub_total', price * order_qty, index)
+                  handleChangeData('price', price, index)
+                  if (order_qty === 0) {
+                    handleChangeData('sub_total', price, index)
+                    handleChangeData('order_qty', 1, index)
+                  }
+                  lastIndex && setFetching('')
+                })
+            })
         }
       })
     }
@@ -240,11 +252,11 @@ export const useTableAddItem = () => {
       getDetailQuotation({ id: router.query.id as string })
         .then((response) => {
           setData(
-          response.data.items.map((items) => ({
-            ...items,
-            sub_total: parseInt(items.order_qty) * parseInt(items.price),
-            product_id: items.product_id,
-          })) as any,
+            response.data.items.map((items) => ({
+              ...items,
+              sub_total: parseInt(items.order_qty) * parseInt(items.price),
+              product_id: items.product_id,
+            })) as any,
           )
           setFetching('uom')
         })
@@ -252,6 +264,25 @@ export const useTableAddItem = () => {
         .catch(() => router.push(`${PATH.SALES}/quotation`))
     }
   }, [router])
+
+  React.useEffect(() => {
+    const now = new Date().toISOString()
+
+    getPricingByCompany()
+      .then((result) => result.data
+        .filter(({ valid_from, valid_to }) => now > valid_from && now < valid_to)
+        .map(({ product_id }) => product_id))
+      .then((allPricing) => getProductByCompany()
+        .then((result) =>
+          result.data
+            .filter(({ product_id }) => allPricing.includes(product_id))
+            .splice(0, 10)
+            .map(({ name, product_id }) => ({
+              label: name,
+              value: product_id,
+            }))))
+      .then((prod) => setOptionsProduct(prod))
+  }, [])
 
   return {
     data,

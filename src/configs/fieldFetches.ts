@@ -129,8 +129,8 @@ export function fieldPrice(product_id: string, uom: string) {
         .then((result) => result.data?.price)
 }
 
-export function fieldReason(): Promise<any> {
-    return getReason()
+export function fieldReason(doc_category_id: string): Promise<any> {
+    return getReason(doc_category_id)
         .then((result) => result.data)
         .then((data) => data
             .map(({ Name, ID }) => ({

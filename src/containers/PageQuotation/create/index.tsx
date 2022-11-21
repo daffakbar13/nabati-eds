@@ -11,9 +11,8 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { createQuotation, getDetailQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldSoldToCustomer } from 'src/configs/fieldFetches'
 import { CheckCircleFilled } from '@ant-design/icons';
-import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
+import { getCustomerByCompany, getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
 import { useTableAddItem } from './columns'
@@ -40,6 +39,7 @@ export default function PageCreateQuotation() {
   const [cancel, setCancel] = React.useState(false)
   const [optionsOrderType, setOptionsOrderType] = React.useState([])
   const [optionsSalesman, setOptionsSalesman] = React.useState([])
+  const [optionsCustomerSoldTo, setOptionsCustomerSoldTo] = React.useState([])
   const [optionsCustomerShipTo, setOptionsCustomerShipTo] = React.useState([])
   const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
   const [optionsBranch, setOptionsBranch] = React.useState([])
@@ -172,7 +172,8 @@ export default function PageCreateQuotation() {
 
   React.useEffect(() => {
     setProccessing('Wait for proccess')
-    getDocTypeByCategory('B')
+    async function api() {
+      await getDocTypeByCategory('B')
       .then((result) => result.data
         .map(({ id, name }) => ({
           label: [id, name.split('-').join(' - ')].join(' - '),
@@ -181,8 +182,18 @@ export default function PageCreateQuotation() {
       .then((data) => {
         onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZQP1'))?.value)
         setOptionsOrderType(data)
-        setProccessing('')
       })
+      await getCustomerByCompany()
+        .then((result) => result.data
+          .map(({ sold_to_customer_id, name }) => ({
+            label: [sold_to_customer_id, name].join(' - '),
+            value: [sold_to_customer_id, name].join(' - '),
+          })))
+        .then((cust) => setOptionsCustomerSoldTo(cust))
+    }
+    api()
+      .then(() => setProccessing(''))
+      // .then((err) => setProccessing(`${err}`))
   }, [])
 
   return (
@@ -251,7 +262,7 @@ export default function PageCreateQuotation() {
                 }
               }}
             >
-              {isCreateOrOrderAgain ? 'Submit' : 'Save'}
+              Submit
             </Button>
           </Row>
         </Row>
@@ -277,7 +288,10 @@ export default function PageCreateQuotation() {
               label="Sold To Customer"
               required
               value={dataForm.customer_id}
-              fetchOptions={fieldSoldToCustomer}
+              fetchOptions={async (search) => optionsCustomerSoldTo
+                .filter(({ value }) => value.toLowerCase().includes(search.toLowerCase()))
+                .splice(0, 10)
+              }
               onChange={(e: any) => {
                 onChangeForm('customer_id', e.value)
                 setFetching('customer')

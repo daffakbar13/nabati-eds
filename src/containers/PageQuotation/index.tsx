@@ -413,8 +413,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                 </div>
                 {hasData && (
                     <Pagination
-                        defaultPageSize={table.defaultLimit}
-                        defaultCurrent={table.defaultPage}
+                        defaultPageSize={20}
                         pageSizeOptions={[20, 50, 100]}
                         showLessItems
                         showSizeChanger

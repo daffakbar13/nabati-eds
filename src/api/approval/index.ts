@@ -3,7 +3,7 @@ import { METHODS } from 'src/api/methods'
 import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
 import { Approval } from './types'
 
-const subUrl = 'v1/approval/ist'
+const url = 'v1/approvals'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getApprovalList = async (
@@ -12,7 +12,7 @@ export const getApprovalList = async (
     const response = await call({
         method: METHODS.POST,
         overrideBaseUrl,
-        subUrl: `${subUrl}/list`,
+        subUrl: `${url}/list`,
         data: params,
     })
     return response.data
@@ -23,21 +23,24 @@ export const getApprovalDetail = async (
 ): Promise<CommonListResponse<Approval>> => {
     const response = await call({
         method: METHODS.GET,
-        subUrl: `${subUrl}/${params.id}/detail`,
+        subUrl: `${url}/${params.id}/detail`,
     })
     return response.data
 }
 
-export const createApproval = async (payload: any) => {
-    const response = await call({ method: METHODS.POST, subUrl, data: payload })
+export const multipleSubmitApproval = async (payload: any) => {
+    const response = await call({
+        method: METHODS.POST,
+        subUrl: `${url}/submit`,
+        data: payload,
+    })
     return response.data
 }
 
-export const editApproval = async (payload: Approval) => {
+export const downloadApproval = async () => {
     const response = await call({
-        method: METHODS.PATCH,
-        subUrl: `${subUrl}/${payload.id}`,
-        data: payload,
+        method: METHODS.POST,
+        subUrl: `${url}/export-excel`,
     })
     return response.data
 }

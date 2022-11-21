@@ -20,7 +20,7 @@ const subUrl = {
   getProductById: '/v1/master/get-product/PP01/',
   getPricing: 'v1/master/get-pricing-group/PP01',
   getOrderType: 'v1/master/get-order-type/PP01',
-  getReason: 'v1/master/get-reason/PP01/B',
+  getReason: 'v1/master/get-reason/PP01/',
   getCustomerByFilter: 'v1/master/get-customer-branch-salesman-salesorg/PP01',
   getDocTypeByCategory: 'v1/master/get-doc-type/category',
   getConfigSloc: 'v1/master/get-config-sloc/PP01',
@@ -154,11 +154,11 @@ export const getPricingByIdAndUom = async (
   return response.data
 }
 
-export const getReason = async (): Promise<CommonDetailResponse<any>> => {
+export const getReason = async (doc_category_id: string): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: subUrl.getReason,
+    subUrl: subUrl.getReason + doc_category_id,
   })
 
   return response.data

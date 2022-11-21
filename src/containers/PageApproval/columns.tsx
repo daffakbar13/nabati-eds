@@ -1,31 +1,206 @@
+/* eslint-disable radix */
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
+import React from 'react'
+import { Button } from 'pink-lava-ui'
+import { PATH } from 'src/configs/menus'
+import DateFormat from 'src/components/DateFormat'
+import { Tag } from 'antd'
 
-function Action({ link }: { link: string }) {
+interface LinkedProps {
+  link: string
+  status: string
+  type: 'id' | 'action'
+  page: string
+  limit: string
+}
+
+function Linked(props: LinkedProps) {
+  const { link, status, type, limit, page } = props
   const router = useRouter()
   const navigate = () => {
-    router.push(`/billing/detail/${link}`)
+    status === 'Draft'
+      ? router.push(`${PATH.SALES}/approval/edit/${link}`)
+      : router.push({
+        pathname: `${PATH.SALES}/approval/detail/${link}`,
+        query: {
+          status,
+          page,
+          limit,
+        },
+      })
   }
+  const [hover, setHover] = React.useState(false)
+
   return (
-    <h4 onClick={navigate} style={{ cursor: 'pointer' }}>
-      View Detail
-    </h4>
+    <>
+      {type === 'id' ? (
+        <div
+          onClick={navigate}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
+          style={{
+            cursor: 'pointer',
+            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
+          }}
+        >
+          {link}
+        </div>
+      ) : (
+        <Button size="big" variant="tertiary" onClick={navigate}>
+          View Detail
+        </Button>
+      )}
+    </>
   )
 }
 
-export const TableBilling = [
-  CreateColumns('Sales Order', 'shipment_id', true),
-  CreateColumns('Order Type', 'vehicle_id'),
-  CreateColumns('Order Date', 'driver_name'),
-  CreateColumns('Delivery Date', 'driver_name'),
-  CreateColumns('Sales Org.', 'created_date'),
-  CreateColumns('Branch', 'total_do'),
-  CreateColumns('Sold To Customer', 'sales_org_name'),
-  CreateColumns('Ship To Customer', 'sales_org_name'),
-  CreateColumns('Salesman', 'branch_type'),
-  CreateColumns('Total Amount', 'branch_type'),
-  CreateColumns('Status', 'status'),
-  CreateColumns('Block Status', 'status'),
-  CreateColumns('Status Approval', 'status'),
-  CreateColumns('Action', 'shipment_id', false, (link: string) => <Action link={link} />),
+export const useColumnApproval = [
+  CreateColumns(
+    'Sales Order',
+    'id',
+    true,
+    (link: string, { status_approved_name, page, limit }: any) => <Linked
+      link={link}
+      type="id"
+      status={status_approved_name}
+      page={page}
+      limit={limit}
+    />,
+    170,
+    true,
+    'have-checkbox',
+  ),
+  CreateColumns(
+    'Order Type',
+    'order_type_id',
+    false,
+    undefined,
+    120,
+  ),
+  CreateColumns(
+    'Order Date',
+    'order_date',
+    false,
+    (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
+    120,
+  ),
+  CreateColumns(
+    'Sales Org.',
+    'sales_org_id',
+    false,
+    undefined,
+    110,
+  ),
+  CreateColumns(
+    'Branch',
+    'branch_id',
+    false,
+    undefined,
+    90,
+  ),
+  CreateColumns(
+    'Sold To Customer',
+    'sold_to_customer_id',
+    false,
+    (id, { customer_name }) => [id, customer_name].join(' - '),
+    250,
+
+  ),
+  CreateColumns(
+    'Ship To Customer',
+    'ship_to_customer_id',
+    false,
+    (id, { customer_name }) => [id, customer_name].join(' - '),
+    250,
+
+  ),
+  CreateColumns(
+    'Salesman',
+    'salesman_id',
+    false,
+    undefined,
+    105,
+
+  ),
+  CreateColumns(
+    'Total Amount',
+    'total_amount',
+    false,
+    (total_amount) => parseInt(total_amount).toLocaleString(),
+    140,
+
+  ),
+  CreateColumns(
+    'Create From',
+    'created_from',
+    false,
+    undefined,
+    125,
+  ),
+  CreateColumns(
+    'Status',
+    'status_name',
+    false,
+    (status) => {
+      let color: string
+      switch (status) {
+        case 'Cancel':
+          color = 'red'
+          break;
+        case 'DO Complete':
+          color = 'green'
+          break;
+        default:
+          break;
+      }
+      return <Tag {...(status !== 'New' && { color })} > {status}</Tag>
+    },
+    155,
+  ),
+  CreateColumns(
+    'Block Status',
+    'status_block_name',
+    false,
+    undefined,
+    180,
+  ),
+  CreateColumns(
+    'Status Approval',
+    'status_approved_name',
+    false,
+    (status_approved_name) => {
+      let color: string
+      switch (status_approved_name) {
+        case 'Approved':
+          color = 'blue'
+          break;
+        case 'Rejected':
+          color = 'red'
+          break;
+        default:
+          color = 'warning'
+          break;
+      }
+      return <Tag color={color} >{status_approved_name}</Tag>
+    },
+  ),
+  CreateColumns(
+    'Action',
+    'id',
+    false,
+    (link, { status_approved_name, page, limit }) => <Linked
+      link={link}
+      type="action"
+      status={status_approved_name}
+      page={page}
+      limit={limit}
+    />,
+  ),
 ]
