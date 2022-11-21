@@ -55,7 +55,7 @@ export default function PageCreateQuotation() {
     const [allSloc, setAllScloc] = React.useState([])
     const [supplyingBranch, setSupplyingBranch] = React.useState('')
     const [receivingBranch, setReceivingBranch] = React.useState('')
-    const tableAddItems = useTableAddItem({ idbranch: supplyingBranch.split(' - ')[0] || '', })
+    const tableAddItems = useTableAddItem({ idbranch: supplyingBranch.split(' - ')[0] || '' })
 
     const initialValue = {
         document_type: 'ZINC',
