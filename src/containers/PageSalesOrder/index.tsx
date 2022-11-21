@@ -323,7 +323,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
   )
 
   React.useEffect(() => {
-    fieldReason()
+    fieldReason('C')
       .then((data) => {
         setOptionsReason(data)
         setReason(data[0].value)
@@ -333,7 +333,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
 
   return (
     <Col>
-      {onProcess && <Loader type='process' text={processing} />}
+      {onProcess && <Loader type="process" text={processing} />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -349,11 +349,13 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
                 if (value === '') {
                   table.handleFilter([])
                 } else {
-                  table.handleFilter([{
-                    field: 'eds_order.id',
-                    option: 'CP',
-                    from_value: `%${e.target.value}%`,
-                  }])
+                  table.handleFilter([
+                    {
+                      field: 'eds_order.id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                    },
+                  ])
                 }
               }}
             />
@@ -393,16 +395,19 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           />
         </div>
         {hasData && (
-            <Pagination
-              defaultPageSize={20}
-              pageSizeOptions={[20, 50, 100]}
-              showLessItems
-              showSizeChanger
-              showQuickJumper
-              responsive
-              total={table.data.length}
-              showTotal={showTotal}
-            />
+          <Pagination
+            defaultPageSize={20}
+            pageSizeOptions={[20, 50, 100]}
+            showLessItems
+            showSizeChanger
+            showQuickJumper
+            responsive
+            total={table.total}
+            showTotal={showTotal}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
+          />
         )}
       </Card>
       {table.selected.length > 0 && (
@@ -417,9 +422,13 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
             <b>{table.selected.length} Document Sales Order are Selected</b>
           </div>
           <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-            <Button size="big" variant="tertiary" onClick={() => {
-              setShowConfirm('cancel')
-            }}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => {
+                setShowConfirm('cancel')
+              }}
+            >
               Cancel Process
             </Button>
             <Button

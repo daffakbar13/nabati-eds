@@ -329,12 +329,12 @@ export default function PageQuotation(props: PageQuotationProps) {
     )
 
     React.useEffect(() => {
-        fieldReason()
-            .then((data) => {
-                setOptionsReason(data)
-                setReason(data[0].value)
-            })
-            .catch((err) => console.log(err))
+        fieldReason('B')
+          .then((data) => {
+            setOptionsReason(data)
+            setReason(data[0].value)
+          })
+          .catch((err) => console.log(err))
     }, [])
 
     return (
@@ -413,8 +413,7 @@ export default function PageQuotation(props: PageQuotationProps) {
                 </div>
                 {hasData && (
                     <Pagination
-                        defaultPageSize={table.defaultLimit}
-                        defaultCurrent={table.defaultPage}
+                        defaultPageSize={20}
                         pageSizeOptions={[20, 50, 100]}
                         showLessItems
                         showSizeChanger

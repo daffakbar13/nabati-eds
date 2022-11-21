@@ -37,13 +37,6 @@ export default function Quotation(props: QuotationProps) {
     createDataList('Created From', data.created_from),
   ]
 
-  const arrSubTotal = data.items?.map(({ price }) => price)
-
-  let totalAmount = 0
-  arrSubTotal?.forEach((element) => {
-    totalAmount += element
-  });
-
   return (
     <>
       <Row gutter={8}>
@@ -70,7 +63,7 @@ export default function Quotation(props: QuotationProps) {
       <Spacer size={30} />
       <Row>
         <Col span={12} offset={12}>
-          <Total label="Total Amount" value={totalAmount.toLocaleString()} />
+          <Total label="Total Amount" value={data.total_amount.toLocaleString()} />
         </Col>
       </Row>
     </>
