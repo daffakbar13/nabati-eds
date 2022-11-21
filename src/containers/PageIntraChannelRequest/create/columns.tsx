@@ -24,7 +24,7 @@ export const useTableAddItem = (props: propsUseTable) => {
         batch: '',
         remarks: '',
     }
-
+    console.log("branchid : ", props.idbranch);
     const [data, setData] = React.useState([])
     const [optionsUom, setOptionsUom] = React.useState([])
     const [valueItemSender, setValueItemSender] = React.useState([])
@@ -32,7 +32,9 @@ export const useTableAddItem = (props: propsUseTable) => {
     const [loading, setLoading] = React.useState(false)
 
     React.useEffect(() => {
-        setData([initialValue]);
+        if (props.idbranch) {
+            setData([initialValue]);
+        }
     }, [props.idbranch])
 
     function handleChangeData(key: string, value: string | number, index: number) {
