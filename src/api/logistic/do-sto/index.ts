@@ -26,12 +26,11 @@ export const getListDoSto = async (
 }
 
 export const getPoStoDetail = async (
-  id: string,
-  params: CommonListParams = {},
+  params: any,
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/${id}/detail`,
+    method: METHODS.GET,
+    subUrl: `${url}/${params.id}/detail`,
     overrideBaseUrl,
     data: params,
   })

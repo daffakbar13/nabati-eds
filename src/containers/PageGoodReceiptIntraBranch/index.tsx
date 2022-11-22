@@ -36,11 +36,7 @@ export default function PageGoodsIssue(props: Props) {
 
   const selectedQuotation = {
     text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
-    content: (
-      <div style={{ textAlign: 'center' }}>
-        {table.selected.join(', ')}
-      </div>
-    ),
+    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
   const statusOption = [
@@ -88,7 +84,12 @@ export default function PageGoodsIssue(props: Props) {
       </>
     )
     return (
-      <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
+      <Popover
+        placement="bottomRight"
+        title={'Hide/Show Columns'}
+        content={content}
+        trigger="click"
+      >
         <MoreOutlined style={{ cursor: 'pointer' }} />
       </Popover>
     )
@@ -101,51 +102,51 @@ export default function PageGoodsIssue(props: Props) {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder='Search by GR Number' />
+            <SearchQueryParams placeholder="Search by GR Number" />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='suppl_sloc_id' dataType='S' label='Supplying Branch' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
-                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
-                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
+              <SmartFilter.Field
+                field="suppl_sloc_id"
+                dataType="S"
+                label="Supplying Branch"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
-              <SmartFilter.Field field='receive_plant_id' dataType='S' label='Receiving Branch' options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}>
-                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
-                <DebounceSelect type='select' fetchOptions={fieldBranchAll} />
+              <SmartFilter.Field
+                field="receive_plant_id"
+                dataType="S"
+                label="Receiving Branch"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
-              <SmartFilter.Field field='posting_date' dataType='S' label='Posting Date' options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}>
+              <SmartFilter.Field
+                field="posting_date"
+                dataType="S"
+                label="Posting Date"
+                options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
+              >
                 <DatePickerInput
                   label={''}
                   fullWidth
                   format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
+                  placeholder="Posting Date"
                 />
                 <DatePickerInput
                   fullWidth
                   label={''}
                   format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
+                  placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field='status' dataType='S' label='Status' options={['EQ']} >
-                <DebounceSelect
-                  type='select'
-                  placeholder={'Select'}
-                  options={statusOption}
-                />
+              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>
-          <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => { }}>
-              Download
-            </Button>
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
-            >
-              Create
-            </Button>
-          </Row>
+          <Row gap="16px"></Row>
         </Row>
       </Card>
       <Spacer size={10} />
@@ -156,7 +157,6 @@ export default function PageGoodsIssue(props: Props) {
             columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
             dataSource={table.data}
             showSorterTooltip={false}
-            rowSelection={table.rowSelection}
             rowKey={'id'}
           />
         </div>
@@ -170,7 +170,9 @@ export default function PageGoodsIssue(props: Props) {
             responsive
             total={table.total}
             showTotal={showTotal}
-            onChange={(page, limit) => { table.handlePagination(page, limit) }}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
           />
         )}
         {table.selected.length > 0 && (
@@ -185,7 +187,7 @@ export default function PageGoodsIssue(props: Props) {
               <b>{table.selected.length} Document Quotation are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => { }}>
+              <Button size="big" variant="tertiary" onClick={() => {}}>
                 Cancel Process
               </Button>
               <Button
@@ -201,24 +203,43 @@ export default function PageGoodsIssue(props: Props) {
           </FloatAction>
         )}
         {showConfirm === 'submit' && (
-          <Popup onOutsideClick={() => { setShowConfirm('') }}>
+          <Popup
+            onOutsideClick={() => {
+              setShowConfirm('')
+            }}
+          >
             <Typography.Title level={3} style={{ margin: 0 }}>
               Confirm Submit
             </Typography.Title>
             <Typography.Title level={5} style={{ margin: 0 }}>
               Are you sure to submit quotation
-              {oneSelected
-                ? ` ${selectedQuotation.text} ?`
-                : <Popover content={selectedQuotation.content}>
+              {oneSelected ? (
+                ` ${selectedQuotation.text} ?`
+              ) : (
+                <Popover content={selectedQuotation.content}>
                   {` ${selectedQuotation.text} ?`}
                 </Popover>
-              }
+              )}
             </Typography.Title>
             <div style={{ display: 'flex', gap: 10 }}>
-              <Button size="big" style={{ flexGrow: 1 }} variant="secondary" onClick={() => { router.reload() }}>
+              <Button
+                size="big"
+                style={{ flexGrow: 1 }}
+                variant="secondary"
+                onClick={() => {
+                  router.reload()
+                }}
+              >
                 Cancel Proccess
               </Button>
-              <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={() => { router.reload() }}>
+              <Button
+                size="big"
+                style={{ flexGrow: 1 }}
+                variant="primary"
+                onClick={() => {
+                  router.reload()
+                }}
+              >
                 Submit
               </Button>
             </div>

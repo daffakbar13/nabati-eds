@@ -10,37 +10,24 @@ import CreateColumns from 'src/utils/createColumns'
 import { Input } from 'pink-lava-ui'
 
 interface DataType {
+  company_id: string
+  id: string
+  material_doc_id: string
   product_id: string
-  description: string
-  description_show: string
+  product_name: string
   qty: number
-  base_qty: number
-  po_qty: number
   uom_id: string
+  base_qty: number
   base_uom_id: string
-  po_uom_id: string
   sloc_id: string
-  remarks: string
+  sloc_name: string
+  received_qty: number
+  received_uom_id: string
   batch: string
+  remarks: string
 }
 
 export const useTableAddItem = (props: any) => {
-  const initialValue = {
-    key: 0,
-    product_id: '',
-    description: '',
-    description_show: '',
-    qty: 0,
-    base_qty: 0,
-    po_qty: 0,
-    uom_id: '',
-    base_uom_id: '',
-    po_uom_id: '',
-    sloc_id: '',
-    remarks: '',
-    batch: '',
-  }
-
   const [data, setData] = React.useState([])
   const [dataSubmit, setDataSubmit] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
@@ -62,18 +49,23 @@ export const useTableAddItem = (props: any) => {
     const ItemsData = props.items?.map((item: any, index) => {
       return {
         key: index,
+        company_id: item.company_id,
+        id: parseInt(item.id),
+        material_doc_id: item.material_doc_id,
         product_id: item.product_id,
-        description: item.description,
-        description_show: `${item.product_id} - ${item.description}`,
-        qty: item.qty,
-        base_qty: item.qty,
-        po_qty: item.qty,
+        product_name: item.product_name,
+        qty: parseInt(item.qty),
         uom_id: item.uom_id,
-        base_uom_id: item.uom_id,
-        po_uom_id: item.uom_id,
+        base_qty: parseInt(item.base_qty),
+        base_uom_id: item.base_uom_id,
         sloc_id: item.sloc_id,
+        sloc_name: item.sloc_name,
+        received_qty: item.received_qty,
+        received_uom_id: item.received_uom_id,
         remarks: '',
         batch: item.batch,
+        slocval: `${item.sloc_id} - ${item.sloc_name}`,
+        producval: `${item.product_id} - ${item.product_name}`,
       }
     })
 
@@ -83,12 +75,6 @@ export const useTableAddItem = (props: any) => {
       setRowSelection(defineRowSelection)
     }
   }, [props.items])
-
-  useEffect(() => {
-    fieldSloc('ZOP1').then((response) => {
-      setOptionsSloc(response)
-    })
-  }, [])
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
@@ -102,10 +88,6 @@ export const useTableAddItem = (props: any) => {
     return data.find((___, i) => i === index).product_sender_id === ''
   }
 
-  function handleAddItem() {
-    setData([...data, initialValue])
-  }
-
   const styleInputNumber = {
     border: '1px solid #AAAAAA',
     borderRadius: 8,
@@ -117,16 +99,16 @@ export const useTableAddItem = (props: any) => {
   const columns = [
     CreateColumns(
       'Item Po',
-      'description',
+      'producval',
       false,
       (description, __, index) => (
-        <DebounceSelect type="input" disabled value={data[index].description_show || ''} />
+        <DebounceSelect type="input" disabled value={data[index].producval || ''} />
       ),
       400,
     ),
     CreateColumns(
       'Po',
-      'qty_po',
+      'base_qty',
       false,
       (qty, __, index) => <Input type="text" disabled value={qty || ''} />,
       400,
@@ -136,7 +118,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'Qty',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_qty || ''} />
+            <DebounceSelect type="input" disabled value={rows.base_qty || ''} />
           ),
           key: 'qty_po',
           width: 100,
@@ -144,7 +126,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'UoM',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_uom_id || ''} />
+            <DebounceSelect type="input" disabled value={rows.base_uom_id || ''} />
           ),
           key: 'uom_po',
           width: 100,
@@ -163,7 +145,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'Qty',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_qty || ''} />
+            <DebounceSelect type="input" disabled value={rows.base_qty || ''} />
           ),
           key: 'qty_po',
           width: 100,
@@ -171,7 +153,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'UoM',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_uom_id || ''} />
+            <DebounceSelect type="input" disabled value={rows.base_uom_id || ''} />
           ),
           key: 'uom_po',
           width: 100,
@@ -191,7 +173,7 @@ export const useTableAddItem = (props: any) => {
           title: 'Qty',
           render: (rows, __, index) => (
             <InputNumber
-              disabled={isNullProductId(index)}
+              disabled
               min={isNullProductId(index) ? '0' : '1'}
               value={rows.qty?.toLocaleString()}
               onChange={(newVal) => {
@@ -211,7 +193,7 @@ export const useTableAddItem = (props: any) => {
               type="select"
               value={rows.uom_id as any}
               options={optionsUom[index] || []}
-              disabled={isNullProductId(index)}
+              disabled
               onChange={(e) => {
                 handleChangeData('uom_id', e.value, index)
                 handleChangeData('base_uom_id', e.value, index)
@@ -228,17 +210,8 @@ export const useTableAddItem = (props: any) => {
       'SLoc',
       'sloc_id',
       false,
-      (sloc_id, __, index) => (
-        <DebounceSelect
-          type="select"
-          required
-          placeholder="Select SLoc"
-          options={optionsSloc}
-          onChange={(e: any) => {
-            handleChangeData('sloc_id', e.value, index)
-          }}
-        />
-      ),
+      (rows, __, index) => 
+      <DebounceSelect type="input" disabled value={data[index].slocval} />,
       200,
     ),
     CreateColumns(
@@ -292,7 +265,6 @@ export const useTableAddItem = (props: any) => {
   return {
     data,
     dataSubmit,
-    handleAddItem,
     columns,
     loading,
     rowSelection,
