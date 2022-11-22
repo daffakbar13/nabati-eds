@@ -181,31 +181,6 @@ export const menuLogistic = [
     ],
   },
   {
-    key: 'intra-sloc',
-    title: 'Intra Sloc',
-    icon: LogisticIcIntraSloc,
-    children: [
-      {
-        key: 'request-intra-sloc',
-        title: 'Request',
-        content: () => 'Request',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/request-intra-sloc`),
-      },
-      {
-        key: 'goods-issue-intra-sloc',
-        title: 'Goods Issue',
-        content: () => 'Goods Issue',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc`),
-      },
-      {
-        key: 'goods-receipt-intra-sloc',
-        title: 'Goods Receipt',
-        content: () => 'Goods Receipt',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-sloc`),
-      },
-    ],
-  },
-  {
     key: 'canvas',
     title: 'Canvas',
     icon: LogisticIcCanvas,
