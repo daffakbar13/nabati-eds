@@ -494,7 +494,9 @@ export default function PageCreateQuotation() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`${PATH.SALES}/quotation`)
+                    isOrderAgainPage
+                      ? router.push(`${PATH.SALES}/quotation/detail/${router.query.id}`)
+                      : router.push(`${PATH.SALES}/quotation`)
                   }}
                 >
                   Yes

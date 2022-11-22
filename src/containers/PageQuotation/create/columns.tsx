@@ -1,3 +1,7 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-const-assign */
+/* eslint-disable no-plusplus */
+/* eslint-disable consistent-return */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable function-paren-newline */
 /* eslint-disable radix */
@@ -32,6 +36,7 @@ export const useTableAddItem = () => {
   const [optionsProduct, setOptionsProduct] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [fetching, setFetching] = React.useState('')
+  const [pending, setPending] = React.useState(0)
   const [showConfirm, setShowConfirm] = React.useState('')
   const [removedListProduct, setRemovedListProduct] = React.useState([])
   const [isLoading, setIsLoading] = React.useState(false)
@@ -289,7 +294,8 @@ export const useTableAddItem = () => {
           ({ label }) => !duplicateProduct.map((obj) => obj.uom_id).includes(label),
         )
         newOptionsUom[index] = filteredArr
-        const newUom = uom_id === '' ? filteredArr[0].value : uom_id
+        const newUom = uom_id === '' ? filteredArr[0]?.value : uom_id
+        console.log('optuom', newOptionsUom)
 
         handleChangeData('uom_id', newUom, index)
         setOptionsUom(newOptionsUom)
@@ -316,11 +322,16 @@ export const useTableAddItem = () => {
     }
     if (fetching !== '') {
       data.forEach(({ product_id, uom_id, order_qty }, index) => {
+        const lastIndex = index === data.length - 1
         if (product_id !== '') {
-          api(product_id, uom_id, order_qty, index)
-        }
-        if (uom_id === '') {
-          setFetching('load again')
+          setPending((current) => ++current)
+          api(product_id, uom_id, order_qty, index).then(() => {
+            setPending((current) => --current)
+            if (uom_id === '') {
+              setFetching('load again')
+              return false
+            }
+          })
         }
       })
       setFetching('')
@@ -328,22 +339,27 @@ export const useTableAddItem = () => {
   }, [fetching])
 
   React.useEffect(() => {
-    if (data.find(({ order_qty, product_id }) => order_qty === 0 && product_id !== '')) {
+    if (pending > 0) {
       setIsLoading(true)
     } else {
       setIsLoading(false)
     }
-  }, [data])
+    console.log('pending', pending)
+  }, [pending])
 
   React.useEffect(() => {
     setOptionsProduct(baseAllProduct.filter(({ value }) => !removedListProduct.includes(value)))
+    console.log('removedListProduct', removedListProduct)
+    console.log(optionsProduct)
   }, [removedListProduct])
 
   React.useEffect(() => {
     if (router.query.id) {
-      setIsLoading(true)
+      // router.reload()
+      setPending((current) => ++current)
       getDetailQuotation({ id: router.query.id as string })
         .then((response) => {
+          setPending((current) => --current)
           setData(
             response.data.items.map((items) => ({
               ...items,
@@ -352,8 +368,8 @@ export const useTableAddItem = () => {
               description: `${items.product_id} - ${items.description}`,
             })) as any,
           )
-          setFetching('product')
-          setIsLoading(false)
+          setFetching('')
+          setFetching('load product')
         })
         .catch(() => router.push(`${PATH.SALES}/quotation`))
     }
@@ -361,9 +377,7 @@ export const useTableAddItem = () => {
 
   React.useEffect(() => {
     const now = new Date().toISOString()
-
-    setIsLoading(true)
-
+    setPending((current) => ++current)
     getPricingByCompany()
       .then((result) =>
         result.data
@@ -381,9 +395,9 @@ export const useTableAddItem = () => {
         ),
       )
       .then((prod) => {
+        setPending((current) => --current)
         setOptionsProduct(prod)
         setBaseAllProduct(prod)
-        setIsLoading(false)
       })
   }, [])
 

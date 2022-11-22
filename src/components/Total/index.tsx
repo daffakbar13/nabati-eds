@@ -32,7 +32,9 @@ export default function Total(props: TotalProps) {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'start' }}>{currency || 'IDR'}</div>
-        <div style={{ display: 'flex', justifyContent: 'end', flexGrow: 1 }}>{value}</div>
+        <div style={{ display: 'flex', justifyContent: 'end', flexGrow: 1 }}>
+          {value.toLocaleString()}
+        </div>
       </div>
       {/* end::value */}
     </div>
