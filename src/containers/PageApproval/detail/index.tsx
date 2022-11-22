@@ -133,14 +133,18 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   )
 
   const ConfirmReject = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Rejection
+        Confirm Rejectation
       </Typography.Title>
       <DebounceSelect
-        type='select'
+        type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
-        label={'Reason Cancel Process Quotation'}
+        label={'Reason Reject Sales Order'}
         required
         options={optionsReason}
         onChange={({ value }) => setReason(value)}
@@ -150,7 +154,10 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
