@@ -50,7 +50,11 @@ export default function Popup(props: PopupProps) {
         }}
         {...(onOutsideClick && { ref: wrapper })}
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: gap || 10 }}>{children}</div>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: gap || 10, fontWeight: 'bold' }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   )

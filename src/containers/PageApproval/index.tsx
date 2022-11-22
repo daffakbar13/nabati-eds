@@ -5,17 +5,11 @@ import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
+import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
+import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import {
-  cancelBatchOrder,
-  downloadTemplateQuotation,
-  getQuotation,
-  multipleSubmitQuotation,
-} from 'src/api/quotation'
 import Popup from 'src/components/Popup'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -24,6 +18,7 @@ import { PATH } from 'src/configs/menus'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import Loader from 'src/components/Loader'
 import { downloadApproval, getApprovalList, multipleSubmitApproval } from 'src/api/approval'
+import Pagination from 'src/components/Pagination'
 import { PageApprovalProps } from './types'
 import { useColumnApproval } from './columns'
 
@@ -407,7 +402,7 @@ export default function PageApproval(props: PageApprovalProps) {
             />
           </Row>
           <Row gap="16px">
-          <Button size="big" variant="secondary" onClick={() => { }}>
+            <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
             <Button
@@ -434,17 +429,22 @@ export default function PageApproval(props: PageApprovalProps) {
         </div>
         {hasData && (
           <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.total}
-            showTotal={showTotal}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
+          // page={1}
+          // totalPages={100}
+          // size={20}
+          // totalItems={100}
+          // itemsPerPage={20}
+          // defaultPageSize={20}
+          // pageSizeOptions={[20, 50, 100]}
+          // showLessItems
+          // showSizeChanger
+          // showQuickJumper
+          // responsive
+          // total={table.total}
+          // showTotal={showTotal}
+          // onChange={(page, limit) => {
+          //   table.handlePagination(page, limit)
+          // }}
           />
         )}
         {table.selected.length > 0 && (

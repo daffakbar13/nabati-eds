@@ -30,7 +30,7 @@ export default function SalesOrder(props: SalesOrderProps) {
     createDataList('Doc. Date', dateFormat(data.doc_date, format)),
     createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
     // FIXME Quotation
-    createDataList('Quotation', data.quotation),
+    createDataList('Quotation', data.document_ref_id),
     createDataList('Reference', data.customer_ref),
     createDataList('Created On', dateFormat(data.created_at, format)),
     createDataList('Created By', data.created_by),

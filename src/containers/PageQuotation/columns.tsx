@@ -8,6 +8,7 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 interface LinkedProps {
   link: string
@@ -24,13 +25,13 @@ function Linked(props: LinkedProps) {
     status === 'Draft'
       ? router.push(`${PATH.SALES}/quotation/edit/${link}`)
       : router.push({
-        pathname: `${PATH.SALES}/quotation/detail/${link}`,
-        query: {
-          status,
-          page,
-          limit,
-        },
-      })
+          pathname: `${PATH.SALES}/quotation/detail/${link}`,
+          query: {
+            status,
+            page,
+            limit,
+          },
+        })
   }
   const [hover, setHover] = React.useState(false)
 
@@ -66,52 +67,29 @@ export const useColumnQuotation = [
     'Quotation',
     'id',
     true,
-    (link: string, { status_name, page, limit }: any) => <Linked
-      link={link}
-      type="id"
-      status={status_name}
-      page={page}
-      limit={limit}
-    />,
+    (link: string, { status_name, page, limit }: any) => (
+      <Linked link={link} type="id" status={status_name} page={page} limit={limit} />
+    ),
     170,
     true,
     'have-checkbox',
   ),
-  CreateColumns(
-    'Order Type',
-    'order_type_id',
-    false,
-    undefined,
-    120,
-  ),
+  CreateColumns('Order Type', 'order_type_id', false, undefined, 120),
   CreateColumns(
     'Order Date',
     'order_date',
     false,
-    (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
+    (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
     120,
   ),
-  CreateColumns(
-    'Sales Org.',
-    'sales_org_id',
-    false,
-    undefined,
-    110,
-  ),
-  CreateColumns(
-    'Branch',
-    'branch_id',
-    false,
-    undefined,
-    90,
-  ),
+  CreateColumns('Sales Org.', 'sales_org_id', false, undefined, 110),
+  CreateColumns('Branch', 'branch_id', false, undefined, 90),
   CreateColumns(
     'Sold To Customer',
     'sold_to_customer_id',
     false,
     (id, { customer_name }) => [id, customer_name].join(' - '),
     250,
-
   ),
   CreateColumns(
     'Ship To Customer',
@@ -119,54 +97,21 @@ export const useColumnQuotation = [
     false,
     (id, { customer_name }) => [id, customer_name].join(' - '),
     250,
-
   ),
-  CreateColumns(
-    'Salesman',
-    'salesman_id',
-    false,
-    undefined,
-    105,
-
-  ),
+  CreateColumns('Salesman', 'salesman_id', false, undefined, 105),
   CreateColumns(
     'Total Amount',
     'total_amount',
     false,
     (total_amount) => parseInt(total_amount).toLocaleString(),
     140,
-
   ),
-  CreateColumns(
-    'Create From',
-    'created_from',
-    false,
-    undefined,
-    125,
-  ),
-  CreateColumns(
-    'Status',
-    'status_name',
-    false,
-    (status) => <Tag {...(status === 'Complete' && { color: 'green' })} > {status}</Tag>,
-    110,
-  ),
-  CreateColumns(
-    'Status Process',
-    'status_process_id',
-    false,
-    (status_process) => <>{status_process !== '' && <Tag> {status_process}</Tag>}</>,
-  ),
-  CreateColumns(
-    'Action',
-    'id',
-    false,
-    (link, { status_name, page, limit }) => <Linked
-      link={link}
-      type="action"
-      status={status_name}
-      page={page}
-      limit={limit}
-    />,
-  ),
+  CreateColumns('Create From', 'created_from', false, undefined, 125),
+  CreateColumns('Status', 'status_name', false, (status) => <TaggedStatus status={status} />, 110),
+  CreateColumns('Status Process', 'status_process_id', false, (status_process) => (
+    <TaggedStatus status={status_process || 'Not Implemented'} />
+  )),
+  CreateColumns('Action', 'id', false, (link, { status_name, page, limit }) => (
+    <Linked link={link} type="action" status={status_name} page={page} limit={limit} />
+  )),
 ]
