@@ -5,9 +5,9 @@ import {
   LogisticIcGr,
   LogisticIcIntraBranch,
   LogisticIcIntraChannel,
-  // LogisticIcIntraSloc,
-  // LogisticIcCanvas,
-  // LogisticIcBadStock,
+  LogisticIcIntraSloc,
+  LogisticIcCanvas,
+  LogisticIcBadStock,
   // LogisticIcSwapHandling,
   // LogisticIcStockAdjustment,
 } from 'src/assets'
@@ -88,31 +88,6 @@ export const menuLogistic = [
     ],
   },
   {
-    key: 'intra-channel',
-    title: 'Intra Channel',
-    icon: LogisticIcIntraChannel,
-    children: [
-      {
-        key: 'request',
-        title: 'Request',
-        content: () => 'Request',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/request-intra-channel`),
-      },
-      {
-        key: 'goods-issue-intra-channel',
-        title: 'Goods Issue',
-        content: () => 'Goods Issue',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel`),
-      },
-      {
-        key: 'goods-receipt-intra-channel',
-        title: 'Goods Receipt',
-        content: () => 'Goods Receipt',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel`),
-      },
-    ],
-  },
-  {
     key: 'intra-branch',
     title: 'Intra Branch',
     icon: LogisticIcIntraBranch,
@@ -152,6 +127,119 @@ export const menuLogistic = [
         title: 'Sync GR From SAP',
         content: () => 'Sync GR From SAP',
         onClick: () => Router.push(`${PATH.LOGISTIC}/sync-gr-from-sap`),
+      },
+    ],
+  },
+  {
+    key: 'intra-channel',
+    title: 'Intra Channel',
+    icon: LogisticIcIntraChannel,
+    children: [
+      {
+        key: 'request',
+        title: 'Request',
+        content: () => 'Request',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/request-intra-channel`),
+      },
+      {
+        key: 'goods-issue-intra-channel',
+        title: 'Goods Issue',
+        content: () => 'Goods Issue',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel`),
+      },
+      {
+        key: 'goods-receipt-intra-channel',
+        title: 'Goods Receipt',
+        content: () => 'Goods Receipt',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel`),
+      },
+    ],
+  },
+  {
+    key: 'intra-sloc',
+    title: 'Intra Sloc',
+    icon: LogisticIcIntraSloc,
+    children: [
+      {
+        key: 'request-intra-sloc',
+        title: 'Request',
+        content: () => 'Request',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/request-intra-sloc`),
+      },
+      {
+        key: 'goods-issue-intra-sloc',
+        title: 'Goods Issue',
+        content: () => 'Goods Issue',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc`),
+      },
+      {
+        key: 'goods-receipt-intra-sloc',
+        title: 'Goods Receipt',
+        content: () => 'Goods Receipt',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-sloc`),
+      },
+    ],
+  },
+  {
+    key: 'intra-sloc',
+    title: 'Intra Sloc',
+    icon: LogisticIcIntraSloc,
+    children: [
+      {
+        key: 'request-intra-sloc',
+        title: 'Request',
+        content: () => 'Request',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/request-intra-sloc`),
+      },
+      {
+        key: 'goods-issue-intra-sloc',
+        title: 'Goods Issue',
+        content: () => 'Goods Issue',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc`),
+      },
+      {
+        key: 'goods-receipt-intra-sloc',
+        title: 'Goods Receipt',
+        content: () => 'Goods Receipt',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-sloc`),
+      },
+    ],
+  },
+  {
+    key: 'canvas',
+    title: 'Canvas',
+    icon: LogisticIcCanvas,
+    children: [
+      {
+        key: 'stock-reservation',
+        title: 'Stock Reservation',
+        content: () => 'Request',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/stock-reservation  `),
+      },
+      {
+        key: 'approval-stock-reservation',
+        title: 'Approval',
+        content: () => 'Approval',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/approval-stock-reservation`),
+      },
+      {
+        key: 'transfer-to-gs',
+        title: 'Transfer to GS',
+        content: () => 'Transfer to GS',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/transfer-to-gs`),
+      },
+    ],
+  },
+  {
+    key: 'bad-stock',
+    title: 'Bad Stock',
+    icon: LogisticIcBadStock,
+    children: [
+      {
+        key: 'gi-disposal',
+        title: 'GI Disposal',
+        content: () => 'GI Disposal',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/gi-disposal`),
       },
     ],
   },
