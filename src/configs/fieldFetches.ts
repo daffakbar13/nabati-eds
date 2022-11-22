@@ -149,9 +149,10 @@ export function fieldBranchAll(search: string) {
                     id.toLowerCase().includes(search.toLowerCase())
                     || name.toLowerCase().includes(search.toLowerCase()))
                 .splice(0, 10)
-                .map(({ id, name }) => ({
+                .map(({ id, name, branch_type }) => ({
                     label: [id, name].join(' - '),
                     value: id,
+                    key: branch_type,
                 })))
 }
 

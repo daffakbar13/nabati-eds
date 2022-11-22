@@ -36,4 +36,12 @@ export const getDetailRequestIntraSloc = async (
     return response.data
 }
 
-
+export const createRequestIntraSloc = async (payload: any) => {
+    const response = await call({
+      method: METHODS.POST,
+      overrideBaseUrl,
+      subUrl: `${url}`,
+      data: payload,
+    })
+    return response.data
+  }
