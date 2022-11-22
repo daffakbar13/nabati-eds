@@ -245,13 +245,13 @@ export default function PageCreateSalesOrder() {
                 if (canSave) {
                   setProccessing('Wait for save Quotation')
                   isCreateOrOrderAgain
-                    ? createSalesOrder(dataSubmited(6))
+                    ? createSalesOrder(dataSubmited(10))
                         .then((response) => {
                           setDraftQuotation(response.data.id)
                           setProccessing('')
                         })
                         .catch(() => setProccessing(''))
-                    : updateSalesOrder(dataSubmited(6), titlePage.split(' ').reverse()[0])
+                    : updateSalesOrder(dataSubmited(10), titlePage.split(' ').reverse()[0])
                         .then((response) => {
                           setDraftQuotation(response.data.id)
                           setProccessing('')
@@ -494,7 +494,9 @@ export default function PageCreateSalesOrder() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`${PATH.SALES}/sales-order`)
+                    isOrderAgainPage
+                      ? router.push(`${PATH.SALES}/sales-order/detail/${router.query.id}`)
+                      : router.push(`${PATH.SALES}/sales-order`)
                   }}
                 >
                   Yes
