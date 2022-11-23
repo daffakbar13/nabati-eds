@@ -54,7 +54,12 @@ export default function useTable(props: useTableProps) {
     setBody((current) => ({ ...current, filters: newBody, page: 1 }))
   }
 
+  const handleSelected = (newData: object[]) => {
+    setSelected(newData)
+  }
+
   const defineRowSelection = {
+    selectedRowKeys: selected,
     onChange: (selectedRowKeys) => {
       setSelected(selectedRowKeys)
     },
@@ -67,7 +72,7 @@ export default function useTable(props: useTableProps) {
       }),
     }),
     fixed: 'left',
-    // preserveSelectedRowKeys: true,
+    preserveSelectedRowKeys: true,
   }
 
   React.useEffect(() => {
@@ -95,6 +100,10 @@ export default function useTable(props: useTableProps) {
     setColumns(props.columns.filter((e) => !hiddenColumns.includes(e.title)))
   }, [hiddenColumns, props.columns])
 
+  React.useEffect(() => {
+    setRowSelection(defineRowSelection)
+  }, [selected])
+
   return {
     data,
     total,
@@ -108,5 +117,6 @@ export default function useTable(props: useTableProps) {
     handleResetHideShowColumns,
     handlePagination,
     handleFilter,
+    handleSelected,
   }
 }
