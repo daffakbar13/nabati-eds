@@ -338,126 +338,139 @@ export default function PageQuotation(props: PageQuotationProps) {
     }, [])
 
     return (
-        <Col>
-            {onProcess && <Loader type='process' text={processing} />}
-            <Text variant={'h4'}>{titlePage}</Text>
-            <Spacer size={20} />
-            <Card style={{ overflow: 'unset' }}>
-                <Row justifyContent="space-between">
-                    <Row gap="16px">
-                        <Search
-                            width="380px"
-                            nameIcon="SearchOutlined"
-                            placeholder="Search Quotation ID"
-                            colorIcon={colors.grey.regular}
-                            onChange={(e) => {
-                                const { value } = e.target
-                                if (value === '') {
-                                    table.handleFilter([])
-                                } else {
-                                    table.handleFilter([{
-                                        field: 'eds_order.id',
-                                        option: 'CP',
-                                        from_value: `%${e.target.value}%`,
-                                    }])
-                                }
-                            }}
-                        />
-                        <SmartFilter
-                            onOk={(newVal) => {
-                                const newFiltered = newVal
-                                    .filter((obj) => obj.fromValue)
-                                    .map((obj) => ({
-                                        field: `eds_order.${obj.field}`,
-                                        option: obj.option,
-                                        from_value: obj.fromValue.value,
-                                        to_value: obj.toValue?.value,
-                                    }))
-                                setFilters(newVal)
-                                table.handleFilter(newFiltered)
-                            }}
-                            filters={filters} />
-                    </Row>
-                    <Row gap="16px">
-                        <Popover placement="bottom" content={moreContent} trigger="click">
-                            <Button
-                                size="big"
-                                variant="secondary"
-                                onClick={downloadTemplateQuotation}
-                                style={{ gap: 5 }}
-                            >
-                                More <DownOutlined />
-                            </Button>
-                        </Popover>
-                        <Button
-                            size="big"
-                            variant="primary"
-                            onClick={() => router.push(`${router.pathname}/create`)}
-                        >
-                            Create
-                        </Button>
-                    </Row>
-                </Row>
-            </Card>
-            <Spacer size={10} />
-            <Card style={{ padding: '16px 20px' }}>
-                <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-                    <Table
-                        loading={table.loading}
-                        columns={[...table.columns, { title: <HideShowColumns />, fixed: 'right', width: 50 }]}
-                        dataSource={table.data}
-                        showSorterTooltip={false}
-                        rowSelection={table.rowSelection}
-                        rowKey={'id'}
-                    />
-                </div>
-                {hasData && (
-                    <Pagination
-                        defaultPageSize={20}
-                        pageSizeOptions={[20, 50, 100]}
-                        showLessItems
-                        showSizeChanger
-                        showQuickJumper
-                        responsive
-                        total={table.total}
-                        showTotal={showTotal}
-                        onChange={(page, limit) => { table.handlePagination(page, limit) }}
-                    />
-                )}
-                {table.selected.length > 0 && (
-                    <FloatAction>
-                        <div
-                            style={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                            }}
-                        >
-                            <b>{table.selected.length} Document Quotation are Selected</b>
-                        </div>
-                        <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-                            <Button size="big" variant="tertiary" onClick={() => {
-                                setShowConfirm('cancel')
-                            }}>
-                                Cancel Process
-                            </Button>
-                            <Button
-                                size="big"
-                                variant="primary"
-                                onClick={() => {
-                                    setShowConfirm('submit')
-                                }}
-                            >
-                                Submit
-                            </Button>
-                        </div>
-                    </FloatAction>
-                )}
-                {showConfirm === 'submit' && <ConfirmSubmit />}
-                {showConfirm === 'success-submit' && <ConfirmSuccessSubmit />}
-                {showConfirm === 'cancel' && <ConfirmCancel />}
-                {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
-            </Card>
-        </Col>
+      <Col>
+        {onProcess && <Loader type="process" text={processing} />}
+        <Text variant={'h4'}>{titlePage}</Text>
+        <Spacer size={20} />
+        <Card style={{ overflow: 'unset' }}>
+          <Row justifyContent="space-between">
+            <Row gap="16px">
+              <Search
+                width="380px"
+                nameIcon="SearchOutlined"
+                placeholder="Search Quotation ID"
+                colorIcon={colors.grey.regular}
+                onChange={(e) => {
+                  const { value } = e.target
+                  if (value === '') {
+                    table.handleFilter([])
+                  } else {
+                    table.handleFilter([
+                      {
+                        field: 'eds_order.id',
+                        option: 'CP',
+                        from_value: `%${e.target.value}%`,
+                      },
+                    ])
+                  }
+                }}
+              />
+              <SmartFilter
+                onOk={(newVal) => {
+                  const newFiltered = newVal
+                    .filter((obj) => obj.fromValue)
+                    .map((obj) => ({
+                      field: `eds_order.${obj.field}`,
+                      option: obj.option,
+                      from_value: obj.fromValue.value,
+                      to_value: obj.toValue?.value,
+                    }))
+                  setFilters(newVal)
+                  table.handleFilter(newFiltered)
+                }}
+                filters={filters}
+              />
+            </Row>
+            <Row gap="16px">
+              <Popover placement="bottom" content={moreContent} trigger="click">
+                <Button
+                  size="big"
+                  variant="secondary"
+                  onClick={downloadTemplateQuotation}
+                  style={{ gap: 5 }}
+                >
+                  More <DownOutlined />
+                </Button>
+              </Popover>
+              <Button
+                size="big"
+                variant="primary"
+                onClick={() => router.push(`${router.pathname}/create`)}
+              >
+                Create
+              </Button>
+            </Row>
+          </Row>
+        </Card>
+        <Spacer size={10} />
+        <Card style={{ padding: '16px 20px' }}>
+          <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+            <Table
+              scroll={{ y: 600 }}
+              loading={table.loading}
+              columns={[
+                ...table.columns,
+                { title: <HideShowColumns />, fixed: 'right', width: 50 },
+              ]}
+              dataSource={table.data}
+              showSorterTooltip={false}
+              rowSelection={table.rowSelection}
+              rowKey={'id'}
+            />
+          </div>
+          {hasData && (
+            <Pagination
+              defaultPageSize={20}
+              pageSizeOptions={[20, 50, 100]}
+              showLessItems
+              showSizeChanger
+              showQuickJumper
+              responsive
+              total={table.total}
+              showTotal={showTotal}
+              onChange={(page, limit) => {
+                table.handlePagination(page, limit)
+              }}
+            />
+          )}
+          {table.selected.length > 0 && (
+            <FloatAction>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
+              >
+                <b>{table.selected.length} Document Quotation are Selected</b>
+              </div>
+              <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    setShowConfirm('cancel')
+                  }}
+                >
+                  Cancel Process
+                </Button>
+                <Button
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    setShowConfirm('submit')
+                  }}
+                >
+                  Submit
+                </Button>
+              </div>
+            </FloatAction>
+          )}
+          {showConfirm === 'submit' && <ConfirmSubmit />}
+          {showConfirm === 'success-submit' && <ConfirmSuccessSubmit />}
+          {showConfirm === 'cancel' && <ConfirmCancel />}
+          {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
+        </Card>
+      </Col>
     )
 }

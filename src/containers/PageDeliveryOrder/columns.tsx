@@ -5,8 +5,7 @@ import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus';
-import React from 'react';
-import { Tag } from 'antd';
+import React from 'react'
 import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {

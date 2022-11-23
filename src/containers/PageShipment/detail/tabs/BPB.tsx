@@ -5,5 +5,9 @@ interface BPBProps {}
 export default function BPB(props: BPBProps) {
   const {} = props
 
-  return <></>
+  return (
+    <>
+      <div onClick={() => window.print()}>asdasdas</div>
+    </>
+  )
 }
