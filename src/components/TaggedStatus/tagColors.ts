@@ -23,6 +23,7 @@ const tagColors = {
     yellow: [
         'Draft',
         'Wait For Approval',
+        'Pending',
     ],
 }
 

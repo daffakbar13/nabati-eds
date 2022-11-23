@@ -13,7 +13,7 @@ import { column } from './columns'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-export default function PageQuotationDetail() {
+export default function PageIntraSlocRequestDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
   const data: any = useDetail(getDetailRequestIntraSloc, { id: router.query.id as string })
@@ -144,17 +144,17 @@ export default function PageQuotationDetail() {
       <Card style={{ padding: '16px 20px' }}>
         <Row gutter={8}>
           <Col span={8}>
-            {dataList.slice(0, 5).map(({ label, value }, i) => (
+            {dataList.slice(0, 4).map(({ label, value }, i) => (
               <DataList key={i} label={label} value={value} />
             ))}
           </Col>
           <Col span={8}>
-            {dataList.slice(5, 10).map(({ label, value }, i) => (
+            {dataList.slice(4, 7).map(({ label, value }, i) => (
               <DataList key={i} label={label} value={value} />
             ))}
           </Col>
           <Col span={8}>
-            {dataList.slice(10).map(({ label, value }, i) => (
+            {dataList.slice(7).map(({ label, value }, i) => (
               <DataList key={i} label={label} value={value} />
             ))}
           </Col>
