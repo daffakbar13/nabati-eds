@@ -78,8 +78,8 @@ export const column = [
     false,
     (text: string, record: any) => `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
   ),
-  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link, record) => (
+  CreateColumns('Status', 'status_name', false, (status_name) => <TaggedStatus status={status_name} />),
+  CreateColumns('Action', 'doc_number', false, (link, record) => (
     <Linked link={link} type="action" linkType="id" />
   )),
 ]
