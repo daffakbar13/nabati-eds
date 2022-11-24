@@ -37,13 +37,12 @@ export default function CreateGoodsReceipt() {
   const [showSubmitModal, setShowSubmitModal] = useState(false)
 
   const router = useRouter()
-
-  console.log('form', form)
+  // console.log('form', form)
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
     setHeaderData(values)
-    console.log('values', values)
+    // console.log('values', values)
     setShowSubmitModal(true)
   }
 
@@ -183,6 +182,7 @@ export default function CreateGoodsReceipt() {
         content="Are you sure want Submit Goods Receipt?"
         successContent="GR Number 22P10400000001555 has been
         successfully created"
+        successOkText="Print"
       />
     </Col>
   )
