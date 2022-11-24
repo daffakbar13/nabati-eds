@@ -49,3 +49,16 @@ export const getGoodReceiptDetail = async (
   })
   return response.data
 }
+
+export const getGoodReceiptByPo = async (
+  poNumber: string,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/request-data/${poNumber}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

@@ -58,8 +58,6 @@ const ModalCustomize = ({
     }
   }
 
-  console.log('typeof title', typeof title)
-  console.log('isReactComponent', isReactComponent(title))
   return (
     <>
       <Modal
