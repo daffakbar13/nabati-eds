@@ -1,7 +1,9 @@
 import { Divider, Form, message } from 'antd'
+import { useRouter } from 'next/router'
+
 import { Button, Col, DatePickerInput, Row, Spacer, Text as Title } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, Input, SelectMasterData, TableEditable, Text } from 'src/components'
+import { Card, Input, SelectMasterData, TableEditable, Text, Modal } from 'src/components'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import { columns } from './columns'
 
@@ -29,17 +31,26 @@ const originData: Item[] = [
 
 export default function CreateGoodsReceipt() {
   const [form] = Form.useForm()
+  const [headerData, setHeaderData] = useState(null)
   const [data, setData] = useState<Item[]>(originData)
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [showSubmitModal, setShowSubmitModal] = useState(false)
+
+  const router = useRouter()
 
   console.log('form', form)
 
-  const submit = () => {
-    form.submit()
+  const onClickSubmit = async () => {
+    const values = await form.validateFields()
+    setHeaderData(values)
+    console.log('values', values)
+    setShowSubmitModal(true)
   }
 
-  const onFinish = (values) => {
-    console.log('values', values)
-    message.success('Submit success!')
+  const handleCreate = () => {
+    // TO DO SUBMIT with API here...
+    console.log('headerData', headerData)
+    return 'xxx'
   }
 
   return (
@@ -49,10 +60,10 @@ export default function CreateGoodsReceipt() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button size="big" variant="tertiary" onClick={() => {}}>
+            <Button size="big" variant="tertiary" onClick={() => setShowCancelModal(true)}>
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={submit}>
+            <Button size="big" variant="primary" onClick={onClickSubmit}>
               Submit
             </Button>
           </Row>
@@ -67,7 +78,7 @@ export default function CreateGoodsReceipt() {
           autoComplete="off"
           requiredMark={false}
           scrollToFirstError
-          onFinish={onFinish}
+          // onFinish={onFinish}
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item
@@ -154,6 +165,25 @@ export default function CreateGoodsReceipt() {
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <TableEditable data={data} setData={setData} columns={columns()} />
       </Card>
+
+      <Modal
+        open={showCancelModal}
+        onOk={() => router.back()}
+        onCancel={() => setShowCancelModal(false)}
+        title="Confirm Cancellation"
+        content="Are you sure want to cancel ? Change you made so far
+        will not be saved"
+      />
+
+      <Modal
+        open={showSubmitModal}
+        onOk={handleCreate}
+        onCancel={() => setShowSubmitModal(false)}
+        title="Confirm Submit"
+        content="Are you sure want Submit Goods Receipt?"
+        successContent="GR Number 22P10400000001555 has been
+        successfully created"
+      />
     </Col>
   )
 }

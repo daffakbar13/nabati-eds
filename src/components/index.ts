@@ -13,5 +13,6 @@ export { default as GoBackArrow } from './GoBackArrow'
 export { default as Tabs } from './Tabs'
 export { default as DataList } from './DataList'
 export { default as Input } from './Input'
+export { default as Modal } from './Modal'
 
 export { Card } from './Card'
