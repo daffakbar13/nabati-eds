@@ -45,16 +45,19 @@ const ModalCustomize = ({
       setLoading(true)
       const res = await onOk()
       setLoading(false)
-      if (res === false) return
+
+      console.log('res aaa', res)
+      if (!res) return
       setOnOkResponse(res)
+
+      if (successContent) {
+        setShowSuccessModal(true)
+      }
+
       close()
     } catch (error) {
       setLoading(false)
       console.log(error)
-    }
-
-    if (successContent) {
-      setShowSuccessModal(true)
     }
   }
 

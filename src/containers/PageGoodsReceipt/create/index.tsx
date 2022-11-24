@@ -8,6 +8,7 @@ import { Card, Input, SelectMasterData, Text, Modal } from 'src/components'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import { getGoodReceiptByPo, createGoodReceipt } from 'src/api/logistic/good-receipt'
 import { getListPoSto } from 'src/api/logistic/po-sto'
+import moment from 'moment'
 import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
@@ -37,17 +38,33 @@ export default function CreateGoodsReceipt() {
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
+    // console.log(v)
     setHeaderData(values)
     setShowSubmitModal(true)
   }
 
   const handleCreate = async () => {
     // TO DO SUBMIT with API here...
-    // const payload = { ...headerData }
-    // const res = await createGoodReceipt(payload)
+    console.log('headerData', headerData)
+    const payload: any = {
+      po_number: headerData.po_number,
+      delivery_number: headerData.po_number,
+      document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
+      posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
+      remarks: headerData.remark,
+      vendor: headerData.vendor.value,
+      branch: headerData.branch.value,
+      delivery_note: headerData.delivery_note,
+      bill_of_lading: headerData.bill_of_lading,
+      items: selectedTableData,
+    }
+    console.log('payload', payload)
+    const res = await createGoodReceipt(payload)
+
+    console.log('res', res)
 
     console.log('headerData', headerData)
-    return 'xxx'
+    return res
   }
 
   const onChangePoNumber = async (poNumber: any) => {
@@ -57,12 +74,9 @@ export default function CreateGoodsReceipt() {
     }
 
     try {
-      console.log('poNumber', poNumber)
       const { data } = await getGoodReceiptByPo(poNumber)
-      console.log('data', data)
       setTableData((data.items || []).map((i: any, ind: number) => ({ ...i, rowKey: ind + 1 })))
       form.setFieldsValue({
-        // po_number: data.po_number,
         delivery_number: data.delivery_number,
         vendor: { value: data.vendor },
         branch: { value: data.branch },
@@ -210,7 +224,7 @@ export default function CreateGoodsReceipt() {
           <Table
             rowSelection={{
               onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-                setSelectedTableData(selectedRowKeys)
+                setSelectedTableData(selectedRows)
               },
             }}
             rowKey="rowKey"
@@ -235,8 +249,7 @@ export default function CreateGoodsReceipt() {
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Goods Receipt?"
-        successContent="GR Number 22P10400000001555 has been
-        successfully created"
+        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
       />
     </Col>
