@@ -2,52 +2,16 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
 /* eslint-disable radix */
+import { ColumnsType } from 'antd/lib/table'
 import CreateColumns from 'src/utils/createColumns'
 
 export const TableSalesOrder = [
-  CreateColumns(
-    'No',
-    'no',
-    false,
-    (_, __, index) => ++index,
-    60,
-    true,
-  ),
-  CreateColumns(
-    'Item',
-    'description',
-    false,
-    undefined,
-    300,
-  ),
-  CreateColumns(
-    'Item Category',
-    'item_category_id',
-    false,
-    undefined,
-    137,
-  ),
-  CreateColumns(
-    'Uom',
-    'uom_id',
-    false,
-    undefined,
-    70,
-  ),
-  CreateColumns(
-    'Quantity',
-    'order_qty',
-    false,
-    undefined,
-    100,
-  ),
-  CreateColumns(
-    'Based Price',
-    'price',
-    false,
-    (price) => parseInt(price).toLocaleString(),
-    120,
-  ),
+  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
+  CreateColumns('Item', 'description', false, undefined, 300),
+  CreateColumns('Item Category', 'item_category_id', false, undefined, 137),
+  CreateColumns('Uom', 'uom_id', false, undefined, 70),
+  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
+  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
   // FIXME Sub Total
   CreateColumns(
     'Gross',
@@ -70,13 +34,7 @@ export const TableSalesOrder = [
     (sub_total, { price, order_qty }) => (parseInt(price) * parseInt(order_qty)).toLocaleString(),
     110,
   ),
-  CreateColumns(
-    'Remarks',
-    'remarks',
-    false,
-    undefined,
-    120,
-  ),
+  CreateColumns('Remarks', 'remarks', false, undefined, 120),
 ]
 
 export const TableDocumentFlow = [
@@ -95,64 +53,15 @@ export const TableCustomerInfo = [
 ]
 
 export const TablePricingCondition = [
-  CreateColumns(
-    'No',
-    'no',
-    false,
-    (_, __, index) => ++index,
-    60,
-    true,
-  ),
-  CreateColumns(
-    'Item ID',
-    'product_id',
-    false,
-    undefined,
-    85,
-  ),
-  CreateColumns(
-    'Item Category',
-    'item_category_id',
-    false,
-    undefined,
-    140,
-  ),
+  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
+  CreateColumns('Item ID', 'product_id', false, undefined, 85),
+  CreateColumns('Item Category', 'item_category_id', false, undefined, 140),
   // FIXME Promotion Type
-  CreateColumns(
-    'Promotion Type',
-    'Doc. Number',
-    false,
-    undefined,
-    150,
-  ),
-  CreateColumns(
-    'Name',
-    'description',
-    false,
-    undefined,
-    250,
-  ),
-  CreateColumns(
-    'Uom',
-    'uom_id',
-    false,
-    undefined,
-    80,
-  ),
-  CreateColumns(
-    'Quantity',
-    'order_qty',
-    false,
-    undefined,
-    100,
-  ),
-  CreateColumns(
-    'Based Price',
-    'price',
-    false,
-    (price) => parseInt(price).toLocaleString(),
-    120,
-  ),
+  CreateColumns('Promotion Type', 'Doc. Number', false, undefined, 150),
+  CreateColumns('Name', 'description', false, undefined, 250),
+  CreateColumns('Uom', 'uom_id', false, undefined, 80),
+  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
+  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
   CreateColumns(
     'Gross',
     'gross_value',
@@ -226,7 +135,116 @@ export const TablePricingCondition = [
   ),
 ]
 
-export const TablePromotionList = [
-  CreateColumns('Salesman', 'Process'),
-  CreateColumns('Salesman Group', 'Doc. Number'),
+// (price) => ({ children: price, props: { colspan: 2 } })
+
+export const ColumnsPromotionList: ColumnsType<any> = [
+  {
+    title: <div style={{ textAlign: 'center' }}>No</div>,
+    render: (_, obj, index) => {
+      const key = Object.keys(obj)[0]
+      let title: string
+      switch (key) {
+        case 'gross_total_amount':
+          title = 'Total Gross'
+          break
+        case 'dpp_total_amount':
+          title = 'Net Before Tax'
+          break
+        case 'discount_total_amount':
+          title = 'Total Discount'
+          break
+        case 'net_total_amount':
+          title = 'Net'
+          break
+        case 'tax_total_amount':
+          title = 'PPN'
+          break
+        case 'total_amount':
+          title = 'Total Amount'
+          break
+        default:
+          break
+      }
+      if (obj.product_id) {
+        return ++index
+      }
+      return {
+        children: title,
+        props: { colSpan: 7 },
+      }
+    },
+    width: 70,
+    colSpan: 1,
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>PID</div>,
+    dataIndex: 'product_id',
+    render: (val, obj) => {
+      if (obj.product_id) {
+        return val
+      }
+      return { props: { style: { display: 'none' } } }
+    },
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>Product Name</div>,
+    dataIndex: 'description',
+    width: 400,
+    render: (val, obj) => {
+      if (obj.product_id) {
+        return val
+      }
+      return { props: { style: { display: 'none' } } }
+    },
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>UoM</div>,
+    dataIndex: 'uom_id',
+    render: (val, obj) => {
+      if (obj.product_id) {
+        return val
+      }
+      return { props: { style: { display: 'none' } } }
+    },
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>Qty</div>,
+    dataIndex: 'order_qty',
+    render: (val, obj) => {
+      if (obj.product_id) {
+        return val
+      }
+      return { props: { style: { display: 'none' } } }
+    },
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>Price</div>,
+    dataIndex: 'price',
+    render: (val, obj) => {
+      if (obj.product_id) {
+        return val
+      }
+      return { props: { style: { display: 'none' } } }
+    },
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>Discount</div>,
+    dataIndex: 'discount_value',
+    render: (val, obj) => {
+      if (obj.product_id) {
+        return val
+      }
+      return { props: { style: { display: 'none' } } }
+    },
+  },
+  {
+    title: <div style={{ textAlign: 'center' }}>Amount</div>,
+    dataIndex: 'product_id',
+    render: (_, obj) => {
+      if (obj.price) {
+        return (parseInt(obj.price) * parseInt(obj.order_qty)).toLocaleString()
+      }
+      return obj[Object.keys(obj)[0]].toLocaleString()
+    },
+  },
 ]

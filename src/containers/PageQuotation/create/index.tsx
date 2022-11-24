@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable radix */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-nested-ternary */
@@ -168,6 +169,7 @@ export default function PageCreateQuotation() {
             })),
           )
         })
+        .catch((err) => console.log(err))
     }
     setFetching('')
   }, [fetching])
@@ -196,7 +198,8 @@ export default function PageCreateQuotation() {
           result.data.map(({ id, name }) => ({
             label: [id, name.split('-').join(' - ')].join(' - '),
             value: [id, name.split('-').join(' - ')].join(' - '),
-          })))
+          })),
+        )
         .then((data) => {
           onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZQP1'))?.value)
           setOptionsOrderType(data)
@@ -206,7 +209,8 @@ export default function PageCreateQuotation() {
           result.data.map(({ sold_to_customer_id, name }) => ({
             label: [sold_to_customer_id, name].join(' - '),
             value: [sold_to_customer_id, name].join(' - '),
-          })))
+          })),
+        )
         .then((cust) => setOptionsCustomerSoldTo(cust))
     }
     api()
@@ -407,7 +411,7 @@ export default function PageCreateQuotation() {
                 onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
               }}
               label="Delivery Date"
-              disabledDate={(current) => current < moment().endOf('day')}
+              disabledDate={(current) => current < moment().startOf('day')}
               value={moment(dataForm.delivery_date)}
               format={'DD-MMM-YYYY'}
               required
@@ -542,7 +546,7 @@ export default function PageCreateQuotation() {
           </div>
         </Popup>
       )}
-      {<tableAddItems.ConfirmDelete/>}
+      {<tableAddItems.ConfirmDelete />}
     </Col>
   )
 }

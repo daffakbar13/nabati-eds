@@ -110,20 +110,22 @@ export default function PageShipment(props: PageShipmentProps) {
             pagination={false}
             onChange={(_, __, sorter) => console.log(sorter)}
           />
-          {hasData && (
-            <Pagination
-              defaultPageSize={20}
-              pageSizeOptions={[20, 50, 100]}
-              showLessItems
-              showSizeChanger
-              showQuickJumper
-              responsive
-              total={table.total}
-              showTotal={showTotal}
-              onChange={(page, limit) => { table.handlePagination(page, limit) }}
-            />
-          )}
         </div>
+        {hasData && (
+          <Pagination
+            defaultPageSize={20}
+            pageSizeOptions={[20, 50, 100]}
+            showLessItems
+            showSizeChanger
+            showQuickJumper
+            responsive
+            total={table.total}
+            showTotal={showTotal}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
+          />
+        )}
       </Card>
     </Col>
   )

@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable radix */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-nested-ternary */
@@ -40,8 +41,8 @@ export default function PageCreateSalesOrder() {
     customer_ref: '',
     currency_id: 'IDR',
   })
-  const [newQuotation, setNewQuotation] = React.useState()
-  const [draftQuotation, setDraftQuotation] = React.useState()
+  const [newSalesOrder, setNewSalesOrder] = React.useState()
+  const [draftSalesOrder, setDraftSalesOrder] = React.useState()
   const [cancel, setCancel] = React.useState(false)
   const [optionsOrderType, setOptionsOrderType] = React.useState([])
   const [optionsSalesman, setOptionsSalesman] = React.useState([])
@@ -168,6 +169,7 @@ export default function PageCreateSalesOrder() {
             })),
           )
         })
+        .catch((err) => console.log(err))
     }
     setFetching('')
   }, [fetching])
@@ -196,7 +198,8 @@ export default function PageCreateSalesOrder() {
           result.data.map(({ id, name }) => ({
             label: [id, name.split('-').join(' - ')].join(' - '),
             value: [id, name.split('-').join(' - ')].join(' - '),
-          })))
+          })),
+        )
         .then((data) => {
           onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZOP1'))?.value)
           setOptionsOrderType(data)
@@ -206,7 +209,8 @@ export default function PageCreateSalesOrder() {
           result.data.map(({ sold_to_customer_id, name }) => ({
             label: [sold_to_customer_id, name].join(' - '),
             value: [sold_to_customer_id, name].join(' - '),
-          })))
+          })),
+        )
         .then((cust) => setOptionsCustomerSoldTo(cust))
     }
     api()
@@ -243,17 +247,17 @@ export default function PageCreateSalesOrder() {
               disabled={!canSave}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Quotation')
+                  setProccessing('Wait for save Sales Order')
                   isCreateOrOrderAgain
-                    ? createSalesOrder(dataSubmited(10))
+                    ? createSalesOrder(dataSubmited(6))
                         .then((response) => {
-                          setDraftQuotation(response.data.id)
+                          setDraftSalesOrder(response.data.id)
                           setProccessing('')
                         })
                         .catch(() => setProccessing(''))
-                    : updateSalesOrder(dataSubmited(10), titlePage.split(' ').reverse()[0])
+                    : updateSalesOrder(dataSubmited(6), titlePage.split(' ').reverse()[0])
                         .then((response) => {
-                          setDraftQuotation(response.data.id)
+                          setDraftSalesOrder(response.data.id)
                           setProccessing('')
                         })
                         .catch(() => setProccessing(''))
@@ -270,17 +274,17 @@ export default function PageCreateSalesOrder() {
               disabled={!canSave}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Quotation')
+                  setProccessing('Wait for save Sales Order')
                   isCreateOrOrderAgain
                     ? createSalesOrder(dataSubmited(1))
                         .then((response) => {
-                          setNewQuotation(response.data.id)
+                          setNewSalesOrder(response.data.id)
                           setProccessing('')
                         })
                         .catch(() => setProccessing(''))
                     : updateSalesOrder(dataSubmited(1), titlePage.split(' ').reverse()[0])
                         .then((response) => {
-                          setNewQuotation(response.data.id)
+                          setNewSalesOrder(response.data.id)
                           setProccessing('')
                         })
                         .catch(() => setProccessing(''))
@@ -407,7 +411,7 @@ export default function PageCreateSalesOrder() {
                 onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
               }}
               label="Delivery Date"
-              disabledDate={(current) => current < moment().endOf('day')}
+              disabledDate={(current) => current < moment().startOf('day')}
               value={moment(dataForm.delivery_date)}
               format={'DD-MMM-YYYY'}
               required
@@ -439,7 +443,7 @@ export default function PageCreateSalesOrder() {
           <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
         </div>
       </Card>
-      {(newQuotation || draftQuotation || cancel) && (
+      {(newSalesOrder || draftSalesOrder || cancel) && (
         <Popup>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Text
@@ -465,15 +469,15 @@ export default function PageCreateSalesOrder() {
               'Are you sure want to cancel? Change you made so far will not saved'
             ) : (
               <>
-                New Quotation
-                <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
+                New Sales Order
+                <Typography.Text copyable>{newSalesOrder || draftSalesOrder}</Typography.Text>
                 has been
               </>
             )}
           </div>
           {!cancel && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              successfully {newQuotation ? 'created' : 'saved'}
+              successfully {newSalesOrder ? 'created' : 'saved'}
             </div>
           )}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
@@ -503,31 +507,6 @@ export default function PageCreateSalesOrder() {
                 </Button>
               </>
             )}
-            {newQuotation && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    router.push(`${PATH.SALES}/sales-order`)
-                  }}
-                >
-                  Back To List
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.SALES}/delivery-order`)
-                  }}
-                >
-                  Next Proccess
-                </Button>
-              </>
-            )}
-            {draftQuotation && (
               <Button
                 size="big"
                 variant="primary"
@@ -538,11 +517,10 @@ export default function PageCreateSalesOrder() {
               >
                 OK
               </Button>
-            )}
           </div>
         </Popup>
       )}
-      {<tableAddItems.ConfirmDelete/>}
+      {<tableAddItems.ConfirmDelete />}
     </Col>
   )
 }

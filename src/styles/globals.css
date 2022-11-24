@@ -137,3 +137,11 @@ p {
   .ant-select-selector {
   border-radius: 8px;
 }
+
+.ant-table-ping-left .ant-table-cell-fix-left-last::after {
+  box-shadow: none;
+}
+
+.ant-table-ping-right .ant-table-cell-fix-right::after {
+  box-shadow: none;
+}
