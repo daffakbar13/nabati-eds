@@ -6,17 +6,19 @@ export default function DataList(props: DataListProps) {
   const { label, value } = props
 
   return (
-    <Row gutter={5}>
-      <Col span={12}>
+    <Row gutter={5} style={{ margin: '2px 0', fontSize: 16 }}>
+      <Col span={12} style={{ padding: 0 }}>
         <div style={{ display: 'flex' }}>
-          <h3><strong>{label}</strong></h3>
+          <div>
+            <strong>{label}</strong>
+          </div>
           <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end' }}>
-            <h3>:</h3>
+            <div>:</div>
           </div>
         </div>
       </Col>
       <Col span={12}>
-        <h3>{value}</h3>
+        <div>{value}</div>
       </Col>
     </Row>
   )
