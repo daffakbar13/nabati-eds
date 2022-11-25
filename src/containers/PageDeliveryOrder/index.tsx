@@ -1,9 +1,10 @@
+/* eslint-disable object-curly-newline */
 import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
+import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -16,6 +17,7 @@ import { PATH } from 'src/configs/menus'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
 import Loader from 'src/components/Loader'
+import Pagination from 'src/components/Pagination'
 import { TableDeliveryOrder } from './columns'
 import { PageDeliveryOrderProps } from './types'
 
@@ -54,11 +56,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
 
   const selectedQuotation = {
     text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
-    content: (
-      <div style={{ textAlign: 'center' }}>
-        {table.selected.join(', ')}
-      </div>
-    ),
+    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
   const moreContent = () => (
@@ -84,30 +82,28 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   )
 
   const HideShowColumns = () => {
-  const content = (
-    <div style={{ fontWeight: 'bold' }}>
-      <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>
-        Hide/Show Columns
-      </h4>
-      <Divider style={{ margin: '10px 0' }} />
-      {TableDeliveryOrder.map(({ title }, index) => (
-        <div key={index} style={{ display: 'flex', gap: 10 }}>
-          <Checkbox
-            defaultChecked={!table.hiddenColumns.includes(title)}
-            onChange={(event) => {
-              table.handleHideShowColumns(event.target, title)
-            }}
-          />
-          {title}
-        </div>
-      ))}
-      <Divider style={{ margin: '10px 0' }} />
-      <h4
-        onClick={table.handleResetHideShowColumns}
-        style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
-      >
-        Reset
-      </h4>
+    const content = (
+      <div style={{ fontWeight: 'bold' }}>
+        <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>Hide/Show Columns</h4>
+        <Divider style={{ margin: '10px 0' }} />
+        {TableDeliveryOrder.map(({ title }, index) => (
+          <div key={index} style={{ display: 'flex', gap: 10 }}>
+            <Checkbox
+              defaultChecked={!table.hiddenColumns.includes(title)}
+              onChange={(event) => {
+                table.handleHideShowColumns(event.target, title)
+              }}
+            />
+            {title}
+          </div>
+        ))}
+        <Divider style={{ margin: '10px 0' }} />
+        <h4
+          onClick={table.handleResetHideShowColumns}
+          style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
+        >
+          Reset
+        </h4>
       </div>
     )
     return (
@@ -118,7 +114,11 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   }
 
   const ConfirmSubmit = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Submit
       </Typography.Title>
@@ -126,16 +126,14 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
         Are you sure to submit quotation
         <Typography.Text
           copyable={{
-            text: oneSelected
-              ? selectedQuotation.text
-              : table.selected.join(', '),
-          }}>
-          {oneSelected
-            ? ` ${selectedQuotation.text}`
-            : <Popover content={selectedQuotation.content}>
-              {` ${selectedQuotation.text}`}
-            </Popover>
-          }
+            text: oneSelected ? selectedQuotation.text : table.selected.join(', '),
+          }}
+        >
+          {oneSelected ? (
+            ` ${selectedQuotation.text}`
+          ) : (
+            <Popover content={selectedQuotation.content}>{` ${selectedQuotation.text}`}</Popover>
+          )}
         </Typography.Text>
         {' ?'}
       </Typography.Title>
@@ -144,7 +142,10 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -154,8 +155,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           onClick={() => {
             setProcessing('Wait for submitting Quotation')
             multipleSubmitQuotation({
-              order_list: table.selected
-                .map((id) => ({ id })),
+              order_list: table.selected.map((id) => ({ id })),
             })
               .then((response) => response.data)
               .then((data) => {
@@ -179,7 +179,9 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Submit Success</>
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
         </Text>
       </div>
       <div
@@ -189,42 +191,45 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           New Sales Order
           <Typography.Text
             copyable={{
-              text: oneSelected
-                ? submittedQuotation[0]
-                : submittedQuotation.join(', '),
+              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
             }}
           >
-            {oneSelected
-              ? ` ${submittedQuotation[0]}`
-              : <Popover content={submittedQuotation.join(', ')}>
+            {oneSelected ? (
+              ` ${submittedQuotation[0]}`
+            ) : (
+              <Popover content={submittedQuotation.join(', ')}>
                 {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
               </Popover>
-            }
+            )}
           </Typography.Text>{' '}
           has been
         </div>
-        <div>
-          successfully submitted
-        </div>
+        <div>successfully submitted</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { router.push(`${PATH.SALES}/quotation`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/quotation`)
+          }}
+        >
           Back To List
         </Button>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order`)
+          }}
         >
           Next Process
         </Button>
@@ -233,12 +238,16 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   )
 
   const ConfirmCancel = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Cancellation
       </Typography.Title>
       <DebounceSelect
-        type='select'
+        type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
         label={'Reason Cancel Process Quotation'}
         required
@@ -250,7 +259,10 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -260,8 +272,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           onClick={() => {
             setProcessing('Wait for cancelling Quotation')
             cancelBatchOrder({
-              order_list:
-                table.selected.map((id) => ({ id })),
+              order_list: table.selected.map((id) => ({ id })),
               cancel_reason_id: reason,
             })
               .then(() => {
@@ -284,7 +295,9 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Cancel Success</>
+          <>
+            <CheckCircleFilled /> Cancel Success
+          </>
         </Text>
       </div>
       <div
@@ -294,34 +307,34 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           Quoatation
           <Typography.Text
             copyable={{
-              text: oneSelected
-                ? selectedQuotation.text
-                : table.selected.join(', '),
-            }}>
-            {oneSelected
-              ? ` ${selectedQuotation.text}`
-              : <Popover content={selectedQuotation.content}>
-                {` ${selectedQuotation.text}`}
-              </Popover>
-            }
+              text: oneSelected ? selectedQuotation.text : table.selected.join(', '),
+            }}
+          >
+            {oneSelected ? (
+              ` ${selectedQuotation.text}`
+            ) : (
+              <Popover content={selectedQuotation.content}>{` ${selectedQuotation.text}`}</Popover>
+            )}
           </Typography.Text>{' '}
           has been
         </div>
-        <div>
-          successfully canceled
-        </div>
+        <div>successfully canceled</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/quotation`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/quotation`)
+          }}
+        >
           OK
         </Button>
       </div>
@@ -339,7 +352,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
 
   return (
     <Col>
-      {onProcess && <Loader type='process' text={processing} />}
+      {onProcess && <Loader type="process" text={processing} />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -355,18 +368,20 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
                 if (value === '') {
                   table.handleFilter([])
                 } else {
-                  table.handleFilter([{
-                    field: 'eds_delivery.id',
-                    option: 'CP',
-                    from_value: `%${e.target.value}%`,
-                  }])
+                  table.handleFilter([
+                    {
+                      field: 'eds_delivery.id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                    },
+                  ])
                 }
               }}
             />
             <SmartFilter onOk={setFilters} filters={filters} />
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => { }}>
+            <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
             <Button
@@ -395,13 +410,11 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
             total={table.total}
-            showTotal={showTotal}
-            onChange={(page, limit) => { table.handlePagination(page, limit) }}
+            totalPage={table.totalPage}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
           />
         )}
       </Card>
