@@ -6,56 +6,45 @@ import { Card, Popup } from 'src/components'
 import { useRouter } from 'next/router'
 import TaggedStatus from 'src/components/TaggedStatus'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { UpdateApprovalReservation } from 'src/api/logistic/approve-stock-reservation'
+import { UpdateTransfertoGS } from 'src/api/logistic/transfer-to-gs'
 import { column } from './columns'
 import { PATH } from 'src/configs/menus'
+import { useTableAddItem } from './columnUpdate'
 
 interface propsDetail {
   data: any
 }
 
-export default function PageApproveStockReservationUpdate(props: propsDetail) {
+export default function TransferToGSUpdate(props: propsDetail) {
   const now = new Date().toISOString()
   const router = useRouter()
   const [dataForm, setDataForm] = React.useState({})
   const [reject, setReject] = React.useState(false)
   const [approve, setApprove] = React.useState(false)
   const [approveSuccess, setApproveSuccess] = React.useState(false)
+  const tableAddItems = useTableAddItem({ items: props.data.item })
+
   const initialValue = {
-    status_id: '01',
-    document_date: moment(now).format('YYYY-MM-DD'),
-    posting_date: moment(now).format('YYYY-MM-DD'),
+    reference_doc_number: props.data.ref_doc_number,
+    movement_type_id: props.data.movement_type_id,
+    branch_id: props.data.branch_id,
+    supplying_sloc_id: props.data.supplaying_sloc_id,
+    receiving_sloc_id: props.data.receiving_sloc_id,
+    document_date: moment(props.data.document_date).format('YYYY-MM-DD'),
+    posting_date: moment(props.data.posting_date).format('YYYY-MM-DD'),
     header_text: '',
+    items: tableAddItems.data,
   }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
-  React.useEffect(() => {
-    if (approve) {
-      onChangeForm('status_id', '01')
-    }
-
-    if (reject) {
-      onChangeForm('status_id', '02')
-    }
-  }, [approve, reject])
-
   return (
     <>
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button
-              size="big"
-              variant="tertiary"
-              onClick={() => {
-                setReject(true)
-              }}
-            >
-              Cancel
-            </Button>
             <Button
               size="big"
               variant="primary"
@@ -77,9 +66,9 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
           <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
             <DebounceSelect
               type="input"
-              label="Reservation Number"
+              label="Ref. Doc Number"
               disabled
-              placeholder={props.data.reservation_number}
+              placeholder={props.data.ref_doc_number}
             />
             <DebounceSelect
               type="input"
@@ -139,7 +128,12 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
         </div>
         <Divider />
         <div style={{ overflow: 'scroll' }}>
-          <Table columns={column} data={props.data.item} />
+          <Table
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+          />
         </div>
       </Card>
       {(approve || approveSuccess || reject) && (
@@ -163,12 +157,12 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
           <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
             {reject ? 'Are you sure want to Cancel? Change you made so far will not saved' : ''}
             {approve
-              ? `Are you sure want Submit Reservation Number - ${props.data.reservation_number}?`
+              ? `Are you sure want Submit Document Number - ${props.data.ref_doc_number}?`
               : ''}
             {approveSuccess ? (
               <>
                 Request Number
-                <Typography.Text copyable> {props.data.reservation_number}</Typography.Text>
+                <Typography.Text copyable> {props.data.ref_doc_number}</Typography.Text>
                 has been
               </>
             ) : (
@@ -197,7 +191,7 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    UpdateApprovalReservation(props.data.reservation_number, {
+                    UpdateTransfertoGS({
                       ...initialValue,
                       ...dataForm,
                     }).then(() => {
@@ -207,7 +201,7 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
                       }
                       if (reject) {
                         setReject(false)
-                        router.push(`${PATH.LOGISTIC}/approval-stock-reservation`)
+                        router.push(`${PATH.LOGISTIC}/transfer-to-gs`)
                       }
                     })
                   }}
@@ -224,7 +218,7 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`${PATH.LOGISTIC}/approval-stock-reservation`)
+                    router.push(`${PATH.LOGISTIC}/transfer-to-gs`)
                   }}
                 >
                   OK

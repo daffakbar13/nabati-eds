@@ -79,5 +79,5 @@ export const column = [
       `${record.receiving_sloc_id || ''} - ${record.receiving_sloc_name || ''}`,
   ),
   CreateColumns('Status', 'status_name', false, (status_name) => <TaggedStatus status={status_name} />),
-  CreateColumns('Action', 'id', false, (link, record) => <Linked link={link} type="action" />),
+  CreateColumns('Action', 'document_number', false, (link, record) => <Linked link={link} type="action" />),
 ]
