@@ -3,15 +3,16 @@ import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
+import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt-intra-branch'
 import Popup from 'src/components/Popup'
+import { fieldBranchAll } from 'src/configs/fieldFetches'
+import Pagination from 'src/components/Pagination'
 import { Props } from './types'
 import { columns } from './columns'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -164,12 +165,8 @@ export default function PageGoodsIssue(props: Props) {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
             total={table.total}
-            showTotal={showTotal}
+            totalPage={table.totalPage}
             onChange={(page, limit) => {
               table.handlePagination(page, limit)
             }}
