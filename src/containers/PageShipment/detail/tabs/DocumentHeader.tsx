@@ -1,9 +1,12 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-plusplus */
+/* eslint-disable camelcase */
 import { Col, Row, Divider } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import { Table } from 'pink-lava-ui';
-import { Spacer } from 'pink-lava-ui'
+import { Table, Spacer } from 'pink-lava-ui'
+
 import { TableDocumentHeader } from '../columns'
 
 interface DocumentHeaderProps {
