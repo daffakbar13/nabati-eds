@@ -1,4 +1,7 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-unused-expressions */
+import { MoreOutlined } from '@ant-design/icons'
+import { Checkbox, Divider, Popover } from 'antd'
 import React from 'react'
 import { CommonListParams } from 'src/api/types'
 
@@ -23,12 +26,12 @@ export default function useTable(props: useTableProps) {
   })
   const [total, setTotal] = React.useState(0)
   const [totalPage, setTotalPage] = React.useState(0)
-  const [columns, setColumns] = React.useState(props.columns)
   const [rowSelection, setRowSelection] = React.useState({})
   const [loading, setLoading] = React.useState(true)
   const [selected, setSelected] = React.useState([])
   const [hiddenColumns, setHiddenColumns] = React.useState([])
-  const isHaveCheckbox = (key: string) => haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
+  const isHaveCheckbox = (key: string) =>
+    haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
 
   const updateData = (newData: any[]) => {
     setData([])
@@ -76,6 +79,42 @@ export default function useTable(props: useTableProps) {
     preserveSelectedRowKeys: true,
   }
 
+  const HideShowColumns = () => {
+    const content = (
+      <div style={{ fontWeight: 'bold' }}>
+        <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>Hide/Show Columns</h4>
+        <Divider style={{ margin: '10px 0' }} />
+        {props.columns.map(({ title }, index) => (
+          <div key={index} style={{ display: 'flex', gap: 10 }}>
+            <Checkbox
+              defaultChecked={!hiddenColumns.includes(title)}
+              onChange={(event) => {
+                handleHideShowColumns(event.target, title)
+              }}
+            />
+            {title}
+          </div>
+        ))}
+        <Divider style={{ margin: '10px 0' }} />
+        <h4
+          onClick={handleResetHideShowColumns}
+          style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
+        >
+          Reset
+        </h4>
+      </div>
+    )
+    return (
+      <Popover placement="bottomRight" content={content} trigger="click">
+        <MoreOutlined style={{ cursor: 'pointer' }} />
+      </Popover>
+    )
+  }
+  const [columns, setColumns] = React.useState([
+    ...props.columns,
+    { title: <HideShowColumns />, fixed: 'right', width: 50 },
+  ])
+
   React.useEffect(() => {
     if (haveCheckbox) {
       setRowSelection(defineRowSelection)
@@ -100,6 +139,7 @@ export default function useTable(props: useTableProps) {
 
   React.useEffect(() => {
     setColumns(props.columns.filter((e) => !hiddenColumns.includes(e.title)))
+    setColumns((old) => [...old, { title: <HideShowColumns />, fixed: 'right', width: 50 }])
   }, [hiddenColumns, props.columns])
 
   React.useEffect(() => {

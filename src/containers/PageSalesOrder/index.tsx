@@ -78,41 +78,6 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
     </div>
   )
 
-  const HideShowColumns = () => {
-    const content = (
-      <>
-        {TableSalesOrder.map(({ title }, index) => (
-          <div key={index}>
-            <Checkbox
-              defaultChecked={!table.hiddenColumns.includes(title)}
-              onChange={(event) => {
-                table.handleHideShowColumns(event.target, title)
-              }}
-            />{' '}
-            {title}
-          </div>
-        ))}
-        <Divider />
-        <h4
-          onClick={table.handleResetHideShowColumns}
-          style={{ textAlign: 'center', cursor: 'pointer' }}
-        >
-          Reset
-        </h4>
-      </>
-    )
-    return (
-      <Popover
-        placement="bottomRight"
-        title={'Hide/Show Columns'}
-        content={content}
-        trigger="click"
-      >
-        <MoreOutlined />
-      </Popover>
-    )
-  }
-
   const ConfirmSubmit = () => (
     <Popup
       onOutsideClick={() => {
@@ -125,9 +90,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
         Are you sure to submit sales order
         <Typography.Text
-          copyable={{
-            text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
-          }}
+          copyable={{ text: oneSelected ? selectedSalesOrder.text : table.selected.join(', ') }}
         >
           {oneSelected ? (
             ` ${selectedSalesOrder.text} ?`
@@ -198,9 +161,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         <div>
           New Delivery Order
           <Typography.Text
-            copyable={{
-              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
-            }}
+            copyable={{ text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', ') }}
           >
             {oneSelected ? (
               ` ${submittedQuotation[0]}`
@@ -314,9 +275,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         <div>
           Sales Order
           <Typography.Text
-            copyable={{
-              text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
-            }}
+            copyable={{ text: oneSelected ? selectedSalesOrder.text : table.selected.join(', ') }}
           >
             {oneSelected ? (
               ` ${selectedSalesOrder.text}`
@@ -410,7 +369,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         <div style={{ overflow: 'scroll' }}>
           <Table
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns />, width: 50, fixed: 'right' }]}
+            columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}

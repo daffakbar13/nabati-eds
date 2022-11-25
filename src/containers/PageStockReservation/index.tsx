@@ -3,14 +3,15 @@ import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
+import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListStockReservation } from 'src/api/logistic/stock-reservation'
 import Popup from 'src/components/Popup'
-import { column } from './columns'
 import { fieldBranchAll, fieldSloc } from 'src/configs/fieldFetches'
+import Pagination from 'src/components/Pagination'
+import { column } from './columns'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -55,41 +56,6 @@ export default function PageStockReservation() {
       })
     }
   }, [router.query.search])
-
-  const HideShowColumns = () => {
-    const content = (
-      <>
-        {column.map(({ title }, index) => (
-          <div key={index}>
-            <Checkbox
-              defaultChecked={!table.hiddenColumns.includes(title)}
-              onChange={(event) => {
-                table.handleHideShowColumns(event.target, title)
-              }}
-            />{' '}
-            {title}
-          </div>
-        ))}
-        <Divider />
-        <h4
-          onClick={table.handleResetHideShowColumns}
-          style={{ textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
-        >
-          Reset
-        </h4>
-      </>
-    )
-    return (
-      <Popover
-        placement="bottomRight"
-        title={'Hide/Show Columns'}
-        content={content}
-        trigger="click"
-      >
-        <MoreOutlined style={{ cursor: 'pointer' }} />
-      </Popover>
-    )
-  }
 
   return (
     <Col>
@@ -158,7 +124,7 @@ export default function PageStockReservation() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
+            columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
             rowKey={'id'}
@@ -168,12 +134,8 @@ export default function PageStockReservation() {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
             total={table.total}
-            showTotal={showTotal}
+            totalPage={table.totalPage}
             onChange={(page, limit) => {
               table.handlePagination(page, limit)
             }}

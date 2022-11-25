@@ -3,11 +3,12 @@ import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Pagination, Checkbox, Popover, Divider } from 'antd'
+import { Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getUndeliveredList } from 'src/api/undelivered'
+import Pagination from 'src/components/Pagination'
 import { TableBilling } from './columns'
 
 function showTotal(total: number, range: number[]) {
@@ -23,35 +24,6 @@ export default function PageUndelivered() {
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
-
-  const content = (
-    <>
-      {TableBilling.map(({ title }, index) => (
-        <div key={index}>
-          <Checkbox
-            defaultChecked={!table.hiddenColumns.includes(title)}
-            onChange={(event) => {
-              table.handleHideShowColumns(event.target, title)
-            }}
-          />
-          {title}
-        </div>
-      ))}
-      <Divider />
-      <h4
-        onClick={table.handleResetHideShowColumns}
-        style={{ textAlign: 'center', cursor: 'pointer' }}
-      >
-        Reset
-      </h4>
-    </>
-  )
-
-  const HideShowColumns = () => (
-    <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-      <MoreOutlined />
-    </Popover>
-  )
 
   return (
     <Col>
@@ -81,7 +53,7 @@ export default function PageUndelivered() {
         <div style={{ overflow: 'scroll' }}>
           <Table
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns /> }]}
+            columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}
@@ -92,12 +64,11 @@ export default function PageUndelivered() {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.data.length}
-            showTotal={showTotal}
+            total={table.total}
+            totalPage={table.totalPage}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
           />
         </div>
       </Card>
