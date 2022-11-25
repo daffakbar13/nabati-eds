@@ -165,3 +165,19 @@ table.eds_paper,
 .right-align {
   text-align: right !important;
 }
+
+table.eds_create_shipment {
+  width: 100%;
+}
+
+table.eds_create_shipment thead tr {
+  text-align: left;
+  color: grey;
+  border-top: 1px dashed #88888888;
+  border-bottom: 1px dashed #88888888;
+}
+
+table.eds_create_shipment tbody tr td {
+  font-weight: bold;
+  padding: 10px 0;
+}

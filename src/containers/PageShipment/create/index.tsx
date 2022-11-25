@@ -13,7 +13,12 @@ import { Card } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { useRouter } from 'next/router'
 import { colors } from 'src/configs/colors'
-import { ArrowsAltOutlined, DownOutlined, ShrinkOutlined } from '@ant-design/icons'
+import {
+  ArrowsAltOutlined,
+  DownOutlined,
+  MinusCircleFilled,
+  ShrinkOutlined,
+} from '@ant-design/icons'
 import TitleDataList from 'src/components/TitleDataList'
 import { useTable } from 'src/hooks'
 import type { ColumnsType } from 'antd/es/table'
@@ -22,6 +27,7 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { getDetailQuotation, getQuotation } from 'src/api/quotation'
 import Loader from 'src/components/Loader'
+import { ICDelete } from 'src/assets'
 import { ColumnsDeliveryOrder, ColumnsSelectedDeliveryOrder } from './columns'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -104,6 +110,11 @@ export default function PageCreateShipment() {
     haveCheckbox: 'All',
     columns: ColumnsDeliveryOrder,
   })
+  const table2 = useTable({
+    funcApi: getQuotation,
+    haveCheckbox: 'All',
+    columns: ColumnsDeliveryOrder,
+  })
   const titlePage = useTitlePage('create')
   const [data, setData] = React.useState([])
   const [filter, setFilter] = React.useState<{
@@ -130,8 +141,6 @@ export default function PageCreateShipment() {
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const dataFromSelected = table.data.filter(({ id }) => table.selected.includes(id))
-
   const buttonProps = {
     style: { backgroundColor: '#f4f4f4f4', padding: 2, fontSize: 18 },
     onClick: () => setShowModal((current) => !current),
@@ -142,7 +151,10 @@ export default function PageCreateShipment() {
   }
 
   const handleChangeFilter = (key: keyof typeof filter, value: string) => {
-    setFilter((old) => ({ ...old, [key]: value }))
+    const newData = filter
+    if (value === '') delete newData[key]
+    else Object.assign(newData, { [key]: value })
+    setFilter({ ...newData })
   }
 
   const components = { body: { row: DraggableBodyRow } }
@@ -167,17 +179,31 @@ export default function PageCreateShipment() {
   // }, [table.data])
 
   React.useEffect(() => {
-    setData([])
-    table.selected.forEach((id) => {
+    // table.selected.forEach((id) => {
+    //   setPending((curr) => ++curr)
+    //   getDetailQuotation({ id }).then((res) => {
+    //     setData((old) => [...old, res.data])
+    //     setPending((curr) => --curr)
+    //   })
+    // })
+    if (table.selected.length > 0) {
       setPending((curr) => ++curr)
-      getDetailQuotation({ id }).then((res) => {
-        setData((old) => [...old, res.data])
+      getQuotation({
+        filters: table.selected.map((id) => ({
+          field: 'eds_order.id',
+          option: 'EQ',
+          from_value: id,
+        })),
+        limit: 99999,
+        page: 1,
+      }).then((res) => {
+        setData(res.data.results)
         setPending((curr) => --curr)
       })
-    })
+    } else {
+      setData([])
+    }
   }, [table.selected])
-
-  console.log('filter', filter)
 
   return (
     <ColPinkLava>
@@ -372,16 +398,37 @@ export default function PageCreateShipment() {
                 </div>
               </Row>
               <Spacer size={10} />
-              <TableAntd
-                tableLayout="auto"
-                bordered
-                size="small"
-                loading={pending > 0}
-                columns={ColumnsSelectedDeliveryOrder(handleRemoveItem) as ColumnsType}
-                dataSource={data}
-                pagination={false}
-                rowKey={'id'}
-              />
+              <table className="eds_create_shipment">
+                <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Delivery Order</th>
+                    <th>Size M</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map(({ id, sales_org_id }, index) => (
+                    <tr key={index}>
+                      <td>{++index}</td>
+                      <td>{id}</td>
+                      <td>{sales_org_id}</td>
+                      <td>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => handleRemoveItem(id)}
+                        >
+                          <ICDelete style={{ margin: 0 }} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </Card>
           </Col>
         </Row>
