@@ -75,15 +75,7 @@ export const columns = () => [
 ]
 
 export const ColumnsDeliveryOrder = [
-  CreateColumns(
-    'Delivery Order ',
-    'delivery_order_id',
-    true,
-    undefined,
-    170,
-    true,
-    'have-checkbox',
-  ),
+  CreateColumns('Delivery Order ', 'id', true, undefined, 170, true, 'have-checkbox'),
   CreateColumns('Order Type', 'order_type', false, undefined, 200),
   CreateColumns('Order Date', 'order_date', false, undefined, 120),
   CreateColumns('Sales Org.', 'sales_org_id', false, undefined, 110),
@@ -112,13 +104,13 @@ export const ColumnsDeliveryOrder = [
 
 export const ColumnsSelectedDeliveryOrder = (handleReduceItem: (removedItem) => void) => [
   CreateColumns('No', '', false, (_, __, index) => ++index, 55),
-  CreateColumns('Delivery Order ', 'delivery_order_id'),
-  CreateColumns('Sales Org.', 'sales_org_id', false, (val, { delivery_order_id }) => (
+  CreateColumns('Delivery Order ', 'id'),
+  CreateColumns('Sales Org.', 'sales_org_id', false, (val, { id }) => (
     <Row justify="space-between">
       {val}
       <MinusCircleFilled
         style={{ color: 'red', cursor: 'pointer' }}
-        onClick={() => handleReduceItem(delivery_order_id)}
+        onClick={() => handleReduceItem(id)}
       />
     </Row>
   )),
