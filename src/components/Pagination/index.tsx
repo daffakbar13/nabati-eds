@@ -17,7 +17,9 @@ export default function Pagination(props: PaginationProps) {
   const [limit, setLimit] = React.useState(defaultPageSize)
   const [page, setPage] = React.useState(1)
   const [optionsPage, setOptionsPage] = React.useState<{ label: string; value: number }[]>()
-  const range = `${limit * page - limit + 1}-${limit * page}`
+  const isFirstPage = page === 1
+  const isLastPage = page === totalPage
+  const range = `${limit * page - limit + 1}-${isLastPage ? total : limit * page}`
 
   const styleSelect = {
     border: '1px solid #AAAAAA',
@@ -29,13 +31,13 @@ export default function Pagination(props: PaginationProps) {
   }
 
   function handleBackPage() {
-    if (page > 1) {
+    if (!isFirstPage) {
       setPage((curr) => --curr)
     }
   }
 
   function handleNextPage() {
-    if (page !== totalPage) {
+    if (!isLastPage) {
       setPage((curr) => ++curr)
     }
   }
@@ -49,6 +51,14 @@ export default function Pagination(props: PaginationProps) {
     setPage(value)
   }
 
+  function handleChangeOptionsPage() {
+    const newOptionsPage = []
+    for (let index = 1; index <= totalPage; index++) {
+      newOptionsPage.push({ label: index, value: index })
+    }
+    setOptionsPage(newOptionsPage)
+  }
+
   function MiddleAlign({ children, style }: { children?; style? }) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', ...style }}>
@@ -58,13 +68,13 @@ export default function Pagination(props: PaginationProps) {
   }
 
   React.useEffect(() => {
-    const newOptionsPage = []
-    for (let index = 1; index <= totalPage; index++) {
-      newOptionsPage.push({ label: index, value: index })
-    }
-    setOptionsPage(newOptionsPage)
     onChange(page, limit)
+    handleChangeOptionsPage()
   }, [page, limit])
+
+  React.useEffect(() => {
+    handleChangeOptionsPage()
+  }, [totalPage])
 
   return (
     <div style={{ display: 'flex', fontWeight: '600' }}>
