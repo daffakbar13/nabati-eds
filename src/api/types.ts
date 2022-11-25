@@ -11,6 +11,7 @@ export interface CommonListResponse<T> {
   status: string
   message: string
   data: {
+    results: T[]
     result: T[]
     pagination: CommonPagination
   }
