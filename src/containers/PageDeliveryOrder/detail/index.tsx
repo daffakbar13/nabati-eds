@@ -118,7 +118,7 @@ export default function PageDeliveryOrderDetail(props: PageDeliveryOrderDetailPr
   )
 
   React.useEffect(() => {
-    fieldReason()
+    fieldReason('J')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)
