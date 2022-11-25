@@ -13,6 +13,7 @@ import {
     getPricingByProductId,
     getReason,
     getCustomerByFilter,
+    getUomList,
 } from 'src/api/master-data';
 
 export const MASTER_DATA_TYPES = {
@@ -53,6 +54,16 @@ export const MASTER_DATA_TYPES = {
                 value: item.product_id,
             })),
     },
+    UOM: {
+        api: getUomList,
+        placeholder: 'Select UOM',
+        responseHandler: (res) => res.data
+            .map((item: any) => ({
+                label: `${item.id}`,
+                value: item.id,
+            })),
+    },
+
 }
 
 // "ref_doc_number": "1043000000108",

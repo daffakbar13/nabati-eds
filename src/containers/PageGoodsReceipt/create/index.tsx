@@ -1,8 +1,14 @@
 import { Divider, Form, message } from 'antd'
-import { Button, Col, DatePickerInput, Row, Spacer, Text as Title } from 'pink-lava-ui'
+import { useRouter } from 'next/router'
+
+import { Button, Col, DatePickerInput, Row, Spacer, Text as Title, Table } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, Input, SelectMasterData, TableEditable, Text } from 'src/components'
+import { Card, Input, SelectMasterData, Text, Modal } from 'src/components'
+
 import { CommonSelectValue } from 'src/configs/commonTypes'
+import { getGoodReceiptByPo, createGoodReceipt } from 'src/api/logistic/good-receipt'
+import { getListPoSto } from 'src/api/logistic/po-sto'
+import moment from 'moment'
 import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
@@ -16,31 +22,75 @@ interface Item {
   gross: number
 }
 
-const originData: Item[] = [
-  {
-    key: '0',
-    item: { label: 'Rafik', value: 'Rafik' },
-    uom: { label: 'Hanigal', value: 'Hanigal' },
-    qty: 123,
-    price: 345,
-    gross: 345,
-  },
-]
-
 export default function CreateGoodsReceipt() {
   const [form] = Form.useForm()
-  const [data, setData] = useState<Item[]>(originData)
+  const [headerData, setHeaderData] = useState(null)
+  const [tableData, setTableData] = useState([])
+  const [selectedTableData, setSelectedTableData] = useState([])
+  const [disableSomeFields, setDisableSomeFields] = useState(false)
 
+  // Modal
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [showSubmitModal, setShowSubmitModal] = useState(false)
+
+  const router = useRouter()
   console.log('form', form)
 
-  const submit = () => {
-    form.submit()
+  const onClickSubmit = async () => {
+    const values = await form.validateFields()
+    // console.log(v)
+    setHeaderData(values)
+    setShowSubmitModal(true)
   }
 
-  const onFinish = (values) => {
-    console.log('values', values)
-    message.success('Submit success!')
+  const handleCreate = async () => {
+    // TO DO SUBMIT with API here...
+    console.log('headerData', headerData)
+    const payload: any = {
+      po_number: headerData.po_number,
+      delivery_number: headerData.po_number,
+      document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
+      posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
+      remarks: headerData.remark,
+      vendor: headerData.vendor.value,
+      branch: headerData.branch.value,
+      delivery_note: headerData.delivery_note,
+      bill_of_lading: headerData.bill_of_lading,
+      items: selectedTableData,
+    }
+    console.log('payload', payload)
+    const res = await createGoodReceipt(payload)
+
+    console.log('res', res)
+
+    console.log('headerData', headerData)
+    return res
   }
+
+  const onChangePoNumber = async (poNumber: any) => {
+    if (!poNumber) {
+      setDisableSomeFields(false)
+      return
+    }
+
+    try {
+      const { data } = await getGoodReceiptByPo(poNumber)
+      setTableData((data.items || []).map((i: any, ind: number) => ({ ...i, rowKey: ind + 1 })))
+      form.setFieldsValue({
+        delivery_number: data.delivery_number,
+        vendor: { value: data.vendor },
+        branch: { value: data.branch },
+        delivery_note: data.delivery_note,
+        bill_of_lading: data.bill_of_lading,
+        remarks: data.remarks,
+      })
+    } catch (error) {
+      console.error(error)
+    }
+    setDisableSomeFields(true)
+  }
+
+  console.log('selectedTableData', selectedTableData)
 
   return (
     <Col>
@@ -49,10 +99,10 @@ export default function CreateGoodsReceipt() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button size="big" variant="tertiary" onClick={() => {}}>
+            <Button size="big" variant="tertiary" onClick={() => setShowCancelModal(true)}>
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={submit}>
+            <Button size="big" variant="primary" onClick={onClickSubmit}>
               Submit
             </Button>
           </Row>
@@ -67,23 +117,51 @@ export default function CreateGoodsReceipt() {
           autoComplete="off"
           requiredMark={false}
           scrollToFirstError
-          onFinish={onFinish}
+          // onFinish={onFinish}
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item
-              name="ref_doc_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Ref. Doc Number</LabelRequired>}
-              rules={[{ required: true }]}
-            >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
-            </Form.Item>
-            <Form.Item
               name="po_number"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>PO Number</Label>}
+              label={<LabelRequired>PO Number</LabelRequired>}
+              rules={[{ required: true }]}
             >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+              <Input
+                style={{ marginTop: -12 }}
+                placeholder="Type"
+                size="large"
+                onChange={(e: any) => onChangePoNumber(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item
+              name="vendor"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Vendor</Label>}
+            >
+              <SelectMasterData
+                disabled={disableSomeFields}
+                type="PLANT"
+                style={{ marginTop: -8 }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="delivery_number"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<LabelRequired>Delivery Number</LabelRequired>}
+              rules={[{ required: true }]}
+            >
+              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            </Form.Item>
+            <Form.Item
+              name="branch"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Branch</Label>}
+            >
+              <SelectMasterData
+                disabled={disableSomeFields}
+                type="PLANT"
+                style={{ marginTop: -8 }}
+              />
             </Form.Item>
             <Form.Item
               name="document_date"
@@ -100,11 +178,16 @@ export default function CreateGoodsReceipt() {
               />
             </Form.Item>
             <Form.Item
-              name="vendor"
+              name="delivery_note"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Vendor</Label>}
+              label={<Label>Delivery Note</Label>}
             >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+              <Input
+                disabled={disableSomeFields}
+                style={{ marginTop: -12 }}
+                placeholder="Type"
+                size="large"
+              />
             </Form.Item>
             <Form.Item
               name="posting_date"
@@ -121,20 +204,6 @@ export default function CreateGoodsReceipt() {
               />
             </Form.Item>
             <Form.Item
-              name="branch"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Branch</Label>}
-            >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
-            </Form.Item>
-            <Form.Item
-              name="delivery_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Number</Label>}
-            >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
-            </Form.Item>
-            <Form.Item
               name="bill_of_lading"
               style={{ marginTop: -12, marginBottom: 0 }}
               label={<Label>Bill of Lading</Label>}
@@ -148,18 +217,41 @@ export default function CreateGoodsReceipt() {
             >
               <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
             </Form.Item>
-            <Form.Item
-              name="delivery_note"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Note</Label>}
-            >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
-            </Form.Item>
           </div>
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        <TableEditable data={data} setData={setData} columns={columns()} />
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table
+            rowSelection={{
+              onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
+                setSelectedTableData(selectedRows)
+              },
+            }}
+            rowKey="rowKey"
+            data={tableData}
+            columns={columns()}
+          />
+        </div>
       </Card>
+
+      <Modal
+        open={showCancelModal}
+        onOk={() => router.back()}
+        onCancel={() => setShowCancelModal(false)}
+        title="Confirm Cancellation"
+        content="Are you sure want to cancel ? Change you made so far
+        will not be saved"
+      />
+
+      <Modal
+        open={showSubmitModal}
+        onOk={handleCreate}
+        onCancel={() => setShowSubmitModal(false)}
+        title="Confirm Submit"
+        content="Are you sure want Submit Goods Receipt?"
+        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
+        successOkText="Print"
+      />
     </Col>
   )
 }

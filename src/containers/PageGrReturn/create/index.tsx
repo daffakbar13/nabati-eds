@@ -71,32 +71,17 @@ export default function CreateGrReturn() {
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item
+              name="ref_doc_number"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<LabelRequired>Ref. Doc Number</LabelRequired>}
+              rules={[{ required: true }]}
+            >
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+            </Form.Item>
+            <Form.Item
               name="po_number"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>PO Number</LabelRequired>}
-              rules={[{ required: true }]}
-            >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
-            </Form.Item>
-            <Form.Item
-              name="vendor"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Vendor</Label>}
-            >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
-            </Form.Item>
-            <Form.Item
-              name="delivery_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Delivery Number</LabelRequired>}
-              rules={[{ required: true }]}
-            >
-              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
-            </Form.Item>
-            <Form.Item
-              name="branch"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Branch</Label>}
+              label={<Label>PO Number</Label>}
             >
               <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
             </Form.Item>
@@ -115,11 +100,11 @@ export default function CreateGrReturn() {
               />
             </Form.Item>
             <Form.Item
-              name="delivery_note"
+              name="vendor"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Note</Label>}
+              label={<Label>Vendor</Label>}
             >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
             </Form.Item>
             <Form.Item
               name="posting_date"
@@ -136,6 +121,20 @@ export default function CreateGrReturn() {
               />
             </Form.Item>
             <Form.Item
+              name="branch"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Branch</Label>}
+            >
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+            </Form.Item>
+            <Form.Item
+              name="delivery_number"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Delivery Number</Label>}
+            >
+              <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+            </Form.Item>
+            <Form.Item
               name="bill_of_lading"
               style={{ marginTop: -12, marginBottom: 0 }}
               label={<Label>Bill of Lading</Label>}
@@ -146,6 +145,13 @@ export default function CreateGrReturn() {
               name="remarks"
               style={{ marginTop: -12, marginBottom: 0 }}
               label={<Label>Remarks</Label>}
+            >
+              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            </Form.Item>
+            <Form.Item
+              name="delivery_note"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Delivery Note</Label>}
             >
               <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
             </Form.Item>

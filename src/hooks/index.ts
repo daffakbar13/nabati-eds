@@ -1,5 +1,5 @@
 export { default as useDetail } from './useDetail'
 export { default as useTable } from './useTable'
 export { default as useTitlePage } from './useTitlePage'
-export { default as useSimpleTable } from './useSimpleTable'
+export { default as useSimpleTable } from './useGetListTable'
 export { useTitle } from './useTitle'

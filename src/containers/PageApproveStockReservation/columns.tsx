@@ -21,6 +21,8 @@ function Linked({
   const router = useRouter()
   const navigate = () => {
     if (linkType == 'id') {
+      router.push(`${PATH.LOGISTIC}/approval-stock-reservation/detail/${link}`)
+    } else if (linkType == 'docNumber') {
       router.push(`${PATH.LOGISTIC}/stock-reservation/detail/${link}`)
     }
   }
@@ -54,10 +56,13 @@ function Linked({
 }
 
 export const column = [
-  CreateColumns('Doc. Number', 'doc_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="deliveryNumber" />
+  CreateColumns('Reservation Number', 'reservation_number', true, (link: string, record: any) => (
+    <Linked link={link} type="id" linkType="id" />
   )),
-  CreateColumns('Requirement Date', 'requirement_date', false, (date) => (
+  CreateColumns('Doc. Number', 'doc_number', true, (link: string, record: any) => (
+    <Linked link={link} type="id" linkType="docNumber" />
+  )),
+  CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),
   CreateColumns(
@@ -73,13 +78,35 @@ export const column = [
     (text: string, record: any) => `${record.branch_id || ''} - ${record.branch_name || ''}`,
   ),
   CreateColumns(
+    'Suppling SLoc',
+    'supplying_sloc_id',
+    false,
+    (text: string, record: any) =>
+      `${record.supplying_sloc_id || ''} - ${record.supplying_sloc_name || ''}`,
+  ),
+  CreateColumns(
+    'Receiving SLoc',
+    'receiving_sloc_id',
+    false,
+    (text: string, record: any) =>
+      `${record.receiving_sloc_id || ''} - ${record.receiving_sloc_name || ''}`,
+  ),
+  CreateColumns(
     'Mov. Type',
     'branch_id',
     false,
-    (text: string, record: any) => `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
+    (text: string, record: any) =>
+      `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
   ),
-  CreateColumns('Status', 'status_name', false, (status_name) => <TaggedStatus status={status_name} />),
-  CreateColumns('Action', 'doc_number', false, (link, record) => (
+  CreateColumns(
+    'Header Text',
+    'header_text',
+    false,
+  ),
+  CreateColumns('Status', 'status_name', false, (status_name) => (
+    <TaggedStatus status={status_name} />
+  )),
+  CreateColumns('Action', 'reservation_number', false, (link, record) => (
     <Linked link={link} type="action" linkType="id" />
   )),
 ]

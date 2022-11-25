@@ -1,5 +1,5 @@
 import React from 'react'
-import CreatePage from 'src/containers/PageGoodsReceipt/create'
+import CreatePage from 'src/containers/PageGrReturn/create'
 
 interface CreateProps {}
 

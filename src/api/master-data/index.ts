@@ -232,3 +232,13 @@ export const getItemReceiver = async (
 
   return response.data
 }
+
+export const getUomList = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getUom,
+  })
+
+  return response.data
+}

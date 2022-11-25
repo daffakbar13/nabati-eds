@@ -1,4 +1,5 @@
-export interface stocReservationList {
+export interface listApproval {
+    readonly reservation_number: string
     readonly doc_number: string
     readonly requirement_date: string
     readonly company_id: string
@@ -7,30 +8,29 @@ export interface stocReservationList {
     readonly branch_name: string
     readonly movement_type_id: string
     readonly movement_type_name: string
-    readonly status: string
+    readonly status_id: string
+    readonly status_name: string
 }
 
-export interface stocReservationDetail {
+export interface listApprovalDetail {
+    readonly reservation_number: string
     readonly movement_type_id: string
     readonly movement_type_name: string
     readonly branch_id: string
     readonly branch_name: string
+    readonly document_date: string
+    readonly posting_date: string
+    readonly header_text: string
     readonly supplying_sloc_id: string
     readonly supplying_sloc_name: string
     readonly receiving_sloc_id: string
     readonly receiving_sloc_name: string
-    readonly requirement_date: string
-    readonly header_text: string
-    readonly created_at: string
-    readonly created_by: string
-    readonly modified_at: string
-    readonly modified_by: string
     readonly status_id: string
     readonly status_name: string
-    readonly item: Array<stocReservationDetailItem>
+    readonly item: Array<listApprovalDetailItem>
 }
 
-export interface stocReservationDetailItem {
+export interface listApprovalDetailItem {
     readonly product_id: string
     readonly product_name: string
     readonly qty: string

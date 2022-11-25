@@ -50,3 +50,16 @@ export const getGrReturnDetail = async (
   })
   return response.data
 }
+
+export const getGrReturnByRefDocNo = async (
+  refDocNo: string,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/return/request-data/${refDocNo}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

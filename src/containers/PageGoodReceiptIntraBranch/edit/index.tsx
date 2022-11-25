@@ -58,7 +58,7 @@ interface dataForm {
   items: Array<ItemsState>
 }
 
-export default function CreateBilling() {
+export default function PageGoodReceiptIntraBranchEdit() {
   const now = new Date().toISOString()
 
   const router = useRouter()
@@ -71,6 +71,7 @@ export default function CreateBilling() {
   const initialValue = {
     posting_date: moment(now).format('YYYY-MM-DD'),
     header_text: '',
+    status_id: '01',
     items: tableAddItems.dataSubmit,
   }
 

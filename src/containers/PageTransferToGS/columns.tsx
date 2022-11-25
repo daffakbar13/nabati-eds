@@ -6,23 +6,14 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
+import moment from 'moment'
 import DateFormat from 'src/components/DateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-function Linked({
-  link,
-  linkType,
-  type,
-}: {
-  link: string
-  linkType: string
-  type: 'id' | 'action'
-}) {
+function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    if (linkType == 'id') {
-      router.push(`${PATH.LOGISTIC}/stock-reservation/detail/${link}`)
-    }
+    router.push(`${PATH.LOGISTIC}/transfer-to-gs/detail/${link}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -54,10 +45,10 @@ function Linked({
 }
 
 export const column = [
-  CreateColumns('Doc. Number', 'doc_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="deliveryNumber" />
+  CreateColumns('Doc. Number', 'document_number', true, (link: string, record: any) => (
+    <Linked link={link} type="id" />
   )),
-  CreateColumns('Requirement Date', 'requirement_date', false, (date) => (
+  CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),
   CreateColumns(
@@ -68,18 +59,25 @@ export const column = [
   ),
   CreateColumns(
     'Branch',
-    'branch_id',
+    'suppl_branch_id',
     false,
-    (text: string, record: any) => `${record.branch_id || ''} - ${record.branch_name || ''}`,
+    (text: string, record: any) =>
+      `${record.branch_id || ''} - ${record.branch_name || ''}`,
   ),
   CreateColumns(
-    'Mov. Type',
-    'branch_id',
+    'Supplying Sloc',
+    'supplying_sloc_id',
     false,
-    (text: string, record: any) => `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
+    (text: string, record: any) =>
+      `${record.supplying_sloc_id || ''} - ${record.supplying_sloc_name || ''}`,
+  ),
+  CreateColumns(
+    'Receiving Sloc',
+    'receiving_sloc_id',
+    false,
+    (text: string, record: any) =>
+      `${record.receiving_sloc_id || ''} - ${record.receiving_sloc_name || ''}`,
   ),
   CreateColumns('Status', 'status_name', false, (status_name) => <TaggedStatus status={status_name} />),
-  CreateColumns('Action', 'doc_number', false, (link, record) => (
-    <Linked link={link} type="action" linkType="id" />
-  )),
+  CreateColumns('Action', 'id', false, (link, record) => <Linked link={link} type="action" />),
 ]
