@@ -111,6 +111,7 @@ export default function Pagination(props: PaginationProps) {
           value={page}
           style={styleSelect}
           options={optionsPage}
+          showSearch
           onChange={(e) => handleChangePage(e)}
         />
         <MiddleAlign>of {totalPage} Pages</MiddleAlign>
