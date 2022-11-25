@@ -1,0 +1,237 @@
+import React from 'react'
+import { Button, Spacer, Text, Table, Row } from 'pink-lava-ui'
+import { Card, Popup } from 'src/components'
+import { Col, Divider, Typography } from 'antd'
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import { useRouter } from 'next/router'
+import useDetail from 'src/hooks/useDetail'
+import { getDetailBadStock, UpdateStatusBadstock } from 'src/api/logistic/bad-stock'
+import dateFormat from 'src/utils/dateFormat'
+import DataList from 'src/components/DataList'
+import { column } from './columns'
+import { PATH } from 'src/configs/menus'
+import TaggedStatus from 'src/components/TaggedStatus'
+
+export default function PageQuotationDetail() {
+  const router = useRouter()
+  const data: any = useDetail(getDetailBadStock, { id: router.query.id as string })
+  const createDataList = (label: string, value: string) => ({ label, value })
+  const format = 'DD MMMM YYYY'
+  const [approve, setApprove] = React.useState(false)
+  const [reject, setReject] = React.useState(false)
+
+  const changedStatus = (status: string) => {
+    UpdateStatusBadstock(router.query.id as string, { status_id: status })
+    if (status == '02') {
+      router.push(`${PATH.LOGISTIC}/gi-disposal`)
+    }
+  }
+
+  const dataList = [
+    //row 1
+    createDataList('Reservation Number', data.reservation_number),
+    createDataList(
+      'Movement Type',
+      `${data.movement_type_id || ''} - ${data.movement_type_name || ''}`,
+    ),
+    createDataList('Branch', `${data.branch_id} - ${data.branch_name}`),
+    createDataList('SLoc', `${data.sloc_id} - ${data.sloc_name}`),
+
+    //row 2
+    createDataList('Doc Date', dateFormat(data.document_date, format)),
+    createDataList('Posting Date', dateFormat(data.posting_date, format)),
+    createDataList(
+      'Header Text',
+      data.header_text != '' && data.header_text != null ? data.header_text : '-',
+    ),
+
+    // row 3
+    createDataList(
+      'Created On',
+      data.created_at != '' && data.created_at != null ? dateFormat(data.created_at, format) : '-',
+    ),
+    createDataList(
+      'Created By',
+      data.created_by != '' && data.created_by != null ? data.created_by : '-',
+    ),
+    createDataList(
+      'Modified On',
+      data.modified_at != '' && data.modified_at != null
+        ? dateFormat(data.modified_at, format)
+        : '-',
+    ),
+    createDataList(
+      'Modified By',
+      data.modified_by != '' && data.modified_by != null
+        ? dateFormat(data.modified_by, format)
+        : '-',
+    ),
+  ]
+
+  return (
+    <Col>
+      <div style={{ display: 'flex', gap: 5 }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            router.push('/logistic/gi-disposal')
+          }}
+        >
+          <ArrowLeftOutlined style={{ fontSize: 25 }} />
+        </div>
+        <Text variant={'h4'}>View BS Reservation - {router.query.id}</Text>
+      </div>
+      <Card style={{ overflow: 'unset' }}>
+        {data.status == 'Canceled' ? (
+          <Text variant={'h5'}>
+            <TaggedStatus status={data.status} size="h5" />
+          </Text>
+        ) : (
+          ''
+        )}
+        <Row justifyContent="space-between" reverse>
+          {(() => {
+            if (data.status == 'Done') {
+              return (
+                <>
+                  <Row gap="16px">
+                    <Button size="big" variant="tertiary">
+                      Cancel Process
+                    </Button>
+                  </Row>
+                  <Text variant={'h5'}>
+                    <TaggedStatus status={data.status} size="h5" />
+                  </Text>
+                </>
+              )
+            } else if (data.status == 'Pending') {
+              return (
+                <>
+                  <Row gap="16px">
+                    <Button
+                      size="big"
+                      variant="tertiary"
+                      onClick={() => {
+                        setReject(true)
+                      }}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      size="big"
+                      variant="primary"
+                      onClick={() => {
+                        setApprove(true)
+                        changedStatus('01')
+                      }}
+                    >
+                      Approve
+                    </Button>
+                  </Row>
+                  <Text variant={'h5'}>
+                    <TaggedStatus status={data.status} size="h5" />
+                  </Text>
+                </>
+              )
+            } else if (data.status == 'Canceled') {
+              return <></>
+            }
+          })()}
+        </Row>
+      </Card>
+      <Spacer size={20} />
+      <Card style={{ padding: '16px 20px' }}>
+        <Row gutter={8}>
+          <Col span={8}>
+            {dataList.slice(0, 4).map(({ label, value }, i) => (
+              <DataList key={i} label={label} value={value} />
+            ))}
+          </Col>
+          <Col span={8}>
+            {dataList.slice(4, 7).map(({ label, value }, i) => (
+              <DataList key={i} label={label} value={value} />
+            ))}
+          </Col>
+          <Col span={8}>
+            {dataList.slice(7).map(({ label, value }, i) => (
+              <DataList key={i} label={label} value={value} />
+            ))}
+          </Col>
+        </Row>
+        <Divider />
+        <div style={{ overflow: 'scroll' }}>
+          <Table columns={column} data={data.items} />
+        </div>
+      </Card>
+
+      {(reject || approve) && (
+        <Popup>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Text variant="headingSmall" textAlign="center">
+              {reject ? 'Confirm Cancellation' : 'Success'}
+            </Text>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+            {reject ? (
+              `Are you sure want to Reject BS Reservation <strong>${data.id}</strong>?`
+            ) : (
+              <>
+                Request Number
+                <Typography.Text copyable> {data.id}</Typography.Text>
+                has been
+              </>
+            )}
+          </div>
+          {approve && (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully approved</div>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+            {reject && (
+              <>
+                <Button
+                  style={{ flexGrow: 1 }}
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    setReject(false)
+                  }}
+                >
+                  No
+                </Button>
+                <Button
+                  style={{ flexGrow: 1 }}
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    changedStatus('02')
+                  }}
+                >
+                  Yes
+                </Button>
+              </>
+            )}
+            {approve && (
+              <>
+                <Button
+                  style={{ flexGrow: 1 }}
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    router.push(`${PATH.LOGISTIC}/gi-disposal`)
+                  }}
+                >
+                  Ok
+                </Button>
+              </>
+            )}
+          </div>
+        </Popup>
+      )}
+    </Col>
+  )
+}

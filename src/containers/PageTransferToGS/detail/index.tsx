@@ -33,14 +33,13 @@ export default function PageTransferToGSDetail() {
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
 
-      {/* <TransferToGSDetail data={data} /> */}
-      <TransferToGSUpdate data={data} />
-
-      {/* {data.status_name != '' &&
+      {data.status_name != '' &&
         data.status_name != undefined &&
-        data.status_name != 'Wait For Approval' && (
-          <TransferToGSDetail data={data} />
-        )} */}
+        data.status_name != 'Wait For Approval' && <TransferToGSDetail data={data} />}
+
+      {data.status_name != '' &&
+        data.status_name == 'Pending' ||
+        data.status_name == 'Wait For Approval' && <TransferToGSUpdate data={data} />}
     </Col>
   )
 }

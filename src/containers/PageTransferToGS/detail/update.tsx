@@ -86,7 +86,7 @@ export default function TransferToGSUpdate(props: propsDetail) {
               type="input"
               label="Supplaying SLoc"
               disabled
-              placeholder={`${props.data.supplying_sloc_id} - ${props.data.supplying_sloc_name}`}
+              placeholder={`${props.data.supplaying_sloc_id} - ${props.data.supplaying_sloc_name}`}
             />
           </div>
           <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
