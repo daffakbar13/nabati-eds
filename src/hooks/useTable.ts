@@ -22,6 +22,7 @@ export default function useTable(props: useTableProps) {
     page: 1,
   })
   const [total, setTotal] = React.useState(0)
+  const [totalPage, setTotalPage] = React.useState(0)
   const [columns, setColumns] = React.useState(props.columns)
   const [rowSelection, setRowSelection] = React.useState({})
   const [loading, setLoading] = React.useState(true)
@@ -88,6 +89,7 @@ export default function useTable(props: useTableProps) {
               ? updateData(response.data.result)
               : updateData(response.data.results)
             setTotal(response.data.total_rows)
+            setTotalPage(response.data.total_page)
           })
           .catch((_) => updateData([]))
       }
@@ -107,6 +109,7 @@ export default function useTable(props: useTableProps) {
   return {
     data,
     total,
+    totalPage,
     selected,
     rowSelection,
     loading,

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card, FloatAction, Popup } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
+import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -14,6 +14,7 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { PATH } from 'src/configs/menus'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import Loader from 'src/components/Loader'
+import Pagination from 'src/components/Pagination'
 import { PageSalesOrderProps } from './types'
 import { TableSalesOrder } from './columns'
 
@@ -52,11 +53,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
 
   const selectedSalesOrder = {
     text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
-    content: (
-      <div style={{ textAlign: 'center' }}>
-        {table.selected.join(', ')}
-      </div>
-    ),
+    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
   const moreContent = () => (
@@ -105,14 +102,23 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
       </>
     )
     return (
-    <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-      <MoreOutlined />
-    </Popover>
-  )
+      <Popover
+        placement="bottomRight"
+        title={'Hide/Show Columns'}
+        content={content}
+        trigger="click"
+      >
+        <MoreOutlined />
+      </Popover>
+    )
   }
 
   const ConfirmSubmit = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Submit
       </Typography.Title>
@@ -120,16 +126,16 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         Are you sure to submit sales order
         <Typography.Text
           copyable={{
-            text: oneSelected
-              ? selectedSalesOrder.text
-              : table.selected.join(', '),
-          }}>
-          {oneSelected
-            ? ` ${selectedSalesOrder.text} ?`
-            : <Popover content={selectedSalesOrder.content}>
+            text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
+          }}
+        >
+          {oneSelected ? (
+            ` ${selectedSalesOrder.text} ?`
+          ) : (
+            <Popover content={selectedSalesOrder.content}>
               {` ${selectedSalesOrder.text} ?`}
             </Popover>
-          }
+          )}
         </Typography.Text>
       </Typography.Title>
       <div style={{ display: 'flex', gap: 10 }}>
@@ -137,7 +143,10 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -172,7 +181,9 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Submit Success</>
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
         </Text>
       </div>
       <div
@@ -182,42 +193,45 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           New Delivery Order
           <Typography.Text
             copyable={{
-              text: oneSelected
-                ? submittedQuotation[0]
-                : submittedQuotation.join(', '),
+              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
             }}
           >
-            {oneSelected
-              ? ` ${submittedQuotation[0]}`
-              : <Popover content={submittedQuotation.join(', ')}>
+            {oneSelected ? (
+              ` ${submittedQuotation[0]}`
+            ) : (
+              <Popover content={submittedQuotation.join(', ')}>
                 {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
               </Popover>
-            }
+            )}
           </Typography.Text>
           has been
         </div>
-        <div>
-          successfully submitted
-        </div>
+        <div>successfully submitted</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order`)
+          }}
+        >
           Back To List
         </Button>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/delivery-order`) }}
+          onClick={() => {
+            router.push(`${PATH.SALES}/delivery-order`)
+          }}
         >
           Next Process
         </Button>
@@ -226,12 +240,16 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
   )
 
   const ConfirmCancel = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Cancellation
       </Typography.Title>
       <DebounceSelect
-        type='select'
+        type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
         label={'Reason Cancel Process Sales Order'}
         required
@@ -243,7 +261,10 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -253,8 +274,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           onClick={() => {
             setProcessing('Wait for cancelling Sales Order')
             cancelSalesOrder({
-              order_list:
-                table.selected.map((id) => ({ id })),
+              order_list: table.selected.map((id) => ({ id })),
               cancel_reason_id: reason,
             })
               .then(() => {
@@ -277,7 +297,9 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Cancel Success</>
+          <>
+            <CheckCircleFilled /> Cancel Success
+          </>
         </Text>
       </div>
       <div
@@ -287,35 +309,36 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           Sales Order
           <Typography.Text
             copyable={{
-              text: oneSelected
-                ? selectedSalesOrder.text
-                : table.selected.join(', '),
-            }}>
-            {oneSelected
-              ? ` ${selectedSalesOrder.text}`
-              : <Popover content={selectedSalesOrder.content}>
+              text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
+            }}
+          >
+            {oneSelected ? (
+              ` ${selectedSalesOrder.text}`
+            ) : (
+              <Popover content={selectedSalesOrder.content}>
                 {` ${selectedSalesOrder.text}`}
               </Popover>
-            }
-          </Typography.Text>
-          {' '}
+            )}
+          </Typography.Text>{' '}
           has been
         </div>
-        <div>
-          successfully canceled
-        </div>
+        <div>successfully canceled</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order`)
+          }}
+        >
           OK
         </Button>
       </div>
@@ -398,12 +421,8 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
             total={table.total}
-            showTotal={showTotal}
+            totalPage={table.totalPage}
             onChange={(page, limit) => {
               table.handlePagination(page, limit)
             }}

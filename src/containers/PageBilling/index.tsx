@@ -5,11 +5,12 @@ import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Pagination, Checkbox, Popover, Divider } from 'antd'
+import { Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { getBilling } from 'src/api/billing'
+import Pagination from 'src/components/Pagination'
 import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
 
@@ -113,13 +114,11 @@ export default function PageBilling(props: PageBillingProps) {
             <Pagination
               defaultPageSize={20}
               pageSizeOptions={[20, 50, 100]}
-              showLessItems
-              showSizeChanger
-              showQuickJumper
-              responsive
               total={table.total}
-              showTotal={showTotal}
-              onChange={(page, limit) => { table.handlePagination(page, limit) }}
+              totalPage={table.totalPage}
+              onChange={(page, limit) => {
+                table.handlePagination(page, limit)
+              }}
             />
           )}
         </div>

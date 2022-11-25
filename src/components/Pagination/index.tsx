@@ -1,11 +1,25 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-plusplus */
 import { Select } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import React from 'react'
 
-interface PaginationProps {}
+interface PaginationProps {
+  defaultPageSize: number
+  pageSizeOptions: number[]
+  total: number
+  totalPage: number
+  onChange: (page, limit) => void
+}
 
 export default function Pagination(props: PaginationProps) {
-  const {} = props
+  const { defaultPageSize, onChange, pageSizeOptions, total, totalPage } = props
+  const [limit, setLimit] = React.useState(defaultPageSize)
+  const [page, setPage] = React.useState(1)
+  const [optionsPage, setOptionsPage] = React.useState<{ label: string; value: number }[]>()
+  const isFirstPage = page === 1
+  const isLastPage = page === totalPage
+  const range = `${limit * page - limit + 1}-${isLastPage ? total : limit * page}`
 
   const styleSelect = {
     border: '1px solid #AAAAAA',
@@ -13,6 +27,36 @@ export default function Pagination(props: PaginationProps) {
     fontWeight: 500,
     display: 'flex',
     alignItems: 'center',
+    width: 65,
+  }
+
+  function handleBackPage() {
+    if (!isFirstPage) {
+      setPage((curr) => --curr)
+    }
+  }
+
+  function handleNextPage() {
+    if (!isLastPage) {
+      setPage((curr) => ++curr)
+    }
+  }
+
+  function handleChangeLimit(value: number) {
+    setLimit(value)
+    setPage(1)
+  }
+
+  function handleChangePage(value: number) {
+    setPage(value)
+  }
+
+  function handleChangeOptionsPage() {
+    const newOptionsPage = []
+    for (let index = 1; index <= totalPage; index++) {
+      newOptionsPage.push({ label: index, value: index })
+    }
+    setOptionsPage(newOptionsPage)
   }
 
   function MiddleAlign({ children, style }: { children?; style? }) {
@@ -22,6 +66,15 @@ export default function Pagination(props: PaginationProps) {
       </div>
     )
   }
+
+  React.useEffect(() => {
+    onChange(page, limit)
+    handleChangeOptionsPage()
+  }, [page, limit])
+
+  React.useEffect(() => {
+    handleChangeOptionsPage()
+  }, [totalPage])
 
   return (
     <div style={{ display: 'flex', fontWeight: '600' }}>
@@ -36,24 +89,14 @@ export default function Pagination(props: PaginationProps) {
         <MiddleAlign>Items per page</MiddleAlign>
         <Select
           size="small"
-          value={1}
+          value={limit}
           style={styleSelect}
-          options={[
-            {
-              value: '1',
-              label: '1',
-            },
-            {
-              value: '2',
-              label: '2',
-            },
-            {
-              value: '3',
-              label: '3',
-            },
-          ]}
+          options={pageSizeOptions.map((e) => ({ label: e, value: e }))}
+          onChange={(e) => handleChangeLimit(e)}
         />
-        <MiddleAlign>Showing 1-20 of 100 items</MiddleAlign>
+        <MiddleAlign>
+          Showing {range} of {total} items
+        </MiddleAlign>
       </div>
       <div
         style={{
@@ -65,30 +108,19 @@ export default function Pagination(props: PaginationProps) {
       >
         <Select
           size="small"
-          value={1}
+          value={page}
           style={styleSelect}
-          options={[
-            {
-              value: '1',
-              label: '1',
-            },
-            {
-              value: '2',
-              label: '2',
-            },
-            {
-              value: '3',
-              label: '3',
-            },
-          ]}
+          options={optionsPage}
+          showSearch
+          onChange={(e) => handleChangePage(e)}
         />
-        <MiddleAlign>of 10 Pages</MiddleAlign>
-        <div style={{ display: 'flex', gap: 10, marginLeft: 10, cursor: 'pointer' }}>
+        <MiddleAlign>of {totalPage} Pages</MiddleAlign>
+        <div style={{ display: 'flex', gap: 10, margin: '0 15px', cursor: 'pointer' }}>
           <MiddleAlign>
-            <LeftOutlined />
+            <LeftOutlined onClick={handleBackPage} />
           </MiddleAlign>
           <MiddleAlign>
-            <RightOutlined />
+            <RightOutlined onClick={handleNextPage} />
           </MiddleAlign>
         </div>
       </div>

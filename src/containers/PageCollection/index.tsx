@@ -3,11 +3,12 @@ import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Pagination, Checkbox, Popover, Divider } from 'antd'
+import { Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getCollectionList } from 'src/api/collection'
+import Pagination from 'src/components/Pagination'
 import { PageCollectionProps } from './types'
 import { TableBilling } from './columns'
 
@@ -93,12 +94,11 @@ export default function PageCollection(props: PageCollectionProps) {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
             total={table.total}
-            showTotal={showTotal}
+            totalPage={table.totalPage}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
           />
         </div>
       </Card>

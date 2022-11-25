@@ -4,12 +4,13 @@ import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Pagination, Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
+import { Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { getShipment } from 'src/api/shipment'
+import Pagination from 'src/components/Pagination'
 import { PageShipmentProps } from './types'
 import { TableBilling } from './columns'
 
@@ -115,12 +116,8 @@ export default function PageShipment(props: PageShipmentProps) {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
             total={table.total}
-            showTotal={showTotal}
+            totalPage={table.totalPage}
             onChange={(page, limit) => {
               table.handlePagination(page, limit)
             }}
