@@ -429,22 +429,13 @@ export default function PageApproval(props: PageApprovalProps) {
         </div>
         {hasData && (
           <Pagination
-          // page={1}
-          // totalPages={100}
-          // size={20}
-          // totalItems={100}
-          // itemsPerPage={20}
-          // defaultPageSize={20}
-          // pageSizeOptions={[20, 50, 100]}
-          // showLessItems
-          // showSizeChanger
-          // showQuickJumper
-          // responsive
-          // total={table.total}
-          // showTotal={showTotal}
-          // onChange={(page, limit) => {
-          //   table.handlePagination(page, limit)
-          // }}
+            defaultPageSize={20}
+            pageSizeOptions={[20, 50, 100]}
+            total={table.total}
+            totalPage={table.totalPage}
+            onChange={(page, limit) => {
+              table.handlePagination(page, limit)
+            }}
           />
         )}
         {table.selected.length > 0 && (
