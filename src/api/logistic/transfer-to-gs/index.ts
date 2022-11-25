@@ -25,13 +25,23 @@ export const getListTransferGS = async (
     return response.data
 }
 
-// export const getDetailRequestIntraSloc = async (
-//     params: CommonDetailParams,
-// ): Promise<CommonDetailResponse<TransgerToGSDetail>> => {
-//     const response = await call({
-//         method: METHODS.GET,
-//         overrideBaseUrl,
-//         subUrl: `${url}/${params.id}/detail`,
-//     })
-//     return response.data
-// }
+export const getDetailTransferGS = async (
+    params: CommonDetailParams,
+): Promise<CommonDetailResponse<TransgerToGSDetail>> => {
+    const response = await call({
+        method: METHODS.GET,
+        overrideBaseUrl,
+        subUrl: `${url}/${params.id}/detail`,
+    })
+    return response.data
+}
+
+export const UpdateTransfertoGS = async (payload: any) => {
+    const response = await call({
+        method: METHODS.POST,
+        overrideBaseUrl,
+        subUrl: `${url}`,
+        data: payload,
+    })
+    return response.data
+}
