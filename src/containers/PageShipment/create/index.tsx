@@ -6,7 +6,7 @@
 /* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
-import { Col, Row, Tag, Table as TableAntd, Modal, DatePicker, Pagination } from 'antd'
+import { Col, Row, Tag, Table as TableAntd, Modal, DatePicker } from 'antd'
 import { Button, Search, Spacer, Text, Col as ColPinkLava, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card } from 'src/components'
@@ -28,6 +28,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { getDetailQuotation, getQuotation } from 'src/api/quotation'
 import Loader from 'src/components/Loader'
 import { ICDelete } from 'src/assets'
+import Pagination from 'src/components/Pagination'
 import { ColumnsDeliveryOrder, ColumnsSelectedDeliveryOrder } from './columns'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -364,12 +365,8 @@ export default function PageCreateShipment() {
                   <Pagination
                     defaultPageSize={20}
                     pageSizeOptions={[20, 50, 100]}
-                    showLessItems
-                    showSizeChanger
-                    showQuickJumper
-                    responsive
                     total={table.total}
-                    showTotal={showTotal}
+                    totalPage={table.totalPage}
                     onChange={(page, limit) => {
                       table.handlePagination(page, limit)
                     }}
@@ -473,12 +470,8 @@ export default function PageCreateShipment() {
               <Pagination
                 defaultPageSize={20}
                 pageSizeOptions={[20, 50, 100]}
-                showLessItems
-                showSizeChanger
-                showQuickJumper
-                responsive
                 total={table.total}
-                showTotal={showTotal}
+                totalPage={table.totalPage}
                 onChange={(page, limit) => {
                   table.handlePagination(page, limit)
                 }}
