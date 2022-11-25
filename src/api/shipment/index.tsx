@@ -8,13 +8,18 @@ import {
 } from 'src/api/types'
 import { ShipmentItem } from './types'
 
-const subUrl = 'v1/shipments/lists'
+const url = 'v1/shipments'
 const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
 
 export const getShipment = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<ShipmentItem>> => {
-  const response = await call({ method: METHODS.POST, overrideBaseUrl, subUrl, data: params })
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/lists`,
+    data: params,
+  })
   return response.data
 }
 
@@ -24,7 +29,18 @@ export const getDetailShipment = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `v1/shipments/${params.id}/detail`,
+    subUrl: `${url}/${params.id}/detail`,
+  })
+  return response.data
+}
+
+export const getShipmentBpb = async (
+  params: CommonDetailParams,
+): Promise<CommonDetailResponse<ShipmentItem>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${url}/${params.id}/bpb`,
   })
   return response.data
 }
