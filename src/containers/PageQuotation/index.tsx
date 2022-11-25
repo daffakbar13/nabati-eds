@@ -85,38 +85,6 @@ export default function PageQuotation(props: PageQuotationProps) {
     </div>
   )
 
-  const HideShowColumns = () => {
-    const content = (
-      <div style={{ fontWeight: 'bold' }}>
-        <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>Hide/Show Columns</h4>
-        <Divider style={{ margin: '10px 0' }} />
-        {useColumnQuotation.map(({ title }, index) => (
-          <div key={index} style={{ display: 'flex', gap: 10 }}>
-            <Checkbox
-              defaultChecked={!table.hiddenColumns.includes(title)}
-              onChange={(event) => {
-                table.handleHideShowColumns(event.target, title)
-              }}
-            />
-            {title}
-          </div>
-        ))}
-        <Divider style={{ margin: '10px 0' }} />
-        <h4
-          onClick={table.handleResetHideShowColumns}
-          style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
-        >
-          Reset
-        </h4>
-      </div>
-    )
-    return (
-      <Popover placement="bottomRight" content={content} trigger="click">
-        <MoreOutlined style={{ cursor: 'pointer' }} />
-      </Popover>
-    )
-  }
-
   const ConfirmSubmit = () => (
     <Popup
       onOutsideClick={() => {
@@ -129,9 +97,7 @@ export default function PageQuotation(props: PageQuotationProps) {
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
         Are you sure to submit quotation
         <Typography.Text
-          copyable={{
-            text: oneSelected ? selectedQuotation.text : table.selected.join(', '),
-          }}
+          copyable={{ text: oneSelected ? selectedQuotation.text : table.selected.join(', ') }}
         >
           {oneSelected ? (
             ` ${selectedQuotation.text}`
@@ -158,9 +124,7 @@ export default function PageQuotation(props: PageQuotationProps) {
           variant="primary"
           onClick={() => {
             setProcessing('Wait for submitting Quotation')
-            multipleSubmitQuotation({
-              order_list: table.selected.map((id) => ({ id })),
-            })
+            multipleSubmitQuotation({ order_list: table.selected.map((id) => ({ id })) })
               .then((response) => response.data)
               .then((data) => {
                 setShowConfirm('success-submit')
@@ -200,9 +164,7 @@ export default function PageQuotation(props: PageQuotationProps) {
         <div>
           New Sales Order
           <Typography.Text
-            copyable={{
-              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
-            }}
+            copyable={{ text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', ') }}
           >
             {oneSelected ? (
               ` ${submittedQuotation[0]}`
@@ -316,9 +278,7 @@ export default function PageQuotation(props: PageQuotationProps) {
         <div>
           Quoatation
           <Typography.Text
-            copyable={{
-              text: oneSelected ? selectedQuotation.text : table.selected.join(', '),
-            }}
+            copyable={{ text: oneSelected ? selectedQuotation.text : table.selected.join(', ') }}
           >
             {oneSelected ? (
               ` ${selectedQuotation.text}`
@@ -425,7 +385,7 @@ export default function PageQuotation(props: PageQuotationProps) {
           <Table
             scroll={{ y: 600 }}
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns />, fixed: 'right', width: 50 }]}
+            columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}

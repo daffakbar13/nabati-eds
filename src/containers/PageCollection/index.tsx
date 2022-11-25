@@ -26,35 +26,6 @@ export default function PageCollection(props: PageCollectionProps) {
   })
   const titlePage = useTitlePage('list')
 
-  const content = (
-    <>
-      {TableBilling.map(({ title }, index) => (
-        <div key={index}>
-          <Checkbox
-            defaultChecked={!table.hiddenColumns.includes(title)}
-            onChange={(event) => {
-              table.handleHideShowColumns(event.target, title)
-            }}
-          />
-          {title}
-        </div>
-      ))}
-      <Divider />
-      <h4
-        onClick={table.handleResetHideShowColumns}
-        style={{ textAlign: 'center', cursor: 'pointer' }}
-      >
-        Reset
-      </h4>
-    </>
-  )
-
-  const HideShowColumns = () => (
-    <Popover placement="bottomRight" title={'Hide/Show Columns'} content={content} trigger="click">
-      <MoreOutlined />
-    </Popover>
-  )
-
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
@@ -83,7 +54,7 @@ export default function PageCollection(props: PageCollectionProps) {
         <div style={{ overflow: 'scroll' }}>
           <Table
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns /> }]}
+            columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
             // rowSelection={table.rowSelection}

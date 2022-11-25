@@ -81,38 +81,6 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
     </div>
   )
 
-  const HideShowColumns = () => {
-    const content = (
-      <div style={{ fontWeight: 'bold' }}>
-        <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>Hide/Show Columns</h4>
-        <Divider style={{ margin: '10px 0' }} />
-        {TableDeliveryOrder.map(({ title }, index) => (
-          <div key={index} style={{ display: 'flex', gap: 10 }}>
-            <Checkbox
-              defaultChecked={!table.hiddenColumns.includes(title)}
-              onChange={(event) => {
-                table.handleHideShowColumns(event.target, title)
-              }}
-            />
-            {title}
-          </div>
-        ))}
-        <Divider style={{ margin: '10px 0' }} />
-        <h4
-          onClick={table.handleResetHideShowColumns}
-          style={{ fontWeight: 'bold', textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
-        >
-          Reset
-        </h4>
-      </div>
-    )
-    return (
-      <Popover placement="bottomRight" content={content} trigger="click">
-        <MoreOutlined style={{ cursor: 'pointer' }} />
-      </Popover>
-    )
-  }
-
   const ConfirmSubmit = () => (
     <Popup
       onOutsideClick={() => {
@@ -399,7 +367,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns />, fixed: 'right', width: 50 }]}
+            columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}

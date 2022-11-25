@@ -63,41 +63,6 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
     }
   }, [router.query.search])
 
-  const HideShowColumns = () => {
-    const content = (
-      <>
-        {TableIntraChannelGoodReceipt.map(({ title }, index) => (
-          <div key={index}>
-            <Checkbox
-              defaultChecked={!table.hiddenColumns.includes(title)}
-              onChange={(event) => {
-                table.handleHideShowColumns(event.target, title)
-              }}
-            />{' '}
-            {title}
-          </div>
-        ))}
-        <Divider />
-        <h4
-          onClick={table.handleResetHideShowColumns}
-          style={{ textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
-        >
-          Reset
-        </h4>
-      </>
-    )
-    return (
-      <Popover
-        placement="bottomRight"
-        title={'Hide/Show Columns'}
-        content={content}
-        trigger="click"
-      >
-        <MoreOutlined style={{ cursor: 'pointer' }} />
-      </Popover>
-    )
-  }
-
   return (
     <Col>
       <Text variant={'h4'}>Goods Receipt Intra Channel</Text>
@@ -156,7 +121,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
+            columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
             rowKey={'id'}

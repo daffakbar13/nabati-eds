@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-unused-expressions */
 import { MoreOutlined } from '@ant-design/icons'
 import { Checkbox, Divider, Popover } from 'antd'
