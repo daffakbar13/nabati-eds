@@ -122,7 +122,7 @@ export default function CreateGoodsReceipt() {
 
   return (
     <Col>
-      <Title variant={'h4'}>Create New Goods Receipt</Title>
+      <Title variant={'h4'}>Create New Stock Adjustment</Title>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>

@@ -249,6 +249,7 @@ export default function CreateGoodsReceipt() {
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            loading={loading}
             rowSelection={{
               onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
                 setSelectedTableData(selectedRows)
