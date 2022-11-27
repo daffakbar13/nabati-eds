@@ -31,8 +31,6 @@ export default function CreateGrReturn() {
   const [form] = Form.useForm()
   const [data, setData] = useState<Item[]>(originData)
 
-  console.log('form', form)
-
   const submit = () => {
     form.submit()
   }

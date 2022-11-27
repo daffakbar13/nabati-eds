@@ -2,7 +2,7 @@ import { Divider, Form, message } from 'antd'
 import { useRouter } from 'next/router'
 
 import { Button, Col, DatePickerInput, Row, Spacer, Text as Title, Table } from 'pink-lava-ui'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Card, Input, SelectMasterData, Text, Modal } from 'src/components'
 
 import { CommonSelectValue } from 'src/configs/commonTypes'
@@ -28,24 +28,26 @@ export default function CreateGoodsReceipt() {
   const [tableData, setTableData] = useState([])
   const [selectedTableData, setSelectedTableData] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
 
   const router = useRouter()
-  console.log('form', form)
+
+  // Branch ID For SlocList
+  const branchForSlocList = useRef('')
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
-    // console.log(v)
     setHeaderData(values)
     setShowSubmitModal(true)
   }
 
   const handleCreate = async () => {
     // TO DO SUBMIT with API here...
-    console.log('headerData', headerData)
+    // console.log('headerData', headerData)
     const payload: any = {
       po_number: headerData.po_number,
       delivery_number: headerData.po_number,
@@ -58,39 +60,62 @@ export default function CreateGoodsReceipt() {
       bill_of_lading: headerData.bill_of_lading,
       items: selectedTableData,
     }
-    console.log('payload', payload)
+    // console.log('payload', payload)
     const res = await createGoodReceipt(payload)
 
-    console.log('res', res)
-
-    console.log('headerData', headerData)
+    // console.log('res', res)
+    // console.log('headerData', headerData)
     return res
   }
 
   const onChangePoNumber = async (poNumber: any) => {
+    // console.log('poNumber', poNumber)
     if (!poNumber) {
       setDisableSomeFields(false)
       return
     }
 
     try {
+      form.resetFields()
+      form.setFieldsValue({ po_number: { value: poNumber } })
+      setLoading(true)
       const { data } = await getGoodReceiptByPo(poNumber)
-      setTableData((data.items || []).map((i: any, ind: number) => ({ ...i, rowKey: ind + 1 })))
+
+      setTableData(
+        (data.items || []).map((i: any, ind: number) => ({
+          ...i,
+          rowKey: ind + 1,
+          qty_gr: i.qty_po,
+        })),
+      )
+
       form.setFieldsValue({
+        po_number: { value: poNumber },
         delivery_number: data.delivery_number,
         vendor: { value: data.vendor },
         branch: { value: data.branch },
         delivery_note: data.delivery_note,
         bill_of_lading: data.bill_of_lading,
         remarks: data.remarks,
+        document_date: moment(),
+        posting_date: moment(),
       })
+
+      if (data?.branch) {
+        branchForSlocList.current = data.branch
+      }
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error(error)
     }
     setDisableSomeFields(true)
   }
 
-  console.log('selectedTableData', selectedTableData)
+  const onTableValuesChange = () => {}
+
+  // console.log('selectedTableData', selectedTableData)
+  console.log('form.getFieldValue', form.getFieldValue('branch'))
 
   return (
     <Col>
@@ -126,12 +151,18 @@ export default function CreateGoodsReceipt() {
               label={<LabelRequired>PO Number</LabelRequired>}
               rules={[{ required: true }]}
             >
-              <Input
+              <SelectMasterData
+                type="PO_NUMBER"
+                style={{ marginTop: -8 }}
+                onChange={(opt: any) => onChangePoNumber(opt.value)}
+                loading={loading}
+              />
+              {/* <Input
                 style={{ marginTop: -12 }}
                 placeholder="Type"
                 size="large"
                 onChange={(e: any) => onChangePoNumber(e.target.value)}
-              />
+              /> */}
             </Form.Item>
             <Form.Item
               name="vendor"
@@ -229,7 +260,7 @@ export default function CreateGoodsReceipt() {
             }}
             rowKey="rowKey"
             data={tableData}
-            columns={columns()}
+            columns={columns(branchForSlocList.current)}
           />
         </div>
       </Card>

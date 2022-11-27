@@ -62,3 +62,31 @@ export const getGoodReceiptByPo = async (
   })
   return response.data
 }
+
+export const getPoNumberList = async (
+  poNumber?: string | null,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/get_purchase_id/:po_number`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getSlocListByBranch = (
+  branchId: string,
+  params: CommonListParams = {},
+) => async (): Promise<CommonDetailResponse<any>> => {
+  if (!branchId) return null
+
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/get_sloc/${branchId}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
