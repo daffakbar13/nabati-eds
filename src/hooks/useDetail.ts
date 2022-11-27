@@ -12,16 +12,16 @@ export default function useDetail(
   const backPage = router.asPath.split('/').splice(0, 3).join('/')
 
   React.useEffect(() => {
-    async function getApi() {
+    if (router.query.status === 'Draft' || !router.query.status) {
+      router.push(backPage)
+    } else if (!Object.values(params).includes(undefined)) {
       funcApi(params)
         .then((results) => setData(results.data))
-        .catch((err) => {
-          // setData({})
+        .catch(() => {
           router.push(backPage)
         })
     }
-    getApi()
-  }, [router])
+  }, [router.query])
 
   return data
 }
