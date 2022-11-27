@@ -46,11 +46,11 @@ export const getDetailBadStock = async (
     return response.data
 }
 
-export const UpdateStatusBadstock = async (id: string, payload: any) => {
+export const updateStatusBadStock = async (id: string, payload: any) => {
     const response = await call({
-        method: METHODS.POST,
+        method: METHODS.PUT,
         overrideBaseUrl,
-        subUrl: `${url}/detail/${id}`,
+        subUrl: `${url}/edit/${id}`,
         data: payload,
     })
     return response.data

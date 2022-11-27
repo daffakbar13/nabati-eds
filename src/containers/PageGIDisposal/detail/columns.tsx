@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
 
-export const column = [
+export const columns = [
   CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
   CreateColumns(
     'Item',

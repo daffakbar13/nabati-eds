@@ -1,9 +1,8 @@
 import moment from 'moment'
-import CreateColumns from 'src/utils/createColumns'
 import { Button, Tooltip } from 'pink-lava-ui'
-import { Tag } from 'antd'
 import Link from 'src/components/Link'
 import TaggedStatus from 'src/components/TaggedStatus'
+import CreateColumns from 'src/utils/createColumns'
 
 export const columns = (goToDetail: (id: string) => {}) => [
   CreateColumns(

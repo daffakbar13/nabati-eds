@@ -1,9 +1,9 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Tabs, Modal } from 'src/components'
+import { Card, GoBackArrow, Modal, Tabs } from 'src/components'
 
 import { useRouter } from 'next/router'
-import { getGoodReceiptDetail, doCancelProcess } from 'src/api/logistic/good-receipt'
+import { doCancelProcess, getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
 import { PATH } from 'src/configs/menus'
 
 import DocumentHeader from './Tabs/DocumentHeader'

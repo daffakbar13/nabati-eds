@@ -11,7 +11,7 @@ export const ListContainer = styled.div`
 `
 export const ItemContainer = styled.div`
   display: grid;
-  grid-template-columns: minmax(100px, 150px) minmax(100px, 1fr);
+  grid-template-columns: minmax(150px, 200px) minmax(100px, 1fr);
 `
 
 export const Title = styled.div`
