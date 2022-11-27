@@ -76,12 +76,10 @@ export const getPoNumberList = async (
   return response.data
 }
 
-export const getSlocListByBranch = (
+export const getSlocListByBranch = async (
   branchId: string,
   params: CommonListParams = {},
-) => async (): Promise<CommonDetailResponse<any>> => {
-  if (!branchId) return null
-
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${url}/get_sloc/${branchId}`,

@@ -1,14 +1,13 @@
-import { Input, SelectMasterData, SelectListByApi } from 'src/components'
+import { Input, Select, SelectMasterData } from 'src/components'
 import CreateColumns from 'src/utils/createColumns'
-import { getSlocListByBranch } from 'src/api/logistic/good-receipt'
 
 // import { useRouter } from 'next/router'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'
 // import { PATH } from 'src/configs/menus'
 
-export const columns = (branchId: string) => {
-  console.log('branchId', branchId)
+export const columns = (slocOptions: []) => {
+  console.log('slocOptions', slocOptions)
   return [
     CreateColumns(
       'Item',
@@ -86,16 +85,7 @@ export const columns = (branchId: string) => {
       'sloc_id',
       true,
       // (text, rec) => <Input value={text} disabled type="text" label="" />,
-      (text, rec) => (
-        <SelectListByApi
-          value={text}
-          listApi={getSlocListByBranch(branchId)}
-          optionCreator={(res) =>
-            // eslint-disable-next-line implicit-arrow-linebreak
-            res?.data?.map((i: any) => ({ label: `${i.id}-${i.name}`, value: i.id }))
-          }
-        />
-      ),
+      (text, rec) => <Select options={slocOptions} placeholder="Select Sloc" />,
       300,
     ),
     CreateColumns(

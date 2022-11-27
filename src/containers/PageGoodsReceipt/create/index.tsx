@@ -6,9 +6,14 @@ import { useState, useRef } from 'react'
 import { Card, Input, SelectMasterData, Text, Modal } from 'src/components'
 
 import { CommonSelectValue } from 'src/configs/commonTypes'
-import { getGoodReceiptByPo, createGoodReceipt } from 'src/api/logistic/good-receipt'
+import {
+  getGoodReceiptByPo,
+  createGoodReceipt,
+  getSlocListByBranch,
+} from 'src/api/logistic/good-receipt'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import moment from 'moment'
+
 import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
@@ -37,7 +42,9 @@ export default function CreateGoodsReceipt() {
   const router = useRouter()
 
   // Branch ID For SlocList
-  const branchForSlocList = useRef('')
+  // const branchForSlocList = useRef('')
+  const [branchForSlocList, setBranchForSlocList] = useState('')
+  const [slocOptions, setSlocOptions] = useState<[]>([])
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
@@ -76,8 +83,8 @@ export default function CreateGoodsReceipt() {
     }
 
     try {
-      form.resetFields()
-      form.setFieldsValue({ po_number: { value: poNumber } })
+      // form.resetFields()
+      // form.setFieldsValue({ po_number: { value: poNumber } })
       setLoading(true)
       const { data } = await getGoodReceiptByPo(poNumber)
 
@@ -102,8 +109,12 @@ export default function CreateGoodsReceipt() {
       })
 
       if (data?.branch) {
-        branchForSlocList.current = data.branch
+        setBranchForSlocList(data.branch)
       }
+
+      const slocList = await getSlocListByBranch(data.branch)
+      setSlocOptions(slocList.data?.map((i: any) => ({ label: `${i.id}-${i.name}`, value: i.id })))
+
       setLoading(false)
     } catch (error) {
       setLoading(false)
@@ -116,6 +127,9 @@ export default function CreateGoodsReceipt() {
 
   // console.log('selectedTableData', selectedTableData)
   console.log('form.getFieldValue', form.getFieldValue('branch'))
+
+  console.log('branchForSlocList', branchForSlocList)
+  console.log('slocOptions', slocOptions)
 
   return (
     <Col>
@@ -260,7 +274,7 @@ export default function CreateGoodsReceipt() {
             }}
             rowKey="rowKey"
             data={tableData}
-            columns={columns(branchForSlocList.current)}
+            columns={columns(slocOptions)}
           />
         </div>
       </Card>
