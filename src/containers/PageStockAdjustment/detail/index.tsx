@@ -8,7 +8,7 @@ import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
 
 import { useRouter } from 'next/router'
-import { getDetailSwapHandling } from 'src/api/logistic/swap-handling'
+import { getDetailStockAdjustment } from 'src/api/logistic/stock-adjustment'
 import { PATH } from 'src/configs/menus'
 
 import { getTagColor } from 'src/utils/getTagColor'
@@ -27,7 +27,7 @@ export default function DetailStockAdjustment() {
     const fetchData = async () => {
       try {
         setLoading(true)
-        const res = await getDetailSwapHandling(id)
+        const res = await getDetailStockAdjustment(id)
         setDetails(res.data || [])
         setLoading(false)
       } catch (error) {
@@ -41,8 +41,8 @@ export default function DetailStockAdjustment() {
   return (
     <Col>
       <div style={{ display: 'flex', gap: 5 }}>
-        <GoBackArrow to={`${PATH.LOGISTIC}/swap-handling`} />
-        <Text variant={'h4'}>View Swap Handling {`${router.query.id}`}</Text>
+        <GoBackArrow to={`${PATH.LOGISTIC}/stock-adjustment`} />
+        <Text variant={'h4'}>View Stock Adjustment {`${router.query.id}`}</Text>
       </div>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset', marginBottom: 9 }}>
@@ -61,7 +61,7 @@ export default function DetailStockAdjustment() {
       <Card>
         <List loading={loading}>
           <List.Item
-            label="Mov. Type"
+            label="Movement Type"
             value={`${details?.movement_type_id}-${toTitleCase(details?.movement_type_name)}`}
           />
           <List.Item
@@ -69,13 +69,11 @@ export default function DetailStockAdjustment() {
             value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
           />
           <List.Item
-            label="Supplying SLoc"
+            label="SLoc"
             value={`${details?.from_sloc}-${toTitleCase(details?.from_sloc_name)}`}
           />
-          <List.Item
-            label="Receiving SLoc"
-            value={`${details?.to_sloc}-${toTitleCase(details?.to_sloc_name)}`}
-          />
+          <List.Item label="" value={''} />
+
           <List.Item label="Doc Date" value={moment(details?.document_date).format(DATE_FORMAT)} />
           <List.Item
             label="Posting Date"
@@ -83,6 +81,7 @@ export default function DetailStockAdjustment() {
           />
           <List.Item label="Header Text" value={details?.header_text} />
           <List.Item label="" value={''} />
+
           <List.Item label="Created On" value={moment(details?.created_at).format(DATE_FORMAT)} />
           <List.Item label="Created By" value={details?.created_by} />
           <List.Item label="Modified On" value={details?.modified_at} />
