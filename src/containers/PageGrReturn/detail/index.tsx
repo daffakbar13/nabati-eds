@@ -1,9 +1,11 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Tabs } from 'src/components'
+import { Card, GoBackArrow, Tabs, Modal } from 'src/components'
 
 import { useRouter } from 'next/router'
 import { getGrReturnDetail } from 'src/api/logistic/good-return'
+import { doCancelProcess } from 'src/api/logistic/good-receipt'
+
 import { PATH } from 'src/configs/menus'
 
 import DocumentHeader from './Tabs/DocumentHeader'
@@ -15,7 +17,20 @@ export default function DetailGrReturn() {
   const router = useRouter()
   const id = String(router.query.id) || ''
 
+  // Modals
+  const [cancelProcessModal, setCancelProcessModal] = useState(false)
+
   const hashTab = router.asPath.split('#')[1]
+
+  const handleCancelProcess = async () => {
+    try {
+      const res = await doCancelProcess(id)
+      return res
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
 
   useEffect(() => {
     if (!id) return
@@ -40,7 +55,12 @@ export default function DetailGrReturn() {
         <Text variant={'h4'}>View GR Return From Principal {`${router.query.id}`}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
           {hashTab === '1' && (
-            <Button size="big" variant="tertiary" onClick={() => {}} loading={loading}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => setCancelProcessModal(true)}
+              loading={loading}
+            >
               Cancel Process
             </Button>
           )}
@@ -69,52 +89,17 @@ export default function DetailGrReturn() {
           ]}
         />
       </Card>
+
+      <Modal
+        title="Confirm Cancel Process"
+        open={cancelProcessModal}
+        onOk={handleCancelProcess}
+        onCancel={() => setCancelProcessModal(false)}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gr-return`)}
+        content="Are you sure want to cancel process? Change you made so far will not saved"
+        successContent={(res: any) => 'Cancel Process Success'}
+        successOkText="OK"
+      />
     </Col>
   )
-}
-
-const a = {
-  company_id: 'PP01',
-  company_name: 'Pinus Merah Abadi, PT',
-  id: '1041000000001',
-  doc_number: '1041000000001',
-  posting_date: '2022-11-27T00:00:00Z',
-  document_date: '2022-11-25T00:00:00Z',
-  branch_id: 'P104',
-  branch_name: 'PMA Bandung Selatan',
-  from_sloc: 'TR00',
-  from_sloc_name: 'Transit',
-  to_sloc: 'GS00',
-  to_sloc_name: 'Good Stock',
-  movement_type_id: '311',
-  movement_type_name: 'TF trfr within plant',
-  header_text: '',
-  status_id: '01',
-  status: 'Done',
-  created_at: '2022-11-24T07:31:55Z',
-  created_by: 'SYSTEM',
-  modified_at: null,
-  modified_by: null,
-  items: [
-    {
-      id: '1',
-      material_doc_id: '1041000000001',
-      product_id: '300011',
-      product_name: 'NABATI TIME BREAK RCE 20g GT (20pcs x 6i',
-      qty: '2.000',
-      uom_id: 'PCS',
-      batch: 'sample one',
-      remarks: '4545',
-    },
-    {
-      id: '2',
-      material_doc_id: '1041000000001',
-      product_id: '300009',
-      product_name: 'NABATI RICHEESE 320g MT (6k)',
-      qty: '2.000',
-      uom_id: 'PCS',
-      batch: 'sample one',
-      remarks: '4545',
-    },
-  ],
 }

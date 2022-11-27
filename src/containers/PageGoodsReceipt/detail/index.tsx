@@ -1,9 +1,9 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Tabs } from 'src/components'
+import { Card, GoBackArrow, Tabs, Modal } from 'src/components'
 
 import { useRouter } from 'next/router'
-import { getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
+import { getGoodReceiptDetail, doCancelProcess } from 'src/api/logistic/good-receipt'
 import { PATH } from 'src/configs/menus'
 
 import DocumentHeader from './Tabs/DocumentHeader'
@@ -15,7 +15,20 @@ export default function DetailGR() {
   const router = useRouter()
   const id = String(router.query.id) || ''
 
+  // Modals
+  const [cancelProcessModal, setCancelProcessModal] = useState(false)
+
   const hashTab = router.asPath.split('#')[1]
+
+  const handleCancelProcess = async () => {
+    try {
+      const res = await doCancelProcess(id)
+      return res
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
 
   useEffect(() => {
     if (!id) return
@@ -40,7 +53,12 @@ export default function DetailGR() {
         <Text variant={'h4'}>View GR From Principal {`${router.query.id}`}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
           {hashTab === '1' && (
-            <Button size="big" variant="tertiary" onClick={() => {}} loading={loading}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => setCancelProcessModal(true)}
+              loading={loading}
+            >
               Cancel Process
             </Button>
           )}
@@ -69,6 +87,17 @@ export default function DetailGR() {
           ]}
         />
       </Card>
+
+      <Modal
+        title="Confirm Cancel Process"
+        open={cancelProcessModal}
+        onOk={handleCancelProcess}
+        onCancel={() => setCancelProcessModal(false)}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt`)}
+        content="Are you sure want to cancel process? Change you made so far will not saved"
+        successContent={(res: any) => 'Cancel Process Success'}
+        successOkText="OK"
+      />
     </Col>
   )
 }

@@ -114,3 +114,16 @@ export const getSlocListByBranch = async (
   })
   return response.data
 }
+
+export const doCancelProcess = async (
+  id: string,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/update_status/${id}`,
+    overrideBaseUrl,
+    data: { ...params, status_id: '02' },
+  })
+  return response.data
+}

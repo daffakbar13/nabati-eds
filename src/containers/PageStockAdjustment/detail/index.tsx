@@ -1,5 +1,5 @@
 import { Tag } from 'antd'
-import { Col, Spacer, Table, Text } from 'pink-lava-ui'
+import { Col, Spacer, Table, Text, Button } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
 import { Card, GoBackArrow } from 'src/components'
 
@@ -46,17 +46,40 @@ export default function DetailStockAdjustment() {
       </div>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset', marginBottom: 9 }}>
-        <Tag
-          style={{
-            width: 200,
-            padding: '8px 20px',
-            border: '1px solid #AAAAAA',
-            borderRadius: 8,
-          }}
-          color={getTagColor(details?.status)}
-        >
-          {details?.status || <p style={{ color: 'black' }}>Status...</p>}
-        </Tag>
+        <div style={{ display: 'flex' }}>
+          <Tag
+            style={{
+              width: 200,
+              padding: '8px 20px',
+              border: '1px solid #AAAAAA',
+              borderRadius: 8,
+            }}
+            color={getTagColor(details?.status)}
+          >
+            {details?.status || <p style={{ color: 'black' }}>Status...</p>}
+          </Tag>
+
+          {details?.status && details?.status !== 'Done' && (
+            <div
+              style={{
+                display: 'grid',
+                marginLeft: 'auto',
+                gridTemplateColumns: '1fr 1fr 1fr',
+                gap: 12,
+              }}
+            >
+              <Button size="big" variant="tertiary" onClick={() => {}} loading={loading}>
+                Reject
+              </Button>
+              <Button size="big" variant="secondary" onClick={() => {}} loading={loading}>
+                Edit
+              </Button>
+              <Button size="big" variant="primary" onClick={() => {}} loading={loading}>
+                Approve
+              </Button>
+            </div>
+          )}
+        </div>
       </Card>
       <Card>
         <List loading={loading}>
