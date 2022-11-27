@@ -47,14 +47,13 @@ export default function DetailGR() {
         <Text variant={'h4'}>View Swap Handling {`${router.query.id}`}</Text>
       </div>
       <Spacer size={20} />
-      <Card style={{ marginBottom: 9 }}>
+      <Card style={{ overflow: 'unset', marginBottom: 9 }}>
         <Tag
           style={{
             width: 200,
             padding: '8px 20px',
             border: '1px solid #AAAAAA',
             borderRadius: 8,
-            marginBottom: -10,
           }}
           color={getTagColor(details?.status)}
         >
