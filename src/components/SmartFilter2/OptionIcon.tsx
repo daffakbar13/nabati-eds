@@ -12,7 +12,7 @@ function SelectOptionIcon({ options, onChange, value }) {
   const prevValue = useRef(value)
 
   const onCancel = () => {
-    setCurValue(prevValue.current ?? options[0])
+    setCurValue(prevValue.current || options[0])
     setDefineSelectModal(false)
   }
 
@@ -30,7 +30,7 @@ function SelectOptionIcon({ options, onChange, value }) {
           color="#F4FBFC"
           title="Define Select Option"
         >
-          <div onClick={() => setDefineSelectModal(true)}>{FILTER_TYPES[curValue].icon}</div>
+          <div onClick={() => setDefineSelectModal(true)}>{FILTER_TYPES[curValue]?.icon}</div>
         </Tooltip>
       </Pane>
       <Modal
@@ -48,23 +48,28 @@ function SelectOptionIcon({ options, onChange, value }) {
                 Description
               </Text>
             </HeaderList>
-            {options.map((opt: OptionType) => FILTER_TYPES[opt])
-              .map((type: FilterTypesInterface) => <List
-                key={type.code}
-                active={type.code === curValue}
-                onClick={() => setCurValue(type.code)}
-              >
-                <div style={{ justifySelf: 'center' }}>{type.icon}</div>
-                <Text variant="headingSmall" style={{ fontSize: 16 }}>
-                  {type.label}
-                </Text>
-                {type.code === curValue && <CheckCircleFilled style={{ color: '#00d458' }} />}
-              </List>)}
+            {options
+              .map((opt: OptionType) => FILTER_TYPES[opt])
+              .map((type: FilterTypesInterface) => (
+                <List
+                  key={type.code}
+                  active={type.code === curValue}
+                  onClick={() => setCurValue(type.code)}
+                >
+                  <div style={{ justifySelf: 'center' }}>{type.icon}</div>
+                  <Text variant="headingSmall" style={{ fontSize: 16 }}>
+                    {type.label}
+                  </Text>
+                  {type.code === curValue && <CheckCircleFilled style={{ color: '#00d458' }} />}
+                </List>
+              ))}
           </>
         }
         footer={
           <FooterPane>
-            <Button onClick={onCancel} variant="tertiary">Cancel</Button>
+            <Button onClick={onCancel} variant="tertiary">
+              Cancel
+            </Button>
             <Button onClick={onClickSave}>Save</Button>
           </FooterPane>
         }
