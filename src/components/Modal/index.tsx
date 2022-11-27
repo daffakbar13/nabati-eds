@@ -46,7 +46,6 @@ const ModalCustomize = ({
       const res = await onOk()
       setLoading(false)
 
-      console.log('res aaa', res)
       if (!res) return
       setOnOkResponse(res)
 

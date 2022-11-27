@@ -63,6 +63,19 @@ export const getGoodReceiptByPo = async (
   return response.data
 }
 
+export const getGrReturnByRefDocNo = async (
+  refDocNo: string,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/return/request-data/${refDocNo}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
 export const getPoNumberList = async (
   poNumber?: string | null,
   params: CommonListParams = {},
@@ -70,6 +83,19 @@ export const getPoNumberList = async (
   const response = await call({
     method: METHODS.GET,
     subUrl: `${url}/get_purchase_id/:po_number`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getRefDocNoList = async (
+  poNumber?: string | null,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/get_purchase_id/:ref_doc_number`,
     overrideBaseUrl,
     data: params,
   })
