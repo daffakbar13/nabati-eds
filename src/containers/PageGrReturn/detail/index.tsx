@@ -71,3 +71,49 @@ export default function DetailGrReturn() {
     </Col>
   )
 }
+
+const a = {
+  company_id: 'PP01',
+  company_name: 'Pinus Merah Abadi, PT',
+  id: '1041000000001',
+  doc_number: '1041000000001',
+  posting_date: '2022-11-27T00:00:00Z',
+  document_date: '2022-11-25T00:00:00Z',
+  branch_id: 'P104',
+  branch_name: 'PMA Bandung Selatan',
+  from_sloc: 'TR00',
+  from_sloc_name: 'Transit',
+  to_sloc: 'GS00',
+  to_sloc_name: 'Good Stock',
+  movement_type_id: '311',
+  movement_type_name: 'TF trfr within plant',
+  header_text: '',
+  status_id: '01',
+  status: 'Done',
+  created_at: '2022-11-24T07:31:55Z',
+  created_by: 'SYSTEM',
+  modified_at: null,
+  modified_by: null,
+  items: [
+    {
+      id: '1',
+      material_doc_id: '1041000000001',
+      product_id: '300011',
+      product_name: 'NABATI TIME BREAK RCE 20g GT (20pcs x 6i',
+      qty: '2.000',
+      uom_id: 'PCS',
+      batch: 'sample one',
+      remarks: '4545',
+    },
+    {
+      id: '2',
+      material_doc_id: '1041000000001',
+      product_id: '300009',
+      product_name: 'NABATI RICHEESE 320g MT (6k)',
+      qty: '2.000',
+      uom_id: 'PCS',
+      batch: 'sample one',
+      remarks: '4545',
+    },
+  ],
+}

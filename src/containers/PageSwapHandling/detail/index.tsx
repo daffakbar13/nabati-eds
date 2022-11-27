@@ -1,29 +1,35 @@
-import { Button, Col, Spacer, Text } from 'pink-lava-ui'
+import { Button, Col, Spacer, Table, Text } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Tabs } from 'src/components'
+import { Card, GoBackArrow } from 'src/components'
+import TaggedStatus from 'src/components/TaggedStatus'
+import { Tag } from 'antd'
+
+import moment from 'moment'
+import List from 'src/components/List'
+import { toTitleCase } from 'src/utils/caseConverter'
 
 import { useRouter } from 'next/router'
-import { getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
+import { getDetailSwapHandling } from 'src/api/logistic/swap-handling'
 import { PATH } from 'src/configs/menus'
 
-import DocumentHeader from './Tabs/DocumentHeader'
-import Lpb from './Tabs/LPB'
+import { getTagColor } from 'src/utils/getTagColor'
+import { columns } from './columns'
 
+const DATE_FORMAT = 'DD-MMM-YYYY'
 export default function DetailGR() {
   const [loading, setLoading] = useState(false)
-  const [details, setDetails] = useState<{ items: [] }>({ items: [] })
+  const [details, setDetails] = useState(null)
   const router = useRouter()
   const id = String(router.query.id) || ''
 
-  const hashTab = router.asPath.split('#')[1]
-
   useEffect(() => {
     if (!id) return
+    console.log('id useEffect', id)
     const fetchData = async () => {
       try {
         setLoading(true)
-        const res = await getGoodReceiptDetail(id)
-        setDetails(res.data)
+        const res = await getDetailSwapHandling(id)
+        setDetails(res.data || [])
         setLoading(false)
       } catch (error) {
         setLoading(false)
@@ -31,42 +37,64 @@ export default function DetailGR() {
       }
     }
     fetchData()
-  }, [id])
+  }, [])
+  console.log('getTagColor(details?.status', getTagColor(details?.status))
 
   return (
     <Col>
       <div style={{ display: 'flex', gap: 5 }}>
-        <GoBackArrow to={`${PATH.LOGISTIC}/goods-receipt`} />
-        <Text variant={'h4'}>View GR From Principal {`${router.query.id}`}</Text>
-        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {hashTab === '1' && (
-            <Button size="big" variant="tertiary" onClick={() => {}} loading={loading}>
-              Cancel Process
-            </Button>
-          )}
-          {hashTab === '2' && (
-            <Button size="big" variant="primary" onClick={() => {}} loading={loading}>
-              Print LPB
-            </Button>
-          )}
-        </div>
+        <GoBackArrow to={`${PATH.LOGISTIC}/swap-handling`} />
+        <Text variant={'h4'}>View Swap Handling {`${router.query.id}`}</Text>
       </div>
       <Spacer size={20} />
-      <Card style={{ padding: 0 }}>
-        <Tabs
-          items={[
-            {
-              key: '1',
-              tab: 'Document Header',
-              children: <DocumentHeader loading={loading} details={details} />,
-            },
-            {
-              key: '2',
-              tab: 'LPB',
-              children: <Lpb details={details} />,
-            },
-          ]}
-        />
+      <Card style={{ marginBottom: 9 }}>
+        <Tag
+          style={{
+            width: 200,
+            padding: '8px 20px',
+            border: '1px solid #AAAAAA',
+            borderRadius: 8,
+            marginBottom: -10,
+          }}
+          color={getTagColor(details?.status)}
+        >
+          {details?.status || 'Loading...'}
+        </Tag>
+      </Card>
+      <Card>
+        <List loading={loading}>
+          <List.Item
+            label="Mov. Type"
+            value={`${details?.movement_type_id}-${toTitleCase(details?.movement_type_name)}`}
+          />
+          <List.Item
+            label="Branch"
+            value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
+          />
+          <List.Item
+            label="Supplying SLoc"
+            value={`${details?.from_sloc}-${toTitleCase(details?.from_sloc_name)}`}
+          />
+          <List.Item
+            label="Receiving SLoc"
+            value={`${details?.to_sloc}-${toTitleCase(details?.to_sloc_name)}`}
+          />
+          <List.Item label="Doc Date" value={moment(details?.document_date).format(DATE_FORMAT)} />
+          <List.Item
+            label="Posting Date"
+            value={moment(details?.posting_date).format(DATE_FORMAT)}
+          />
+          <List.Item label="Header Text" value={details?.header_text} />
+          <List.Item label="" value={''} />
+          <List.Item label="Created On" value={moment(details?.created_at).format(DATE_FORMAT)} />
+          <List.Item label="Created By" value={details?.created_by} />
+          <List.Item label="Modified On" value={details?.modified_at} />
+          <List.Item label="Modified By" value={details?.modified_by} />
+        </List>
+        <div style={{ borderTop: '1px solid #AAAAAA', margin: '32px auto 0' }} />
+        <div style={{ overflow: 'scroll', marginTop: 16 }}>
+          <Table columns={columns} dataSource={details?.items || []} />
+        </div>
       </Card>
     </Col>
   )

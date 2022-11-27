@@ -1,8 +1,8 @@
 import React from 'react'
-import Detail from 'src/containers/PageGoodsReceipt/detail'
+import Detail from 'src/containers/PageSwapHandling/detail'
 
-interface Props { }
-export default function GoodsReceiptDetail(props: Props) {
-  const { } = props
+interface Props {}
+export default function SwapHandlingDetail(props: Props) {
+  const {} = props
   return <Detail />
 }
