@@ -11,7 +11,7 @@ interface Props {
   successContent?: React.ReactNode
   open: boolean
   onOk: () => any
-  onOkSuccess?: () => void
+  onOkSuccess?: (a) => any
   onCancel: () => void
   okText?: string
   successOkText?: string
@@ -32,7 +32,7 @@ const ModalCustomize = ({
   okText = 'YES',
   cancelText = 'NO',
   successOkText = 'OK',
-  successCancelText = 'Close',
+  successCancelText,
   ...props
 }: Props) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -99,7 +99,7 @@ const ModalCustomize = ({
       <SuccessModal
         onCancel={() => setShowSuccessModal(false)}
         open={showSuccessModal}
-        onOk={onOkSuccess}
+        onOk={() => onOkSuccess(onOkResponse)}
         title={typeof successTitle === 'function' ? successTitle(onOkResponse) : successTitle}
         content={
           typeof successContent === 'function' ? successContent(onOkResponse) : successContent

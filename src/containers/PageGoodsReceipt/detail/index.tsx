@@ -54,6 +54,7 @@ export default function DetailGR() {
       <Spacer size={20} />
       <Card style={{ padding: 0 }}>
         <Tabs
+          initialActiveTab={hashTab}
           items={[
             {
               key: '1',

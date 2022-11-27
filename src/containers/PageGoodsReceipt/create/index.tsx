@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
+import { PATH } from 'src/configs/menus'
 
 import {
   createGoodReceipt,
@@ -274,11 +275,13 @@ export default function CreateGoodsReceipt() {
       <Modal
         open={showSubmitModal}
         onOk={handleCreate}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${res.data}#2`)}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Goods Receipt?"
         successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
+        successCancelText="Close"
       />
     </Col>
   )

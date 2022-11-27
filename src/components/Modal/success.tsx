@@ -21,7 +21,7 @@ export default function ModalCustomize({
   onOk,
   onCancel,
   okText = 'OK',
-  cancelText = 'Close',
+  cancelText,
   ...props
 }: Props) {
   return (
@@ -56,9 +56,11 @@ export default function ModalCustomize({
         {<>{content}</>}
       </div>
       <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-        <Button size="big" style={{ flexGrow: 1 }} variant="tertiary" onClick={onCancel}>
-          {cancelText}
-        </Button>
+        {cancelText && (
+          <Button size="big" style={{ flexGrow: 1 }} variant="tertiary" onClick={onCancel}>
+            {cancelText}
+          </Button>
+        )}
         <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={onOk || onCancel}>
           {okText}
         </Button>

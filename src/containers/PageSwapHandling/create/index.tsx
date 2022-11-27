@@ -255,7 +255,7 @@ export default function CreateGoodsReceipt() {
         onOk={handleCreate}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
-        content="Are you sure want Submit Goods Receipt?"
+        content="Are you sure want Submit Swap Handling?"
         successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
       />

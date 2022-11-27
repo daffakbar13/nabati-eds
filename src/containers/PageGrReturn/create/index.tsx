@@ -1,13 +1,13 @@
-import { Divider, Form, message } from 'antd'
+import { Divider, Form } from 'antd'
 import moment from 'moment'
-import { useState } from 'react'
-import { CommonSelectValue } from 'src/configs/commonTypes'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { PATH } from 'src/configs/menus'
 
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
 import { getGrReturnByRefDocNo, getSlocListByBranch } from 'src/api/logistic/good-receipt'
 import { createGrReturn } from 'src/api/logistic/good-return'
+import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
 import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
@@ -293,11 +293,13 @@ export default function CreateGrReturn() {
       <Modal
         open={showSubmitModal}
         onOk={handleCreate}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gr-return/detail/${res.data}#2`)}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Dr Return?"
         successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
+        successCancelText="Close"
       />
     </Col>
   )

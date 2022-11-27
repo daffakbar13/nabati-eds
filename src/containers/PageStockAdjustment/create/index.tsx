@@ -8,16 +8,18 @@ import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/componen
 
 import { createStockAdjustment } from 'src/api/logistic/stock-adjustment'
 
-import { columns } from './columns'
+import { useTableAddItem } from './useTableEditable'
 
 const { Label, LabelRequired } = Text
 
-export default function CreateGoodsReceipt() {
+export default function CreateStockAdjustment() {
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
-  const [tableData, setTableData] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  const [branchSelected, setBranchSelected] = useState('')
+  const tableAddItems = useTableAddItem({ idbranch: branchSelected.split(' - ')[0] || '' })
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -32,6 +34,8 @@ export default function CreateGoodsReceipt() {
   }
 
   const handleCreate = async () => {
+    console.log('headerData', headerData)
+    console.log('tableAddItems', tableAddItems)
     const payload: any = {
       branch_id: headerData.branch_id.value,
       stock_doct_type: 'PI',
@@ -41,9 +45,10 @@ export default function CreateGoodsReceipt() {
       header_text: headerData.header_text,
       sloc_id: headerData.sloc_id.value,
       status_id: '00', // ?????
-      items: tableData,
+      items: tableAddItems.data.map((i) => i),
     }
 
+    console.log('payload', payload)
     try {
       setLoading(true)
       const res = await createStockAdjustment(payload)
@@ -93,19 +98,7 @@ export default function CreateGoodsReceipt() {
   //   setDisableSomeFields(true)
   // }
 
-  const onTableValuesChange = ({ field, value, index }) => {
-    setTableData(
-      [...tableData].map((row, ind) => {
-        if (ind === index) {
-          return {
-            ...row,
-            [field]: value,
-          }
-        }
-        return { ...row }
-      }),
-    )
-  }
+  console.log('tableAddItems', tableAddItems)
 
   return (
     <Col>
@@ -172,7 +165,12 @@ export default function CreateGoodsReceipt() {
               label={<LabelRequired>Branch</LabelRequired>}
               rules={[{ required: true }]}
             >
-              <SelectMasterData loading={loading} type="PLANT" style={{ marginTop: -8 }} />
+              <SelectMasterData
+                onChange={(e) => setBranchSelected(e.value)}
+                loading={loading}
+                type="PLANT"
+                style={{ marginTop: -8 }}
+              />
             </Form.Item>
             <Form.Item
               name="posting_date"
@@ -211,8 +209,21 @@ export default function CreateGoodsReceipt() {
           </div>
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
+
+        {branchSelected && (
+          <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
+            + Add Item
+          </Button>
+        )}
+
+        <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table loading={loading} data={tableData} columns={columns(onTableValuesChange)} />
+          <Table
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+          />
         </div>
       </Card>
 
@@ -230,9 +241,12 @@ export default function CreateGoodsReceipt() {
         onOk={handleCreate}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
-        content="Are you sure want Submit Goods Receipt?"
-        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
-        successOkText="Print"
+        content="Are you sure want Submit Stock Adjustment?"
+        successContent={(res: any) =>
+          // eslint-disable-next-line implicit-arrow-linebreak
+          `Stock Adjusment ID: ${res?.data.stock_adjustment_id} has been successfully created`
+        }
+        successOkText="OK"
       />
     </Col>
   )

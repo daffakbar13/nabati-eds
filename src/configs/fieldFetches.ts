@@ -205,7 +205,7 @@ export function productBranch(search: string, branchId: string) {
     return getProductByBranch(branchId)
         .then((result) =>
             result.data
-                .filter(({ product_id, product_name }) =>
+                ?.filter(({ product_id, product_name }) =>
                     product_id.toLowerCase().includes(search.toLowerCase())
                     || product_name.toLowerCase().includes(search.toLowerCase()))
                 .splice(0, 10)
@@ -218,8 +218,7 @@ export function productBranch(search: string, branchId: string) {
 export function itemReceiver(productId: string) {
     return getItemReceiver(productId)
         .then((result) =>
-            result.data
-        )
+            result.data)
 }
 
 export function fieldPoSto(search: string) {
