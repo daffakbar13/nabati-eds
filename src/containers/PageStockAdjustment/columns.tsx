@@ -7,6 +7,14 @@ import TaggedStatus from 'src/components/TaggedStatus'
 
 export const columns = (goToDetail: (id: string) => {}) => [
   CreateColumns(
+    'ID',
+    'id',
+    true,
+    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
+    180,
+    'left',
+  ),
+  CreateColumns(
     'Doc. Number',
     'doc_number',
     true,
@@ -60,7 +68,7 @@ export const columns = (goToDetail: (id: string) => {}) => [
   CreateColumns('Header Text', 'header_text', true),
   CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
 
-  CreateColumns('Action', 'gr_number', false, (text) => (
+  CreateColumns('Action', 'id', false, (text) => (
     <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
       View Detail
     </Button>

@@ -1,15 +1,20 @@
 import { Tag } from 'antd'
 import { Col, Spacer, Table, Text, Button } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow } from 'src/components'
+import { Card, GoBackArrow, Modal } from 'src/components'
 
 import moment from 'moment'
 import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
 
 import { useRouter } from 'next/router'
-import { getDetailStockAdjustment } from 'src/api/logistic/stock-adjustment'
+import {
+  getDetailStockAdjustment,
+  updateStatusStockAdjustment,
+} from 'src/api/logistic/stock-adjustment'
 import { PATH } from 'src/configs/menus'
+
+import { STOCK_ADJUSTMENT_STATUS as S } from 'src/configs/stockAdjustment'
 
 import { getTagColor } from 'src/utils/getTagColor'
 import { columns } from './columns'
@@ -20,6 +25,31 @@ export default function DetailStockAdjustment() {
   const [details, setDetails] = useState(null)
   const router = useRouter()
   const id = String(router.query.id) || ''
+
+  // Modals
+  const [rejectModal, setRejectModal] = useState(false)
+  const [approveModal, setApproveModal] = useState(false)
+
+  const handleReject = async () => {
+    try {
+      const payload = { status_id: S.rejected }
+      const res = await updateStatusStockAdjustment(id, payload)
+      return res
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
+  const handleApprove = async () => {
+    try {
+      const payload = { status_id: S.approved }
+      const res = await updateStatusStockAdjustment(id, payload)
+      return res
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
 
   useEffect(() => {
     if (!id) return
@@ -56,10 +86,12 @@ export default function DetailStockAdjustment() {
             }}
             color={getTagColor(details?.status)}
           >
-            {details?.status || <p style={{ color: 'black' }}>Status...</p>}
+            {<p style={{ marginTop: 4 }}>{details?.status}</p> || (
+              <p style={{ color: 'black' }}>Status...</p>
+            )}
           </Tag>
 
-          {details?.status && details?.status !== 'Done' && (
+          {details?.status && details?.status === 'Pending' && (
             <div
               style={{
                 display: 'grid',
@@ -68,13 +100,23 @@ export default function DetailStockAdjustment() {
                 gap: 12,
               }}
             >
-              <Button size="big" variant="tertiary" onClick={() => {}} loading={loading}>
+              <Button
+                size="big"
+                variant="tertiary"
+                onClick={() => setRejectModal(true)}
+                loading={loading}
+              >
                 Reject
               </Button>
               <Button size="big" variant="secondary" onClick={() => {}} loading={loading}>
                 Edit
               </Button>
-              <Button size="big" variant="primary" onClick={() => {}} loading={loading}>
+              <Button
+                onClick={() => setApproveModal(true)}
+                size="big"
+                variant="primary"
+                loading={loading}
+              >
                 Approve
               </Button>
             </div>
@@ -115,6 +157,28 @@ export default function DetailStockAdjustment() {
           <Table columns={columns} dataSource={details?.items || []} />
         </div>
       </Card>
+
+      <Modal
+        title="Confirm Reject"
+        open={rejectModal}
+        onOk={handleReject}
+        onCancel={() => setRejectModal(false)}
+        onOkSuccess={(res) => router.reload()}
+        content="Are you sure want to reject?"
+        successContent={(res: any) => 'Reject Success'}
+        successOkText="OK"
+      />
+
+      <Modal
+        title="Confirm Approve"
+        open={approveModal}
+        onOk={handleApprove}
+        onCancel={() => setApproveModal(false)}
+        onOkSuccess={(res) => router.reload()}
+        content="Are you sure want to approve?"
+        successContent={(res: any) => 'Approve Success'}
+        successOkText="OK"
+      />
     </Col>
   )
 }

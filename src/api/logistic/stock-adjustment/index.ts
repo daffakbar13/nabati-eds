@@ -49,3 +49,16 @@ export const createStockAdjustment = async (
   })
   return response.data
 }
+
+export const updateStatusStockAdjustment = async (
+  docNumber: string,
+  params: any = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/${docNumber}/update_status`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
