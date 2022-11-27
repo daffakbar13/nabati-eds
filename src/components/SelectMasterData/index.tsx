@@ -11,6 +11,7 @@ interface Props {
   disabled?: boolean
   value?: any
   loading?: boolean
+  defaultValue?: { value: any; label: string }
 }
 
 export default function SelectMasterData({ type, style = {}, onChange, ...props }: Props) {

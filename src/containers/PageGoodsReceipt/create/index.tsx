@@ -41,9 +41,6 @@ export default function CreateGoodsReceipt() {
 
   const router = useRouter()
 
-  // Branch ID For SlocList
-  // const branchForSlocList = useRef('')
-  const [branchForSlocList, setBranchForSlocList] = useState('')
   const [slocOptions, setSlocOptions] = useState<[]>([])
 
   const onClickSubmit = async () => {
@@ -56,8 +53,8 @@ export default function CreateGoodsReceipt() {
     // TO DO SUBMIT with API here...
     // console.log('headerData', headerData)
     const payload: any = {
-      po_number: headerData.po_number,
-      delivery_number: headerData.po_number,
+      po_number: headerData?.po_number?.value,
+      delivery_number: headerData?.delivery_number,
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
       remarks: headerData.remark,
@@ -67,7 +64,7 @@ export default function CreateGoodsReceipt() {
       bill_of_lading: headerData.bill_of_lading,
       items: selectedTableData,
     }
-    // console.log('payload', payload)
+    console.log('payload', payload)
     const res = await createGoodReceipt(payload)
 
     // console.log('res', res)
@@ -76,15 +73,12 @@ export default function CreateGoodsReceipt() {
   }
 
   const onChangePoNumber = async (poNumber: any) => {
-    // console.log('poNumber', poNumber)
     if (!poNumber) {
       setDisableSomeFields(false)
       return
     }
 
     try {
-      // form.resetFields()
-      // form.setFieldsValue({ po_number: { value: poNumber } })
       setLoading(true)
       const { data } = await getGoodReceiptByPo(poNumber)
 
@@ -108,10 +102,6 @@ export default function CreateGoodsReceipt() {
         posting_date: moment(),
       })
 
-      if (data?.branch) {
-        setBranchForSlocList(data.branch)
-      }
-
       const slocList = await getSlocListByBranch(data.branch)
       setSlocOptions(slocList.data?.map((i: any) => ({ label: `${i.id}-${i.name}`, value: i.id })))
 
@@ -123,13 +113,30 @@ export default function CreateGoodsReceipt() {
     setDisableSomeFields(true)
   }
 
-  const onTableValuesChange = () => {}
-
-  // console.log('selectedTableData', selectedTableData)
-  console.log('form.getFieldValue', form.getFieldValue('branch'))
-
-  console.log('branchForSlocList', branchForSlocList)
-  console.log('slocOptions', slocOptions)
+  const onTableValuesChange = ({ field, value, index }) => {
+    // const oldTable = [...tableData]
+    // const updatedTable = oldTable.map((row, ind) => {
+    //   if (ind === index) {
+    //     return {
+    //       ...row,
+    //       [field]: value,
+    //     }
+    //   }
+    //   return { ...row }
+    // })
+    // setTableData(updatedTable)
+    setTableData(
+      [...tableData].map((row, ind) => {
+        if (ind === index) {
+          return {
+            ...row,
+            [field]: value,
+          }
+        }
+        return { ...row }
+      }),
+    )
+  }
 
   return (
     <Col>
@@ -171,12 +178,6 @@ export default function CreateGoodsReceipt() {
                 onChange={(opt: any) => onChangePoNumber(opt.value)}
                 loading={loading}
               />
-              {/* <Input
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-                onChange={(e: any) => onChangePoNumber(e.target.value)}
-              /> */}
             </Form.Item>
             <Form.Item
               name="vendor"
@@ -274,7 +275,7 @@ export default function CreateGoodsReceipt() {
             }}
             rowKey="rowKey"
             data={tableData}
-            columns={columns(slocOptions)}
+            columns={columns(slocOptions, onTableValuesChange)}
           />
         </div>
       </Card>
