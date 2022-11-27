@@ -4,25 +4,25 @@ import { useState } from 'react'
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
 
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
+import { getListSwapHandling } from 'src/api/logistic/swap-handling'
 import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
-export default function PageGoodsReceipt() {
+export default function PageSwapHandling() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
-  const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${id}`)
+  const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/swap-handling/detail/${id}`)
 
   const tableProps = useSimpleTable({
-    funcApi: getGoodReceiptList,
+    funcApi: getListSwapHandling,
     columns: columns(goToDetailPage),
     filters,
   })
 
   return (
     <>
-      <Text variant={'h4'}>Goods Receipt</Text>
+      <Text variant={'h4'}>Swap Handling</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
@@ -44,14 +44,6 @@ export default function PageGoodsReceipt() {
                 options={['EQ', 'NB', 'NP', 'GT', 'LT']}
               >
                 <SelectMasterData type="PLANT" />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="product_id"
-                dataType="S"
-                label="Material"
-                options={['EQ', 'CP']}
-              >
-                <SelectMasterData type="MATERIAL" />
               </SmartFilter.Field>
               <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>
                 <SelectMasterData type="SLOC" />

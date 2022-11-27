@@ -1,18 +1,23 @@
-import { Divider, Form, message } from 'antd'
-import moment from 'moment'
 import { useState } from 'react'
-import { CommonSelectValue } from 'src/configs/commonTypes'
+import moment from 'moment'
+import { Divider, Form } from 'antd'
 import { useRouter } from 'next/router'
 
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
-import { getGrReturnByRefDocNo, getSlocListByBranch } from 'src/api/logistic/good-receipt'
-import { createGrReturn } from 'src/api/logistic/good-return'
+
+import {
+  createGoodReceipt,
+  getGoodReceiptByPo,
+  getSlocListByBranch,
+} from 'src/api/logistic/good-receipt'
+import { CommonSelectValue } from 'src/configs/commonTypes'
+
 import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
 
-export default function CreateGrReturn() {
+export default function CreateGoodsReceipt() {
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
   const [tableData, setTableData] = useState([])
@@ -37,35 +42,34 @@ export default function CreateGrReturn() {
 
   const handleCreate = async () => {
     const payload: any = {
-      ref_doc_number: headerData.ref_doc_number,
+      po_number: headerData?.po_number?.value,
+      delivery_number: headerData?.delivery_number,
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      bill_of_lading: headerData.bill_of_lading,
       remarks: headerData.remark,
-      po_number: headerData?.po_number?.value,
       vendor: headerData.vendor.value,
       branch: headerData.branch.value,
-      delivery_number: headerData?.delivery_number,
       delivery_note: headerData.delivery_note,
+      bill_of_lading: headerData.bill_of_lading,
       items: selectedTableData,
     }
     console.log('payload', payload)
-    const res = await createGrReturn(payload)
+    const res = await createGoodReceipt(payload)
 
     // console.log('res', res)
     // console.log('headerData', headerData)
     return res
   }
 
-  const onChangeRefDocNumber = async (refDocNumber: any) => {
-    if (!refDocNumber || refDocNumber.length < 3) {
+  const onChangePoNumber = async (poNumber: any) => {
+    if (!poNumber) {
       setDisableSomeFields(false)
       return
     }
 
     try {
       setLoading(true)
-      const { data } = await getGrReturnByRefDocNo(refDocNumber)
+      const { data } = await getGoodReceiptByPo(poNumber)
 
       setTableData(
         (data.items || []).map((i: any, ind: number) => ({
@@ -76,7 +80,7 @@ export default function CreateGrReturn() {
       )
 
       form.setFieldsValue({
-        po_number: { value: data.po_number },
+        // po_number: { value: poNumber },
         delivery_number: data.delivery_number,
         vendor: { value: data.vendor },
         branch: { value: data.branch },
@@ -118,7 +122,7 @@ export default function CreateGrReturn() {
 
   return (
     <Col>
-      <Title variant={'h4'}>Create New GR Return</Title>
+      <Title variant={'h4'}>Create New Goods Receipt</Title>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
@@ -144,31 +148,45 @@ export default function CreateGrReturn() {
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item
-              name="ref_doc_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Ref. Doc Number</LabelRequired>}
-              rules={[{ required: true }]}
-            >
-              {/* CHANGE THIS TO SELECT WHEN NEW API READY */}
-              <Input
-                loading={loading}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-                onChange={(e: any) => onChangeRefDocNumber(e.target.value)}
-              />
-
-              {/* <SelectMasterData type="PLANT" style={{ marginTop: -8 }} /> */}
-            </Form.Item>
-            <Form.Item
               name="po_number"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>PO Number</Label>}
+              label={<LabelRequired>PO Number</LabelRequired>}
+              rules={[{ required: true }]}
             >
               <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
                 type="PO_NUMBER"
+                style={{ marginTop: -8 }}
+                onChange={(opt: any) => onChangePoNumber(opt.value)}
+                loading={loading}
+              />
+            </Form.Item>
+            <Form.Item
+              name="vendor"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Vendor</Label>}
+            >
+              <SelectMasterData
+                disabled={disableSomeFields}
+                type="PLANT"
+                style={{ marginTop: -8 }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="delivery_number"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<LabelRequired>Delivery Number</LabelRequired>}
+              rules={[{ required: true }]}
+            >
+              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            </Form.Item>
+            <Form.Item
+              name="branch"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              label={<Label>Branch</Label>}
+            >
+              <SelectMasterData
+                disabled={disableSomeFields}
+                type="PLANT"
                 style={{ marginTop: -8 }}
               />
             </Form.Item>
@@ -187,15 +205,15 @@ export default function CreateGrReturn() {
               />
             </Form.Item>
             <Form.Item
-              name="vendor"
+              name="delivery_note"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Vendor</Label>}
+              label={<Label>Delivery Note</Label>}
             >
-              <SelectMasterData
-                loading={loading}
+              <Input
                 disabled={disableSomeFields}
-                type="PLANT"
-                style={{ marginTop: -8 }}
+                style={{ marginTop: -12 }}
+                placeholder="Type"
+                size="large"
               />
             </Form.Item>
             <Form.Item
@@ -213,36 +231,11 @@ export default function CreateGrReturn() {
               />
             </Form.Item>
             <Form.Item
-              name="branch"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Branch</Label>}
-            >
-              <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="PLANT"
-                style={{ marginTop: -8 }}
-              />
-            </Form.Item>
-            <Form.Item
               name="bill_of_lading"
               style={{ marginTop: -12, marginBottom: 0 }}
               label={<Label>Bill of Lading</Label>}
             >
               <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
-            </Form.Item>
-
-            <Form.Item
-              name="delivery_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Number</Label>}
-            >
-              <Input
-                disabled={disableSomeFields}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-              />
             </Form.Item>
             <Form.Item
               name="remarks"
@@ -250,18 +243,6 @@ export default function CreateGrReturn() {
               label={<Label>Remarks</Label>}
             >
               <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
-            </Form.Item>
-            <Form.Item
-              name="delivery_note"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Note</Label>}
-            >
-              <Input
-                disabled={disableSomeFields}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-              />
             </Form.Item>
           </div>
         </Form>
@@ -294,7 +275,7 @@ export default function CreateGrReturn() {
         onOk={handleCreate}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
-        content="Are you sure want Submit Dr Return?"
+        content="Are you sure want Submit Goods Receipt?"
         successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
       />

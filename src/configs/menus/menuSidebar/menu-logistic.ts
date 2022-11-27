@@ -8,8 +8,8 @@ import {
   LogisticIcIntraSloc,
   LogisticIcCanvas,
   LogisticIcBadStock,
-  // LogisticIcSwapHandling,
-  // LogisticIcStockAdjustment,
+  LogisticIcSwapHandling,
+  LogisticIcStockAdjustment,
 } from 'src/assets'
 import { PATH } from '../path'
 
@@ -217,5 +217,17 @@ export const menuLogistic = [
         onClick: () => Router.push(`${PATH.LOGISTIC}/gi-disposal`),
       },
     ],
+  },
+  {
+    key: 'swap-handling',
+    title: 'Swap Handling',
+    icon: LogisticIcSwapHandling,
+    onClick: () => Router.push(`${PATH.LOGISTIC}/swap-handling`),
+  },
+  {
+    key: 'stock-adjustment',
+    title: 'Stock Adjustment',
+    icon: LogisticIcStockAdjustment,
+    onClick: () => Router.push(`${PATH.LOGISTIC}/stock-adjustment`),
   },
 ]
