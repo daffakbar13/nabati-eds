@@ -31,12 +31,16 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const hasData = Object.keys(data).length > 0
 
   const ConfirmCancel = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Cancellation
       </Typography.Title>
       <DebounceSelect
-        type='select'
+        type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
         label={'Reason Cancel Process Quotation'}
         required
@@ -48,7 +52,10 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -81,7 +88,9 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Cancel Success</>
+          <>
+            <CheckCircleFilled /> Cancel Success
+          </>
         </Text>
       </div>
       <div
@@ -91,25 +100,26 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           Quoatation
-          <Typography.Text
-            copyable={{ text: router.query.id as string }}>
+          <Typography.Text copyable={{ text: router.query.id as string }}>
             {` ${router.query.id} `}
           </Typography.Text>
           has been
         </div>
-        <div>
-          successfully canceled
-        </div>
+        <div>successfully canceled</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/quotation`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/quotation`)
+          }}
+        >
           OK
         </Button>
       </div>
@@ -127,8 +137,8 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
 
   return (
     <Col>
-      {!hasData && <Loader type='process' text='Wait for get data' />}
-      {onProcess && <Loader type='process' text={proccessing} />}
+      {!hasData && <Loader type="process" text="Wait for get data" />}
+      {onProcess && <Loader type="process" text={proccessing} />}
       <div style={{ display: 'flex', gap: 5 }}>
         <div
           style={{
@@ -156,7 +166,9 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
               <Button
                 size="big"
                 variant="tertiary"
-                onClick={() => { setShowConfirm('cancel') }}
+                onClick={() => {
+                  setShowConfirm('cancel')
+                }}
               >
                 Cancel Process
               </Button>
@@ -164,22 +176,26 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
                 size="big"
                 variant="secondary"
                 onClick={() => {
-                  router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`)
+                  router.push(`${PATH.SALES}/quotation/edit/${router.query.id}?status=${router.query.status}`)
                 }}
               >
                 Edit
               </Button>
             </>
           )}
-          <Button
-            size="big"
-            variant="primary"
-            onClick={() => {
-              router.push(`${PATH.SALES}/quotation/create?id=${router.query.id}`)
-            }}
-          >
-            Order Again
-          </Button>
+          {['Complete', 'New'].includes(router.query.status as string) && (
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                router.push(
+                  `${PATH.SALES}/quotation/create?id=${router.query.id}&status=${router.query.status}`,
+                )
+              }}
+            >
+              Order Again
+            </Button>
+          )}
         </div>
       </div>
       <Spacer size={20} />

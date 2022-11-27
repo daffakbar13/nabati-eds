@@ -51,14 +51,14 @@ export default function PageCreateSalesOrder() {
   const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
   const [optionsBranch, setOptionsBranch] = React.useState([])
   const [fetching, setFetching] = React.useState('')
-  const [proccessing, setProccessing] = React.useState('')
+  const [processing, setProcessing] = React.useState('')
   const [canSave, setCanSave] = React.useState(false)
   const [warningFields, setWarningFields] = React.useState(false)
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
-  const onProcess = proccessing !== ''
+  const onProcess = processing !== ''
   const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
   const concatString = (data: string[]) => data.join(' - ')
@@ -81,6 +81,89 @@ export default function PageCreateSalesOrder() {
     customer_ref:
       dataForm.customer_ref === '' || dataForm.customer_ref ? '-' : dataForm.customer_ref,
   })
+
+  const ConfirmSuccessSubmit = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          {'New Sales Order '}
+          <Typography.Text copyable>{newSalesOrder || draftSalesOrder}</Typography.Text>
+          {' has been'}
+        </div>
+        <div>successfully {newSalesOrder ? 'created' : 'saved'}</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmCancel = () => (
+    <Popup
+      onOutsideClick={() => {
+        setCancel(false)
+      }}
+    >
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Cancellation
+      </Typography.Title>
+      <b>Are you sure want to cancel? Change you made so far will not saved</b>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setCancel(false)
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            if (router.query.status) {
+              const { status } = router.query
+              router.push(`${PATH.SALES}/sales-order/detail/${router.query.id}?status=${status}`)
+            } else {
+              router.push(`${PATH.SALES}/sales-order`)
+            }
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
 
   React.useEffect(() => {
     if (router.query.id && optionsOrderType.length > 0) {
@@ -125,7 +208,7 @@ export default function PageCreateSalesOrder() {
   React.useEffect(() => {
     if (fetching === 'customer') {
       const { customer_id } = dataForm
-      setProccessing('Wait for proccess')
+      setProcessing('Wait for proccess')
       getCustomerByFilter({
         branch_id: '',
         customer_id: splitString(customer_id),
@@ -134,7 +217,7 @@ export default function PageCreateSalesOrder() {
       })
         .then((res) => res.data)
         .then((data) => {
-          setProccessing('')
+          setProcessing('')
           const [firstData] = data
           const dataBranch = concatString([firstData.branch_id, firstData.branch_name])
           const dataSalesOrg = concatString([firstData.sales_org_id, firstData.sales_org_name])
@@ -191,7 +274,7 @@ export default function PageCreateSalesOrder() {
   }, [dataForm])
 
   React.useEffect(() => {
-    setProccessing('Wait for get data customer')
+    setProcessing('Wait for get data customer')
     async function api() {
       await getDocTypeByCategory('C')
         .then((result) =>
@@ -214,8 +297,8 @@ export default function PageCreateSalesOrder() {
         .then((cust) => setOptionsCustomerSoldTo(cust))
     }
     api()
-      .then(() => setProccessing(''))
-      .catch((err) => setProccessing(`${err}`))
+      .then(() => setProcessing(''))
+      .catch((err) => setProcessing(`${err}`))
   }, [])
 
   return (
@@ -223,7 +306,7 @@ export default function PageCreateSalesOrder() {
       {(onProcess || tableAddItems.isLoading) && (
         <Loader
           type="process"
-          text={proccessing === '' ? 'Wait for get data items' : proccessing}
+          text={processing === '' ? 'Wait for get data items' : processing}
         />
       )}
       {/* {tableAddItems.isLoading && <Loader type='process' text='Wait for get data' />} */}
@@ -247,20 +330,20 @@ export default function PageCreateSalesOrder() {
               disabled={!canSave}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Sales Order')
+                  setProcessing('Wait for save Sales Order')
                   isCreateOrOrderAgain
                     ? createSalesOrder(dataSubmited(6))
                         .then((response) => {
                           setDraftSalesOrder(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                     : updateSalesOrder(dataSubmited(6), titlePage.split(' ').reverse()[0])
                         .then((response) => {
                           setDraftSalesOrder(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                 } else {
                   setWarningFields(true)
                 }
@@ -274,20 +357,20 @@ export default function PageCreateSalesOrder() {
               disabled={!canSave}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Sales Order')
+                  setProcessing('Wait for save Sales Order')
                   isCreateOrOrderAgain
                     ? createSalesOrder(dataSubmited(1))
                         .then((response) => {
                           setNewSalesOrder(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                     : updateSalesOrder(dataSubmited(1), titlePage.split(' ').reverse()[0])
                         .then((response) => {
                           setNewSalesOrder(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                 } else {
                   setWarningFields(true)
                 }
@@ -443,83 +526,8 @@ export default function PageCreateSalesOrder() {
           <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
         </div>
       </Card>
-      {(newSalesOrder || draftSalesOrder || cancel) && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              textAlign="center"
-              style={{
-                ...(!cancel && { color: '#00C572' }),
-                fontSize: 22,
-                fontWeight: 'bold',
-                marginBottom: 8,
-              }}
-            >
-              {cancel ? (
-                'Confirm Cancellation'
-              ) : (
-                <>
-                  <CheckCircleFilled /> Success
-                </>
-              )}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {cancel ? (
-              'Are you sure want to cancel? Change you made so far will not saved'
-            ) : (
-              <>
-                New Sales Order
-                <Typography.Text copyable>{newSalesOrder || draftSalesOrder}</Typography.Text>
-                has been
-              </>
-            )}
-          </div>
-          {!cancel && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              successfully {newSalesOrder ? 'created' : 'saved'}
-            </div>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {cancel && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setCancel(false)
-                  }}
-                >
-                  No
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    isOrderAgainPage
-                      ? router.push(`${PATH.SALES}/sales-order/detail/${router.query.id}`)
-                      : router.push(`${PATH.SALES}/sales-order`)
-                  }}
-                >
-                  Yes
-                </Button>
-              </>
-            )}
-              <Button
-                size="big"
-                variant="primary"
-                style={{ flexGrow: 1 }}
-                onClick={() => {
-                  router.push(`${PATH.SALES}/sales-order`)
-                }}
-              >
-                OK
-              </Button>
-          </div>
-        </Popup>
-      )}
+      {(newSalesOrder || draftSalesOrder) && <ConfirmSuccessSubmit />}
+      {cancel && <ConfirmCancel />}
       {<tableAddItems.ConfirmDelete />}
     </Col>
   )
