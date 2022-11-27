@@ -153,12 +153,14 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {router.query.status === 'New' && (
+        {router.query.status === 'New' && (
             <>
               <Button
                 size="big"
                 variant="tertiary"
-                onClick={() => { setShowConfirm('cancel') }}
+                onClick={() => {
+                  setShowConfirm('cancel')
+                }}
               >
                 Cancel Process
               </Button>
@@ -166,22 +168,26 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
                 size="big"
                 variant="secondary"
                 onClick={() => {
-                  router.push(`${PATH.SALES}/sales-order/edit/${router.query.id}`)
+                  router.push(`${PATH.SALES}/sales-order/edit/${router.query.id}?status=${router.query.status}`)
                 }}
               >
                 Edit
               </Button>
             </>
           )}
-          <Button
-            size="big"
-            variant="primary"
-            onClick={() => {
-              router.push(`${PATH.SALES}/sales-order/create?id=${router.query.id}`)
-            }}
-          >
-            Order Again
-          </Button>
+          {['Complete', 'New'].includes(router.query.status as string) && (
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                router.push(
+                  `${PATH.SALES}/sales-order/create?id=${router.query.id}&status=${router.query.status}`,
+                )
+              }}
+            >
+              Order Again
+            </Button>
+          )}
         </div>
       </div>
       <Spacer size={20} />
