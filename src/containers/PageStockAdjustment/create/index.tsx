@@ -4,14 +4,9 @@ import { Divider, Form } from 'antd'
 import { useRouter } from 'next/router'
 
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
+import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/components'
 
-import {
-  createGoodReceipt,
-  getGoodReceiptByPo,
-  getSlocListByBranch,
-} from 'src/api/logistic/good-receipt'
-import { CommonSelectValue } from 'src/configs/commonTypes'
+import { createStockAdjustment } from 'src/api/logistic/stock-adjustment'
 
 import { columns } from './columns'
 
@@ -21,12 +16,8 @@ export default function CreateGoodsReceipt() {
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
   const [tableData, setTableData] = useState([])
-  const [selectedTableData, setSelectedTableData] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  // Sloc options for table
-  const [slocOptions, setSlocOptions] = useState<[]>([])
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -42,69 +33,65 @@ export default function CreateGoodsReceipt() {
 
   const handleCreate = async () => {
     const payload: any = {
-      po_number: headerData?.po_number?.value,
-      delivery_number: headerData?.delivery_number,
+      branch_id: headerData.branch_id.value,
+      stock_doct_type: 'PI',
+      material_doc_type: 'WA',
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      remarks: headerData.remark,
-      vendor: headerData.vendor.value,
-      branch: headerData.branch.value,
-      delivery_note: headerData.delivery_note,
-      bill_of_lading: headerData.bill_of_lading,
-      items: selectedTableData,
-    }
-    console.log('payload', payload)
-    const res = await createGoodReceipt(payload)
-
-    // console.log('res', res)
-    // console.log('headerData', headerData)
-    return res
-  }
-
-  const onChangePoNumber = async (poNumber: any) => {
-    if (!poNumber) {
-      setDisableSomeFields(false)
-      return
+      header_text: headerData.header_text,
+      sloc_id: headerData.sloc_id.value,
+      status_id: '00', // ?????
+      items: tableData,
     }
 
     try {
       setLoading(true)
-      const { data } = await getGoodReceiptByPo(poNumber)
-
-      setTableData(
-        (data.items || []).map((i: any, ind: number) => ({
-          ...i,
-          rowKey: ind + 1,
-          qty_gr: i.qty_po,
-        })),
-      )
-
-      form.setFieldsValue({
-        // po_number: { value: poNumber },
-        delivery_number: data.delivery_number,
-        vendor: { value: data.vendor },
-        branch: { value: data.branch },
-        delivery_note: data.delivery_note,
-        bill_of_lading: data.bill_of_lading,
-        remarks: data.remarks,
-        document_date: moment(),
-        posting_date: moment(),
-      })
-
-      if (data.branch) {
-        const slocList = await getSlocListByBranch(data.branch)
-        setSlocOptions(
-          slocList.data?.map((i: any) => ({ label: `${i.id}-${i.name}`, value: i.id })),
-        )
-      }
-
+      const res = await createStockAdjustment(payload)
       setLoading(false)
+      return res
     } catch (error) {
       setLoading(false)
-      console.error(error)
+      const newLocal = false
+      return newLocal
     }
-    setDisableSomeFields(true)
   }
+
+  // const onChangeRefDocNo = async (refDocNo: any) => {
+  //   if (!refDocNo) {
+  //     setDisableSomeFields(false)
+  //     return
+  //   }
+
+  //   try {
+  //     setLoading(true)
+  //     const { data } = await getGoodReceiptByPo(refDocNo)
+
+  //     setTableData(
+  //       (data.items || []).map((i: any, ind: number) => ({
+  //         ...i,
+  //         rowKey: ind + 1,
+  //         qty_gr: i.qty_po,
+  //       })),
+  //     )
+
+  //     form.setFieldsValue({
+  //       branch_id: { value: data.branch_id },
+  //       delivery_note: data.delivery_note,
+  //       document_type: data.document_type,
+  //       receiving_sloc: data.receiving_sloc,
+  //       supplying_sloc: data.supplying_sloc,
+  //       header_text: data.header_text,
+  //       document_date: moment(),
+  //       posting_date: moment(),
+  //     })
+
+  //     setLoading(false)
+  //   } catch (error) {
+  //     setLoading(false)
+  //     console.error(error)
+  //   }
+  //   setDisableSomeFields(true)
+  // }
 
   const onTableValuesChange = ({ field, value, index }) => {
     setTableData(
@@ -122,7 +109,7 @@ export default function CreateGoodsReceipt() {
 
   return (
     <Col>
-      <Title variant={'h4'}>Create New Stock Adjustment</Title>
+      <Title variant={'h4'}>Create Stock Adjustment</Title>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
@@ -148,46 +135,21 @@ export default function CreateGoodsReceipt() {
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item
-              name="po_number"
+              name="movement_type"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>PO Number</LabelRequired>}
-              rules={[{ required: true }]}
+              label={<Label>Movement Type</Label>}
             >
-              <SelectMasterData
-                type="PO_NUMBER"
-                style={{ marginTop: -8 }}
-                onChange={(opt: any) => onChangePoNumber(opt.value)}
+              <Select
                 loading={loading}
-              />
-            </Form.Item>
-            <Form.Item
-              name="vendor"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Vendor</Label>}
-            >
-              <SelectMasterData
                 disabled={disableSomeFields}
-                type="PLANT"
                 style={{ marginTop: -8 }}
-              />
-            </Form.Item>
-            <Form.Item
-              name="delivery_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Delivery Number</LabelRequired>}
-              rules={[{ required: true }]}
-            >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
-            </Form.Item>
-            <Form.Item
-              name="branch"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Branch</Label>}
-            >
-              <SelectMasterData
-                disabled={disableSomeFields}
-                type="PLANT"
-                style={{ marginTop: -8 }}
+                size="large"
+                placeholder="Movement Type"
+                labelInValue
+                options={[
+                  { label: 'GR Phys. Inv', value: 'Z71' },
+                  { label: 'RE GR Phys. Inv', value: 'Z72' },
+                ]}
               />
             </Form.Item>
             <Form.Item
@@ -205,16 +167,12 @@ export default function CreateGoodsReceipt() {
               />
             </Form.Item>
             <Form.Item
-              name="delivery_note"
+              name="branch_id"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Note</Label>}
+              label={<LabelRequired>Branch</LabelRequired>}
+              rules={[{ required: true }]}
             >
-              <Input
-                disabled={disableSomeFields}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-              />
+              <SelectMasterData loading={loading} type="PLANT" style={{ marginTop: -8 }} />
             </Form.Item>
             <Form.Item
               name="posting_date"
@@ -231,33 +189,30 @@ export default function CreateGoodsReceipt() {
               />
             </Form.Item>
             <Form.Item
-              name="bill_of_lading"
+              name="sloc_id"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Bill of Lading</Label>}
+              label={<Label>Sloc</Label>}
             >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+              <SelectMasterData
+                loading={loading}
+                disabled={disableSomeFields}
+                type="SLOC"
+                style={{ marginTop: -8 }}
+              />
             </Form.Item>
+
             <Form.Item
-              name="remarks"
+              name="header_text"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Remarks</Label>}
+              label={<Label>Header Text</Label>}
             >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+              <Input loading={loading} style={{ marginTop: -12 }} placeholder="Type" size="large" />
             </Form.Item>
           </div>
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            rowSelection={{
-              onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-                setSelectedTableData(selectedRows)
-              },
-            }}
-            rowKey="rowKey"
-            data={tableData}
-            columns={columns(slocOptions, onTableValuesChange)}
-          />
+          <Table loading={loading} data={tableData} columns={columns(onTableValuesChange)} />
         </div>
       </Card>
 

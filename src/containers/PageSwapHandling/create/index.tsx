@@ -6,11 +6,7 @@ import { useRouter } from 'next/router'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/components'
 
-import {
-  createGoodReceipt,
-  getGoodReceiptByPo,
-  getSlocListByBranch,
-} from 'src/api/logistic/good-receipt'
+import { createSwapHandling } from 'src/api/logistic/swap-handling'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 
 import { columns } from './columns'
@@ -52,9 +48,17 @@ export default function CreateGoodsReceipt() {
       items: tableData,
     }
     console.log('payload', payload)
-    const res = await createGoodReceipt(payload)
 
-    return res
+    try {
+      setLoading(true)
+      const res = await createSwapHandling(payload)
+      setLoading(false)
+      return res
+    } catch (error) {
+      setLoading(false)
+      const newLocal = false
+      return newLocal
+    }
   }
 
   const onChangeRefDocNo = async (refDocNo: any) => {
