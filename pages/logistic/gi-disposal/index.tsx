@@ -1,9 +1,9 @@
 import React from 'react'
 import PageGIDisposal from 'src/containers/PageGIDisposal'
 
-interface props { }
+interface Props { }
 
-export default function GIDisposal(props: props) {
+export default function GIDisposal(props: Props) {
     const { } = props
 
     return <PageGIDisposal />
