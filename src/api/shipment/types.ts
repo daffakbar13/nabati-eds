@@ -1,4 +1,5 @@
 export interface ShipmentItem {
+  [x: string]: any
   readonly id: string
   readonly order_type_id: string
   readonly order_date: string
