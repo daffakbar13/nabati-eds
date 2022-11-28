@@ -4,7 +4,7 @@ import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/ap
 import { Approval } from './types'
 
 const url = 'v1/approvals'
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getApprovalList = async (
     params: CommonListParams,

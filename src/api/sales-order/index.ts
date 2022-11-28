@@ -9,7 +9,7 @@ import {
 import { SalesOrderItem } from './types'
 
 const url = 'v1/sales-orders'
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getSalesOrder = async (
   params: CommonListParams = {},

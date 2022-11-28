@@ -9,7 +9,7 @@ import {
 import { BillingItem } from './types'
 
 const subUrl = 'v1/billing/list'
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getBilling = async (
   params: CommonListParams = {},

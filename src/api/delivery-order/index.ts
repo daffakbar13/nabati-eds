@@ -4,7 +4,7 @@ import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/ap
 import { DeliveryOrder } from './types'
 
 const url = 'v1/delivery-orders'
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getDeliveryOrderList = async (
   params: CommonListParams,
@@ -22,6 +22,7 @@ export const getDeliveryOrderDetail = async (
   params: CommonDetailParams,
 ): Promise<CommonListResponse<DeliveryOrder>> => {
   const response = await call({
+    overrideBaseUrl,
     method: METHODS.GET,
     subUrl: `${url}/${params.id}/detail`,
     // data: params
@@ -31,6 +32,7 @@ export const getDeliveryOrderDetail = async (
 
 export const createDeliveryOrder = async (payload: any) => {
   const response = await call({
+    overrideBaseUrl,
     method: METHODS.POST,
     subUrl: `${url}/create`,
     data: payload,
@@ -40,6 +42,7 @@ export const createDeliveryOrder = async (payload: any) => {
 
 export const editDeliveryOrder = async (payload: DeliveryOrder) => {
   const response = await call({
+    overrideBaseUrl,
     method: METHODS.PATCH,
     subUrl: `${url}/${payload.id}`,
     data: payload,
