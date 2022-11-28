@@ -9,7 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSloc } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
 
@@ -23,6 +23,9 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageIntraSlocGoodIssue() {
   const [filters, setFilters] = useState([])
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
+  const [allSloc, setAllScloc] = useState([])
 
   const table = useTable({
     funcApi: getListGISloc,
@@ -40,7 +43,15 @@ export default function PageIntraSlocGoodIssue() {
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const statusOption = [{ label: 'Done', value: 'Done' }]
+  const statusOption = [
+    { label: 'Done', value: 'Done' },
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Canceled', value: 'Canceled' },
+  ]
+
+  const movTypeOption = [
+    { label: 'Z54 - GR Phys. Inv', value: 'Z54' },
+  ]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -57,6 +68,13 @@ export default function PageIntraSlocGoodIssue() {
     }
   }, [router.query.search])
 
+  useEffect(() => {
+    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+      console.log('response Branch', response)
+      setAllScloc(response)
+    })
+  }, [branchfrom, branchTo])
+
   return (
     <Col>
       <Text variant={'h4'}>Goods Issue Intra Sloc</Text>
@@ -72,8 +90,22 @@ export default function PageIntraSlocGoodIssue() {
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="suppl_sloc_id"
@@ -81,8 +113,17 @@ export default function PageIntraSlocGoodIssue() {
                 label="SLoc"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="movement_type_id"
+                dataType="S"
+                label="Mov. Type"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"

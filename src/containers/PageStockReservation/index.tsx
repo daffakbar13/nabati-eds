@@ -40,7 +40,12 @@ export default function PageStockReservation() {
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const statusOption = [{ label: 'Done', value: 'Done' }]
+  const statusOption = [
+    { label: 'Approved', value: '01' },
+    { label: 'Rejected', value: '02' },
+    { label: 'Wait For Approval', value: '00' },
+  ]
+  const movTypeOption = [{ label: '313 - Transfer Posting Sloc to Sloc', value: '313' }]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -49,7 +54,7 @@ export default function PageStockReservation() {
   useEffect(() => {
     if (router.query.search) {
       filters.push({
-        field: 'id',
+        field: 'doc_number',
         option: 'EQ',
         from_value: router.query.search,
         data_type: 'S',
@@ -67,7 +72,7 @@ export default function PageStockReservation() {
             <SearchQueryParams placeholder="Search by Doc. Number" />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -76,34 +81,34 @@ export default function PageStockReservation() {
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="movement_type_id"
                 dataType="S"
-                label="SLoc"
+                label="Mov. Type"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="posting_date"
+                field="requirement_date"
                 dataType="S"
-                label="Posting Date"
+                label="Requirement Date"
                 options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DatePickerInput
                   label={''}
                   fullWidth
                   format={'DD-MMM-YYYY'}
-                  placeholder="Posting Date"
+                  placeholder="Requirement Date"
                 />
                 <DatePickerInput
                   fullWidth
                   label={''}
                   format={'DD-MMM-YYYY'}
-                  placeholder="Posting Date"
+                  placeholder="Requirement Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>

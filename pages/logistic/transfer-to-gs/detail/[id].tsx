@@ -1,9 +1,9 @@
 import React from 'react'
 import PageTransferToGSDetail from 'src/containers/PageTransferToGS/detail'
 
-interface props {}
+interface Props {}
 
-export default function TransferToGSDetail(props: props) {
+export default function TransferToGSDetail(props: Props) {
   const {} = props
 
   return <PageTransferToGSDetail />

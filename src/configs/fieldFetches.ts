@@ -286,6 +286,17 @@ export function fieldSloc(doc_type: string) {
                 })))
 }
 
+export function fieldSlocFromBranch(doc_type: string, branch = '', branch_to = '') {
+    return getConfigSloc()
+        .then((result) =>
+            result.data
+                .filter(({ doc_type_id, branch_id }) => doc_type_id == doc_type && branch_id == branch || branch_id == branch_to)
+                .splice(0, 10)
+                .map(({ sloc_id }) => ({
+                    label: sloc_id,
+                    value: sloc_id,
+                })))
+            }
 export async function fieldVehicle(search: string) {
     return getDriverByCompanyId()
         .then((result) => result.data)
