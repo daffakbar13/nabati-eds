@@ -296,6 +296,7 @@ export function fieldSlocFromBranch(doc_type: string, branch = '', branch_to = '
                     label: sloc_id,
                     value: sloc_id,
                 })))
+            }
 export async function fieldVehicle(search: string) {
     return getDriverByCompanyId()
         .then((result) => result.data)
