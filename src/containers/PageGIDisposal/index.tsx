@@ -10,7 +10,7 @@ import FloatAction from 'src/components/FloatAction'
 import { getListBadStock } from 'src/api/logistic/bad-stock'
 import Popup from 'src/components/Popup'
 import { column } from './columns'
-import { fieldBranchAll, fieldSloc } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -22,6 +22,9 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageIntraSlocRequest() {
   const [filters, setFilters] = useState([])
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
+  const [allSloc, setAllScloc] = React.useState([])
 
   const table = useTable({
     funcApi: getListBadStock,
@@ -39,7 +42,11 @@ export default function PageIntraSlocRequest() {
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const statusOption = [{ label: 'Done', value: 'Done' }]
+  const statusOption = [
+    { label: 'Approved', value: '01' },
+    { label: 'Wait For Approval', value: '00' },
+  ]
+  const movTypeOption = [{ label: '555 - Withdrawal for scrapping from blocked stock', value: '555' }]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -48,7 +55,7 @@ export default function PageIntraSlocRequest() {
   useEffect(() => {
     if (router.query.search) {
       filters.push({
-        field: 'id',
+        field: 'reservation_number',
         option: 'EQ',
         from_value: router.query.search,
         data_type: 'S',
@@ -91,6 +98,13 @@ export default function PageIntraSlocRequest() {
     )
   }
 
+  useEffect(() => {
+    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+      console.log('response Branch', response)
+      setAllScloc(response)
+    })
+  }, [branchfrom, branchTo])
+
   return (
     <Col>
       <Text variant={'h4'}>GI Disposal</Text>
@@ -98,7 +112,7 @@ export default function PageIntraSlocRequest() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Doc. Number" />
+            <SearchQueryParams placeholder="Search by Reservation Number" />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
                 field="suppl_branch_id"
@@ -106,8 +120,22 @@ export default function PageIntraSlocRequest() {
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="suppl_sloc_id"
@@ -115,8 +143,17 @@ export default function PageIntraSlocRequest() {
                 label="SLoc"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="movement_type_id"
+                dataType="S"
+                label="Mov. Type"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
@@ -137,7 +174,7 @@ export default function PageIntraSlocRequest() {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>
