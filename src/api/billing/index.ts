@@ -8,13 +8,18 @@ import {
 } from 'src/api/types'
 import { BillingItem } from './types'
 
-const subUrl = 'v1/billing/list'
+const url = 'v1/billings'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getBilling = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<BillingItem>> => {
-  const response = await call({ method: METHODS.POST, overrideBaseUrl, subUrl, data: params })
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/list`,
+    data: params,
+  })
   return response.data
 }
 
