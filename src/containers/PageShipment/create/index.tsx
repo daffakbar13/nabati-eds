@@ -6,17 +6,38 @@
 /* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
-import { Col, Row, Tag, Table as TableAntd, Modal, DatePicker } from 'antd'
-import { Button, Search, Spacer, Text, Col as ColPinkLava, Table } from 'pink-lava-ui'
+import {
+  Col,
+  Row,
+  Tag,
+  Table as TableAntd,
+  Modal,
+  DatePicker,
+  Select,
+  Typography,
+  Popover,
+} from 'antd'
+import {
+  Button,
+  Search,
+  Spacer,
+  Text,
+  Col as ColPinkLava,
+  Table,
+  DatePickerInput,
+} from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Card } from 'src/components'
+import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { useRouter } from 'next/router'
 import { colors } from 'src/configs/colors'
 import {
   ArrowsAltOutlined,
+  CheckCircleFilled,
   DownOutlined,
+  DragOutlined,
   MinusCircleFilled,
+  SaveOutlined,
   ShrinkOutlined,
 } from '@ant-design/icons'
 import TitleDataList from 'src/components/TitleDataList'
@@ -27,8 +48,13 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { getDetailQuotation, getQuotation } from 'src/api/quotation'
 import Loader from 'src/components/Loader'
-import { ICDelete } from 'src/assets'
+import { ICDelete, ICPlus, ICSave } from 'src/assets'
 import Pagination from 'src/components/Pagination'
+import { fieldBranch, fieldBranchAll, fieldSalesOrg, fieldVehicle } from 'src/configs/fieldFetches'
+import { getCustomerByFilter, getDriverByCompanyId, getVehicleByCompany } from 'src/api/master-data'
+import { getDeliveryOrderList } from 'src/api/delivery-order'
+import { createShipment, getCompletedDeliveryOrderList } from 'src/api/shipment'
+import { PATH } from 'src/configs/menus'
 import { ColumnsDeliveryOrder, ColumnsSelectedDeliveryOrder } from './columns'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -107,13 +133,8 @@ function DescVehicle(props: DescVehicleProps) {
 export default function PageCreateShipment() {
   const [showFilter, setShowFilter] = React.useState(false)
   const table = useTable({
-    funcApi: getQuotation,
-    haveCheckbox: 'All',
-    columns: ColumnsDeliveryOrder,
-  })
-  const table2 = useTable({
-    funcApi: getQuotation,
-    haveCheckbox: 'All',
+    funcApi: getCompletedDeliveryOrderList,
+    haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns: ColumnsDeliveryOrder,
   })
   const titlePage = useTitlePage('create')
@@ -124,18 +145,96 @@ export default function PageCreateShipment() {
     salesman?: string
     created_date?: string
   }>({})
+  const [field, setField] = React.useState<{
+    branch_id: string
+    vehicle_id: string
+    total_volume: number
+    delivery_ids: string[]
+  }>()
   const [showConfirm, setShowConfirm] = React.useState('')
+  const [newShipment, setNewShipment] = React.useState<string>()
+  const [draftShipment, setDraftShipment] = React.useState<string>()
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
   const [submittedQuotation, setSubmittedQuotation] = React.useState([])
   const [processing, setProcessing] = React.useState('')
+  const [showDragAndDrop, setShowDragAndDrop] = React.useState(false)
   const [showModal, setShowModal] = React.useState(false)
+  const [showMore, setShowMore] = React.useState(false)
   const [pending, setPending] = React.useState(0)
   const onProcess = processing !== ''
   const hasData = table.total > 0
   const router = useRouter()
   const oneSelected = table.selected.length === 1
   const firstSelected = table.selected[0]
+
+  const canSave = () => {
+    // const allField = ['vehicle_id', 'delivery_ids']
+    // .map((key) => field[key])
+    // const isAllFilled = !allField.find((e) => e === undefined)
+    if (field?.vehicle_id && data.length > 0) {
+      return true
+    }
+    return false
+  }
+
+  const submitedShipment = (status_id: number) => ({
+    branch_id: 'P104',
+    total_volume: 100000,
+    status_id: status_id.toString(),
+    ...field,
+    vehicle_id: field.vehicle_id.split(' - ')[0],
+  })
+
+  const moreContent = (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 7,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      }}
+    >
+      {canSave() && (
+        <div
+        style={{
+          display: 'flex',
+           gap: 5,
+           cursor: 'pointer',
+           verticalAlign: 'center',
+           }}
+           onClick={() => {
+            setProcessing('Wait For Submit Shipment')
+            createShipment(submitedShipment(10))
+              .then((result) => {
+                setNewShipment(result.data.ShipmentID)
+                setProcessing('')
+                setShowConfirm('submit-success')
+              })
+              .catch(() => setProcessing(''))
+          }}
+           >
+          <div>
+            <SaveOutlined />
+          </div>
+          Save As Draft
+        </div>
+      )}
+      <div
+        style={{ display: 'flex', gap: 5, cursor: 'pointer', verticalAlign: 'center' }}
+        onClick={() => {
+          setShowDragAndDrop(true)
+          setShowMore(false)
+        }}
+      >
+        <div>
+          <DragOutlined />
+        </div>
+        Arrange DO
+      </div>
+    </div>
+  )
 
   const selectedQuotation = {
     text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
@@ -175,23 +274,161 @@ export default function PageCreateShipment() {
     [data],
   )
 
-  // React.useEffect(() => {
-  //   setData(table.data)
-  // }, [table.data])
+  const tableList = (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <Row justify="space-between">
+        <TitleDataList title="Select Delivery Order List" />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+        >
+          {showModal ? <ShrinkOutlined {...buttonProps} /> : <ArrowsAltOutlined {...buttonProps} />}
+        </div>
+      </Row>
+      <Table
+        scroll={{ x: 100 }}
+        loading={table.loading}
+        columns={table.columns}
+        dataSource={table.data}
+        showSorterTooltip={false}
+        rowSelection={table.rowSelection}
+        rowKey={'delivery_order_id'}
+      />
+      {hasData && (
+        <Pagination
+          defaultPageSize={20}
+          pageSizeOptions={[20, 50, 100]}
+          total={table.total}
+          totalPage={table.totalPage}
+          onChange={(page, limit) => {
+            table.handlePagination(page, limit)
+          }}
+        />
+      )}
+    </div>
+  )
+
+  const ColumnsDragable = () => {
+    const initial = ColumnsDeliveryOrder
+    delete initial[0].className
+    const dragIcon = (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          background: '#D5FAFD',
+          color: '#2bbecb',
+          fontSize: 20,
+        }}
+      >
+        <DragOutlined style={{ flexGrow: 1 }} />
+      </div>
+    )
+    return [
+      {
+        title: '',
+        width: 38,
+        fixed: 'left',
+        render: () => dragIcon,
+        onCell: () => ({ style: { paddingRight: 0 } }),
+      },
+      ...initial,
+    ]
+  }
+
+  const ConfirmSuccessSubmit = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          {'New Shipment '}
+          <Typography.Text copyable>{newShipment || draftShipment}</Typography.Text>
+          {' has been'}
+        </div>
+        <div>successfully {newShipment ? 'created' : 'saved'}</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/shipment`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmCancel = () => (
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Cancellation
+      </Typography.Title>
+      <b>Are you sure want to cancel? Change you made so far will not saved</b>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            if (router.query.status) {
+              const { status } = router.query
+              router.push(`${PATH.SALES}/shipment/detail/${router.query.id}?status=${status}`)
+            } else {
+              router.push(`${PATH.SALES}/shipment`)
+            }
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
 
   React.useEffect(() => {
-    // table.selected.forEach((id) => {
-    //   setPending((curr) => ++curr)
-    //   getDetailQuotation({ id }).then((res) => {
-    //     setData((old) => [...old, res.data])
-    //     setPending((curr) => --curr)
-    //   })
-    // })
     if (table.selected.length > 0) {
       setPending((curr) => ++curr)
-      getQuotation({
+      getDeliveryOrderList({
         filters: table.selected.map((id) => ({
-          field: 'eds_order.id',
+          field: 'eds_delivery.id',
           option: 'EQ',
           from_value: id,
         })),
@@ -204,11 +441,14 @@ export default function PageCreateShipment() {
     } else {
       setData([])
     }
+
+    setField((old) => ({ ...old, delivery_ids: table.selected }))
   }, [table.selected])
 
   return (
     <ColPinkLava>
       {pending > 0 && <Loader type="process" text="Wait For Get Selected Delivery Order" />}
+      {processing !== '' && <Loader type="process" text={processing} />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -232,27 +472,42 @@ export default function PageCreateShipment() {
             {/* <SmartFilter onOk={setFilters} filters={filters} /> */}
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
-            <Button
-              size="big"
-              variant="tertiary"
-              onClick={() => router.push(`${router.pathname}/create`)}
-            >
-              Create
+            <Button size="big" variant="tertiary" onClick={() => setShowConfirm('cancel')}>
+              Cancel
             </Button>
-            {/* <Popover placement="bottom" content={moreContent} trigger="click"> */}
-            <Button
-              size="big"
-              variant="secondary"
-              // onClick={downloadTemplateQuotation}
-              style={{ gap: 5 }}
+            <Popover
+              placement="bottom"
+              content={moreContent}
+              trigger="click"
+              // onc
+              open={showMore}
             >
-              More <DownOutlined />
-            </Button>
-            {/* </Popover> */}
+              <Button
+                size="big"
+                variant="secondary"
+                onClick={() => {
+                  setShowMore((curr) => !curr)
+                }}
+                disabled={data.length === 0}
+                style={{ gap: 5 }}
+              >
+                More <DownOutlined />
+              </Button>
+            </Popover>
             <Button
               size="big"
               variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
+              disabled={!canSave()}
+              onClick={() => {
+                setProcessing('Wait For Submit Shipment')
+                createShipment(submitedShipment(1))
+                  .then((result) => {
+                    setNewShipment(result.data.ShipmentID)
+                    setProcessing('')
+                    setShowConfirm('submit-success')
+                  })
+                  .catch(() => setProcessing(''))
+              }}
             >
               Create
             </Button>
@@ -266,43 +521,69 @@ export default function PageCreateShipment() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <Row gutter={10}>
                 <Col span={6}>
-                  <div style={{ fontSize: 16 }}>Sales Org.</div>
-                  <Search
-                    nameIcon="SearchOutlined"
-                    placeholder="Type To Search"
-                    colorIcon={colors.grey.regular}
-                    value={filter.sales_org}
-                    onChange={(e) => handleChangeFilter('sales_org', e.target.value)}
-                  />
-                </Col>
-                <Col span={6}>
-                  <div style={{ fontSize: 16 }}>Branch</div>
-                  <Search
-                    nameIcon="SearchOutlined"
-                    placeholder="Type To Search"
-                    colorIcon={colors.grey.regular}
+                  <DebounceSelect
+                    type="select"
+                    label="Branch"
+                    placeholder={'Select'}
                     value={filter.branch}
-                    onChange={(e) => handleChangeFilter('branch', e.target.value)}
+                    style={{ borderRadius: 64 }}
+                    // options={[]}
+                    fetchOptions={fieldBranchAll}
+                    onChange={(e: any) => {
+                      handleChangeFilter('branch', e.value)
+                    }}
                   />
                 </Col>
                 <Col span={6}>
-                  <div style={{ fontSize: 16 }}>Salesman</div>
-                  <Search
-                    nameIcon="SearchOutlined"
-                    placeholder="Type To Search"
-                    colorIcon={colors.grey.regular}
+                  <DebounceSelect
+                    type="select"
+                    label="Sales Org."
+                    placeholder={'Select'}
+                    value={filter.sales_org}
+                    style={{ borderRadius: 64 }}
+                    // options={[]}
+                    fetchOptions={fieldSalesOrg}
+                    onChange={(e: any) => {
+                      // onChangeForm('sales_org_id', e.value)
+                    }}
+                  />
+                </Col>
+                <Col span={6}>
+                  <DebounceSelect
+                    type="select"
+                    label="Salesman"
+                    placeholder={'Select'}
                     value={filter.salesman}
-                    onChange={(e) => handleChangeFilter('salesman', e.target.value)}
+                    style={{ borderRadius: 64 }}
+                    options={[]}
+                    onChange={(e: any) => {
+                      // onChangeForm('sales_org_id', e.value)
+                    }}
                   />
                 </Col>
                 <Col span={6}>
-                  <div style={{ fontSize: 16 }}>Created Date</div>
+                  <DatePickerInput
+                    fullWidth
+                    onChange={(val: any) => {
+                      // onChangeForm('order_date', new Date(moment(val).format()).toISOString())
+                    }}
+                    label="Created Date"
+                    // disabledDate={(current) => current < moment().startOf('day')}
+                    value={moment(filter.created_date)}
+                    format={'DD-MMM-YYYY'}
+                    style={{ borderRadius: 64 }}
+                    required
+                  />
+                  {/* <div style={{ fontSize: 16 }}>
+                    <b>Created Date</b>
+                  </div>
                   <DatePicker
                     size="large"
+                    placeholder={'Select'}
                     defaultValue={moment()}
                     format="DD-MMM-YYYY"
                     style={{ width: '100%', borderRadius: 64, height: 48, borderColor: '#888888' }}
-                  />
+                  /> */}
                 </Col>
               </Row>
               <Row gutter={10} justify="end">
@@ -322,7 +603,7 @@ export default function PageCreateShipment() {
                     size="big"
                     style={{ width: '100%' }}
                     variant="primary"
-                    disabled={Object.keys(filter).length === 0}
+                    disabled={!filter.branch}
                     // onClick={() => router.push(`${router.pathname}/create`)}
                   >
                     Search
@@ -337,51 +618,17 @@ export default function PageCreateShipment() {
       <div style={{ width: '100%' }}>
         <Row gutter={10}>
           <Col span={16}>
-            <Card>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <Row justify="space-between">
-                  <TitleDataList title="Select Delivery Order List" />
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <ArrowsAltOutlined {...buttonProps} />
-                  </div>
-                </Row>
-                <Table
-                  scroll={{ x: 100 }}
-                  loading={table.loading}
-                  columns={table.columns}
-                  dataSource={table.data}
-                  showSorterTooltip={false}
-                  rowSelection={table.rowSelection}
-                  rowKey={'id'}
-                />
-                {hasData && (
-                  <Pagination
-                    defaultPageSize={20}
-                    pageSizeOptions={[20, 50, 100]}
-                    total={table.total}
-                    totalPage={table.totalPage}
-                    onChange={(page, limit) => {
-                      table.handlePagination(page, limit)
-                    }}
-                  />
-                )}
-              </div>
-            </Card>
+            <Card>{tableList}</Card>
           </Col>
           <Col span={8}>
             <Card>
               <TitleDataList title="Select Vehicle" />
               <DebounceSelect
                 type="select"
-                value={'D 1234 NBT - Driverku' as any}
-                options={[{ label: 'D 1234 NBT - Driverku', value: 'D 1234 NBT - Driverku' }]}
+                value={field?.vehicle_id as any}
+                fetchOptions={fieldVehicle}
+                onChange={(e) => setField((old) => ({ ...old, vehicle_id: e.value }))}
+                // options={[{ label: 'D 1234 NBT - Driverku', value: 'D 1234 NBT - Driverku' }]}
               />
               <Spacer size={10} />
               <Row justify="space-between">
@@ -405,10 +652,10 @@ export default function PageCreateShipment() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map(({ id, sales_org_id }, index) => (
+                  {data.map(({ delivery_order_id, sales_org_id }, index) => (
                     <tr key={index}>
                       <td>{++index}</td>
-                      <td>{id}</td>
+                      <td>{delivery_order_id}</td>
                       <td>{sales_org_id}</td>
                       <td>
                         <div
@@ -417,7 +664,7 @@ export default function PageCreateShipment() {
                             justifyContent: 'center',
                             cursor: 'pointer',
                           }}
-                          onClick={() => handleRemoveItem(id)}
+                          onClick={() => handleRemoveItem(delivery_order_id)}
                         >
                           <ICDelete style={{ margin: 0 }} />
                         </div>
@@ -433,7 +680,12 @@ export default function PageCreateShipment() {
           <Card>asd</Card>
         </Col> */}
       </div>
+      {showConfirm === 'cancel' && <ConfirmCancel />}
+      {showConfirm === 'submit-success' && <ConfirmSuccessSubmit />}
       <Modal open={showModal} closable={false} width={'95vw'} footer={null}>
+        {tableList}
+      </Modal>
+      <Modal open={showDragAndDrop} closable={false} width={'95vw'} footer={null}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <Row justify="space-between">
             <TitleDataList title="Select Delivery Order List" />
@@ -445,18 +697,19 @@ export default function PageCreateShipment() {
                 cursor: 'pointer',
               }}
             >
-              <ShrinkOutlined {...buttonProps} />
+              <ShrinkOutlined {...buttonProps} onClick={() => setShowDragAndDrop(false)} />
             </div>
           </Row>
           <DndProvider backend={HTML5Backend}>
+            {delete ColumnsDeliveryOrder[0].className}
             <Table
               scroll={{ x: 100 }}
               loading={table.loading}
-              columns={table.columns}
+              columns={ColumnsDragable()}
               dataSource={data}
               showSorterTooltip={false}
-              rowSelection={table.rowSelection}
-              rowKey={'id'}
+              // rowSelection={table.rowSelection}
+              // rowKey={'delivery_order_id'}
               components={components}
               onRow={(_, index) => {
                 const attr = {
@@ -466,17 +719,6 @@ export default function PageCreateShipment() {
                 return attr as React.HTMLAttributes<any>
               }}
             />
-            {hasData && (
-              <Pagination
-                defaultPageSize={20}
-                pageSizeOptions={[20, 50, 100]}
-                total={table.total}
-                totalPage={table.totalPage}
-                onChange={(page, limit) => {
-                  table.handlePagination(page, limit)
-                }}
-              />
-            )}
           </DndProvider>
         </div>
       </Modal>

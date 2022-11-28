@@ -4,8 +4,11 @@ import React from 'react'
 import ReactToPrint from 'react-to-print'
 import { DataList } from 'src/components'
 import PaperA4 from 'src/components/PaperA4'
+import dateFormat from 'src/utils/dateFormat'
 
-interface BSTFProps {}
+interface BSTFProps {
+  data: any
+}
 
 function CustomText(props: React.CSSProperties & { children: React.ReactNode }) {
   return <div style={{ ...props }}>{props.children}</div>
@@ -92,23 +95,26 @@ function HeadTable(props: { label: string; value: string }) {
 }
 
 export default function BSTF(props: BSTFProps) {
-  const {} = props
+  const { data } = props
 
   return (
     <PaperA4>
       <Row>
         <Col span={8}>
           <CustomText fontWeight="bold" fontSize={18}>
-            Pinus Merah Abadi, PT
+            {data.company_name}
           </CustomText>
           <CustomText fontWeight="bold" fontSize={18}>
-            PMA Pandeglang
+            {data.plant_name}
           </CustomText>
         </Col>
         <Col offset={6} span={10}>
-          <Information label="Tanggal Cetak" value="a" />
-          <Information label="Halaman" value="a" />
-          <Information label="Cetakan Ke" value="a" />
+          <Information
+            label="Tanggal Cetak"
+            value={dateFormat(new Date().toISOString(), 'DD.MM.YYYY-hh:mm:ss')}
+          />
+          <Information label="Halaman" value="1" />
+          <Information label="Cetakan Ke" value="1/1" />
         </Col>
       </Row>
       <Row justify="center">
@@ -118,10 +124,10 @@ export default function BSTF(props: BSTFProps) {
       </Row>
       <Row>
         <Col span={8}>
-          <Information label="Tanggal Kirim" value="a" />
+          <Information label="Tanggal Kirim" value={dateFormat(data.delivery_date, 'DD.MM.YYYY-hh:mm:ss')} />
         </Col>
         <Col offset={6} span={10}>
-          <Information label="No. BSTF" value="a" />
+          <Information label="No. BSTF" value="?" />
         </Col>
       </Row>
       <div>
@@ -129,29 +135,29 @@ export default function BSTF(props: BSTFProps) {
           <tbody>
             <tr>
               <td>No. Kendaraan</td>
-              <td>B 123 UUB</td>
+              <td>{data.vehicle_id}</td>
               <td>Driver</td>
-              <td>Driverku</td>
+              <td>{data.driver_name}</td>
               <td>Jam Berangkat</td>
-              <td></td>
+              <td>?</td>
               <td>KM Berangkat</td>
-              <td></td>
+              <td>?</td>
               <td>Jml. Kublikasi</td>
-              <td>5.304</td>
+              <td>{data.total_cubication}</td>
             </tr>
             <tr>
               <td>Pengiriman</td>
-              <td>RIT B</td>
+              <td>?</td>
               <td>Helper</td>
-              <td></td>
+              <td>?</td>
               <td>Jam Kembali</td>
-              <td></td>
+              <td>?</td>
               <td>KM Kembali</td>
-              <td></td>
-              <td colSpan={2}>Tidak Melebihi Kublikasi</td>
+              <td>?</td>
+              <td colSpan={2}>?</td>
             </tr>
             <tr>
-              <td colSpan={10}>Jumlah Toko: 1</td>
+              <td colSpan={10}>Jumlah Toko: {data.total_store}</td>
             </tr>
           </tbody>
         </table>
@@ -181,40 +187,39 @@ export default function BSTF(props: BSTFProps) {
             </tr>
           </thead>
           <tbody>
-            <tr style={{ height: 400 }}>
-              <td>
-                <div>asd</div>
-                <div>asd</div>
-              </td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-            </tr>
+            {data.items.map((e, i) => (
+              <tr key={i}>
+                <td>{e.item_number}</td>
+                <td>{e.customer_id}</td>
+                <td>{e.customer_name}</td>
+                <td>{e.customer_address}</td>
+                <td>{e.billing_to}</td>
+                <td>{e.doc_type}</td>
+                <td>{e.item_number}</td>
+                <td>{e.item_number}</td>
+                <td>{e.item_number}</td>
+                <td>{e.total_qty_item}</td>
+                <td>{e.total_qty_item}</td>
+                <td>{e.total_qty_item}</td>
+                <td>{e.item_number}</td>
+                <td>{e.item_number}</td>
+                <td>{e.cubication}</td>
+              </tr>
+            ))}
             <tr>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
               <th colSpan={4}>Total</th>
-              <td>asd</td>
+              <td>?</td>
               <td colSpan={2} className="right-align">
-                asd
+                ?
               </td>
-              <td>asd</td>
-              <td>asd</td>
-              <td>asd</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
             </tr>
           </tbody>
         </table>

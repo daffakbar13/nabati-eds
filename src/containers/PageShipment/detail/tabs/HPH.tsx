@@ -1,11 +1,15 @@
 /* eslint-disable camelcase */
 import { Col, Row } from 'antd'
+import moment from 'moment'
 import React from 'react'
 import ReactToPrint from 'react-to-print'
 import { DataList } from 'src/components'
 import PaperA4 from 'src/components/PaperA4'
+import dateFormat from 'src/utils/dateFormat'
 
-interface HPHProps {}
+interface HPHProps {
+  data: any
+}
 
 function CustomText(props: React.CSSProperties & { children: React.ReactNode }) {
   return <div style={{ ...props }}>{props.children}</div>
@@ -63,23 +67,26 @@ function LabelPGI(props: { text: string }) {
 }
 
 export default function HPH(props: HPHProps) {
-  const {} = props
+  const { data } = props
 
   return (
     <PaperA4>
       <Row>
         <Col span={8}>
           <CustomText fontWeight="bold" fontSize={18}>
-            Pinus Merah Abadi, PT
+            {data.company_name}
           </CustomText>
           <CustomText fontWeight="bold" fontSize={18}>
-            PMA Pandeglang
+            {data.plant_name}
           </CustomText>
         </Col>
         <Col offset={6} span={8}>
-          <Information label="Tanggal Cetak" value="a" />
-          <Information label="Halaman" value="a" />
-          <Information label="Cetakan Ke" value="a" />
+          <Information
+            label="Tanggal Cetak"
+            value={dateFormat(new Date().toISOString(), 'DD.MM.YYYY-hh:mm:ss')}
+          />
+          <Information label="Halaman" value="1" />
+          <Information label="Cetakan Ke" value="1/1" />
         </Col>
       </Row>
       <Row justify="center">
@@ -89,13 +96,16 @@ export default function HPH(props: HPHProps) {
       </Row>
       <Row>
         <Col span={8}>
-          <Information label="No. Kendaraan" value="a" />
-          <Information label="Pengiriman" value="a" />
-          <Information label="Jumlah Toko" value="a" />
+          <Information label="No. Kendaraan" value={data.vehicle_id} />
+          <Information label="Pengiriman" value="?" />
+          <Information label="Jumlah Toko" value={data.total_store} />
         </Col>
         <Col offset={6} span={8}>
-          <Information label="No. HPH" value="a" />
-          <Information label="Tanggal Kirim" value="a" />
+          <Information label="No. HPH" value="?" />
+          <Information
+            label="Tanggal Kirim"
+            value={moment(data.delivery_date).format('DD.MM.YYYY-hh:mm:ss')}
+          />
         </Col>
       </Row>
       <table className="eds_paper">
@@ -125,38 +135,37 @@ export default function HPH(props: HPHProps) {
           </tr>
         </thead>
         <tbody>
-          <tr style={{ height: 400 }}>
-            <td>
-              <div>asd</div>
-              <div>asd</div>
-            </td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-          </tr>
+          {data.items.map((e, i) => (
+            <tr key={i}>
+              <td>{e.item_number}</td>
+              <td>{e.customer_id}</td>
+              <td>{e.customer_name}</td>
+              <td>?</td>
+              <td>?</td>
+              <td>{e.doc_type}</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+              <td>?</td>
+            </tr>
+          ))}
           <tr>
             <td></td>
             <td></td>
             <th>Total</th>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
-            <td>asd</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
+            <td>?</td>
           </tr>
         </tbody>
       </table>
