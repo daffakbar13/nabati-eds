@@ -16,6 +16,8 @@ import {
     getUomList,
 } from 'src/api/master-data';
 
+import { getPoNumberList } from 'src/api/logistic/good-receipt'
+
 export const MASTER_DATA_TYPES = {
     COMPANY: {
         api: getCompanies,
@@ -63,7 +65,15 @@ export const MASTER_DATA_TYPES = {
                 value: item.id,
             })),
     },
-
+    PO_NUMBER: {
+        api: getPoNumberList,
+        placeholder: 'Select PO Number',
+        responseHandler: (res) => res?.data?.po_id
+            .map((item: any) => ({
+                label: `${item}`,
+                value: item,
+            })),
+    },
 }
 
 // "ref_doc_number": "1043000000108",

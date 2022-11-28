@@ -62,3 +62,68 @@ export const getGoodReceiptByPo = async (
   })
   return response.data
 }
+
+export const getGrReturnByRefDocNo = async (
+  refDocNo: string,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/return/request-data/${refDocNo}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getPoNumberList = async (
+  poNumber?: string | null,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/get_purchase_id/:po_number`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getRefDocNoList = async (
+  poNumber?: string | null,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/get_purchase_id/:ref_doc_number`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getSlocListByBranch = async (
+  branchId: string,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/get_sloc/${branchId}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const doCancelProcess = async (
+  id: string,
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/update_status/${id}`,
+    overrideBaseUrl,
+    data: { ...params, status_id: '02' },
+  })
+  return response.data
+}

@@ -63,3 +63,15 @@ export const getGrReturnByRefDocNo = async (
   })
   return response.data
 }
+
+export const createGrReturn = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/return`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

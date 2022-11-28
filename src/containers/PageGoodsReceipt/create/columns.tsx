@@ -1,18 +1,7 @@
-import React from 'react'
-import { Text } from 'pink-lava-ui'
-import DebounceSelect from 'src/components/DebounceSelect'
-import { CommonSelectValue } from 'src/configs/commonTypes'
-import { fakeApi } from 'src/api/fakeApi'
-import { Card, Input, SelectMasterData, Modal } from 'src/components'
-
+import { Input, Select, SelectMasterData } from 'src/components'
 import CreateColumns from 'src/utils/createColumns'
 
-// import { useRouter } from 'next/router'
-// import React from 'react'
-// import { Button } from 'pink-lava-ui'
-// import { PATH } from 'src/configs/menus'
-
-export const columns = () => [
+export const columns = (slocOptions: [], onTableValuesChange: (opt: any) => void) => [
   CreateColumns(
     'Item',
     'item_number',
@@ -72,14 +61,32 @@ export const columns = () => [
         'Qty',
         'qty_gr',
         true,
-        (text, rec) => <Input value={text} type="number" label="" />,
+        (text, rec, index) => (
+          <Input
+            defaultValue={text}
+            type="number"
+            label=""
+            onChange={(e: any) => {
+              onTableValuesChange({ field: 'qty_gr', value: +e.target.value, index })
+            }}
+          />
+        ),
         100,
       ),
       CreateColumns(
         'UoM',
         'uom_id',
         true,
-        (text, rec) => <SelectMasterData value={text} type="UOM" style={{ marginTop: -8 }} />,
+        (text, rec, index) => (
+          <SelectMasterData
+            onChange={(val: any) => {
+              onTableValuesChange({ field: 'uom_id', value: val.value, index })
+            }}
+            defaultValue={{ value: text, label: text }}
+            type="UOM"
+            style={{ marginTop: -8 }}
+          />
+        ),
         120,
       ),
     ],
@@ -88,7 +95,16 @@ export const columns = () => [
     'Storage Location',
     'sloc_id',
     true,
-    (text, rec) => <Input value={text} disabled type="text" label="" />,
+    // (text, rec) => <Input value={text} disabled type="text" label="" />,
+    (text, rec, index) => (
+      <Select
+        options={slocOptions}
+        placeholder="Select Sloc"
+        onChange={(val: any) => {
+          onTableValuesChange({ field: 'sloc_id', value: val.value, index })
+        }}
+      />
+    ),
     300,
   ),
   CreateColumns(

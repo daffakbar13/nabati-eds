@@ -1,0 +1,75 @@
+import moment from 'moment'
+import { Button, Tooltip } from 'pink-lava-ui'
+import Link from 'src/components/Link'
+import TaggedStatus from 'src/components/TaggedStatus'
+import CreateColumns from 'src/utils/createColumns'
+
+export const columns = (goToDetail: (id: string) => {}) => [
+  CreateColumns(
+    'ID',
+    'id',
+    true,
+    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
+    180,
+    'left',
+  ),
+  CreateColumns(
+    'Doc. Number',
+    'doc_number',
+    true,
+    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
+    180,
+    'left',
+  ),
+  CreateColumns(
+    'Posting Date',
+    'posting_date',
+    true,
+    (date) => <>{moment(date).format('DD-MMM-YYYY')}</>,
+    180,
+  ),
+  CreateColumns(
+    'Company',
+    'company_id',
+    true,
+    (text, rec) => <>{`${text} - ${rec.company_name}`}</>,
+    250,
+  ),
+  CreateColumns(
+    'Branch',
+    'branch_id',
+    true,
+    (branch, rec) => <>{`${branch} - ${rec.branch_name}`}</>,
+    250,
+  ),
+  CreateColumns(
+    'Sloc',
+    'from_sloc',
+    true,
+    (branch, rec) => <>{`${branch} - ${rec.from_sloc_name}`}</>,
+    200,
+  ),
+  CreateColumns(
+    'Move Type',
+    'movement_type_id',
+    true,
+    (text, rec) => (
+      <Tooltip
+        overlayInnerStyle={{ width: 'fit-content' }}
+        color="#F4FBFC"
+        title={rec.movement_type_name}
+      >
+        {text}
+      </Tooltip>
+    ),
+    // 200,
+  ),
+  CreateColumns('Header Text', 'header_text', true),
+  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
+
+  CreateColumns('Action', 'id', false, (text) => (
+    <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
+      View Detail
+    </Button>
+  )),
+]

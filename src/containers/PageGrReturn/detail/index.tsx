@@ -1,9 +1,11 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Tabs } from 'src/components'
+import { Card, GoBackArrow, Tabs, Modal } from 'src/components'
 
 import { useRouter } from 'next/router'
 import { getGrReturnDetail } from 'src/api/logistic/good-return'
+import { doCancelProcess } from 'src/api/logistic/good-receipt'
+
 import { PATH } from 'src/configs/menus'
 
 import DocumentHeader from './Tabs/DocumentHeader'
@@ -15,7 +17,20 @@ export default function DetailGrReturn() {
   const router = useRouter()
   const id = String(router.query.id) || ''
 
+  // Modals
+  const [cancelProcessModal, setCancelProcessModal] = useState(false)
+
   const hashTab = router.asPath.split('#')[1]
+
+  const handleCancelProcess = async () => {
+    try {
+      const res = await doCancelProcess(id)
+      return res
+    } catch (error) {
+      console.error(error)
+      return false
+    }
+  }
 
   useEffect(() => {
     if (!id) return
@@ -40,7 +55,12 @@ export default function DetailGrReturn() {
         <Text variant={'h4'}>View GR Return From Principal {`${router.query.id}`}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
           {hashTab === '1' && (
-            <Button size="big" variant="tertiary" onClick={() => {}} loading={loading}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => setCancelProcessModal(true)}
+              loading={loading}
+            >
               Cancel Process
             </Button>
           )}
@@ -54,6 +74,7 @@ export default function DetailGrReturn() {
       <Spacer size={20} />
       <Card style={{ padding: 0 }}>
         <Tabs
+          initialActiveTab={hashTab}
           items={[
             {
               key: '1',
@@ -68,6 +89,17 @@ export default function DetailGrReturn() {
           ]}
         />
       </Card>
+
+      <Modal
+        title="Confirm Cancel Process"
+        open={cancelProcessModal}
+        onOk={handleCancelProcess}
+        onCancel={() => setCancelProcessModal(false)}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gr-return`)}
+        content="Are you sure want to cancel process? Change you made so far will not saved"
+        successContent={(res: any) => 'Cancel Process Success'}
+        successOkText="OK"
+      />
     </Col>
   )
 }

@@ -42,19 +42,19 @@ export function call({
     },
     data,
   }
-  // const payload = { ...data }
-  // if (method === METHODS.GET) {
-  //   if (!isObjectEmpty(payload)) {
-  //     Object.keys(payload).forEach((key) => {
-  //       if (payload[key] === null || payload[key] === '') {
-  //         delete payload[key]
-  //       }
-  //     })
-  //     config.params = toSnakeCase(payload)
-  //   }
-  // } else if (!isObjectEmpty(payload)) {
-  //   config.data = toSnakeCase(payload)
-  // }
+  const payload = { ...data }
+  if (method === METHODS.GET) {
+    if (!isObjectEmpty(payload)) {
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] === null || payload[key] === '') {
+          delete payload[key]
+        }
+      })
+      config.params = payload
+    }
+  } else if (!isObjectEmpty(payload)) {
+    config.data = payload
+  }
 
   // console.log('config', config)
   return instance.request(config)

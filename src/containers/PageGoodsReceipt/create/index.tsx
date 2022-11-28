@@ -1,26 +1,22 @@
-import { Divider, Form, message } from 'antd'
+import { useState } from 'react'
+import moment from 'moment'
+import { Divider, Form } from 'antd'
 import { useRouter } from 'next/router'
 
-import { Button, Col, DatePickerInput, Row, Spacer, Text as Title, Table } from 'pink-lava-ui'
-import { useState } from 'react'
-import { Card, Input, SelectMasterData, Text, Modal } from 'src/components'
+import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
+import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
+import { PATH } from 'src/configs/menus'
 
+import {
+  createGoodReceipt,
+  getGoodReceiptByPo,
+  getSlocListByBranch,
+} from 'src/api/logistic/good-receipt'
 import { CommonSelectValue } from 'src/configs/commonTypes'
-import { getGoodReceiptByPo, createGoodReceipt } from 'src/api/logistic/good-receipt'
-import { getListPoSto } from 'src/api/logistic/po-sto'
-import moment from 'moment'
+
 import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
-
-interface Item {
-  key: string
-  item: CommonSelectValue
-  uom: CommonSelectValue
-  qty: number
-  price: number
-  gross: number
-}
 
 export default function CreateGoodsReceipt() {
   const [form] = Form.useForm()
@@ -28,27 +24,27 @@ export default function CreateGoodsReceipt() {
   const [tableData, setTableData] = useState([])
   const [selectedTableData, setSelectedTableData] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  // Sloc options for table
+  const [slocOptions, setSlocOptions] = useState<[]>([])
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
 
   const router = useRouter()
-  console.log('form', form)
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
-    // console.log(v)
     setHeaderData(values)
     setShowSubmitModal(true)
   }
 
   const handleCreate = async () => {
-    // TO DO SUBMIT with API here...
-    console.log('headerData', headerData)
     const payload: any = {
-      po_number: headerData.po_number,
-      delivery_number: headerData.po_number,
+      po_number: headerData?.po_number?.value,
+      delivery_number: headerData?.delivery_number,
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
       remarks: headerData.remark,
@@ -61,9 +57,8 @@ export default function CreateGoodsReceipt() {
     console.log('payload', payload)
     const res = await createGoodReceipt(payload)
 
-    console.log('res', res)
-
-    console.log('headerData', headerData)
+    // console.log('res', res)
+    // console.log('headerData', headerData)
     return res
   }
 
@@ -74,23 +69,57 @@ export default function CreateGoodsReceipt() {
     }
 
     try {
+      setLoading(true)
       const { data } = await getGoodReceiptByPo(poNumber)
-      setTableData((data.items || []).map((i: any, ind: number) => ({ ...i, rowKey: ind + 1 })))
+
+      setTableData(
+        (data.items || []).map((i: any, ind: number) => ({
+          ...i,
+          rowKey: ind + 1,
+          qty_gr: i.qty_po,
+        })),
+      )
+
       form.setFieldsValue({
+        // po_number: { value: poNumber },
         delivery_number: data.delivery_number,
         vendor: { value: data.vendor },
         branch: { value: data.branch },
         delivery_note: data.delivery_note,
         bill_of_lading: data.bill_of_lading,
         remarks: data.remarks,
+        document_date: moment(),
+        posting_date: moment(),
       })
+
+      if (data.branch) {
+        const slocList = await getSlocListByBranch(data.branch)
+        setSlocOptions(
+          slocList.data?.map((i: any) => ({ label: `${i.id}-${i.name}`, value: i.id })),
+        )
+      }
+
+      setLoading(false)
     } catch (error) {
+      setLoading(false)
       console.error(error)
     }
     setDisableSomeFields(true)
   }
 
-  console.log('selectedTableData', selectedTableData)
+  const onTableValuesChange = ({ field, value, index }) => {
+    setTableData(
+      [...tableData].map((row, ind) => {
+        if (ind === index) {
+          return {
+            ...row,
+            [field]: value,
+          }
+        }
+        return { ...row }
+      }),
+    )
+  }
 
   return (
     <Col>
@@ -117,7 +146,6 @@ export default function CreateGoodsReceipt() {
           autoComplete="off"
           requiredMark={false}
           scrollToFirstError
-          // onFinish={onFinish}
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item
@@ -126,11 +154,11 @@ export default function CreateGoodsReceipt() {
               label={<LabelRequired>PO Number</LabelRequired>}
               rules={[{ required: true }]}
             >
-              <Input
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-                onChange={(e: any) => onChangePoNumber(e.target.value)}
+              <SelectMasterData
+                type="PO_NUMBER"
+                style={{ marginTop: -8 }}
+                onChange={(opt: any) => onChangePoNumber(opt.value)}
+                loading={loading}
               />
             </Form.Item>
             <Form.Item
@@ -222,6 +250,7 @@ export default function CreateGoodsReceipt() {
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            loading={loading}
             rowSelection={{
               onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
                 setSelectedTableData(selectedRows)
@@ -229,7 +258,7 @@ export default function CreateGoodsReceipt() {
             }}
             rowKey="rowKey"
             data={tableData}
-            columns={columns()}
+            columns={columns(slocOptions, onTableValuesChange)}
           />
         </div>
       </Card>
@@ -246,11 +275,13 @@ export default function CreateGoodsReceipt() {
       <Modal
         open={showSubmitModal}
         onOk={handleCreate}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${res.data}#2`)}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Goods Receipt?"
         successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
+        successCancelText="Close"
       />
     </Col>
   )

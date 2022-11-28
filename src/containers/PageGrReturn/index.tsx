@@ -29,33 +29,47 @@ export default function PageGrReturn() {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='company_id' dataType='S' label='Company ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
-                <SelectMasterData type='COMPANY' />
+              <SmartFilter.Field
+                field="company_id"
+                dataType="S"
+                label="Company ID"
+                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+              >
+                <SelectMasterData type="COMPANY" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
-                <SelectMasterData type='PLANT' />
+              <SmartFilter.Field
+                field="branch_id"
+                dataType="S"
+                label="Branch ID"
+                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+              >
+                <SelectMasterData type="PLANT" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='product_id' dataType='S' label='Material' options={['EQ', 'CP']} >
-                <SelectMasterData type='MATERIAL' />
+              <SmartFilter.Field
+                field="product_id"
+                dataType="S"
+                label="Material"
+                options={['EQ', 'CP']}
+              >
+                <SelectMasterData type="MATERIAL" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
-                <SelectMasterData type='SLOC' />
+              <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>
+                <SelectMasterData type="SLOC" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='date_aja' dataType='S' label='Posting Date' options={['GT', 'LT', 'EQ', 'CP']} >
+              <SmartFilter.Field
+                field="posting_date"
+                dataType="S"
+                label="Posting Date"
+                options={['GT', 'LT', 'EQ', 'CP']}
+              >
                 <DatePickerInput
                   label={''}
                   fullWidth
                   format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
-                />
-                <DatePickerInput
-                  fullWidth
-                  label={''}
-                  format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
+                  placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field='status_data' dataType='S' label='Status' options={['EQ']} >
+              <SmartFilter.Field field="status_data" dataType="S" label="Status" options={['EQ']}>
                 <Select options={[{ label: 'YES', value: 'yes' }]} />
               </SmartFilter.Field>
             </SmartFilter>

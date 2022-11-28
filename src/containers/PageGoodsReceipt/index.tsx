@@ -1,12 +1,12 @@
-import { useRouter } from 'next/router';
-import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui';
-import { useState } from 'react';
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components';
+import { useRouter } from 'next/router'
+import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { useState } from 'react'
+import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
 
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt';
-import { useSimpleTable } from 'src/hooks';
-import { columns } from './columns';
+import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
+import { useSimpleTable } from 'src/hooks'
+import { columns } from './columns'
 
 export default function PageGoodsReceipt() {
   const [filters, setFilters] = useState([])
@@ -29,33 +29,47 @@ export default function PageGoodsReceipt() {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='company_id' dataType='S' label='Company ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
-                <SelectMasterData type='COMPANY' />
+              <SmartFilter.Field
+                field="company_id"
+                dataType="S"
+                label="Company ID"
+                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+              >
+                <SelectMasterData type="COMPANY" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
-                <SelectMasterData type='PLANT' />
+              <SmartFilter.Field
+                field="branch_id"
+                dataType="S"
+                label="Branch ID"
+                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+              >
+                <SelectMasterData type="PLANT" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='product_id' dataType='S' label='Material' options={['EQ', 'CP']} >
-                <SelectMasterData type='MATERIAL' />
+              <SmartFilter.Field
+                field="product_id"
+                dataType="S"
+                label="Material"
+                options={['EQ', 'CP']}
+              >
+                <SelectMasterData type="MATERIAL" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
-                <SelectMasterData type='SLOC' />
+              <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>
+                <SelectMasterData type="SLOC" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='date_aja' dataType='S' label='Posting Date' options={['GT', 'LT', 'EQ', 'CP']} >
+              <SmartFilter.Field
+                field="posting_date"
+                dataType="S"
+                label="Posting Date"
+                options={['GT', 'LT', 'EQ', 'CP']}
+              >
                 <DatePickerInput
                   label={''}
                   fullWidth
                   format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
-                />
-                <DatePickerInput
-                  fullWidth
-                  label={''}
-                  format={'DD-MMM-YYYY'}
-                  placeholder='Posting Date'
+                  placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field='status_data' dataType='S' label='Status' options={['EQ']} >
+              <SmartFilter.Field field="status_data" dataType="S" label="Status" options={['EQ']}>
                 <Select options={[{ label: 'YES', value: 'yes' }]} />
               </SmartFilter.Field>
             </SmartFilter>
@@ -77,6 +91,6 @@ export default function PageGoodsReceipt() {
           <Table {...tableProps} />
         </div>
       </Card>
-    </ >
+    </>
   )
 }

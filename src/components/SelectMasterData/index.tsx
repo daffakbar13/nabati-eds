@@ -5,11 +5,13 @@ import { useEffect, useState } from 'react'
 import { MASTER_DATA_TYPES } from './config'
 
 interface Props {
-  type: 'PLANT' | 'MATERIAL' | 'SLOC' | 'COMPANY' | 'UOM' // TO DO tambah lagi nanti..
+  type: 'PLANT' | 'MATERIAL' | 'SLOC' | 'COMPANY' | 'UOM' | 'PO_NUMBER' // TO DO tambah lagi nanti..
   style?: any
   onChange?: (a: any) => any
   disabled?: boolean
   value?: any
+  loading?: boolean
+  defaultValue?: { value: any; label: string }
 }
 
 export default function SelectMasterData({ type, style = {}, onChange, ...props }: Props) {

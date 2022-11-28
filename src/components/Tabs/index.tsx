@@ -10,9 +10,9 @@ interface Tab {
   children: React.ReactNode
 }
 
-function TabsCard({ items }: { items: Tab[] }) {
+function TabsCard({ items, initialActiveTab }: { items: Tab[]; initialActiveTab?: string }) {
   const initialTabActive = useRef(items[0].key)
-  const [activeTab, setActiveTab] = useState<string>(items[0].key)
+  const [activeTab, setActiveTab] = useState<string>(initialActiveTab || items[0].key)
   const router = useRouter()
 
   const handleTabChange = (key: string) => {
