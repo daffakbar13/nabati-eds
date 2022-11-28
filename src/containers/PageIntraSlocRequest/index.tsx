@@ -9,7 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListSloc } from 'src/api/logistic/request-intra-sloc'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSloc } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { PageSlocRequest } from './types'
 import { column } from './columns'
@@ -24,6 +24,9 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageIntraSlocRequest(props: PageSlocRequest) {
   const [filters, setFilters] = useState([])
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
+  const [allSloc, setAllScloc] = React.useState([])
 
   const table = useTable({
     funcApi: getListSloc,
@@ -41,7 +44,11 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const statusOption = [{ label: 'Done', value: 'Done' }]
+  const statusOption = [
+    { label: 'Done', value: 'Done' },
+    { label: 'Pending', value: 'Pending' },
+    { label: 'Canceled', value: 'Canceled' },
+  ]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -58,6 +65,13 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
     }
   }, [router.query.search])
 
+  useEffect(() => {
+    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+      console.log('response Branch', response)
+      setAllScloc(response)
+    })
+  }, [branchfrom, branchTo])
+
   return (
     <Col>
       <Text variant={'h4'}>Request Intra Sloc</Text>
@@ -73,8 +87,22 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="suppl_sloc_id"
@@ -82,8 +110,8 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
                 label="SLoc"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
