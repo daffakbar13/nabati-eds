@@ -6,19 +6,15 @@
 /* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
-import { Divider, Typography } from 'antd'
-import { Button, Col, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
+import { Divider, Typography, Col, Row } from 'antd'
+import { Button, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { CheckCircleFilled } from '@ant-design/icons'
-import {
-  getCustomerByCompany,
-  getCustomerByFilter,
-  getDocTypeByCategory,
-} from 'src/api/master-data'
+import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
 import { createSalesOrder, getDetailSalesOrder, updateSalesOrder } from 'src/api/sales-order'
@@ -28,8 +24,6 @@ import { useTableAddItem } from './columns'
 export default function PageCreateSalesOrder() {
   const now = new Date().toISOString()
   const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
-  const router = useRouter()
-  const tableAddItems = useTableAddItem()
   const [dataForm, setDataForm] = React.useState<any>({
     company_id: 'PP01',
     source_id: 'Z02',
@@ -42,19 +36,18 @@ export default function PageCreateSalesOrder() {
     customer_ref: '',
     currency_id: 'IDR',
   })
+  const router = useRouter()
+  const tableAddItems = useTableAddItem()
   const [newSalesOrder, setNewSalesOrder] = React.useState()
   const [draftSalesOrder, setDraftSalesOrder] = React.useState()
   const [cancel, setCancel] = React.useState(false)
   const [optionsOrderType, setOptionsOrderType] = React.useState([])
   const [optionsSalesman, setOptionsSalesman] = React.useState([])
-  const [optionsCustomerSoldTo, setOptionsCustomerSoldTo] = React.useState([])
-  const [optionsCustomerShipTo, setOptionsCustomerShipTo] = React.useState([])
   const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
   const [optionsBranch, setOptionsBranch] = React.useState([])
   const [fetching, setFetching] = React.useState('')
   const [processing, setProcessing] = React.useState('')
   const [canSave, setCanSave] = React.useState(false)
-  const [warningFields, setWarningFields] = React.useState(false)
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
@@ -62,7 +55,7 @@ export default function PageCreateSalesOrder() {
   const onProcess = processing !== ''
   const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
-  const concatString = (data: string[]) => data.join(' - ')
+  const concatString = (...data: string[]) => data.join(' - ')
 
   const splitString = (data: string) => data.split(' - ')[0]
 
@@ -99,7 +92,6 @@ export default function PageCreateSalesOrder() {
         style={{
           display: 'flex',
           gap: 4,
-          fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
         }}
@@ -173,27 +165,25 @@ export default function PageCreateSalesOrder() {
         .then((data) => {
           const initFromDetail = {
             company_id: 'PP01',
-            branch_id: concatString([data.branch_id, data.branch_name]),
+            branch_id: concatString(data.branch_id, data.branch_name),
             source_id: 'Z02',
             order_date: data.order_date,
             delivery_date: data.delivery_date,
             pricing_date: data.pricing_date || now,
-            order_type_id: optionsOrderType.find(({ value }) => value.includes(data.order_type_id))
-              ?.value,
-            customer_id: concatString([data.customer_id, data.customer_name]),
+            order_type_id: dataForm.order_type_id,
+            customer_id: concatString(data.customer_id, data.customer_name),
             ship_to_id:
               data.ship_to_id === ''
-                ? concatString([data.customer_id, data.customer_name])
+                ? concatString(data.customer_id, data.customer_name)
                 : data.ship_to_id,
-            salesman_id: concatString([data.salesman_id, data.salesman_name]),
-            sales_org_id: concatString([data.sales_org_id, data.sales_org_name]),
+            salesman_id: concatString(data.salesman_id, data.salesman_name),
+            sales_org_id: concatString(data.sales_org_id, data.sales_org_name),
             valid_from: data.valid_from,
             valid_to: data.valid_to,
             term_id: data.term_id || 'Z007',
             customer_ref: data.customer_ref,
             customer_ref_date: data.customer_ref_date || now,
             currency_id: 'IDR',
-            // items: tableAddItems.data,
           }
           setDataForm(initFromDetail)
           setFetching('customer')
@@ -208,6 +198,7 @@ export default function PageCreateSalesOrder() {
 
   React.useEffect(() => {
     if (fetching === 'customer') {
+      setProcessing('Wait for load customer')
       const customer_id = dataForm.customer_id.split(' - ')[0]
       getCustomerByFilter({
         branch_id: '',
@@ -216,27 +207,33 @@ export default function PageCreateSalesOrder() {
         salesman_id: '',
       })
         .then((result) => {
-          setOptionsSalesman(
-            result.data.map(({ salesman_id, salesman_name }) => ({
+          const newOptions = {
+            salesman: result.data.map(({ salesman_id, salesman_name }) => ({
               label: [salesman_id, salesman_name].join(' - '),
               value: [salesman_id, salesman_name].join(' - '),
             })),
-          )
-          return result.data.splice(0, 1)
-        })
-        .then((data) => {
-          setOptionsSalesOrg(
-            data.map(({ sales_org_id, sales_org_name }) => ({
+            sales_org: result.data.splice(0, 1).map(({ sales_org_id, sales_org_name }) => ({
               label: [sales_org_id, sales_org_name].join(' - '),
               value: [sales_org_id, sales_org_name].join(' - '),
             })),
-          )
-          setOptionsBranch(
-            data.map(({ branch_id, branch_name }) => ({
+            branch: result.data.splice(0, 1).map(({ branch_id, branch_name }) => ({
               label: [branch_id, branch_name].join(' - '),
               value: [branch_id, branch_name].join(' - '),
             })),
-          )
+          }
+          setOptionsSalesman(newOptions.salesman)
+          setOptionsSalesOrg(newOptions.sales_org)
+          setOptionsBranch(newOptions.branch)
+          onChangeForm('ship_to_id', dataForm.customer_id)
+          onChangeForm('sales_org_id', newOptions.sales_org[0].value)
+          onChangeForm('branch_id', newOptions.branch[0].value)
+          onChangeForm('salesman_id', newOptions.salesman[0].value)
+
+          setProcessing('')
+          setFetching('')
+        })
+        .catch(() => {
+          setProcessing('')
           setFetching('')
         })
     }
@@ -250,7 +247,6 @@ export default function PageCreateSalesOrder() {
       dataForm.ship_to_id,
       dataForm.salesman_id,
       dataForm.sales_org_id,
-      // dataForm.customer_ref,
     ]
     const fullFilled = requiredFields.filter((e) => e === '' || e === undefined).length === 0
     const haveItems = tableAddItems.data.filter(({ product_id }) => product_id === '').length === 0
@@ -259,7 +255,7 @@ export default function PageCreateSalesOrder() {
   }, [dataForm])
 
   React.useEffect(() => {
-    setProcessing('Wait for get data customer')
+    setProcessing('Wait for get order type')
     async function api() {
       await getDocTypeByCategory('C')
         .then((result) =>
@@ -272,14 +268,6 @@ export default function PageCreateSalesOrder() {
           onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZOP1'))?.value)
           setOptionsOrderType(data)
         })
-      await getCustomerByCompany()
-        .then((result) =>
-          result.data.map(({ sold_to_customer_id, name }) => ({
-            label: [sold_to_customer_id, name].join(' - '),
-            value: [sold_to_customer_id, name].join(' - '),
-          })),
-        )
-        .then((cust) => setOptionsCustomerSoldTo(cust))
     }
     api()
       .then(() => setProcessing(''))
@@ -291,12 +279,11 @@ export default function PageCreateSalesOrder() {
       {(onProcess || tableAddItems.isLoading) && (
         <Loader type="process" text={processing === '' ? 'Wait for get data items' : processing} />
       )}
-      {/* {tableAddItems.isLoading && <Loader type='process' text='Wait for get data' />} */}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
-        <Row justifyContent="space-between" reverse>
-          <Row gap="16px">
+      <Row justify="end" gutter={10}>
+          <Col>
             <Button
               size="big"
               variant="tertiary"
@@ -306,6 +293,8 @@ export default function PageCreateSalesOrder() {
             >
               Cancel
             </Button>
+          </Col>
+          <Col>
             <Button
               size="big"
               variant="secondary"
@@ -326,13 +315,13 @@ export default function PageCreateSalesOrder() {
                           setProcessing('')
                         })
                         .catch(() => setProcessing(''))
-                } else {
-                  setWarningFields(true)
                 }
               }}
             >
               Save As Draft
             </Button>
+          </Col>
+          <Col>
             <Button
               size="big"
               variant="primary"
@@ -353,21 +342,18 @@ export default function PageCreateSalesOrder() {
                           setProcessing('')
                         })
                         .catch(() => setProcessing(''))
-                } else {
-                  setWarningFields(true)
                 }
               }}
             >
               Submit
             </Button>
-          </Row>
+          </Col>
         </Row>
       </Card>
       <Spacer size={10} />
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
-        <div style={{ display: 'flex', gap: 20 }}>
-          <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
-            {/* FIXME progress buat api */}
+        <Row gutter={[10, 10]}>
+          <Col span={8}>
             <DebounceSelect
               type="select"
               required
@@ -379,27 +365,8 @@ export default function PageCreateSalesOrder() {
                 onChangeForm('order_type_id', e.value)
               }}
             />
-            <DebounceSelect
-              type="select"
-              label="Sold To Customer"
-              required
-              value={dataForm.customer_id}
-              fetchOptions={fieldCustomer}
-              onChange={(e: any) => {
-                onChangeForm('customer_id', e.value)
-                setFetching('customer')
-              }}
-            />
-            <DebounceSelect
-              type="select"
-              label="Ship To Customer"
-              placeholder={'Select'}
-              value={dataForm.ship_to_id}
-              options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
-              onChange={(e: any) => {
-                onChangeForm('ship_to_id', e.value)
-              }}
-            />
+          </Col>
+          <Col span={8}>
             <DebounceSelect
               type="select"
               label="Sales Organization"
@@ -410,6 +377,8 @@ export default function PageCreateSalesOrder() {
                 onChangeForm('sales_org_id', e.value)
               }}
             />
+          </Col>
+          <Col span={8}>
             <DebounceSelect
               type="select"
               label="Branch"
@@ -420,18 +389,8 @@ export default function PageCreateSalesOrder() {
                 onChangeForm('branch_id', e.value)
               }}
             />
-            <DebounceSelect
-              type="select"
-              label="Salesman"
-              placeholder="Select"
-              value={dataForm.salesman_id}
-              options={optionsSalesman}
-              onChange={(e: any) => {
-                onChangeForm('salesman_id', e.value)
-              }}
-            />
-          </div>
-          <div style={{ display: 'flex', gap: 10, flexDirection: 'column', flexGrow: 1 }}>
+          </Col>
+          <Col span={8}>
             <DatePickerInput
               fullWidth
               onChange={(val: any) => {
@@ -443,6 +402,33 @@ export default function PageCreateSalesOrder() {
               format={'DD-MMM-YYYY'}
               required
             />
+          </Col>
+          <Col span={8}>
+            <DebounceSelect
+              type="select"
+              label="Sold To Customer"
+              required
+              value={dataForm.customer_id}
+              fetchOptions={fieldCustomer}
+              onChange={(e: any) => {
+                onChangeForm('customer_id', e.value)
+                setFetching('customer')
+              }}
+            />
+          </Col>
+          <Col span={8}>
+            <DebounceSelect
+              type="select"
+              label="Ship To Customer"
+              placeholder={'Select'}
+              value={dataForm.ship_to_id}
+              options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
+              onChange={(e: any) => {
+                onChangeForm('ship_to_id', e.value)
+              }}
+            />
+          </Col>
+          <Col span={8}>
             <DatePickerInput
               fullWidth
               onChange={(val: any) => {
@@ -454,6 +440,8 @@ export default function PageCreateSalesOrder() {
               format={'DD-MMM-YYYY'}
               required
             />
+          </Col>
+          <Col span={8}>
             <DatePickerInput
               fullWidth
               onChange={(val: any) => {
@@ -465,6 +453,8 @@ export default function PageCreateSalesOrder() {
               format={'DD-MMM-YYYY'}
               required
             />
+          </Col>
+          <Col span={8}>
             <DatePickerInput
               fullWidth
               onChange={(val: any) => {
@@ -477,6 +467,20 @@ export default function PageCreateSalesOrder() {
               format={'DD-MMM-YYYY'}
               required
             />
+          </Col>
+          <Col span={8}>
+            <DebounceSelect
+              type="select"
+              label="Salesman"
+              placeholder="Select"
+              value={dataForm.salesman_id}
+              options={optionsSalesman}
+              onChange={(e: any) => {
+                onChangeForm('salesman_id', e.value)
+              }}
+            />
+          </Col>
+          <Col span={8}>
             <DebounceSelect
               type="input"
               label="Reference"
@@ -486,8 +490,9 @@ export default function PageCreateSalesOrder() {
                 onChangeForm('customer_ref', e.target.value)
               }}
             />
-          </div>
-        </div>
+          </Col>
+          <Col span={8}></Col>
+        </Row>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
