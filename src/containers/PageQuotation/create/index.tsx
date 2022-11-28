@@ -18,10 +18,12 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import {
   getCustomerByCompany,
   getCustomerByFilter,
+  getCustomerList,
   getDocTypeByCategory,
 } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
+import { fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateQuotation() {
@@ -51,14 +53,14 @@ export default function PageCreateQuotation() {
   const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
   const [optionsBranch, setOptionsBranch] = React.useState([])
   const [fetching, setFetching] = React.useState('')
-  const [proccessing, setProccessing] = React.useState('')
+  const [processing, setProcessing] = React.useState('')
   const [canSave, setCanSave] = React.useState(false)
   const [warningFields, setWarningFields] = React.useState(false)
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
-  const onProcess = proccessing !== ''
+  const onProcess = processing !== ''
   const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
   const concatString = (data: string[]) => data.join(' - ')
@@ -81,6 +83,88 @@ export default function PageCreateQuotation() {
     customer_ref:
       dataForm.customer_ref === '' || dataForm.customer_ref ? '-' : dataForm.customer_ref,
   })
+
+  const ConfirmSuccessSubmit = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          {'New Quotation '}
+          <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
+          {' has been'}
+        </div>
+        <div>successfully {newQuotation ? 'created' : 'saved'}</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/quotation`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmCancel = () => (
+    <Popup
+      onOutsideClick={() => {
+        setCancel(false)
+      }}
+    >
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Cancellation
+      </Typography.Title>
+      <b>Are you sure want to cancel? Change you made so far will not saved</b>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setCancel(false)
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            if (router.query.status) {
+              const { status } = router.query
+              router.push(`${PATH.SALES}/quotation/detail/${router.query.id}?status=${status}`)
+            } else {
+              router.push(`${PATH.SALES}/quotation`)
+            }
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
 
   React.useEffect(() => {
     if (router.query.id && optionsOrderType.length > 0) {
@@ -124,54 +208,38 @@ export default function PageCreateQuotation() {
 
   React.useEffect(() => {
     if (fetching === 'customer') {
-      const { customer_id } = dataForm
-      setProccessing('Wait for proccess')
+      const customer_id = dataForm.customer_id.split(' - ')[0]
       getCustomerByFilter({
         branch_id: '',
-        customer_id: splitString(customer_id),
+        customer_id,
         sales_org_id: '',
         salesman_id: '',
       })
-        .then((res) => res.data)
-        .then((data) => {
-          setProccessing('')
-          const [firstData] = data
-          const dataBranch = concatString([firstData.branch_id, firstData.branch_name])
-          const dataSalesOrg = concatString([firstData.sales_org_id, firstData.sales_org_name])
-          const dataSalesman = concatString([firstData.salesman_id, firstData.salesman_name])
-
-          onChangeForm('ship_to_id', customer_id)
-          onChangeForm('branch_id', dataBranch)
-          onChangeForm('sales_org_id', dataSalesOrg)
-          onChangeForm('salesman_id', dataSalesman)
-          setOptionsCustomerShipTo([
-            {
-              label: customer_id,
-              value: customer_id,
-            },
-          ])
-          setOptionsBranch([
-            {
-              label: dataBranch,
-              value: dataBranch,
-            },
-          ])
-          setOptionsSalesOrg([
-            {
-              label: dataSalesOrg,
-              value: dataSalesOrg,
-            },
-          ])
+        .then((result) => {
           setOptionsSalesman(
-            data.map(({ salesman_id, salesman_name }) => ({
-              label: concatString([salesman_id, salesman_name]),
-              value: concatString([salesman_id, salesman_name]),
+            result.data.map(({ salesman_id, salesman_name }) => ({
+              label: [salesman_id, salesman_name].join(' - '),
+              value: [salesman_id, salesman_name].join(' - '),
             })),
           )
+          return result.data.splice(0, 1)
         })
-        .catch((err) => console.log(err))
+        .then((data) => {
+          setOptionsSalesOrg(
+            data.map(({ sales_org_id, sales_org_name }) => ({
+              label: [sales_org_id, sales_org_name].join(' - '),
+              value: [sales_org_id, sales_org_name].join(' - '),
+            })),
+          )
+          setOptionsBranch(
+            data.map(({ branch_id, branch_name }) => ({
+              label: [branch_id, branch_name].join(' - '),
+              value: [branch_id, branch_name].join(' - '),
+            })),
+          )
+          setFetching('')
+        })
     }
-    setFetching('')
   }, [fetching])
 
   React.useEffect(() => {
@@ -191,7 +259,7 @@ export default function PageCreateQuotation() {
   }, [dataForm])
 
   React.useEffect(() => {
-    setProccessing('Wait for get data customer')
+    setProcessing('Wait for get data customer')
     async function api() {
       await getDocTypeByCategory('B')
         .then((result) =>
@@ -204,27 +272,24 @@ export default function PageCreateQuotation() {
           onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZQP1'))?.value)
           setOptionsOrderType(data)
         })
-      await getCustomerByCompany()
-        .then((result) =>
-          result.data.map(({ sold_to_customer_id, name }) => ({
-            label: [sold_to_customer_id, name].join(' - '),
-            value: [sold_to_customer_id, name].join(' - '),
-          })),
-        )
-        .then((cust) => setOptionsCustomerSoldTo(cust))
+      // await getCustomerByCompany()
+      //   .then((result) =>
+      //     result.data.map(({ sold_to_customer_id, name }) => ({
+      //       label: [sold_to_customer_id, name].join(' - '),
+      //       value: [sold_to_customer_id, name].join(' - '),
+      //     })),
+      //   )
+      //   .then((cust) => setOptionsCustomerSoldTo(cust))
     }
     api()
-      .then(() => setProccessing(''))
-      .catch((err) => setProccessing(`${err}`))
+      .then(() => setProcessing(''))
+      .catch((err) => setProcessing(`${err}`))
   }, [])
 
   return (
     <Col>
       {(onProcess || tableAddItems.isLoading) && (
-        <Loader
-          type="process"
-          text={proccessing === '' ? 'Wait for get data items' : proccessing}
-        />
+        <Loader type="process" text={processing === '' ? 'Wait for get data items' : processing} />
       )}
       {/* {tableAddItems.isLoading && <Loader type='process' text='Wait for get data' />} */}
       <Text variant={'h4'}>{titlePage}</Text>
@@ -247,20 +312,20 @@ export default function PageCreateQuotation() {
               disabled={!canSave}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Quotation')
+                  setProcessing('Wait for save Quotation')
                   isCreateOrOrderAgain
                     ? createQuotation(dataSubmited(6))
                         .then((response) => {
                           setDraftQuotation(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                     : updateQuotation(dataSubmited(6), titlePage.split(' ').reverse()[0])
                         .then((response) => {
                           setDraftQuotation(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                 } else {
                   setWarningFields(true)
                 }
@@ -274,20 +339,20 @@ export default function PageCreateQuotation() {
               disabled={!canSave}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Quotation')
+                  setProcessing('Wait for save Quotation')
                   isCreateOrOrderAgain
                     ? createQuotation(dataSubmited(1))
                         .then((response) => {
                           setNewQuotation(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                     : updateQuotation(dataSubmited(1), titlePage.split(' ').reverse()[0])
                         .then((response) => {
                           setNewQuotation(response.data.id)
-                          setProccessing('')
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
                 } else {
                   setWarningFields(true)
                 }
@@ -319,11 +384,7 @@ export default function PageCreateQuotation() {
               label="Sold To Customer"
               required
               value={dataForm.customer_id}
-              fetchOptions={async (search) =>
-                optionsCustomerSoldTo
-                  .filter(({ value }) => value.toLowerCase().includes(search.toLowerCase()))
-                  .splice(0, 10)
-              }
+              fetchOptions={fieldCustomer}
               onChange={(e: any) => {
                 onChangeForm('customer_id', e.value)
                 setFetching('customer')
@@ -334,7 +395,7 @@ export default function PageCreateQuotation() {
               label="Ship To Customer"
               placeholder={'Select'}
               value={dataForm.ship_to_id}
-              options={optionsCustomerShipTo}
+              options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
               onChange={(e: any) => {
                 onChangeForm('ship_to_id', e.value)
               }}
@@ -443,109 +504,8 @@ export default function PageCreateQuotation() {
           <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
         </div>
       </Card>
-      {(newQuotation || draftQuotation || cancel) && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              textAlign="center"
-              style={{
-                ...(!cancel && { color: '#00C572' }),
-                fontSize: 22,
-                fontWeight: 'bold',
-                marginBottom: 8,
-              }}
-            >
-              {cancel ? (
-                'Confirm Cancellation'
-              ) : (
-                <>
-                  <CheckCircleFilled /> Success
-                </>
-              )}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {cancel ? (
-              'Are you sure want to cancel? Change you made so far will not saved'
-            ) : (
-              <>
-                New Quotation
-                <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
-                has been
-              </>
-            )}
-          </div>
-          {!cancel && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              successfully {newQuotation ? 'created' : 'saved'}
-            </div>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {cancel && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setCancel(false)
-                  }}
-                >
-                  No
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    isOrderAgainPage
-                      ? router.push(`${PATH.SALES}/quotation/detail/${router.query.id}`)
-                      : router.push(`${PATH.SALES}/quotation`)
-                  }}
-                >
-                  Yes
-                </Button>
-              </>
-            )}
-            {newQuotation && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    router.push(`${PATH.SALES}/quotation`)
-                  }}
-                >
-                  Back To List
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.SALES}/sales-order`)
-                  }}
-                >
-                  Next Proccess
-                </Button>
-              </>
-            )}
-            {draftQuotation && (
-              <Button
-                size="big"
-                variant="primary"
-                style={{ flexGrow: 1 }}
-                onClick={() => {
-                  router.push(`${PATH.SALES}/quotation`)
-                }}
-              >
-                OK
-              </Button>
-            )}
-          </div>
-        </Popup>
-      )}
+      {(newQuotation || draftQuotation) && <ConfirmSuccessSubmit />}
+      {cancel && <ConfirmCancel />}
       {<tableAddItems.ConfirmDelete />}
     </Col>
   )

@@ -1,16 +1,23 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-param-reassign */
+/* eslint-disable arrow-spacing */
+/* eslint-disable no-plusplus */
 import React from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card } from 'src/components'
+import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Card, FloatAction, Popup } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Dropdown, Space, Menu, Checkbox, Popover, Divider } from 'antd'
+import { Dropdown, Space, Menu, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { CheckCircleFilled, MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { getShipment } from 'src/api/shipment'
+import { getShipment, PGIShipment } from 'src/api/shipment'
 import Pagination from 'src/components/Pagination'
+import { PATH } from 'src/configs/menus'
+import moment from 'moment'
+import Loader from 'src/components/Loader'
 import { PageShipmentProps } from './types'
 import { TableBilling } from './columns'
 
@@ -32,15 +39,149 @@ export default function PageShipment(props: PageShipmentProps) {
 
   const table = useTable({
     funcApi: getShipment,
-    haveCheckbox: 'All',
+    haveCheckbox: { headCell: 'status', member: ['New'] },
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
-  const router = useRouter()
+  const [showConfirm, setShowConfirm] = React.useState('')
+  const [reason, setReason] = React.useState('')
+  const [optionsReason, setOptionsReason] = React.useState([])
+  const [shipmentArePGI, setShipmentArePGI] = React.useState([])
+  const [processing, setProcessing] = React.useState('')
+  const [pending, setPending] = React.useState(0)
+  const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
+  const onProcess = processing !== ''
   const hasData = table.total > 0
+  const router = useRouter()
+  const oneSelected = table.selected.length === 1
+  const firstSelected = table.selected[0]
+
+  const selectedSalesOrder = {
+    text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
+    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
+  }
+
+  const ConfirmPGI = () => (
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm PGI
+      </Typography.Title>
+      <DatePickerInput
+        fullWidth
+        onChange={(val: any) => {
+          setPostingDate(moment(val).format('YYYY-MM-DD'))
+        }}
+        label="Posting Date"
+        disabledDate={(current) => current < moment().startOf('day')}
+        value={moment(postingDate)}
+        format={'YYYY-MM-DD'}
+        required
+      />
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            table.selected.forEach((shipment_id, index) => {
+              setPending((curr) => ++curr)
+              PGIShipment(shipment_id, { posting_date: postingDate }).then(() => {
+                setPending((curr) => --curr)
+                if (index === table.selected.length - 1) {
+                  setShowConfirm('success-PGI')
+                }
+              })
+            })
+            // setProcessing('Wait for submitting Quotation')
+            // multipleSubmitQuotation({
+            //   order_list: table.selected
+            //     .map((id) => ({ id })),
+            // })
+            //   .then((response) => response.data)
+            //   .then((data) => {
+            //     setShowConfirm('success-PGI')
+            //     setShipmentArePGI(data.results.map(({ id }) => id))
+            //     setProcessing('')
+            //   })
+            //   .catch(() => setProcessing(''))
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmSuccessPGI = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          Shipment
+          <Typography.Text
+            copyable={{ text: oneSelected ? shipmentArePGI[0] : shipmentArePGI.join(', ') }}
+          >
+            {oneSelected ? (
+              ` ${table.selected[0]} `
+            ) : (
+              <Popover content={table.selected.join(', ')}>
+                {` ${table.selected[0]}, +${table.selected.length - 1} more `}
+              </Popover>
+            )}
+          </Typography.Text>
+          has been
+        </div>
+        <div>successfully submitted</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/shipment`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
 
   return (
     <Col>
+      {pending > 0 && <Loader type="process" text="Wait For PGI Shipment" />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -94,6 +235,41 @@ export default function PageShipment(props: PageShipmentProps) {
             }}
           />
         )}
+        {table.selected.length > 0 && (
+          <FloatAction>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+              }}
+            >
+              <b>{table.selected.length} Document Shipment are Selected</b>
+            </div>
+            <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+              <Button
+                size="big"
+                variant="tertiary"
+                onClick={() => {
+                  // setShowConfirm('cancel')
+                }}
+              >
+                Print
+              </Button>
+              <Button
+                size="big"
+                variant="primary"
+                onClick={() => {
+                  setShowConfirm('PGI')
+                }}
+              >
+                PGI ({table.selected.length})
+              </Button>
+            </div>
+          </FloatAction>
+        )}
+        {showConfirm === 'PGI' && <ConfirmPGI />}
+        {showConfirm === 'success-PGI' && <ConfirmSuccessPGI />}
       </Card>
     </Col>
   )

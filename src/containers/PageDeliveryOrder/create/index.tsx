@@ -169,6 +169,12 @@ export default function PageCreateDeliveryOrder() {
     fullFilled && haveItems ? setCanSave(true) : setCanSave(false)
   }, [dataForm])
 
+  React.useEffect(()=>{
+    if (router.query.id) {
+      
+    }
+  },[router])
+
   React.useEffect(() => {
     setProccessing('Wait for proccess')
     getDocTypeByCategory('J')

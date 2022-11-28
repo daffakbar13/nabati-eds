@@ -104,10 +104,10 @@ export default function BPB(props: BPBProps) {
         <Col offset={6} span={10}>
           <Information
             label="Tanggal Cetak"
-            value={dateFormat(data.delivery_date, 'DD.MM.YYYY - hh:mm:SS')}
+            value={dateFormat(new Date().toISOString(), 'DD.MM.YYYY-hh:mm:ss')}
           />
-          <Information label="Halaman" value="" />
-          <Information label="Cetakan Ke" value="" />
+          <Information label="Halaman" value="1" />
+          <Information label="Cetakan Ke" value="1/1" />
         </Col>
       </Row>
       <Row justify="center">
@@ -117,13 +117,13 @@ export default function BPB(props: BPBProps) {
       </Row>
       <Row>
         <Col span={8}>
-          <Information label="Tanggal Kirim" value="" />
+          <Information label="Tanggal Kirim" value="?" />
           <Information label="Kendaraan" value={data.vehicle_id} />
           <Information label="Driver / Helper" value={data.driver_name} />
         </Col>
         <Col offset={6} span={10}>
-          <Information label="No. BPB" value="" />
-          <Information label="Pengiriman" value="" />
+          <Information label="No. BPB" value="?" />
+          <Information label="Pengiriman" value="?" />
           <Information label="Jumlah Toko" value={data.total_store} />
         </Col>
       </Row>

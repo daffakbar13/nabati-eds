@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
-import { Select } from 'antd'
+import { InputNumber, Select } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import React from 'react'
 
@@ -48,7 +48,7 @@ export default function Pagination(props: PaginationProps) {
   }
 
   function handleChangePage(value: number) {
-    setPage(value)
+    if (value > 0 && value <= totalPage) setPage(value)
   }
 
   function handleChangeOptionsPage() {
@@ -106,14 +106,22 @@ export default function Pagination(props: PaginationProps) {
           gap: 5,
         }}
       >
-        <Select
+        <InputNumber
+          size="small"
+          value={page}
+          style={styleSelect}
+          min={1}
+          max={totalPage}
+          onChange={(e) => handleChangePage(e)}
+        />
+        {/* <Select
           size="small"
           value={page}
           style={styleSelect}
           options={optionsPage}
           showSearch
           onChange={(e) => handleChangePage(e)}
-        />
+        /> */}
         <MiddleAlign>of {totalPage} Pages</MiddleAlign>
         <div style={{ display: 'flex', gap: 10, margin: '0 15px', cursor: 'pointer' }}>
           <MiddleAlign>

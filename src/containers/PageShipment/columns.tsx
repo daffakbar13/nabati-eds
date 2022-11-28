@@ -46,57 +46,21 @@ export const TableBilling = [
     'Shipment',
     'shipment_id',
     true,
-    (link, record) => <Linked link={link} status={record.status} type='id' />,
-  ),
-  CreateColumns(
-    'Vehicle Number',
-    'vehicle_id',
+    (link, record) => <Linked link={link} status={record.status} type="id" />,
+    170,
     true,
+    'have-checkbox',
   ),
-  CreateColumns(
-    'Driver',
-    'driver_name',
-    true,
-  ),
-  CreateColumns(
-    'Created Date',
-    'created_at',
-    true,
-  ),
-  CreateColumns(
-    'Total DO',
-    'total_do',
-    true,
-  ),
-  CreateColumns(
-    'Sales Org.',
-    'sales_org_name',
-    true,
-  ),
-  CreateColumns(
-    'Branch',
-    'branch_name',
-    true,
-  ),
-  CreateColumns(
-    'Branch Type',
-    'branch_type',
-    true,
-  ),
-  CreateColumns(
-    'Status',
-    'status',
-    true,
-  ),
-  CreateColumns(
-    'Status Process',
-    'status_process',
-    true,
-  ),
-  CreateColumns(
-    'Action',
-    'shipment_id',
-    false,
-    (link, record) => <Linked link={link} status={record.status} type='action' />,
-  ),
+  CreateColumns('Vehicle Number', 'vehicle_id', false),
+  CreateColumns('Driver', 'driver_name', false),
+  CreateColumns('Created Date', 'created_at', false),
+  CreateColumns('Total DO', 'total_do', false),
+  CreateColumns('Sales Org.', 'sales_org_name', false),
+  CreateColumns('Branch', 'branch_name', false),
+  CreateColumns('Branch Type', 'branch_type', false),
+  CreateColumns('Status', 'status', false),
+  CreateColumns('Status Process', 'status_process', false),
+  CreateColumns('Action', 'shipment_id', false, (link, record) => (
+    <Linked link={link} status={record.status} type="action" />
+  )),
 ]

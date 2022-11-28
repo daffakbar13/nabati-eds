@@ -12,6 +12,7 @@ import { getCustomerByFilterProps } from './types'
 
 const subUrl = {
   getCustomerByCompany: 'v1/master/get-customer/PP01',
+  getCustomerList: 'v1/master/list/customer',
   getSalesOrgByCompany: 'v1/master/get-sales-org/PP01',
   getBranch: 'v1/master/get-branch/PP01',
   getSalesmanByCompany: 'v1/master/get-salesman/PP01',
@@ -26,8 +27,10 @@ const subUrl = {
   getConfigSloc: 'v1/master/get-config-sloc/PP01',
   getRouteByCompany: 'v1/master/get-route/PP01',
   getRouteIntraChannel: 'v1/intra-channel',
+  getDriverByCompanyId: 'v1/master/get-driver/PP01',
+  getVehicleByCompany: 'v1/master/get-vehicle/PP01',
 }
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3001/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 const BaseUrl2 = 'https://dist-system.nabatisnack.co.id:3002/'
 
 export const getCompanies = async (): Promise<CommonDetailResponse<any>> => {
@@ -45,6 +48,18 @@ export const getCustomerByCompany = async (): Promise<CommonDetailResponse<any>>
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getCustomerByCompany,
+  })
+
+  return response.data
+}
+
+export const getCustomerList = async (payload: CommonListParams)
+  : Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: subUrl.getCustomerList,
+    data: payload,
   })
 
   return response.data
@@ -238,6 +253,26 @@ export const getUomList = async (): Promise<CommonDetailResponse<any>> => {
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getUom,
+  })
+
+  return response.data
+}
+
+export const getDriverByCompanyId = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getDriverByCompanyId,
+  })
+
+  return response.data
+}
+
+export const getVehicleByCompany = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getVehicleByCompany,
   })
 
   return response.data

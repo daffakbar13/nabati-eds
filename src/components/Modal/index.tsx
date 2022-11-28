@@ -99,7 +99,7 @@ const ModalCustomize = ({
       <SuccessModal
         onCancel={() => setShowSuccessModal(false)}
         open={showSuccessModal}
-        onOk={() => onOkSuccess(onOkResponse)}
+        onOk={() => (onOkSuccess ? onOkSuccess(onOkResponse) : setShowSuccessModal(false))}
         title={typeof successTitle === 'function' ? successTitle(onOkResponse) : successTitle}
         content={
           typeof successContent === 'function' ? successContent(onOkResponse) : successContent

@@ -75,7 +75,15 @@ export const columns = () => [
 ]
 
 export const ColumnsDeliveryOrder = [
-  CreateColumns('Delivery Order ', 'id', true, undefined, 170, true, 'have-checkbox'),
+  CreateColumns(
+    'Delivery Order ',
+    'delivery_order_id',
+    true,
+    undefined,
+    170,
+    true,
+    'have-checkbox',
+  ),
   CreateColumns('Order Type', 'order_type', false, undefined, 200),
   CreateColumns('Order Date', 'order_date', false, undefined, 120),
   CreateColumns('Sales Org.', 'sales_org_id', false, undefined, 110),

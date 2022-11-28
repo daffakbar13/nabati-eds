@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -19,6 +19,28 @@ export function fieldQuotationType(search: string) {
                     label: [order_type_id, ' - ', doc_type_name.split('-').join(' - ')].join(''),
                     value: order_type_id,
                 })))
+}
+
+export function fieldCustomer(search: string) {
+    return getCustomerList({
+        filters: [{
+            field: 'id',
+            option: 'CP',
+            from_value: `%${search}%`,
+        }],
+        limit: 10,
+        page: 1,
+    })
+        .then((result) => result.data)
+        .then((data) => data.results
+            // .filter(({ sold_to_customer_id, name, branch_id }) =>
+            // (sold_to_customer_id.toLowerCase().includes(search.toLowerCase())
+            //     || name.toLowerCase().includes(search.toLowerCase())))
+            // .splice(0, 10)
+            .map(({ id, name }) => ({
+                label: [id, name].join(' - '),
+                value: [id, name].join(' - '),
+            })))
 }
 
 export function fieldSoldToCustomer(search: string) {
@@ -51,15 +73,19 @@ export function fieldShipToCustomer(search: string) {
                 })))
 }
 
-export function fieldSalesOrg(search: string) {
-    return getSalesOrgByCompany()
+export function fieldSalesOrg(customer_id: string) {
+    return getCustomerByFilter({
+        branch_id: '',
+        customer_id,
+        sales_org_id: '',
+        salesman_id: '',
+    })
         .then((result) =>
             result.data
-                .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
-                .splice(0, 10)
-                .map(({ id, name }) => ({
-                    label: [id, name].join(' - '),
-                    value: [id, name].join(' - '),
+                .splice(0, 1)
+                .map(({ sales_org_id, sales_org_name }) => ({
+                    label: [sales_org_id, sales_org_name].join(' - '),
+                    value: [sales_org_id, sales_org_name].join(' - '),
                 })))
 }
 
@@ -252,7 +278,7 @@ export function fieldSloc(doc_type: string) {
     return getConfigSloc()
         .then((result) =>
             result.data
-                .filter(({ doc_type_id }) => doc_type_id == doc_type)
+                .filter(({ doc_type_id }) => doc_type_id === doc_type)
                 .splice(0, 10)
                 .map(({ sloc_id }) => ({
                     label: sloc_id,
@@ -270,4 +296,19 @@ export function fieldSlocFromBranch(doc_type: string, branch = '', branch_to = '
                     label: sloc_id,
                     value: sloc_id,
                 })))
+export async function fieldVehicle(search: string) {
+    return getDriverByCompanyId()
+        .then((result) => result.data)
+        .then((allDriver) => getVehicleByCompany()
+            .then((result) =>
+                result.data
+                    .map((obj) => ({ ...obj, driver_name: allDriver.find(({ id }) => id === obj.DriverID).name }))
+                    .filter(({ VehicleID, driver_name }) =>
+                        VehicleID.toLowerCase().includes(search.toLowerCase())
+                        || driver_name.toLowerCase().includes(search.toLowerCase()))
+                    .splice(0, 10)
+                    .map(({ VehicleID, driver_name }) => ({
+                        label: [VehicleID, driver_name].join(' - '),
+                        value: [VehicleID, driver_name].join(' - '),
+                    }))))
 }

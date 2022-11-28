@@ -2,6 +2,7 @@ import { useState } from 'react'
 import moment from 'moment'
 import { Divider, Form } from 'antd'
 import { useRouter } from 'next/router'
+import { PATH } from 'src/configs/menus'
 
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/components'
@@ -239,6 +240,7 @@ export default function CreateStockAdjustment() {
       <Modal
         open={showSubmitModal}
         onOk={handleCreate}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Stock Adjustment?"
