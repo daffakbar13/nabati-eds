@@ -53,7 +53,7 @@ import Pagination from 'src/components/Pagination'
 import { fieldBranch, fieldBranchAll, fieldSalesOrg, fieldVehicle } from 'src/configs/fieldFetches'
 import { getCustomerByFilter, getDriverByCompanyId, getVehicleByCompany } from 'src/api/master-data'
 import { getDeliveryOrderList } from 'src/api/delivery-order'
-import { createShipment, getCompletedDeliveryOrderList } from 'src/api/shipment'
+import { createShipment, getCompletedDeliveryOrderList, getDetailShipment } from 'src/api/shipment'
 import { PATH } from 'src/configs/menus'
 import { ColumnsDeliveryOrder, ColumnsSelectedDeliveryOrder } from './columns'
 
@@ -198,13 +198,13 @@ export default function PageCreateShipment() {
     >
       {canSave() && (
         <div
-        style={{
-          display: 'flex',
-           gap: 5,
-           cursor: 'pointer',
-           verticalAlign: 'center',
-           }}
-           onClick={() => {
+          style={{
+            display: 'flex',
+            gap: 5,
+            cursor: 'pointer',
+            verticalAlign: 'center',
+          }}
+          onClick={() => {
             setProcessing('Wait For Submit Shipment')
             createShipment(submitedShipment(10))
               .then((result) => {
@@ -214,7 +214,7 @@ export default function PageCreateShipment() {
               })
               .catch(() => setProcessing(''))
           }}
-           >
+        >
           <div>
             <SaveOutlined />
           </div>
@@ -444,6 +444,18 @@ export default function PageCreateShipment() {
 
     setField((old) => ({ ...old, delivery_ids: table.selected }))
   }, [table.selected])
+
+  React.useEffect(() => {
+    if (router.query.id) {
+      getDetailShipment({ id: router.query.id as string })
+        .then((result) => result.data)
+        .then((detail) => {
+          table.handleSelected(
+            detail.shipment_items_detail.map(({ delivery_order_id }) => delivery_order_id),
+          )
+        })
+    }
+  }, [router])
 
   return (
     <ColPinkLava>

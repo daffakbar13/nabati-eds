@@ -1,5 +1,6 @@
 /* eslint-disable radix */
-import React, { } from 'react'
+import React from 'react'
+import * as XLSX from 'xlsx'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
@@ -23,6 +24,8 @@ import { PATH } from 'src/configs/menus'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import Loader from 'src/components/Loader'
 import Pagination from 'src/components/Pagination'
+import ReactToPrint from 'react-to-print'
+import axios from 'axios'
 import { PageQuotationProps } from './types'
 import { useColumnQuotation } from './columns'
 
@@ -52,18 +55,59 @@ export default function PageQuotation(props: PageQuotationProps) {
   const [optionsReason, setOptionsReason] = React.useState([])
   const [submittedQuotation, setSubmittedQuotation] = React.useState([])
   const [processing, setProcessing] = React.useState('')
+  const [downloadData, setDownloadData] = React.useState<any>()
+  const componentRef = React.useRef()
   const onProcess = processing !== ''
   const hasData = table.total > 0
   const router = useRouter()
   const oneSelected = table.selected.length === 1
   const firstSelected = table.selected[0]
 
+  //   const handleUpload = (e) => {
+  //     e.preventDefault();
+
+  //     var files = e.target.files, f = files[0];
+  //     var reader = new FileReader();
+  //     reader.onload = function (e) {
+  //         var data = e.target.result;
+  //         let readedData = XLSX.read(data, {type: 'binary'});
+  //         const wsname = readedData.SheetNames[0];
+  //         const ws = readedData.Sheets[wsname];
+
+  //         /* Convert array to json*/
+  //         const dataParse = XLSX.utils.sheet_to_json(ws, {header:1});
+  //         setFileUploaded(dataParse);
+  //     };
+  //     reader.readAsBinaryString(f)
+  // }
+
+  // const downloadFile = async () => {
+  //   const resp = await axios.post(
+  //     'https://dist-system.nabatisnack.co.id:3001/v1/quotations/export-excel',
+  //     {},
+  //     {
+  //       responseType: 'arraybuffer',
+  //       headers: { 'Content-Type': 'blob' },
+  //     },
+  //   )
+
+  //   const link = document.createElement('a')
+  //   const fileName = 'file.xlsx'
+  //   link.setAttribute('download', fileName)
+  //   link.href = URL.createObjectURL(new Blob([resp.data]))
+  //   document.body.appendChild(link)
+  //   console.log('blob', new Blob([resp.data]))
+
+  //   link.click()
+  //   link.remove()
+  // }
+
   const selectedQuotation = {
     text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const moreContent = () => (
+  const moreContent = (
     <div
       style={{
         display: 'flex',
@@ -73,9 +117,28 @@ export default function PageQuotation(props: PageQuotationProps) {
         // padding: 5,
       }}
     >
-      <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
-        <ICDownloadTemplate /> Download Template
-      </div>
+      <ReactToPrint
+        onBeforeGetContent={async () => {
+          await downloadTemplateQuotation().then((e) => {
+            setDownloadData(e)
+          })
+        }}
+        // onBeforePrint={() => {
+        //   downloadTemplateQuotation().then((e) => {
+        //     setDownloadData(e)
+        //   })
+        // }}
+        onAfterPrint={() => {
+          setDownloadData('')
+        }}
+        removeAfterPrint
+        trigger={() => (
+          <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
+            <ICDownloadTemplate /> Download Template
+          </div>
+        )}
+        content={() => componentRef.current}
+      />
       <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
         <ICUploadTemplate /> Upload Template
       </div>
@@ -318,6 +381,7 @@ export default function PageQuotation(props: PageQuotationProps) {
     <Col>
       {onProcess && <Loader type="process" text={processing} />}
       <Text variant={'h4'}>{titlePage}</Text>
+      <div ref={componentRef}>{downloadData}</div>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

@@ -210,29 +210,17 @@ export const useTableAddItem = () => {
       (sub_total) => <div style={styleDisabledInput}>{sub_total?.toLocaleString()}</div>,
       130,
     ),
-    CreateColumns(
-      'Remarks',
-      'remarks',
-      false,
-      // (_, __, index) => <DebounceSelect
-      //   type='input'
-      //   placeholder='e.g Testing'
-      //   onChange={(e) => {
-      //     handleChangeData('remarks', e.target.value, index)
-      //   }}
-      // />,
-      (remarks, _, index) => (
-        <Input.TextArea
-          style={styleInputNumber}
-          rows={2}
-          autoSize={{ minRows: 2 }}
-          value={remarks}
-          onChange={(e) => {
-            handleChangeData('remarks', e.target.value, index)
-          }}
-        />
-      ),
-    ),
+    CreateColumns('Remarks', 'remarks', false, (remarks, _, index) => (
+      <Input.TextArea
+        style={styleInputNumber}
+        rows={2}
+        autoSize={{ minRows: 2 }}
+        value={remarks}
+        onChange={(e) => {
+          handleChangeData('remarks', e.target.value, index)
+        }}
+      />
+    )),
   ]
 
   function ConfirmDelete() {
@@ -295,7 +283,6 @@ export const useTableAddItem = () => {
         )
         newOptionsUom[index] = filteredArr
         const newUom = uom_id === '' ? filteredArr[0]?.value : uom_id
-        console.log('optuom', newOptionsUom)
 
         handleChangeData('uom_id', newUom, index)
         setOptionsUom(newOptionsUom)
@@ -344,18 +331,14 @@ export const useTableAddItem = () => {
     } else {
       setIsLoading(false)
     }
-    console.log('pending', pending)
   }, [pending])
 
   React.useEffect(() => {
     setOptionsProduct(baseAllProduct.filter(({ value }) => !removedListProduct.includes(value)))
-    console.log('removedListProduct', removedListProduct)
-    console.log(optionsProduct)
   }, [removedListProduct])
 
   React.useEffect(() => {
     if (router.query.id) {
-      // router.reload()
       setPending((current) => ++current)
       getDetailQuotation({ id: router.query.id as string })
         .then((response) => {

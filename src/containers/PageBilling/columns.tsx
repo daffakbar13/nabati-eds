@@ -48,58 +48,23 @@ export const TableBilling = [
     'Billing Number',
     'billing_number',
     true,
-    (link, record) => <Linked link={link} status={record.status} type='id' />,
-  ),
-  CreateColumns(
-    'Order Type',
-    'order_type',
+    (link, record) => <Linked link={link} status={record.status} type="id" />,
+    170,
     true,
+    'have-checkbox',
   ),
-  CreateColumns(
-    'Order Date',
-    'order_date',
-    true,
-    (order_date) => <DateFormat date={order_date} format='DD-MM-YYYY' />,
-  ),
-  CreateColumns(
-    'Sales Org.',
-    'sales_org',
-    true,
-  ),
-  CreateColumns(
-    'Branch',
-    'branch',
-    true,
-  ),
-  CreateColumns(
-    'Ship To Customer',
-    'ship_to_customer',
-    true,
-  ),
-  CreateColumns(
-    'Shipment Number',
-    'shipment_number',
-    true,
-  ),
-  CreateColumns(
-    'Salesman',
-    'salesman',
-    true,
-  ),
-  CreateColumns(
-    'Total Amount',
-    'total_amount',
-    true,
-  ),
-  CreateColumns(
-    'Status',
-    'status',
-    true,
-  ),
-  CreateColumns(
-    'Action',
-    'billing_number',
-    false,
-    (link, record) => <Linked link={link} status={record.status} type='action' />,
-  ),
+  CreateColumns('Order Type', 'order_type', false),
+  CreateColumns('Order Date', 'order_date', false, (order_date) => (
+    <DateFormat date={order_date} format="DD-MM-YYYY" />
+  )),
+  CreateColumns('Sales Org.', 'sales_org', false),
+  CreateColumns('Branch', 'branch', false),
+  CreateColumns('Ship To Customer', 'ship_to_customer', false),
+  CreateColumns('Shipment Number', 'shipment_number', false),
+  CreateColumns('Salesman', 'salesman', false),
+  CreateColumns('Total Amount', 'total_amount', false),
+  CreateColumns('Status', 'status', false),
+  CreateColumns('Action', 'billing_number', false, (link, record) => (
+    <Linked link={link} status={record.status} type="action" />
+  )),
 ]

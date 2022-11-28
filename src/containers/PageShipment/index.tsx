@@ -21,13 +21,7 @@ import Loader from 'src/components/Loader'
 import { PageShipmentProps } from './types'
 import { TableBilling } from './columns'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
-export default function PageShipment(props: PageShipmentProps) {
+export default function PageShipment() {
   const { filters, setFilters } = useSmartFilters([
     FILTER.SALES_ORG,
     FILTER.BRANCH,
@@ -44,22 +38,12 @@ export default function PageShipment(props: PageShipmentProps) {
   })
   const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
-  const [reason, setReason] = React.useState('')
-  const [optionsReason, setOptionsReason] = React.useState([])
-  const [shipmentArePGI, setShipmentArePGI] = React.useState([])
   const [processing, setProcessing] = React.useState('')
   const [pending, setPending] = React.useState(0)
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
-  const onProcess = processing !== ''
   const hasData = table.total > 0
   const router = useRouter()
   const oneSelected = table.selected.length === 1
-  const firstSelected = table.selected[0]
-
-  const selectedSalesOrder = {
-    text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
-    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
-  }
 
   const ConfirmPGI = () => (
     <Popup
@@ -106,18 +90,6 @@ export default function PageShipment(props: PageShipmentProps) {
                 }
               })
             })
-            // setProcessing('Wait for submitting Quotation')
-            // multipleSubmitQuotation({
-            //   order_list: table.selected
-            //     .map((id) => ({ id })),
-            // })
-            //   .then((response) => response.data)
-            //   .then((data) => {
-            //     setShowConfirm('success-PGI')
-            //     setShipmentArePGI(data.results.map(({ id }) => id))
-            //     setProcessing('')
-            //   })
-            //   .catch(() => setProcessing(''))
           }}
         >
           Yes
@@ -150,7 +122,7 @@ export default function PageShipment(props: PageShipmentProps) {
         <div>
           Shipment
           <Typography.Text
-            copyable={{ text: oneSelected ? shipmentArePGI[0] : shipmentArePGI.join(', ') }}
+            copyable={{ text: oneSelected ? table.selected[0] : table.selected.join(', ') }}
           >
             {oneSelected ? (
               ` ${table.selected[0]} `
