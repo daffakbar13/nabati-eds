@@ -40,7 +40,11 @@ export default function PageIntraSlocRequest() {
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const statusOption = [{ label: 'Done', value: 'Done' }]
+  const statusOption = [
+    { label: 'Approved', value: '01' },
+    { label: 'Done', value: '03' },
+    { label: 'Wait For Approval', value: '00' },
+  ]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -49,7 +53,7 @@ export default function PageIntraSlocRequest() {
   useEffect(() => {
     if (router.query.search) {
       filters.push({
-        field: 'id',
+        field: 'document_number',
         option: 'EQ',
         from_value: router.query.search,
         data_type: 'S',
@@ -67,18 +71,18 @@ export default function PageIntraSlocRequest() {
             <SearchQueryParams placeholder="Search by Doc. Number" />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
-                label="Branch"
+                label="Supplying Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="receiving_branch_id"
                 dataType="S"
-                label="SLoc"
+                label="Receiving Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
@@ -103,7 +107,7 @@ export default function PageIntraSlocRequest() {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>

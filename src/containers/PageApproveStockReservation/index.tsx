@@ -40,7 +40,11 @@ export default function PageStockReservation() {
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
 
-  const statusOption = [{ label: 'Done', value: 'Done' }]
+  const statusOption = [
+    { label: 'Approved', value: '03' },
+    { label: 'Rejected', value: '02 ' },
+    { label: 'Wait For Approval', value: '00' },
+  ]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -49,7 +53,13 @@ export default function PageStockReservation() {
   useEffect(() => {
     if (router.query.search) {
       filters.push({
-        field: 'id',
+        field: 'reservation_number',
+        option: 'EQ',
+        from_value: router.query.search,
+        data_type: 'S',
+      })
+      filters.push({
+        field: 'doc_number',
         option: 'EQ',
         from_value: router.query.search,
         data_type: 'S',
@@ -64,21 +74,21 @@ export default function PageStockReservation() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Doc. Number" />
+            <SearchQueryParams placeholder="Search by Reservation Number, Doc. Number" />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
-                label="Branch"
+                label="Supplying Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="receiving_branch_id"
                 dataType="S"
-                label="SLoc"
+                label="Receiving Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
@@ -103,7 +113,7 @@ export default function PageStockReservation() {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>

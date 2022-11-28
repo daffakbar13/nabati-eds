@@ -55,7 +55,7 @@ function Linked({
 
 export const column = [
   CreateColumns('Doc. Number', 'doc_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="deliveryNumber" />
+    <Linked link={link} type="id" linkType="id" />
   )),
   CreateColumns('Requirement Date', 'requirement_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
