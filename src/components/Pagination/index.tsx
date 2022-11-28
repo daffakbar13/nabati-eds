@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
-import { InputNumber, Select } from 'antd'
+import { Col, InputNumber, Row, Select } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import React from 'react'
 
@@ -59,9 +59,17 @@ export default function Pagination(props: PaginationProps) {
     setOptionsPage(newOptionsPage)
   }
 
-  function MiddleAlign({ children, style }: { children?; style? }) {
+  function VerticalMiddle({ children, style }: { children?; style? }) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', ...style }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          height: '100%',
+          ...style,
+        }}
+      >
         {children}
       </div>
     )
@@ -77,61 +85,63 @@ export default function Pagination(props: PaginationProps) {
   }, [totalPage])
 
   return (
-    <div style={{ display: 'flex', fontWeight: '600' }}>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'left',
-          flexGrow: 1,
-          gap: 5,
-        }}
-      >
-        <MiddleAlign>Items per page</MiddleAlign>
-        <Select
-          size="small"
-          value={limit}
-          style={styleSelect}
-          options={pageSizeOptions.map((e) => ({ label: e, value: e }))}
-          onChange={(e) => handleChangeLimit(e)}
-        />
-        <MiddleAlign>
-          Showing {range} of {total} items
-        </MiddleAlign>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'right',
-          flexGrow: 1,
-          gap: 5,
-        }}
-      >
-        <InputNumber
-          size="small"
-          value={page}
-          style={styleSelect}
-          min={1}
-          max={totalPage}
-          onChange={(e) => handleChangePage(e)}
-        />
-        {/* <Select
-          size="small"
-          value={page}
-          style={styleSelect}
-          options={optionsPage}
-          showSearch
-          onChange={(e) => handleChangePage(e)}
-        /> */}
-        <MiddleAlign>of {totalPage} Pages</MiddleAlign>
-        <div style={{ display: 'flex', gap: 10, margin: '0 15px', cursor: 'pointer' }}>
-          <MiddleAlign>
-            <LeftOutlined onClick={handleBackPage} />
-          </MiddleAlign>
-          <MiddleAlign>
-            <RightOutlined onClick={handleNextPage} />
-          </MiddleAlign>
-        </div>
-      </div>
-    </div>
+    <Row justify="space-between" style={{ fontWeight: '600' }}>
+      <Row gutter={10}>
+        <Col>
+          <VerticalMiddle>Items per page</VerticalMiddle>
+        </Col>
+        <Col>
+          <Select
+            size="small"
+            value={limit}
+            style={styleSelect}
+            options={pageSizeOptions.map((e) => ({ label: e, value: e }))}
+            onChange={(e) => handleChangeLimit(e)}
+          />
+        </Col>
+        <Col>
+          <VerticalMiddle>
+            Showing {range} of {total} items
+          </VerticalMiddle>
+        </Col>
+      </Row>
+      <Row gutter={10}>
+        <Col>
+          <InputNumber
+            size="small"
+            value={page}
+            style={styleSelect}
+            min={1}
+            max={totalPage}
+            onChange={(e) => handleChangePage(e)}
+          />
+        </Col>
+        <Col>
+          <VerticalMiddle>of {totalPage} Pages</VerticalMiddle>
+        </Col>
+        <Col>
+          <VerticalMiddle>
+            <Row justify="space-between" gutter={10}>
+              <Col>
+                <VerticalMiddle>
+                  <LeftOutlined
+                    onClick={handleBackPage}
+                    style={{ fontSize: 16, ...(isFirstPage && { color: 'grey' }) }}
+                  />
+                </VerticalMiddle>
+              </Col>
+              <Col>
+                <VerticalMiddle>
+                  <RightOutlined
+                    onClick={handleNextPage}
+                    style={{ fontSize: 16, ...(isLastPage && { color: 'grey' }) }}
+                  />
+                </VerticalMiddle>
+              </Col>
+            </Row>
+          </VerticalMiddle>
+        </Col>
+      </Row>
+    </Row>
   )
 }
