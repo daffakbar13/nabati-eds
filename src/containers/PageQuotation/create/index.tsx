@@ -18,10 +18,12 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import {
   getCustomerByCompany,
   getCustomerByFilter,
+  getCustomerList,
   getDocTypeByCategory,
 } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
+import { fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateQuotation() {
@@ -206,54 +208,38 @@ export default function PageCreateQuotation() {
 
   React.useEffect(() => {
     if (fetching === 'customer') {
-      const { customer_id } = dataForm
-      setProcessing('Wait for proccess')
+      const customer_id = dataForm.customer_id.split(' - ')[0]
       getCustomerByFilter({
         branch_id: '',
-        customer_id: splitString(customer_id),
+        customer_id,
         sales_org_id: '',
         salesman_id: '',
       })
-        .then((res) => res.data)
-        .then((data) => {
-          setProcessing('')
-          const [firstData] = data
-          const dataBranch = concatString([firstData.branch_id, firstData.branch_name])
-          const dataSalesOrg = concatString([firstData.sales_org_id, firstData.sales_org_name])
-          const dataSalesman = concatString([firstData.salesman_id, firstData.salesman_name])
-
-          onChangeForm('ship_to_id', customer_id)
-          onChangeForm('branch_id', dataBranch)
-          onChangeForm('sales_org_id', dataSalesOrg)
-          onChangeForm('salesman_id', dataSalesman)
-          setOptionsCustomerShipTo([
-            {
-              label: customer_id,
-              value: customer_id,
-            },
-          ])
-          setOptionsBranch([
-            {
-              label: dataBranch,
-              value: dataBranch,
-            },
-          ])
-          setOptionsSalesOrg([
-            {
-              label: dataSalesOrg,
-              value: dataSalesOrg,
-            },
-          ])
+        .then((result) => {
           setOptionsSalesman(
-            data.map(({ salesman_id, salesman_name }) => ({
-              label: concatString([salesman_id, salesman_name]),
-              value: concatString([salesman_id, salesman_name]),
+            result.data.map(({ salesman_id, salesman_name }) => ({
+              label: [salesman_id, salesman_name].join(' - '),
+              value: [salesman_id, salesman_name].join(' - '),
             })),
           )
+          return result.data.splice(0, 1)
         })
-        .catch((err) => console.log(err))
+        .then((data) => {
+          setOptionsSalesOrg(
+            data.map(({ sales_org_id, sales_org_name }) => ({
+              label: [sales_org_id, sales_org_name].join(' - '),
+              value: [sales_org_id, sales_org_name].join(' - '),
+            })),
+          )
+          setOptionsBranch(
+            data.map(({ branch_id, branch_name }) => ({
+              label: [branch_id, branch_name].join(' - '),
+              value: [branch_id, branch_name].join(' - '),
+            })),
+          )
+          setFetching('')
+        })
     }
-    setFetching('')
   }, [fetching])
 
   React.useEffect(() => {
@@ -286,14 +272,14 @@ export default function PageCreateQuotation() {
           onChangeForm('order_type_id', data.find(({ value }) => value.includes('ZQP1'))?.value)
           setOptionsOrderType(data)
         })
-      await getCustomerByCompany()
-        .then((result) =>
-          result.data.map(({ sold_to_customer_id, name }) => ({
-            label: [sold_to_customer_id, name].join(' - '),
-            value: [sold_to_customer_id, name].join(' - '),
-          })),
-        )
-        .then((cust) => setOptionsCustomerSoldTo(cust))
+      // await getCustomerByCompany()
+      //   .then((result) =>
+      //     result.data.map(({ sold_to_customer_id, name }) => ({
+      //       label: [sold_to_customer_id, name].join(' - '),
+      //       value: [sold_to_customer_id, name].join(' - '),
+      //     })),
+      //   )
+      //   .then((cust) => setOptionsCustomerSoldTo(cust))
     }
     api()
       .then(() => setProcessing(''))
@@ -398,11 +384,7 @@ export default function PageCreateQuotation() {
               label="Sold To Customer"
               required
               value={dataForm.customer_id}
-              fetchOptions={async (search) =>
-                optionsCustomerSoldTo
-                  .filter(({ value }) => value.toLowerCase().includes(search.toLowerCase()))
-                  .splice(0, 10)
-              }
+              fetchOptions={fieldCustomer}
               onChange={(e: any) => {
                 onChangeForm('customer_id', e.value)
                 setFetching('customer')
@@ -413,7 +395,7 @@ export default function PageCreateQuotation() {
               label="Ship To Customer"
               placeholder={'Select'}
               value={dataForm.ship_to_id}
-              options={optionsCustomerShipTo}
+              options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
               onChange={(e: any) => {
                 onChangeForm('ship_to_id', e.value)
               }}

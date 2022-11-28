@@ -30,6 +30,8 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
   const data = useDetail(getDetailQuotation, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
 
+  const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+
   const ConfirmCancel = () => (
     <Popup
       onOutsideClick={() => {
@@ -161,7 +163,7 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {router.query.status === 'New' && (
+          {isStatus('New') && (
             <>
               <Button
                 size="big"
@@ -176,14 +178,16 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
                 size="big"
                 variant="secondary"
                 onClick={() => {
-                  router.push(`${PATH.SALES}/quotation/edit/${router.query.id}?status=${router.query.status}`)
+                  router.push(
+                    `${PATH.SALES}/quotation/edit/${router.query.id}?status=${router.query.status}`,
+                  )
                 }}
               >
                 Edit
               </Button>
             </>
           )}
-          {['Complete', 'New'].includes(router.query.status as string) && (
+          {isStatus('Complete', 'New') && (
             <Button
               size="big"
               variant="primary"

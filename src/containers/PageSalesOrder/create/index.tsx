@@ -22,6 +22,7 @@ import {
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
 import { createSalesOrder, getDetailSalesOrder, updateSalesOrder } from 'src/api/sales-order'
+import { fieldCustomer } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateSalesOrder() {
@@ -207,54 +208,38 @@ export default function PageCreateSalesOrder() {
 
   React.useEffect(() => {
     if (fetching === 'customer') {
-      const { customer_id } = dataForm
-      setProcessing('Wait for proccess')
+      const customer_id = dataForm.customer_id.split(' - ')[0]
       getCustomerByFilter({
         branch_id: '',
-        customer_id: splitString(customer_id),
+        customer_id,
         sales_org_id: '',
         salesman_id: '',
       })
-        .then((res) => res.data)
-        .then((data) => {
-          setProcessing('')
-          const [firstData] = data
-          const dataBranch = concatString([firstData.branch_id, firstData.branch_name])
-          const dataSalesOrg = concatString([firstData.sales_org_id, firstData.sales_org_name])
-          const dataSalesman = concatString([firstData.salesman_id, firstData.salesman_name])
-
-          onChangeForm('ship_to_id', customer_id)
-          onChangeForm('branch_id', dataBranch)
-          onChangeForm('sales_org_id', dataSalesOrg)
-          onChangeForm('salesman_id', dataSalesman)
-          setOptionsCustomerShipTo([
-            {
-              label: customer_id,
-              value: customer_id,
-            },
-          ])
-          setOptionsBranch([
-            {
-              label: dataBranch,
-              value: dataBranch,
-            },
-          ])
-          setOptionsSalesOrg([
-            {
-              label: dataSalesOrg,
-              value: dataSalesOrg,
-            },
-          ])
+        .then((result) => {
           setOptionsSalesman(
-            data.map(({ salesman_id, salesman_name }) => ({
-              label: concatString([salesman_id, salesman_name]),
-              value: concatString([salesman_id, salesman_name]),
+            result.data.map(({ salesman_id, salesman_name }) => ({
+              label: [salesman_id, salesman_name].join(' - '),
+              value: [salesman_id, salesman_name].join(' - '),
             })),
           )
+          return result.data.splice(0, 1)
         })
-        .catch((err) => console.log(err))
+        .then((data) => {
+          setOptionsSalesOrg(
+            data.map(({ sales_org_id, sales_org_name }) => ({
+              label: [sales_org_id, sales_org_name].join(' - '),
+              value: [sales_org_id, sales_org_name].join(' - '),
+            })),
+          )
+          setOptionsBranch(
+            data.map(({ branch_id, branch_name }) => ({
+              label: [branch_id, branch_name].join(' - '),
+              value: [branch_id, branch_name].join(' - '),
+            })),
+          )
+          setFetching('')
+        })
     }
-    setFetching('')
   }, [fetching])
 
   React.useEffect(() => {
@@ -304,10 +289,7 @@ export default function PageCreateSalesOrder() {
   return (
     <Col>
       {(onProcess || tableAddItems.isLoading) && (
-        <Loader
-          type="process"
-          text={processing === '' ? 'Wait for get data items' : processing}
-        />
+        <Loader type="process" text={processing === '' ? 'Wait for get data items' : processing} />
       )}
       {/* {tableAddItems.isLoading && <Loader type='process' text='Wait for get data' />} */}
       <Text variant={'h4'}>{titlePage}</Text>
@@ -402,11 +384,7 @@ export default function PageCreateSalesOrder() {
               label="Sold To Customer"
               required
               value={dataForm.customer_id}
-              fetchOptions={async (search) =>
-                optionsCustomerSoldTo
-                  .filter(({ value }) => value.toLowerCase().includes(search.toLowerCase()))
-                  .splice(0, 10)
-              }
+              fetchOptions={fieldCustomer}
               onChange={(e: any) => {
                 onChangeForm('customer_id', e.value)
                 setFetching('customer')
@@ -417,7 +395,7 @@ export default function PageCreateSalesOrder() {
               label="Ship To Customer"
               placeholder={'Select'}
               value={dataForm.ship_to_id}
-              options={optionsCustomerShipTo}
+              options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
               onChange={(e: any) => {
                 onChangeForm('ship_to_id', e.value)
               }}
