@@ -10,6 +10,7 @@ import {
   LogisticIcBadStock,
   LogisticIcSwapHandling,
   LogisticIcStockAdjustment,
+  LogisticIcConfiguration,
 } from 'src/assets'
 import { PATH } from '../path'
 
@@ -189,7 +190,7 @@ export const menuLogistic = [
         key: 'stock-reservation',
         title: 'Stock Reservation',
         content: () => 'Request',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/stock-reservation  `),
+        onClick: () => Router.push(`${PATH.LOGISTIC}/stock-reservation`),
       },
       {
         key: 'approval-stock-reservation',
@@ -229,5 +230,42 @@ export const menuLogistic = [
     title: 'Stock Adjustment',
     icon: LogisticIcStockAdjustment,
     onClick: () => Router.push(`${PATH.LOGISTIC}/stock-adjustment`),
+  },
+  {
+    key: 'configuration',
+    title: 'Configuration',
+    icon: LogisticIcConfiguration,
+    children: [
+      {
+        key: 'company',
+        title: 'Company',
+        content: () => 'Company',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/company`),
+      },
+      {
+        key: 'sloc-company',
+        title: 'Sloc Company',
+        content: () => 'Sloc Company',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/sloc-company`),
+      },
+      {
+        key: 'sloc-costumer-group',
+        title: 'Sloc Customer Group',
+        content: () => 'Sloc Customer Group',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/sloc-costumer-group`),
+      },
+      {
+        key: 'sloc-salesman',
+        title: 'Sloc Salesman',
+        content: () => 'Sloc Salesman',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/sloc-salesman`),
+      },
+      {
+        key: 'auto-so-to-do',
+        title: 'Auto SO to DO',
+        content: () => 'Auto SO to DO',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/auto-so-to-do`),
+      },
+    ],
   },
 ]
