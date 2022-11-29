@@ -234,7 +234,7 @@ export const menuLogistic = [
   {
     key: 'configuration',
     title: 'Configuration',
-    icon: LogisticIcConfiguration,
+    icon: LogisticIcStockAdjustment,
     children: [
       {
         key: 'company',
