@@ -15,10 +15,14 @@ import TaggedStatus from 'src/components/TaggedStatus'
 export default function PageIntraSlocGoodIssueDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const data: any = useDetail(getDetailGIIntraSloc, {
-    id: router.query.id as string,
-    doc_type: 'WA',
-  })
+  const data: any = useDetail(
+    getDetailGIIntraSloc,
+    {
+      id: router.query.id as string,
+      doc_type: 'WA',
+    },
+    false,
+  )
   const createDataList = (label: string, value: string) => ({ label, value })
   const format = 'DD MMMM YYYY'
 

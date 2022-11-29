@@ -56,12 +56,22 @@ function Linked({
 }
 
 export const column = [
-  CreateColumns('Reservation Number', 'reservation_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="id" />
-  )),
-  CreateColumns('Doc. Number', 'doc_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="docNumber" />
-  )),
+  CreateColumns(
+    'Reservation Number',
+    'reservation_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    175,
+    'left',
+  ),
+  CreateColumns(
+    'Doc. Number',
+    'doc_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="docNumber" />,
+    175,
+    'left',
+  ),
   CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),
@@ -98,11 +108,7 @@ export const column = [
     (text: string, record: any) =>
       `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
   ),
-  CreateColumns(
-    'Header Text',
-    'header_text',
-    false,
-  ),
+  CreateColumns('Header Text', 'header_text', false),
   CreateColumns('Status', 'status_name', false, (status_name) => (
     <TaggedStatus status={status_name} />
   )),

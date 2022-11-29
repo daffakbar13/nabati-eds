@@ -16,7 +16,11 @@ import TaggedStatus from 'src/components/TaggedStatus'
 export default function PageStockReservationDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const data: any = useDetail(getListStockReservationDetail, { id: router.query.id as string })
+  const data: any = useDetail(
+    getListStockReservationDetail,
+    { id: router.query.id as string },
+    false,
+  )
   const createDataList = (label: string, value: string) => ({ label, value })
   const format = 'DD MMMM YYYY'
   const [approve, setApprove] = React.useState(false)
@@ -78,16 +82,16 @@ export default function PageStockReservationDetail() {
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
       <Card style={{ overflow: 'unset' }}>
-        {data.status != 'Pending' ? (
+        {data.status_name != 'Pending' ? (
           <Text variant={'h5'}>
-            <TaggedStatus status={data.status} size="h5" />
+            <TaggedStatus status={data.status_name} size="h5" />
           </Text>
         ) : (
           ''
         )}
         <Row justifyContent="space-between" reverse>
           {(() => {
-            if (data.status == 'Pending') {
+            if (data.status_name == 'Pending') {
               return (
                 <>
                   <Row gap="16px">
@@ -96,7 +100,7 @@ export default function PageStockReservationDetail() {
                     </Button>
                   </Row>
                   <Text variant={'h5'}>
-                    <TaggedStatus status={data.status} size="h5" />
+                    <TaggedStatus status={data.status_name} size="h5" />
                   </Text>
                 </>
               )
@@ -118,7 +122,7 @@ export default function PageStockReservationDetail() {
             ))}
           </Col>
           <Col span={8}>
-            {dataList.slice(6   ).map(({ label, value }, i) => (
+            {dataList.slice(6).map(({ label, value }, i) => (
               <DataList key={i} label={label} value={value} />
             ))}
           </Col>

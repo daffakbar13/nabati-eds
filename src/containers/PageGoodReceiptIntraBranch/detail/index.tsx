@@ -14,9 +14,13 @@ import { column } from './columns'
 export default function PageIntraChannelGoodIssueDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const data: any = useDetail(getGoodReceiptDetail, {
-    id: router.query.id as string
-  })
+  const data: any = useDetail(
+    getGoodReceiptDetail,
+    {
+      id: router.query.id as string,
+    },
+    false,
+  )
   const createDataList = (label: string, value: string) => ({ label, value })
   const format = 'DD MMMM YYYY'
 

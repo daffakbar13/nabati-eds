@@ -45,9 +45,14 @@ function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
 }
 
 export const column = [
-  CreateColumns('Reservation Number', 'reservation_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" />
-  )),
+  CreateColumns(
+    'Reservation Number',
+    'reservation_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" />,
+    175,
+    'left',
+  ),
   CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),
@@ -61,22 +66,19 @@ export const column = [
     'Branch',
     'suppl_branch_id',
     false,
-    (text: string, record: any) =>
-      `${record.branch_id || ''} - ${record.branch_name || ''}`,
+    (text: string, record: any) => `${record.branch_id || ''} - ${record.branch_name || ''}`,
   ),
   CreateColumns(
     'Sloc',
     'supplying_sloc_id',
     false,
-    (text: string, record: any) =>
-      `${record.sloc_id || ''} - ${record.sloc_name || ''}`,
+    (text: string, record: any) => `${record.sloc_id || ''} - ${record.sloc_name || ''}`,
   ),
   CreateColumns(
     'Mov. Type',
     'movement_type_id',
     false,
-    (text: string, record: any) =>
-      `${record.movement_type_id || ''}`,
+    (text: string, record: any) => `${record.movement_type_id || ''}`,
   ),
   CreateColumns(
     'Header Text',
@@ -85,6 +87,10 @@ export const column = [
     (text: string, record: any) =>
       `${record.header_text != '' && record.header_text != null ? record.header_text : '-'}`,
   ),
-  CreateColumns('Status', 'status_name', false, (status_name) => <TaggedStatus status={status_name} />),
-  CreateColumns('Action', 'reservation_number', false, (link, record) => <Linked link={link} type="action" />),
+  CreateColumns('Status', 'status_name', false, (status_name) => (
+    <TaggedStatus status={status_name} />
+  )),
+  CreateColumns('Action', 'reservation_number', false, (link, record) => (
+    <Linked link={link} type="action" />
+  )),
 ]

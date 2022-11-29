@@ -16,7 +16,7 @@ import TaggedStatus from 'src/components/TaggedStatus'
 export default function PageIntraSlocRequestDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const data: any = useDetail(getDetailRequestIntraSloc, { id: router.query.id as string })
+  const data: any = useDetail(getDetailRequestIntraSloc, { id: router.query.id as string }, false)
   const createDataList = (label: string, value: string) => ({ label, value })
   const format = 'DD MMMM YYYY'
   const [approve, setApprove] = React.useState(false)

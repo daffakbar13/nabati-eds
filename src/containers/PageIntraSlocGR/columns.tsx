@@ -59,15 +59,28 @@ function Linked({
 }
 
 export const column = [
-  CreateColumns('Request Number', 'delivery_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="deliveryNumber" />
-  )),
+  CreateColumns(
+    'Request Number',
+    'delivery_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="deliveryNumber" />,
+    175,
+    'left',
+  ),
   CreateColumns('GI Number', 'gi_number', true, (link: string, record: any) => (
     <Linked link={link} type="id" linkType="GI" />
   )),
-  CreateColumns('GR Number', 'id', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="id" />
-  )),
+  175,
+  'left',
+  ,
+  CreateColumns(
+    'GR Number',
+    'id',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    175,
+    'left',
+  ),
   CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),

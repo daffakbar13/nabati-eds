@@ -12,7 +12,7 @@ import TransferToGSUpdate from './update'
 export default function PageTransferToGSDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const data: any = useDetail(getDetailTransferGS, { id: router.query.id as string })
+  const data: any = useDetail(getDetailTransferGS, { id: router.query.id as string }, false)
 
   return (
     <Col>
@@ -37,9 +37,8 @@ export default function PageTransferToGSDetail() {
         data.status_name != undefined &&
         data.status_name != 'Wait For Approval' && <TransferToGSDetail data={data} />}
 
-      {data.status_name != '' &&
-        data.status_name == 'Pending' ||
-        data.status_name == 'Wait For Approval' && <TransferToGSUpdate data={data} />}
+      {(data.status_name != '' && data.status_name == 'Pending') ||
+        (data.status_name == 'Wait For Approval' && <TransferToGSUpdate data={data} />)}
     </Col>
   )
 }

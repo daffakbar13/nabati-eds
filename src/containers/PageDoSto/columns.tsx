@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import React from 'react'
-import moment from 'moment';
+import moment from 'moment'
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
@@ -11,12 +11,26 @@ import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+function Linked({
+  link,
+  status,
+  type,
+  linkType,
+}: {
+  link: string
+  status: string
+  type: 'id' | 'action'
+  linkType: string
+}) {
   const router = useRouter()
   const navigate = () => {
-    status === 'Draft'
-      ? router.push(`${PATH.LOGISTIC}/do-sto/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
+    if (linkType == 'do-sto') {
+      status === 'Draft'
+        ? router.push(`${PATH.LOGISTIC}/do-sto/edit/${link}`)
+        : router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
+    } else if (linkType == 'po-sto') {
+      router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
+    }
   }
   const [hover, setHover] = React.useState(false)
 
@@ -52,7 +66,9 @@ export const columns = [
     'PO Number',
     'purchase_id',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (link: string, { status_name }: any) => (
+      <Linked link={link} type="id" status={status_name} linkType="po-sto" />
+    ),
     180,
     'left',
   ),
@@ -60,7 +76,9 @@ export const columns = [
     'DO Number',
     'id',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
+    (link: string, { status_name }: any) => (
+      <Linked link={link} type="id" status={status_name} linkType="do-sto" />
+    ),
     180,
     'left',
   ),
@@ -68,16 +86,12 @@ export const columns = [
     'Posting Date',
     'created_at',
     false,
-    (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
+    (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
     180,
-    'left',
   ),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (company_id, rec) => <>{`${company_id || ''} - ${rec.company_name || ''}`}</>,
-  ),
+  CreateColumns('Company', 'company_id', false, (company_id, rec) => (
+    <>{`${company_id || ''} - ${rec.company_name || ''}`}</>
+  )),
   CreateColumns(
     'Supplying Branch',
     'supply_branch_id',
@@ -92,16 +106,10 @@ export const columns = [
     (branch, rec) => <>{`${branch} - ${rec.receive_branch_name}`}</>,
     250,
   ),
-  CreateColumns(
-    'Status',
-    'status',
-    false,
-    (status_process) => <TaggedStatus status={status_process} />,
-  ),
-  CreateColumns(
-    'Action',
-    'id',
-    false,
-    (link, record) => <Linked link={link} type="action" status={record.status_name} />,
-  ),
+  CreateColumns('Status', 'status', false, (status_process) => (
+    <TaggedStatus status={status_process} />
+  )),
+  CreateColumns('Action', 'id', false, (link, record) => (
+    <Linked link={link} type="action" status={record.status_name} linkType="do-sto" />
+  )),
 ]
