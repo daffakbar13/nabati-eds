@@ -57,12 +57,22 @@ function Linked({
 }
 
 export const column = [
-  CreateColumns('Request Number', 'delivery_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="deliveryNumber" />
-  )),
-  CreateColumns('GI Number', 'id', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="id" />
-  )),
+  CreateColumns(
+    'Request Number',
+    'delivery_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="deliveryNumber" />,
+    175,
+    'left',
+  ),
+  CreateColumns(
+    'GI Number',
+    'id',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    175,
+    'left',
+  ),
   CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),
@@ -83,22 +93,19 @@ export const column = [
     'From Sloc',
     'from_sloc',
     false,
-    (text: string, record: any) =>
-      `${record.from_sloc || ''} - ${record.from_sloc_name || ''}`,
+    (text: string, record: any) => `${record.from_sloc || ''} - ${record.from_sloc_name || ''}`,
   ),
   CreateColumns(
     'To Sloc',
     'to_sloc',
     false,
-    (text: string, record: any) =>
-      `${record.to_sloc || ''} - ${record.to_sloc_name || ''}`,
+    (text: string, record: any) => `${record.to_sloc || ''} - ${record.to_sloc_name || ''}`,
   ),
   CreateColumns(
     'Mov. Type',
     'branch_id',
     false,
-    (text: string, record: any) =>
-      `${record.movement_type_id || ''}`,
+    (text: string, record: any) => `${record.movement_type_id || ''}`,
   ),
   CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
   CreateColumns('Action', 'id', false, (link, record) => (

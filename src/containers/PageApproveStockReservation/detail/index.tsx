@@ -12,7 +12,11 @@ import PageApproveStockReservationUpdate from './update'
 export default function ApproveStocReservationDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const data: any = useDetail(getListApprovalReservationDetail, { id: router.query.id as string })
+  const data: any = useDetail(
+    getListApprovalReservationDetail,
+    { id: router.query.id as string },
+    true,
+  )
 
   return (
     <Col>
@@ -32,7 +36,7 @@ export default function ApproveStocReservationDetail() {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
-      
+
       {data.status_name != '' &&
         data.status_name != undefined &&
         data.status_name != 'Wait For Approval' && (

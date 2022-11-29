@@ -55,12 +55,16 @@ export const TableIntraChannelGoodIssue = [
         'delivery_number',
         true,
         (link: string, record: any) => <Linked link={link} type="id" linkType='deliveryNumber' />,
+        175,
+        'left',
     ),
     CreateColumns(
         'GI Number',
         'id',
         true,
         (link: string, record: any) => <Linked link={link} type="id" linkType='id' />,
+        175,
+        'left',
     ),
     CreateColumns(
         'Posting Date',

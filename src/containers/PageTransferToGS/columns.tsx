@@ -45,9 +45,14 @@ function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
 }
 
 export const column = [
-  CreateColumns('Doc. Number', 'document_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" />
-  )),
+  CreateColumns(
+    'Doc. Number',
+    'document_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" />,
+    175,
+    'left',
+  ),
   CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),
@@ -61,8 +66,7 @@ export const column = [
     'Branch',
     'suppl_branch_id',
     false,
-    (text: string, record: any) =>
-      `${record.branch_id || ''} - ${record.branch_name || ''}`,
+    (text: string, record: any) => `${record.branch_id || ''} - ${record.branch_name || ''}`,
   ),
   CreateColumns(
     'Supplying Sloc',
@@ -78,6 +82,10 @@ export const column = [
     (text: string, record: any) =>
       `${record.receiving_sloc_id || ''} - ${record.receiving_sloc_name || ''}`,
   ),
-  CreateColumns('Status', 'status_name', false, (status_name) => <TaggedStatus status={status_name} />),
-  CreateColumns('Action', 'document_number', false, (link, record) => <Linked link={link} type="action" />),
+  CreateColumns('Status', 'status_name', false, (status_name) => (
+    <TaggedStatus status={status_name} />
+  )),
+  CreateColumns('Action', 'document_number', false, (link, record) => (
+    <Linked link={link} type="action" />
+  )),
 ]

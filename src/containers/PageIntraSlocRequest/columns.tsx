@@ -47,9 +47,14 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 }
 
 export const column = [
-  CreateColumns('Request Number', 'id', true, (link: string, record: any) => (
-    <Linked link={link} type="id" status={record.status} />
-  )),
+  CreateColumns(
+    'Request Number',
+    'id',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" status={record.status} />,
+    175,
+    'left',
+  ),
   CreateColumns('Posting Date', 'posting_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),

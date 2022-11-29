@@ -108,7 +108,6 @@ export const columns = [
     false,
     (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
     180,
-    'left',
   ),
   CreateColumns('Company', 'company_id', false, (company_id, rec) => (
     <>{`${company_id} - ${rec.company_name}`}</>

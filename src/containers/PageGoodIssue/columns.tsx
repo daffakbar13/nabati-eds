@@ -82,7 +82,6 @@ export const columns = [
     false,
     (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
     180,
-    'left',
   ),
   CreateColumns(
     'Company',

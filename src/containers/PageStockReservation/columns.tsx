@@ -54,9 +54,14 @@ function Linked({
 }
 
 export const column = [
-  CreateColumns('Doc. Number', 'doc_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="id" />
-  )),
+  CreateColumns(
+    'Doc. Number',
+    'doc_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    175,
+    'left',
+  ),
   CreateColumns('Requirement Date', 'requirement_date', false, (date) => (
     <DateFormat date={date} format="DD-MM-YYYY" />
   )),
@@ -76,9 +81,12 @@ export const column = [
     'Mov. Type',
     'branch_id',
     false,
-    (text: string, record: any) => `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
+    (text: string, record: any) =>
+      `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
   ),
-  CreateColumns('Status', 'status_name', false, (status_name) => <TaggedStatus status={status_name} />),
+  CreateColumns('Status', 'status_name', false, (status_name) => (
+    <TaggedStatus status={status_name} />
+  )),
   CreateColumns('Action', 'doc_number', false, (link, record) => (
     <Linked link={link} type="action" linkType="id" />
   )),
