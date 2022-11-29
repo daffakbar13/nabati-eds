@@ -1,26 +1,66 @@
+/* eslint-disable radix */
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-expressions */
+import React from 'react'
 import CreateColumns from 'src/utils/createColumns'
+import { Button } from 'pink-lava-ui'
+import { Switch } from 'antd'
 
-export const columns = () => [
-  CreateColumns('No', 'branch', true, (text, _, ind) => <>{ind + 1}</>, 75),
+function Linked({ record }: { record: string }) {
+  return <></>
+}
+
+const onChange = (checked) => {
+  console.log(`switch to ${checked}`)
+}
+
+const selectData = (record) => {
+  console.log(`selectedData : `, record)
+}
+
+export const columns = [
+  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1, 55),
   CreateColumns(
     'Company',
     'company_id',
-    true,
-    (text, rec) => <>{`${text} - ${rec.company_name}`}</>,
-    250,
+    false,
+    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
   ),
   CreateColumns(
-    'Company',
+    'Supplying Branch',
     'sales_org_id',
-    true,
-    (text, rec) => <>{`${text} - ${rec.sales_org_name}`}</>,
-    250,
-  ),
-  CreateColumns(
-    'Sloc',
-    'from_sloc',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.from_sloc_name}`}</>,
+    false,
+    (sales_org_id, record) => <>{`${sales_org_id || ''} - ${record.sales_org_name || ''}`}</>,
     200,
   ),
+  CreateColumns(
+    'Customer Group',
+    'customer_group_id',
+    false,
+    (customer_group_id, record) => (
+      <>{`${customer_group_id || ''} - ${record.customer_group_name || ''}`}</>
+    ),
+    200,
+  ),
+  CreateColumns('SLoc', 'sloc_id', false, (sloc_id, record) => <>{`${sloc_id || ''}`}</>, 200),
+  CreateColumns(
+    'Active / Inactive',
+    'status',
+    false,
+    (sloc_id, record) => (
+      <>
+        <Switch defaultChecked onChange={onChange} />
+      </>
+    ),
+    200,
+  ),
+  CreateColumns('Action', 'id', false, (id: string, record: any) => (
+    <Button
+      size="big"
+      variant="tertiary"
+      onClick={()=> selectData(record)}
+    >
+      View Detail
+    </Button>
+  )),
 ]

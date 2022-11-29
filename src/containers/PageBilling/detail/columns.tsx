@@ -1,14 +1,20 @@
 import CreateColumns from 'src/utils/createColumns'
 
 export const TableBilling = [
-  CreateColumns('No', 'no'),
-  CreateColumns('Item', 'item'),
-  CreateColumns('Item Category', 'item_category'),
+  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1, 60),
+  CreateColumns(
+    'Item',
+    'product_id',
+    false,
+    (text: string, record: any) => `${record.product_id || ''} - ${record.description || ''}`,
+    250
+  ),
+  CreateColumns('Item Category', 'item_category_id'),
   CreateColumns('Uom', 'uom'),
-  CreateColumns('Quantity', 'quantity'),
-  CreateColumns('Based Price', 'based_price'),
-  CreateColumns('Gross', 'quantity'),
-  CreateColumns('Discount', 'quantity'),
+  CreateColumns('Quantity', 'base_qty'),
+  CreateColumns('Based Price', 'price'),
+  CreateColumns('Gross', 'gross_value'),
+  CreateColumns('Discount', 'discount_value'),
   CreateColumns('Sub Total', 'sub_total'),
   CreateColumns('Remarks', 'remarks'),
 ]
