@@ -303,13 +303,13 @@ export default function PageCreateSalesOrder() {
                 if (canSave) {
                   setProcessing('Wait for save Sales Order')
                   isCreateOrOrderAgain
-                    ? createSalesOrder(dataSubmited(6))
+                    ? createSalesOrder(dataSubmited(10))
                         .then((response) => {
                           setDraftSalesOrder(response.data.id)
                           setProcessing('')
                         })
                         .catch(() => setProcessing(''))
-                    : updateSalesOrder(dataSubmited(6), titlePage.split(' ').reverse()[0])
+                    : updateSalesOrder(dataSubmited(10), titlePage.split(' ').reverse()[0])
                         .then((response) => {
                           setDraftSalesOrder(response.data.id)
                           setProcessing('')
