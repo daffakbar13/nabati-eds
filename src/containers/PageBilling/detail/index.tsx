@@ -20,6 +20,7 @@ export default function PageBillingDetail(props: PageBillingDetailProps) {
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
   const data = useDetail(getDetailBilling, { id: router.query.id as string })
+  const hasData = Object.keys(data).length > 0
 
   return (
     <Col>
@@ -44,11 +45,15 @@ export default function PageBillingDetail(props: PageBillingDetailProps) {
           }}
           items={AllTabs}
         />
-        {currentTab === '1' && <Billing data={data} />}
-        {currentTab === '2' && <PricingCondition data={data} />}
-        {currentTab === '3' && <DocumentFlow data={data} />}
-        {currentTab === '4' && <CustomerInfo data={data} />}
-        {currentTab === '5' && <SalesmanInfo data={data} />}
+        {hasData && (
+          <>
+            {currentTab === '1' && <Billing data={data} />}
+            {currentTab === '2' && <PricingCondition data={data} />}
+            {currentTab === '3' && <DocumentFlow data={data} />}
+            {currentTab === '4' && <CustomerInfo data={data} />}
+            {currentTab === '5' && <SalesmanInfo data={data} />}
+          </>
+        )}
       </Card>
     </Col>
   )
