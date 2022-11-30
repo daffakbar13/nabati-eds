@@ -7,7 +7,12 @@ import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { cancelSalesOrder, downloadTemplateSalesOrder, getSalesOrder } from 'src/api/sales-order'
+import {
+  cancelSalesOrder,
+  downloadTemplateSalesOrder,
+  getSalesOrder,
+  multipleSubmitSalesOrder,
+} from 'src/api/sales-order'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { fieldReason } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -43,7 +48,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
-  const [submittedQuotation, setSubmittedQuotation] = React.useState([])
+  const [newDeliveryOrder, setNewDeliveryOrder] = React.useState([])
   const [processing, setProcessing] = React.useState('')
   const onProcess = processing !== ''
   const hasData = table.total > 0
@@ -89,17 +94,13 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
         Are you sure to submit sales order
-        <Typography.Text
-          copyable={{ text: oneSelected ? selectedSalesOrder.text : table.selected.join(', ') }}
-        >
-          {oneSelected ? (
-            ` ${selectedSalesOrder.text} ?`
-          ) : (
-            <Popover content={selectedSalesOrder.content}>
-              {` ${selectedSalesOrder.text} ?`}
-            </Popover>
+        <Typography.Text>
+          {oneSelected && ` ${selectedSalesOrder.text}`}
+          {!oneSelected && (
+            <Popover content={selectedSalesOrder.content}>{` ${selectedSalesOrder.text}`}</Popover>
           )}
         </Typography.Text>
+        {' ?'}
       </Typography.Title>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -117,18 +118,17 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            // setProcessing('Wait for submitting Quotation')
-            // multipleSubmitQuotation({
-            //   order_list: table.selected
-            //     .map((id) => ({ id })),
-            // })
-            //   .then((response) => response.data)
-            //   .then((data) => {
-            //     setShowConfirm('success-submit')
-            //     setSubmittedQuotation(data.results.map(({ id }) => id))
-            //     setProcessing('')
-            //   })
-            //   .catch(() => setProcessing(''))
+            setProcessing('Wait for submitting Sales Order')
+            table.selected.forEach((id) => {
+              multipleSubmitSalesOrder(id)
+                .then((response) => response.data)
+                .then((data) => {
+                  setShowConfirm('success-submit')
+                  setNewDeliveryOrder((old) => [...old, data.id])
+                  setProcessing('')
+                })
+                .catch(() => setProcessing(''))
+            })
           }}
         >
           Yes
@@ -161,13 +161,13 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
         <div>
           New Delivery Order
           <Typography.Text
-            copyable={{ text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', ') }}
+            copyable={{ text: oneSelected ? newDeliveryOrder[0] : newDeliveryOrder.join(', ') }}
           >
             {oneSelected ? (
-              ` ${submittedQuotation[0]}`
+              ` ${newDeliveryOrder[0]}`
             ) : (
-              <Popover content={submittedQuotation.join(', ')}>
-                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
+              <Popover content={newDeliveryOrder.join(', ')}>
+                {` ${newDeliveryOrder[0]}, +${newDeliveryOrder.length - 1} more`}
               </Popover>
             )}
           </Typography.Text>
@@ -368,6 +368,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
           <Table
+            scroll={{ y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}
