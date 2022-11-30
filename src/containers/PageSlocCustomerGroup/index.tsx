@@ -11,7 +11,7 @@ import { getListPoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { useTableModal } from './columns'
+import { columns, selectData } from './columns'
 import CreateModal from './create'
 import EditModal from './edit'
 
@@ -26,13 +26,14 @@ function showTotal(total: number, range: number[]) {
 export default function PageSlocCustomerGroup() {
   const [filters, setFilters] = useState([])
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const TableModal = useTableModal()
   const table = useTable({
     funcApi: getListPoSto,
-    columns: TableModal.columns,
+    columns,
   })
   const hasData = table.total > 0
   const router = useRouter()
+
+  console.log('Selected Data', selectData)
 
   const statusOption = [
     { label: 'All', value: null },
@@ -97,11 +98,11 @@ export default function PageSlocCustomerGroup() {
         )}
       </Card>
       <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
-      <EditModal
-        visible={TableModal.showUpdateModal}
-        close={() => TableModal.setShowUpdateModal(false)}
-        selectedData={TableModal.selectedData}
-      />
+      {/* <EditModal
+        visible={showUpdateModal}
+        close={() => setShowUpdateModal(false)}
+        selectedData={selectedData}
+      /> */}
     </Col>
   )
 }
