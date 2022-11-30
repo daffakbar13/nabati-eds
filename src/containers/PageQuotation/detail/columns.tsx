@@ -11,7 +11,6 @@ export const ColumnsQuotation = [
   CreateColumns('Uom', 'uom_id', false, undefined, 100),
   CreateColumns('Quantity', 'order_qty', false, undefined, 100),
   CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
-  // FIXME Sub Total
   CreateColumns(
     'Sub Total',
     'sub_total',

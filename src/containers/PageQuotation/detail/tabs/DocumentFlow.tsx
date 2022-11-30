@@ -1,4 +1,5 @@
-import { Table } from 'antd'
+import { Row } from 'antd'
+import { Table } from 'pink-lava-ui'
 import React from 'react'
 import { ColumnsDocumentFlow } from '../columns'
 
@@ -7,7 +8,11 @@ interface DocumentFlowProps {
 }
 
 export default function DocumentFlow(props: DocumentFlowProps) {
-  const { } = props
+  const {} = props
 
-  return <Table columns={ColumnsDocumentFlow} dataSource={[]} />
+  return (
+    <Row style={{ overflow: 'scroll' }}>
+      <Table columns={ColumnsDocumentFlow} dataSource={[]} />
+    </Row>
+  )
 }
