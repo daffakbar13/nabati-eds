@@ -7,8 +7,8 @@ import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
-import { Tag } from 'antd'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { concatString } from 'src/utils/concatString'
 
 interface LinkedProps {
   link: string
@@ -88,14 +88,14 @@ export const useColumnQuotation = [
     'Sold To Customer',
     'sold_to_customer_id',
     false,
-    (id, { customer_name }) => [id, customer_name].join(' - '),
+    (id, { customer_name }) => concatString(id, customer_name),
     250,
   ),
   CreateColumns(
     'Ship To Customer',
     'ship_to_customer_id',
     false,
-    (id, { customer_name }) => [id, customer_name].join(' - '),
+    (id, { customer_name }) => concatString(id, customer_name),
     250,
   ),
   CreateColumns('Salesman', 'salesman_id', false, undefined, 105),
