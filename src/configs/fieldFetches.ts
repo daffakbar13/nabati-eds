@@ -22,25 +22,32 @@ export function fieldQuotationType(search: string) {
 }
 
 export function fieldCustomer(search: string) {
-    return getCustomerList({
-        filters: [{
-            field: 'id',
-            option: 'CP',
-            from_value: `%${search}%`,
-        }],
-        limit: 10,
-        page: 1,
-    })
-        .then((result) => result.data)
-        .then((data) => data.results
-            // .filter(({ sold_to_customer_id, name, branch_id }) =>
-            // (sold_to_customer_id.toLowerCase().includes(search.toLowerCase())
-            //     || name.toLowerCase().includes(search.toLowerCase())))
-            // .splice(0, 10)
-            .map(({ id, name }) => ({
-                label: [id, name].join(' - '),
-                value: [id, name].join(' - '),
-            })))
+    async function runApi(field: 'id' | 'eds_customer.name') {
+        return getCustomerList({
+            filters: [
+                {
+                    field,
+                    option: 'CP',
+                    from_value: `%${search}%`,
+                },
+            ],
+            limit: 10,
+            page: 1,
+        })
+            .then((result) => result.data)
+            .then((data) => data.results
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
+                    value: [id, name].join(' - '),
+                })))
+    }
+    return runApi('id')
+        .then((arr) => {
+            if (arr.length > 0) {
+                return arr
+            }
+            return runApi('eds_customer.name')
+        })
 }
 
 export function fieldSoldToCustomer(search: string) {
@@ -62,7 +69,7 @@ export function fieldShipToCustomer(search: string) {
     return getCustomerByCompany()
         .then((result) =>
             result.data
-                .filter(({ ship_to_customer_id, name, branch_id }) =>
+                .filter(({ ship_to_customer_id, name }) =>
                 (ship_to_customer_id.toLowerCase().includes(search.toLowerCase())
                     || name.toLowerCase().includes(search.toLowerCase())))
                 // && branch === branch_id)
@@ -204,7 +211,7 @@ export function fieldBranchSupply(search: string, channel = '', supplybranch = '
             result.data
                 .filter(({ id, name, branch_type }) =>
                     (id.toLowerCase().includes(search.toLowerCase())
-                        || name.toLowerCase().includes(search.toLowerCase())) && branch_type != channel && id != supplybranch)
+                        || name.toLowerCase().includes(search.toLowerCase())) && branch_type !== channel && id !== supplybranch)
                 .splice(0, 10)
                 .map(({ id, name, branch_type }) => ({
                     label: [id, name].join(' - '),
@@ -262,16 +269,6 @@ export function fieldPoSto(search: string) {
                         label: id,
                         value: id,
                     }))))
-    // return getListPoSto()
-    //     .then((result) =>
-    //         result.data.result
-    //             .filter(({ id }) =>
-    //                 id.toLowerCase().includes(search.toLowerCase()))
-    //             .splice(0, 10)
-    //             .map(({ id }) => ({
-    //                 label: id,
-    //                 value: id,
-    //             })))
 }
 
 export function fieldSloc(doc_type: string) {
@@ -290,13 +287,13 @@ export function fieldSlocFromBranch(doc_type: string, branch = '', branch_to = '
     return getConfigSloc()
         .then((result) =>
             result.data
-                .filter(({ doc_type_id, branch_id }) => doc_type_id == doc_type && branch_id == branch || branch_id == branch_to)
+                .filter(({ doc_type_id, branch_id }) => doc_type_id === doc_type && (branch_id === branch || branch_id === branch_to))
                 .splice(0, 10)
                 .map(({ sloc_id }) => ({
                     label: sloc_id,
                     value: sloc_id,
                 })))
-            }
+}
 export async function fieldVehicle(search: string) {
     return getDriverByCompanyId()
         .then((result) => result.data)
