@@ -18,8 +18,6 @@ import { concatString } from 'src/utils/concatString'
 import { PageApprovalDetailProps } from './types'
 import { tableApproval } from './columns'
 
-const createDataList = (label: string, value: string) => ({ label, value: value || '-' })
-
 export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
@@ -34,27 +32,31 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   const format = 'DD MMMM YYYY'
 
   const dataList = [
-    createDataList('Quotation', data.document_ref_id),
-    createDataList('Customer', concatString(data.customer_id, data.customer_name)),
-    createDataList('Sales Org.', concatString(data.sales_org_id, data.sales_org_name)),
-    createDataList('Branch', concatString(data.branch_id, data.branch_name)),
-    createDataList('Salesman', concatString(data.salesman_id, data.salesman_name)),
+    DataList.createDataList('Quotation', data.document_ref_id),
+    DataList.createDataList('Customer', concatString(data.customer_id, data.customer_name)),
+    DataList.createDataList('Sales Org.', concatString(data.sales_org_id, data.sales_org_name)),
+    DataList.createDataList('Branch', concatString(data.branch_id, data.branch_name)),
+    DataList.createDataList('Salesman', concatString(data.salesman_id, data.salesman_name)),
     // FIXME Doc. Date
-    createDataList('Doc. Date', dateFormat(data.doc_date, format)),
-    createDataList('Valid From', dateFormat(data.valid_from, format)),
-    createDataList('Valid To', dateFormat(data.valid_to, format)),
-    createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
-    createDataList('Reference', data.customer_ref),
-    createDataList('Created On', dateFormat(data.created_at, format)),
-    createDataList('Created By', data.created_by),
-    createDataList('Modified On', dateFormat(data.modified_at, format)),
-    createDataList('Modified By', data.modified_by),
+    DataList.createDataList('Doc. Date', dateFormat(data.doc_date, format)),
+    DataList.createDataList('Valid From', dateFormat(data.valid_from, format)),
+    DataList.createDataList('Valid To', dateFormat(data.valid_to, format)),
+    DataList.createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
+    DataList.createDataList('Reference', data.customer_ref),
+    DataList.createDataList('Created On', dateFormat(data.created_at, format)),
+    DataList.createDataList('Created By', data.created_by),
+    DataList.createDataList('Modified On', dateFormat(data.modified_at, format)),
+    DataList.createDataList('Modified By', data.modified_by),
     // FIXME Created From
-    createDataList('Created From', data.created_from),
+    DataList.createDataList('Created From', data.created_from),
   ]
 
   const ConfirmApprove = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Approve
       </Typography.Title>
@@ -64,7 +66,10 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -97,7 +102,9 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Approve Success</>
+          <>
+            <CheckCircleFilled /> Approve Success
+          </>
         </Text>
       </div>
       <div
@@ -107,25 +114,26 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           Sales Order
-          <Typography.Text
-            copyable={{ text: router.query.id as string }}>
+          <Typography.Text copyable={{ text: router.query.id as string }}>
             {` ${router.query.id}`}
           </Typography.Text>{' '}
           has been
         </div>
-        <div>
-          successfully approved
-        </div>
+        <div>successfully approved</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/approval`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/approval`)
+          }}
+        >
           OK
         </Button>
       </div>
@@ -191,7 +199,9 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Reject Success</>
+          <>
+            <CheckCircleFilled /> Reject Success
+          </>
         </Text>
       </div>
       <div
@@ -201,25 +211,26 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           Sales Order
-          <Typography.Text
-            copyable={{ text: router.query.id as string }}>
+          <Typography.Text copyable={{ text: router.query.id as string }}>
             {` ${router.query.id} `}
           </Typography.Text>
           has been
         </div>
-        <div>
-          successfully rejected
-        </div>
+        <div>successfully rejected</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/approval`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/approval`)
+          }}
+        >
           OK
         </Button>
       </div>
@@ -237,8 +248,8 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
 
   return (
     <Col>
-      {!hasData && <Loader type='process' text='Wait for get data' />}
-      {onProcess && <Loader type='process' text={proccessing} />}
+      {!hasData && <Loader type="process" text="Wait for get data" />}
+      {onProcess && <Loader type="process" text={proccessing} />}
       <div style={{ display: 'flex', gap: 5 }}>
         <div
           style={{
@@ -261,8 +272,8 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {router.query.status === 'Wait For Approval'
-            && <>
+          {router.query.status === 'Wait For Approval' && (
+            <>
               <Button
                 size="big"
                 variant="tertiary"
@@ -282,14 +293,14 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
                 Approve
               </Button>
             </>
-          }
+          )}
         </div>
       </div>
       <Spacer size={20} />
-      {hasData
-        && <Card style={{ padding: '16px 20px' }}>
+      {hasData && (
+        <Card style={{ padding: '16px 20px' }}>
           <Row>
-            <TitleDataList title='Sales Order' />
+            <TitleDataList title="Sales Order" />
           </Row>
           <Row>
             <Col span={12}>
@@ -321,7 +332,7 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
             </Col>
           </Row>
         </Card>
-      }
+      )}
       {showConfirm === 'approve' && <ConfirmApprove />}
       {showConfirm === 'success-approve' && <ConfirmSuccessApprove />}
       {showConfirm === 'reject' && <ConfirmReject />}
