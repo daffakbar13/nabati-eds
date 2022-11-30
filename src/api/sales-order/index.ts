@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
 import {
@@ -48,6 +49,14 @@ export const updateSalesOrder = async (payload: any, id: string) => {
     method: METHODS.POST,
     subUrl: `${url}/${id}/update`,
     data: payload,
+  })
+  return response.data
+}
+
+export const multipleSubmitSalesOrder = async (order_id: string) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `v1/delivery-orders/${order_id}/submit`,
   })
   return response.data
 }
