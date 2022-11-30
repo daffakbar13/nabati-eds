@@ -231,28 +231,31 @@ export const menuLogistic = [
     icon: LogisticIcStockAdjustment,
     onClick: () => Router.push(`${PATH.LOGISTIC}/stock-adjustment`),
   },
+
+  { type: 'title', title: 'GENERAL' },
+  { type: 'divider' },
   {
     key: 'configuration',
     title: 'Configuration',
-    icon: LogisticIcStockAdjustment,
+    icon: LogisticIcConfiguration,
     children: [
       {
         key: 'company',
         title: 'Company',
         content: () => 'Company',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/company`),
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-company`),
       },
       {
         key: 'sloc-company',
         title: 'Sloc Company',
         content: () => 'Sloc Company',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/sloc-company`),
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sloc-company`),
       },
       {
         key: 'sloc-costumer-group',
         title: 'Sloc Customer Group',
         content: () => 'Sloc Customer Group',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/sloc-costumer-group`),
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sloc-costumer-group`),
       },
       {
         key: 'sloc-salesman',
