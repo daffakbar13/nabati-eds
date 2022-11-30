@@ -68,6 +68,7 @@ export const TableDeliveryOrder = [
     (total_amount) => parseInt(total_amount).toLocaleString(),
     140,
   ),
+  CreateColumns('Currency', 'currency_id', false, undefined, 100),
   CreateColumns('Create From', 'create_from', false, undefined, 125),
   CreateColumns(
     'Availibility',
