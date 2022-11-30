@@ -246,6 +246,12 @@ export const menuLogistic = [
         onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-company`),
       },
       {
+        key: 'sloc',
+        title: 'SLoc',
+        content: () => 'SLoc',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sloc`),
+      },
+      {
         key: 'sloc-company',
         title: 'Sloc Company',
         content: () => 'Sloc Company',

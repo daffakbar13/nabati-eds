@@ -120,7 +120,7 @@ export default function CreateGoodsReceiptModal({ visible = false, close = () =>
         open={visible}
         onOk={() => {}}
         onCancel={close}
-        title="Create Config Company"
+        title="Create Config Sloc Company"
         content={content}
       />
 
