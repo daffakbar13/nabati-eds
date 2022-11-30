@@ -55,7 +55,7 @@ export const getCompletedDeliveryOrderList = async (
         {
           field: 'eds_delivery.status_id',
           option: 'EQ',
-          from_value: '1',
+          from_value: '9',
         },
         ...params.filters,
       ],
