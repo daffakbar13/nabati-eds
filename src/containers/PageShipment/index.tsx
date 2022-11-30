@@ -186,6 +186,7 @@ export default function PageShipment() {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
           <Table
+            scroll={{ y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}
