@@ -7,19 +7,19 @@ interface SalesmanInfoProps {
   data: any
 }
 
-const CreateDataList = (label: string, value: string) => ({ label, value })
+// const DataList.createDataList = (label: string, value: string) => ({ label, value })
 
 export default function SalesmanInfo(props: SalesmanInfoProps) {
   const {} = props
 
   const generalInformation = [
-    CreateDataList('Employee Name', 'Test123'),
-    CreateDataList('Division Name', 'Test123'),
-    CreateDataList('Branch', 'Test123'),
-    CreateDataList('ID Card Number', 'Test123'),
-    CreateDataList('Mobile Number', 'Test123'),
-    CreateDataList('Email', 'Test123'),
-    CreateDataList('External Code', 'Test123'),
+    DataList.createDataList('Employee Name', 'Test123'),
+    DataList.createDataList('Division Name', 'Test123'),
+    DataList.createDataList('Branch', 'Test123'),
+    DataList.createDataList('ID Card Number', 'Test123'),
+    DataList.createDataList('Mobile Number', 'Test123'),
+    DataList.createDataList('Email', 'Test123'),
+    DataList.createDataList('External Code', 'Test123'),
   ]
 
   return (

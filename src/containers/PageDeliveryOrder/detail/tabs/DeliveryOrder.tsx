@@ -11,14 +11,12 @@ interface DeliveryOrderProps {
   data: any
 }
 
-const createDataList = (label: string, value: string) => ({ label, value })
+const createDataList = (label: string, value: string) => ({ label, value: value || '-' })
 
 export default function DeliveryOrder(props: DeliveryOrderProps) {
   const { data } = props
   const format = 'DD MMMM YYYY'
-  // const concatString = (str: string[]) => (str.join(' - '))
 
-  // const table = useTable({ api: '', columns: TableDeliveryOrder })
   const dataList = [
     createDataList('Order Type', data.order_type),
     createDataList('Customer', data.customer),
@@ -64,7 +62,10 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
             <Total label="Total Gross" value={parseInt(data.gross_total_amount).toLocaleString()} />
             <Total label="Total DPP" value={parseInt(data.dpp_total_amount).toLocaleString()} />
-            <Total label="Total Disc" value={parseInt(data.discount_total_amount).toLocaleString()} />
+            <Total
+              label="Total Disc"
+              value={parseInt(data.discount_total_amount).toLocaleString()}
+            />
             <Total label="Total Net" value={parseInt(data.net_total_amount).toLocaleString()} />
             <Total label="Total Tax" value={parseInt(data.tax_total_amount).toLocaleString()} />
           </div>

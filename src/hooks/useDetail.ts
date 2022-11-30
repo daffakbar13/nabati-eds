@@ -10,29 +10,22 @@ export default function useDetail(
 ) {
   const [data, setData] = React.useState<any>({})
   const router = useRouter()
-  const backPage = router.asPath.split('/').splice(0, 3).join('/')
+  const pageList = router.asPath.split('/').splice(0, 3).join('/')
+  const throwToPageList = () => {
+    router.push(pageList)
+  }
 
   React.useEffect(() => {
-    if (strict) {
-      if (router.query.status === 'Draft' || !router.query.status) {
-        router.push(backPage)
-      } else if (!Object.values(params).includes(undefined)) {
-        funcApi(params)
-          .then((results) => setData(results.data))
-          .catch(() => {
-            router.push(backPage)
-          })
-      }
-    } else {
-      if (!Object.values(params).includes(undefined)) {
-        funcApi(params)
-          .then((results) => setData(results.data))
-          .catch(() => {
-            router.push(backPage)
-          })
-      }
+    if (!Object.values(params).includes(undefined)) { // handling for bugs error when refresh page
+      if (strict && (router.query.status === 'Draft' || !router.query.status)) {
+        throwToPageList()
     }
-
+      funcApi(params)
+        .then((results) => setData(results.data))
+        .catch(() => {
+        throwToPageList()
+      })
+    }
   }, [router.query])
 
   return data

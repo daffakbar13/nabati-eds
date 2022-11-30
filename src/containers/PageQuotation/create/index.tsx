@@ -55,8 +55,6 @@ export default function PageCreateQuotation() {
   const onProcess = processing !== ''
   const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
-  const concatString = (...data: string[]) => data.join(' - ')
-
   const splitString = (data: string) => data.split(' - ')[0]
 
   const onChangeForm = (form: string, value: any) => {
@@ -165,19 +163,19 @@ export default function PageCreateQuotation() {
         .then((data) => {
           const initFromDetail = {
             company_id: 'PP01',
-            branch_id: concatString(data.branch_id, data.branch_name),
+            branch_id: (data.branch_id, data.branch_name),
             source_id: 'Z02',
             order_date: data.order_date,
             delivery_date: data.delivery_date,
             pricing_date: data.pricing_date || now,
             order_type_id: dataForm.order_type_id,
-            customer_id: concatString(data.customer_id, data.customer_name),
+            customer_id: (data.customer_id, data.customer_name),
             ship_to_id:
               data.ship_to_id === ''
-                ? concatString(data.customer_id, data.customer_name)
+                ? (data.customer_id, data.customer_name)
                 : data.ship_to_id,
-            salesman_id: concatString(data.salesman_id, data.salesman_name),
-            sales_org_id: concatString(data.sales_org_id, data.sales_org_name),
+            salesman_id: (data.salesman_id, data.salesman_name),
+            sales_org_id: (data.sales_org_id, data.sales_org_name),
             valid_from: data.valid_from,
             valid_to: data.valid_to,
             term_id: data.term_id || 'Z007',

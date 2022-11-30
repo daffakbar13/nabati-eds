@@ -4,37 +4,33 @@ import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import { Spacer, Table } from 'pink-lava-ui'
 import dateFormat from 'src/utils/dateFormat'
+import { concatString } from 'src/utils/concatString'
 import { ColumnsQuotation } from '../columns'
 
 interface QuotationProps {
   data: any
 }
 
-const createDataList = (label: string, value: string) => ({ label, value })
-
 export default function Quotation(props: QuotationProps) {
   const { data } = props
   const format = 'DD MMMM YYYY'
-  const concatString = (str: string[]) => (str.join(' - '))
 
   const dataList = [
-    createDataList('Quotation', data.id),
-    createDataList('Customer', concatString([data.customer_id, data.customer_name])),
-    createDataList('Sales Org.', concatString([data.sales_org_id, data.sales_org_name])),
-    createDataList('Branch', concatString([data.branch_id, data.branch_name])),
-    createDataList('Salesman', concatString([data.salesman_id, data.salesman_name])),
-    // FIXME Doc. Date
-    createDataList('Doc. Date', dateFormat(data.doc_date, format)),
-    createDataList('Valid From', dateFormat(data.valid_from, format)),
-    createDataList('Valid To', dateFormat(data.valid_to, format)),
-    createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
-    createDataList('Reference', data.customer_ref),
-    createDataList('Created On', dateFormat(data.created_at, format)),
-    createDataList('Created By', data.created_by),
-    createDataList('Modified On', dateFormat(data.modified_at, format)),
-    createDataList('Modified By', data.modified_by),
-    // FIXME Created From
-    createDataList('Created From', data.created_from),
+    DataList.createDataList('Quotation', data.id),
+    DataList.createDataList('Customer', concatString(data.customer_id, data.customer_name)),
+    DataList.createDataList('Sales Org.', concatString(data.sales_org_id, data.sales_org_name)),
+    DataList.createDataList('Branch', concatString(data.branch_id, data.branch_name)),
+    DataList.createDataList('Salesman', concatString(data.salesman_id, data.salesman_name)),
+    DataList.createDataList('Doc. Date', dateFormat(data.doc_date, format)),
+    DataList.createDataList('Valid From', dateFormat(data.valid_from, format)),
+    DataList.createDataList('Valid To', dateFormat(data.valid_to, format)),
+    DataList.createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
+    DataList.createDataList('Reference', data.customer_ref),
+    DataList.createDataList('Created On', dateFormat(data.created_at, format)),
+    DataList.createDataList('Created By', data.created_by),
+    DataList.createDataList('Modified On', dateFormat(data.modified_at, format)),
+    DataList.createDataList('Modified By', data.modified_by),
+    DataList.createDataList('Created From', data.created_from),
   ]
 
   return (
@@ -57,9 +53,9 @@ export default function Quotation(props: QuotationProps) {
         </Col>
       </Row>
       <Divider />
-      <div style={{ overflow: 'scroll' }}>
+      <Row style={{ overflow: 'scroll' }}>
         <Table columns={ColumnsQuotation} data={data.items} />
-      </div>
+      </Row>
       <Spacer size={30} />
       <Row>
         <Col span={12} offset={12}>

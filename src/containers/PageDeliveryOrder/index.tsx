@@ -366,6 +366,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            scroll={{ y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}

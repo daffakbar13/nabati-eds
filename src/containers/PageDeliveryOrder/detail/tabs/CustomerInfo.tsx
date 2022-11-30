@@ -10,7 +10,7 @@ interface CustomerInfoProps {
   data: any
 }
 
-const CreateDataList = (label: string, value: string) => ({ label, value })
+const CreateDataList = (label: string, value: string) => ({ label, value: value || '-' })
 
 export default function CustomerInfo(props: CustomerInfoProps) {
   const { data } = props

@@ -159,12 +159,9 @@ export default function PageQuotation(props: PageQuotationProps) {
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
         Are you sure to submit quotation
-        <Typography.Text
-          copyable={{ text: oneSelected ? selectedQuotation.text : table.selected.join(', ') }}
-        >
-          {oneSelected ? (
-            ` ${selectedQuotation.text}`
-          ) : (
+        <Typography.Text>
+          {oneSelected && ` ${selectedQuotation.text}`}
+          {!oneSelected && (
             <Popover content={selectedQuotation.content}>{` ${selectedQuotation.text}`}</Popover>
           )}
         </Typography.Text>

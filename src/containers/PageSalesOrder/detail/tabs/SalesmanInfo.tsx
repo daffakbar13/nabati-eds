@@ -7,23 +7,18 @@ interface SalesmanInfoProps {
   data: any
 }
 
-const CreateDataList = (label: string, value: string) => ({ label, value })
-
 export default function SalesmanInfo(props: SalesmanInfoProps) {
   const { data } = props
+  const { salesman } = data
 
   const generalInformation = [
-    CreateDataList('Employee Name', data.salesman.name),
-    // FIXME Employee Name
-    CreateDataList('Division Name', data.division_name),
-    CreateDataList('Branch', data.branch_name),
-    CreateDataList('ID Card Number', data.salesman.employee_id),
-    // FIXME Mobile Number
-    CreateDataList('Mobile Number', data.customer_phone),
-    // FIXME Email
-    CreateDataList('Email', data.customer_email),
-    // FIXME External Code
-    CreateDataList('External Code', data.external_code),
+    DataList.createDataList('Employee Name', salesman.name),
+    DataList.createDataList('Division Name', salesman.division_name),
+    DataList.createDataList('Branch', salesman.branch_name),
+    DataList.createDataList('ID Card Number', salesman.employee_id),
+    DataList.createDataList('Mobile Number', salesman.mobile_number),
+    DataList.createDataList('Email', salesman.email),
+    DataList.createDataList('External Code', salesman.external_number),
   ]
 
   return (
