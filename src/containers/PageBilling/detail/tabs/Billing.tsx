@@ -9,25 +9,25 @@ interface BillingProps {
   data: any
 }
 
-const createDataList = (label: string, value: string) => ({ label, value })
+// const DataList.createDataList = (label: string, value: string) => ({ label, value })
 
 export default function Billing(props: BillingProps) {
   const { data } = props
   const dataList = [
-    createDataList('Order Type', data.billing_type_id),
-    createDataList('Customer', data.customer_id),
-    createDataList('Sales Org.', data.sales_org_id),
-    createDataList('Plant', data.plant),
-    createDataList('Salesman', data.salesman),
-    createDataList('Doc. Date', data.billing_date),
-    createDataList('GI Date', data.billing_date),
-    createDataList('Delivery Date', data.billing_date),
-    createDataList('SO Number', data.delivery_id),
-    createDataList('DO Number', data.delivery_id),
-    createDataList('Created On', data.created_at?.Time),
-    createDataList('Created By', data.created_at?.Valid),
-    createDataList('Modified On', data.modified_at?.Time),
-    createDataList('Modified By', data.modified_at?.Valid),
+    DataList.createDataList('Order Type', data.billing_type_id),
+    DataList.createDataList('Customer', data.customer_id),
+    DataList.createDataList('Sales Org.', data.sales_org_id),
+    DataList.createDataList('Plant', data.plant),
+    DataList.createDataList('Salesman', data.salesman),
+    DataList.createDataList('Doc. Date', data.billing_date),
+    DataList.createDataList('GI Date', data.billing_date),
+    DataList.createDataList('Delivery Date', data.billing_date),
+    DataList.createDataList('SO Number', data.delivery_id),
+    DataList.createDataList('DO Number', data.delivery_id),
+    DataList.createDataList('Created On', data.created_at?.Time),
+    DataList.createDataList('Created By', data.created_at?.Valid),
+    DataList.createDataList('Modified On', data.modified_at?.Time),
+    DataList.createDataList('Modified By', data.modified_at?.Valid),
   ]
 
   console.log('billing item :', data.billing_item)

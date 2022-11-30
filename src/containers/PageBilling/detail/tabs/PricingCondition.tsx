@@ -11,11 +11,8 @@ interface PricingConditionProps {
   data: any
 }
 
-const createDataList = (label: string, value: string) => ({ label, value })
-
 export default function PricingCondition(props: PricingConditionProps) {
   const {} = props
-  const table = useTable({ api: '', columns: TablePricingCondition })
 
   return (
     <>
@@ -26,7 +23,7 @@ export default function PricingCondition(props: PricingConditionProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={table.columns} dataSource={[]} />
+        <Table columns={TablePricingCondition} dataSource={[]} />
       </div>
       <Spacer size={30} />
       <Row>
