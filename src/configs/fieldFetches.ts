@@ -146,9 +146,10 @@ export function fieldUom(product_id: string): Promise<any> {
         .then((result) => result.data)
         .then((data) => data
             .filter(({ valid_from, valid_to }) => now >= valid_from && now <= valid_to)
-            .map(({ uom_id }) => ({
+            .map(({ uom_id, price }) => ({
                 label: uom_id,
                 value: uom_id,
+                key: price,
             })))
 }
 
@@ -296,7 +297,7 @@ export function fieldSlocFromBranch(doc_type: string, branch = '', branch_to = '
                     label: sloc_id,
                     value: sloc_id,
                 })))
-            }
+}
 export async function fieldVehicle(search: string) {
     return getDriverByCompanyId()
         .then((result) => result.data)

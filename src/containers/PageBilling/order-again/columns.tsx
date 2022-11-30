@@ -24,18 +24,18 @@ export const useTableAddItem = (props: propsUseTable) => {
     sub_total: 0,
     remarks: '',
   }
-  const [data, setData] = React.useState([])
+  const [data, setData] = React.useState([initialValue])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [valueItemSender, setValueItemSender] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [totalAmount, setTotalAmount] = React.useState(0)
 
-  React.useEffect(() => {
-    if (props.id) {
-      setData([initialValue])
-    }
-  }, [props.id])
+  //   React.useEffect(() => {
+  //     if (props.id) {
+  //       setData([initialValue])
+  //     }
+  //   }, [props.id])
 
   React.useEffect(() => {
     if (data.length > 0) {
