@@ -29,7 +29,7 @@ export const getDetailBilling = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${url}/${params.id}/detail`,
+    subUrl: `${url}/${params.id}`,
   })
   return response.data
 }

@@ -1,8 +1,8 @@
-import { Col, Row, Table, Divider } from 'antd'
+import { Col, Row, Divider } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import { Spacer } from 'pink-lava-ui'
+import { Spacer, Table } from 'pink-lava-ui'
 import { TableBilling } from '../columns'
 
 interface BillingProps {
@@ -24,12 +24,13 @@ export default function Billing(props: BillingProps) {
     createDataList('Delivery Date', data.billing_date),
     createDataList('SO Number', data.delivery_id),
     createDataList('DO Number', data.delivery_id),
-    createDataList('Reference', data.customer_ref),
-    createDataList('Created On', data.created_at.Time),
-    createDataList('Created By', data.created_at.Valid),
-    createDataList('Modified On', data.modified_at.Time),
-    createDataList('Modified By', data.modified_at.Valid),
+    createDataList('Created On', data.created_at?.Time),
+    createDataList('Created By', data.created_at?.Valid),
+    createDataList('Modified On', data.modified_at?.Time),
+    createDataList('Modified By', data.modified_at?.Valid),
   ]
+
+  console.log('billing item :', data.billing_item)
 
   return (
     <>
@@ -40,19 +41,19 @@ export default function Billing(props: BillingProps) {
           ))}
         </Col>
         <Col span={8}>
-          {dataList.slice(5, 9).map(({ label, value }, i) => (
+          {dataList.slice(5, 10).map(({ label, value }, i) => (
             <DataList key={i} label={label} value={value} />
           ))}
         </Col>
         <Col span={8}>
-          {dataList.slice(9).map(({ label, value }, i) => (
+          {dataList.slice(10).map(({ label, value }, i) => (
             <DataList key={i} label={label} value={value} />
           ))}
         </Col>
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TableBilling} dataSource={[]} />
+        <Table columns={TableBilling} data={data.billing_item} />
       </div>
       <Spacer size={30} />
       <Row>

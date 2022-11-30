@@ -4,7 +4,7 @@ import { message } from 'antd'
 import HideShowColumns from './HideShowColumns'
 
 const DEFAULT_LIMIT = 20
-export default function useSimpleTable({ columns, funcApi, filters }) {
+export default function useSimpleTable({ columns, funcApi, filters = [] }) {
   const [loading, setLoading] = useState(false)
   const [dataSource, setData] = useState([])
   const router = useRouter()
