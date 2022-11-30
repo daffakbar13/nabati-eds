@@ -24,4 +24,4 @@ export default function DataList(props: DataListProps) {
   )
 }
 
-DataList.createDataList = (label: string, value: string) => ({ label, value })
+DataList.createDataList = (label: string, value: string) => ({ label, value: value || '-' })
