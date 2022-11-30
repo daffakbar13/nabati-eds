@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, Col, Spacer, Text } from 'pink-lava-ui'
+import { Button, Spacer, Text } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
-import { Tabs, Typography } from 'antd'
+import { Row, Col, Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
@@ -141,67 +141,72 @@ export default function PageQuotationDetail(props: PageQuotationDetailProps) {
     <Col>
       {!hasData && <Loader type="process" text="Wait for get data" />}
       {onProcess && <Loader type="process" text={proccessing} />}
-      <div style={{ display: 'flex', gap: 5 }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => {
-            router.push({
-              pathname: `${PATH.SALES}/quotation`,
-              query: {
-                page: router.query.page,
-                limit: router.query.limit,
-              },
-            })
-          }}
-        >
-          <ArrowLeftOutlined style={{ fontSize: 25 }} />
-        </div>
-        <Text variant={'h4'}>{titlePage}</Text>
-        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
+      <Row justify="space-between">
+        <Row gutter={5}>
+          <Col>
+              <ArrowLeftOutlined
+                onClick={() => {
+                  router.push({
+                    pathname: `${PATH.SALES}/quotation`,
+                    query: {
+                      page: router.query.page,
+                      limit: router.query.limit,
+                    },
+                  })
+                }}
+                style={{ fontSize: 25, lineHeight: '48px' }}
+              />
+          </Col>
+          <Col>
+            <Text variant={'h4'}>{titlePage}</Text>
+          </Col>
+        </Row>
+        <Row gutter={10}>
           {isStatus('New') && (
             <>
-              <Button
-                size="big"
-                variant="tertiary"
-                onClick={() => {
-                  setShowConfirm('cancel')
-                }}
-              >
-                Cancel Process
-              </Button>
-              <Button
-                size="big"
-                variant="secondary"
-                onClick={() => {
-                  router.push(
-                    `${PATH.SALES}/quotation/edit/${router.query.id}?status=${router.query.status}`,
-                  )
-                }}
-              >
-                Edit
-              </Button>
+              <Col>
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    setShowConfirm('cancel')
+                  }}
+                >
+                  Cancel Process
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  size="big"
+                  variant="secondary"
+                  onClick={() => {
+                    router.push(
+                      `${PATH.SALES}/quotation/edit/${router.query.id}?status=${router.query.status}`,
+                    )
+                  }}
+                >
+                  Edit
+                </Button>
+              </Col>
             </>
           )}
           {isStatus('Complete', 'New') && (
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => {
-                router.push(
-                  `${PATH.SALES}/quotation/create?id=${router.query.id}&status=${router.query.status}`,
-                )
-              }}
-            >
-              Order Again
-            </Button>
+            <Col>
+              <Button
+                size="big"
+                variant="primary"
+                onClick={() => {
+                  router.push(
+                    `${PATH.SALES}/quotation/create?id=${router.query.id}&status=${router.query.status}`,
+                  )
+                }}
+              >
+                Order Again
+              </Button>
+            </Col>
           )}
-        </div>
-      </div>
+        </Row>
+      </Row>
       <Spacer size={20} />
       <Card style={{ padding: '16px 20px' }}>
         <Tabs

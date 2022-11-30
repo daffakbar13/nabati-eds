@@ -1,51 +1,16 @@
+/* eslint-disable camelcase */
 /* eslint-disable radix */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
 import CreateColumns from 'src/utils/createColumns'
 
 export const ColumnsQuotation = [
-  CreateColumns(
-    'No',
-    'no',
-    false,
-    (_, __, index) => ++index,
-    60,
-  ),
-  CreateColumns(
-    'Item',
-    'description',
-    false,
-    undefined,
-    300,
-  ),
-  CreateColumns(
-    'Item Category',
-    'item_category_id',
-    false,
-    undefined,
-    150,
-  ),
-  CreateColumns(
-    'Uom',
-    'uom_id',
-    false,
-    undefined,
-    100,
-  ),
-  CreateColumns(
-    'Quantity',
-    'order_qty',
-    false,
-    undefined,
-    100,
-  ),
-  CreateColumns(
-    'Based Price',
-    'price',
-    false,
-    (price) => parseInt(price).toLocaleString(),
-    120,
-  ),
+  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60),
+  CreateColumns('Item', 'description', false, undefined, 300),
+  CreateColumns('Item Category', 'item_category_id', false, undefined, 150),
+  CreateColumns('Uom', 'uom_id', false, undefined, 100),
+  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
+  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
   // FIXME Sub Total
   CreateColumns(
     'Sub Total',
@@ -54,10 +19,7 @@ export const ColumnsQuotation = [
     (_, record) => (record.price * record.order_qty).toLocaleString(),
     100,
   ),
-  CreateColumns(
-    'Remarks',
-    'remarks',
-  ),
+  CreateColumns('Remarks', 'remarks'),
 ]
 
 export const ColumnsDocumentFlow = [
@@ -72,5 +34,5 @@ export const ColumnsDocumentFlow = [
 
 export const ColumnsCustomerInfo = [
   CreateColumns('Salesman', 'id', false, (id, { name }) => [id, name].join(' - ')),
-  CreateColumns('Salesman Group', 'salesman_group_id'),
+  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) => [id, salesman_group_name].join(' - ')),
 ]
