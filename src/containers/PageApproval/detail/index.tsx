@@ -14,6 +14,7 @@ import Loader from 'src/components/Loader'
 import dateFormat from 'src/utils/dateFormat'
 import TitleDataList from 'src/components/TitleDataList'
 import Total from 'src/components/Total'
+import { concatString } from 'src/utils/concatString'
 import { PageApprovalDetailProps } from './types'
 import { tableApproval } from './columns'
 
@@ -31,14 +32,13 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   const data = useDetail(getApprovalDetail, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
   const format = 'DD MMMM YYYY'
-  const concatString = (str: string[]) => (str.join(' - '))
 
   const dataList = [
     createDataList('Quotation', data.document_ref_id),
-    createDataList('Customer', concatString([data.customer_id, data.customer_name])),
-    createDataList('Sales Org.', concatString([data.sales_org_id, data.sales_org_name])),
-    createDataList('Branch', concatString([data.branch_id, data.branch_name])),
-    createDataList('Salesman', concatString([data.salesman_id, data.salesman_name])),
+    createDataList('Customer', concatString(data.customer_id, data.customer_name)),
+    createDataList('Sales Org.', concatString(data.sales_org_id, data.sales_org_name)),
+    createDataList('Branch', concatString(data.branch_id, data.branch_name)),
+    createDataList('Salesman', concatString(data.salesman_id, data.salesman_name)),
     // FIXME Doc. Date
     createDataList('Doc. Date', dateFormat(data.doc_date, format)),
     createDataList('Valid From', dateFormat(data.valid_from, format)),
