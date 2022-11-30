@@ -3,16 +3,12 @@ import { Table, Spacer } from 'pink-lava-ui'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import useTable from 'src/hooks/useTable'
 import dateFormat from 'src/utils/dateFormat'
-
-import { TablePricingCondition } from '../columns'
+import { ColumnsPricingCondition } from '../columns'
 
 interface PricingConditionProps {
   data: any
 }
-
-const createDataList = (label: string, value: string) => ({ label, value })
 
 export default function PricingCondition(props: PricingConditionProps) {
   const { data } = props
@@ -26,7 +22,7 @@ export default function PricingCondition(props: PricingConditionProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TablePricingCondition} dataSource={data.items} />
+        <Table columns={ColumnsPricingCondition} dataSource={data.items} />
       </div>
       <Spacer size={30} />
       <Row>

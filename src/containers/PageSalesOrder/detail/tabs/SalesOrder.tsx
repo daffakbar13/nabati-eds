@@ -3,10 +3,9 @@ import { Table, Spacer } from 'pink-lava-ui'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
-import useTable from 'src/hooks/useTable'
+import { concatString } from 'src/utils/concatString'
 import dateFormat from 'src/utils/dateFormat'
-
-import { TableSalesOrder } from '../columns'
+import { ColumnsSalesOrder } from '../columns'
 
 interface SalesOrderProps {
   data: any
@@ -17,19 +16,15 @@ const createDataList = (label: string, value: string) => ({ label, value })
 export default function SalesOrder(props: SalesOrderProps) {
   const { data } = props
   const format = 'DD MMMM YYYY'
-  const concatString = (str: string[]) => (str.join(' - '))
 
   const dataList = [
-    createDataList('Sales Order', data.id),
-    createDataList('Customer', concatString([data.customer_id, data.customer_name])),
-    createDataList('Sales Org.', concatString([data.sales_org_id, data.sales_org_name])),
-    // FIXME Plant
-    createDataList('Branch', concatString([data.branch_id, data.branch_name])),
-    createDataList('Salesman', concatString([data.salesman_id, data.salesman_name])),
-    // FIXME Doc. Date
-    createDataList('Doc. Date', dateFormat(data.doc_date, format)),
+    DataList.createDataList('Sales Order', data.id),
+    DataList.createDataList('Customer', concatString(data.customer_id, data.customer_name)),
+    DataList.createDataList('Sales Org.', concatString(data.sales_org_id, data.sales_org_name)),
+    DataList.createDataList('Branch', concatString(data.branch_id, data.branch_name)),
+    DataList.createDataList('Salesman', concatString(data.salesman_id, data.salesman_name)),
+    DataList.createDataList('Doc. Date', dateFormat(data.doc_date, format)),
     createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
-    // FIXME Quotation
     createDataList('Quotation', data.document_ref_id),
     createDataList('Reference', data.customer_ref),
     createDataList('Created On', dateFormat(data.created_at, format)),
@@ -59,19 +54,31 @@ export default function SalesOrder(props: SalesOrderProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TableSalesOrder} dataSource={data.items} />
+        <Table columns={ColumnsSalesOrder} dataSource={data.items} />
       </div>
       <Spacer size={30} />
       <Row>
         <Col span={12} offset={12}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 15 }}>
+          <Row gutter={[15, 15]}>
+            <Col span={24}>
             <Total label="Total Gross" value={data.gross_total_amount} />
+            </Col>
+            <Col span={24}>
             <Total label="Total DPP" value={data.dpp_total_amount} />
+            </Col>
+            <Col span={24}>
             <Total label="Total Disc" value={data.discount_total_amount} />
+            </Col>
+            <Col span={24}>
             <Total label="Total Net" value={data.net_total_amount} />
+            </Col>
+            <Col span={24}>
             <Total label="Total Tax" value={data.tax_total_amount} />
+            </Col>
+            <Col span={24}>
             <Total label="Total Amount" value={data.total_amount} largeSize />
-          </div>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </>

@@ -5,7 +5,7 @@
 import { ColumnsType } from 'antd/lib/table'
 import CreateColumns from 'src/utils/createColumns'
 
-export const TableSalesOrder = [
+export const ColumnsSalesOrder = [
   CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
   CreateColumns('Item', 'description', false, undefined, 300),
   CreateColumns('Item Category', 'item_category_id', false, undefined, 137),
@@ -37,7 +37,7 @@ export const TableSalesOrder = [
   CreateColumns('Remarks', 'remarks', false, undefined, 120),
 ]
 
-export const TableDocumentFlow = [
+export const ColumnsDocumentFlow = [
   CreateColumns('Process', 'Process'),
   CreateColumns('Doc. Number', 'Doc. Number'),
   CreateColumns('Created Date', 'Created Date'),
@@ -47,12 +47,12 @@ export const TableDocumentFlow = [
   CreateColumns('Status', 'Status'),
 ]
 
-export const TableCustomerInfo = [
-  CreateColumns('Salesman', 'Process'),
-  CreateColumns('Salesman Group', 'Doc. Number'),
+export const ColumnsCustomerInfo = [
+  CreateColumns('Salesman', 'id', false, (id, { name }) => [id, name].join(' - ')),
+  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) => [id, salesman_group_name].join(' - ')),
 ]
 
-export const TablePricingCondition = [
+export const ColumnsPricingCondition = [
   CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
   CreateColumns('Item ID', 'product_id', false, undefined, 85),
   CreateColumns('Item Category', 'item_category_id', false, undefined, 140),

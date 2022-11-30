@@ -9,6 +9,7 @@ import { PATH } from 'src/configs/menus'
 import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { concatString } from 'src/utils/concatString'
 
 interface LinkedProps {
   link: string
@@ -74,7 +75,13 @@ export const TableSalesOrder = [
     true,
     'have-checkbox',
   ),
-  CreateColumns('Order Type', 'order_type_id', false, undefined, 120),
+  CreateColumns(
+    'Order Type',
+    '',
+    false,
+    (_, { order_type_id, order_type_name }) => concatString(order_type_id, order_type_name),
+    230,
+  ),
   CreateColumns(
     'Order Date',
     'order_date',
@@ -82,23 +89,41 @@ export const TableSalesOrder = [
     (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
     120,
   ),
-  CreateColumns('Sales Org.', 'sales_org_id', false, undefined, 110),
-  CreateColumns('Branch', 'branch_id', false, undefined, 90),
+  CreateColumns(
+    'Sales Org.',
+    '',
+    false,
+    (_, { sales_org_id, sales_org_name }) => concatString(sales_org_id, sales_org_name),
+    150,
+  ),
+  CreateColumns(
+    'Branch',
+    '',
+    false,
+    (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
+    250,
+  ),
   CreateColumns(
     'Sold To Customer',
     'sold_to_customer_id',
     false,
-    (id, { customer_name }) => [id, customer_name].join(' - '),
+    (id, { customer_name }) => concatString(id, customer_name),
     250,
   ),
   CreateColumns(
     'Ship To Customer',
     'ship_to_customer_id',
     false,
-    (id, { customer_name }) => [id, customer_name].join(' - '),
+    (id, { customer_name }) => concatString(id, customer_name),
     250,
   ),
-  CreateColumns('Salesman', 'salesman_id', false, undefined, 105),
+  CreateColumns(
+    'Salesman',
+    '',
+    false,
+    (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
+    270,
+  ),
   CreateColumns(
     'Total Amount',
     'total_amount',
