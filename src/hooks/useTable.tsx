@@ -34,13 +34,11 @@ export default function useTable(props: useTableProps) {
     haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
 
   const updateData = (newData: any[]) => {
-    setData([])
-    setData(newData)
+    setData(() => newData)
     setLoading(false)
   }
 
   const handleHideShowColumns = (event, newData: any) => {
-    // eslint-disable-next-line no-unused-expressions
     event.checked
       ? setHiddenColumns(hiddenColumns.filter((e) => e !== newData))
       : setHiddenColumns([...hiddenColumns, newData])
@@ -82,7 +80,7 @@ export default function useTable(props: useTableProps) {
   const HideShowColumns = () => {
     const content = (
       <div style={{ fontWeight: 'bold' }}>
-        <h4 style={{ fontWeight: 'bold', textAlign: 'center' }}>Hide/Show Columns</h4>
+        <h4 style={{ fontWeight: 'bold' }}>Hide/Show Columns</h4>
         <Divider style={{ margin: '10px 0' }} />
         {props.columns.map(({ title }, index) => (
           <div key={index} style={{ display: 'flex', gap: 10 }}>
@@ -119,19 +117,17 @@ export default function useTable(props: useTableProps) {
     if (haveCheckbox) {
       setRowSelection(defineRowSelection)
     }
-    async function getApi() {
-      if (funcApi) {
-        setLoading(true)
-        funcApi(body)
-          .then((response) => {
-            response.data.result
-              ? updateData(response.data.result)
-              : updateData(response.data.results)
-            setTotal(response.data.total_rows)
-            setTotalPage(response.data.total_page)
-          })
-          .catch((_) => updateData([]))
-      }
+    function getApi() {
+      setLoading(true)
+      funcApi(body)
+        .then((response) => {
+          response.data.result
+            ? updateData(response.data.result)
+            : updateData(response.data.results)
+          setTotal(response.data.total_rows)
+          setTotalPage(response.data.total_page)
+        })
+        .catch((_) => updateData([]))
     }
 
     getApi()
@@ -147,19 +143,61 @@ export default function useTable(props: useTableProps) {
   }, [selected])
 
   return {
+    /**
+     * data of table
+     */
     data,
+    /**
+     * total of rows
+     */
     total,
+    /**
+     * total of page
+     */
     totalPage,
+    /**
+     * selected data from checkbox
+     */
     selected,
+    /**
+     * pass to parameter rowSelection on table component
+     */
     rowSelection,
+    /**
+     * pass to parameter loading on table component
+     */
     loading,
+    /**
+     * func to change data
+     */
     updateData,
+    /**
+     * array of columns are hidden
+     */
     hiddenColumns,
+    /**
+     * func for handle hide/show column
+     */
     handleHideShowColumns,
+    /**
+     * columns of table
+     */
     columns,
+    /**
+     * func for handle reset hide/show column
+     */
     handleResetHideShowColumns,
+    /**
+     * func for handle pagination
+     */
     handlePagination,
+    /**
+     * func for handle filter
+     */
     handleFilter,
+    /**
+     * func for change selected of rows
+     */
     handleSelected,
   }
 }
