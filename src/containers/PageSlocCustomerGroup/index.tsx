@@ -11,7 +11,9 @@ import { getListPoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { columns } from './columns'
+import { useTableModal } from './columns'
+import CreateModal from './create'
+import EditModal from './edit'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -23,20 +25,14 @@ function showTotal(total: number, range: number[]) {
 
 export default function PageSlocCustomerGroup() {
   const [filters, setFilters] = useState([])
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const TableModal = useTableModal()
   const table = useTable({
     funcApi: getListPoSto,
-    columns,
+    columns: TableModal.columns,
   })
-  const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.total > 0
   const router = useRouter()
-  const oneSelected = table.selected.length === 1
-  const firstSelected = table.selected[0]
-
-  const selectedQuotation = {
-    text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
-    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
-  }
 
   const statusOption = [
     { label: 'All', value: null },
@@ -71,11 +67,7 @@ export default function PageSlocCustomerGroup() {
             <SearchQueryParams placeholder="Search by PO Number" />
           </Row>
           <Row gap="16px">
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
-            >
+            <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
               Create
             </Button>
           </Row>
@@ -103,77 +95,13 @@ export default function PageSlocCustomerGroup() {
             }}
           />
         )}
-        {table.selected.length > 0 && (
-          <FloatAction>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <b>{table.selected.length} Document Quotation are Selected</b>
-            </div>
-            <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => {}}>
-                Cancel Process
-              </Button>
-              <Button
-                size="big"
-                variant="primary"
-                onClick={() => {
-                  setShowConfirm('submit')
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </FloatAction>
-        )}
-        {showConfirm === 'submit' && (
-          <Popup
-            onOutsideClick={() => {
-              setShowConfirm('')
-            }}
-          >
-            <Typography.Title level={3} style={{ margin: 0 }}>
-              Confirm Submit
-            </Typography.Title>
-            <Typography.Title level={5} style={{ margin: 0 }}>
-              Are you sure to submit quotation
-              {oneSelected ? (
-                ` ${selectedQuotation.text} ?`
-              ) : (
-                <Popover content={selectedQuotation.content}>
-                  {` ${selectedQuotation.text} ?`}
-                </Popover>
-              )}
-            </Typography.Title>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="secondary"
-                onClick={() => {
-                  router.reload()
-                }}
-              >
-                Cancel Proccess
-              </Button>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="primary"
-                onClick={() => {
-                  router.reload()
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </Popup>
-        )}
       </Card>
+      <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
+      <EditModal
+        visible={TableModal.showUpdateModal}
+        close={() => TableModal.setShowUpdateModal(false)}
+        selectedData={TableModal.selectedData}
+      />
     </Col>
   )
 }
