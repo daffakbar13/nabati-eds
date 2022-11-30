@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, Col, Spacer, Text } from 'pink-lava-ui'
+import { Button, Spacer, Text } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
-import { Tabs, Typography } from 'antd'
+import { Row, Col, Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import useDetail from 'src/hooks/useDetail'
 import { cancelSalesOrder, getDetailSalesOrder } from 'src/api/sales-order'
@@ -32,13 +32,19 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
   const data = useDetail(getDetailSalesOrder, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
 
+  const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+
   const ConfirmCancel = () => (
-    <Popup onOutsideClick={() => { setShowConfirm('') }}>
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Cancellation
       </Typography.Title>
       <DebounceSelect
-        type='select'
+        type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
         label={'Reason Cancel Process Quotation'}
         required
@@ -50,7 +56,10 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
           size="big"
           style={{ flexGrow: 1 }}
           variant="secondary"
-          onClick={() => { setShowConfirm('') }}>
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
           No
         </Button>
         <Button
@@ -83,7 +92,9 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
           textAlign="center"
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
-          <><CheckCircleFilled /> Cancel Success</>
+          <>
+            <CheckCircleFilled /> Cancel Success
+          </>
         </Text>
       </div>
       <div
@@ -93,25 +104,26 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
           fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
-        }}>
+        }}
+      >
         <div>
           Quoatation
-          <Typography.Text
-            copyable={{ text: router.query.id as string }}>
+          <Typography.Text copyable={{ text: router.query.id as string }}>
             {` ${router.query.id} `}
           </Typography.Text>
           has been
         </div>
-        <div>
-          successfully canceled
-        </div>
+        <div>successfully canceled</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => { router.push(`${PATH.SALES}/sales-order`) }}>
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order`)
+          }}
+        >
           OK
         </Button>
       </div>
@@ -129,67 +141,68 @@ export default function PageSalesOrderDetail(props: PageSalesOrderDetailProps) {
 
   return (
     <Col>
-      {!hasData && <Loader type='process' text='Wait for get data' />}
-      {onProcess && <Loader type='process' text={proccessing} />}
-      <div style={{ display: 'flex', gap: 5 }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => {
-            router.push({
-              pathname: `${PATH.SALES}/sales-order`,
-              query: {
-                page: router.query.page,
-                limit: router.query.limit,
-              },
-            })
-          }}
-        >
-          <ArrowLeftOutlined style={{ fontSize: 25 }} />
-        </div>
-        <Text variant={'h4'}>{titlePage}</Text>
-        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-        {router.query.status === 'New' && (
+      {!hasData && <Loader type="process" text="Wait for get data" />}
+      {onProcess && <Loader type="process" text={proccessing} />}
+      <Row justify="space-between">
+        <Row gutter={5}>
+          <Col>
+            <ArrowLeftOutlined
+              onClick={() => {
+                router.push(`${PATH.SALES}/sales-order`)
+              }}
+              style={{ fontSize: 25, lineHeight: '48px' }}
+            />
+          </Col>
+          <Col>
+            <Text variant={'h4'}>{titlePage}</Text>
+          </Col>
+        </Row>
+        <Row gutter={10}>
+          {isStatus('New') && (
             <>
-              <Button
-                size="big"
-                variant="tertiary"
-                onClick={() => {
-                  setShowConfirm('cancel')
-                }}
-              >
-                Cancel Process
-              </Button>
-              <Button
-                size="big"
-                variant="secondary"
-                onClick={() => {
-                  router.push(`${PATH.SALES}/sales-order/edit/${router.query.id}?status=${router.query.status}`)
-                }}
-              >
-                Edit
-              </Button>
+              <Col>
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    setShowConfirm('cancel')
+                  }}
+                >
+                  Cancel Process
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  size="big"
+                  variant="secondary"
+                  onClick={() => {
+                    router.push(
+                      `${PATH.SALES}/sales-order/edit/${router.query.id}?status=${router.query.status}`,
+                    )
+                  }}
+                >
+                  Edit
+                </Button>
+              </Col>
             </>
           )}
-          {['Complete', 'New'].includes(router.query.status as string) && (
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => {
-                router.push(
-                  `${PATH.SALES}/sales-order/create?id=${router.query.id}&status=${router.query.status}`,
-                )
-              }}
-            >
-              Order Again
-            </Button>
+          {isStatus('Complete', 'New') && (
+            <Col>
+              <Button
+                size="big"
+                variant="primary"
+                onClick={() => {
+                  router.push(
+                    `${PATH.SALES}/sales-order/create?id=${router.query.id}&status=${router.query.status}`,
+                  )
+                }}
+              >
+                Order Again
+              </Button>
+            </Col>
           )}
-        </div>
-      </div>
+        </Row>
+      </Row>
       <Spacer size={20} />
       <Card style={{ padding: '16px 20px' }}>
         <Tabs
