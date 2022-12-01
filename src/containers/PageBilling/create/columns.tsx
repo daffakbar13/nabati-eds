@@ -94,7 +94,7 @@ export const useTableAddItem = (props: propsUseTable) => {
         <DebounceSelect
           type="select"
           value={product_id as any}
-          fetchOptions={(search) => productBranch(search, 'P104')}
+          fetchOptions={(search) => productBranch(search, props.id)}
           onChange={(e) => {
             handleChangeData('product_id', e.value, index)
             setFetching(true)
@@ -213,20 +213,27 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   React.useEffect(() => {
     if (fetching) {
-      data.forEach(({ product_id, uom_id, qty }, index) => {
+      data.forEach(({ product_id, uom_id, based_price }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log("value :" + value);
+            console.log('value :', value)
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
-              let newUom = uom_id === '' ? value[2].value : uom_id
+              const newUom = uom_id === '' ? value[2]?.value : uom_id
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             } else {
-              let newUom = uom_id
+              const newUom = uom_id
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             }
+
+            if (value[2]?.key) {
+              let newPrice = based_price === 0 ? value[2].key : based_price
+              handleChangeData('based_price', newPrice, index)
+            } else {
+              let newPrice = based_price
+              handleChangeData('based_price', newPrice, index)
+            }
+
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
           })

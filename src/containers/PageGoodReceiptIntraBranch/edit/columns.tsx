@@ -210,8 +210,7 @@ export const useTableAddItem = (props: any) => {
       'SLoc',
       'sloc_id',
       false,
-      (rows, __, index) => 
-      <DebounceSelect type="input" disabled value={data[index].slocval} />,
+      (rows, __, index) => <DebounceSelect type="input" disabled value={data[index].slocval} />,
       200,
     ),
     CreateColumns(
@@ -247,14 +246,16 @@ export const useTableAddItem = (props: any) => {
             // console.log('value :', value)
             // console.log(value)
             const newOptionsUom = [...optionsUom]
-            let newUom = uom_id
 
             if (value[2]?.value) {
-              newUom = uom_id === '' ? value[2]?.value : uom_id
+              const newUom = uom_id === '' ? value[2]?.value : uom_id
+              handleChangeData('uom_id', newUom, index)
+            } else {
+              const newUom = uom_id
+              handleChangeData('uom_id', newUom, index)
             }
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
-            handleChangeData('uom_id', newUom, index)
           })
         }
       })

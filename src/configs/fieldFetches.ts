@@ -326,3 +326,16 @@ export function fieldOrderType(doc_type: string, search = '') {
                     value: id,
                 })))
 }
+
+export function fieldSalesOrganization(search = '') {
+    return getSalesOrgByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id }) =>
+                    id.toLowerCase().includes(search.toLowerCase()))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: id,
+                    value: id,
+                })))
+}
