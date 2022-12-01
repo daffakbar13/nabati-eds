@@ -2,7 +2,7 @@ import axios, { AxiosPromise, AxiosRequestConfig, Method } from 'axios'
 
 import { METHODS } from 'src/api/methods'
 import { errorInterceptor, responseInterceptor } from 'src/api/interceptors'
-import { API_BASE_URL_1 } from 'src/configs/env'
+import { API_BASE_URL_1, API_BASE_URL_3 } from 'src/configs/env'
 import { auth } from 'src/utils/auth'
 import { toSnakeCase } from 'src/utils/formatter'
 
@@ -31,7 +31,7 @@ export function call({
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgwNTY2ODMsImlzcyI6InNhbGVzLWVkcy1hcGkiLCJ1c2VyX2lkIjoiMSIsImVtYWlsIjoicmV5Z2FfdmlyZ2lhd2FuQG5hYmF0aXNuYWNrLmNvLmlkIiwiY29tcGFueV9pZCI6IlBQMDEifQ.nRSrclvhE2YmHZyI9bNn5wgWgBW0-cobM8f6Bx8yXos'
   const config: AxiosRequestConfig = {
     ...options,
-    baseURL: overrideBaseUrl || API_BASE_URL_1,
+    baseURL: overrideBaseUrl || API_BASE_URL_3,
     // withCredentials: true,
     method,
     url: subUrl,

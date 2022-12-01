@@ -6,3 +6,4 @@ export const MAINTENANCE = false
 
 export const API_BASE_URL_1 = process.env.NEXT_PUBLIC_API_BASE_URL_1
 export const API_BASE_URL_2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
+export const API_BASE_URL_3 = process.env.NEXT_PUBLIC_API_BASE_URL_3

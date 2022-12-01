@@ -80,6 +80,7 @@ export const cancelOrder = async (id: string) => {
 
 export const multipleSubmitQuotation = async (payload: { order_list: { id: string }[] }) => {
   const response = await call({
+    overrideBaseUrl,
     method: METHODS.POST,
     subUrl: 'v1/sales-orders/submit',
     data: payload,
