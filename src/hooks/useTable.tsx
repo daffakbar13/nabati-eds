@@ -1,3 +1,5 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable object-curly-newline */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-unused-expressions */
 import { MoreOutlined } from '@ant-design/icons'
@@ -132,6 +134,20 @@ export default function useTable(props: useTableProps) {
 
     getApi()
   }, [body])
+
+  React.useEffect(() => {
+    if (!loading) {
+      setColumns((arr) =>
+        arr.map((obj) => ({
+          ...obj,
+          ...(obj.title.props.id && {
+            width:
+              document.getElementById(obj.title.props.id).clientWidth + 32 + (obj.sorter ? 20 : 0),
+          }),
+        })),
+      )
+    }
+  }, [loading])
 
   React.useEffect(() => {
     setColumns(props.columns.filter((e) => !hiddenColumns.includes(e.title)))
