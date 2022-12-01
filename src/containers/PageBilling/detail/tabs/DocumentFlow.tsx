@@ -1,4 +1,4 @@
-import { Table } from 'antd'
+import { Table } from 'pink-lava-ui'
 import React from 'react'
 import useTable from 'src/hooks/useTable'
 import { TableDocumentFlow } from '../columns'
@@ -8,8 +8,13 @@ interface DocumentFlowProps {
 }
 
 export default function DocumentFlow(props: DocumentFlowProps) {
-  const {} = props
-  const table = useTable({ api: '', columns: TableDocumentFlow })
+  const { data } = props
 
-  return <Table columns={table.columns} dataSource={[]} />
+  return (
+    <>
+      <div style={{ overflow: 'scroll' }}>
+        <Table columns={TableDocumentFlow} dataSource={[]} />
+      </div>
+    </>
+  )
 }
