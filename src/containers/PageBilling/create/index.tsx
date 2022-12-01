@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
@@ -9,10 +9,11 @@ import { fakeApi } from 'src/api/fakeApi'
 import { useTableAddItem } from './columns'
 import Total from 'src/components/Total'
 import { useRouter } from 'next/router'
+import { fieldOrderType } from 'src/configs/fieldFetches'
 
 export default function CreateBilling() {
   const now = new Date().toISOString()
-  
+
   const router = useRouter()
   const titlePage = useTitlePage('create')
   const [cancel, setCancel] = useState(false)
@@ -20,6 +21,11 @@ export default function CreateBilling() {
   const [dataForm, setDataForm] = React.useState([])
   const [selectedOrderType, setSelectedOrderType] = React.useState('')
   const tableAddItems = useTableAddItem({ id: selectedOrderType || '' })
+  const [optionsOrderType, setOptionsOrderType] = useState([])
+
+  useEffect(() => {
+    fieldOrderType('B').then((result) => setOptionsOrderType(result))
+  }, [])
 
   const initialValue = {
     order_type_id: 'ZOP1',
@@ -68,7 +74,7 @@ export default function CreateBilling() {
           <DebounceSelect
             label="Order Type"
             type="select"
-            fetchOptions={fakeApi}
+            options={optionsOrderType}
             onChange={(val: any) => {
               onChangeForm('order_type_id', val.value)
               setSelectedOrderType(val.value)
