@@ -151,7 +151,9 @@ export default function PageDeliveryOrderDetail(props: PageDeliveryOrderDetailPr
               <Button size="big" variant="tertiary">
                 Cancel Process
               </Button>
-              <Button size="big" variant="secondary" onClick={() => { }}>
+              <Button size="big" variant="secondary" onClick={() => {
+                router.push(`${PATH.SALES}/delivery-order/edit/${router.query.id}`)
+               }}>
                 Edit
               </Button>
             </>
