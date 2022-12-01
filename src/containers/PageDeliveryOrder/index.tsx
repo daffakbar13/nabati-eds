@@ -1,8 +1,9 @@
+/* eslint-disable camelcase */
 /* eslint-disable object-curly-newline */
 import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card, Popup } from 'src/components'
+import { Card, FloatAction, Popup } from 'src/components'
 import { colors } from 'src/configs/colors'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
@@ -10,9 +11,9 @@ import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons
 import useTitlePage from 'src/hooks/useTitlePage'
 
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { getDeliveryOrderList } from 'src/api/delivery-order'
+import { cancelDeliveryOrder, getDeliveryOrderList, manualSubmitDeliveryOrder } from 'src/api/delivery-order'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
-import { cancelBatchOrder, multipleSubmitQuotation } from 'src/api/quotation'
+// import { cancelBatchOrder, multipleSubmitDeliveryOrder } from 'src/api/DeliveryOrder'
 import { PATH } from 'src/configs/menus'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
@@ -46,7 +47,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
-  const [submittedQuotation, setSubmittedQuotation] = React.useState([])
+  const [submittedDeliveryOrder, setSubmittedDeliveryOrder] = React.useState([])
   const [processing, setProcessing] = React.useState('')
   const onProcess = processing !== ''
   const hasData = table.total > 0
@@ -54,7 +55,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
   const oneSelected = table.selected.length === 1
   const firstSelected = table.selected[0]
 
-  const selectedQuotation = {
+  const selectedDeliveryOrder = {
     text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
     content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
   }
@@ -91,16 +92,16 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
         Confirm Submit
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
-        Are you sure to submit quotation
+        Are you sure to submit Delivery Order
         <Typography.Text
           copyable={{
-            text: oneSelected ? selectedQuotation.text : table.selected.join(', '),
+            text: oneSelected ? selectedDeliveryOrder.text : table.selected.join(', '),
           }}
         >
           {oneSelected ? (
-            ` ${selectedQuotation.text}`
+            ` ${selectedDeliveryOrder.text}`
           ) : (
-            <Popover content={selectedQuotation.content}>{` ${selectedQuotation.text}`}</Popover>
+            <Popover content={selectedDeliveryOrder.content}>{` ${selectedDeliveryOrder.text}`}</Popover>
           )}
         </Typography.Text>
         {' ?'}
@@ -121,17 +122,17 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            setProcessing('Wait for submitting Quotation')
-            multipleSubmitQuotation({
-              order_list: table.selected.map((id) => ({ id })),
+            setProcessing('Wait for submitting Delivery Order')
+            table.selected.forEach((delivery_id) => {
+              manualSubmitDeliveryOrder(delivery_id)
+                .then((response) => response.data)
+                .then((data) => {
+                  setShowConfirm('success-submit')
+                  setSubmittedDeliveryOrder((old) => [...old, data.id])
+                  setProcessing('')
+                })
+                .catch(() => setProcessing(''))
             })
-              .then((response) => response.data)
-              .then((data) => {
-                setShowConfirm('success-submit')
-                setSubmittedQuotation(data.results.map(({ id }) => id))
-                setProcessing('')
-              })
-              .catch(() => setProcessing(''))
           }}
         >
           Yes
@@ -162,17 +163,17 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
         }}
       >
         <div>
-          New Sales Order
+          Delivery Order
           <Typography.Text
             copyable={{
-              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
+              text: oneSelected ? submittedDeliveryOrder[0] : submittedDeliveryOrder.join(', '),
             }}
           >
             {oneSelected ? (
-              ` ${submittedQuotation[0]}`
+              ` ${submittedDeliveryOrder[0]}`
             ) : (
-              <Popover content={submittedQuotation.join(', ')}>
-                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
+              <Popover content={submittedDeliveryOrder.join(', ')}>
+                {` ${submittedDeliveryOrder[0]}, +${submittedDeliveryOrder.length - 1} more`}
               </Popover>
             )}
           </Typography.Text>{' '}
@@ -186,7 +187,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           style={{ flexGrow: 1 }}
           variant="secondary"
           onClick={() => {
-            router.push(`${PATH.SALES}/quotation`)
+            router.push(`${PATH.SALES}/delivery-order`)
           }}
         >
           Back To List
@@ -196,7 +197,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/sales-order`)
+            router.push(`${PATH.SALES}/shipment`)
           }}
         >
           Next Process
@@ -217,7 +218,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
       <DebounceSelect
         type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
-        label={'Reason Cancel Process Quotation'}
+        label={'Reason Cancel Process Delivery Order'}
         required
         options={optionsReason}
         onChange={({ value }) => setReason(value)}
@@ -238,16 +239,17 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            setProcessing('Wait for cancelling Quotation')
-            cancelBatchOrder({
-              order_list: table.selected.map((id) => ({ id })),
-              cancel_reason_id: reason,
+            setProcessing('Wait for cancelling Delivery Order')
+            table.selected.forEach((delivery_id) => {
+              cancelDeliveryOrder(delivery_id)
+                .then((response) => response.data)
+                .then((data) => {
+                  setShowConfirm('success-cancel')
+                  setSubmittedDeliveryOrder((old) => [...old, data.id])
+                  setProcessing('')
+                })
+                .catch(() => setProcessing(''))
             })
-              .then(() => {
-                setShowConfirm('success-cancel')
-                setProcessing('')
-              })
-              .catch((err) => console.log(err))
           }}
         >
           Yes
@@ -281,13 +283,13 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           Quoatation
           <Typography.Text
             copyable={{
-              text: oneSelected ? selectedQuotation.text : table.selected.join(', '),
+              text: oneSelected ? selectedDeliveryOrder.text : table.selected.join(', '),
             }}
           >
             {oneSelected ? (
-              ` ${selectedQuotation.text}`
+              ` ${selectedDeliveryOrder.text}`
             ) : (
-              <Popover content={selectedQuotation.content}>{` ${selectedQuotation.text}`}</Popover>
+              <Popover content={selectedDeliveryOrder.content}>{` ${selectedDeliveryOrder.text}`}</Popover>
             )}
           </Typography.Text>{' '}
           has been
@@ -300,7 +302,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/quotation`)
+            router.push(`${PATH.SALES}/DeliveryOrder`)
           }}
         >
           OK
@@ -372,7 +374,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
             dataSource={table.data}
             showSorterTooltip={false}
             rowSelection={table.rowSelection}
-            rowKey={'id'}
+            rowKey={'delivery_order_id'}
           />
         </div>
         {hasData && (
@@ -387,6 +389,39 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           />
         )}
       </Card>
+      {table.selected.length > 0 && (
+        <FloatAction>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <b>{table.selected.length} Document Delivery Order are Selected</b>
+          </div>
+          <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => {
+                setShowConfirm('cancel')
+              }}
+            >
+              Cancel DO
+            </Button>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                setShowConfirm('submit')
+              }}
+            >
+              Submit
+            </Button>
+          </div>
+        </FloatAction>
+      )}
       {showConfirm === 'submit' && <ConfirmSubmit />}
       {showConfirm === 'success-submit' && <ConfirmSuccessSubmit />}
       {showConfirm === 'cancel' && <ConfirmCancel />}

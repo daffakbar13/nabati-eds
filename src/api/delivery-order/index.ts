@@ -1,6 +1,7 @@
+/* eslint-disable camelcase */
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
-import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
+import { CommonListParams, CommonListResponse, CommonDetailParams, CommonDetailResponse } from 'src/api/types'
 import { DeliveryOrder } from './types'
 
 const url = 'v1/delivery-orders'
@@ -20,7 +21,7 @@ export const getDeliveryOrderList = async (
 
 export const getDeliveryOrderDetail = async (
   params: CommonDetailParams,
-): Promise<CommonListResponse<DeliveryOrder>> => {
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     overrideBaseUrl,
     method: METHODS.GET,
@@ -46,6 +47,30 @@ export const editDeliveryOrder = async (payload: DeliveryOrder) => {
     method: METHODS.PATCH,
     subUrl: `${url}/${payload.id}`,
     data: payload,
+  })
+  return response.data
+}
+
+export const manualSubmitDeliveryOrder = async (
+  delivery_id: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    overrideBaseUrl,
+    method: METHODS.POST,
+    subUrl: `${url}/${delivery_id}/submit`,
+    // data: params
+  })
+  return response.data
+}
+
+export const cancelDeliveryOrder = async (
+  delivery_id: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    overrideBaseUrl,
+    method: METHODS.POST,
+    subUrl: `${url}/${delivery_id}/cancel`,
+    // data: params
   })
   return response.data
 }

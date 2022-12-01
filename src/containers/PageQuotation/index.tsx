@@ -120,7 +120,7 @@ export default function PageQuotation(props: PageQuotationProps) {
       <ReactToPrint
         onBeforeGetContent={async () => {
           await downloadTemplateQuotation().then((e) => {
-            setDownloadData(e)
+            // setDownloadData(e)
           })
         }}
         // onBeforePrint={() => {
@@ -128,9 +128,9 @@ export default function PageQuotation(props: PageQuotationProps) {
         //     setDownloadData(e)
         //   })
         // }}
-        onAfterPrint={() => {
-          setDownloadData('')
-        }}
+        // onAfterPrint={() => {
+        //   // setDownloadData('')
+        // }}
         removeAfterPrint
         trigger={() => (
           <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>

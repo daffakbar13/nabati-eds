@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import moment from 'moment'
-import { Divider, Form } from 'antd'
+import { Divider, Form, Spin } from 'antd'
 import { useRouter } from 'next/router'
 
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
@@ -16,9 +16,11 @@ import { CommonSelectValue } from 'src/configs/commonTypes'
 
 import { columns } from './columns'
 
+import SlocForm from './slocForm'
+
 const { Label, LabelRequired } = Text
 
-export default function CreateGoodsReceiptModal({ visible = false, close = () => {} }) {
+export default function CreateSlocModal({ visible = false, close = () => {} }) {
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
   const [selectedTableData, setSelectedTableData] = useState([])
@@ -63,48 +65,27 @@ export default function CreateGoodsReceiptModal({ visible = false, close = () =>
   }
 
   const content = (
-    <Form
-      form={form}
-      labelCol={{ span: 24 }}
-      wrapperCol={{ span: 24 }}
-      autoComplete="off"
-      requiredMark={false}
-      scrollToFirstError
-    >
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginTop: 40 }}>
-        <Form.Item
-          name="company"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Company</LabelRequired>}
-          rules={[{ required: true }]}
+    <div>
+      <SlocForm />
+
+      {/* Table Here ... */}
+      <Table style={{ marginTop: 20 }} columns={columns()} />
+
+      <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+        <Button
+          size="big"
+          style={{ marginLeft: 'auto', width: 144 }}
+          variant="tertiary"
+          onClick={close}
         >
-          <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />
-        </Form.Item>
-        <Form.Item
-          name="key"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Key</LabelRequired>}
-          rules={[{ required: true }]}
-        >
-          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
-        </Form.Item>
-        <Form.Item
-          name="value"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Sloc</LabelRequired>}
-          rules={[{ required: true }]}
-        >
-          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
-        </Form.Item>
-        <Form.Item
-          name="description"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<Label>Description</Label>}
-        >
-          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
-        </Form.Item>
+          Cancel
+        </Button>
+        <Button size="big" style={{ width: 144 }} variant="primary" onClick={() => {}}>
+          {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
+          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>Submit</span>
+        </Button>
       </div>
-    </Form>
+    </div>
   )
 
   return (
@@ -113,8 +94,10 @@ export default function CreateGoodsReceiptModal({ visible = false, close = () =>
         open={visible}
         onOk={() => {}}
         onCancel={close}
-        title="Create Config Sloc Company"
+        title="Create Sloc"
         content={content}
+        width={1132}
+        footer={null}
       />
 
       {/* <Modal
