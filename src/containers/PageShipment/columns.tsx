@@ -51,7 +51,7 @@ export const TableBilling = [
     true,
     'have-checkbox',
   ),
-  CreateColumns('Vehicle Number', 'vehicle_id', false, undefined, 150),
+  CreateColumns('Vehicle Number', 'vehicle_id', false, undefined, 120),
   CreateColumns('Driver', 'driver_name', false, undefined, 120),
   CreateColumns('Created Date', 'created_at', false, undefined, 130),
   CreateColumns('Total DO', 'total_do', false, undefined, 100),

@@ -7,10 +7,9 @@ import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, FloatAction, Popup } from 'src/components'
 import { colors } from 'src/configs/colors'
-// import { TableBilling } from 'src/data/tables'
-import { Dropdown, Space, Menu, Checkbox, Popover, Divider, Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { CheckCircleFilled, MoreOutlined } from '@ant-design/icons'
+import { CheckCircleFilled } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import { getShipment, PGIShipment } from 'src/api/shipment'
@@ -18,7 +17,6 @@ import Pagination from 'src/components/Pagination'
 import { PATH } from 'src/configs/menus'
 import moment from 'moment'
 import Loader from 'src/components/Loader'
-import { PageShipmentProps } from './types'
 import { TableBilling } from './columns'
 
 export default function PageShipment() {
@@ -164,7 +162,20 @@ export default function PageShipment() {
               nameIcon="SearchOutlined"
               placeholder="Search Menu Design Name"
               colorIcon={colors.grey.regular}
-              onChange={() => {}}
+              onChange={(e) => {
+                const { value } = e.target
+                if (value === '') {
+                  table.handleFilter([])
+                } else {
+                  table.handleFilter([
+                    {
+                      field: 'id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                    },
+                  ])
+                }
+              }}
             />
             <SmartFilter onOk={setFilters} filters={filters} />
           </Row>
@@ -184,9 +195,9 @@ export default function PageShipment() {
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
-        <div style={{ overflow: 'scroll' }}>
+        <div style={{ overflow: 'scroll', width: '' }}>
           <Table
-            scroll={{ y: 600 }}
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}
