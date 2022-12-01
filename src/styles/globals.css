@@ -117,7 +117,7 @@ p {
   border-color: #2bbecb;
 }
 
-.ant-table-cell.ant-table-selection-column {
+/* .ant-table-cell.ant-table-selection-column {
   z-index: 4 !important;
 }
 
@@ -127,7 +127,7 @@ p {
 
 .ant-table-cell-fix-left.ant-table-cell-ellipsis.have-checkbox {
   left: 32px !important;
-}
+} */
 
 .ant-spin-dot-item {
   background-color: #2bbecb;
@@ -142,6 +142,7 @@ p {
 .ant-table-ping-right .ant-table-cell-fix-right::after {
   box-shadow: none;
 }
+
 table.eds_paper{
   width: 100%;
 }
@@ -181,3 +182,11 @@ table.eds_create_shipment tbody tr td {
   font-weight: bold;
   padding: 10px 0;
 }
+
+/* th.ant-table-cell {
+  width: max-content !important;
+}
+
+th.ant-table-cell {
+  width: fit-content !important;
+} */
