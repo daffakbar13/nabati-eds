@@ -11,7 +11,7 @@ import { getListPoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { columns, selectData } from './columns'
+import { columns } from './columns'
 import CreateModal from './create'
 import EditModal from './edit'
 
@@ -32,8 +32,6 @@ export default function PageSlocCustomerGroup() {
   })
   const hasData = table.total > 0
   const router = useRouter()
-
-  console.log('Selected Data', selectData)
 
   const statusOption = [
     { label: 'All', value: null },
@@ -100,8 +98,11 @@ export default function PageSlocCustomerGroup() {
       <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
       {/* <EditModal
         visible={showUpdateModal}
-        close={() => setShowUpdateModal(false)}
-        selectedData={selectedData}
+        handleClose={() => {
+          setShowUpdateModal(false)
+          setSelectedData({})
+        }}
+        selectedUpdateData={selectedData}
       /> */}
     </Col>
   )

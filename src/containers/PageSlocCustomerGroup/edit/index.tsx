@@ -3,11 +3,17 @@ import { Spacer } from 'pink-lava-ui'
 import { fakeApi } from 'src/api/fakeApi'
 import DebounceSelect from 'src/components/DebounceSelect'
 
-export default function ModalUpdate({
-  visible = false,
-  close = () => {},
-  selectedData: any,
-}) {
+type Props = {
+  visible: boolean
+  selectedUpdateData: any
+  handleClose: () => void
+}
+
+export default function ModalUpdate(props: Props) {
+  const handleClose = () => {
+    props.handleClose()
+  }
+
   const content = (
     <>
       <Spacer size={20} />
@@ -48,9 +54,9 @@ export default function ModalUpdate({
   return (
     <>
       <Modal
-        open={visible}
+        open={props.visible}
         onOk={() => {}}
-        onCancel={close}
+        onCancel={handleClose}
         title="Create SLoc Customer Group"
         content={content}
         cancelText="Cancel"
