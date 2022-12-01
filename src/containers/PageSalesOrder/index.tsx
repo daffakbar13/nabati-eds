@@ -171,7 +171,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
               </Popover>
             )}
           </Typography.Text>
-          has been
+          {' has been'}
         </div>
         <div>successfully submitted</div>
       </div>
@@ -368,7 +368,7 @@ export default function PageSalesOrder(props: PageSalesOrderProps) {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
           <Table
-            scroll={{ y: 600 }}
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}

@@ -2,10 +2,10 @@
 import React from 'react'
 import * as XLSX from 'xlsx'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
+import { Button, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Checkbox, Popover, Divider, Typography, Col, Row } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -381,8 +381,8 @@ export default function PageQuotation(props: PageQuotationProps) {
       <div ref={componentRef}>{downloadData}</div>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
-        <Row justifyContent="space-between">
-          <Row gap="16px">
+        <Row justify="space-between">
+          <Row gutter={16}>
             <Search
               width="380px"
               nameIcon="SearchOutlined"
@@ -419,7 +419,7 @@ export default function PageQuotation(props: PageQuotationProps) {
               filters={filters}
             />
           </Row>
-          <Row gap="16px">
+          <Row gutter={16}>
             <Popover placement="bottom" content={moreContent} trigger="click">
               <Button
                 size="big"
@@ -444,7 +444,7 @@ export default function PageQuotation(props: PageQuotationProps) {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
-            scroll={{ y: 600 }}
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}

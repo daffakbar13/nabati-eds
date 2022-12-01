@@ -6,8 +6,8 @@
 /* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
-import { Divider, Typography, Col, Row } from 'antd'
-import { Button, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
+import { Col, Divider, Row, Typography } from 'antd'
+import { Button, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -17,14 +17,35 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
-import { createSalesOrder, getDetailSalesOrder, updateSalesOrder } from 'src/api/sales-order'
 import { fieldCustomer } from 'src/configs/fieldFetches'
+import { concatString } from 'src/utils/concatString'
+import { createSalesOrder, getDetailSalesOrder, updateSalesOrder } from 'src/api/sales-order'
 import { useTableAddItem } from './columns'
+
+interface payloadCreate {
+  company_id?: string
+  branch_id?: string
+  source_id?: string
+  order_date?: string
+  delivery_date?: string
+  pricing_date?: string
+  order_type_id?: string
+  customer_id?: string
+  ship_to_id?: string
+  salesman_id?: string
+  sales_org_id?: string
+  valid_from?: string
+  valid_to?: string
+  customer_ref?: string
+  currency_id?: string
+  term_id?: string
+  items?: any[]
+}
 
 export default function PageCreateSalesOrder() {
   const now = new Date().toISOString()
   const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
-  const [dataForm, setDataForm] = React.useState<any>({
+  const [dataForm, setDataForm] = React.useState<payloadCreate>({
     company_id: 'PP01',
     source_id: 'Z02',
     order_date: now,
@@ -32,20 +53,20 @@ export default function PageCreateSalesOrder() {
     pricing_date: now,
     valid_from: now,
     valid_to: tomorrow,
-    term_id: 'Z007',
     customer_ref: '',
     currency_id: 'IDR',
+    term_id: 'Z000',
   })
   const router = useRouter()
   const tableAddItems = useTableAddItem()
   const [newSalesOrder, setNewSalesOrder] = React.useState()
   const [draftSalesOrder, setDraftSalesOrder] = React.useState()
-  const [cancel, setCancel] = React.useState(false)
+  const [cancel, setCancel] = React.useState<boolean>(false)
   const [optionsOrderType, setOptionsOrderType] = React.useState([])
   const [optionsSalesman, setOptionsSalesman] = React.useState([])
   const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
   const [optionsBranch, setOptionsBranch] = React.useState([])
-  const [fetching, setFetching] = React.useState('')
+  const [fetching, setFetching] = React.useState<'customer' | 'load-options'>()
   const [processing, setProcessing] = React.useState('')
   const [canSave, setCanSave] = React.useState(false)
   const isCreatePage = router.asPath.split('/').includes('create')
@@ -55,11 +76,9 @@ export default function PageCreateSalesOrder() {
   const onProcess = processing !== ''
   const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
-  const concatString = (...data: string[]) => data.join(' - ')
-
   const splitString = (data: string) => data.split(' - ')[0]
 
-  const onChangeForm = (form: string, value: any) => {
+  const onChangeForm = (form: keyof typeof dataForm, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
@@ -72,8 +91,7 @@ export default function PageCreateSalesOrder() {
     branch_id: splitString(dataForm.branch_id),
     salesman_id: splitString(dataForm.salesman_id),
     status_id: status_id.toString(),
-    customer_ref:
-      dataForm.customer_ref === '' || dataForm.customer_ref ? '-' : dataForm.customer_ref,
+    customer_ref: dataForm.customer_ref || '-',
   })
 
   const ConfirmSuccessSubmit = () => (
@@ -119,11 +137,7 @@ export default function PageCreateSalesOrder() {
   )
 
   const ConfirmCancel = () => (
-    <Popup
-      onOutsideClick={() => {
-        setCancel(false)
-      }}
-    >
+    <Popup>
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Cancellation
       </Typography.Title>
@@ -158,12 +172,245 @@ export default function PageCreateSalesOrder() {
     </Popup>
   )
 
+  const ActionButton = () => (
+    <Row justify="end" gutter={10}>
+      <Col>
+        <Button
+          size="big"
+          variant="tertiary"
+          onClick={() => {
+            setCancel(true)
+          }}
+        >
+          Cancel
+        </Button>
+      </Col>
+      <Col>
+        <Button
+          size="big"
+          variant="secondary"
+          disabled={!canSave}
+          onClick={() => {
+            if (canSave) {
+              setProcessing('Wait for save Sales Order')
+              isCreateOrOrderAgain
+                ? createSalesOrder(dataSubmited(10))
+                    .then((response) => {
+                      setDraftSalesOrder(response.data.id)
+                      setProcessing('')
+                    })
+                    .catch(() => setProcessing(''))
+                : updateSalesOrder(dataSubmited(10), titlePage.split(' ').reverse()[0])
+                    .then((response) => {
+                      setDraftSalesOrder(response.data.id)
+                      setProcessing('')
+                    })
+                    .catch(() => setProcessing(''))
+            }
+          }}
+        >
+          Save As Draft
+        </Button>
+      </Col>
+      <Col>
+        <Button
+          size="big"
+          variant="primary"
+          disabled={!canSave}
+          onClick={() => {
+            if (canSave) {
+              setProcessing('Wait for save Sales Order')
+              isCreateOrOrderAgain
+                ? createSalesOrder(dataSubmited(1))
+                    .then((response) => {
+                      setNewSalesOrder(response.data.id)
+                      setProcessing('')
+                    })
+                    .catch(() => setProcessing(''))
+                : updateSalesOrder(dataSubmited(1), titlePage.split(' ').reverse()[0])
+                    .then((response) => {
+                      setNewSalesOrder(response.data.id)
+                      setProcessing('')
+                    })
+                    .catch(() => setProcessing(''))
+            }
+          }}
+        >
+          Submit
+        </Button>
+      </Col>
+    </Row>
+  )
+
+  const FieldCreateSalesOrder = () => (
+    <Row gutter={[10, 10]}>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          required
+          label="Order Type"
+          placeholder={'Select'}
+          value={dataForm.order_type_id}
+          options={optionsOrderType}
+          onChange={(e: any) => {
+            onChangeForm('order_type_id', e.value)
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          label="Sales Organization"
+          placeholder={'Select'}
+          value={dataForm.sales_org_id}
+          options={optionsSalesOrg}
+          onChange={(e: any) => {
+            onChangeForm('sales_org_id', e.value)
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          label="Branch"
+          placeholder={'Select'}
+          value={dataForm.branch_id}
+          options={optionsBranch}
+          onChange={(e: any) => {
+            onChangeForm('branch_id', e.value)
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DatePickerInput
+          fullWidth
+          onChange={(val: any) => {
+            val !== null && onChangeForm('order_date', new Date(moment(val).format()).toISOString())
+          }}
+          label="Document Date"
+          disabledDate={(current) => current < moment().startOf('day')}
+          value={moment(dataForm.order_date)}
+          format={'DD-MMM-YYYY'}
+          required
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          label="Sold To Customer"
+          required
+          value={dataForm.customer_id}
+          fetchOptions={fieldCustomer}
+          onChange={(e: any) => {
+            onChangeForm('customer_id', e.value)
+            setFetching('customer')
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          label="Ship To Customer"
+          placeholder={'Select'}
+          value={dataForm.ship_to_id}
+          options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
+          onChange={(e: any) => {
+            onChangeForm('ship_to_id', e.value)
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DatePickerInput
+          fullWidth
+          onChange={(val: any) => {
+            val !== null && onChangeForm('valid_from', new Date(moment(val).format()).toISOString())
+          }}
+          label="Valid From"
+          disabledDate={(current) => current < moment().startOf('day')}
+          value={moment(dataForm.valid_from)}
+          format={'DD-MMM-YYYY'}
+          required
+        />
+      </Col>
+      <Col span={8}>
+        <DatePickerInput
+          fullWidth
+          onChange={(val: any) => {
+            val !== null && onChangeForm('valid_to', new Date(moment(val).format()).toISOString())
+          }}
+          label="Valid To"
+          disabledDate={(current) => current < moment().endOf('day')}
+          value={moment(dataForm.valid_to)}
+          format={'DD-MMM-YYYY'}
+          required
+        />
+      </Col>
+      <Col span={8}>
+        <DatePickerInput
+          fullWidth
+          onChange={(val: any) => {
+            val !== null
+              && onChangeForm('delivery_date', new Date(moment(val).format()).toISOString())
+            val !== null
+              && onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
+          }}
+          label="Delivery Date"
+          disabledDate={(current) => current < moment().startOf('day')}
+          value={moment(dataForm.delivery_date)}
+          format={'DD-MMM-YYYY'}
+          required
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          label="Salesman"
+          placeholder="Select"
+          value={dataForm.salesman_id}
+          options={optionsSalesman}
+          onChange={(e: any) => {
+            onChangeForm('salesman_id', e.value)
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="input"
+          label="Reference"
+          placeholder="e.g Type Here..."
+          value={dataForm.customer_ref}
+          onChange={(e: any) => {
+            onChangeForm('customer_ref', e.target.value)
+          }}
+        />
+      </Col>
+      <Col span={8}></Col>
+    </Row>
+  )
+
+  const TableItems = () => (
+    <>
+      <Row style={{ overflow: 'scroll' }}>
+        <Table data={dataForm.customer_id && tableAddItems.data} columns={tableAddItems.columns} />
+      </Row>
+      {dataForm.customer_id && (
+        <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
+          Add Item
+        </Button>
+      )}
+      <Row justify="end">
+        <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
+      </Row>
+    </>
+  )
+
   React.useEffect(() => {
     if (router.query.id && optionsOrderType.length > 0) {
       getDetailSalesOrder({ id: router.query.id as string })
         .then((response) => response.data)
         .then((data) => {
-          const initFromDetail = {
+          setDataForm({
+            ...dataForm,
             company_id: 'PP01',
             branch_id: concatString(data.branch_id, data.branch_name),
             source_id: 'Z02',
@@ -172,21 +419,15 @@ export default function PageCreateSalesOrder() {
             pricing_date: data.pricing_date || now,
             order_type_id: dataForm.order_type_id,
             customer_id: concatString(data.customer_id, data.customer_name),
-            ship_to_id:
-              data.ship_to_id === ''
-                ? concatString(data.customer_id, data.customer_name)
-                : data.ship_to_id,
+            ship_to_id: concatString(data.customer_id, data.customer_name),
             salesman_id: concatString(data.salesman_id, data.salesman_name),
             sales_org_id: concatString(data.sales_org_id, data.sales_org_name),
             valid_from: data.valid_from,
             valid_to: data.valid_to,
-            term_id: data.term_id || 'Z007',
             customer_ref: data.customer_ref,
-            customer_ref_date: data.customer_ref_date || now,
             currency_id: 'IDR',
-          }
-          setDataForm(initFromDetail)
-          setFetching('customer')
+          })
+          setFetching('load-options')
         })
         .catch(() => router.push(`${PATH.SALES}/sales-order`))
     }
@@ -197,7 +438,7 @@ export default function PageCreateSalesOrder() {
   }, [tableAddItems.data])
 
   React.useEffect(() => {
-    if (fetching === 'customer') {
+    if (fetching) {
       setProcessing('Wait for load customer')
       const customer_id = dataForm.customer_id.split(' - ')[0]
       getCustomerByFilter({
@@ -225,16 +466,18 @@ export default function PageCreateSalesOrder() {
           setOptionsSalesOrg(newOptions.sales_org)
           setOptionsBranch(newOptions.branch)
           onChangeForm('ship_to_id', dataForm.customer_id)
-          onChangeForm('sales_org_id', newOptions.sales_org[0].value)
-          onChangeForm('branch_id', newOptions.branch[0].value)
-          onChangeForm('salesman_id', newOptions.salesman[0].value)
+          if (fetching === 'customer') {
+            onChangeForm('sales_org_id', newOptions.sales_org[0].value)
+            onChangeForm('branch_id', newOptions.branch[0].value)
+            onChangeForm('salesman_id', newOptions.salesman[0].value)
+          }
 
           setProcessing('')
-          setFetching('')
+          setFetching(undefined)
         })
         .catch(() => {
           setProcessing('')
-          setFetching('')
+          setFetching(undefined)
         })
     }
   }, [fetching])
@@ -275,243 +518,28 @@ export default function PageCreateSalesOrder() {
   }, [])
 
   return (
-    <Col>
+    <Row gutter={[20, 20]}>
+      <Col span={24}>
+        <Text variant={'h4'}>{titlePage}</Text>
+      </Col>
+      <Col span={24}>
+        <Card>
+          <ActionButton />
+        </Card>
+      </Col>
+      <Col span={24}>
+        <Card>
+          <FieldCreateSalesOrder />
+          <Divider style={{ borderColor: '#AAAAAA' }} />
+          <TableItems />
+        </Card>
+      </Col>
       {(onProcess || tableAddItems.isLoading) && (
-        <Loader type="process" text={processing === '' ? 'Wait for get data items' : processing} />
+        <Loader type="process" text={onProcess ? processing : 'Wait for get data items'} />
       )}
-      <Text variant={'h4'}>{titlePage}</Text>
-      <Spacer size={20} />
-      <Card style={{ overflow: 'unset' }}>
-      <Row justify="end" gutter={10}>
-          <Col>
-            <Button
-              size="big"
-              variant="tertiary"
-              onClick={() => {
-                setCancel(true)
-              }}
-            >
-              Cancel
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              size="big"
-              variant="secondary"
-              disabled={!canSave}
-              onClick={() => {
-                if (canSave) {
-                  setProcessing('Wait for save Sales Order')
-                  isCreateOrOrderAgain
-                    ? createSalesOrder(dataSubmited(10))
-                        .then((response) => {
-                          setDraftSalesOrder(response.data.id)
-                          setProcessing('')
-                        })
-                        .catch(() => setProcessing(''))
-                    : updateSalesOrder(dataSubmited(10), titlePage.split(' ').reverse()[0])
-                        .then((response) => {
-                          setDraftSalesOrder(response.data.id)
-                          setProcessing('')
-                        })
-                        .catch(() => setProcessing(''))
-                }
-              }}
-            >
-              Save As Draft
-            </Button>
-          </Col>
-          <Col>
-            <Button
-              size="big"
-              variant="primary"
-              disabled={!canSave}
-              onClick={() => {
-                if (canSave) {
-                  setProcessing('Wait for save Sales Order')
-                  isCreateOrOrderAgain
-                    ? createSalesOrder(dataSubmited(1))
-                        .then((response) => {
-                          setNewSalesOrder(response.data.id)
-                          setProcessing('')
-                        })
-                        .catch(() => setProcessing(''))
-                    : updateSalesOrder(dataSubmited(1), titlePage.split(' ').reverse()[0])
-                        .then((response) => {
-                          setNewSalesOrder(response.data.id)
-                          setProcessing('')
-                        })
-                        .catch(() => setProcessing(''))
-                }
-              }}
-            >
-              Submit
-            </Button>
-          </Col>
-        </Row>
-      </Card>
-      <Spacer size={10} />
-      <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
-        <Row gutter={[10, 10]}>
-          <Col span={8}>
-            <DebounceSelect
-              type="select"
-              required
-              label="Order Type"
-              placeholder={'Select'}
-              value={dataForm.order_type_id}
-              options={optionsOrderType}
-              onChange={(e: any) => {
-                onChangeForm('order_type_id', e.value)
-              }}
-            />
-          </Col>
-          <Col span={8}>
-            <DebounceSelect
-              type="select"
-              label="Sales Organization"
-              placeholder={'Select'}
-              value={dataForm.sales_org_id}
-              options={optionsSalesOrg}
-              onChange={(e: any) => {
-                onChangeForm('sales_org_id', e.value)
-              }}
-            />
-          </Col>
-          <Col span={8}>
-            <DebounceSelect
-              type="select"
-              label="Branch"
-              placeholder={'Select'}
-              value={dataForm.branch_id}
-              options={optionsBranch}
-              onChange={(e: any) => {
-                onChangeForm('branch_id', e.value)
-              }}
-            />
-          </Col>
-          <Col span={8}>
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('order_date', new Date(moment(val).format()).toISOString())
-              }}
-              label="Document Date"
-              disabledDate={(current) => current < moment().startOf('day')}
-              value={moment(dataForm.order_date)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-          </Col>
-          <Col span={8}>
-            <DebounceSelect
-              type="select"
-              label="Sold To Customer"
-              required
-              value={dataForm.customer_id}
-              fetchOptions={fieldCustomer}
-              onChange={(e: any) => {
-                onChangeForm('customer_id', e.value)
-                setFetching('customer')
-              }}
-            />
-          </Col>
-          <Col span={8}>
-            <DebounceSelect
-              type="select"
-              label="Ship To Customer"
-              placeholder={'Select'}
-              value={dataForm.ship_to_id}
-              options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
-              onChange={(e: any) => {
-                onChangeForm('ship_to_id', e.value)
-              }}
-            />
-          </Col>
-          <Col span={8}>
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('valid_from', new Date(moment(val).format()).toISOString())
-              }}
-              label="Valid From"
-              disabledDate={(current) => current < moment().startOf('day')}
-              value={moment(dataForm.valid_from)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-          </Col>
-          <Col span={8}>
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('valid_to', new Date(moment(val).format()).toISOString())
-              }}
-              label="Valid To"
-              disabledDate={(current) => current < moment().endOf('day')}
-              value={moment(dataForm.valid_to)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-          </Col>
-          <Col span={8}>
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('delivery_date', new Date(moment(val).format()).toISOString())
-                onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
-              }}
-              label="Delivery Date"
-              disabledDate={(current) => current < moment().startOf('day')}
-              value={moment(dataForm.delivery_date)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-          </Col>
-          <Col span={8}>
-            <DebounceSelect
-              type="select"
-              label="Salesman"
-              placeholder="Select"
-              value={dataForm.salesman_id}
-              options={optionsSalesman}
-              onChange={(e: any) => {
-                onChangeForm('salesman_id', e.value)
-              }}
-            />
-          </Col>
-          <Col span={8}>
-            <DebounceSelect
-              type="input"
-              label="Reference"
-              placeholder="e.g Type Here..."
-              value={dataForm.customer_ref}
-              onChange={(e: any) => {
-                onChangeForm('customer_ref', e.target.value)
-              }}
-            />
-          </Col>
-          <Col span={8}></Col>
-        </Row>
-        <Divider style={{ borderColor: '#AAAAAA' }} />
-        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            data={dataForm.customer_id && tableAddItems.data}
-            columns={tableAddItems.columns}
-          />
-        </div>
-        {dataForm.customer_id && (
-          <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
-            Add Item
-          </Button>
-        )}
-        <div style={{ display: 'flex', flexGrow: 1, flexDirection: 'row-reverse' }}>
-          <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
-        </div>
-      </Card>
       {(newSalesOrder || draftSalesOrder) && <ConfirmSuccessSubmit />}
       {cancel && <ConfirmCancel />}
       {<tableAddItems.ConfirmDelete />}
-    </Col>
+    </Row>
   )
 }
