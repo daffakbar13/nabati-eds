@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
@@ -8,7 +9,7 @@ import { Button, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { updateQuotation } from 'src/api/quotation'
+// import { updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { fieldCustomer, fieldRoute, fieldSoldToCustomer } from 'src/configs/fieldFetches'
@@ -16,7 +17,8 @@ import { CheckCircleFilled, PlusOutlined } from '@ant-design/icons'
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
-import { createDeliveryOrder } from 'src/api/delivery-order'
+import { createDeliveryOrder, getDeliveryOrderDetail } from 'src/api/delivery-order'
+import { updateQuotation } from 'src/api/quotation'
 import { useTableAddItem } from './columns'
 
 export default function PageCreateDeliveryOrder() {
@@ -24,15 +26,33 @@ export default function PageCreateDeliveryOrder() {
   const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
   const router = useRouter()
   const tableAddItems = useTableAddItem()
-  const [dataForm, setDataForm] = React.useState<any>({
+  const [dataForm, setDataForm] = React.useState<{
+    order_type?: string
+    sold_to_customer?: string
+    ship_to_customer?: string
+    sales_org_id?: string
+    branch_id?: string
+    route_id?: string
+    document_date?: string
+    loading_date?: string
+    delivery_date?: string
+    pricing_date?: string
+    reference?: string
+    status_id?: string
+    total_amount?: number
+    salesman_id?: string
+    delivery_items?: any[]
+  }>({
+    order_type: 'ZDCC',
+    route_id: 'ID0080',
     document_date: now,
     delivery_date: tomorrow,
     loading_date: now,
     pricing_date: now,
     reference: '',
   })
-  const [newQuotation, setNewQuotation] = React.useState()
-  const [draftQuotation, setDraftQuotation] = React.useState()
+  const [newDeliveryOrder, setNewDeliveryOrder] = React.useState()
+  const [draftDeliveryOrder, setDraftDeliveryOrder] = React.useState()
   const [cancel, setCancel] = React.useState(false)
   const [optionsOrderType, setOptionsOrderType] = React.useState([])
   // const [optionsSalesman, setOptionsSalesman] = React.useState([])
@@ -41,25 +61,23 @@ export default function PageCreateDeliveryOrder() {
   const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
   const [optionsBranch, setOptionsBranch] = React.useState([])
   const [fetching, setFetching] = React.useState('')
-  const [proccessing, setProccessing] = React.useState('')
+  const [processing, setProcessing] = React.useState('')
   const [canSave, setCanSave] = React.useState(false)
   const [warningFields, setWarningFields] = React.useState(false)
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
-  const onProcess = proccessing !== ''
+  const onProcess = processing !== ''
   const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
-
-  const  = (...data: string[]) => data.join(' - ')
 
   const splitString = (data: string) => data.split(' - ')[0]
 
-  const onChangeForm = (form: string, value: any) => {
+  const onChangeForm = (form: keyof typeof dataForm, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
-  const dataSubmited = (status_id: number) => ({
+  const dataSubmited = (status_id: number): typeof dataForm => ({
     ...dataForm,
     order_type: splitString(dataForm.order_type),
     sold_to_customer: splitString(dataForm.sold_to_customer),
@@ -70,41 +88,115 @@ export default function PageCreateDeliveryOrder() {
     salesman_id: splitString(dataForm.salesman_id),
     total_amount: tableAddItems.total_amount,
     status_id: status_id.toString(),
-    reference: dataForm.reference === '' || dataForm.reference ? '-' : dataForm.reference,
+    reference: dataForm.reference || '-',
+    delivery_items: tableAddItems.data.map((obj) => ({
+      ...obj,
+      product_name: obj.product_name.split(' - ')[1],
+    })),
   })
 
+  const ConfirmSuccessSubmit = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          {'New Quotation '}
+          <Typography.Text copyable>{newDeliveryOrder || draftDeliveryOrder}</Typography.Text>
+          {' has been'}
+        </div>
+        <div>successfully {newDeliveryOrder ? 'created' : 'saved'}</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/delivery-order`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmCancel = () => (
+    <Popup
+      onOutsideClick={() => {
+        setCancel(false)
+      }}
+    >
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Cancellation
+      </Typography.Title>
+      <b>Are you sure want to cancel? Change you made so far will not saved</b>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setCancel(false)
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            if (router.query.status) {
+              const { status } = router.query
+              router.push(`${PATH.SALES}/delivery-order/detail/${router.query.id}?status=${status}`)
+            } else {
+              router.push(`${PATH.SALES}/delivery-order`)
+            }
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
+
   React.useEffect(() => {
-    if (router.query.id && optionsOrderType.length > 0) {
-      // getDetailQuotation({ id: router.query.id as string })
-      //   .then((response) => response.data)
-      //   .then((data) => {
-      //     const initFromDetail = {
-      //       company_id: 'PP01',
-      //       branch_id: ([data.branch_id, data.branch_name]),
-      //       source_id: 'Z02',
-      //       document_date: data.document_date,
-      //       delivery_date: data.delivery_date,
-      //       pricing_date: data.pricing_date || now,
-      //       order_type: optionsOrderType
-      //         .find(({ value }) => value.includes(data.order_type))?.value,
-      //       sold_to_customer: ([data.sold_to_customer, data.customer_name]),
-      //       ship_to_customer: data.ship_to_customer === '' ? ([data.sold_to_customer, data.customer_name]) : data.ship_to_customer,
-      //       salesman_id: ([data.salesman_id, data.salesman_name]),
-      //       sales_org_id: ([data.sales_org_id, data.sales_org_name]),
-      //       valid_from: data.valid_from,
-      //       valid_to: data.valid_to,
-      //       term_id: data.term_id || 'Z007',
-      //       reference: data.reference,
-      //       reference_date: data.reference_date || now,
-      //       currency_id: 'IDR',
-      //       // delivery_items: tableAddItems.data,
-      //     }
-      //     setDataForm(initFromDetail)
-      //     setFetching('customer')
-      //   })
-      //   .catch(() => router.push(`${PATH.SALES}/delivery-order`))
+    if (router.query.id) {
+      getDeliveryOrderDetail({ id: router.query.id as string })
+        .then((resp) => resp.data)
+        .then((detail) => {
+          setDataForm({
+            ...dataForm,
+            order_type: detail.order_type,
+            pricing_date: now,
+            reference: detail.reference,
+            route_id: detail.route_id,
+            salesman_id: detail.salesman,
+            sold_to_customer: detail.customer,
+            total_amount: detail.total_amount,
+            delivery_items: detail.delivery_items,
+          })
+        })
+        .then(() => setFetching('customer'))
     }
-  }, [router, optionsOrderType])
+  }, [router])
 
   React.useEffect(() => {
     onChangeForm('delivery_items', tableAddItems.data)
@@ -113,47 +205,42 @@ export default function PageCreateDeliveryOrder() {
   React.useEffect(() => {
     if (fetching === 'customer') {
       const { sold_to_customer } = dataForm
-      setProccessing('Wait for proccess')
+      setProcessing('Wait for proccess')
       getCustomerByFilter({
         branch_id: '',
         customer_id: splitString(sold_to_customer),
         sales_org_id: '',
         salesman_id: '',
       })
-        .then((res) => res.data)
-        .then((data) => {
-          setProccessing('')
-          const [firstData] = data
-          const dataBranch = (firstData.branch_id, firstData.branch_name)
-          const dataSalesOrg = (firstData.sales_org_id, firstData.sales_org_name)
-          const dataSalesman = (firstData.salesman_id, firstData.salesman_name)
+        .then((result) => {
+          const newOptions = {
+            salesman: result.data.map(({ salesman_id, salesman_name }) => ({
+              label: [salesman_id, salesman_name].join(' - '),
+              value: [salesman_id, salesman_name].join(' - '),
+            })),
+            sales_org: result.data.splice(0, 1).map(({ sales_org_id, sales_org_name }) => ({
+              label: [sales_org_id, sales_org_name].join(' - '),
+              value: [sales_org_id, sales_org_name].join(' - '),
+            })),
+            branch: result.data.splice(0, 1).map(({ branch_id, branch_name }) => ({
+              label: [branch_id, branch_name].join(' - '),
+              value: [branch_id, branch_name].join(' - '),
+            })),
+          }
+          setOptionsSalesman(newOptions.salesman)
+          setOptionsSalesOrg(newOptions.sales_org)
+          setOptionsBranch(newOptions.branch)
+          onChangeForm('ship_to_customer', dataForm.sold_to_customer)
+          onChangeForm('sales_org_id', newOptions.sales_org[0].value)
+          onChangeForm('branch_id', newOptions.branch[0].value)
+          onChangeForm('salesman_id', newOptions.salesman[0].value)
 
-          onChangeForm('ship_to_customer', sold_to_customer)
-          onChangeForm('branch_id', dataBranch)
-          onChangeForm('sales_org_id', dataSalesOrg)
-          onChangeForm('salesman_id', dataSalesman)
-          setOptionsCustomerShipTo([
-            {
-              label: sold_to_customer,
-              value: sold_to_customer,
-            },
-          ])
-          setOptionsBranch([
-            {
-              label: dataBranch,
-              value: dataBranch,
-            },
-          ])
-          setOptionsSalesOrg([
-            {
-              label: dataSalesOrg,
-              value: dataSalesOrg,
-            },
-          ])
-          // setOptionsSalesman(data.map(({ salesman_id, salesman_name }) => ({
-          //   label: ([salesman_id, salesman_name]),
-          //   value: ([salesman_id, salesman_name]),
-          // })))
+          setProcessing('')
+          setFetching('')
+        })
+        .catch(() => {
+          setProcessing('')
+          setFetching('')
         })
     }
     setFetching('')
@@ -167,8 +254,6 @@ export default function PageCreateDeliveryOrder() {
       dataForm.sales_org_id,
       dataForm.branch_id,
       dataForm.route_id,
-      dataForm.so_number,
-      // dataForm.reference,
     ]
     const fullFilled = requiredFields.filter((e) => e === '' || e === undefined).length === 0
     const haveItems = tableAddItems.data.filter(({ product_id }) => product_id === '').length === 0
@@ -177,29 +262,25 @@ export default function PageCreateDeliveryOrder() {
   }, [dataForm])
 
   React.useEffect(() => {
-    if (router.query.id) {
-    }
-  }, [router])
-
-  React.useEffect(() => {
-    setProccessing('Wait for proccess')
+    setProcessing('Wait for proccess')
     getDocTypeByCategory('J')
-      .then((result) => result.data.map(({ id, name }) => ({
+      .then((result) =>
+        result.data.map(({ id, name }) => ({
           label: [id, name.split('-').join(' - ')].join(' - '),
           value: [id, name.split('-').join(' - ')].join(' - '),
         })))
       .then((data) => {
         onChangeForm('order_type', data.find(({ value }) => value.includes('ZDP1'))?.value)
         setOptionsOrderType(data)
-        setProccessing('')
+        setProcessing('')
       })
-      .catch(() => setProccessing('Connection or server is error, please reload the page'))
+      .catch(() => setProcessing('Connection or server is error, please reload the page'))
   }, [])
 
   return (
     <Col>
       {(onProcess || tableAddItems.isLoading) && (
-        <Loader type="process" text={proccessing === '' ? 'Wait for get data' : proccessing} />
+        <Loader type="process" text={processing === '' ? 'Wait for get data' : processing} />
       )}
       {/* {tableAddItems.isLoading && <Loader type='process' text='Wait for get data' />} */}
       <Text variant={'h4'}>{titlePage}</Text>
@@ -222,58 +303,48 @@ export default function PageCreateDeliveryOrder() {
             <Button
               size="big"
               variant="secondary"
-              disabled={!canSave}
+              disabled={!canSave || isEditPage}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Quotation')
+                  setProcessing('Wait for save Delivery Order')
                   isCreateOrOrderAgain
                     ? createDeliveryOrder(dataSubmited(10))
                         .then((response) => {
-                          setDraftQuotation(response.data.id)
-                          setProccessing('')
+                          setDraftDeliveryOrder(response.data.id)
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
-                    : updateQuotation(dataSubmited(10), titlePage.split(' ').reverse()[0])
-                        .then((response) => {
-                          setDraftQuotation(response.data.id)
-                          setProccessing('')
-                        })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
+                    : null
                 } else {
                   setWarningFields(true)
                 }
               }}
             >
-              Save As Draft
+              {isCreateOrOrderAgain ? 'Save As Draft' : 'UNDER DEVELOPMENT(HAVE ISSUE)'}
             </Button>
           </Col>
           <Col>
             <Button
               size="big"
               variant="primary"
-              disabled={!canSave}
+              disabled={!canSave || isEditPage}
               onClick={() => {
                 if (canSave) {
-                  setProccessing('Wait for save Quotation')
+                  setProcessing('Wait for save Delivery Order')
                   isCreateOrOrderAgain
                     ? createDeliveryOrder(dataSubmited(1))
                         .then((response) => {
-                          setNewQuotation(response.data.id)
-                          setProccessing('')
+                          setNewDeliveryOrder(response.data.id)
+                          setProcessing('')
                         })
-                        .catch(() => setProccessing(''))
-                    : updateQuotation(dataSubmited(1), titlePage.split(' ').reverse()[0])
-                        .then((response) => {
-                          setNewQuotation(response.data.id)
-                          setProccessing('')
-                        })
-                        .catch(() => setProccessing(''))
+                        .catch(() => setProcessing(''))
+                    : null
                 } else {
                   setWarningFields(true)
                 }
               }}
             >
-              {isCreateOrOrderAgain ? 'Submit' : 'Save'}
+              {isCreateOrOrderAgain ? 'Create' : 'UNDER DEVELOPMENT(HAVE ISSUE)'}
             </Button>
           </Col>
           {/* </Row> */}
@@ -363,22 +434,9 @@ export default function PageCreateDeliveryOrder() {
               onChange={(val: any) => {
                 onChangeForm('loading_date', new Date(moment(val).format()).toISOString())
               }}
-              label="Valid From"
+              label="Loading Date"
               disabledDate={(current) => current < moment().startOf('day')}
               value={moment(dataForm.loading_date)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-          </Col>
-          <Col span={8}>
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('valid_to', new Date(moment(val).format()).toISOString())
-              }}
-              label="Valid To"
-              disabledDate={(current) => current < moment().endOf('day')}
-              value={moment(dataForm.valid_to)}
               format={'DD-MMM-YYYY'}
               required
             />
@@ -414,134 +472,14 @@ export default function PageCreateDeliveryOrder() {
               type="input"
               label="Reference"
               placeholder="e.g Type Here..."
-              value={dataForm.customer_ref}
-              onChange={(e: any) => {
-                onChangeForm('customer_ref', e.target.value)
-              }}
-            />
-          </Col>
-          <Col span={8}></Col>
-        </Row>
-        {/* <div style={{ display: 'flex', gap: 20 }}>
-          <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
-            <DebounceSelect
-              type='select'
-              required
-              label="Order Type"
-              placeholder={'Select'}
-              value={dataForm.order_type}
-              options={optionsOrderType}
-              onChange={(e: any) => {
-                onChangeForm('order_type', e.value)
-              }}
-            />
-            <DebounceSelect
-              type='select'
-              label="Sold To Customer"
-              required
-              value={dataForm.sold_to_customer}
-              fetchOptions={fieldSoldToCustomer}
-              onChange={(e: any) => {
-                onChangeForm('sold_to_customer', e.value)
-                setFetching('customer')
-              }}
-            />
-            <DebounceSelect
-              type='select'
-              label="Ship To Customer"
-              placeholder={'Select'}
-              value={dataForm.ship_to_customer}
-              options={optionsCustomerShipTo}
-              onChange={(e: any) => {
-                onChangeForm('ship_to_customer', e.value)
-              }}
-            />
-            <DebounceSelect
-              type='select'
-              label="Sales Organization"
-              placeholder={'Select'}
-              value={dataForm.sales_org_id}
-              options={optionsSalesOrg}
-              onChange={(e: any) => {
-                onChangeForm('sales_org_id', e.value)
-              }}
-            />
-            <DebounceSelect
-              type='select'
-              label="Branch"
-              placeholder={'Select'}
-              value={dataForm.branch_id}
-              options={optionsBranch}
-              onChange={(e: any) => {
-                onChangeForm('branch_id', e.value)
-              }}
-            />
-            <DebounceSelect
-              type='select'
-              label="Route"
-              required
-              value={dataForm.route_id}
-              fetchOptions={fieldRoute}
-              onChange={(e: any) => {
-                onChangeForm('route_id', e.value)
-              }}
-            />
-          </div>
-          <div style={{ display: 'flex', gap: 10, flexDirection: 'column', flexGrow: 1 }}>
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                val !== '' && onChangeForm('document_date', new Date(moment(val).format()).toISOString())
-              }}
-              label="Document Date"
-              disabledDate={(current) => current < moment().startOf('day')}
-              value={moment(dataForm.document_date)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('loading_date', new Date(moment(val).format()).toISOString())
-              }}
-              label="Loading Date"
-              disabledDate={(current) => current < moment().startOf('day')}
-              value={moment(dataForm.loading_date)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('delivery_date', new Date(moment(val).format()).toISOString())
-              }}
-              label="Delivery Date"
-              disabledDate={(current) => current < moment().endOf('day')}
-              value={moment(dataForm.delivery_date)}
-              format={'DD-MMM-YYYY'}
-              required
-            />
-            <DebounceSelect
-              type='input'
-              label="SO Number"
-              placeholder="e.g 12345"
-              required
-              value={dataForm.so_number}
-              onChange={(e: any) => {
-                onChangeForm('so_number', e.target.value)
-              }}
-            />
-            <DebounceSelect
-              type='input'
-              label="Reference"
-              placeholder="e.g Type Here..."
               value={dataForm.reference}
               onChange={(e: any) => {
                 onChangeForm('reference', e.target.value)
               }}
             />
-          </div>
-        </div> */}
+          </Col>
+          <Col span={8}></Col>
+        </Row>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         {dataForm.sold_to_customer && (
           <Button
@@ -564,7 +502,7 @@ export default function PageCreateDeliveryOrder() {
           <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
         </div>
       </Card>
-      {(newQuotation || draftQuotation || cancel) && (
+      {(newDeliveryOrder || draftDeliveryOrder || cancel) && (
         <Popup>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Text
@@ -591,14 +529,14 @@ export default function PageCreateDeliveryOrder() {
             ) : (
               <>
                 New Quotation
-                <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
+                <Typography.Text copyable>{newDeliveryOrder || draftDeliveryOrder}</Typography.Text>
                 has been
               </>
             )}
           </div>
           {!cancel && (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-              successfully {newQuotation ? 'created' : 'saved'}
+              successfully {newDeliveryOrder ? 'created' : 'saved'}
             </div>
           )}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
@@ -626,7 +564,7 @@ export default function PageCreateDeliveryOrder() {
                 </Button>
               </>
             )}
-            {newQuotation && (
+            {newDeliveryOrder && (
               <>
                 <Button
                   style={{ flexGrow: 1 }}
@@ -650,7 +588,7 @@ export default function PageCreateDeliveryOrder() {
                 </Button>
               </>
             )}
-            {draftQuotation && (
+            {draftDeliveryOrder && (
               <Button
                 size="big"
                 variant="primary"
@@ -665,6 +603,9 @@ export default function PageCreateDeliveryOrder() {
           </div>
         </Popup>
       )}
+      {(newDeliveryOrder || draftDeliveryOrder) && <ConfirmSuccessSubmit />}
+      {cancel && <ConfirmCancel />}
+      {<tableAddItems.ConfirmDelete />}
     </Col>
   )
 }
