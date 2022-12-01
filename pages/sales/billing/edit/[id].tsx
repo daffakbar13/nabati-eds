@@ -1,9 +1,10 @@
 import React from 'react'
+import PageBillingEdit from 'src/containers/PageBilling/edit'
 
-interface BillingEditProps {}
+interface Props {}
 
-export default function BillingEdit(props: BillingEditProps) {
+export default function BillingEdit(props: Props) {
   const {} = props
 
-  return <div>BillingEdit</div>
+  return <PageBillingEdit />
 }

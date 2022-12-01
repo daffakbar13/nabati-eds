@@ -1,10 +1,10 @@
 import React from 'react'
-import PageConfigurationCompany from 'src/containers/PageConfigurationCompany'
+import PageSlocCustomerGroup from 'src/containers/PageSlocCustomerGroup'
 
 interface RealTimeProps {}
 
 export default function ConfigurationCompany(props: RealTimeProps) {
   const {} = props
 
-  return <PageConfigurationCompany />
+  return <PageSlocCustomerGroup />
 }

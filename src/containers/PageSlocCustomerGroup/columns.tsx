@@ -1,21 +1,18 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import React from 'react'
+import React, { useState } from 'react'
 import CreateColumns from 'src/utils/createColumns'
-import { Button } from 'pink-lava-ui'
-import { Switch } from 'antd'
+import { Button, Switch } from 'pink-lava-ui'
 
-function Linked({ record }: { record: string }) {
-  return <></>
-}
+// const [showUpdateModal, setShowUpdateModal] = useState(false)
 
 const onChange = (checked) => {
   console.log(`switch to ${checked}`)
 }
 
-const selectData = (record) => {
-  console.log(`selectedData : `, record)
+export const selectData = (record) => {
+  return record
 }
 
 export const columns = [
@@ -55,11 +52,7 @@ export const columns = [
     200,
   ),
   CreateColumns('Action', 'id', false, (id: string, record: any) => (
-    <Button
-      size="big"
-      variant="tertiary"
-      onClick={()=> selectData(record)}
-    >
+    <Button size="big" variant="tertiary" onClick={() => selectData(record)}>
       View Detail
     </Button>
   )),

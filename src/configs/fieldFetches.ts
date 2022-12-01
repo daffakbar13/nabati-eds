@@ -153,9 +153,10 @@ export function fieldUom(product_id: string): Promise<any> {
         .then((result) => result.data)
         .then((data) => data
             .filter(({ valid_from, valid_to }) => now >= valid_from && now <= valid_to)
-            .map(({ uom_id }) => ({
+            .map(({ uom_id, price }) => ({
                 label: uom_id,
                 value: uom_id,
+                key: price,
             })))
 }
 

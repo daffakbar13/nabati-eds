@@ -6,6 +6,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { useRouter } from 'next/router'
 import { useDetail } from 'src/hooks'
 import { getDetailBilling } from 'src/api/billing'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import { PageBillingDetailProps } from './types'
 import AllTabs from './tabs'
@@ -25,13 +26,38 @@ export default function PageBillingDetail(props: PageBillingDetailProps) {
   return (
     <Col>
       <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            router.push('/sales/billing')
+          }}
+        >
+          <ArrowLeftOutlined style={{ fontSize: 25 }} />
+        </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
           <Button>asd</Button>
-          <ButtonPinkLava size="big" variant="secondary" onClick={() => {}}>
+          <ButtonPinkLava
+            size="big"
+            variant="secondary"
+            onClick={() => {
+              router.push(`/sales/billing/edit/${router.query.id}?status=New`)
+            }}
+          >
             Edit
           </ButtonPinkLava>
-          <ButtonPinkLava size="big" variant="primary" onClick={() => {}}>
+          <ButtonPinkLava
+            size="big"
+            variant="primary"
+            onClick={() => {
+              router.push(`/sales/billing/order-again/${router.query.id}?status=New`)
+            }}
+          >
             Order Again
           </ButtonPinkLava>
         </div>

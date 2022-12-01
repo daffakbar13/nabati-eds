@@ -2,36 +2,24 @@ import React, { useState } from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
-import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
-import useTitlePage from 'src/hooks/useTitlePage'
-import { fakeApi } from 'src/api/fakeApi'
+import { useRouter } from 'next/router'
+import { useDetail } from 'src/hooks'
+import { getDetailBilling } from 'src/api/billing'
+import { ArrowLeftOutlined } from '@ant-design/icons'
+import DebounceSelect from 'src/components/DebounceSelect'
 import { useTableAddItem } from './columns'
 import Total from 'src/components/Total'
-import { useRouter } from 'next/router'
+import { fakeApi } from 'src/api/fakeApi'
 
-export default function CreateBilling() {
-  const now = new Date().toISOString()
-  
+export default function PageBillingDetail() {
   const router = useRouter()
-  const titlePage = useTitlePage('create')
+  const data = useDetail(getDetailBilling, { id: router.query.id as string })
   const [cancel, setCancel] = useState(false)
+  const [dataForm, setDataForm] = useState([])
   const [newData, setNewData] = useState()
-  const [dataForm, setDataForm] = React.useState([])
-  const [selectedOrderType, setSelectedOrderType] = React.useState('')
+  const [selectedOrderType, setSelectedOrderType] = useState('')
   const tableAddItems = useTableAddItem({ id: selectedOrderType || '' })
-
-  const initialValue = {
-    order_type_id: 'ZOP1',
-    gi_date: moment(now).format('YYYY-MM-DD'),
-    customer_id: 'C1609023',
-    document_date: moment(now).format('YYYY-MM-DD'),
-    sales_org_id: 'PID1',
-    delivery_date: moment(now).format('YYYY-MM-DD'),
-    branch_id: 'P104',
-    reference: '',
-    items: tableAddItems.data,
-  }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -39,7 +27,22 @@ export default function CreateBilling() {
 
   return (
     <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
+      <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            router.push(`/sales/billing/detail/${router.query.id}?status=New`)
+          }}
+        >
+          <ArrowLeftOutlined style={{ fontSize: 25 }} />
+        </div>
+        <Text variant={'h4'}>Edit Billing {router.query.id}</Text>
+      </div>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
@@ -53,27 +56,16 @@ export default function CreateBilling() {
             >
               Cancel
             </Button>
-            <Button size="big" variant="secondary" onClick={() => {}}>
-              Save As Draft
-            </Button>
             <Button size="big" variant="primary" onClick={() => {}}>
               Submit
             </Button>
           </Row>
         </Row>
       </Card>
-      <Spacer size={10} />
-      <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
+      <Spacer size={20} />
+      <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect
-            label="Order Type"
-            type="select"
-            fetchOptions={fakeApi}
-            onChange={(val: any) => {
-              onChangeForm('order_type_id', val.value)
-              setSelectedOrderType(val.value)
-            }}
-          />
+          <DebounceSelect label="Order Type" type="input" disabled placeholder="ZOP1" />
           <DatePickerInput
             fullWidth
             onChange={(val: any) => {
@@ -84,12 +76,7 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect
-            label="Customer"
-            type="select"
-            fetchOptions={fakeApi}
-            onChange={() => {}}
-          />
+          <DebounceSelect label="Customer" type="input" disabled placeholder="C1609023 - ANA" />
           <DatePickerInput
             fullWidth
             onChange={(val: any) => {
@@ -100,7 +87,13 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Sales Organization" type="input" disabled onChange={() => {}} />
+          <DebounceSelect
+            label="Sales Organization"
+            type="input"
+            disabled
+            placeholder="PID1"
+            onChange={() => {}}
+          />
           <DatePickerInput
             fullWidth
             onChange={(val: any) => {
@@ -111,7 +104,13 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          <DebounceSelect label="Branch" type="input" disabled onChange={() => {}} />
+          <DebounceSelect
+            label="Branch"
+            type="input"
+            placeholder="P104"
+            disabled
+            onChange={() => {}}
+          />
           <DebounceSelect
             label="Reference"
             type="input"
@@ -120,13 +119,9 @@ export default function CreateBilling() {
           />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        {selectedOrderType != '' ? (
-          <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-            + Add Item
-          </Button>
-        ) : (
-          ''
-        )}
+        <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
+          + Add Item
+        </Button>
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
@@ -191,7 +186,7 @@ export default function CreateBilling() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing`)
+                    router.push(`/sales/billing/detail/${router.query.id}?status=New`)
                   }}
                 >
                   Yes
@@ -205,7 +200,7 @@ export default function CreateBilling() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing`)
+                    router.push(`/sales/billing/detail/${router.query.id}?status=New`)
                   }}
                 >
                   OK
