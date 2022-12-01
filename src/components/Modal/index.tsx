@@ -17,6 +17,8 @@ interface Props {
   successOkText?: string
   cancelText?: string
   successCancelText?: string
+  width?: number | string
+  footer?: any
 }
 
 const ModalCustomize = ({
@@ -60,11 +62,23 @@ const ModalCustomize = ({
     }
   }
 
+  const footerComponent = (
+    <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+      <Button size="big" style={{ flexGrow: 1 }} variant="tertiary" onClick={close}>
+        {cancelText}
+      </Button>
+      <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={handleOk}>
+        {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
+        <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>{okText}</span>
+      </Button>
+    </div>
+  )
+
   return (
     <>
       <Modal
         // ok
-        footer={null}
+        footer={footerComponent || null}
         open={open}
         onOk={onOk}
         onCancel={close}
@@ -85,16 +99,6 @@ const ModalCustomize = ({
           </Typography.Title>
         ) : null}
         {typeof content === 'object' ? <>{content}</> : null}
-
-        <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-          <Button size="big" style={{ flexGrow: 1 }} variant="tertiary" onClick={close}>
-            {cancelText}
-          </Button>
-          <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={handleOk}>
-            {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
-            <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>{okText}</span>
-          </Button>
-        </div>
       </Modal>
       <SuccessModal
         onCancel={() => setShowSuccessModal(false)}

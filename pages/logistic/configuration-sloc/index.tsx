@@ -1,10 +1,6 @@
 import React from 'react'
-import PageConfigurationCompany from 'src/containers/PageConfigurationCompany'
+import PageConfigurationSloc from 'src/containers/PageConfigurationSloc'
 
-interface RealTimeProps {}
-
-export default function ConfigurationCompany(props: RealTimeProps) {
-  const {} = props
-
-  return <PageConfigurationCompany />
+export default function ConfigurationCompany() {
+  return <PageConfigurationSloc />
 }

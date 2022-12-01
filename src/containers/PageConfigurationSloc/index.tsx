@@ -16,7 +16,7 @@ export default function PageConfigurationSloc() {
 
   const [showCreateModal, setShowCreateModal] = useState(false)
 
-  const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${id}`)
+  const goToDetailPage = (id: string) => false
   const onChangeActive = (a: boolean) => {
     console.log('a', a)
   }
@@ -29,7 +29,7 @@ export default function PageConfigurationSloc() {
 
   return (
     <>
-      <Text variant={'h4'}>Company</Text>
+      <Text variant={'h4'}>Sloc</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
