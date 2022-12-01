@@ -29,7 +29,7 @@ export default function CreateBilling() {
   const [optionsOrderType, setOptionsOrderType] = useState([])
 
   useEffect(() => {
-    fieldOrderType('B').then((result) => setOptionsOrderType(result))
+    fieldOrderType('J').then((result) => setOptionsOrderType(result))
   }, [])
 
   const initialValue = {
