@@ -241,7 +241,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           onClick={() => {
             setProcessing('Wait for cancelling Delivery Order')
             table.selected.forEach((delivery_id) => {
-              cancelDeliveryOrder(delivery_id)
+              cancelDeliveryOrder(delivery_id, { reason_id: reason })
                 .then((response) => response.data)
                 .then((data) => {
                   setShowConfirm('success-cancel')
@@ -280,7 +280,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
         }}
       >
         <div>
-          Quoatation
+          Delivery Order
           <Typography.Text
             copyable={{
               text: oneSelected ? selectedDeliveryOrder.text : table.selected.join(', '),
@@ -289,7 +289,9 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
             {oneSelected ? (
               ` ${selectedDeliveryOrder.text}`
             ) : (
-              <Popover content={selectedDeliveryOrder.content}>{` ${selectedDeliveryOrder.text}`}</Popover>
+              <Popover
+                content={selectedDeliveryOrder.content}
+              >{` ${selectedDeliveryOrder.text}`}</Popover>
             )}
           </Typography.Text>{' '}
           has been
@@ -302,7 +304,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/DeliveryOrder`)
+            router.push(`${PATH.SALES}/delivery-order`)
           }}
         >
           OK
@@ -368,7 +370,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
-            scroll={{ y: 600 }}
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}
