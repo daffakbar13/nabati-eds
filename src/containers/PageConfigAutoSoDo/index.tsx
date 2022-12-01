@@ -58,12 +58,12 @@ export default function PageSlocCustomerGroup() {
 
   return (
     <Col>
-      <Text variant={'h4'}>SLoc Customer Group</Text>
+      <Text variant={'h4'}>Auto SO to DO</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by PO Number" />
+            <SearchQueryParams placeholder="Search by Sales Org" />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>

@@ -18,7 +18,7 @@ export default function ModalUpdate(props: Props) {
     <>
       <Spacer size={20} />
       <DebounceSelect
-        label="Company"
+        label="Salesman"
         required
         type="select"
         fetchOptions={fakeApi}
@@ -26,23 +26,7 @@ export default function ModalUpdate(props: Props) {
       />
       <Spacer size={10} />
       <DebounceSelect
-        label="Sales Org"
-        required
-        type="select"
-        fetchOptions={fakeApi}
-        onChange={(val: any) => {}}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Customer Group"
-        required
-        type="select"
-        fetchOptions={fakeApi}
-        onChange={(val: any) => {}}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Sloc"
+        label="SLoc"
         required
         type="select"
         fetchOptions={fakeApi}

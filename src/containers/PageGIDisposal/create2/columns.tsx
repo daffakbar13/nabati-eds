@@ -158,10 +158,10 @@ export const useTableAddItem = (props: propsUseTable) => {
             // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
-              let newUom = uom_qty === '' ? value[2].value : uom_qty
+              const newUom = uom_qty === '' ? value[2]?.value : uom_qty
               handleChangeData('uom_qty', newUom, index)
             } else {
-              let newUom = uom_qty
+              const newUom = uom_qty
               handleChangeData('uom_qty', newUom, index)
             }
             newOptionsUom[index] = value

@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -311,4 +311,31 @@ export async function fieldVehicle(search: string) {
                         label: [VehicleID, driver_name].join(' - '),
                         value: [VehicleID, driver_name].join(' - '),
                     }))))
+}
+
+export function fieldOrderType(doc_type: string, search = '') {
+    return getDocTypeByCategory(doc_type)
+        .then((result) =>
+            result.data
+                .filter(({ id, name }) =>
+                    id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase()))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name.split('-').join(' - ')].join(' - '),
+                    value: id,
+                })))
+}
+
+export function fieldSalesOrganization(search = '') {
+    return getSalesOrgByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id }) =>
+                    id.toLowerCase().includes(search.toLowerCase()))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: id,
+                    value: id,
+                })))
 }

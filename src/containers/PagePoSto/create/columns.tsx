@@ -6,12 +6,12 @@ import React from 'react'
 import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { productBranch, fieldUom } from 'src/configs/fieldFetches'
-import { MinusCircleFilled } from '@ant-design/icons';
+import { MinusCircleFilled } from '@ant-design/icons'
 import CreateColumns from 'src/utils/createColumns'
 
 interface propsUseTable {
-  idSupplyingBranch: string,
-  idReceivingBranch: string,
+  idSupplyingBranch: string
+  idReceivingBranch: string
 }
 
 export const useTableAddItem = (props: propsUseTable) => {
@@ -33,7 +33,7 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   React.useEffect(() => {
     if (props.idSupplyingBranch != '' && props.idReceivingBranch != '') {
-      setData([initialValue]);
+      setData([initialValue])
     }
   }, [props.idSupplyingBranch, props.idReceivingBranch])
 
@@ -66,104 +66,114 @@ export const useTableAddItem = (props: propsUseTable) => {
       '',
       'action',
       false,
-      (_, __, index) => <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <MinusCircleFilled
-          style={{ color: 'red', margin: 'auto' }}
-          onClick={() => { handleDeleteRows(index); console.log('delete', index) }}
-        />
-      </div>,
+      (_, __, index) => (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <MinusCircleFilled
+            style={{ color: 'red', margin: 'auto' }}
+            onClick={() => {
+              handleDeleteRows(index)
+              console.log('delete', index)
+            }}
+          />
+        </div>
+      ),
       55,
     ),
     CreateColumns(
       'Item',
       'product_id',
       false,
-      (product_id, __, index) => <DebounceSelect
-        type='select'
-        value={product_id as any}
-        fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
-        onChange={(e) => {
-          handleChangeData('product_id', e.value, index)
-          handleChangeData('description', e.label.split(' - ')[1] || '', index)
-          handleChangeData('remarks', '', index)
-          setFetching(true)
-        }}
-      />,
+      (product_id, __, index) => (
+        <DebounceSelect
+          type="select"
+          value={product_id as any}
+          fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
+          onChange={(e) => {
+            handleChangeData('product_id', e.value, index)
+            handleChangeData('description', e.label.split(' - ')[1] || '', index)
+            handleChangeData('remarks', '', index)
+            setFetching(true)
+          }}
+        />
+      ),
       400,
     ),
     CreateColumns(
       'Qty',
       'qty',
       false,
-      (order_qty, record, index) => <InputNumber
-        disabled={isNullProductId(index)}
-        min={isNullProductId(index) ? '0' : '1'}
-        value={order_qty?.toLocaleString()}
-        onChange={(newVal) => {
-          handleChangeData('qty', newVal, index)
-          handleChangeData('base_qty', newVal, index)
-        }}
-        style={styleInputNumber}
-      />,
+      (order_qty, record, index) => (
+        <InputNumber
+          disabled={isNullProductId(index)}
+          min={isNullProductId(index) ? '0' : '1'}
+          value={order_qty?.toLocaleString()}
+          onChange={(newVal) => {
+            handleChangeData('qty', newVal, index)
+            handleChangeData('base_qty', newVal, index)
+          }}
+          style={styleInputNumber}
+        />
+      ),
       130,
     ),
     CreateColumns(
       'UoM',
       'uom_id',
       false,
-      (uom_id, __, index) => <DebounceSelect
-        type='select'
-        value={uom_id as any}
-        options={optionsUom[index] || []}
-        disabled={isNullProductId(index)}
-        onChange={(e) => {
-          handleChangeData('uom_id', e.value, index)
-          handleChangeData('base_uom_id', e.value, index)
-          setFetching(true)
-        }}
-      />,
+      (uom_id, __, index) => (
+        <DebounceSelect
+          type="select"
+          value={uom_id as any}
+          options={optionsUom[index] || []}
+          disabled={isNullProductId(index)}
+          onChange={(e) => {
+            handleChangeData('uom_id', e.value, index)
+            handleChangeData('base_uom_id', e.value, index)
+            setFetching(true)
+          }}
+        />
+      ),
       150,
     ),
-    CreateColumns(
-      'Batch',
-      'batch',
-      false,
-      (_, __, index) => <DebounceSelect
-        type='input'
-        placeholder='e.g Testing'
+    CreateColumns('Batch', 'batch', false, (_, __, index) => (
+      <DebounceSelect
+        type="input"
+        placeholder="e.g Testing"
         onChange={(e) => {
-          console.log(e);
+          console.log(e)
           handleChangeData('batch', e.target.value, index)
         }}
-      />,
-    ),
+      />
+    )),
   ]
 
   React.useEffect(() => {
     if (fetching) {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
-          fieldUom(product_id)
-            .then((value) => {
-              // console.log("value :");
-              // console.log(value);
-              const newOptionsUom = [...optionsUom]
-              let newUom = uom_id
-              if (value[2].value) {
-                let newUom = uom_id === '' ? value[2].value : uom_id
-              }
-              newOptionsUom[index] = value
-              setOptionsUom(newOptionsUom)
+          fieldUom(product_id).then((value) => {
+            // console.log("value :");
+            // console.log(value);
+            const newOptionsUom = [...optionsUom]
+            if (value[2]?.value) {
+              const newUom = uom_id === '' ? value[2]?.value : uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
-            })
+            } else {
+              const newUom = uom_id
+              handleChangeData('uom_id', newUom, index)
+              handleChangeData('base_uom_id', newUom, index)
+            }
+            newOptionsUom[index] = value
+            setOptionsUom(newOptionsUom)
+          })
         }
       })
       setFetching(false)
     }
   }, [fetching])
 
-  console.log(data);
+  console.log(data)
 
   return {
     data,

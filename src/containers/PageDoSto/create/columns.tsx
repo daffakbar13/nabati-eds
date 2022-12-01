@@ -274,14 +274,16 @@ export const useTableAddItem = (props: any) => {
             // console.log('value :', value)
             // console.log(value)
             const newOptionsUom = [...optionsUom]
-            let newUom = uom_id
 
             if (value[2]?.value) {
-              newUom = uom_id === '' ? value[2]?.value : uom_id
+              const newUom = uom_id === '' ? value[2]?.value : uom_id
+              handleChangeData('uom_id', newUom, index)
+            } else {
+              const newUom = uom_id
+              handleChangeData('uom_id', newUom, index)
             }
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
-            handleChangeData('uom_id', newUom, index)
           })
         }
       })
