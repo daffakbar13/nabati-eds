@@ -41,12 +41,12 @@ export default function SlocForm() {
           label={<LabelRequired>Branch</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />
+          <SelectMasterData disabled={disableSomeFields} type="PLANT" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
           name="sales_org"
           style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Branch</LabelRequired>}
+          label={<LabelRequired>Sales Org</LabelRequired>}
           rules={[{ required: true }]}
         >
           <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />
@@ -54,23 +54,23 @@ export default function SlocForm() {
         <Form.Item
           name="sloc"
           style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Branch</LabelRequired>}
+          label={<LabelRequired>SLoc ID</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />
+          <SelectMasterData disabled={disableSomeFields} type="SLOC" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
           name="sloc_name"
           style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Branch</LabelRequired>}
+          label={<LabelRequired>Sloc Name</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />
+          <SelectMasterData disabled={disableSomeFields} type="SLOC" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
           name="sloc_type"
           style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Branch</LabelRequired>}
+          label={<LabelRequired>Sloc Type</LabelRequired>}
           rules={[{ required: true }]}
         >
           <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />

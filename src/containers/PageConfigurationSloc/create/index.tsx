@@ -94,7 +94,7 @@ export default function CreateSlocModal({ visible = false, close = () => {} }) {
         open={visible}
         onOk={() => {}}
         onCancel={close}
-        title="Create Config Company"
+        title="Create Sloc"
         content={content}
         width={1132}
         footer={null}
