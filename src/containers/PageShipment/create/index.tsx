@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-const-assign */
 /* eslint-disable no-plusplus */
@@ -6,17 +7,7 @@
 /* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
-import {
-  Col,
-  Row,
-  Tag,
-  Table as TableAntd,
-  Modal,
-  DatePicker,
-  Select,
-  Typography,
-  Popover,
-} from 'antd'
+import { Col, Row, Tag, Modal, Typography, Popover } from 'antd'
 import {
   Button,
   Search,
@@ -36,26 +27,22 @@ import {
   CheckCircleFilled,
   DownOutlined,
   DragOutlined,
-  MinusCircleFilled,
   SaveOutlined,
   ShrinkOutlined,
 } from '@ant-design/icons'
 import TitleDataList from 'src/components/TitleDataList'
 import { useTable } from 'src/hooks'
-import type { ColumnsType } from 'antd/es/table'
 import update from 'immutability-helper'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { getDetailQuotation, getQuotation } from 'src/api/quotation'
 import Loader from 'src/components/Loader'
-import { ICDelete, ICPlus, ICSave } from 'src/assets'
+import { ICDelete } from 'src/assets'
 import Pagination from 'src/components/Pagination'
-import { fieldBranch, fieldBranchAll, fieldSalesOrg, fieldVehicle } from 'src/configs/fieldFetches'
-import { getCustomerByFilter, getDriverByCompanyId, getVehicleByCompany } from 'src/api/master-data'
+import { fieldBranchAll, fieldSalesOrg, fieldVehicle } from 'src/configs/fieldFetches'
 import { getDeliveryOrderList } from 'src/api/delivery-order'
 import { createShipment, getCompletedDeliveryOrderList, getDetailShipment } from 'src/api/shipment'
 import { PATH } from 'src/configs/menus'
-import { ColumnsDeliveryOrder, ColumnsSelectedDeliveryOrder } from './columns'
+import { ColumnsDeliveryOrder } from './columns'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   index: number
@@ -134,7 +121,7 @@ export default function PageCreateShipment() {
   const [showFilter, setShowFilter] = React.useState(false)
   const table = useTable({
     funcApi: getCompletedDeliveryOrderList,
-    haveCheckbox: { headCell: 'status_name', member: ['New'] },
+    haveCheckbox: { headCell: 'status_name', member: ['Complete'] },
     columns: ColumnsDeliveryOrder,
   })
   const titlePage = useTitlePage('create')
@@ -162,16 +149,20 @@ export default function PageCreateShipment() {
   const [showModal, setShowModal] = React.useState(false)
   const [showMore, setShowMore] = React.useState(false)
   const [pending, setPending] = React.useState(0)
+  const [vehicleSize, setVehicleSize] = React.useState(0)
   const onProcess = processing !== ''
   const hasData = table.total > 0
   const router = useRouter()
   const oneSelected = table.selected.length === 1
   const firstSelected = table.selected[0]
+  const totalSize = data.length > 0
+      ? `${data
+          .map(({ volume }) => volume)
+          .reduce((old, now) => old + now)
+          .toString()} M`
+      : '0 M'
 
   const canSave = () => {
-    // const allField = ['vehicle_id', 'delivery_ids']
-    // .map((key) => field[key])
-    // const isAllFilled = !allField.find((e) => e === undefined)
     if (field?.vehicle_id && data.length > 0) {
       return true
     }
@@ -634,20 +625,24 @@ export default function PageCreateShipment() {
           </Col>
           <Col span={8}>
             <Card>
+              {/* {parseInt('30.000'.split('.').join(''))} */}
               <TitleDataList title="Select Vehicle" />
               <DebounceSelect
                 type="select"
                 value={field?.vehicle_id as any}
                 fetchOptions={fieldVehicle}
-                onChange={(e) => setField((old) => ({ ...old, vehicle_id: e.value }))}
+                onChange={(e) => {
+                  setVehicleSize(parseInt(e.key.split('.').join('')) / 1000)
+                  setField((old) => ({ ...old, vehicle_id: e.value }))
+                }}
                 // options={[{ label: 'D 1234 NBT - Driverku', value: 'D 1234 NBT - Driverku' }]}
               />
               <Spacer size={10} />
               <Row justify="space-between">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-                  <DescVehicle label="Vehicle Size" value="25 M" />
-                  <DescVehicle label="Total Size" value="5 M" />
-                  <DescVehicle label="Total Delivery Order" value="2" />
+                  <DescVehicle label="Vehicle Size" value={`${vehicleSize} M`} />
+                  <DescVehicle label="Total Size" value={totalSize} />
+                  <DescVehicle label="Total Delivery Order" value={data.length.toString()} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                   <Tag color="green">Available</Tag>
@@ -688,9 +683,6 @@ export default function PageCreateShipment() {
             </Card>
           </Col>
         </Row>
-        {/* <Col span={9}>
-          <Card>asd</Card>
-        </Col> */}
       </div>
       {showConfirm === 'cancel' && <ConfirmCancel />}
       {showConfirm === 'submit-success' && <ConfirmSuccessSubmit />}
@@ -720,8 +712,6 @@ export default function PageCreateShipment() {
               columns={ColumnsDragable()}
               dataSource={data}
               showSorterTooltip={false}
-              // rowSelection={table.rowSelection}
-              // rowKey={'delivery_order_id'}
               components={components}
               onRow={(_, index) => {
                 const attr = {
