@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
@@ -8,21 +8,44 @@ import { useDetail } from 'src/hooks'
 import { getDetailBilling } from 'src/api/billing'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { useTableAddItem } from './columns'
+import { useTableEditItem } from './columns'
 import Total from 'src/components/Total'
-import { fakeApi } from 'src/api/fakeApi'
+import { fieldCustomer } from 'src/configs/fieldFetches'
 
 export default function PageBillingDetail() {
+  const now = new Date().toISOString()
+
   const router = useRouter()
   const data = useDetail(getDetailBilling, { id: router.query.id as string })
   const [cancel, setCancel] = useState(false)
   const [dataForm, setDataForm] = useState([])
   const [newData, setNewData] = useState()
   const [selectedOrderType, setSelectedOrderType] = useState('')
-  const tableAddItems = useTableAddItem({ id: selectedOrderType || '' })
+  const [oldCust, setOldCust] = useState('')
+  const tableAddItems = useTableEditItem({ branchId: data.branch_id, items: data.billing_item })
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
+  useEffect(() => {
+    setOldCust(`${data.customer_id} - ${data.customer?.split(' - ')[1]}`)
+  }, [data])
+
+  const initialValue = {
+    billing_id: data.id,
+    order_type: 'ZOP1',
+    gi_date: moment(data.gi_date).format('YYYY-MM-DD'),
+    customer: data.customer_id,
+    document_date: moment(data.doc_date).format('YYYY-MM-DD'),
+    sales_org_id: data.sales_org_id,
+    delivery_date: moment(data.delivery_date).format('YYYY-MM-DD'),
+    branch_id: data.branch_id,
+    reference: data.reference || '',
+    total_amount: data.total_amount,
+    status_id: '1',
+    modified_by: 'SYSTEM',
+    billing_items: tableAddItems.data,
   }
 
   return (
@@ -72,16 +95,19 @@ export default function PageBillingDetail() {
               onChangeForm('gi_date', moment(val).format('YYYY-MM-DD'))
             }}
             label="GI Date"
-            defaultValue={moment()}
+            defaultValue={data.gi_date ? moment(data.gi_date) : moment(now)}
             format={'DD/MM/YYYY'}
             required
           />
           <DebounceSelect
             label="Customer"
             type="select"
-            required
-            fetchOptions={fakeApi}
-            onChange={() => {}}
+            value={oldCust}
+            fetchOptions={(search) => fieldCustomer(search)}
+            onChange={(val: any) => {
+              onChangeForm('customer', val.value)
+              setOldCust(val.label)
+            }}
           />
           <DatePickerInput
             fullWidth
@@ -89,7 +115,7 @@ export default function PageBillingDetail() {
               onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
             }}
             label="Document Date"
-            defaultValue={moment()}
+            defaultValue={data.doc_date ? moment(data.doc_date) : moment(now)}
             format={'DD/MM/YYYY'}
             required
           />
@@ -97,7 +123,7 @@ export default function PageBillingDetail() {
             label="Sales Organization"
             type="input"
             disabled
-            placeholder="PID1"
+            placeholder={data.sales_org_id}
             onChange={() => {}}
           />
           <DatePickerInput
@@ -106,21 +132,21 @@ export default function PageBillingDetail() {
               onChangeForm('delivery_date', moment(val).format('YYYY-MM-DD'))
             }}
             label="Delivery Date"
-            defaultValue={moment()}
+            defaultValue={data.delivery_date ? moment(data.delivery_date) : moment(now)}
             format={'DD/MM/YYYY'}
             required
           />
           <DebounceSelect
             label="Branch"
             type="input"
-            placeholder="P104"
+            placeholder={data.branch_id}
             disabled
             onChange={() => {}}
           />
           <DebounceSelect
             label="Reference"
             type="input"
-            fetchOptions={fakeApi}
+            placeholder={data.reference || ''}
             onChange={() => {}}
           />
         </div>
