@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { Search, Button } from 'pink-lava-ui'
 import React from 'react'
 import ReactToPrint from 'react-to-print'
-import { downloadTemplateQuotation } from 'src/api/quotation'
+import { downloadTemplateSalesOrder } from 'src/api/sales-order'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { colors } from 'src/configs/colors'
 
@@ -22,7 +22,7 @@ export default function SectionAction(props: SectionActionProps) {
       <Col span={24}>
         <ReactToPrint
           onBeforeGetContent={async () => {
-            await downloadTemplateQuotation().then(() => {})
+            await downloadTemplateSalesOrder().then(() => {})
           }}
           removeAfterPrint
           trigger={() => (
@@ -62,7 +62,7 @@ export default function SectionAction(props: SectionActionProps) {
           <Search
             width="380px"
             nameIcon="SearchOutlined"
-            placeholder="Search Quotation ID"
+            placeholder="Search SalesOrder ID"
             colorIcon={colors.grey.regular}
             onChange={(e) => {
               const { value } = e.target
@@ -104,7 +104,7 @@ export default function SectionAction(props: SectionActionProps) {
             <Button
               size="big"
               variant="secondary"
-              onClick={downloadTemplateQuotation}
+              onClick={downloadTemplateSalesOrder}
               style={{ gap: 5 }}
             >
               More <DownOutlined />

@@ -13,9 +13,9 @@ import { Input, InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { getDetailQuotation } from 'src/api/quotation'
+import { getDetailSalesOrder } from 'src/api/sales-order'
 import { Popup } from 'src/components'
 import { Text, Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
@@ -35,9 +35,9 @@ export const useTableProduct = () => {
   const [baseAllProduct, setBaseAllProduct] = React.useState([])
   const [optionsProduct, setOptionsProduct] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
-  const [fetching, setFetching] = React.useState('')
+  const [fetching, setFetching] = React.useState<string>()
   const [pending, setPending] = React.useState(0)
-  const [showConfirm, setShowConfirm] = React.useState('')
+  const [showConfirm, setShowConfirm] = React.useState<string>()
   const [removedListProduct, setRemovedListProduct] = React.useState([])
   const [isLoading, setIsLoading] = React.useState(false)
   const router = useRouter()
@@ -79,11 +79,8 @@ export const useTableProduct = () => {
   }
 
   const columns = [
-    CreateColumns(
-      '',
-      'action',
-      false,
-      (_, { product_id }, index) => (
+    addColumn({
+      render: (_, __, index) => (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <MinusCircleFilled
             style={{ color: 'red', margin: 'auto' }}
@@ -93,56 +90,15 @@ export const useTableProduct = () => {
               }
             }}
           />
-          {/* {showConfirm === index.toString() && (
-            <Popup>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Text
-                  textAlign="center"
-                  style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-                >
-                  Confirm Delete
-                </Text>
-              </div>
-              <div
-                style={{ display: 'flex', justifyContent: 'center', gap: 4, fontWeight: 'bold' }}
-              >
-                Are you sure want to delete item {product_id} at rows {index + 1} ?
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 10 }}>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setShowConfirm('')
-                  }}
-                >
-                  No
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    setShowConfirm('')
-                    handleDeleteRows(index)
-                  }}
-                >
-                  Yes
-                </Button>
-              </div>
-            </Popup>
-          )} */}
         </div>
       ),
-      55,
-      true,
-    ),
-    CreateColumns(
-      'Item',
-      'product_id',
-      false,
-      (_, { description }, index) => (
+      width: 55,
+      fixed: true,
+    }),
+    addColumn({
+      title: 'Item',
+      dataIndex: 'product_id',
+      render: (_, { description }, index) => (
         <DebounceSelect
           type="select"
           value={description as any}
@@ -158,13 +114,12 @@ export const useTableProduct = () => {
           }}
         />
       ),
-      550,
-    ),
-    CreateColumns(
-      'Uom',
-      'uom_id',
-      false,
-      (uom_id, __, index) => (
+      width: 550,
+    }),
+    addColumn({
+      title: 'Uom',
+      dataIndex: 'uom_id',
+      render: (uom_id, __, index) => (
         <DebounceSelect
           type="select"
           value={uom_id as any}
@@ -176,13 +131,12 @@ export const useTableProduct = () => {
           }}
         />
       ),
-      150,
-    ),
-    CreateColumns(
-      'Quantity',
-      'order_qty',
-      false,
-      (order_qty, record, index) => (
+      width: 150,
+    }),
+    addColumn({
+      title: 'Quantity',
+      dataIndex: 'order_qty',
+      render: (order_qty, record, index) => (
         <InputNumber
           disabled={isNullProductId(index)}
           min={isNullProductId(index) ? '0' : '1'}
@@ -194,41 +148,41 @@ export const useTableProduct = () => {
           style={styleInputNumber}
         />
       ),
-      130,
-    ),
-    CreateColumns(
-      'Based Price',
-      'price',
-      false,
-      (price) => <div style={styleDisabledInput}>{price?.toLocaleString()}</div>,
-      130,
-    ),
-    CreateColumns(
-      'Sub Total',
-      'sub_total',
-      false,
-      (sub_total) => <div style={styleDisabledInput}>{sub_total?.toLocaleString()}</div>,
-      130,
-    ),
-    CreateColumns('Remarks', 'remarks', false, (remarks, _, index) => (
-      <Input.TextArea
-        style={styleInputNumber}
-        rows={2}
-        autoSize={{ minRows: 2 }}
-        value={remarks}
-        onChange={(e) => {
-          handleChangeData('remarks', e.target.value, index)
-        }}
-      />
-    )),
+      width: 130,
+    }),
+    addColumn({
+      title: 'Based Price',
+      dataIndex: 'price',
+      render: (price) => <div style={styleDisabledInput}>{price?.toLocaleString()}</div>,
+      width: 130,
+    }),
+    addColumn({
+      title: 'Sub Total',
+      dataIndex: 'sub_total',
+      render: (sub_total) => <div style={styleDisabledInput}>{sub_total?.toLocaleString()}</div>,
+      width: 130,
+    }),
+    addColumn({
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      render: (remarks, _, index) => (
+        <Input.TextArea
+          style={styleInputNumber}
+          rows={2}
+          autoSize={{ minRows: 2 }}
+          value={remarks}
+          onChange={(e) => {
+            handleChangeData('remarks', e.target.value, index)
+          }}
+        />
+      ),
+    }),
   ]
 
   function ConfirmDelete() {
-    const isShow = showConfirm !== ''
-
     return (
       <>
-        {isShow && (
+        {showConfirm && (
           <Popup>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Text
@@ -248,7 +202,7 @@ export const useTableProduct = () => {
                 size="big"
                 variant="tertiary"
                 onClick={() => {
-                  setShowConfirm('')
+                  setShowConfirm(undefined)
                 }}
               >
                 No
@@ -258,7 +212,7 @@ export const useTableProduct = () => {
                 size="big"
                 variant="primary"
                 onClick={() => {
-                  setShowConfirm('')
+                  setShowConfirm(undefined)
                   handleDeleteRows(parseInt(showConfirm))
                 }}
               >
@@ -321,7 +275,7 @@ export const useTableProduct = () => {
           })
         }
       })
-      setFetching('')
+      setFetching(undefined)
     }
   }, [fetching])
 
@@ -340,7 +294,7 @@ export const useTableProduct = () => {
   React.useEffect(() => {
     if (router.query.id) {
       setPending((current) => ++current)
-      getDetailQuotation({ id: router.query.id as string })
+      getDetailSalesOrder({ id: router.query.id as string })
         .then((response) => {
           setPending((current) => --current)
           setData(
@@ -351,10 +305,10 @@ export const useTableProduct = () => {
               description: `${items.product_id} - ${items.description}`,
             })) as any,
           )
-          setFetching('')
+          setFetching(undefined)
           setFetching('load product')
         })
-        .catch(() => router.push(`${PATH.SALES}/quotation`))
+        .catch(() => router.push(`${PATH.SALES}/sales-order`))
     }
   }, [router])
 

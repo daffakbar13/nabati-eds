@@ -3,7 +3,7 @@ import { Col, Row, Table } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
 import React from 'react'
 import dateFormat from 'src/utils/dateFormat'
-import { ColumnsPromotionList } from '../columns'
+import { ColumnsPromotionList } from '../../columns'
 
 interface PromotionListProps {
   data: any

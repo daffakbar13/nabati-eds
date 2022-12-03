@@ -5,7 +5,7 @@ import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import { concatString } from 'src/utils/concatString'
 import dateFormat from 'src/utils/dateFormat'
-import { ColumnsSalesOrder } from '../columns'
+import { ColumnsSalesOrder } from '../../columns'
 
 interface SalesOrderProps {
   data: any
@@ -61,22 +61,22 @@ export default function SalesOrder(props: SalesOrderProps) {
         <Col span={12} offset={12}>
           <Row gutter={[15, 15]}>
             <Col span={24}>
-            <Total label="Total Gross" value={data.gross_total_amount} />
+              <Total label="Total Gross" value={data.gross_total_amount} />
             </Col>
             <Col span={24}>
-            <Total label="Total DPP" value={data.dpp_total_amount} />
+              <Total label="Total DPP" value={data.dpp_total_amount} />
             </Col>
             <Col span={24}>
-            <Total label="Total Disc" value={data.discount_total_amount} />
+              <Total label="Total Disc" value={data.discount_total_amount} />
             </Col>
             <Col span={24}>
-            <Total label="Total Net" value={data.net_total_amount} />
+              <Total label="Total Net" value={data.net_total_amount} />
             </Col>
             <Col span={24}>
-            <Total label="Total Tax" value={data.tax_total_amount} />
+              <Total label="Total Tax" value={data.tax_total_amount} />
             </Col>
             <Col span={24}>
-            <Total label="Total Amount" value={data.total_amount} largeSize />
+              <Total label="Total Amount" value={data.total_amount} largeSize />
             </Col>
           </Row>
         </Col>

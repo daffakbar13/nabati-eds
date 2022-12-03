@@ -4,7 +4,7 @@ import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import dateFormat from 'src/utils/dateFormat'
-import { ColumnsPricingCondition } from '../columns'
+import { ColumnsPricingCondition } from '../../columns'
 
 interface PricingConditionProps {
   data: any
