@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTableProduct } from '../columns'
-import { ConfirmCancel, ConfirmSuccessSubmit } from './confirms'
+import { ConfirmCancel, ConfirmSuccessSubmit } from './alerts'
 
 interface SectionConfirmProps {
   newQuotation: string

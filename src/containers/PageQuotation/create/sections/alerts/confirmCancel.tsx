@@ -38,8 +38,8 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
             if (router.query.status) {
               const { status, id } = router.query
               router.push({
-                pathname: `${PATH.SALES}/quotation/detail/`,
-                query: { status, id },
+                pathname: `${PATH.SALES}/quotation/detail/${id}`,
+                query: { status },
               })
             } else {
               router.push(`${PATH.SALES}/quotation`)

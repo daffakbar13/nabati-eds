@@ -31,14 +31,14 @@ export default function PageQuotation() {
       <Col span={24}>
         <Card>
           <SectionTable table={table} handleShowConfirm={setShowConfirm} />
-          <SectionConfirm
-            handleProcess={setProcessing}
-            table={table}
-            showConfirm={showConfirm}
-            handleShowConfirm={setShowConfirm}
-          />
         </Card>
       </Col>
+      <SectionConfirm
+        handleProcess={setProcessing}
+        table={table}
+        showConfirm={showConfirm}
+        handleShowConfirm={setShowConfirm}
+      />
       {processing && <Loader type="process" text={processing} />}
     </Row>
   )

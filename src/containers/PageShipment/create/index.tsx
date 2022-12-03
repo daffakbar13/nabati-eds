@@ -281,7 +281,7 @@ export default function PageCreateShipment() {
         </div>
       </Row>
       <Table
-        scroll={{ x: 100 }}
+        scroll={{ x: 'max-content', y: 600 }}
         loading={table.loading}
         columns={table.columns}
         dataSource={table.data}
@@ -707,7 +707,7 @@ export default function PageCreateShipment() {
           <DndProvider backend={HTML5Backend}>
             {delete ColumnsDeliveryOrder[0].className}
             <Table
-              scroll={{ x: 100 }}
+              scroll={{ x: 'max-content', y: 600 }}
               loading={table.loading}
               columns={ColumnsDragable()}
               dataSource={data}

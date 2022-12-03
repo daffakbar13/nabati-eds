@@ -10,12 +10,7 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { fieldReason } from 'src/configs/fieldFetches'
-import {
-  ConfirmCancel,
-  ConfirmSubmit,
-  ConfirmSuccessCancel,
-  ConfirmSuccessSubmit,
-} from './confirms'
+import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessCancel, ConfirmSuccessSubmit } from './alerts'
 
 interface SectionConfirmProps {
   table: ReturnType<typeof useTable>

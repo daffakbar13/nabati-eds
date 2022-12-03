@@ -1,5 +1,5 @@
 import React from 'react'
-import { ConfirmCancel, ConfirmSuccessCancel } from './confirms'
+import { ConfirmCancel, ConfirmSuccessCancel } from './alerts'
 
 interface SectionConfirmProps {
   showConfirm: string

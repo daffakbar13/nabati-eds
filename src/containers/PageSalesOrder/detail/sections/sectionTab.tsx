@@ -1,8 +1,9 @@
 import { Tabs } from 'antd'
+import { useRouter } from 'next/router'
 import React from 'react'
+import { TabDocumentFlow } from 'src/components'
 import {
   CustomerInfo,
-  DocumentFlow,
   PricingCondition,
   PromotionList,
   SalesmanInfo,
@@ -16,6 +17,7 @@ interface SectionTabProps {
 export default function SectionTab(props: SectionTabProps) {
   const { data } = props
   const [currentTab, setCurrentTab] = React.useState('1')
+  const router = useRouter()
   const hasData = Object.keys(data).length > 0
 
   const createTabs = (label: string, key: string) => ({
@@ -49,7 +51,7 @@ export default function SectionTab(props: SectionTabProps) {
           {currentTab === '1' && <SalesOrder data={data} />}
           {currentTab === '2' && <PricingCondition data={data} />}
           {currentTab === '3' && <PromotionList data={data} />}
-          {currentTab === '4' && <DocumentFlow data={data} />}
+          {currentTab === '4' && <TabDocumentFlow document_id={router.query.id as string} />}
           {currentTab === '5' && <CustomerInfo data={data} />}
           {currentTab === '6' && <SalesmanInfo data={data} />}
         </>

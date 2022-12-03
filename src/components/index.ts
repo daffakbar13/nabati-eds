@@ -16,5 +16,7 @@ export { default as Input } from './Input'
 export { default as Modal } from './Modal'
 export { default as Pagination } from './Pagination'
 export { default as Loader } from './Loader'
+export { default as TabCustomerInfo } from './TabCustomerInfo'
+export { default as TabDocumentFlow } from './TabDocumentFlow'
 
 export { Card } from './Card'

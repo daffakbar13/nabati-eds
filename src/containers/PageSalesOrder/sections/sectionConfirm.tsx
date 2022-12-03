@@ -1,12 +1,7 @@
 /* eslint-disable object-curly-newline */
 import React from 'react'
 import { useTable } from 'src/hooks'
-import {
-  ConfirmCancel,
-  ConfirmSubmit,
-  ConfirmSuccessCancel,
-  ConfirmSuccessSubmit,
-} from './confirms'
+import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessCancel, ConfirmSuccessSubmit } from './alerts'
 
 interface SectionConfirmProps {
   table: ReturnType<typeof useTable>

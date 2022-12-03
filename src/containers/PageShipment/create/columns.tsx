@@ -1,15 +1,14 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
+/* eslint-disable radix */
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-expressions */
 import React from 'react'
 import { Text } from 'pink-lava-ui'
 import { InputNumber, Row } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import { fakeApi } from 'src/api/fakeApi'
-
-/* eslint-disable radix */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { MinusCircleFilled } from '@ant-design/icons'
