@@ -99,6 +99,7 @@ export function addColumn(props: addColumnProps) {
         }
       : false,
     ellipsis: true,
+    width: props.width || 170,
     align: isRightAlign ? 'right' : 'left',
   }
 }

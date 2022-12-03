@@ -5,24 +5,21 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
-import moment from 'moment'
 import { Col, Divider, Row, Typography } from 'antd'
-import { Button, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
-import DebounceSelect from 'src/components/DebounceSelect'
+import { Button, Text } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { createQuotation, getDetailQuotation, updateQuotation } from 'src/api/quotation'
+import { getDetailQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
-import Total from 'src/components/Total'
 import Loader from 'src/components/Loader'
-import { fieldCustomer } from 'src/configs/fieldFetches'
 import { concatString } from 'src/utils/concatString'
-import { useTableAddItem } from './columns'
+import { SectionAction, SectionConfirm, SectionField, SectionTable } from './sections'
+import { useTableProduct } from './columns'
 
-interface payloadCreate {
+export interface payloadCreate {
   company_id?: string
   branch_id?: string
   source_id?: string
@@ -41,37 +38,38 @@ interface payloadCreate {
   items?: any[]
 }
 
+const now = new Date().toISOString()
+const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
+const initialValue: payloadCreate = {
+  company_id: 'PP01',
+  source_id: 'Z02',
+  order_date: now,
+  delivery_date: tomorrow,
+  pricing_date: now,
+  valid_from: now,
+  valid_to: tomorrow,
+  customer_ref: '',
+  currency_id: 'IDR',
+}
+
 export default function PageCreateQuotation() {
-  const now = new Date().toISOString()
-  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
-  const [dataForm, setDataForm] = React.useState<payloadCreate>({
-    company_id: 'PP01',
-    source_id: 'Z02',
-    order_date: now,
-    delivery_date: tomorrow,
-    pricing_date: now,
-    valid_from: now,
-    valid_to: tomorrow,
-    customer_ref: '',
-    currency_id: 'IDR',
-  })
+  const [dataForm, setDataForm] = React.useState<payloadCreate>(initialValue)
   const router = useRouter()
-  const tableAddItems = useTableAddItem()
-  const [newQuotation, setNewQuotation] = React.useState()
-  const [draftQuotation, setDraftQuotation] = React.useState()
+  const tableProduct = useTableProduct()
+  const [newQuotation, setNewQuotation] = React.useState<string>()
+  const [draftQuotation, setDraftQuotation] = React.useState<string>()
   const [cancel, setCancel] = React.useState(false)
   const [optionsOrderType, setOptionsOrderType] = React.useState([])
   const [optionsSalesman, setOptionsSalesman] = React.useState([])
   const [optionsSalesOrg, setOptionsSalesOrg] = React.useState([])
   const [optionsBranch, setOptionsBranch] = React.useState([])
   const [fetching, setFetching] = React.useState<'customer' | 'load-options'>()
-  const [processing, setProcessing] = React.useState('')
+  const [processing, setProcessing] = React.useState<string>()
   const [canSave, setCanSave] = React.useState(false)
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
   const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
-  const onProcess = processing !== ''
   const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
   const splitString = (data: string) => data.split(' - ')[0]
@@ -80,7 +78,7 @@ export default function PageCreateQuotation() {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
-  const dataSubmited = (status_id: number) => ({
+  const dataSubmitted = (status_id: number) => ({
     ...dataForm,
     order_type_id: splitString(dataForm.order_type_id),
     customer_id: splitString(dataForm.customer_id),
@@ -92,316 +90,6 @@ export default function PageCreateQuotation() {
     customer_ref:
       dataForm.customer_ref === '' || dataForm.customer_ref ? '-' : dataForm.customer_ref,
   })
-
-  const ConfirmSuccessSubmit = () => (
-    <Popup>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Text
-          textAlign="center"
-          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-        >
-          <>
-            <CheckCircleFilled /> Submit Success
-          </>
-        </Text>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          gap: 4,
-          flexDirection: 'column',
-          textAlign: 'center',
-        }}
-      >
-        <div>
-          {'New Quotation '}
-          <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
-          {' has been'}
-        </div>
-        <div>successfully {newQuotation ? 'created' : 'saved'}</div>
-      </div>
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            router.push(`${PATH.SALES}/quotation`)
-          }}
-        >
-          OK
-        </Button>
-      </div>
-    </Popup>
-  )
-
-  const ConfirmCancel = () => (
-    <Popup>
-      <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Cancellation
-      </Typography.Title>
-      <b>Are you sure want to cancel? Change you made so far will not saved</b>
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="secondary"
-          onClick={() => {
-            setCancel(false)
-          }}
-        >
-          No
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            if (router.query.status) {
-              const { status } = router.query
-              router.push(`${PATH.SALES}/quotation/detail/${router.query.id}?status=${status}`)
-            } else {
-              router.push(`${PATH.SALES}/quotation`)
-            }
-          }}
-        >
-          Yes
-        </Button>
-      </div>
-    </Popup>
-  )
-
-  const ActionButton = () => (
-    <Row justify="end" gutter={10}>
-      <Col>
-        <Button
-          size="big"
-          variant="tertiary"
-          onClick={() => {
-            setCancel(true)
-          }}
-        >
-          Cancel
-        </Button>
-      </Col>
-      <Col>
-        <Button
-          size="big"
-          variant="secondary"
-          disabled={!canSave}
-          onClick={() => {
-            if (canSave) {
-              setProcessing('Wait for save Quotation')
-              isCreateOrOrderAgain
-                ? createQuotation(dataSubmited(6))
-                    .then((response) => {
-                      setDraftQuotation(response.data.id)
-                      setProcessing('')
-                    })
-                    .catch(() => setProcessing(''))
-                : updateQuotation(dataSubmited(6), titlePage.split(' ').reverse()[0])
-                    .then((response) => {
-                      setDraftQuotation(response.data.id)
-                      setProcessing('')
-                    })
-                    .catch(() => setProcessing(''))
-            }
-          }}
-        >
-          Save As Draft
-        </Button>
-      </Col>
-      <Col>
-        <Button
-          size="big"
-          variant="primary"
-          disabled={!canSave}
-          onClick={() => {
-            if (canSave) {
-              setProcessing('Wait for save Quotation')
-              isCreateOrOrderAgain
-                ? createQuotation(dataSubmited(1))
-                    .then((response) => {
-                      setNewQuotation(response.data.id)
-                      setProcessing('')
-                    })
-                    .catch(() => setProcessing(''))
-                : updateQuotation(dataSubmited(1), titlePage.split(' ').reverse()[0])
-                    .then((response) => {
-                      setNewQuotation(response.data.id)
-                      setProcessing('')
-                    })
-                    .catch(() => setProcessing(''))
-            }
-          }}
-        >
-          Submit
-        </Button>
-      </Col>
-    </Row>
-  )
-
-  const FieldCreateQuotation = () => (
-    <Row gutter={[10, 10]}>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
-          required
-          label="Order Type"
-          placeholder={'Select'}
-          value={dataForm.order_type_id}
-          options={optionsOrderType}
-          onChange={(e: any) => {
-            onChangeForm('order_type_id', e.value)
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
-          label="Sales Organization"
-          placeholder={'Select'}
-          value={dataForm.sales_org_id}
-          options={optionsSalesOrg}
-          onChange={(e: any) => {
-            onChangeForm('sales_org_id', e.value)
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
-          label="Branch"
-          placeholder={'Select'}
-          value={dataForm.branch_id}
-          options={optionsBranch}
-          onChange={(e: any) => {
-            onChangeForm('branch_id', e.value)
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DatePickerInput
-          fullWidth
-          onChange={(val: any) => {
-            val !== null && onChangeForm('order_date', new Date(moment(val).format()).toISOString())
-          }}
-          label="Document Date"
-          disabledDate={(current) => current < moment().startOf('day')}
-          value={moment(dataForm.order_date)}
-          format={'DD-MMM-YYYY'}
-          required
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
-          label="Sold To Customer"
-          required
-          value={dataForm.customer_id}
-          fetchOptions={fieldCustomer}
-          onChange={(e: any) => {
-            onChangeForm('customer_id', e.value)
-            setFetching('customer')
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
-          label="Ship To Customer"
-          placeholder={'Select'}
-          value={dataForm.ship_to_id}
-          options={[{ label: dataForm.customer_id, value: dataForm.customer_id }]}
-          onChange={(e: any) => {
-            onChangeForm('ship_to_id', e.value)
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DatePickerInput
-          fullWidth
-          onChange={(val: any) => {
-            val !== null && onChangeForm('valid_from', new Date(moment(val).format()).toISOString())
-          }}
-          label="Valid From"
-          disabledDate={(current) => current < moment().startOf('day')}
-          value={moment(dataForm.valid_from)}
-          format={'DD-MMM-YYYY'}
-          required
-        />
-      </Col>
-      <Col span={8}>
-        <DatePickerInput
-          fullWidth
-          onChange={(val: any) => {
-            val !== null && onChangeForm('valid_to', new Date(moment(val).format()).toISOString())
-          }}
-          label="Valid To"
-          disabledDate={(current) => current < moment().endOf('day')}
-          value={moment(dataForm.valid_to)}
-          format={'DD-MMM-YYYY'}
-          required
-        />
-      </Col>
-      <Col span={8}>
-        <DatePickerInput
-          fullWidth
-          onChange={(val: any) => {
-            val !== null
-              && onChangeForm('delivery_date', new Date(moment(val).format()).toISOString())
-            val !== null
-              && onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
-          }}
-          label="Delivery Date"
-          disabledDate={(current) => current < moment().startOf('day')}
-          value={moment(dataForm.delivery_date)}
-          format={'DD-MMM-YYYY'}
-          required
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
-          label="Salesman"
-          placeholder="Select"
-          value={dataForm.salesman_id}
-          options={optionsSalesman}
-          onChange={(e: any) => {
-            onChangeForm('salesman_id', e.value)
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="input"
-          label="Reference"
-          placeholder="e.g Type Here..."
-          value={dataForm.customer_ref}
-          onChange={(e: any) => {
-            onChangeForm('customer_ref', e.target.value)
-          }}
-        />
-      </Col>
-      <Col span={8}></Col>
-    </Row>
-  )
-
-  const TableItems = () => (
-    <>
-      <Row style={{ overflow: 'scroll' }}>
-        <Table data={dataForm.customer_id && tableAddItems.data} columns={tableAddItems.columns} />
-      </Row>
-      {dataForm.customer_id && (
-        <Button size="small" variant="primary" onClick={tableAddItems.handleAddItem}>
-          Add Item
-        </Button>
-      )}
-      <Row justify="end">
-        <Total label="Total Amount" value={tableAddItems.total_amount.toLocaleString()} />
-      </Row>
-    </>
-  )
 
   React.useEffect(() => {
     if (router.query.id && optionsOrderType.length > 0) {
@@ -432,8 +120,8 @@ export default function PageCreateQuotation() {
   }, [router, optionsOrderType])
 
   React.useEffect(() => {
-    onChangeForm('items', tableAddItems.data)
-  }, [tableAddItems.data])
+    onChangeForm('items', tableProduct.data)
+  }, [tableProduct.data])
 
   React.useEffect(() => {
     if (fetching) {
@@ -490,7 +178,7 @@ export default function PageCreateQuotation() {
       dataForm.sales_org_id,
     ]
     const fullFilled = requiredFields.filter((e) => e === '' || e === undefined).length === 0
-    const haveItems = tableAddItems.data.filter(({ product_id }) => product_id === '').length === 0
+    const haveItems = tableProduct.data.filter(({ product_id }) => product_id === '').length === 0
 
     fullFilled && haveItems ? setCanSave(true) : setCanSave(false)
   }, [dataForm])
@@ -522,22 +210,42 @@ export default function PageCreateQuotation() {
       </Col>
       <Col span={24}>
         <Card>
-          <ActionButton />
+          <SectionAction
+            canSave={canSave}
+            dataSubmitted={dataSubmitted}
+            handleCancel={setCancel}
+            handleDraftQuotation={setDraftQuotation}
+            handleNewQuotation={setNewQuotation}
+            handleProcess={setProcessing}
+            isCreateOrOrderAgain={isCreateOrOrderAgain}
+          />
         </Card>
       </Col>
       <Col span={24}>
         <Card>
-          <FieldCreateQuotation />
+          <SectionField
+            dataForm={dataForm}
+            handleFetching={setFetching}
+            onChangeForm={onChangeForm}
+            optionsBranch={optionsBranch}
+            optionsOrderType={optionsOrderType}
+            optionsSalesOrg={optionsSalesOrg}
+            optionsSalesman={optionsSalesman}
+          />
           <Divider style={{ borderColor: '#AAAAAA' }} />
-          <TableItems />
+          <SectionTable dataForm={dataForm} tableProduct={tableProduct} />
         </Card>
       </Col>
-      {(onProcess || tableAddItems.isLoading) && (
-        <Loader type="process" text={onProcess ? processing : 'Wait for get data items'} />
+      <SectionConfirm
+        cancel={cancel}
+        draftQuotation={draftQuotation}
+        handleCancel={setCancel}
+        newQuotation={newQuotation}
+        tableProduct={tableProduct}
+      />
+      {(processing || tableProduct.isLoading) && (
+        <Loader type="process" text={processing || 'Wait for get data items'} />
       )}
-      {(newQuotation || draftQuotation) && <ConfirmSuccessSubmit />}
-      {cancel && <ConfirmCancel />}
-      {<tableAddItems.ConfirmDelete />}
     </Row>
   )
 }

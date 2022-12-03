@@ -10,7 +10,7 @@ export default function FloatAction(props: FloatActionProps) {
   return (
     <div
       style={{
-        position: 'absolute',
+        position: 'fixed',
         bottom: '7%',
         left: '50%',
         transform: 'translate(-40%, 0)',

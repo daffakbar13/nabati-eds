@@ -14,23 +14,17 @@ interface LinkedProps {
   link: string
   status: string
   type: 'id' | 'action'
-  page: string
-  limit: string
 }
 
 function Linked(props: LinkedProps) {
-  const { link, status, type, limit, page } = props
+  const { link, status, type } = props
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
       ? router.push(`${PATH.SALES}/quotation/edit/${link}`)
       : router.push({
           pathname: `${PATH.SALES}/quotation/detail/${link}`,
-          query: {
-            status,
-            page,
-            limit,
-          },
+          query: { status },
         })
   }
   const [hover, setHover] = React.useState(false)
@@ -67,8 +61,8 @@ export const useColumnQuotation = [
     title: 'Quotation',
     dataIndex: 'id',
     fixed: true,
-    render: (link: string, { status_name, page, limit }: any) => (
-      <Linked link={link} type="id" status={status_name} page={page} limit={limit} />
+    render: (link: string, { status_name }: any) => (
+      <Linked link={link} type="id" status={status_name}/>
     ),
     sorter: true,
   }),
@@ -129,8 +123,8 @@ export const useColumnQuotation = [
   addColumn({
     title: 'Action',
     dataIndex: 'id',
-    render: (link, { status_name, page, limit }) => (
-      <Linked link={link} type="action" status={status_name} page={page} limit={limit} />
+    render: (link, { status_name }) => (
+      <Linked link={link} type="action" status={status_name}/>
     ),
   }),
 ]

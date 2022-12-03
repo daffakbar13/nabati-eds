@@ -29,6 +29,7 @@ const subUrl = {
   getRouteIntraChannel: 'v1/intra-channel',
   getDriverByCompanyId: 'v1/master/get-driver/PP01',
   getVehicleByCompany: 'v1/master/get-vehicle/PP01',
+  getDocFlow: 'v1/master/get-doc-flow/PP01',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 const BaseUrl2 = 'https://dist-system.nabatisnack.co.id:3002/'
@@ -273,6 +274,18 @@ export const getVehicleByCompany = async (): Promise<CommonDetailResponse<any>> 
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getVehicleByCompany,
+  })
+
+  return response.data
+}
+
+export const getDocFlow = async (
+  document_id: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getDocFlow}//${document_id}`,
   })
 
   return response.data
