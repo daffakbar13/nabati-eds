@@ -5,7 +5,7 @@ import Total from 'src/components/Total'
 import { Spacer, Table } from 'pink-lava-ui'
 import dateFormat from 'src/utils/dateFormat'
 import { concatString } from 'src/utils/concatString'
-import { ColumnsQuotation } from '../columns'
+import { ColumnsQuotation } from '../../columns'
 
 interface QuotationProps {
   data: any

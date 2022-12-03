@@ -1,7 +1,7 @@
 import { Row } from 'antd'
 import { Table } from 'pink-lava-ui'
 import React from 'react'
-import { ColumnsDocumentFlow } from '../columns'
+import { ColumnsDocumentFlow } from '../../columns'
 
 interface DocumentFlowProps {
   data: object

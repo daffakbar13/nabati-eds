@@ -21,7 +21,7 @@ import { Text, Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import { getPricingByCompany, getProductByCompany } from 'src/api/master-data'
 
-export const useTableAddItem = () => {
+export const useTableProduct = () => {
   const initialValue = {
     product_id: '',
     uom_id: '',

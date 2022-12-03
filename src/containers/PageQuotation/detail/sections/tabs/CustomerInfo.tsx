@@ -1,12 +1,12 @@
 /* eslint-disable camelcase */
 import { Col, Divider, Row } from 'antd'
-import { Table } from 'pink-lava-ui';
+import { Table } from 'pink-lava-ui'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import TitleDataList from 'src/components/TitleDataList'
-import { concatString } from 'src/utils/concatString';
+import { concatString } from 'src/utils/concatString'
 import dateFormat from 'src/utils/dateFormat'
-import { ColumnsCustomerInfo } from '../columns'
+import { ColumnsCustomerInfo } from '../../columns'
 
 interface CustomerInfoProps {
   data: any
@@ -53,14 +53,26 @@ export default function CustomerInfo(props: CustomerInfoProps) {
   ]
 
   const companyInformation = [
-    DataList.createDataList('Sales Organization', concatString(data.sales_org_id, data.sales_org_name)),
+    DataList.createDataList(
+      'Sales Organization',
+      concatString(data.sales_org_id, data.sales_org_name),
+    ),
     DataList.createDataList('Company', concatString(data.company_id, data.company_name)),
     DataList.createDataList('Branch', concatString(data.branch_id, data.branch_name)),
-    DataList.createDataList('Stock', concatString(customer_sales.sloc_id, customer_sales.sloc_name)),
-    DataList.createDataList('Sales Office', concatString(data.sales_office_id, data.sales_office_name)),
+    DataList.createDataList(
+      'Stock',
+      concatString(customer_sales.sloc_id, customer_sales.sloc_name),
+    ),
+    DataList.createDataList(
+      'Sales Office',
+      concatString(data.sales_office_id, data.sales_office_name),
+    ),
     DataList.createDataList('Sales Division', concatString(data.division_id, data.division_name)),
     DataList.createDataList('Sales Channel', concatString(data.channel_id, data.channel_name)),
-    DataList.createDataList('Sales Group', concatString(data.sales_group_id, data.sales_group_name)),
+    DataList.createDataList(
+      'Sales Group',
+      concatString(data.sales_group_id, data.sales_group_name),
+    ),
   ]
 
   const paymentInformation = [
