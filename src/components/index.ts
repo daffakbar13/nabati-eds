@@ -14,5 +14,7 @@ export { default as Tabs } from './Tabs'
 export { default as DataList } from './DataList'
 export { default as Input } from './Input'
 export { default as Modal } from './Modal'
+export { default as Pagination } from './Pagination'
+export { default as Loader } from './Loader'
 
 export { Card } from './Card'
