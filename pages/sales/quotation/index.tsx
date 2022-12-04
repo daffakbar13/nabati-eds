@@ -1,5 +1,5 @@
 import React from 'react'
-import PageQuotation from 'src/containers/PageQuotation'
+import PageQuotation from 'src/containers/PageQuotation/list'
 
 interface QuotationProps {}
 
