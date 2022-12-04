@@ -5,7 +5,6 @@ import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lav
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { fakeApi } from 'src/api/fakeApi'
 import { useTableAddItem } from './columns'
 import Total from 'src/components/Total'
 import { useRouter } from 'next/router'
@@ -15,6 +14,7 @@ import {
   fieldSalesOrganization,
   fieldBranchAll,
 } from 'src/configs/fieldFetches'
+import { createBilling } from 'src/api/billing'
 
 export default function CreateBilling() {
   const now = new Date().toISOString()
@@ -29,19 +29,22 @@ export default function CreateBilling() {
   const [optionsOrderType, setOptionsOrderType] = useState([])
 
   useEffect(() => {
-    fieldOrderType('J').then((result) => setOptionsOrderType(result))
+    fieldOrderType('M').then((result) => setOptionsOrderType(result))
   }, [])
 
   const initialValue = {
-    order_type_id: 'ZOP1',
+    order_type: 'ZOP1',
     gi_date: moment(now).format('YYYY-MM-DD'),
-    customer_id: 'C1609023',
+    customer: 'C1609023',
     document_date: moment(now).format('YYYY-MM-DD'),
     sales_org_id: 'PID1',
     delivery_date: moment(now).format('YYYY-MM-DD'),
     branch_id: 'P104',
     reference: '',
-    items: tableAddItems.data,
+    total_amount: tableAddItems.totalAmount,
+    status_id: '1',
+    created_by: 'SYSTEM',
+    billing_items: tableAddItems.data,
   }
 
   const onChangeForm = (form: string, value: any) => {
@@ -67,7 +70,15 @@ export default function CreateBilling() {
             <Button size="big" variant="secondary" onClick={() => {}}>
               Save As Draft
             </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                createBilling({ ...initialValue, ...dataForm })
+                  .then((response) => setNewData(response.data.id))
+                  .catch((e) => console.log(e))
+              }}
+            >
               Submit
             </Button>
           </Row>
@@ -81,7 +92,7 @@ export default function CreateBilling() {
             type="select"
             options={optionsOrderType}
             onChange={(val: any) => {
-              onChangeForm('order_type_id', val.value)
+              onChangeForm('order_type', val.value)
             }}
           />
           <DatePickerInput
@@ -98,7 +109,9 @@ export default function CreateBilling() {
             label="Customer"
             type="select"
             fetchOptions={(search) => fieldCustomer(search)}
-            onChange={() => {}}
+            onChange={(val: any) => {
+              onChangeForm('customer', val.value)
+            }}
           />
           <DatePickerInput
             fullWidth
@@ -114,7 +127,9 @@ export default function CreateBilling() {
             label="Sales Organization"
             type="select"
             fetchOptions={(search) => fieldSalesOrganization(search)}
-            onChange={() => {}}
+            onChange={(val: any) => {
+              onChangeForm('sales_org', val.value)
+            }}
           />
           <DatePickerInput
             fullWidth
@@ -132,13 +147,15 @@ export default function CreateBilling() {
             fetchOptions={(search) => fieldBranchAll(search)}
             onChange={(val: any) => {
               setSelectedBranch(val.value)
+              onChangeForm('branch', val.value)
             }}
           />
           <DebounceSelect
             label="Reference"
             type="input"
-            fetchOptions={fakeApi}
-            onChange={() => {}}
+            onChange={(e: any) => {
+              onChangeForm('reference', e.target.value)
+            }}
           />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />

@@ -10,32 +10,48 @@ import { MinusCircleFilled } from '@ant-design/icons'
 import CreateColumns from 'src/utils/createColumns'
 
 interface propsUseTable {
-  id: string
+  branchId: string
+  items: []
 }
 
-export const useTableAddItem = (props: propsUseTable) => {
+export const useTableEditItem = (props: propsUseTable) => {
   const initialValue = {
-    product_id: '',
-    uom_id: '',
-    qty: 0,
+    item: '',
+    uom: '',
+    quantity: 0,
     based_price: 0,
     gross: 0,
     discount: 0,
     sub_total: 0,
     remarks: '',
   }
-  const [data, setData] = React.useState([initialValue])
+  const [data, setData] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [valueItemSender, setValueItemSender] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const [totalAmount, setTotalAmount] = React.useState(0)
 
-//   React.useEffect(() => {
-//     if (props.id) {
-//       setData([initialValue])
-//     }
-//   }, [props.id])
+  React.useEffect(() => {
+    if (props.items) {
+      const itemSData = props.items?.map((item: any) => {
+        return {
+          item: item.product_id,
+          item_description: `${item.product_id} - ${item.description}`,
+          uom: item.uom_id,
+          quantity: item.base_qty,
+          based_price: item.price,
+          gross: item.gross_value,
+          discount: item.discount_value,
+          sub_total: item.price * item.base_qty - item.discount_value,
+          remarks: item.remarks,
+        }
+      })
+
+      setData(itemSData)
+      setFetching(true)
+    }
+  }, [props.items])
 
   React.useEffect(() => {
     if (data.length > 0) {
@@ -79,7 +95,6 @@ export const useTableAddItem = (props: propsUseTable) => {
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
@@ -88,15 +103,16 @@ export const useTableAddItem = (props: propsUseTable) => {
     ),
     CreateColumns(
       'Item',
-      'product_id',
+      'item_description',
       false,
-      (product_id, __, index) => (
+      (item_description, __, index) => (
         <DebounceSelect
           type="select"
-          value={product_id as any}
-          fetchOptions={(search) => productBranch(search, 'P104')}
+          value={item_description as any}
+          fetchOptions={(search) => productBranch(search, props.branchId)}
           onChange={(e) => {
-            handleChangeData('product_id', e.value, index)
+            handleChangeData('item', e.value, index)
+            handleChangeData('item_description', e.label, index)
             setFetching(true)
           }}
         />
@@ -105,16 +121,16 @@ export const useTableAddItem = (props: propsUseTable) => {
     ),
     CreateColumns(
       'UoM',
-      'uom_id',
+      'uom',
       false,
-      (uom_id, __, index) => (
+      (uom, __, index) => (
         <DebounceSelect
           type="select"
-          value={uom_id as any}
+          value={uom as any}
           options={optionsUom[index] || []}
           disabled={isNullProductId(index)}
           onChange={(e) => {
-            handleChangeData('uom_id', e.value, index)
+            handleChangeData('uom', e.value, index)
             handleChangeData('based_price', e.key, index)
             setFetching(true)
           }}
@@ -124,15 +140,15 @@ export const useTableAddItem = (props: propsUseTable) => {
     ),
     CreateColumns(
       'Quantity',
-      'qty',
+      'quantity',
       false,
-      (order_qty, record, index) => (
+      (quantity, record, index) => (
         <InputNumber
           disabled={isNullProductId(index)}
           min={isNullProductId(index) ? '0' : '1'}
-          value={order_qty?.toLocaleString()}
+          value={quantity?.toLocaleString()}
           onChange={(newVal) => {
-            handleChangeData('qty', newVal, index)
+            handleChangeData('quantity', newVal, index)
             handleChangeData('sub_total', parseInt(newVal) * data[index].based_price, index)
           }}
           style={styleInputNumber}
@@ -173,11 +189,15 @@ export const useTableAddItem = (props: propsUseTable) => {
       (discount, record, index) => (
         <InputNumber
           disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
+          min={'0'}
           value={discount?.toLocaleString()}
           onChange={(newVal) => {
             handleChangeData('discount', newVal, index)
-            handleChangeData('sub_total', data[index].based_price - parseInt(newVal), index)
+            handleChangeData(
+              'sub_total',
+              parseInt(data[index].quantity) * data[index].based_price - parseInt(newVal),
+              index,
+            )
           }}
           style={styleInputNumber}
         />
@@ -213,20 +233,27 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   React.useEffect(() => {
     if (fetching) {
-      data.forEach(({ product_id, uom_id, qty }, index) => {
-        if (product_id !== '') {
-          fieldUom(product_id).then((value) => {
-            // console.log("value :" + value);
+      data.forEach(({ item, uom, based_price }, index) => {
+        if (item !== '') {
+          fieldUom(item).then((value) => {
+            // console.log('value :', value)
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
-              let newUom = uom_id === '' ? value[2].value : uom_id
+              const newUom = uom === '' ? value[2]?.value : uom
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             } else {
-              let newUom = uom_id
+              const newUom = uom
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             }
+
+            if (value[2]?.key) {
+              let newPrice = based_price === 0 ? value[2].key : based_price
+              handleChangeData('based_price', newPrice, index)
+            } else {
+              let newPrice = based_price
+              handleChangeData('based_price', newPrice, index)
+            }
+
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
           })
