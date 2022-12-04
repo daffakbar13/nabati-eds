@@ -6,9 +6,10 @@ import { Button } from 'pink-lava-ui'
 import { cancelBatchOrder } from 'src/api/quotation'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
-import { SalesQuotationListCtx } from '../../states'
+import { useSalesQuotationListContext } from 'src/hooks/contexts'
 
 export default function ConfirmCancel() {
+  const pageCtx = useSalesQuotationListContext()
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
 
@@ -22,7 +23,7 @@ export default function ConfirmCancel() {
   }, [])
 
   return (
-    <SalesQuotationListCtx.Consumer>
+    <pageCtx.getConsumer>
       {({ handler, state }) => {
         const { table } = state
         const { showConfirm, unShowConfirm, runProcess, stopProcess } = handler
@@ -73,6 +74,6 @@ export default function ConfirmCancel() {
           </Popup>
         )
       }}
-    </SalesQuotationListCtx.Consumer>
+    </pageCtx.getConsumer>
   )
 }

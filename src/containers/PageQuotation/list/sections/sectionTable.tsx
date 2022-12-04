@@ -2,11 +2,12 @@ import { Col, Row } from 'antd'
 import { Table, Button } from 'pink-lava-ui'
 import React from 'react'
 import { FloatAction, Pagination } from 'src/components'
-import { SalesQuotationListCtx } from '../states'
+import { useSalesQuotationListContext } from 'src/hooks/contexts'
 
 export default function SectionTable() {
+  const pageCtx = useSalesQuotationListContext()
   return (
-    <SalesQuotationListCtx.Consumer>
+    <pageCtx.getConsumer>
       {({ handler, state }) => {
         const { table } = state
         const { showConfirm } = handler
@@ -54,6 +55,6 @@ export default function SectionTable() {
           </>
         )
       }}
-    </SalesQuotationListCtx.Consumer>
+    </pageCtx.getConsumer>
   )
 }

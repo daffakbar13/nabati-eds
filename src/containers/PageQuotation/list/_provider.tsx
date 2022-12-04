@@ -1,8 +1,8 @@
 import React from 'react'
 import { getQuotation } from 'src/api/quotation'
 import { useTable } from 'src/hooks'
+import { useSalesQuotationListContext } from 'src/hooks/contexts'
 import { useColumnQuotation } from './columns'
-import { baseHandler, counterReducer, SalesQuotationListCtx, StateInterface } from './states'
 
 export default function SalesQuotationListProvider(
   props: React.PropsWithChildren<React.ReactNode>,
@@ -13,16 +13,19 @@ export default function SalesQuotationListProvider(
     haveCheckbox: { headCell: 'status_name', member: ['New'] },
     columns: useColumnQuotation,
   })
-  const initialValue: StateInterface = {
-    submittedQuotation: [],
-    table,
-  }
-  const [state, dispatch] = React.useReducer(counterReducer, initialValue)
-  const handler = baseHandler(dispatch)
+  const pageCtx = useSalesQuotationListContext()
 
   return (
-    <SalesQuotationListCtx.Provider value={{ state: { ...state, table }, handler }}>
+    <pageCtx.getProvider
+      value={{
+        state: {
+          ...pageCtx.state,
+          table,
+        },
+        handler: pageCtx.handler,
+      }}
+    >
       {children}
-    </SalesQuotationListCtx.Provider>
+    </pageCtx.getProvider>
   )
 }

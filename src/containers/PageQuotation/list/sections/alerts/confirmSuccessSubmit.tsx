@@ -7,12 +7,13 @@ import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { SalesQuotationListCtx } from '../../states'
+import { useSalesQuotationListContext } from 'src/hooks/contexts'
 
 export default function ConfirmSuccessSubmit() {
+  const pageCtx = useSalesQuotationListContext()
   const router = useRouter()
   return (
-    <SalesQuotationListCtx.Consumer>
+    <pageCtx.getConsumer>
       {({ state }) => {
         const { table, submittedQuotation } = state
         const oneSelected = table.selected.length === 1
@@ -82,6 +83,6 @@ export default function ConfirmSuccessSubmit() {
           </Popup>
         )
       }}
-    </SalesQuotationListCtx.Consumer>
+    </pageCtx.getConsumer>
   )
 }

@@ -1,11 +1,13 @@
 /* eslint-disable object-curly-newline */
 import React from 'react'
+import { useSalesQuotationListContext } from 'src/hooks/contexts'
 import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessCancel, ConfirmSuccessSubmit } from './alerts'
-import { SalesQuotationListCtx } from '../states'
 
 export default function SectionConfirm() {
+  const pageCtx = useSalesQuotationListContext()
+
   return (
-    <SalesQuotationListCtx.Consumer>
+    <pageCtx.getConsumer>
       {({ state }) => {
         const { confirm } = state
 
@@ -18,6 +20,6 @@ export default function SectionConfirm() {
           </>
         )
       }}
-    </SalesQuotationListCtx.Consumer>
+    </pageCtx.getConsumer>
   )
 }

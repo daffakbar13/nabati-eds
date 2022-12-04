@@ -7,14 +7,15 @@ import ReactToPrint from 'react-to-print'
 import { downloadTemplateQuotation } from 'src/api/quotation'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { colors } from 'src/configs/colors'
-import { SalesQuotationListCtx } from '../states'
+import { useSalesQuotationListContext } from 'src/hooks/contexts'
 
 export default function SectionAction() {
+  const pageCtx = useSalesQuotationListContext()
   const router = useRouter()
   const componentRef = React.useRef()
 
   return (
-    <SalesQuotationListCtx.Consumer>
+    <pageCtx.getConsumer>
       {({ state }) => {
         const { table } = state
 
@@ -125,6 +126,6 @@ export default function SectionAction() {
           </Row>
         )
       }}
-    </SalesQuotationListCtx.Consumer>
+    </pageCtx.getConsumer>
   )
 }

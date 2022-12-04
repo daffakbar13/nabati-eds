@@ -4,11 +4,13 @@ import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
 import { multipleSubmitQuotation } from 'src/api/quotation'
-import { SalesQuotationListCtx } from '../../states'
+import { useSalesQuotationListContext } from 'src/hooks/contexts'
 
 export default function ConfirmSubmit() {
+  const pageCtx = useSalesQuotationListContext()
+
   return (
-    <SalesQuotationListCtx.Consumer>
+    <pageCtx.getConsumer>
       {({ handler, state }) => {
         const { table } = state
         const { showConfirm, unShowConfirm, runProcess, stopProcess, changeSubmittedQuotation } =
@@ -63,6 +65,6 @@ export default function ConfirmSubmit() {
           </Popup>
         )
       }}
-    </SalesQuotationListCtx.Consumer>
+    </pageCtx.getConsumer>
   )
 }
