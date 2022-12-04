@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable radix */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-const-assign */
@@ -7,7 +8,7 @@
 /* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
-import { Col, Row, Tag, Modal, Typography, Popover } from 'antd'
+import { Col, Row, Tag, Modal, Typography, Popover, Empty } from 'antd'
 import {
   Button,
   Search,
@@ -38,10 +39,17 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import Loader from 'src/components/Loader'
 import { ICDelete } from 'src/assets'
 import Pagination from 'src/components/Pagination'
-import { fieldBranchAll, fieldSalesOrg, fieldVehicle } from 'src/configs/fieldFetches'
+import {
+  fieldBranch,
+  fieldBranchAll,
+  fieldSalesman,
+  fieldSalesOrg,
+  fieldVehicle,
+} from 'src/configs/fieldFetches'
 import { getDeliveryOrderList } from 'src/api/delivery-order'
 import { createShipment, getCompletedDeliveryOrderList, getDetailShipment } from 'src/api/shipment'
 import { PATH } from 'src/configs/menus'
+import { getCustomerByFilter } from 'src/api/master-data'
 import { ColumnsDeliveryOrder } from './columns'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -143,6 +151,7 @@ export default function PageCreateShipment() {
   const [draftShipment, setDraftShipment] = React.useState<string>()
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
+  const [optionsSalesman, setOptionsSalesman] = React.useState([])
   const [submittedQuotation, setSubmittedQuotation] = React.useState([])
   const [processing, setProcessing] = React.useState('')
   const [showDragAndDrop, setShowDragAndDrop] = React.useState(false)
@@ -155,7 +164,8 @@ export default function PageCreateShipment() {
   const router = useRouter()
   const oneSelected = table.selected.length === 1
   const firstSelected = table.selected[0]
-  const totalSize = data.length > 0
+  const totalSize =
+    data.length > 0
       ? `${data
           .map(({ volume }) => volume)
           .reduce((old, now) => old + now)
@@ -448,6 +458,32 @@ export default function PageCreateShipment() {
     }
   }, [router])
 
+  React.useEffect(() => {
+    if (filter.branch) {
+      getCustomerByFilter({
+        branch_id: filter.branch.split(' - ')[0],
+        customer_id: '',
+        sales_org_id: filter.sales_org.split(' - ')[0],
+        salesman_id: '',
+      }).then((result) => {
+        const idArr = result.data.map(({ salesman_id }) => salesman_id)
+        const newIdArr = [...new Set(idArr)]
+        const newArr = newIdArr.map((id) =>
+          result.data.find(({ salesman_id }) => salesman_id === id),
+        )
+        setOptionsSalesman(
+          newArr.map(({ salesman_id, salesman_name }) => ({
+            label: [salesman_id, salesman_name].join(' - '),
+            value: [salesman_id, salesman_name].join(' - '),
+          })),
+        )
+      })
+    } else {
+      setData([])
+      table.handlePagination(1, 1)
+    }
+  }, [filter])
+
   return (
     <ColPinkLava>
       {pending > 0 && <Loader type="process" text="Wait For Get Selected Delivery Order" />}
@@ -530,10 +566,12 @@ export default function PageCreateShipment() {
                     placeholder={'Select'}
                     value={filter.branch}
                     style={{ borderRadius: 64 }}
-                    // options={[]}
-                    fetchOptions={fieldBranchAll}
+                    {...(filter.branch
+                      ? { options: [{ label: filter.branch, value: filter.branch }] }
+                      : { fetchOptions: fieldBranch })}
                     onChange={(e: any) => {
                       handleChangeFilter('branch', e.value)
+                      handleChangeFilter('sales_org', e.key)
                     }}
                   />
                 </Col>
@@ -544,10 +582,13 @@ export default function PageCreateShipment() {
                     placeholder={'Select'}
                     value={filter.sales_org}
                     style={{ borderRadius: 64 }}
+                    {...(filter.sales_org
+                      ? { options: [{ label: filter.sales_org, value: filter.sales_org }] }
+                      : { fetchOptions: fieldSalesOrg })}
                     // options={[]}
-                    fetchOptions={fieldSalesOrg}
                     onChange={(e: any) => {
-                      // onChangeForm('sales_org_id', e.value)
+                      handleChangeFilter('sales_org', e.value)
+                      handleChangeFilter('branch', e.key)
                     }}
                   />
                 </Col>
@@ -558,9 +599,9 @@ export default function PageCreateShipment() {
                     placeholder={'Select'}
                     value={filter.salesman}
                     style={{ borderRadius: 64 }}
-                    options={[]}
+                    options={optionsSalesman}
                     onChange={(e: any) => {
-                      // onChangeForm('sales_org_id', e.value)
+                      handleChangeFilter('salesman', e.value)
                     }}
                   />
                 </Col>
@@ -596,7 +637,7 @@ export default function PageCreateShipment() {
                     style={{ width: '100%' }}
                     variant="tertiary"
                     disabled={Object.keys(filter).length === 0}
-                    onClick={() => setFilter({})}
+                    onClick={() => setFilter(() => ({}))}
                   >
                     Clear All
                   </Button>
@@ -607,7 +648,17 @@ export default function PageCreateShipment() {
                     style={{ width: '100%' }}
                     variant="primary"
                     disabled={!filter.branch}
-                    // onClick={() => router.push(`${router.pathname}/create`)}
+                    onClick={() => {
+                      const newBody = []
+                      if (filter.salesman) {
+                        newBody.push({
+                            field: 'salesman_id',
+                            option: 'EQ',
+                            from_value: filter.salesman.split(' - ')[0],
+                          })
+                      }
+                      table.handleFilter(newBody)
+                    }}
                   >
                     Search
                   </Button>
@@ -618,7 +669,8 @@ export default function PageCreateShipment() {
           <Spacer size={10} />
         </>
       )}
-      <div style={{ width: '100%' }}>
+      {!filter.branch && <Card><Empty/></Card>}
+      <div style={{ width: '100%', display: !filter.branch && 'none' }}>
         <Row gutter={10}>
           <Col span={16}>
             <Card>{tableList}</Card>

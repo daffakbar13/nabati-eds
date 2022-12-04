@@ -1,20 +1,20 @@
 import React from 'react'
+import { Loader } from 'src/components'
 import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
 import { useTableProduct } from '../columns'
-import { ConfirmCancel, ConfirmSuccessSubmit } from './alerts'
 
-export default function SectionConfirm() {
+export default function SectionLoader() {
   const pageCtx = useSalesQuotationCreateContext<typeof useTableProduct>()
   return (
     <pageCtx.getConsumer>
       {({ state }) => {
-        const { newQuotation, draftQuotation, cancel, tableProduct } = state
+        const { processing, tableProduct } = state
 
         return (
           <>
-            {(newQuotation || draftQuotation) && <ConfirmSuccessSubmit />}
-            {cancel && <ConfirmCancel />}
-            {<tableProduct.ConfirmDelete />}
+            {(processing || tableProduct.isLoading) && (
+              <Loader type="process" text={processing || 'Wait for get data items'} />
+            )}
           </>
         )
       }}
