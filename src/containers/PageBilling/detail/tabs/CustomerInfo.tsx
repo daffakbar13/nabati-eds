@@ -152,7 +152,7 @@ export default function CustomerInfo(props: CustomerInfoProps) {
           <Divider />
         </>
       ))}
-      <Table dataSource={[]} columns={TableCustomerInfo} />
+      <Table scroll={{ x: 'max-content', y: 600 }} dataSource={[]} columns={TableCustomerInfo} />
     </>
   )
 }

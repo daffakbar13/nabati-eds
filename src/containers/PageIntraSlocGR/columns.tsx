@@ -67,12 +67,14 @@ export const column = [
     175,
     'left',
   ),
-  CreateColumns('GI Number', 'gi_number', true, (link: string, record: any) => (
-    <Linked link={link} type="id" linkType="GI" />
-  )),
-  175,
-  'left',
-  ,
+  CreateColumns(
+    'GI Number',
+    'gi_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="GI" />,
+    175,
+    'left',
+  ),
   CreateColumns(
     'GR Number',
     'id',
