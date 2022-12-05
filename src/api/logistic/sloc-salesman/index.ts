@@ -25,7 +25,7 @@ export const getListSlocman = async (
   return response.data
 }
 
-export const createDoSto = async (payload: any) => {
+export const createSlocman = async (payload: any) => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}`,

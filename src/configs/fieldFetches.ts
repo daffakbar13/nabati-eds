@@ -133,6 +133,7 @@ export function fieldSalesman(search: string, branch: string) {
                 })))
 }
 
+
 export function fieldItem(search: string) {
     const now = new Date().toISOString()
     return getPricingByCompany()
@@ -342,6 +343,20 @@ export function fieldSalesOrganization(search = '') {
                 .splice(0, 10)
                 .map(({ id, name }) => ({
                     label: id,
+                    value: id,
+                })))
+}
+
+export function fieldSalesmanAll(search: string) {
+    return getSalesmanByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id, name, branch_id }) =>
+                (id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase())))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
                     value: id,
                 })))
 }
