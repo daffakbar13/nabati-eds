@@ -2,10 +2,11 @@
 /* eslint-disable no-unused-expressions */
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { Button } from 'pink-lava-ui';
-import { PATH } from 'src/configs/menus';
-import React from 'react';
-import DateFormat from 'src/components/DateFormat';
+import { Button } from 'pink-lava-ui'
+import { PATH } from 'src/configs/menus'
+import React from 'react'
+import DateFormat from 'src/components/DateFormat'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -46,9 +47,9 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 export const TableBilling = [
   CreateColumns(
     'Billing Number',
-    'billing_number',
+    'id',
     true,
-    (link, record) => <Linked link={link} status={record.status} type="id" />,
+    (link, record) => <Linked link={record.billing_number} status={record.status} type="id" />,
     170,
     true,
     'have-checkbox',
@@ -63,8 +64,18 @@ export const TableBilling = [
   CreateColumns('Shipment Number', 'shipment_number', false),
   CreateColumns('Salesman', 'salesman', false),
   CreateColumns('Total Amount', 'total_amount', false),
-  CreateColumns('Status', 'status', false),
-  CreateColumns('Action', 'billing_number', false, (link, record) => (
-    <Linked link={link} status={record.status} type="action" />
-  )),
+  CreateColumns(
+    'Status',
+    'status',
+    false,
+    (status, record) => <TaggedStatus status={status} />,
+    200,
+  ),
+  CreateColumns(
+    'Action',
+    'billing_number',
+    false,
+    (link, record) => <Linked link={link} status={record.status} type="action" />,
+    200,
+  ),
 ]

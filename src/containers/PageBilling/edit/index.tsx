@@ -10,11 +10,11 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { useTableEditItem } from './columns'
 import Total from 'src/components/Total'
-import { fakeApi } from 'src/api/fakeApi'
+import { UpdateBilling } from 'src/api/billing'
 
 export default function PageBillingDetail() {
   const now = new Date().toISOString()
-  
+
   const router = useRouter()
   const data = useDetail(getDetailBilling, { id: router.query.id as string })
   const [cancel, setCancel] = useState(false)
@@ -27,10 +27,6 @@ export default function PageBillingDetail() {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
-  // useEffect(() => {
-  //   console.log('data OKEH', data.customer)
-  // }, [])
-
   const initialValue = {
     billing_id: data.id,
     order_type: 'ZOP1',
@@ -42,7 +38,7 @@ export default function PageBillingDetail() {
     branch_id: data.branch_id,
     reference: data.reference || '',
     total_amount: data.total_amount,
-    status_id: '1',
+    status_id: data.status_id,
     modified_by: 'SYSTEM',
     billing_items: tableAddItems.data,
   }
@@ -58,7 +54,7 @@ export default function PageBillingDetail() {
             cursor: 'pointer',
           }}
           onClick={() => {
-            router.push(`/sales/billing/detail/${router.query.id}?status=New`)
+            router.push(`/sales/billing/detail/${router.query.id}?status=${router.query.status}`)
           }}
         >
           <ArrowLeftOutlined style={{ fontSize: 25 }} />
@@ -78,7 +74,15 @@ export default function PageBillingDetail() {
             >
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                UpdateBilling({ ...initialValue, ...dataForm })
+                  .then((response) => setNewData(response.data.id))
+                  .catch((e) => console.log(e))
+              }}
+            >
               Submit
             </Button>
           </Row>
@@ -94,7 +98,7 @@ export default function PageBillingDetail() {
               onChangeForm('gi_date', moment(val).format('YYYY-MM-DD'))
             }}
             label="GI Date"
-            defaultValue={((data.gi_date) ? moment(data.gi_date) : moment(now))}
+            defaultValue={data.gi_date ? moment(data.gi_date) : moment(now)}
             format={'DD/MM/YYYY'}
             required
           />
@@ -111,7 +115,7 @@ export default function PageBillingDetail() {
               onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
             }}
             label="Document Date"
-            defaultValue={((data.doc_date) ? moment(data.doc_date) : moment(now))}
+            defaultValue={data.doc_date ? moment(data.doc_date) : moment(now)}
             format={'DD/MM/YYYY'}
             required
           />
@@ -128,7 +132,7 @@ export default function PageBillingDetail() {
               onChangeForm('delivery_date', moment(val).format('YYYY-MM-DD'))
             }}
             label="Delivery Date"
-            defaultValue={((data.delivery_date) ? moment(data.delivery_date) : moment(now))}
+            defaultValue={data.delivery_date ? moment(data.delivery_date) : moment(now)}
             format={'DD/MM/YYYY'}
             required
           />
@@ -143,7 +147,9 @@ export default function PageBillingDetail() {
             label="Reference"
             type="input"
             placeholder={data.reference || ''}
-            onChange={() => {}}
+            onChange={(e: any) => {
+              onChangeForm('reference', e.target.value)
+            }}
           />
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
@@ -194,7 +200,7 @@ export default function PageBillingDetail() {
             )}
           </div>
           {!cancel && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully created</div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully Updated</div>
           )}
           <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
             {cancel && (
@@ -214,7 +220,9 @@ export default function PageBillingDetail() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing/detail/${router.query.id}?status=New`)
+                    router.push(
+                      `/sales/billing/detail/${router.query.id}?status=${router.query.status}`,
+                    )
                   }}
                 >
                   Yes
@@ -228,7 +236,9 @@ export default function PageBillingDetail() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing/detail/${router.query.id}?status=New`)
+                    router.push(
+                      `/sales/billing/detail/${router.query.id}?status=${router.query.status}`,
+                    )
                   }}
                 >
                   OK

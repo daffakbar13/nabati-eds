@@ -11,6 +11,7 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { useTableEditItem } from './columns'
 import Total from 'src/components/Total'
 import { fieldCustomer } from 'src/configs/fieldFetches'
+import { createBilling } from 'src/api/billing'
 
 export default function PageBillingDetail() {
   const now = new Date().toISOString()
@@ -59,7 +60,7 @@ export default function PageBillingDetail() {
             cursor: 'pointer',
           }}
           onClick={() => {
-            router.push(`/sales/billing/detail/${router.query.id}?status=New`)
+            router.push(`/sales/billing/detail/${router.query.id}?status=${router.query.status}`)
           }}
         >
           <ArrowLeftOutlined style={{ fontSize: 25 }} />
@@ -79,7 +80,15 @@ export default function PageBillingDetail() {
             >
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                createBilling({ ...initialValue, ...dataForm })
+                  .then((response) => setNewData(response.data.id))
+                  .catch((e) => console.log(e))
+              }}
+            >
               Submit
             </Button>
           </Row>
@@ -218,7 +227,9 @@ export default function PageBillingDetail() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing/detail/${router.query.id}?status=New`)
+                    router.push(
+                      `/sales/billing/detail/${router.query.id}?status=${router.query.status}`,
+                    )
                   }}
                 >
                   Yes
@@ -232,7 +243,9 @@ export default function PageBillingDetail() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing/detail/${router.query.id}?status=New`)
+                    router.push(
+                      `/sales/billing/detail/${router.query.id}?status=${router.query.status}`,
+                    )
                   }}
                 >
                   OK
