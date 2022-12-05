@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router'
 import { Button, DatePickerInput, Row, Spacer, Table, Text, Switch } from 'pink-lava-ui'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
+import { ExclamationBrownIc } from 'src/assets'
 
-import { getListStockAdjustment } from 'src/api/logistic/stock-adjustment'
+import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
 import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
@@ -13,6 +14,7 @@ import FreezeSlocModal from './modals/freezeSloc'
 export default function PageStockAdjustment() {
   const [filters, setFilters] = useState([])
   const [freezeModal, setFreezeModal] = useState(false)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   const goToDetailPage = (id: string) =>
@@ -24,6 +26,22 @@ export default function PageStockAdjustment() {
     columns: columns(goToDetailPage),
     filters,
   })
+
+  const [freezeList, setFreezeList] = useState([])
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        setLoading(true)
+        const res = await checkIsFreezeList()
+        setFreezeList(res.data || [])
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        console.error(error)
+      }
+    }
+    fetch()
+  }, [])
 
   return (
     <>
@@ -74,7 +92,11 @@ export default function PageStockAdjustment() {
           <Row gap="16px">
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <p style={{ fontWeight: 'bold', marginRight: 8 }}>Freeze Sloc?</p>
-              <Switch onChange={(e) => setFreezeModal(true)} />
+              <Switch
+                onChange={(e) => setFreezeModal(true)}
+                checked={freezeList.length > 0}
+                disabled={loading}
+              />
             </div>
             <Button
               size="big"
@@ -87,13 +109,36 @@ export default function PageStockAdjustment() {
         </Row>
       </Card>
       <Spacer size={10} />
+
+      {freezeList.map((i) => (
+        <div
+          key={i.id}
+          style={{
+            color: '#B78101',
+            background: '#FFFBDF',
+            borderRadius: 8,
+            padding: '8px 16px',
+            display: 'grid',
+            gridTemplateColumns: '30px 1fr',
+          }}
+        >
+          <ExclamationBrownIc />
+          <p>{`Branch ${i.branch_id}-${i.branch_id}, SLoc ${i.id} ${i.name} is being frezee.`}</p>
+        </div>
+      ))}
+
+      <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...tableProps} />
         </div>
       </Card>
 
-      <FreezeSlocModal visible={freezeModal} close={() => setFreezeModal(false)} />
+      <FreezeSlocModal
+        isListFreezed={freezeList}
+        visible={freezeModal}
+        close={() => setFreezeModal(false)}
+      />
     </>
   )
 }
