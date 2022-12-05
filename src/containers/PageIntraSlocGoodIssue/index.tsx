@@ -49,9 +49,7 @@ export default function PageIntraSlocGoodIssue() {
     { label: 'Canceled', value: 'Canceled' },
   ]
 
-  const movTypeOption = [
-    { label: 'Z54 - GR Phys. Inv', value: 'Z54' },
-  ]
+  const movTypeOption = [{ label: 'Z54 - GR Phys. Inv', value: 'Z54' }]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -155,6 +153,7 @@ export default function PageIntraSlocGoodIssue() {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}

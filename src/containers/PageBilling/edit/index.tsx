@@ -159,6 +159,7 @@ export default function PageBillingDetail() {
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            scroll={{ x: 'max-content', y: 600 }}
             editable
             data={tableAddItems.data}
             columns={tableAddItems.columns}

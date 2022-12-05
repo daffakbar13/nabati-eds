@@ -129,6 +129,7 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}

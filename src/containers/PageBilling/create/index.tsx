@@ -170,6 +170,7 @@ export default function CreateBilling() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
             editable
+            scroll={{ x: 'max-content', y: 600 }}
             data={tableAddItems.data}
             columns={tableAddItems.columns}
             loading={tableAddItems.loading}

@@ -49,9 +49,7 @@ export default function PageIntraSlocGoodIssue() {
     { label: 'Canceled', value: 'Canceled' },
   ]
 
-  const movTypeOption = [
-    { label: 'Z53 - GR Phys. Inv', value: 'Z53' },
-  ]
+  const movTypeOption = [{ label: 'Z53 - GR Phys. Inv', value: 'Z53' }]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -84,7 +82,7 @@ export default function PageIntraSlocGoodIssue() {
           <Row gap="16px">
             <SearchQueryParams placeholder="Search by GI Number" />
             <SmartFilter onOk={setFilters}>
-            <SmartFilter.Field
+              <SmartFilter.Field
                 field="suppl_branch_id"
                 dataType="S"
                 label="Branch"
@@ -155,6 +153,7 @@ export default function PageIntraSlocGoodIssue() {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
             columns={table.columns}
             dataSource={table.data}

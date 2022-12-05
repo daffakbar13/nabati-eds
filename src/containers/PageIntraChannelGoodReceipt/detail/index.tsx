@@ -106,7 +106,11 @@ export default function PageIntraChannelGoodReceiptDetail() {
         </Row>
         <Divider />
         <div style={{ overflow: 'scroll' }}>
-          <Table columns={TableIntraChannelGoodReceiptDetail} data={data.items} />
+          <Table
+            scroll={{ x: 'max-content', y: 600 }}
+            columns={TableIntraChannelGoodReceiptDetail}
+            data={data.items}
+          />
         </div>
       </Card>
     </Col>

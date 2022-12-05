@@ -46,7 +46,9 @@ export default function PageIntraSlocRequest() {
     { label: 'Approved', value: '01' },
     { label: 'Wait For Approval', value: '00' },
   ]
-  const movTypeOption = [{ label: '555 - Withdrawal for scrapping from blocked stock', value: '555' }]
+  const movTypeOption = [
+    { label: '555 - Withdrawal for scrapping from blocked stock', value: '555' },
+  ]
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -194,8 +196,9 @@ export default function PageIntraSlocRequest() {
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
+            scroll={{ x: 'max-content', y: 600 }}
             loading={table.loading}
-            columns={[...table.columns, { title: <HideShowColumns />, width: 50 }]}
+            columns={[...table.columns]}
             dataSource={table.data}
             showSorterTooltip={false}
             rowKey={'id'}

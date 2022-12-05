@@ -316,7 +316,11 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
           </Row>
           <Divider />
           <div style={{ overflow: 'scroll' }}>
-            <Table columns={tableApproval} data={data.items} />
+            <Table
+              scroll={{ x: 'max-content', y: 600 }}
+              columns={tableApproval}
+              data={data.items}
+            />
           </div>
           <Spacer size={30} />
           <Row>

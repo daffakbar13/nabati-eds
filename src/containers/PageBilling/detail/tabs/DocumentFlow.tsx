@@ -13,7 +13,7 @@ export default function DocumentFlow(props: DocumentFlowProps) {
   return (
     <>
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TableDocumentFlow} dataSource={[]} />
+        <Table scroll={{ x: 'max-content', y: 600 }} columns={TableDocumentFlow} dataSource={[]} />
       </div>
     </>
   )
