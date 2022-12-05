@@ -1,75 +1,188 @@
-import React, { useEffect, useState } from 'react'
-import { Modal } from 'src/components'
-import { Spacer, Text, Button } from 'pink-lava-ui'
-import DebounceSelect from 'src/components/DebounceSelect'
+import { Form } from 'antd'
 import { useRouter } from 'next/router'
-import { fieldSlocFromBranch, fieldSalesmanAll } from 'src/configs/fieldFetches'
-import { createSlocman } from 'src/api/logistic/sloc-salesman'
+import { useEffect, useState } from 'react'
+import { Input, Modal, SelectMasterData, Text } from 'src/components'
 
-export default function ModalCreate({ visible = false, close = () => {} }) {
+import {
+  createConfigCompany,
+  getConfigCompanyDetail,
+  updateConfigCompany,
+} from 'src/api/logistic/configuration-company'
+
+const { Label, LabelRequired } = Text
+
+export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
+  const [loading, setLoading] = useState(false)
+  const [showConfirmModal, setConfirmModal] = useState(false)
   const router = useRouter()
-  const [allSloc, setAllScloc] = React.useState([])
-  const [dataForm, setDataForm] = React.useState({})
-  const [newData, SetNewData] = React.useState()
+  const isOnEditMode = !!payload
+
+  const [form] = Form.useForm()
+
+  const onClickSubmit = async () => {
+    await form.validateFields()
+    setConfirmModal(true)
+  }
+
+  const doUpdate = async (reqBody: any) => {
+    try {
+      setLoading(true)
+      const res = updateConfigCompany(reqBody, reqBody.company_id, reqBody.key)
+      setLoading(false)
+      return res
+    } catch (error) {
+      console.error(error)
+    }
+    return false
+  }
+
+  const doCreate = async (reqBody: any) => {
+    try {
+      setLoading(true)
+      const res = createConfigCompany(reqBody)
+      setLoading(false)
+      return res
+    } catch (error) {
+      console.error(error)
+    }
+    return false
+  }
+
+  const handleSubmit = async () => {
+    const values = form.getFieldsValue(true)
+    const reqBody = {
+      company_id: values.company_id.value,
+      key: values.key,
+      value: values.value,
+      description: values.description,
+      console_group: values.console_group,
+    }
+
+    if (!isOnEditMode) {
+      return doCreate(reqBody)
+    }
+
+    if (isOnEditMode) {
+      return doUpdate(reqBody)
+    }
+
+    return false
+  }
+
+  const handleCancel = () => {
+    setConfirmModal(false)
+    form.resetFields()
+    close()
+  }
 
   useEffect(() => {
-    fieldSlocFromBranch('ZOP3', 'P104').then((response) => {
-      setAllScloc(response)
-    })
-  }, [])
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        const res = await getConfigCompanyDetail(payload.company_id, payload.key)
+        form.setFieldsValue({
+          company_id: {
+            value: res?.data?.company_id,
+            label: `${res?.data?.company_id} - ${res?.data?.company_name}`,
+          },
+          console_group: res?.data?.console_group,
+          description: res?.data?.description,
+          key: res?.data?.key,
+          value: res?.data?.value,
+        })
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        console.error(error)
+      }
+    }
 
-  const initialValue = {
-    company_id: 'PP01',
-    salesman_id: '130201',
-    sloc_id: 'KV03',
-    status: 1,
-  }
-
-  const onChangeForm = (form: string, value: any) => {
-    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
-  }
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const content = (
-    <>
-      <Spacer size={20} />
-      <DebounceSelect
-        label="Salesman"
-        required
-        type="select"
-        fetchOptions={fieldSalesmanAll}
-        onChange={(val: any) => {
-          onChangeForm('salesman_id', val.value)
-        }}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="SLoc"
-        required
-        type="select"
-        options={allSloc}
-        onChange={(val: any) => {
-          onChangeForm('sloc_id', val.value)
-        }}
-      />
-    </>
+    <Form
+      form={form}
+      labelCol={{ span: 24 }}
+      wrapperCol={{ span: 24 }}
+      autoComplete="off"
+      requiredMark={false}
+      scrollToFirstError
+      preserve={false}
+    >
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginTop: 40 }}>
+        <Form.Item
+          name="company_id"
+          style={{ marginTop: -12, marginBottom: 0 }}
+          label={<LabelRequired>Company</LabelRequired>}
+          rules={[{ required: true }]}
+        >
+          <SelectMasterData loading={loading} type="COMPANY" style={{ marginTop: -8 }} />
+        </Form.Item>
+        <Form.Item
+          name="key"
+          style={{ marginTop: -12, marginBottom: 0 }}
+          label={<LabelRequired>Key</LabelRequired>}
+          rules={[{ required: true }]}
+        >
+          <Input loading={loading} style={{ marginTop: -12 }} placeholder="Type" size="large" />
+        </Form.Item>
+        <Form.Item
+          name="value"
+          style={{ marginTop: -12, marginBottom: 0 }}
+          label={<LabelRequired>Value</LabelRequired>}
+          rules={[{ required: true }]}
+        >
+          <Input loading={loading} style={{ marginTop: -12 }} placeholder="Type" size="large" />
+        </Form.Item>
+        <Form.Item
+          name="description"
+          style={{ marginTop: -12, marginBottom: 0 }}
+          label={<Label>Description</Label>}
+        >
+          <Input loading={loading} style={{ marginTop: -12 }} placeholder="Type" size="large" />
+        </Form.Item>
+        <Form.Item
+          name="console_group"
+          style={{ marginTop: -12, marginBottom: 0 }}
+          label={<Label>Console Group</Label>}
+        >
+          <Input loading={loading} style={{ marginTop: -12 }} placeholder="Type" size="large" />
+        </Form.Item>
+      </div>
+    </Form>
   )
 
   return (
     <>
       <Modal
+        title={isOnEditMode ? 'View Detail Config Company' : 'Create Config Company'}
         open={visible}
-        onOk={() => {
-          createSlocman({ ...initialValue, ...dataForm })
-            .then((response) => SetNewData(response.data.id))
-            .catch((e) => console.log(e))
-        }}
-        onCancel={() => {
-          close()
-        }}
-        title="Create SLoc Salesman"
+        onOk={onClickSubmit}
+        onCancel={handleCancel}
         content={content}
+        loading={loading}
         cancelText="Cancel"
-        okText="Submit"
+        okText={isOnEditMode ? 'Update' : 'Submit'}
+      />
+      <Modal
+        title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
+        open={showConfirmModal}
+        onOk={handleSubmit}
+        onCancel={() => {
+          setConfirmModal(false)
+        }}
+        content="Are you sure want to submit config company?"
+        loading={loading}
+        onOkSuccess={() => {
+          handleCancel()
+          router.reload()
+        }}
+        successContent={(res: any) => 'Config company has been successfully Updated'}
+        successOkText="OK"
+        width={432}
       />
     </>
   )

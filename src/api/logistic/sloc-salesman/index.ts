@@ -34,3 +34,13 @@ export const createSlocman = async (payload: any) => {
   })
   return response.data
 }
+
+export const UpdateStatusSlocman = async (id: string, payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/status/${id}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}

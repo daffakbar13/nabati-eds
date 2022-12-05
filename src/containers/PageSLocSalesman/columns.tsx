@@ -1,53 +1,35 @@
-/* eslint-disable radix */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-expressions */
-import React, { useState } from 'react'
+import moment from 'moment'
 import CreateColumns from 'src/utils/createColumns'
 import { Button, Switch } from 'pink-lava-ui'
+import { Tag } from 'antd'
+import Link from 'src/components/Link'
 
-// const [showUpdateModal, setShowUpdateModal] = useState(false)
-
-const onChange = (checked) => {
-  console.log(`switch to ${checked}`)
-}
-
-export const selectData = (record) => {
-  return record
-}
-
-export const columns = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1, 55),
+export const columns = (
+  onClickDetail: (rec: any) => void,
+  onClickSwitch: (a: boolean, rec: any) => void,
+) => [
+  CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   CreateColumns(
     'Salesman',
     'salesman_id',
-    false,
-    (text: string, record: any) => `${record.salesman_id || ''} - ${record.salesman_name || ''}`,
-    400,
+    true,
+    (text: string, rec, index) => `${rec.salesman_id} - ${rec.salesman_name}`,
+    70,
+    'left',
   ),
   CreateColumns(
-    'SLoc',
-    'sloc_id',
-    false,
-    (text: string, record: any) => <>{`${record.sloc_id || ''}`}</>,
-    200,
-  ),
-  CreateColumns(
-    'Active / Inactive',
+    'Active/Inactive',
     'status',
-    false,
-    (status, record) => (
+    true,
+    (status: string, rec) => (
       <>
-        {record.status == 1 ? (
-          <Switch defaultChecked onChange={onChange} />
-        ) : (
-          <Switch onChange={onChange} />
-        )}
+        <Switch checked={status} onChange={(bool: boolean) => onClickSwitch(bool, rec)} />
       </>
     ),
-    200,
+    180,
   ),
-  CreateColumns('Action', 'id', false, (id: string, record: any) => (
-    <Button size="big" variant="tertiary" onClick={() => selectData(record)}>
+  CreateColumns('Action', 'gr_number', false, (text, rec) => (
+    <Button size="big" variant="tertiary" onClick={() => onClickDetail(rec)}>
       View Detail
     </Button>
   )),

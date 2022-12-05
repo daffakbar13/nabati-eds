@@ -1,45 +1,48 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card, SearchQueryParams } from 'src/components'
-import { Popover, Typography } from 'antd'
-import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
-import useTitlePage from 'src/hooks/useTitlePage'
-import FloatAction from 'src/components/FloatAction'
-import Popup from 'src/components/Popup'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Card, SearchQueryParams, Modal } from 'src/components'
+import { getListSlocman, UpdateStatusSlocman } from 'src/api/logistic/sloc-salesman'
 import Pagination from 'src/components/Pagination'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
+
 import CreateModal from './create'
-import EditModal from './edit'
-import { getListSlocman } from 'src/api/logistic/sloc-salesman'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
-export default function PageSlocCustomerGroup() {
+export default function PageConfigurationSloc() {
   const [filters, setFilters] = useState([])
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const table = useTable({
-    funcApi: getListSlocman,
-    columns,
-  })
-  const hasData = table.total > 0
   const router = useRouter()
 
-  const statusOption = [
-    { label: 'All', value: null },
-    { label: 'Approved', value: 'Approved' },
-    { label: 'Done', value: 'Done' },
-    { label: 'Rejected', value: 'Rejected' },
-    { label: 'Wait For Approval', value: 'Wait For Approval' },
-  ]
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [selectedRow, setSelectedRow] = useState(null)
+
+  const goToDetailPage = (row: any) => {
+    setSelectedRow(row)
+    setShowCreateModal(true)
+  }
+
+  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
+  const [changeStatusPayload, setChangeStatusPayload] = useState(null)
+  const onClickSwitch = (a: boolean, rec: any) => {
+    setChangeStatusPayload(rec)
+    setShowChangeStatusModal(true)
+  }
+
+  const handleChangeStatus = async () => {
+    const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
+    try {
+      return await UpdateStatusSlocman(changeStatusPayload.salesman_id as string, reqBody)
+    } catch (error) {
+      console.error(error)
+    }
+    return false
+  }
+
+  const table = useTable({
+    funcApi: getListSlocman,
+    columns: columns(goToDetailPage, onClickSwitch),
+  })
+  const hasData = table.total > 0
 
   useEffect(() => {
     table.handleFilter(filters)
@@ -48,7 +51,7 @@ export default function PageSlocCustomerGroup() {
   useEffect(() => {
     if (router.query.search) {
       filters.push({
-        field: 'e.id',
+        field: 'e.salesman_id',
         option: 'EQ',
         from_value: router.query.search,
         data_type: 'S',
@@ -57,13 +60,13 @@ export default function PageSlocCustomerGroup() {
   }, [router.query.search])
 
   return (
-    <Col>
+    <>
       <Text variant={'h4'}>SLoc Salesman</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Salesman ID" />
+            <SearchQueryParams placeholder='Search by Salesman ID' />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
@@ -73,7 +76,7 @@ export default function PageSlocCustomerGroup() {
         </Row>
       </Card>
       <Spacer size={10} />
-      <Card style={{ padding: '16px 20px' }}>
+      <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
             scroll={{ x: 'max-content', y: 600 }}
@@ -81,7 +84,7 @@ export default function PageSlocCustomerGroup() {
             columns={table.columns}
             dataSource={table.data}
             showSorterTooltip={false}
-            rowKey={'id'}
+            rowKey={'salesman_id'}
           />
         </div>
         {hasData && (
@@ -96,15 +99,34 @@ export default function PageSlocCustomerGroup() {
           />
         )}
       </Card>
-      <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
-      {/* <EditModal
-        visible={showUpdateModal}
-        handleClose={() => {
-          setShowUpdateModal(false)
-          setSelectedData({})
+
+      <CreateModal
+        visible={showCreateModal}
+        payload={selectedRow || null}
+        close={() => {
+          setSelectedRow(null)
+          setShowCreateModal(false)
         }}
-        selectedUpdateData={selectedData}
-      /> */}
-    </Col>
+      />
+
+      <Modal
+        title={'Confirm Submit'}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.status ? 'inactivate' : 'activate'
+        } this Sloc Salesman?`}
+        onOkSuccess={() => {
+          router.reload()
+        }}
+        successContent={(res: any) => `Sloc Salesman has been successfully 
+          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
+      />
+    </>
   )
 }
