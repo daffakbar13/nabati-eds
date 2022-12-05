@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, DatePickerInput, Row, Spacer, Table, Text, Switch } from 'pink-lava-ui'
 import { useState } from 'react'
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
@@ -8,8 +8,11 @@ import { getListStockAdjustment } from 'src/api/logistic/stock-adjustment'
 import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
-export default function PageSwapHandling() {
+import FreezeSlocModal from './modals/freezeSloc'
+
+export default function PageStockAdjustment() {
   const [filters, setFilters] = useState([])
+  const [freezeModal, setFreezeModal] = useState(false)
   const router = useRouter()
 
   const goToDetailPage = (id: string) =>
@@ -69,6 +72,10 @@ export default function PageSwapHandling() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <p style={{ fontWeight: 'bold', marginRight: 8 }}>Freeze Sloc?</p>
+              <Switch onChange={(e) => setFreezeModal(true)} />
+            </div>
             <Button
               size="big"
               variant="primary"
@@ -85,6 +92,8 @@ export default function PageSwapHandling() {
           <Table {...tableProps} />
         </div>
       </Card>
+
+      <FreezeSlocModal visible={freezeModal} close={() => setFreezeModal(false)} />
     </>
   )
 }
