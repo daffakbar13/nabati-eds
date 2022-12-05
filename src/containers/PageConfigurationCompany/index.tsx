@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router'
-import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
-import { PATH } from 'src/configs/menus'
+import { Card, SearchQueryParams } from 'src/components'
 
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
+import { getConfigCompanyList } from 'src/api/logistic/configuration-company'
 import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
@@ -15,17 +14,23 @@ export default function PageConfigurationSloc() {
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [selectedRow, setSelectedRow] = useState(null)
 
-  const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${id}`)
+  const goToDetailPage = (row: any) => {
+    setSelectedRow(row)
+    setShowCreateModal(true)
+  }
   const onChangeActive = (a: boolean) => {
     console.log('a', a)
   }
 
   const tableProps = useSimpleTable({
-    funcApi: getGoodReceiptList,
+    funcApi: getConfigCompanyList,
     columns: columns(goToDetailPage, onChangeActive),
     filters,
   })
+
+  console.log('selectedRow', selectedRow)
 
   return (
     <>
@@ -50,7 +55,14 @@ export default function PageConfigurationSloc() {
         </div>
       </Card>
 
-      <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
+      <CreateModal
+        visible={showCreateModal}
+        payload={selectedRow || null}
+        close={() => {
+          setSelectedRow(null)
+          setShowCreateModal(false)
+        }}
+      />
     </>
   )
 }

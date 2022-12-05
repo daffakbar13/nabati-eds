@@ -47,9 +47,8 @@ export default function useSimpleTable({ columns, funcApi, filters = [] }) {
         page: +router.query.page || 1,
       }
 
-      if (router.query.search) {
-        // Jika ada search value
-        payload.filters.push({
+      if (router?.query?.search) {
+        payload?.filters?.push({
           field: 'id',
           option: 'CP',
           from_value: router.query.search,
