@@ -1,0 +1,36 @@
+import { call } from 'src/api/BaseApi'
+import { METHODS } from 'src/api/methods'
+import {
+  CommonListResponse,
+  CommonDetailResponse,
+  CommonListParams,
+  CommonDetailParams,
+} from 'src/api/types'
+import { API_BASE_URL_2 } from 'src/configs/env'
+import { ListSlocman } from './types'
+
+const url = 'v1/sloc-salesman'
+
+const overrideBaseUrl = API_BASE_URL_2
+
+export const getListSlocman = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<ListSlocman>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/list`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const createDoSto = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}

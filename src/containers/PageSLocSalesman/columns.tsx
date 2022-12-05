@@ -22,6 +22,7 @@ export const columns = [
     'salesman_id',
     false,
     (text: string, record: any) => `${record.salesman_id || ''} - ${record.salesman_name || ''}`,
+    400,
   ),
   CreateColumns(
     'SLoc',
@@ -34,9 +35,13 @@ export const columns = [
     'Active / Inactive',
     'status',
     false,
-    (sloc_id, record) => (
+    (status, record) => (
       <>
-        <Switch defaultChecked onChange={onChange} />
+        {record.status == 1 ? (
+          <Switch defaultChecked onChange={onChange} />
+        ) : (
+          <Switch onChange={onChange} />
+        )}
       </>
     ),
     200,

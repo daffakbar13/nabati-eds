@@ -7,13 +7,13 @@ import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
-import { getListPoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { columns } from './columns'
 import CreateModal from './create'
 import EditModal from './edit'
+import { getListSlocman } from 'src/api/logistic/sloc-salesman'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -27,7 +27,7 @@ export default function PageSlocCustomerGroup() {
   const [filters, setFilters] = useState([])
   const [showCreateModal, setShowCreateModal] = useState(false)
   const table = useTable({
-    funcApi: getListPoSto,
+    funcApi: getListSlocman,
     columns,
   })
   const hasData = table.total > 0
