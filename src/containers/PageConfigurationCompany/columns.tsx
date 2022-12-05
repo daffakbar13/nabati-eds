@@ -6,7 +6,7 @@ import Link from 'src/components/Link'
 
 export const columns = (
   onClickDetail: (rec: any) => void,
-  onChangeActive: (a: boolean) => void,
+  onClickSwitch: (a: boolean, rec: any) => void,
 ) => [
   CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   CreateColumns('Company ID', 'company_id', true),
@@ -17,9 +17,9 @@ export const columns = (
     'Active/Inactive',
     'status',
     true,
-    (status: string) => (
+    (status: string, rec) => (
       <>
-        <Switch checked={status} onChange={onChangeActive} />
+        <Switch checked={status} onChange={(bool: boolean) => onClickSwitch(bool, rec)} />
       </>
     ),
     180,

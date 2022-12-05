@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, SearchQueryParams } from 'src/components'
+import { Card, SearchQueryParams, Modal } from 'src/components'
 
-import { getConfigCompanyList } from 'src/api/logistic/configuration-company'
+import { getConfigCompanyList, updateStatus } from 'src/api/logistic/configuration-company'
 import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
@@ -20,13 +20,27 @@ export default function PageConfigurationSloc() {
     setSelectedRow(row)
     setShowCreateModal(true)
   }
-  const onChangeActive = (a: boolean) => {
-    console.log('a', a)
+
+  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
+  const [changeStatusPayload, setChangeStatusPayload] = useState(null)
+  const onClickSwitch = (a: boolean, rec: any) => {
+    setChangeStatusPayload(rec)
+    setShowChangeStatusModal(true)
+  }
+
+  const handleChangeStatus = async () => {
+    const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
+    try {
+      return await updateStatus(reqBody, changeStatusPayload)
+    } catch (error) {
+      console.error(error)
+    }
+    return false
   }
 
   const tableProps = useSimpleTable({
     funcApi: getConfigCompanyList,
-    columns: columns(goToDetailPage, onChangeActive),
+    columns: columns(goToDetailPage, onClickSwitch),
     filters,
   })
 
@@ -62,6 +76,25 @@ export default function PageConfigurationSloc() {
           setSelectedRow(null)
           setShowCreateModal(false)
         }}
+      />
+
+      <Modal
+        title={'Confirm Submit'}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.status ? 'inactivate' : 'activate'
+        } this Company?`}
+        onOkSuccess={() => {
+          router.reload()
+        }}
+        successContent={(res: any) => `Config company has been successfully 
+          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
       />
     </>
   )

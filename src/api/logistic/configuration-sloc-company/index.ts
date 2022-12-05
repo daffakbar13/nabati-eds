@@ -13,51 +13,53 @@ const url = 'v1/configuration'
 
 const overrideBaseUrl = API_BASE_URL_2
 
-export const getConfigCompanyList = async (
+export const getConfigSlocCompanyList = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/list_company`,
+    subUrl: `${url}/list_sloc_company`,
     overrideBaseUrl,
     data: params,
   })
   return response.data
 }
 
-export const createConfigCompany = async (
+export const createConfigSlocCompany = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/create_company`,
+    subUrl: `${url}/create_sloc_company`,
     overrideBaseUrl,
     data: params,
   })
   return response.data
 }
 
-export const updateConfigCompany = async (
+export const updateConfigSlocCompany = async (
   params: any,
   companyId: string,
+  slocId: string,
   key: string = '1',
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/update_company/${companyId}/${key}`,
+    method: METHODS.PUT,
+    subUrl: `${url}/update_sloc_company/${companyId}/${key}/${slocId}`,
     overrideBaseUrl,
     data: params,
   })
   return response.data
 }
 
-export const getConfigCompanyDetail = async (
+export const getConfigSlocCompanyDetail = async (
   companyId: string,
+  slocId: string,
   key: string = '1',
 ): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${url}/detail_company/${companyId}/${key}`,
+    subUrl: `${url}/detail_sloc_company/${companyId}/${key}/${slocId}`,
     overrideBaseUrl,
 
   })
@@ -70,7 +72,7 @@ export const updateStatus = async (
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.PUT,
-    subUrl: `${url}/update_company/status/${options.company_id}/${options.key || '1'}`,
+    subUrl: `${url}/update_sloc_company/status/${options.company_id}/${options.key}/${options.sloc_id}`,
     overrideBaseUrl,
     data: params,
   })
