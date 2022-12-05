@@ -32,6 +32,14 @@ export default function useTable(props: useTableProps) {
   const [loading, setLoading] = React.useState(true)
   const [selected, setSelected] = React.useState([])
   const [hiddenColumns, setHiddenColumns] = React.useState([])
+
+  const oneSelected = selected.length === 1
+  const firstSelected = selected[0]
+  const description = {
+    text: oneSelected ? firstSelected : `${firstSelected}, +${selected.length - 1} more`,
+    content: <div style={{ textAlign: 'center' }}>{selected.join(', ')}</div>,
+  }
+
   const isHaveCheckbox = (key: string) =>
     haveCheckbox !== 'All' && !haveCheckbox.member.includes(key)
 
@@ -114,6 +122,25 @@ export default function useTable(props: useTableProps) {
     ...props.columns,
     { title: <HideShowColumns />, fixed: 'right', width: 50 },
   ])
+
+  const tableProps = {
+    scroll: { x: 'max-content', y: 600 },
+    loading,
+    columns,
+    dataSource: data,
+    showSorterTooltip: false,
+    rowSelection,
+  }
+
+  const paginationProps = {
+    defaultPageSize: 20,
+    pageSizeOptions: [20, 50, 100],
+    total,
+    totalPage,
+    onChange: (page, limit) => {
+      handlePagination(page, limit)
+    },
+  }
 
   React.useEffect(() => {
     if (haveCheckbox) {
@@ -215,5 +242,17 @@ export default function useTable(props: useTableProps) {
      * func for change selected of rows
      */
     handleSelected,
+    /**
+     * description of selected table
+     */
+    description,
+    /**
+     * props for assign to table props
+     */
+    tableProps,
+    /**
+     * props for assign to pagination props
+     */
+    paginationProps,
   }
 }

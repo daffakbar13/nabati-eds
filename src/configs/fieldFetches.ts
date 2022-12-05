@@ -80,36 +80,42 @@ export function fieldShipToCustomer(search: string) {
                 })))
 }
 
-export function fieldSalesOrg(customer_id: string) {
+export function fieldSalesOrg(search: string) {
     return getCustomerByFilter({
         branch_id: '',
-        customer_id,
+        customer_id: '',
         sales_org_id: '',
         salesman_id: '',
     })
         .then((result) =>
             result.data
+                .filter(({ sales_org_id, sales_org_name }) => sales_org_id.toLowerCase().includes(search.toLowerCase())
+                    || sales_org_name.toLowerCase().includes(search.toLowerCase()))
                 .splice(0, 1)
-                .map(({ sales_org_id, sales_org_name }) => ({
+                .map(({ sales_org_id, sales_org_name, branch_id, branch_name }) => ({
                     label: [sales_org_id, sales_org_name].join(' - '),
                     value: [sales_org_id, sales_org_name].join(' - '),
+                    key: [branch_id, branch_name].join(' - '),
                 })))
 }
 
-export function fieldBranch(payload: getCustomerByFilterProps) {
-    return getCustomerByFilter(payload)
-        .then((res) => res.data)
-    // return getBranch()
-    //     .then((result) =>
-    //         result.data
-    //             .filter(({ id, name }) =>
-    //                 id.toLowerCase().includes(search.toLowerCase())
-    //                 || name.toLowerCase().includes(search.toLowerCase()))
-    //             .splice(0, 10)
-    //             .map(({ id, name }) => ({
-    //                 label: [id, name].join(' - '),
-    //                 value: id,
-    //             })))
+export function fieldBranch(search: string) {
+    return getCustomerByFilter({
+        branch_id: '',
+        customer_id: '',
+        sales_org_id: '',
+        salesman_id: '',
+    })
+        .then((result) =>
+            result.data
+                .filter(({ branch_id, branch_name }) => branch_id.toLowerCase().includes(search.toLowerCase())
+                    || branch_name.toLowerCase().includes(search.toLowerCase()))
+                .splice(0, 1)
+                .map(({ sales_org_id, sales_org_name, branch_id, branch_name }) => ({
+                    label: [branch_id, branch_name].join(' - '),
+                    value: [branch_id, branch_name].join(' - '),
+                    key: [sales_org_id, sales_org_name].join(' - '),
+                })))
 }
 
 export function fieldSalesman(search: string, branch: string) {

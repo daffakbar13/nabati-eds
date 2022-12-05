@@ -54,12 +54,10 @@ export const updateSalesOrder = async (payload: any, id: string) => {
 }
 
 export const multipleSubmitSalesOrder = async (order_id: string) => {
-  console.log('url', overrideBaseUrl);
-
   const response = await call({
     overrideBaseUrl,
     method: METHODS.POST,
-    subUrl: `v1/delivery-orders/${order_id}/submit`,
+    subUrl: `v1/delivery-orders/so/${order_id}/submit`,
   })
   return response.data
 }

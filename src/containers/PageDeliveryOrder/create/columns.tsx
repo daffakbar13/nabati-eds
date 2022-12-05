@@ -13,18 +13,15 @@ import { Input, InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { getDetailQuotation } from 'src/api/quotation'
 import { Popup } from 'src/components'
 import { Text, Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import { getPricingByCompany, getProductByCompany } from 'src/api/master-data'
 import { getDeliveryOrderDetail } from 'src/api/delivery-order'
 
-const splitString = (data: string) => data.split(' - ')[0]
-
-export const useTableAddItem = () => {
+export const useTableProduct = () => {
   const initialValue = {
     product_id: '',
     uom_id: '',
@@ -38,9 +35,9 @@ export const useTableAddItem = () => {
   const [baseAllProduct, setBaseAllProduct] = React.useState([])
   const [optionsProduct, setOptionsProduct] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
-  const [fetching, setFetching] = React.useState('')
+  const [fetching, setFetching] = React.useState<string>()
   const [pending, setPending] = React.useState(0)
-  const [showConfirm, setShowConfirm] = React.useState('')
+  const [showConfirm, setShowConfirm] = React.useState<string>()
   const [removedListProduct, setRemovedListProduct] = React.useState([])
   const [isLoading, setIsLoading] = React.useState(false)
   const router = useRouter()
@@ -82,11 +79,8 @@ export const useTableAddItem = () => {
   }
 
   const columns = [
-    CreateColumns(
-      '',
-      'action',
-      false,
-      (_, { product_id }, index) => (
+    addColumn({
+      render: (_, __, index) => (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <MinusCircleFilled
             style={{ color: 'red', margin: 'auto' }}
@@ -98,14 +92,13 @@ export const useTableAddItem = () => {
           />
         </div>
       ),
-      55,
-      true,
-    ),
-    CreateColumns(
-      'Item',
-      'product_id',
-      false,
-      (_, { product_name }, index) => (
+      width: 55,
+      fixed: true,
+    }),
+    addColumn({
+      title: 'Item',
+      dataIndex: 'product_id',
+      render: (_, { product_name }, index) => (
         <DebounceSelect
           type="select"
           value={product_name as any}
@@ -121,13 +114,12 @@ export const useTableAddItem = () => {
           }}
         />
       ),
-      550,
-    ),
-    CreateColumns(
-      'Uom',
-      'uom_id',
-      false,
-      (uom_id, __, index) => (
+      width: 550,
+    }),
+    addColumn({
+      title: 'Uom',
+      dataIndex: 'uom_id',
+      render: (uom_id, __, index) => (
         <DebounceSelect
           type="select"
           value={uom_id as any}
@@ -139,13 +131,12 @@ export const useTableAddItem = () => {
           }}
         />
       ),
-      150,
-    ),
-    CreateColumns(
-      'Quantity',
-      'order_qty',
-      false,
-      (order_qty, record, index) => (
+      width: 150,
+    }),
+    addColumn({
+      title: 'Quantity',
+      dataIndex: 'order_qty',
+      render: (order_qty, record, index) => (
         <InputNumber
           disabled={isNullProductId(index)}
           min={isNullProductId(index) ? '0' : '1'}
@@ -157,41 +148,41 @@ export const useTableAddItem = () => {
           style={styleInputNumber}
         />
       ),
-      130,
-    ),
-    CreateColumns(
-      'Based Price',
-      'price',
-      false,
-      (price) => <div style={styleDisabledInput}>{price?.toLocaleString()}</div>,
-      130,
-    ),
-    CreateColumns(
-      'Sub Total',
-      'sub_total',
-      false,
-      (sub_total) => <div style={styleDisabledInput}>{sub_total?.toLocaleString()}</div>,
-      130,
-    ),
-    CreateColumns('Remarks', 'remarks', false, (remarks, _, index) => (
-      <Input.TextArea
-        style={styleInputNumber}
-        rows={2}
-        autoSize={{ minRows: 2 }}
-        value={remarks}
-        onChange={(e) => {
-          handleChangeData('remarks', e.target.value, index)
-        }}
-      />
-    )),
+      width: 130,
+    }),
+    addColumn({
+      title: 'Based Price',
+      dataIndex: 'price',
+      render: (price) => <div style={styleDisabledInput}>{price?.toLocaleString()}</div>,
+      width: 130,
+    }),
+    addColumn({
+      title: 'Sub Total',
+      dataIndex: 'sub_total',
+      render: (sub_total) => <div style={styleDisabledInput}>{sub_total?.toLocaleString()}</div>,
+      width: 130,
+    }),
+    addColumn({
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      render: (remarks, _, index) => (
+        <Input.TextArea
+          style={styleInputNumber}
+          rows={2}
+          autoSize={{ minRows: 2 }}
+          value={remarks}
+          onChange={(e) => {
+            handleChangeData('remarks', e.target.value, index)
+          }}
+        />
+      ),
+    }),
   ]
 
   function ConfirmDelete() {
-    const isShow = showConfirm !== ''
-
     return (
       <>
-        {isShow && (
+        {showConfirm && (
           <Popup>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <Text
@@ -211,7 +202,7 @@ export const useTableAddItem = () => {
                 size="big"
                 variant="tertiary"
                 onClick={() => {
-                  setShowConfirm('')
+                  setShowConfirm(undefined)
                 }}
               >
                 No
@@ -221,7 +212,7 @@ export const useTableAddItem = () => {
                 size="big"
                 variant="primary"
                 onClick={() => {
-                  setShowConfirm('')
+                  setShowConfirm(undefined)
                   handleDeleteRows(parseInt(showConfirm))
                 }}
               >
@@ -284,7 +275,7 @@ export const useTableAddItem = () => {
           })
         }
       })
-      setFetching('')
+      setFetching(undefined)
     }
   }, [fetching])
 

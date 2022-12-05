@@ -1,19 +1,31 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { Button } from 'pink-lava-ui'
-import { PATH } from 'src/configs/menus';
 import React from 'react'
+import { Button } from 'pink-lava-ui'
+import { PATH } from 'src/configs/menus'
+import DateFormat from 'src/components/DateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { concatString } from 'src/utils/concatString'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+interface LinkedProps {
+  link: string
+  status: string
+  type: 'id' | 'action'
+}
+
+function Linked(props: LinkedProps) {
+  const { link, status, type } = props
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
       ? router.push(`${PATH.SALES}/delivery-order/edit/${link}`)
-      : router.push(`${PATH.SALES}/delivery-order/detail/${link}?status=${status}`)
+      : router.push({
+          pathname: `${PATH.SALES}/delivery-order/detail/${link}`,
+          query: { status },
+        })
   }
   const [hover, setHover] = React.useState(false)
 
@@ -44,42 +56,75 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
   )
 }
 
-export const TableDeliveryOrder = [
-  CreateColumns(
-    'Delivery Order ',
-    'delivery_order_id',
-    true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    170,
-    true,
-    'have-checkbox',
-  ),
-  CreateColumns('Order Type', 'order_type', false, undefined, 200),
-  CreateColumns('Order Date', 'order_date', false, undefined, 120),
-  CreateColumns('Sales Org.', 'sales_org_id', false, undefined, 110),
-  CreateColumns('Branch', 'branch_id', false, undefined, 90),
-  CreateColumns('Sold To Customer', 'sold_to_customer', false, undefined, 250),
-  CreateColumns('Ship To Customer', 'ship_to_customer', false, undefined, 250),
-  CreateColumns('Salesman', 'salesman_id', false, undefined, 360),
-  CreateColumns(
-    'Total Amount',
-    'total_amount',
-    false,
-    (total_amount) => parseInt(total_amount).toLocaleString(),
-    140,
-  ),
-  CreateColumns('Currency', 'currency_id', false, undefined, 100),
-  CreateColumns('Create From', 'create_from', false, undefined, 125),
-  CreateColumns(
-    'Availibility',
-    'availablity',
-    false,
-    (availablity) => <TaggedStatus status={availablity} />,
-    115,
-  ),
-  CreateColumns('Status', 'status_name', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Status Process', 'status_process', false, undefined, 190),
-  CreateColumns('Action', 'delivery_order_id', false, (link, record) => (
-    <Linked link={link} type="action" status={record.status_name} />
-  )),
+export const useColumnDeliveryOrder = [
+  addColumn({
+    title: 'Delivery Order',
+    dataIndex: 'delivery_order_id',
+    fixed: true,
+    render: (link: string, { status_name }: any) => (
+      <Linked link={link} type="id" status={status_name} />
+    ),
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Order Type',
+    dataIndex: 'order_type',
+  }),
+  addColumn({
+    title: 'Order Date',
+    dataIndex: 'order_date',
+  }),
+  addColumn({
+    title: 'Sales Org.',
+    dataIndex: 'sales_org_id',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+  }),
+  addColumn({
+    title: 'Sold To Customer',
+    dataIndex: 'sold_to_customer',
+  }),
+  addColumn({
+    title: 'Ship To Customer',
+    dataIndex: 'ship_to_customer',
+  }),
+  addColumn({
+    title: 'Salesman',
+    dataIndex: 'salesman_id',
+  }),
+  addColumn({
+    title: 'Total Amount',
+    dataIndex: 'total_amount',
+    render: (total_amount) => parseInt(total_amount).toLocaleString(),
+  }),
+  addColumn({
+    title: 'Currency',
+    dataIndex: 'currency_id',
+  }),
+  addColumn({
+    title: 'Create From',
+    dataIndex: 'create_from',
+  }),
+  addColumn({
+    title: 'Availibility',
+    dataIndex: 'availablity',
+    render: (availablity) => <TaggedStatus status={availablity} />,
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status_name',
+    render: (status_name) => <TaggedStatus status={status_name} />,
+  }),
+  addColumn({
+    title: 'Status Process',
+    dataIndex: 'status_process',
+    render: (status_process) => <TaggedStatus status={status_process || 'Not Implemented'} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'delivery_order_id',
+    render: (link, { status_name }) => <Linked link={link} type="action" status={status_name} />,
+  }),
 ]

@@ -1,17 +1,12 @@
 import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
-import DebounceSelect from 'src/components/DebounceSelect'
 import { Button, Text } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
-import { cancelBatchOrder } from 'src/api/quotation'
-import { fieldReason } from 'src/configs/fieldFetches'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { PATH } from 'src/configs/menus'
 
-interface ConfirmCancelProps {}
-
-export default function ConfirmCancel(props: ConfirmCancelProps) {
+export default function ConfirmCancel() {
   const router = useRouter()
 
   return (

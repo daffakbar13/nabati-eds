@@ -1,25 +1,23 @@
 import React from 'react'
+import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
 import { useTableProduct } from '../columns'
 import { ConfirmCancel, ConfirmSuccessSubmit } from './alerts'
 
-interface SectionConfirmProps {
-  newQuotation: string
-  draftQuotation: string
-  cancel: boolean
-  handleCancel: (cancel: boolean) => void
-  tableProduct: ReturnType<typeof useTableProduct>
-}
-
-export default function SectionConfirm(props: SectionConfirmProps) {
-  const { newQuotation, draftQuotation, cancel, handleCancel, tableProduct } = props
-
+export default function SectionConfirm() {
+  const pageCtx = useSalesQuotationCreateContext<typeof useTableProduct>()
   return (
-    <>
-      {(newQuotation || draftQuotation) && (
-        <ConfirmSuccessSubmit draftQuotation={draftQuotation} newQuotation={newQuotation} />
-      )}
-      {cancel && <ConfirmCancel handleCancel={handleCancel} />}
-      {<tableProduct.ConfirmDelete />}
-    </>
+    <pageCtx.getConsumer>
+      {({ state }) => {
+        const { newQuotation, draftQuotation, cancel, tableProduct } = state
+
+        return (
+          <>
+            {(newQuotation || draftQuotation) && <ConfirmSuccessSubmit />}
+            {cancel && <ConfirmCancel />}
+            {<tableProduct.ConfirmDelete />}
+          </>
+        )
+      }}
+    </pageCtx.getConsumer>
   )
 }

@@ -1,24 +1,15 @@
-import { useState } from 'react'
+import { Form } from 'antd'
 import moment from 'moment'
-import { Divider, Form } from 'antd'
 import { useRouter } from 'next/router'
+import { useState } from 'react'
 
-import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
-import { PATH } from 'src/configs/menus'
+import { Input, Modal, SelectMasterData, Text } from 'src/components'
 
-import {
-  createGoodReceipt,
-  getGoodReceiptByPo,
-  getSlocListByBranch,
-} from 'src/api/logistic/good-receipt'
-import { CommonSelectValue } from 'src/configs/commonTypes'
-
-import { columns } from './columns'
+import { createGoodReceipt } from 'src/api/logistic/good-receipt'
 
 const { Label, LabelRequired } = Text
 
-export default function CreateGoodsReceiptModal({ visible = false, close = () => {} }) {
+export default function CreateConfigurationCompany({ visible = false, close = () => {} }) {
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
   const [selectedTableData, setSelectedTableData] = useState([])
@@ -115,26 +106,12 @@ export default function CreateGoodsReceiptModal({ visible = false, close = () =>
   )
 
   return (
-    <>
-      <Modal
-        open={visible}
-        onOk={() => {}}
-        onCancel={close}
-        title="Create Config Company"
-        content={content}
-      />
-
-      {/* <Modal
-        open={showSubmitModal}
-        onOk={handleCreate}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${res.data}#2`)}
-        onCancel={() => setShowSubmitModal(false)}
-        title="Confirm Submit"
-        content="Are you sure want Submit Goods Receipt?"
-        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
-        successOkText="Print"
-        successCancelText="Close"
-      /> */}
-    </>
+    <Modal
+      open={visible}
+      onOk={() => {}}
+      onCancel={close}
+      title="Create Config Company"
+      content={content}
+    />
   )
 }

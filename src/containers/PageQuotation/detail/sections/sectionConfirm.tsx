@@ -1,21 +1,21 @@
 import React from 'react'
+import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
 import { ConfirmCancel, ConfirmSuccessCancel } from './alerts'
 
-interface SectionConfirmProps {
-  showConfirm: string
-  handleShowConfirm: (confirm: string) => void
-  handleProcess: (process: string) => void
-}
-
-export default function SectionConfirm(props: SectionConfirmProps) {
-  const { showConfirm, handleProcess, handleShowConfirm } = props
+export default function SectionConfirm() {
+  const pageCtx = useSalesQuotationDetailContext()
 
   return (
-    <>
-      {showConfirm === 'cancel' && (
-        <ConfirmCancel handleProcess={handleProcess} handleShowConfirm={handleShowConfirm} />
-      )}
-      {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
-    </>
+    <pageCtx.getConsumer>
+      {({ state }) => {
+        const { confirm } = state
+        return (
+          <>
+            {confirm === 'cancel' && <ConfirmCancel />}
+            {confirm === 'success-cancel' && <ConfirmSuccessCancel />}
+          </>
+        )
+      }}
+    </pageCtx.getConsumer>
   )
 }
