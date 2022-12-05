@@ -152,8 +152,8 @@ export default function SalesQuotationCreateProvider(
       await getDocTypeByCategory('B')
         .then((result) =>
           result.data.map(({ id, name }) => ({
-            label: [id, name.split('-').join(' - ')].join(' - '),
-            value: [id, name.split('-').join(' - ')].join(' - '),
+            label: concatString(id, name),
+            value: concatString(id, name),
           })),
         )
         .then((data) => {

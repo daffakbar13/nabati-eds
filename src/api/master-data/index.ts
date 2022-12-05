@@ -285,7 +285,7 @@ export const getDocFlow = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl.getDocFlow}//${document_id}`,
+    subUrl: `${subUrl.getDocFlow}/-/${document_id}`,
   })
 
   return response.data

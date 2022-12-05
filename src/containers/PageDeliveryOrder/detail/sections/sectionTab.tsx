@@ -41,7 +41,7 @@ export default function SectionTab(props: SectionTabProps) {
       {hasData && (
         <>
           {currentTab === '1' && <DeliveryOrder data={data} />}
-          {currentTab === '2' && <DocumentFlow data={data} />}
+          {currentTab === '2' && <TabDocumentFlow document_id={router.query.id as string} />}
           {currentTab === '3' && <CustomerInfo data={data} />}
           {currentTab === '4' && <SalesmanInfo data={data} />}
         </>
