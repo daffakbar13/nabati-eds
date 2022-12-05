@@ -28,7 +28,7 @@ export default function FreezeSlocModal({ isListFreezed, visible = false, close 
     const values = await form.getFieldsValue(true)
     const reqBody: any = {
       id: values.sloc.value,
-      is_freeze: isListFreezed ? 1 : 0,
+      is_freeze: isListFreezed ? 0 : 1,
     }
 
     try {
@@ -78,7 +78,9 @@ export default function FreezeSlocModal({ isListFreezed, visible = false, close 
         </Button>
         <Button size="big" variant="primary" onClick={onClickSubmit}>
           {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
-          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>Freeze</span>
+          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>
+            {isListFreezed ? 'Unfreeze' : 'Freeze'}
+          </span>
         </Button>
       </div>
     </Form>

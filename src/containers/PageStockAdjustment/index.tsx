@@ -114,6 +114,7 @@ export default function PageStockAdjustment() {
         <div
           key={i.id}
           style={{
+            marginBottom: 10,
             color: '#B78101',
             background: '#FFFBDF',
             borderRadius: 8,
@@ -123,11 +124,10 @@ export default function PageStockAdjustment() {
           }}
         >
           <ExclamationBrownIc />
-          <p>{`Branch ${i.branch_id}-${i.branch_id}, SLoc ${i.id} ${i.name} is being frezee.`}</p>
+          <p>{`Branch ${i.branch_id}-${i.branch_name}, SLoc ${i.id} ${i.name} is being frezee.`}</p>
         </div>
       ))}
 
-      <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...tableProps} />
@@ -135,7 +135,7 @@ export default function PageStockAdjustment() {
       </Card>
 
       <FreezeSlocModal
-        isListFreezed={freezeList}
+        isListFreezed={freezeList.length > 0}
         visible={freezeModal}
         close={() => setFreezeModal(false)}
       />
