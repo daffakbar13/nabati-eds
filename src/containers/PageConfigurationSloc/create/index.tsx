@@ -1,86 +1,90 @@
-import { useState } from 'react'
-import moment from 'moment'
-import { Divider, Form, Spin } from 'antd'
+import { Spin } from 'antd'
 import { useRouter } from 'next/router'
-
-import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
-import { PATH } from 'src/configs/menus'
-
-import {
-  createGoodReceipt,
-  getGoodReceiptByPo,
-  getSlocListByBranch,
-} from 'src/api/logistic/good-receipt'
-import { CommonSelectValue } from 'src/configs/commonTypes'
-
+import { useState } from 'react'
+import { Button, Table } from 'pink-lava-ui'
+import { Modal, Text } from 'src/components'
+import { createConfigSloc } from 'src/api/logistic/configuration-sloc'
 import { columns } from './columns'
-
 import SlocForm from './slocForm'
 
-const { Label, LabelRequired } = Text
-
-export default function CreateSlocModal({ visible = false, close = () => {} }) {
-  const [form] = Form.useForm()
-  const [headerData, setHeaderData] = useState(null)
-  const [selectedTableData, setSelectedTableData] = useState([])
-  const [disableSomeFields, setDisableSomeFields] = useState(false)
+export default function CreateSlocModal({ visible = false, close = () => {}, payload }) {
+  const [tableData, setTableData] = useState([])
   const [loading, setLoading] = useState(false)
-
-  // Sloc options for table
-  const [slocOptions, setSlocOptions] = useState<[]>([])
-
-  // Modal
-  const [showSubmitModal, setShowSubmitModal] = useState(false)
-
+  const isOnEditMode = !!payload
   const router = useRouter()
 
-  const onClickSubmit = async () => {
-    setLoading(true)
-    const values = await form.validateFields()
-    setHeaderData(values)
-    setShowSubmitModal(true)
-    setLoading(false)
+  // Modal
+  const [showConfirmModal, setConfirmModal] = useState(false)
+
+  const handleSubmit = async () => {
+    const reqBody: any = {
+      sloc_list: tableData.map((row) => ({
+        branch_id: row.branch_id,
+        sales_org: row.sales_org,
+        sloc_id: row.sloc_id,
+        sloc_name: row.sloc_name,
+        sloc_type: row.sloc_type,
+      })),
+    }
+    try {
+      setLoading(true)
+      const res = await createConfigSloc(reqBody)
+      setLoading(false)
+      return res
+    } catch (error) {
+      setLoading(false)
+      console.error(error)
+      setLoading(false)
+    }
+
+    return false
   }
 
-  const handleCreate = async () => {
-    const payload: any = {
-      po_number: headerData?.po_number?.value,
-      delivery_number: headerData?.delivery_number,
-      document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
-      posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      remarks: headerData.remark,
-      vendor: headerData.vendor.value,
-      branch: headerData.branch.value,
-      delivery_note: headerData.delivery_note,
-      bill_of_lading: headerData.bill_of_lading,
-      items: selectedTableData,
-    }
-    console.log('payload', payload)
-    const res = await createGoodReceipt(payload)
+  const handleAdd = (newRow: any) => {
+    setTableData([newRow, ...tableData])
+  }
 
-    // console.log('res', res)
-    // console.log('headerData', headerData)
-    return res
+  const deleteRow = (index: number) => {
+    setTableData([...tableData].filter((row, ind) => ind !== index))
+  }
+
+  const onChangeSlocType = (value: any, index: number) => {
+    setTableData(
+      tableData.map((row, i) => {
+        if (i === index) return { ...row, sloc_type: value }
+        return row
+      }),
+    )
+  }
+
+  const handleClose = () => {
+    setTableData([])
+    close()
   }
 
   const content = (
     <div>
-      <SlocForm />
-
-      {/* Table Here ... */}
-      <Table style={{ marginTop: 20 }} columns={columns()} />
-
+      <SlocForm handleAdd={handleAdd} disableSomeFields={tableData.length > 0} />
+      <Table
+        data={tableData}
+        style={{ marginTop: 20 }}
+        columns={columns(onChangeSlocType, deleteRow)}
+      />
       <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
         <Button
           size="big"
           style={{ marginLeft: 'auto', width: 144 }}
           variant="tertiary"
-          onClick={close}
+          onClick={handleClose}
         >
           Cancel
         </Button>
-        <Button size="big" style={{ width: 144 }} variant="primary" onClick={() => {}}>
+        <Button
+          size="big"
+          style={{ width: 144 }}
+          variant="primary"
+          onClick={() => setConfirmModal(true)}
+        >
           {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
           <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>Submit</span>
         </Button>
@@ -93,24 +97,32 @@ export default function CreateSlocModal({ visible = false, close = () => {} }) {
       <Modal
         open={visible}
         onOk={() => {}}
-        onCancel={close}
+        onCancel={handleClose}
         title="Create Sloc"
         content={content}
         width={1132}
         footer={null}
       />
 
-      {/* <Modal
-        open={showSubmitModal}
-        onOk={handleCreate}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${res.data}#2`)}
-        onCancel={() => setShowSubmitModal(false)}
-        title="Confirm Submit"
-        content="Are you sure want Submit Goods Receipt?"
-        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
-        successOkText="Print"
-        successCancelText="Close"
-      /> */}
+      <Modal
+        title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
+        open={showConfirmModal}
+        onOk={handleSubmit}
+        onCancel={() => {
+          setConfirmModal(false)
+        }}
+        content="Are you sure want to create sloc?"
+        loading={loading}
+        onOkSuccess={() => {
+          handleClose()
+          router.reload()
+        }}
+        successContent={(res: any) => (
+          <>Sloc has been successfully {isOnEditMode ? 'Updated' : 'created'}</>
+        )}
+        successOkText="OK"
+        width={432}
+      />
     </>
   )
 }
