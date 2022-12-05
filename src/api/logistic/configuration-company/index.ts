@@ -9,81 +9,70 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { StockRealTime } from './types'
 
-const url = 'v1/stock-adjustment'
+const url = 'v1/configuration'
 
 const overrideBaseUrl = API_BASE_URL_2
 
-export const getListStockAdjustment = async (
+export const getConfigCompanyList = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/list`,
+    subUrl: `${url}/list_company`,
     overrideBaseUrl,
     data: params,
   })
   return response.data
 }
 
-export const getDetailStockAdjustment = async (
-  id: string,
+export const createConfigCompany = async (
   params: CommonListParams = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/create_company`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const updateConfigCompany = async (
+  params: any,
+  companyId: string,
+  key: string = '1',
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/update_company/${companyId}/${key}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getConfigCompanyDetail = async (
+  companyId: string,
+  key: string = '1',
 ): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${url}/${id}/detail`,
+    subUrl: `${url}/detail_company/${companyId}/${key}`,
     overrideBaseUrl,
-    data: { ...params, doc_type: 'WA' },
+
   })
   return response.data
 }
 
-export const createStockAdjustment = async (
-  params: CommonListParams = {},
+export const updateStatus = async (
+  params: any,
+  options: any,
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}`,
+    method: METHODS.PUT,
+    subUrl: `${url}/update_company/status/${options.company_id}/${options.key || '1'}`,
     overrideBaseUrl,
     data: params,
-  })
-  return response.data
-}
-
-export const updateStatusStockAdjustment = async (
-  docNumber: string,
-  params: any = {},
-): Promise<CommonListResponse<StockRealTime>> => {
-  const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/${docNumber}/update_status`,
-    overrideBaseUrl,
-    data: params,
-  })
-  return response.data
-}
-
-export const checkIsFreezeList = async (
-  params: CommonListParams = {},
-): Promise<CommonDetailResponse<any>> => {
-  const response = await call({
-    method: METHODS.GET,
-    subUrl: 'v1/sloc/check/freeze',
-    overrideBaseUrl,
-    data: { ...params },
-  })
-  return response.data
-}
-
-export const freezeSlocIdByBranchId = async (
-  params: CommonListParams,
-  branchId: string,
-): Promise<CommonListResponse<any>> => {
-  const response = await call({
-    method: METHODS.POST,
-    subUrl: `v1/sloc/edit/${branchId}`,
-    overrideBaseUrl,
-    data: { ...params },
   })
   return response.data
 }

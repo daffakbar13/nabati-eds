@@ -19,6 +19,7 @@ interface Props {
   successCancelText?: string
   width?: number | string
   footer?: any
+  loading?: boolean
 }
 
 const ModalCustomize = ({
@@ -35,6 +36,7 @@ const ModalCustomize = ({
   cancelText = 'NO',
   successOkText = 'OK',
   successCancelText,
+  loading: parentLoading,
   ...props
 }: Props) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -63,13 +65,27 @@ const ModalCustomize = ({
   }
 
   const footerComponent = (
-    <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+    <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
       <Button size="big" style={{ flexGrow: 1 }} variant="tertiary" onClick={close}>
         {cancelText}
       </Button>
-      <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={handleOk}>
-        {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
-        <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>{okText}</span>
+      <Button
+        size="big"
+        variant="primary"
+        onClick={handleOk}
+        style={{ flexGrow: 1, cursor: loading || parentLoading ? 'not-allowed' : 'pointer' }}
+      >
+        {(loading || parentLoading) && (
+          <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />
+        )}
+        <span
+          style={{
+            color: loading || parentLoading ? '#fff' : 'unset',
+            // color: loading || parentLoading ? 'white' : 'unset',
+          }}
+        >
+          {okText}
+        </span>
       </Button>
     </div>
   )
@@ -100,10 +116,21 @@ const ModalCustomize = ({
         ) : null}
         {typeof content === 'object' ? <>{content}</> : null}
       </Modal>
+
       <SuccessModal
-        onCancel={() => setShowSuccessModal(false)}
+        onCancel={() => {
+          close()
+          setShowSuccessModal(false)
+        }}
         open={showSuccessModal}
-        onOk={() => (onOkSuccess ? onOkSuccess(onOkResponse) : setShowSuccessModal(false))}
+        onOk={() => {
+          if (onOkSuccess) {
+            onOkSuccess(onOkResponse)
+          }
+
+          close()
+          setShowSuccessModal(false)
+        }}
         title={typeof successTitle === 'function' ? successTitle(onOkResponse) : successTitle}
         content={
           typeof successContent === 'function' ? successContent(onOkResponse) : successContent

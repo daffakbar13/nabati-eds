@@ -33,6 +33,7 @@ export { default as ICUploadTemplate } from './upload-template.svg'
 export { default as ICSyncData } from './sync-data.svg'
 export { default as ExpandMinusIc } from './expand-icon-minus.svg'
 export { default as ExpandPlusIc } from './expand-icon-plus.svg'
+export { default as ExclamationBrownIc } from './exclamation-brown.svg'
 
 // Filter Icon
 export { default as ICFilterAddFolder } from './Filter-addFolder.svg'

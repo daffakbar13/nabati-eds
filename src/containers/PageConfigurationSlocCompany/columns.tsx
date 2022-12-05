@@ -4,7 +4,10 @@ import { Button, Switch } from 'pink-lava-ui'
 import { Tag } from 'antd'
 import Link from 'src/components/Link'
 
-export const columns = (goToDetail: (id: string) => {}, onChangeActive: (a: boolean) => void) => [
+export const columns = (
+  goToDetail: (rec: any) => void,
+  onClickSwitch: (a: boolean, rec: any) => void,
+) => [
   CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   // CreateColumns('Company ID', 'company_id', true),
   CreateColumns(
@@ -31,8 +34,14 @@ export const columns = (goToDetail: (id: string) => {}, onChangeActive: (a: bool
     200,
   ),
   CreateColumns('Description', 'description', true),
-  CreateColumns('Action', 'gr_number', false, (text) => (
-    <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
+  CreateColumns('Action', 'gr_number', false, (text, rec) => (
+    <Button
+      size="big"
+      variant="tertiary"
+      onClick={() => {
+        goToDetail(rec)
+      }}
+    >
       View Detail
     </Button>
   )),
@@ -40,11 +49,11 @@ export const columns = (goToDetail: (id: string) => {}, onChangeActive: (a: bool
   // CreateColumns('Value', 'company_id', true),
   CreateColumns(
     'Active/Inactive',
-    '-',
+    'status',
     true,
-    (text: string) => (
+    (text: string, rec) => (
       <>
-        <Switch defaultChecked onChange={onChangeActive} />
+        <Switch checked={text} onChange={(bool: boolean) => onClickSwitch(bool, rec)} />
       </>
     ),
     180,

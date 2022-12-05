@@ -1,66 +1,112 @@
-import { useState } from 'react'
-import moment from 'moment'
-import { Divider, Form } from 'antd'
+import { Form } from 'antd'
 import { useRouter } from 'next/router'
-
-import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
-import { PATH } from 'src/configs/menus'
+import { useEffect, useState } from 'react'
+import { Input, Modal, SelectMasterData, Text } from 'src/components'
 
 import {
-  createGoodReceipt,
-  getGoodReceiptByPo,
-  getSlocListByBranch,
-} from 'src/api/logistic/good-receipt'
-import { CommonSelectValue } from 'src/configs/commonTypes'
-
-import { columns } from './columns'
+  createConfigSlocCompany,
+  getConfigSlocCompanyDetail,
+  updateConfigSlocCompany,
+} from 'src/api/logistic/configuration-sloc-company'
 
 const { Label, LabelRequired } = Text
 
-export default function CreateGoodsReceiptModal({ visible = false, close = () => {} }) {
-  const [form] = Form.useForm()
-  const [headerData, setHeaderData] = useState(null)
-  const [selectedTableData, setSelectedTableData] = useState([])
-  const [disableSomeFields, setDisableSomeFields] = useState(false)
+export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
-
-  // Sloc options for table
-  const [slocOptions, setSlocOptions] = useState<[]>([])
-
-  // Modal
-  const [showSubmitModal, setShowSubmitModal] = useState(false)
-
+  const [showConfirmModal, setConfirmModal] = useState(false)
   const router = useRouter()
+  const isOnEditMode = !!payload
+
+  const [form] = Form.useForm()
 
   const onClickSubmit = async () => {
-    setLoading(true)
-    const values = await form.validateFields()
-    setHeaderData(values)
-    setShowSubmitModal(true)
-    setLoading(false)
+    await form.validateFields()
+    setConfirmModal(true)
   }
 
-  const handleCreate = async () => {
-    const payload: any = {
-      po_number: headerData?.po_number?.value,
-      delivery_number: headerData?.delivery_number,
-      document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
-      posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      remarks: headerData.remark,
-      vendor: headerData.vendor.value,
-      branch: headerData.branch.value,
-      delivery_note: headerData.delivery_note,
-      bill_of_lading: headerData.bill_of_lading,
-      items: selectedTableData,
+  const doUpdate = async (reqBody: any) => {
+    try {
+      setLoading(true)
+      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      setLoading(false)
+      return res
+    } catch (error) {
+      console.error(error)
     }
-    console.log('payload', payload)
-    const res = await createGoodReceipt(payload)
-
-    // console.log('res', res)
-    // console.log('headerData', headerData)
-    return res
+    return false
   }
+
+  const doCreate = async (reqBody: any) => {
+    try {
+      setLoading(true)
+      const res = createConfigSlocCompany(reqBody)
+      setLoading(false)
+      return res
+    } catch (error) {
+      console.error(error)
+    }
+    return false
+  }
+
+  const handleSubmit = async () => {
+    const values = form.getFieldsValue(true)
+    const reqBody = {
+      company_id: values.company_id.value,
+      sloc_id: values.sloc_id.value,
+      key: values.key,
+      value: values.value,
+      description: values.description,
+      console_group: values.console_group,
+    }
+
+    if (!isOnEditMode) {
+      return doCreate(reqBody)
+    }
+
+    if (isOnEditMode) {
+      return doUpdate(reqBody)
+    }
+
+    return false
+  }
+
+  const handleCancel = () => {
+    setConfirmModal(false)
+    form.resetFields()
+    close()
+  }
+
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    console.log('payload', payload)
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        const res = await getConfigSlocCompanyDetail(
+          payload.company_id,
+          payload.sloc_id,
+          payload.key,
+        )
+        console.log('res', res)
+        form.setFieldsValue({
+          company_id: {
+            value: res?.data?.company_id,
+            label: `${res?.data?.company_id} - ${res?.data?.company_name}`,
+          },
+          sloc_id: { value: res?.data?.sloc_id },
+          description: res?.data?.description,
+          key: res?.data?.key,
+        })
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+        console.error(error)
+      }
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const content = (
     <Form
@@ -70,15 +116,16 @@ export default function CreateGoodsReceiptModal({ visible = false, close = () =>
       autoComplete="off"
       requiredMark={false}
       scrollToFirstError
+      preserve={false}
     >
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginTop: 40 }}>
         <Form.Item
-          name="company"
+          name="company_id"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Company</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />
+          <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
           name="key"
@@ -89,12 +136,12 @@ export default function CreateGoodsReceiptModal({ visible = false, close = () =>
           <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
         </Form.Item>
         <Form.Item
-          name="value"
+          name="sloc_id"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Sloc</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+          <SelectMasterData type="SLOC" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
           name="description"
@@ -110,24 +157,32 @@ export default function CreateGoodsReceiptModal({ visible = false, close = () =>
   return (
     <>
       <Modal
+        title={isOnEditMode ? 'View Detail Config Company' : 'Create Config Company'}
         open={visible}
-        onOk={() => {}}
-        onCancel={close}
-        title="Create Config Sloc Company"
+        onOk={onClickSubmit}
+        onCancel={handleCancel}
         content={content}
+        loading={loading}
+        cancelText="Cancel"
+        okText={isOnEditMode ? 'Update' : 'Submit'}
       />
-
-      {/* <Modal
-        open={showSubmitModal}
-        onOk={handleCreate}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${res.data}#2`)}
-        onCancel={() => setShowSubmitModal(false)}
-        title="Confirm Submit"
-        content="Are you sure want Submit Goods Receipt?"
-        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
-        successOkText="Print"
-        successCancelText="Close"
-      /> */}
+      <Modal
+        title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
+        open={showConfirmModal}
+        onOk={handleSubmit}
+        onCancel={() => {
+          setConfirmModal(false)
+        }}
+        content="Are you sure want to submit config sloc company?"
+        loading={loading}
+        onOkSuccess={() => {
+          handleCancel()
+          router.reload()
+        }}
+        successContent={(res: any) => 'Config sloc company has been successfully Updated'}
+        successOkText="OK"
+        width={432}
+      />
     </>
   )
 }
