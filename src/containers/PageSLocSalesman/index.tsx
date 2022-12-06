@@ -4,7 +4,7 @@ import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, SearchQueryParams, Modal } from 'src/components'
 import { getListSlocman, UpdateStatusSlocman } from 'src/api/logistic/sloc-salesman'
 import Pagination from 'src/components/Pagination'
-import { useTable } from 'src/hooks'
+import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
@@ -38,15 +38,11 @@ export default function PageConfigurationSloc() {
     return false
   }
 
-  const table = useTable({
+  const table = useSimpleTable({
     funcApi: getListSlocman,
     columns: columns(goToDetailPage, onClickSwitch),
+    filters,
   })
-  const hasData = table.total > 0
-
-  useEffect(() => {
-    table.handleFilter(filters)
-  }, [filters])
 
   useEffect(() => {
     if (router.query.search) {
@@ -66,7 +62,7 @@ export default function PageConfigurationSloc() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder='Search by Salesman ID' />
+            <SearchQueryParams placeholder="Search by Salesman ID" />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
@@ -78,26 +74,8 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowKey={'salesman_id'}
-          />
+          <Table scroll={{ x: 'max-content', y: 600 }} {...table} />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
-          />
-        )}
       </Card>
 
       <CreateModal

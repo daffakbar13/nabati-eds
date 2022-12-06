@@ -8,25 +8,30 @@ export const columns = (
   onClickDetail: (rec: any) => void,
   onClickSwitch: (a: boolean, rec: any) => void,
 ) => [
-  CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
+  CreateColumns('No', '', false, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   CreateColumns(
     'Salesman',
     'salesman_id',
     true,
-    (text: string, rec, index) => `${rec.salesman_id} - ${rec.salesman_name}`,
-    70,
+    (text: string, rec) => (
+      <>
+        {rec.salesman_id} -{rec.salesman_name}
+      </>
+    ),
+    200,
     'left',
   ),
+  CreateColumns('SLoc', 'sloc_id', false),
   CreateColumns(
     'Active/Inactive',
     'status',
-    true,
+    false,
     (status: string, rec) => (
       <>
         <Switch checked={status} onChange={(bool: boolean) => onClickSwitch(bool, rec)} />
       </>
     ),
-    180,
+    150,
   ),
   CreateColumns('Action', 'gr_number', false, (text, rec) => (
     <Button size="big" variant="tertiary" onClick={() => onClickDetail(rec)}>

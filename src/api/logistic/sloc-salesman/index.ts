@@ -35,6 +35,25 @@ export const createSlocman = async (payload: any) => {
   return response.data
 }
 
+export const getDetailSlocman = async (idSloc: string) => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/${idSloc}/detail`,
+    overrideBaseUrl,
+  })
+  return response.data
+}
+
+export const updateSlocman = async (id: string, sloc_id: string, payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/data/${id}/${sloc_id}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}
+
 export const UpdateStatusSlocman = async (id: string, payload: any) => {
   const response = await call({
     method: METHODS.POST,
