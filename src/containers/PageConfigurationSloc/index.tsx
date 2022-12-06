@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
 
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
+import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
+
 import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
@@ -12,17 +13,20 @@ import CreateModal from './create'
 
 export default function PageConfigurationSloc() {
   const [filters, setFilters] = useState([])
+  const [selectedRow, setSelectedRow] = useState(null)
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
 
-  const goToDetailPage = (id: string) => false
+  const goToDetailPage = (row: any) => {
+    setSelectedRow(row)
+  }
   const onChangeActive = (a: boolean) => {
     console.log('a', a)
   }
 
   const tableProps = useSimpleTable({
-    funcApi: getGoodReceiptList,
+    funcApi: getConfigSlocList,
     columns: columns(goToDetailPage, onChangeActive),
     filters,
   })
@@ -50,7 +54,11 @@ export default function PageConfigurationSloc() {
         </div>
       </Card>
 
-      <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
+      <CreateModal
+        visible={showCreateModal}
+        close={() => setShowCreateModal(false)}
+        payload={selectedRow}
+      />
     </>
   )
 }

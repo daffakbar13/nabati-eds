@@ -62,6 +62,7 @@ export default function SelectMasterData({ type, style = {}, onChange, ...props 
           borderRadius: 8,
           width: '100%',
           minHeight: 48,
+          overflow: 'hidden',
         }}
         onChange={onChange}
         {...props}

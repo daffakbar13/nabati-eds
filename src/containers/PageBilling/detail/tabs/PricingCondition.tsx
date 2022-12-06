@@ -24,7 +24,11 @@ export default function PricingCondition(props: PricingConditionProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TablePricingCondition} data={data.billing_item} />
+        <Table
+          scroll={{ x: 'max-content', y: 600 }}
+          columns={TablePricingCondition}
+          data={data.billing_item}
+        />
       </div>
       <Spacer size={30} />
       <Row>

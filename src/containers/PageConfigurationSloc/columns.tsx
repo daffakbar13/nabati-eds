@@ -5,16 +5,16 @@ import { Tag } from 'antd'
 import Link from 'src/components/Link'
 import { ExpandMinusIc, ExpandPlusIc } from 'src/assets'
 
-export const columns = (goToDetail: (id: string) => {}, onChangeActive: (a: boolean) => void) => [
+export const columns = (goToDetail: (a: any) => void, onChangeActive: (a: boolean) => void) => [
   CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   // CreateColumns('Company ID', 'company_id', true),
   CreateColumns(
     'Branch ',
-    'company_name',
+    'branch_id',
     true,
     (text, rec) => (
       <>
-        {text}-{rec.company_name}
+        {text} + {rec.branch_name}
       </>
     ),
     200,
@@ -30,33 +30,11 @@ export const columns = (goToDetail: (id: string) => {}, onChangeActive: (a: bool
     ),
     200,
   ),
-  CreateColumns(
-    'Company',
-    'company_name',
-    true,
-    (text, rec) => (
-      <>
-        {text}-{rec.company_name}
-      </>
-    ),
-    200,
-  ),
-  CreateColumns(
-    'Sloc ID',
-    'company_name',
-    true,
-    (text, rec) => (
-      <>
-        {text}-{rec.company_name}
-      </>
-    ),
-    200,
-  ),
-  CreateColumns('Sloc Function', 'description', true),
-  CreateColumns('Sloc Type', 'description', true),
-  CreateColumns('Description', 'description', true),
-  CreateColumns('Action', 'gr_number', false, (text) => (
-    <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
+  CreateColumns('Sloc ID', 'sloc_id', true),
+  CreateColumns('Sloc Function', 'sloc_function', true),
+  CreateColumns('Sloc Type', 'sloc_type', true),
+  CreateColumns('Action', 'gr_number', false, (text, rec) => (
+    <Button size="big" variant="tertiary" onClick={() => goToDetail(rec)}>
       View Detail
     </Button>
   )),

@@ -62,3 +62,28 @@ export const updateStatusStockAdjustment = async (
   })
   return response.data
 }
+
+export const checkIsFreezeList = async (
+  params: CommonListParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: 'v1/sloc/check/freeze',
+    overrideBaseUrl,
+    data: { ...params },
+  })
+  return response.data
+}
+
+export const freezeSlocIdByBranchId = async (
+  params: CommonListParams,
+  branchId: string,
+): Promise<CommonListResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `v1/sloc/edit/${branchId}`,
+    overrideBaseUrl,
+    data: { ...params },
+  })
+  return response.data
+}

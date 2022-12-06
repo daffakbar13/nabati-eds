@@ -150,7 +150,7 @@ export default function PageApprovalDetail() {
         </Row>
         <Divider />
         <div style={{ overflow: 'scroll' }}>
-          <Table columns={columns} data={data.items} />
+          <Table scroll={{ x: 'max-content', y: 600 }} columns={columns} data={data.items} />
         </div>
       </Card>
       {(reject || approve) && (

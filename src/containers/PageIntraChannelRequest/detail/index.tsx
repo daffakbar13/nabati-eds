@@ -168,7 +168,11 @@ export default function PageQuotationDetail() {
         </Row>
         <Divider />
         <div style={{ overflow: 'scroll' }}>
-          <Table columns={TableIntraChannelRequestDetail} data={data.items} />
+          <Table
+            scroll={{ x: 'max-content', y: 600 }}
+            columns={TableIntraChannelRequestDetail}
+            data={data.items}
+          />
         </div>
       </Card>
 

@@ -1,24 +1,17 @@
-import { Form, Divider, Spin } from 'antd'
-import moment from 'moment'
+import { Form, Spin } from 'antd'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import { Button } from 'pink-lava-ui'
+import { useState } from 'react'
 
-import { Input, Modal, SelectMasterData, Text } from 'src/components'
+import { Modal, SelectMasterData, Text } from 'src/components'
 
-import { createGoodReceipt } from 'src/api/logistic/good-receipt'
+import { freezeSlocIdByBranchId } from 'src/api/logistic/stock-adjustment'
 
 const { Label, LabelRequired } = Text
 
-export default function FreezeSlocModal({ visible = false, close = () => {} }) {
+export default function FreezeSlocModal({ isListFreezed, visible = false, close = () => {} }) {
   const [form] = Form.useForm()
-  const [headerData, setHeaderData] = useState(null)
-  const [selectedTableData, setSelectedTableData] = useState([])
-  const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  // Sloc options for table
-  const [slocOptions, setSlocOptions] = useState<[]>([])
 
   // Modal
   const [showSubmitModal, setShowSubmitModal] = useState(false)
@@ -26,19 +19,28 @@ export default function FreezeSlocModal({ visible = false, close = () => {} }) {
   const router = useRouter()
 
   const onClickSubmit = async () => {
-    setLoading(true)
-    const values = await form.validateFields()
-    setHeaderData(values)
+    console.log('here')
+    await form.validateFields()
     setShowSubmitModal(true)
-    setLoading(false)
   }
 
   const handleFreeze = async () => {
-    const payload: any = {
-      branch: headerData.branch.value,
-      sloc: headerData.sloc.value,
+    const values = await form.getFieldsValue(true)
+    const reqBody: any = {
+      id: values.sloc.value,
+      is_freeze: isListFreezed ? 0 : 1,
     }
-    console.log('payload', payload)
+
+    try {
+      setLoading(true)
+      const res = await freezeSlocIdByBranchId(reqBody, values.branch.value)
+      setLoading(false)
+      return res
+    } catch (error) {
+      setLoading(false)
+      console.error(error)
+    }
+    return false
   }
 
   const content = (
@@ -49,6 +51,7 @@ export default function FreezeSlocModal({ visible = false, close = () => {} }) {
       autoComplete="off"
       requiredMark={false}
       scrollToFirstError
+      preserve={false}
     >
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginTop: 40 }}>
         <Form.Item
@@ -57,7 +60,7 @@ export default function FreezeSlocModal({ visible = false, close = () => {} }) {
           label={<LabelRequired>Branch</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData disabled={disableSomeFields} type="PLANT" style={{ marginTop: -8 }} />
+          <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
           name="sloc"
@@ -65,7 +68,7 @@ export default function FreezeSlocModal({ visible = false, close = () => {} }) {
           label={<LabelRequired>Sloc</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData disabled={disableSomeFields} type="SLOC" style={{ marginTop: -8 }} />
+          <SelectMasterData type="SLOC" style={{ marginTop: -8 }} />
         </Form.Item>
       </div>
 
@@ -73,22 +76,45 @@ export default function FreezeSlocModal({ visible = false, close = () => {} }) {
         <Button size="big" variant="tertiary" onClick={() => {}}>
           Download Data
         </Button>
-        <Button size="big" variant="primary" onClick={() => {}}>
+        <Button size="big" variant="primary" onClick={onClickSubmit}>
           {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
-          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>Freeze</span>
+          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>
+            {isListFreezed ? 'Unfreeze' : 'Freeze'}
+          </span>
         </Button>
       </div>
     </Form>
   )
 
   return (
-    <Modal
-      open={visible}
-      onOk={() => {}}
-      onCancel={close}
-      title="Freeze Storeloc"
-      content={content}
-      footer={null}
-    />
+    <>
+      <Modal
+        open={visible}
+        onOk={onClickSubmit}
+        onCancel={close}
+        title={isListFreezed ? 'Unfreeze Storeloc' : 'Freeze Storeloc'}
+        content={content}
+        footer={null}
+      />
+
+      <Modal
+        title={'Confirm Freeze'}
+        open={showSubmitModal}
+        onOk={handleFreeze}
+        onCancel={() => {
+          setShowSubmitModal(false)
+        }}
+        content={`Are you sure want to ${isListFreezed ? 'unfreeze' : 'freeze'} branch?`}
+        onOkSuccess={() => {
+          setShowSubmitModal(false)
+          close()
+          router.reload()
+        }}
+        successContent={(res: any) => `Sloc has been successfully 
+          ${isListFreezed ? 'unfreeze' : 'freeze'}`}
+        successOkText="OK"
+        width={432}
+      />
+    </>
   )
 }

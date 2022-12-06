@@ -1,10 +1,9 @@
 import { useRouter } from 'next/router'
-import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
-import { PATH } from 'src/configs/menus'
+import { Card, SearchQueryParams, Modal } from 'src/components'
 
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
+import { getConfigCompanyList, updateStatus } from 'src/api/logistic/configuration-company'
 import { useSimpleTable } from 'src/hooks'
 import { columns } from './columns'
 
@@ -15,17 +14,37 @@ export default function PageConfigurationSloc() {
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [selectedRow, setSelectedRow] = useState(null)
 
-  const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${id}`)
-  const onChangeActive = (a: boolean) => {
-    console.log('a', a)
+  const goToDetailPage = (row: any) => {
+    setSelectedRow(row)
+    setShowCreateModal(true)
+  }
+
+  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
+  const [changeStatusPayload, setChangeStatusPayload] = useState(null)
+  const onClickSwitch = (a: boolean, rec: any) => {
+    setChangeStatusPayload(rec)
+    setShowChangeStatusModal(true)
+  }
+
+  const handleChangeStatus = async () => {
+    const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
+    try {
+      return await updateStatus(reqBody, changeStatusPayload)
+    } catch (error) {
+      console.error(error)
+    }
+    return false
   }
 
   const tableProps = useSimpleTable({
-    funcApi: getGoodReceiptList,
-    columns: columns(goToDetailPage, onChangeActive),
+    funcApi: getConfigCompanyList,
+    columns: columns(goToDetailPage, onClickSwitch),
     filters,
   })
+
+  console.log('selectedRow', selectedRow)
 
   return (
     <>
@@ -50,7 +69,33 @@ export default function PageConfigurationSloc() {
         </div>
       </Card>
 
-      <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
+      <CreateModal
+        visible={showCreateModal}
+        payload={selectedRow || null}
+        close={() => {
+          setSelectedRow(null)
+          setShowCreateModal(false)
+        }}
+      />
+
+      <Modal
+        title={'Confirm Submit'}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.status ? 'inactivate' : 'activate'
+        } this Company?`}
+        onOkSuccess={() => {
+          router.reload()
+        }}
+        successContent={(res: any) => `Config company has been successfully 
+          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
+      />
     </>
   )
 }

@@ -93,8 +93,8 @@ export default function DetailGR() {
         open={cancelProcessModal}
         onOk={handleCancelProcess}
         onCancel={() => setCancelProcessModal(false)}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt`)}
         content="Are you sure want to cancel process? Change you made so far will not saved"
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/goods-receipt`)}
         successContent={(res: any) => 'Cancel Process Success'}
         successOkText="OK"
       />

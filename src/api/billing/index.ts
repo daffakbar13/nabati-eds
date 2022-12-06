@@ -43,3 +43,14 @@ export const createBilling = async (payload: any) => {
   })
   return response.data
 }
+
+export const UpdateBilling = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/update`,
+    data: payload,
+  })
+  return response.data
+}
+

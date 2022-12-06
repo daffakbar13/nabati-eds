@@ -25,18 +25,15 @@ export default function TransferToGSDetail(props: propsDetail) {
       'Movement Type',
       `${props.data.movement_type_id} - ${props.data.movement_type_name}`,
     ),
+    createDataList('Branch', `${props.data.branch_id} - ${props.data.branch_name}`),
     createDataList(
-      'Branch',
-      `${props.data.branch_id} - ${props.data.branch_name}`,
+      'Supplying Sloc',
+      `${props.data.supplaying_sloc_id} - ${props.data.supplaying_sloc_name}`,
     ),
     createDataList(
-        'Supplying Sloc',
-        `${props.data.supplaying_sloc_id} - ${props.data.supplaying_sloc_name}`,
-      ),
-      createDataList(
-        'Receiving Sloc',
-        `${props.data.receiving_sloc_id} - ${props.data.receiving_sloc_name}`,
-      ),
+      'Receiving Sloc',
+      `${props.data.receiving_sloc_id} - ${props.data.receiving_sloc_name}`,
+    ),
 
     //row 2
     createDataList('Document Date', dateFormat(props.data.document_date, format)),
@@ -99,7 +96,7 @@ export default function TransferToGSDetail(props: propsDetail) {
         </Row>
         <Divider />
         <div style={{ overflow: 'scroll' }}>
-          <Table columns={column} data={props.data.item} />
+          <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={props.data.item} />
         </div>
       </Card>
     </>
