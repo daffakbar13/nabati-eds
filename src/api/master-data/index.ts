@@ -11,6 +11,7 @@ import { getCustomerByFilterProps } from './types'
 // import { QuotationItem } from './types'
 
 const subUrl = {
+  getCompany: 'v1/master/get-company',
   getCustomerByCompany: 'v1/master/get-customer/PP01',
   getCustomerList: 'v1/master/list/customer',
   getSalesOrgByCompany: 'v1/master/get-sales-org/PP01',
@@ -30,6 +31,9 @@ const subUrl = {
   getDriverByCompanyId: 'v1/master/get-driver/PP01',
   getVehicleByCompany: 'v1/master/get-vehicle/PP01',
   getDocFlow: 'v1/master/get-doc-flow/PP01',
+  getSalesOrgByCompanyDynamic: 'v1/master/get-sales-org',
+  getCustomerGroupCompanyDynamic: 'v1/master/get-customer-group',
+  getConfigSlocCompanyDynamic: 'v1/master/get-config-sloc',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 const BaseUrl2 = 'https://dist-system.nabatisnack.co.id:3002/'
@@ -286,6 +290,47 @@ export const getDocFlow = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getDocFlow}/-/${document_id}`,
+  })
+
+  return response.data
+}
+
+export const getCompanyList = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getCompany,
+  })
+
+  return response.data
+}
+
+export const getSalesOrgByCompanyDynamic = async (company_id: string): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getSalesOrgByCompanyDynamic}/${company_id}`,
+  })
+
+  return response.data
+}
+
+
+export const getCustomerGroupCompanyDynamic = async (company_id: string): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getCustomerGroupCompanyDynamic}/${company_id}`,
+  })
+
+  return response.data
+}
+
+export const getConfigSlocCompanyDynamic = async (company_id: string): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getConfigSlocCompanyDynamic}/${company_id}`,
   })
 
   return response.data
