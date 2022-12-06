@@ -342,7 +342,7 @@ export function fieldSalesOrganization(search = '') {
                     id.toLowerCase().includes(search.toLowerCase()))
                 .splice(0, 10)
                 .map(({ id, name }) => ({
-                    label: id,
+                    label: [id, name].join(' - '),
                     value: id,
                 })))
 }

@@ -127,10 +127,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }, [isOnEditMode, payload])
 
   useEffect(() => {
-    console.log('data form : ', dataForm)
-  }, [dataForm])
-
-  useEffect(() => {
     fieldSlocFromBranchCompanyDynamic(dataForm?.company_id || 'PP01', 'ZOP3', 'P104').then(
       (response) => {
         setAllScloc(response)
