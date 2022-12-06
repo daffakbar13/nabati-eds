@@ -4,3 +4,10 @@ export type ActionType =
     | 'SHOW_CONFIRM'
     | 'UNSHOW_CONFIRM'
     | 'CHANGE_SUBMITTED_QUOTATION'
+
+interface Action {
+    'RUN_PROCESS': string
+    'STOP_PROCESS': string
+}
+
+type ActionTypess = keyof Action

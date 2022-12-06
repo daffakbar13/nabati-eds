@@ -12,6 +12,7 @@ import { fakeApi } from 'src/api/fakeApi'
 import CreateColumns from 'src/utils/createColumns'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { MinusCircleFilled } from '@ant-design/icons'
+import dateFormat from 'src/utils/dateFormat'
 
 export const columns = () => [
   {
@@ -83,7 +84,13 @@ export const ColumnsDeliveryOrder = [
     true,
     'have-checkbox',
   ),
-  CreateColumns('Create Date', 'order_date', false, undefined, 120),
+  CreateColumns(
+    'Create Date',
+    'order_date',
+    false,
+    (date) => dateFormat(date, 'DD MMMM YYYY'),
+    120,
+  ),
   CreateColumns('Order Type', 'order_type', false, undefined, 200),
   CreateColumns('Ship To Customer', 'ship_to_customer', false, undefined, 250),
   CreateColumns('Salesman', 'salesman_id', false, undefined, 200),
