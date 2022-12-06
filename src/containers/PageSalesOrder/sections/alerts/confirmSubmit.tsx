@@ -56,7 +56,7 @@ export default function ConfirmSubmit(props: ConfirmSubmitProps) {
                 .then((response) => response.data)
                 .then((data) => {
                   handleShowConfirm('success-submit')
-                  handleSubmittedSalesOrder((old) => [...old, data.results.id])
+                  handleSubmittedSalesOrder((old) => [...old, data.id])
                   handleProcess(undefined)
                 })
                 .catch(() => handleProcess(undefined))

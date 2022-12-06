@@ -30,6 +30,9 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-family: Nunito Sans;
+  scrollbar-width: none !important; /* Firefox 64 */
+  -ms-overflow-style: none;  /* Disable scrollbar IE 10+ */
+  -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 /*
     6. Improve media defaults
@@ -96,6 +99,11 @@ p {
 /* END - ANTD SELECT */
 
 ::-webkit-scrollbar {
+  display: none;
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+::-moz-scrollbar {
   width: 0; /* Remove scrollbar space */
   background: transparent; /* Optional: just make scrollbar invisible */
 }

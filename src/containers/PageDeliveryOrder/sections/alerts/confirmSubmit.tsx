@@ -30,7 +30,7 @@ export default function ConfirmSubmit(props: ConfirmSubmitProps) {
         Confirm Submit
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
-        Are you sure to submit Sales Order
+        Are you sure to submit Delivery Order
         <Typography.Text>
           {oneSelected && ` ${selectedDeliveryOrder.text}`}
           {!oneSelected && (
@@ -57,13 +57,13 @@ export default function ConfirmSubmit(props: ConfirmSubmitProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            handleProcess('Wait for submitting Sales Order')
+            handleProcess('Wait for submitting Delivery Order')
             table.selected.forEach((id) => {
               manualSubmitDeliveryOrder(id)
                 .then((response) => response.data)
                 .then((data) => {
                   handleShowConfirm('success-submit')
-                  handleSubmittedDeliveryOrder((old) => [...old, data.results.id])
+                  handleSubmittedDeliveryOrder((old) => [...old, data.id])
                   handleProcess(undefined)
                 })
                 .catch(() => handleProcess(undefined))

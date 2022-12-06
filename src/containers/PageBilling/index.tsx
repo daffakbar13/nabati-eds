@@ -71,16 +71,7 @@ export default function PageBilling(props: PageBillingProps) {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
-          <Table
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'shipment_id'}
-            pagination={false}
-            onChange={(_, __, sorter) => console.log(sorter)}
-          />
+          <Table {...table.tableProps} rowKey={'shipment_id'} />
           {hasData && (
             <Pagination
               defaultPageSize={20}

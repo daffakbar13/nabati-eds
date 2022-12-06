@@ -144,7 +144,7 @@ export default function PageCreateShipment() {
     branch_id: string
     vehicle_id: string
     total_volume: number
-    delivery_ids: string[]
+    delivery_data: any[]
   }>()
   const [showConfirm, setShowConfirm] = React.useState('')
   const [newShipment, setNewShipment] = React.useState<string>()
@@ -166,11 +166,9 @@ export default function PageCreateShipment() {
   const firstSelected = table.selected[0]
   const totalSize =
     data.length > 0
-      ? `${data
-          .map(({ volume }) => volume)
-          .reduce((old, now) => old + now)
-          .toString()} M`
-      : '0 M'
+      ? Math.floor(data.map(({ volume }) => volume).reduce((old, now) => old + now) / 10)
+      : 0
+  const isOverload = totalSize > vehicleSize
 
   const canSave = () => {
     if (field?.vehicle_id && data.length > 0) {
@@ -181,7 +179,7 @@ export default function PageCreateShipment() {
 
   const submitedShipment = (status_id: number) => ({
     branch_id: 'P104',
-    total_volume: 100000,
+    total_volume: totalSize,
     status_id: status_id.toString(),
     ...field,
     vehicle_id: field.vehicle_id.split(' - ')[0],
@@ -442,9 +440,17 @@ export default function PageCreateShipment() {
     } else {
       setData([])
     }
-
-    setField((old) => ({ ...old, delivery_ids: table.selected }))
   }, [table.selected])
+
+  React.useEffect(() => {
+    setField((old) => ({
+      ...old,
+      delivery_data: data.map(({ delivery_order_id, salesman_id }) => ({
+        delivery_id: delivery_order_id,
+        salesman_id: salesman_id.split(' - ')[0],
+      })),
+    }))
+  }, [data])
 
   React.useEffect(() => {
     if (router.query.id) {
@@ -536,7 +542,7 @@ export default function PageCreateShipment() {
             <Button
               size="big"
               variant="primary"
-              disabled={!canSave()}
+              disabled={!canSave() || isOverload}
               onClick={() => {
                 setProcessing('Wait For Submit Shipment')
                 createShipment(submitedShipment(1))
@@ -652,11 +658,23 @@ export default function PageCreateShipment() {
                       const newBody = []
                       if (filter.salesman) {
                         newBody.push({
-                            field: 'salesman_id',
-                            option: 'EQ',
-                            from_value: filter.salesman.split(' - ')[0],
-                          })
+                          field: 'salesman_id',
+                          option: 'EQ',
+                          from_value: filter.salesman.split(' - ')[0],
+                        })
                       }
+                      newBody.push([
+                        {
+                          field: 'branch_id',
+                          option: 'EQ',
+                          from_value: filter.branch.split(' - ')[0],
+                        },
+                        {
+                          field: 'sales_',
+                          option: 'EQ',
+                          from_value: filter.branch.split(' - ')[0],
+                        },
+                      ])
                       table.handleFilter(newBody)
                     }}
                   >
@@ -669,7 +687,11 @@ export default function PageCreateShipment() {
           <Spacer size={10} />
         </>
       )}
-      {!filter.branch && <Card><Empty/></Card>}
+      {!filter.branch && (
+        <Card>
+          <Empty />
+        </Card>
+      )}
       <div style={{ width: '100%', display: !filter.branch && 'none' }}>
         <Row gutter={10}>
           <Col span={16}>
@@ -693,11 +715,13 @@ export default function PageCreateShipment() {
               <Row justify="space-between">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                   <DescVehicle label="Vehicle Size" value={`${vehicleSize} M`} />
-                  <DescVehicle label="Total Size" value={totalSize} />
+                  <DescVehicle label="Total Size" value={`${totalSize} M`} />
                   <DescVehicle label="Total Delivery Order" value={data.length.toString()} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                  <Tag color="green">Available</Tag>
+                  <Tag color={isOverload ? 'red' : 'green'}>
+                    {isOverload ? 'Overload' : 'Available'}
+                  </Tag>
                 </div>
               </Row>
               <Spacer size={10} />

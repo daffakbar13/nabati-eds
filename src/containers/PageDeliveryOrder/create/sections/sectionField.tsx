@@ -9,6 +9,7 @@ import { Col, Row } from 'antd'
 import { DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldCustomer } from 'src/configs/fieldFetches'
+import dateFormat from 'src/utils/dateFormat'
 import { payloadCreate } from '..'
 
 interface SectionFieldProps {
@@ -113,7 +114,7 @@ export default function SectionField(props: SectionFieldProps) {
         <DatePickerInput
           fullWidth
           onChange={(val: any) => {
-            onChangeForm('loading_date', new Date(moment(val).format()).toISOString())
+            onChangeForm('loading_date', dateFormat(val, 'YYYY-MM-DD'))
           }}
           label="Loading Date"
           disabledDate={(current) => current < moment().startOf('day')}
@@ -126,7 +127,7 @@ export default function SectionField(props: SectionFieldProps) {
         <DatePickerInput
           fullWidth
           onChange={(val: any) => {
-            onChangeForm('delivery_date', new Date(moment(val).format()).toISOString())
+            onChangeForm('delivery_date', dateFormat(val, 'YYYY-MM-DD'))
             onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
           }}
           label="Delivery Date"

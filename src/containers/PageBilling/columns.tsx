@@ -1,11 +1,13 @@
+/* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { Button } from 'pink-lava-ui';
-import { PATH } from 'src/configs/menus';
-import React from 'react';
-import DateFormat from 'src/components/DateFormat';
+import { Button } from 'pink-lava-ui'
+import { PATH } from 'src/configs/menus'
+import React from 'react'
+import TaggedStatus from 'src/components/TaggedStatus'
+import dateFormat from 'src/utils/dateFormat'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -44,27 +46,54 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 }
 
 export const TableBilling = [
-  CreateColumns(
-    'Billing Number',
-    'billing_number',
-    true,
-    (link, record) => <Linked link={link} status={record.status} type="id" />,
-    170,
-    true,
-    'have-checkbox',
-  ),
-  CreateColumns('Order Type', 'order_type', false),
-  CreateColumns('Order Date', 'order_date', false, (order_date) => (
-    <DateFormat date={order_date} format="DD-MM-YYYY" />
-  )),
-  CreateColumns('Sales Org.', 'sales_org', false),
-  CreateColumns('Branch', 'branch', false),
-  CreateColumns('Ship To Customer', 'ship_to_customer', false),
-  CreateColumns('Shipment Number', 'shipment_number', false),
-  CreateColumns('Salesman', 'salesman', false),
-  CreateColumns('Total Amount', 'total_amount', false),
-  CreateColumns('Status', 'status', false),
-  CreateColumns('Action', 'billing_number', false, (link, record) => (
-    <Linked link={link} status={record.status} type="action" />
-  )),
+  addColumn({
+    title: 'Billing Number',
+    dataIndex: 'billing_number',
+    render: (link, record) => <Linked link={link} status={record.status} type="id" />,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Order Type',
+    dataIndex: 'order_type',
+  }),
+  addColumn({
+    title: 'Order Date',
+    dataIndex: 'order_date',
+    render: (date) => dateFormat(date, 'DD-MM-YYYY'),
+  }),
+  addColumn({
+    title: 'Sales Org.',
+    dataIndex: 'sales_org',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch',
+  }),
+  addColumn({
+    title: 'Ship To Customer',
+    dataIndex: 'ship_to_customer',
+  }),
+  addColumn({
+    title: 'Shipment Number',
+    dataIndex: 'shipment_number',
+  }),
+  addColumn({
+    title: 'Salesman',
+    dataIndex: 'salesman',
+  }),
+  addColumn({
+    title: 'Total Amount',
+    dataIndex: 'total_amount',
+    render: (total_amount) => parseInt(total_amount).toLocaleString(),
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status',
+    render: (status) => <TaggedStatus status={status} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'billing_number',
+    render: (link, record) => <Linked link={link} status={record.status} type="action" />,
+  }),
 ]
