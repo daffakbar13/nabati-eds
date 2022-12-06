@@ -7,8 +7,6 @@ import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getBilling } from 'src/api/billing'
 import Pagination from 'src/components/Pagination'
-import { PageBillingProps } from './types'
-import { TableBilling } from './columns'
 import FloatAction from 'src/components/FloatAction'
 import {
   fieldOrderType,
@@ -16,6 +14,8 @@ import {
   fieldSalesOrganization,
   fieldBranchAll,
 } from 'src/configs/fieldFetches'
+import { PageBillingProps } from './types'
+import { TableBilling } from './columns'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -153,32 +153,10 @@ export default function PageBilling(props: PageBillingProps) {
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
-        <div style={{ overflow: 'scroll' }}>
-          <Table {...table.tableProps} rowKey={'shipment_id'} />
-        
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'billing_number'}
-            onChange={(_, __, sorter) => console.log(sorter)}
-          />
+          <Table {...table.tableProps} rowKey={'shipment_id'} />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
-          />
-        )}
+        {hasData && <Pagination {...table.paginationProps} />}
         {table.selected.length > 0 && (
           <FloatAction>
             <div
