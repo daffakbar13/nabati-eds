@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -149,7 +149,7 @@ export function fieldItem(search: string) {
                         && allPricing.includes(product_id))
                     .splice(0, 10)
                     .map(({ name, product_id }) => ({
-                        label: name,
+                        label: [product_id, name].join(' - '),
                         value: product_id,
                     }))))
 }
@@ -363,6 +363,20 @@ export function fieldSalesmanAll(search: string) {
 
 export function fieldCompanyList(search: string) {
     return getCompanyList()
+        .then((result) =>
+            result.data
+                .filter(({ id, name }) =>
+                (id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase())))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
+                    value: id,
+                })))
+}
+
+export function fieldCustomerGroupCompany(search = '') {
+    return getCustomerGroupCompany()
         .then((result) =>
             result.data
                 .filter(({ id, name }) =>
