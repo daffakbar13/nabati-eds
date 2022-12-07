@@ -4,6 +4,7 @@ import { Modal } from 'src/components'
 import { Spacer, Text } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Radio } from 'antd'
+import { PATH } from 'src/configs/menus'
 
 import { fieldSalesOrganization } from 'src/configs/fieldFetches'
 import {
@@ -196,7 +197,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.reload()
+          router.push(`${PATH.LOGISTIC}/auto-so-to-do`)
         }}
         successContent={(res: any) => 'Auto SO to DO has been successfully Updated'}
         successOkText="OK"

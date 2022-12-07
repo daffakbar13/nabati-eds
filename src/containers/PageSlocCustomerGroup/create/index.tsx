@@ -13,6 +13,8 @@ import {
   CreateCustomerGroup,
   updateCustomerGroup,
 } from 'src/api/logistic/configuration-sloc-costumer-group'
+import { PATH } from 'src/configs/menus'
+
 
 const { Label, LabelRequired } = Text
 
@@ -215,7 +217,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.reload()
+          router.push(`${PATH.LOGISTIC}/configuration-sloc-costumer-group`)
         }}
         successContent={(res: any) => 'SLoc Customer Group has been successfully Updated'}
         successOkText="OK"
