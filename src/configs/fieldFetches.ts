@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getChannelByCompany, getSalesmanGroupByCompany, getUomList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -377,6 +377,49 @@ export function fieldCompanyList(search: string) {
 
 export function fieldCustomerGroupCompany(search = '') {
     return getCustomerGroupCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id, name }) =>
+                (id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase())))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
+                    value: id,
+                })))
+}
+
+export function fieldChannelCompany(search = '') {
+    return getChannelByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id, name }) =>
+                (id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase())))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
+                    value: id,
+                })))
+}
+
+
+export function fieldSalesmanGroup(search = '') {
+    return getSalesmanGroupByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ id, name }) =>
+                (id.toLowerCase().includes(search.toLowerCase())
+                    || name.toLowerCase().includes(search.toLowerCase())))
+                .splice(0, 10)
+                .map(({ id, name }) => ({
+                    label: [id, name].join(' - '),
+                    value: id,
+                })))
+}
+
+export function fieldUomList(search = '') {
+    return getUomList()
         .then((result) =>
             result.data
                 .filter(({ id, name }) =>

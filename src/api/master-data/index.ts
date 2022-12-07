@@ -32,6 +32,8 @@ const subUrl = {
   getVehicleByCompany: 'v1/master/get-vehicle/PP01',
   getDocFlow: 'v1/master/get-doc-flow/PP01',
   getCustomerGroupCompany: 'v1/master/get-customer-group/PP01',
+  getChannelByCompany: '/v1/master/get-channel/PP01',
+  getSalesmanGroupByCompany: '/v1/master/get-salesman-group/PP01',
   getSalesOrgByCompanyDynamic: 'v1/master/get-sales-org',
   getCustomerGroupCompanyDynamic: 'v1/master/get-customer-group',
   getConfigSlocCompanyDynamic: 'v1/master/get-config-sloc',
@@ -311,6 +313,26 @@ export const getCustomerGroupCompany = async (): Promise<CommonDetailResponse<an
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getCustomerGroupCompany}`,
+  })
+
+  return response.data
+}
+
+export const getChannelByCompany = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getChannelByCompany}`,
+  })
+
+  return response.data
+}
+
+export const getSalesmanGroupByCompany = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getSalesmanGroupByCompany}`,
   })
 
   return response.data
