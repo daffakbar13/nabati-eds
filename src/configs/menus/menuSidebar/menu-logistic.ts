@@ -275,6 +275,24 @@ export const menuLogistic = [
         content: () => 'Auto SO to DO',
         onClick: () => Router.push(`${PATH.LOGISTIC}/auto-so-to-do`),
       },
+      {
+        key: 'tax-regulator',
+        title: 'Tax Regulator',
+        content: () => 'Tax Regulator',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-tax-regulator`),
+      },
+      {
+        key: 'item-category',
+        title: 'Item Category',
+        content: () => 'Item Category',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-item-category`),
+      },
+      {
+        key: 'branch-location',
+        title: 'Branch Location',
+        content: () => 'Branch Location',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-branch-location`),
+      },
     ],
   },
   {
