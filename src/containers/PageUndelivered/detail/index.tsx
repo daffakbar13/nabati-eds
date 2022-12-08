@@ -6,9 +6,6 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { PageUndeliveredDetailProps } from './types'
 import AllTabs from './tabs'
 import Quotation from './tabs/Quotation'
-import DocumentFlow from './tabs/DocumentFlow'
-import CustomerInfo from './tabs/CustomerInfo'
-import SalesmanInfo from './tabs/SalesmanInfo'
 
 export default function PageUndeliveredDetail(props: PageUndeliveredDetailProps) {
   const titlePage = useTitlePage('detail')
@@ -20,11 +17,8 @@ export default function PageUndeliveredDetail(props: PageUndeliveredDetailProps)
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
           <Button>asd</Button>
-          <ButtonPinkLava size="big" variant="secondary" onClick={() => {}}>
-            Edit
-          </ButtonPinkLava>
           <ButtonPinkLava size="big" variant="primary" onClick={() => {}}>
-            Order Again
+            Confirm
           </ButtonPinkLava>
         </div>
       </div>
@@ -38,8 +32,6 @@ export default function PageUndeliveredDetail(props: PageUndeliveredDetailProps)
           items={AllTabs}
         />
         {currentTab === '1' && <Quotation />}
-        {currentTab === '2' && <DocumentFlow />} {currentTab === '3' && <CustomerInfo />}{' '}
-        {currentTab === '4' && <SalesmanInfo />}
       </Card>
     </Col>
   )
