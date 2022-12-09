@@ -8,7 +8,7 @@ import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { createPoSto } from 'src/api/logistic/po-sto'
-import { fieldBranchSupply } from 'src/configs/fieldFetches'
+import { fieldBranchSupply, fieldSlocFromBranch } from 'src/configs/fieldFetches'
 
 interface ItemsState {
   product_id: string
@@ -40,6 +40,10 @@ export default function CreateBilling() {
   const router = useRouter()
   const [supplyingBranch, setSupplyingBranch] = React.useState('')
   const [receivingBranch, setReceivingBranch] = React.useState('')
+  const [allSloc, setAllSloc] = React.useState([])
+  const [receivingChannel, setReceivingChannel] = React.useState('')
+  const [supplyingChannel, setSupplyingChannel] = React.useState('')
+
   const tableAddItems = useTableAddItem({
     idSupplyingBranch: supplyingBranch.split(' - ')[0] || '',
     idReceivingBranch: receivingBranch.split(' - ')[0] || '',
@@ -64,6 +68,16 @@ export default function CreateBilling() {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
+  useEffect(() => {
+    fieldSlocFromBranch('ZOP3', dataForm?.suppl_branch_id).then((response) => {
+      setAllSloc(response)
+    })
+  }, [dataForm?.suppl_branch_id])
+
+  useEffect(() => {
+    console.log('Receiving Channel :', receivingChannel)
+    console.log('Supplying Channel :', supplyingChannel)
+  }, [receivingChannel, supplyingChannel])
   return (
     <Col>
       <Text variant={'h4'}>Create New PO STO</Text>
@@ -105,6 +119,7 @@ export default function CreateBilling() {
             onChange={(val: any) => {
               onChangeForm('receive_plant_id', val.label.split(' - ')[0])
               setReceivingBranch(val.label)
+              setReceivingChannel(val.key)
             }}
             value={receivingBranch}
           />
@@ -125,6 +140,7 @@ export default function CreateBilling() {
             onChange={(val: any) => {
               onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
               setSupplyingBranch(val.label)
+              setSupplyingChannel(val.key)
             }}
             value={supplyingBranch}
           />
@@ -138,9 +154,25 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
+          {receivingChannel != '' &&
+          supplyingChannel != '' &&
+          receivingChannel != supplyingChannel ? (
+            <>
+              <DebounceSelect
+                type="select"
+                label="SLoc"
+                options={allSloc}
+                onChange={(val: any) => {
+                  onChangeForm('sloc_id', val.label.split(' - ')[0])
+                }}
+              />
+            </>
+          ) : (
+            ''
+          )}
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
-        {dataForm?.suppl_branch_id || dataForm?.receive_plant_id ? (
+        {dataForm?.suppl_branch_id ? (
           <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
             + Add Item
           </Button>
@@ -149,13 +181,25 @@ export default function CreateBilling() {
         )}
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            editable
-            data={tableAddItems.data}
-            columns={tableAddItems.columns}
-            loading={tableAddItems.loading}
-          />
+          {receivingChannel != '' &&
+          supplyingChannel != '' &&
+          receivingChannel != supplyingChannel ? (
+            <Table
+              scroll={{ x: 'max-content', y: 600 }}
+              editable
+              data={tableAddItems.data}
+              columns={tableAddItems.columnsSender}
+              loading={tableAddItems.loading}
+            />
+          ) : (
+            <Table
+              scroll={{ x: 'max-content', y: 600 }}
+              editable
+              data={tableAddItems.data}
+              columns={tableAddItems.columns}
+              loading={tableAddItems.loading}
+            />
+          )}
         </div>
       </Card>
       {(newPoSTO || cancel) && (
