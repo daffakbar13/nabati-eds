@@ -5,14 +5,12 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { Typography } from 'antd'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
+import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
 
-interface ConfirmSuccessSubmitProps {
-  newSalesOrder: string
-  draftSalesOrder: string
-}
-
-export default function ConfirmSuccessSubmit(props: ConfirmSuccessSubmitProps) {
-  const { newSalesOrder, draftSalesOrder } = props
+export default function ConfirmSuccessSubmit() {
+  const {
+    state: { newSalesOrder, draftSalesOrder },
+  } = useSalesSalesOrderCreateContext()
   const router = useRouter()
 
   return (

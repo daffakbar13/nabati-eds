@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
@@ -63,56 +63,57 @@ function Linked(props: LinkedProps) {
 }
 
 export const useColumnApproval = [
-  CreateColumns(
-    'Sales Order',
-    'id',
-    true,
-    (link: string, { status_approved_name, page, limit }: any) => (
+  addColumn({
+    title: 'Sales Order',
+    dataIndex: 'id',
+    render: (link: string, { status_approved_name, page, limit }: any) => (
       <Linked link={link} type="id" status={status_approved_name} page={page} limit={limit} />
     ),
-    170,
-    true,
-    'have-checkbox',
-  ),
-  CreateColumns('Order Type', 'order_type_id', false, undefined, 120),
-  CreateColumns(
-    'Order Date',
-    'order_date',
-    false,
-    (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
-    120,
-  ),
-  CreateColumns('Sales Org.', 'sales_org_id', false, undefined, 110),
-  CreateColumns('Branch', 'branch_id', false, undefined, 90),
-  CreateColumns(
-    'Sold To Customer',
-    'sold_to_customer_id',
-    false,
-    (id, { customer_name }) => [id, customer_name].join(' - '),
-    250,
-  ),
-  CreateColumns(
-    'Ship To Customer',
-    'ship_to_customer_id',
-    false,
-    (id, { customer_name }) => [id, customer_name].join(' - '),
-    250,
-  ),
-  CreateColumns('Salesman', 'salesman_id', false, undefined, 105),
-  CreateColumns(
-    'Total Amount',
-    'total_amount',
-    false,
-    (total_amount) => parseInt(total_amount).toLocaleString(),
-    140,
-  ),
-  CreateColumns('Create From', 'created_from', false, undefined, 125),
-  CreateColumns('Status', 'status_name', false, (status) => <TaggedStatus status={status} />, 155),
-  CreateColumns('Block Status', 'status_block_name', false, undefined, 180),
-  CreateColumns('Status Approval', 'status_approved_name', false, (status_approved_name) => (
-    <TaggedStatus status={status_approved_name} />
-  )),
-  CreateColumns('Action', 'id', false, (link, { status_approved_name, page, limit }) => (
-    <Linked link={link} type="action" status={status_approved_name} page={page} limit={limit} />
-  )),
+    fixed: true,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Order Type',
+    dataIndex: 'order_type_id',
+  }),
+  addColumn({
+    title: 'Order Date',
+    dataIndex: 'order_date',
+  }),
+  addColumn({ title: 'Sales Org.', dataIndex: 'sales_org_id' }),
+  addColumn({ title: 'Branch', dataIndex: 'branch_id' }),
+  addColumn({
+    title: 'Sold To Customer',
+    dataIndex: 'sold_to_customer_id',
+    render: (id, { customer_name }) => [id, customer_name].join(' - '),
+  }),
+  addColumn({
+    title: 'Ship To Customer',
+    dataIndex: 'ship_to_customer_id',
+    render: (id, { customer_name }) => [id, customer_name].join(' - '),
+  }),
+  addColumn({ title: 'Salesman', dataIndex: 'salesman_id' }),
+  addColumn({
+    title: 'Total Amount',
+    dataIndex: 'total_amount',
+  }),
+  addColumn({ title: 'Create From', dataIndex: 'created_from' }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status_name',
+    render: (status) => <TaggedStatus status={status} />,
+  }),
+  addColumn({ title: 'Block Status', dataIndex: 'status_block_name' }),
+  addColumn({
+    title: 'Status Approval',
+    dataIndex: 'status_approved_name',
+    render: (status_approved_name) => <TaggedStatus status={status_approved_name} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'id',
+    render: (link, { status_approved_name, page, limit }) => (
+      <Linked link={link} type="action" status={status_approved_name} page={page} limit={limit} />
+    ),
+  }),
 ]

@@ -5,56 +5,52 @@ import { FloatAction, Pagination } from 'src/components'
 import { useSalesQuotationListContext } from 'src/hooks/contexts'
 
 export default function SectionTable() {
-  const pageCtx = useSalesQuotationListContext()
+  const {
+    state: {
+      table: {
+        state: { tableProps, paginationProps, selected, data },
+      },
+    },
+    handler,
+  } = useSalesQuotationListContext()
+  const hasData = data.length > 0
   return (
-    <pageCtx.getConsumer>
-      {({ handler, state }) => {
-        const { table } = state
-        const { showConfirm } = handler
-        const hasData = table.data.length > 0
-
-        return (
-          <>
-            <Row style={{ overflow: 'scroll' }}>
-              <Table {...table.tableProps} rowKey={'id'} />
+    <>
+      <Row style={{ overflow: 'scroll' }}>
+        <Table {...tableProps} rowKey={'id'} />
+      </Row>
+      {hasData && <Pagination {...paginationProps} />}
+      {selected.length > 0 && (
+        <FloatAction>
+          <Row justify="space-between" style={{ flexGrow: 1 }}>
+            <b style={{ lineHeight: '48px' }}>{selected.length} Document Quotation are Selected</b>
+            <Row gutter={10}>
+              <Col>
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    handler.showConfirm('cancel')
+                  }}
+                >
+                  Cancel Process
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    handler.showConfirm('submit')
+                  }}
+                >
+                  Submit
+                </Button>
+              </Col>
             </Row>
-            {hasData && <Pagination {...table.paginationProps} />}
-            {table.selected.length > 0 && (
-              <FloatAction>
-                <Row justify="space-between" style={{ flexGrow: 1 }}>
-                  <b style={{ lineHeight: '48px' }}>
-                    {table.selected.length} Document Quotation are Selected
-                  </b>
-                  <Row gutter={10}>
-                    <Col>
-                      <Button
-                        size="big"
-                        variant="tertiary"
-                        onClick={() => {
-                          showConfirm('cancel')
-                        }}
-                      >
-                        Cancel Process
-                      </Button>
-                    </Col>
-                    <Col>
-                      <Button
-                        size="big"
-                        variant="primary"
-                        onClick={() => {
-                          showConfirm('submit')
-                        }}
-                      >
-                        Submit
-                      </Button>
-                    </Col>
-                  </Row>
-                </Row>
-              </FloatAction>
-            )}
-          </>
-        )
-      }}
-    </pageCtx.getConsumer>
+          </Row>
+        </FloatAction>
+      )}
+    </>
   )
 }

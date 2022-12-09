@@ -28,20 +28,22 @@ export default function PageBilling(props: PageBillingProps) {
   const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getBilling,
-    haveCheckbox: { headCell: 'status', member: ['New'] },
+    haveCheckBox: { rowKey: 'status', member: ['New'] },
     columns: TableBilling,
   })
-  const hasData = table.total > 0
-  const oneSelected = table.selected.length === 1
-  const firstSelected = table.selected[0]
+  const hasData = table.state.total > 0
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = table.state.selected[0]
   const [optionsOrderType, setOptionsOrderType] = useState([])
   useEffect(() => {
     fieldOrderType('M').then((result) => setOptionsOrderType(result))
   }, [])
 
   const selectedQuotation = {
-    text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
-    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, More +${table.state.selected.length - 1}`,
+    content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
   const titlePage = useTitlePage('list')
 
@@ -54,7 +56,7 @@ export default function PageBilling(props: PageBillingProps) {
   ]
 
   useEffect(() => {
-    table.handleFilter(filters)
+    table.handler.handleFilter(filters)
   }, [filters])
 
   useEffect(() => {
@@ -154,10 +156,10 @@ export default function PageBilling(props: PageBillingProps) {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.tableProps} rowKey={'shipment_id'} />
+          <Table {...table.state.tableProps} rowKey={'shipment_id'} />
         </div>
-        {hasData && <Pagination {...table.paginationProps} />}
-        {table.selected.length > 0 && (
+        {hasData && <Pagination {...table.state.paginationProps} />}
+        {table.state.selected.length > 0 && (
           <FloatAction>
             <div
               style={{
@@ -166,7 +168,7 @@ export default function PageBilling(props: PageBillingProps) {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.selected.length} Document Biling Number are Selected</b>
+              <b>{table.state.selected.length} Document Biling Number are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <Button size="small" variant="tertiary" onClick={() => {}}>

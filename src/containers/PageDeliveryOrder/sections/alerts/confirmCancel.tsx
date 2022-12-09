@@ -58,7 +58,7 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
           variant="primary"
           onClick={() => {
             handleProcess('Wait for cancelling Delivery Order')
-            table.selected.forEach((id) => {
+            table.state.selected.forEach((id) => {
               cancelDeliveryOrder(id, { reson_id: reason })
                 .then(() => {
                   handleShowConfirm('success-cancel')

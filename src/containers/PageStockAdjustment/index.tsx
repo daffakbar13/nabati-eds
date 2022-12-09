@@ -6,7 +6,7 @@ import { PATH } from 'src/configs/menus'
 import { ExclamationBrownIc } from 'src/assets'
 
 import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
-import { useSimpleTable } from 'src/hooks'
+import { useSimpleTable, useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import FreezeSlocModal from './modals/freezeSloc'
@@ -21,10 +21,9 @@ export default function PageStockAdjustment() {
     // eslint-disable-next-line implicit-arrow-linebreak
     router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${id}`)
 
-  const tableProps = useSimpleTable({
+  const table = useTable({
     funcApi: getListStockAdjustment,
     columns: columns(goToDetailPage),
-    filters,
   })
 
   const [freezeList, setFreezeList] = useState([])
@@ -130,7 +129,7 @@ export default function PageStockAdjustment() {
 
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...tableProps} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
 

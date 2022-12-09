@@ -3,27 +3,24 @@
 import { DispatchType } from './reducer'
 import { StateType } from './state'
 
-export function baseHandler<
-    T extends (...args: any) => any
->(
-    dispatch: React.Dispatch<DispatchType<T>>) {
+export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchType>) {
     const splitString = (data: string) => data.split(' - ')[0]
 
-    function setDataForm(data: StateType<T>['dataForm']) {
+    function setDataForm(data: StateType['dataForm']) {
         dispatch({
             type: 'dataForm',
             payload: data,
         })
     }
 
-    function onChangeForm(field: keyof StateType<T>['dataForm'], value: any) {
+    function onChangeForm(field: keyof StateType['dataForm'], value: any) {
         dispatch({
             type: 'dataForm',
             payload: { [field]: value },
         })
     }
 
-    function dataSubmitted(status_id: number, dataForm: StateType<T>['dataForm'] | any) {
+    function dataSubmitted(status_id: number, dataForm: StateType['dataForm'] | any) {
         return {
             ...dataForm,
             order_type_id: splitString(dataForm.order_type_id),

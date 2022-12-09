@@ -1,7 +1,7 @@
 import React from 'react'
 import { getQuotation } from 'src/api/quotation'
-import { useTable } from 'src/hooks'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListProvider } from 'src/hooks/contexts'
+import useTable from 'src/hooks/useTable/index'
 import { useColumnQuotation } from './columns'
 
 export default function SalesQuotationListProvider(
@@ -10,22 +10,22 @@ export default function SalesQuotationListProvider(
   const { children } = props
   const table = useTable({
     funcApi: getQuotation,
-    haveCheckbox: { headCell: 'status_name', member: ['New'] },
+    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
     columns: useColumnQuotation,
   })
-  const pageCtx = useSalesQuotationListContext()
+  const SalesQuotationList = useSalesQuotationListProvider()
 
   return (
-    <pageCtx.getProvider
+    <SalesQuotationList.Provider
       value={{
         state: {
-          ...pageCtx.state,
+          ...SalesQuotationList.state,
           table,
         },
-        handler: pageCtx.handler,
+        handler: SalesQuotationList.handler,
       }}
     >
       {children}
-    </pageCtx.getProvider>
+    </SalesQuotationList.Provider>
   )
 }

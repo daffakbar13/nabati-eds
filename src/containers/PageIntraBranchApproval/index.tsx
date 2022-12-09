@@ -27,18 +27,20 @@ export default function PageApproval(props: Props) {
 
   const table = useTable({
     funcApi: getListPoSto,
-    haveCheckbox: { headCell: 'status_name', member: ['New'] },
+    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
     columns,
   })
   const [showConfirm, setShowConfirm] = React.useState('')
-  const hasData = table.total > 0
+  const hasData = table.state.total > 0
   const router = useRouter()
-  const oneSelected = table.selected.length === 1
-  const firstSelected = table.selected[0]
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = table.state.selected[0]
 
   const selectedQuotation = {
-    text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
-    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, More +${table.state.selected.length - 1}`,
+    content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
 
   const statusOption = [
@@ -50,7 +52,7 @@ export default function PageApproval(props: Props) {
   ]
 
   useEffect(() => {
-    table.handleFilter(filters)
+    table.handler.handleFilter(filters)
   }, [filters])
 
   useEffect(() => {
@@ -120,28 +122,10 @@ export default function PageApproval(props: Props) {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'id'}
-          />
+          <Table {...table.state.tableProps} />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
-          />
-        )}
-        {table.selected.length > 0 && (
+        {hasData && <Pagination {...table.state.paginationProps} />}
+        {table.state.selected.length > 0 && (
           <FloatAction>
             <div
               style={{
@@ -150,7 +134,7 @@ export default function PageApproval(props: Props) {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.selected.length} Document Quotation are Selected</b>
+              <b>{table.state.selected.length} Document Quotation are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <Button size="big" variant="tertiary" onClick={() => {}}>

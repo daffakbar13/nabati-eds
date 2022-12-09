@@ -9,56 +9,50 @@ import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
 import { useTableProduct } from '../../columns'
 
 export default function ConfirmSuccessSubmit() {
-  const pageCtx = useSalesQuotationCreateContext<typeof useTableProduct>()
+  const {
+    state: { newQuotation, draftQuotation },
+  } = useSalesQuotationCreateContext()
   const router = useRouter()
 
   return (
-    <pageCtx.getConsumer>
-      {({ state }) => {
-        const { newQuotation, draftQuotation } = state
-
-        return (
-          <Popup>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Text
-                textAlign="center"
-                style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-              >
-                <>
-                  <CheckCircleFilled /> Submit Success
-                </>
-              </Text>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                gap: 4,
-                flexDirection: 'column',
-                textAlign: 'center',
-              }}
-            >
-              <div>
-                {'New Quotation '}
-                <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
-                {' has been'}
-              </div>
-              <div>successfully {newQuotation ? 'created' : 'saved'}</div>
-            </div>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="primary"
-                onClick={() => {
-                  router.push(`${PATH.SALES}/quotation`)
-                }}
-              >
-                OK
-              </Button>
-            </div>
-          </Popup>
-        )
-      }}
-    </pageCtx.getConsumer>
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          {'New Quotation '}
+          <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
+          {' has been'}
+        </div>
+        <div>successfully {newQuotation ? 'created' : 'saved'}</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/quotation`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
   )
 }

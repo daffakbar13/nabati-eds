@@ -85,7 +85,7 @@ export default function Pagination(props: PaginationProps) {
   }, [totalPage])
 
   return (
-    <Row justify="space-between" style={{ fontWeight: '600' }}>
+    <Row justify="space-between" style={{ fontWeight: '600', margin: '20px 0' }}>
       <Row gutter={10}>
         <Col>
           <VerticalMiddle>Items per page</VerticalMiddle>

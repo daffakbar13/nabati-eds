@@ -17,7 +17,7 @@ interface ConfirmSuccessSubmitProps {
 export default function ConfirmSuccessSubmit(props: ConfirmSuccessSubmitProps) {
   const { submittedDeliveryOrder, table } = props
   const router = useRouter()
-  const oneSelected = table.selected.length === 1
+  const oneSelected = table.state.selected.length === 1
 
   return (
     <Popup>

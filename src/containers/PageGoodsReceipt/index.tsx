@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from '
 import { PATH } from 'src/configs/menus'
 
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt'
-import { useSimpleTable } from 'src/hooks'
+import { useSimpleTable, useTable } from 'src/hooks'
 import { columns } from './columns'
 
 export default function PageGoodsReceipt() {
@@ -14,10 +14,9 @@ export default function PageGoodsReceipt() {
 
   const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${id}`)
 
-  const tableProps = useSimpleTable({
+  const table = useTable({
     funcApi: getGoodReceiptList,
     columns: columns(goToDetailPage),
-    filters,
   })
 
   return (
@@ -88,7 +87,7 @@ export default function PageGoodsReceipt() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...tableProps} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
     </>

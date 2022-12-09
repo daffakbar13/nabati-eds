@@ -2,15 +2,14 @@
 import React from 'react'
 import { TabCustomerInfo } from 'src/components'
 import { AllDataCustomer, TableInformation } from 'src/components/TabCustomerInfo/types'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 import { concatString } from 'src/utils/concatString'
 import dateFormat from 'src/utils/dateFormat'
 
-interface CustomerInfoProps {
-  data: any
-}
-
-export default function CustomerInfo(props: CustomerInfoProps) {
-  const { data } = props
+export default function CustomerInfo() {
+  const {
+    state: { data },
+  } = useSalesSalesOrderDetailContext()
   const { customer_sales, salesman } = data
 
   const dataCustomer: AllDataCustomer = {

@@ -30,7 +30,7 @@ export default function PageSlocCustomerGroup() {
     funcApi: getListPoSto,
     columns,
   })
-  const hasData = table.total > 0
+  const hasData = table.state.total > 0
   const router = useRouter()
 
   const statusOption = [
@@ -42,7 +42,7 @@ export default function PageSlocCustomerGroup() {
   ]
 
   useEffect(() => {
-    table.handleFilter(filters)
+    table.handler.handleFilter(filters)
   }, [filters])
 
   useEffect(() => {
@@ -77,9 +77,9 @@ export default function PageSlocCustomerGroup() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
             scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
+            loading={table.state.loading}
+            columns={table.state.columns}
+            dataSource={table.state.data}
             showSorterTooltip={false}
             rowKey={'id'}
           />
@@ -88,10 +88,10 @@ export default function PageSlocCustomerGroup() {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
+            total={table.state.total}
+            totalPage={table.state.totalPage}
             onChange={(page, limit) => {
-              table.handlePagination(page, limit)
+              table.handler.handlePagination(page, limit)
             }}
           />
         )}

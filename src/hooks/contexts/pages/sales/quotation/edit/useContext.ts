@@ -1,16 +1,27 @@
+/* eslint-disable function-paren-newline */
+/* eslint-disable space-before-function-paren */
 import React from 'react'
-import { SalesQuotationListCtx } from './context'
+import { useCreatePageProvider } from 'src/hooks/contexts/useCreateProvider'
 import { baseHandler } from './handler'
-import { baseReducer } from './reducer'
+import { baseReducer, DispatchType } from './reducer'
 import { StateType } from './state'
 
-export function useSalesQuotationDetailContext() {
-    const initialValue: StateType = {}
-    const [state, dispatch] = React.useReducer(baseReducer, initialValue)
-    const handler = baseHandler(dispatch)
-    const ctx = SalesQuotationListCtx
-    const getProvider = ctx.Provider
-    const getConsumer = ctx.Consumer
+interface ctxType {
+    state: StateType
+    handler: ReturnType<typeof baseHandler>
+}
 
-    return { getProvider, getConsumer, state, handler }
+const ctx = React.createContext<ctxType>(undefined)
+
+export function useSalesQuotationDetailProvider() {
+    return useCreatePageProvider<
+        ctxType,
+        StateType,
+        DispatchType,
+        typeof baseHandler
+    >(ctx, baseReducer, baseHandler)
+}
+
+export function useSalesQuotationDetailContext() {
+    return React.useContext(ctx)
 }

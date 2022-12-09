@@ -8,7 +8,7 @@ import React from 'react'
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import { getDetailQuotation } from 'src/api/quotation'
 import { PATH } from 'src/configs/menus'
-import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
+import { useSalesQuotationCreateProvider } from 'src/hooks/contexts'
 import { concatString } from 'src/utils/concatString'
 import { useTableProduct } from './columns'
 
@@ -36,23 +36,25 @@ const now = new Date().toISOString()
 export default function SalesQuotationCreateProvider(
   props: React.PropsWithChildren<React.ReactNode>,
 ) {
+  const SalesQuotationCreate = useSalesQuotationCreateProvider()
   const tableProduct = useTableProduct()
-  const pageCtx = useSalesQuotationCreateContext<typeof useTableProduct>()
   const router = useRouter()
-  const { dataForm, fetching, optionsOrderType } = pageCtx.state
   const {
-    runProcess,
-    setCanSave,
-    setDataForm,
-    setFetching,
-    setOptionsBranch,
-    setOptionsOrderType,
-    setOptionsSalesOrg,
-    setOptionsSalesman,
-    stopProcess,
-    onChangeForm,
-    stopFetching,
-  } = pageCtx.handler
+    state: { dataForm, fetching, optionsOrderType },
+    handler: {
+      runProcess,
+      setCanSave,
+      setDataForm,
+      setFetching,
+      setOptionsBranch,
+      setOptionsOrderType,
+      setOptionsSalesOrg,
+      setOptionsSalesman,
+      stopProcess,
+      onChangeForm,
+      stopFetching,
+    },
+  } = SalesQuotationCreate
 
   React.useEffect(() => {
     if (router.query.id && optionsOrderType.length > 0) {
@@ -167,16 +169,16 @@ export default function SalesQuotationCreateProvider(
   }, [])
 
   return (
-    <pageCtx.getProvider
+    <SalesQuotationCreate.Provider
       value={{
         state: {
-          ...pageCtx.state,
+          ...SalesQuotationCreate.state,
           tableProduct,
         },
-        handler: pageCtx.handler,
+        handler: SalesQuotationCreate.handler,
       }}
     >
       {props.children}
-    </pageCtx.getProvider>
+    </SalesQuotationCreate.Provider>
   )
 }

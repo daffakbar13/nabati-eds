@@ -9,16 +9,8 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListBadStock } from 'src/api/logistic/bad-stock'
 import Popup from 'src/components/Popup'
-import { column } from './columns'
 import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
-
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
+import { column } from './columns'
 
 export default function PageIntraSlocRequest() {
   const [filters, setFilters] = useState([])
@@ -32,14 +24,16 @@ export default function PageIntraSlocRequest() {
   })
 
   const [showConfirm, setShowConfirm] = React.useState('')
-  const hasData = table.total > 0
+  const hasData = table.state.total > 0
   const router = useRouter()
-  const oneSelected = table.selected.length === 1
-  const firstSelected = table.selected[0]
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = table.state.selected[0]
 
   const selectedQuotation = {
-    text: oneSelected ? firstSelected : `${firstSelected}, More +${table.selected.length - 1}`,
-    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, More +${table.state.selected.length - 1}`,
+    content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
 
   const statusOption = [
@@ -51,7 +45,7 @@ export default function PageIntraSlocRequest() {
   ]
 
   useEffect(() => {
-    table.handleFilter(filters)
+    table.handler.handleFilter(filters)
   }, [filters])
 
   useEffect(() => {
@@ -64,41 +58,6 @@ export default function PageIntraSlocRequest() {
       })
     }
   }, [router.query.search])
-
-  const HideShowColumns = () => {
-    const content = (
-      <>
-        {column.map(({ title }, index) => (
-          <div key={index}>
-            <Checkbox
-              defaultChecked={!table.hiddenColumns.includes(title)}
-              onChange={(event) => {
-                table.handleHideShowColumns(event.target, title)
-              }}
-            />{' '}
-            {title}
-          </div>
-        ))}
-        <Divider />
-        <h4
-          onClick={table.handleResetHideShowColumns}
-          style={{ textAlign: 'center', cursor: 'pointer', color: '#EB008B' }}
-        >
-          Reset
-        </h4>
-      </>
-    )
-    return (
-      <Popover
-        placement="bottomRight"
-        title={'Hide/Show Columns'}
-        content={content}
-        trigger="click"
-      >
-        <MoreOutlined style={{ cursor: 'pointer' }} />
-      </Popover>
-    )
-  }
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
@@ -195,31 +154,10 @@ export default function PageIntraSlocRequest() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={[...table.columns]}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowKey={'id'}
-          />
+          <Table {...table.state.tableProps} />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            showLessItems
-            showSizeChanger
-            showQuickJumper
-            responsive
-            total={table.total}
-            showTotal={showTotal}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
-          />
-        )}
-        {table.selected.length > 0 && (
+        {hasData && <Pagination {...table.state.paginationProps} />}
+        {table.state.selected.length > 0 && (
           <FloatAction>
             <div
               style={{
@@ -228,7 +166,7 @@ export default function PageIntraSlocRequest() {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.selected.length} Document Quotation are Selected</b>
+              <b>{table.state.selected.length} Document Quotation are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <Button size="big" variant="tertiary" onClick={() => {}}>

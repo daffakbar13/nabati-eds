@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from '
 import { PATH } from 'src/configs/menus'
 
 import { getListGrReturn } from 'src/api/logistic/good-return'
-import { useSimpleTable } from 'src/hooks'
+import { useSimpleTable, useTable } from 'src/hooks'
 import { columns } from './columns'
 
 export default function PageGrReturn() {
@@ -14,10 +14,9 @@ export default function PageGrReturn() {
 
   const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/gr-return/detail/${id}`)
 
-  const tableProps = useSimpleTable({
+  const table = useTable({
     funcApi: getListGrReturn,
     columns: columns(goToDetailPage),
-    filters,
   })
 
   return (
@@ -88,7 +87,7 @@ export default function PageGrReturn() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...tableProps} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
     </Col>

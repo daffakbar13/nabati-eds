@@ -1,21 +1,16 @@
 import React from 'react'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 import { ConfirmCancel, ConfirmSuccessCancel } from './alerts'
 
-interface SectionConfirmProps {
-  showConfirm: string
-  handleShowConfirm: (confirm: string) => void
-  handleProcess: (process: string) => void
-}
-
-export default function SectionConfirm(props: SectionConfirmProps) {
-  const { showConfirm, handleProcess, handleShowConfirm } = props
+export default function SectionConfirm() {
+  const {
+    state: { confirm },
+  } = useSalesSalesOrderDetailContext()
 
   return (
     <>
-      {showConfirm === 'cancel' && (
-        <ConfirmCancel handleProcess={handleProcess} handleShowConfirm={handleShowConfirm} />
-      )}
-      {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
+      {confirm === 'cancel' && <ConfirmCancel />}
+      {confirm === 'success-cancel' && <ConfirmSuccessCancel />}
     </>
   )
 }

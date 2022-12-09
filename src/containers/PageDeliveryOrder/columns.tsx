@@ -97,7 +97,6 @@ export const useColumnDeliveryOrder = [
   addColumn({
     title: 'Total Amount',
     dataIndex: 'total_amount',
-    render: (total_amount) => parseInt(total_amount).toLocaleString(),
   }),
   addColumn({
     title: 'Currency',

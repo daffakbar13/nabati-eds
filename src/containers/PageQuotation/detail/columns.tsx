@@ -2,23 +2,44 @@
 /* eslint-disable radix */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
+import localeStringFormat from 'src/utils/currencyFormat'
 
 export const ColumnsQuotation = [
-  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60),
-  CreateColumns('Item', 'description', false, undefined, 300),
-  CreateColumns('Item Category', 'item_category_id', false, undefined, 150),
-  CreateColumns('Uom', 'uom_id', false, undefined, 100),
-  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
-  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
-  CreateColumns(
-    'Sub Total',
-    'sub_total',
-    false,
-    (_, record) => (record.price * record.order_qty).toLocaleString(),
-    100,
-  ),
-  CreateColumns('Remarks', 'remarks'),
+  addColumn({
+    title: 'No',
+    render: (_, __, i) => ++i,
+  }),
+  addColumn({
+    title: 'Item',
+    dataIndex: 'description',
+  }),
+  addColumn({
+    title: 'Item Category',
+    dataIndex: 'item_category_id',
+  }),
+  addColumn({
+    title: 'Uom',
+    dataIndex: 'uom_id',
+  }),
+  addColumn({
+    title: 'Quantity',
+    dataIndex: 'order_qty',
+  }),
+  addColumn({
+    title: 'Based Price',
+    dataIndex: 'price',
+    render: (price) => parseInt(price).toLocaleString(),
+  }),
+  addColumn({
+    title: 'Sub Total',
+    dataIndex: 'sub_total',
+    render: (_, { price, order_qty }) => localeStringFormat(price * order_qty),
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]
 
 export const ColumnsDocumentFlow = [

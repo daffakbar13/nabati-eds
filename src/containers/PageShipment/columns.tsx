@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { PATH } from 'src/configs/menus';
-import { Button } from 'pink-lava-ui';
-import React from 'react';
+import { PATH } from 'src/configs/menus'
+import { Button } from 'pink-lava-ui'
+import React from 'react'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -42,25 +43,54 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 }
 
 export const TableBilling = [
-  CreateColumns(
-    'Shipment',
-    'shipment_id',
-    true,
-    (link, record) => <Linked link={link} status={record.status} type="id" />,
-    170,
-    true,
-    'have-checkbox',
-  ),
-  CreateColumns('Vehicle Number', 'vehicle_id', false, undefined, 120),
-  CreateColumns('Driver', 'driver_name', false, undefined, 120),
-  CreateColumns('Created Date', 'created_at', false, undefined, 130),
-  CreateColumns('Total DO', 'total_do', false, undefined, 100),
-  CreateColumns('Sales Org.', 'sales_org_name', false, undefined, 120),
-  CreateColumns('Branch', 'branch_name', false, undefined, 250),
-  CreateColumns('Branch Type', 'branch_type', false, undefined, 140),
-  CreateColumns('Status', 'status', false),
-  CreateColumns('Status Process', 'status_process', false),
-  CreateColumns('Action', 'shipment_id', false, (link, record) => (
-    <Linked link={link} status={record.status} type="action" />
-  )),
+  addColumn({
+    title: 'Shipment',
+    dataIndex: 'shipment_id',
+    render: (link, record) => <Linked link={link} status={record.status} type="id" />,
+    fixed: true,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Vehicle Number',
+    dataIndex: 'vehicle_id',
+  }),
+  addColumn({
+    title: 'Driver',
+    dataIndex: 'driver_name',
+  }),
+  addColumn({
+    title: 'Created Date',
+    dataIndex: 'created_at',
+  }),
+  addColumn({
+    title: 'Total DO',
+    dataIndex: 'total_do',
+  }),
+  addColumn({
+    title: 'Sales Org.',
+    dataIndex: 'sales_org_name',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_name',
+  }),
+  addColumn({
+    title: 'Branch Type',
+    dataIndex: 'branch_type',
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status',
+    render: (status) => <TaggedStatus status={status} />,
+  }),
+  addColumn({
+    title: 'Status Process',
+    dataIndex: 'status_process',
+    render: (status) => <TaggedStatus status={status || 'Not Implemented'} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'shipment_id',
+    render: (link, record) => <Linked link={link} status={record.status} type="action" />,
+  }),
 ]

@@ -20,6 +20,7 @@ import { Text, Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import { getPricingByCompany, getProductByCompany } from 'src/api/master-data'
 import { getDetailQuotation } from 'src/api/quotation'
+import useTable from 'src/hooks/useTable/index'
 
 export const useTableProduct = () => {
   const initialValue = {
@@ -176,6 +177,7 @@ export const useTableProduct = () => {
           }}
         />
       ),
+      width: 200,
     }),
   ]
 

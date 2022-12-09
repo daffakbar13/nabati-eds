@@ -11,37 +11,19 @@ interface SectionTableProps {
 
 export default function SectionTable(props: SectionTableProps) {
   const { table, handleShowConfirm } = props
-  const hasData = table.data.length > 0
+  const hasData = table.state.data.length > 0
 
   return (
     <>
       <Row style={{ overflow: 'scroll' }}>
-        <Table
-          scroll={{ x: 'max-content', y: 600 }}
-          loading={table.loading}
-          columns={table.columns}
-          dataSource={table.data}
-          showSorterTooltip={false}
-          rowSelection={table.rowSelection}
-          rowKey={'delivery_order_id'}
-        />
+        <Table {...table.state.tableProps} />
       </Row>
-      {hasData && (
-        <Pagination
-          defaultPageSize={20}
-          pageSizeOptions={[20, 50, 100]}
-          total={table.total}
-          totalPage={table.totalPage}
-          onChange={(page, limit) => {
-            table.handlePagination(page, limit)
-          }}
-        />
-      )}
-      {table.selected.length > 0 && (
+      {hasData && <Pagination {...table.state.paginationProps} />}
+      {table.state.selected.length > 0 && (
         <FloatAction>
           <Row justify="space-between" style={{ flexGrow: 1 }}>
             <b style={{ lineHeight: '48px' }}>
-              {table.selected.length} Document Delivery Order are Selected
+              {table.state.selected.length} Document Delivery Order are Selected
             </b>
             <Row gutter={10}>
               <Col>

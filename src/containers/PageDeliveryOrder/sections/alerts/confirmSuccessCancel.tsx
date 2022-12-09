@@ -17,7 +17,7 @@ interface ConfirmSuccessCancelProps {
 export default function ConfirmSuccessCancel(props: ConfirmSuccessCancelProps) {
   const { table, selectedDeliveryOrder } = props
   const router = useRouter()
-  const oneSelected = table.selected.length === 1
+  const oneSelected = table.state.selected.length === 1
 
   return (
     <Popup>
@@ -44,7 +44,7 @@ export default function ConfirmSuccessCancel(props: ConfirmSuccessCancelProps) {
           Delivery Order
           <Typography.Text
             copyable={{
-              text: oneSelected ? selectedDeliveryOrder.text : table.selected.join(', '),
+              text: oneSelected ? selectedDeliveryOrder.text : table.state.selected.join(', '),
             }}
           >
             {oneSelected ? (

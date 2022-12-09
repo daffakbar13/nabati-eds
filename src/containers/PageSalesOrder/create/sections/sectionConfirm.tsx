@@ -1,24 +1,16 @@
 import React from 'react'
-import { useTableProduct } from '../columns'
+import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
 import { ConfirmCancel, ConfirmSuccessSubmit } from './alerts'
 
-interface SectionConfirmProps {
-  newSalesOrder: string
-  draftSalesOrder: string
-  cancel: boolean
-  handleCancel: (cancel: boolean) => void
-  tableProduct: ReturnType<typeof useTableProduct>
-}
-
-export default function SectionConfirm(props: SectionConfirmProps) {
-  const { newSalesOrder, draftSalesOrder, cancel, handleCancel, tableProduct } = props
+export default function SectionConfirm() {
+  const {
+    state: { newSalesOrder, draftSalesOrder, cancel, tableProduct },
+  } = useSalesSalesOrderCreateContext()
 
   return (
     <>
-      {(newSalesOrder || draftSalesOrder) && (
-        <ConfirmSuccessSubmit draftSalesOrder={draftSalesOrder} newSalesOrder={newSalesOrder} />
-      )}
-      {cancel && <ConfirmCancel handleCancel={handleCancel} />}
+      {(newSalesOrder || draftSalesOrder) && <ConfirmSuccessSubmit />}
+      {cancel && <ConfirmCancel />}
       {<tableProduct.ConfirmDelete />}
     </>
   )

@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from '
 import { PATH } from 'src/configs/menus'
 
 import { getListSwapHandling } from 'src/api/logistic/swap-handling'
-import { useSimpleTable } from 'src/hooks'
+import { useSimpleTable, useTable } from 'src/hooks'
 import { columns } from './columns'
 
 export default function PageSwapHandling() {
@@ -14,10 +14,9 @@ export default function PageSwapHandling() {
 
   const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/swap-handling/detail/${id}`)
 
-  const tableProps = useSimpleTable({
+  const table = useTable({
     funcApi: getListSwapHandling,
     columns: columns(goToDetailPage),
-    filters,
   })
 
   return (
@@ -80,7 +79,7 @@ export default function PageSwapHandling() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...tableProps} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
     </>

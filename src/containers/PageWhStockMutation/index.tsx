@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Card, DownloadButton, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 
 import { exportExcelListSwapHandling, getListSwapHandling } from 'src/api/logistic/wh-stock-mutation'
-import { useSimpleTable } from 'src/hooks'
+import { useSimpleTable, useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import { Props } from './types'
@@ -13,10 +13,9 @@ export default function PageWhStockMutation(props: Props) {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
-  const tableProps = useSimpleTable({
+  const table = useTable({
     funcApi: getListSwapHandling,
     columns,
-    filters,
   })
 
   return (
@@ -28,19 +27,34 @@ export default function PageWhStockMutation(props: Props) {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field='branch_id' dataType='S' label='Branch ID' options={['EQ', 'NB', 'NP', 'GT', 'LT']} >
-                <SelectMasterData type='PLANT' />
+              <SmartFilter.Field
+                field="branch_id"
+                dataType="S"
+                label="Branch ID"
+                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+              >
+                <SelectMasterData type="PLANT" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='product_id' dataType='S' label='Material' options={['EQ', 'CP']} >
-                <SelectMasterData type='MATERIAL' />
+              <SmartFilter.Field
+                field="product_id"
+                dataType="S"
+                label="Material"
+                options={['EQ', 'CP']}
+              >
+                <SelectMasterData type="MATERIAL" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='sloc_id' dataType='S' label='Sloc' options={['EQ', 'NB']} >
-                <SelectMasterData type='SLOC' />
+              <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>
+                <SelectMasterData type="SLOC" />
               </SmartFilter.Field>
-              <SmartFilter.Field field='status_data' dataType='S' label='Status Data' options={['EQ']} >
+              <SmartFilter.Field
+                field="status_data"
+                dataType="S"
+                label="Status Data"
+                options={['EQ']}
+              >
                 <Select options={[{ label: 'YES', value: 'yes' }]} />
               </SmartFilter.Field>
-              <SmartFilter.Field field='status_data' dataType='S' label='Status' options={['EQ']} >
+              <SmartFilter.Field field="status_data" dataType="S" label="Status" options={['EQ']}>
                 <Select options={[{ label: 'YES', value: 'yes' }]} />
               </SmartFilter.Field>
             </SmartFilter>
@@ -53,7 +67,7 @@ export default function PageWhStockMutation(props: Props) {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...tableProps} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
     </Col>

@@ -3,19 +3,17 @@ import { Table, Spacer } from 'pink-lava-ui'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 import { concatString } from 'src/utils/concatString'
 import dateFormat from 'src/utils/dateFormat'
 import { ColumnsSalesOrder } from '../../columns'
 
-interface SalesOrderProps {
-  data: any
-}
-
 const createDataList = (label: string, value: string) => ({ label, value })
 
-export default function SalesOrder(props: SalesOrderProps) {
-  const { data } = props
-  const format = 'DD MMMM YYYY'
+export default function SalesOrder() {
+  const {
+    state: { data },
+  } = useSalesSalesOrderDetailContext()
 
   const dataList = [
     DataList.createDataList('Sales Order', data.id),
@@ -23,14 +21,14 @@ export default function SalesOrder(props: SalesOrderProps) {
     DataList.createDataList('Sales Org.', concatString(data.sales_org_id, data.sales_org_name)),
     DataList.createDataList('Branch', concatString(data.branch_id, data.branch_name)),
     DataList.createDataList('Salesman', concatString(data.salesman_id, data.salesman_name)),
-    DataList.createDataList('Doc. Date', dateFormat(data.doc_date, format)),
-    createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
-    createDataList('Quotation', data.document_ref_id),
-    createDataList('Reference', data.customer_ref),
-    createDataList('Created On', dateFormat(data.created_at, format)),
-    createDataList('Created By', data.created_by),
-    createDataList('Modified On', dateFormat(data.modified_at, format)),
-    createDataList('Modified By', data.modified_by),
+    DataList.createDataList('Doc. Date', dateFormat(data.doc_date)),
+    DataList.createDataList('Delivery Date', dateFormat(data.delivery_date)),
+    DataList.createDataList('Quotation', data.document_ref_id),
+    DataList.createDataList('Reference', data.customer_ref),
+    DataList.createDataList('Created On', dateFormat(data.created_at)),
+    DataList.createDataList('Created By', data.created_by),
+    DataList.createDataList('Modified On', dateFormat(data.modified_at)),
+    DataList.createDataList('Modified By', data.modified_by),
   ]
 
   return (

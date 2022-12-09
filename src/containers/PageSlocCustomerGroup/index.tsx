@@ -30,7 +30,7 @@ export default function PageSlocCustomerGroup() {
     funcApi: getListPoSto,
     columns,
   })
-  const hasData = table.total > 0
+  const hasData = table.state.total > 0
   const router = useRouter()
 
   const statusOption = [
@@ -42,7 +42,7 @@ export default function PageSlocCustomerGroup() {
   ]
 
   useEffect(() => {
-    table.handleFilter(filters)
+    table.handler.handleFilter(filters)
   }, [filters])
 
   useEffect(() => {
@@ -75,26 +75,9 @@ export default function PageSlocCustomerGroup() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowKey={'id'}
-          />
+          <Table {...table.state.tableProps} />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
-          />
-        )}
+        {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
       <CreateModal visible={showCreateModal} close={() => setShowCreateModal(false)} />
       {/* <EditModal

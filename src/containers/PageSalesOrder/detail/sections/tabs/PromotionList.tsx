@@ -2,12 +2,9 @@
 import { Col, Row, Table } from 'antd'
 import { ColumnsType } from 'antd/lib/table'
 import React from 'react'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 import dateFormat from 'src/utils/dateFormat'
 import { ColumnsPromotionList } from '../../columns'
-
-interface PromotionListProps {
-  data: any
-}
 
 function CustomText(props: React.CSSProperties & { children?: React.ReactNode } = {}) {
   return (
@@ -37,8 +34,10 @@ function CustomDivider() {
   )
 }
 
-export default function PromotionList(props: PromotionListProps) {
-  const { data } = props
+export default function PromotionList() {
+  const {
+    state: { data },
+  } = useSalesSalesOrderDetailContext()
   const { customer_sales } = data
 
   const size = {

@@ -1,5 +1,5 @@
 import React from 'react'
-import PageSalesOrder from 'src/containers/PageSalesOrder'
+import PageSalesOrder from 'src/containers/PageSalesOrder/list'
 
 interface SalesOrderProps {}
 

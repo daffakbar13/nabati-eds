@@ -1,3 +1,5 @@
+import { useTableProduct } from 'src/containers/PageQuotation/create/columns'
+
 interface OptionsType {
     key?: string
     label?: string
@@ -23,9 +25,9 @@ interface PayloadCreate {
     items?: any[]
 }
 
-export interface StateType<T extends (...args: any) => any> {
+export interface StateType {
     dataForm?: PayloadCreate
-    tableProduct?: ReturnType<T>
+    tableProduct?: ReturnType<typeof useTableProduct>
     newQuotation?: string
     draftQuotation?: string
     cancel?: boolean
