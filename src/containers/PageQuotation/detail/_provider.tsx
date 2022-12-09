@@ -2,23 +2,37 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { getDetailQuotation } from 'src/api/quotation'
 import { useDetail } from 'src/hooks'
-import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
+import { useSalesQuotationDetailProvider } from 'src/hooks/contexts'
+import useTable from 'src/hooks/useTable/index'
+import { ColumnsQuotation } from './columns'
 
 export default function SalesQuotationDetailProvider(
   props: React.PropsWithChildren<React.ReactNode>,
 ) {
-  const pageCtx = useSalesQuotationDetailContext()
+  const { children } = props
   const router = useRouter()
+  const SalesQuotationDetail = useSalesQuotationDetailProvider()
   const data = useDetail(getDetailQuotation, { id: router.query.id as string })
+  const tableTabQuotation = useTable({
+    columns: ColumnsQuotation,
+    data: [],
+    removeHideShowColums: true,
+  })
+
+  React.useEffect(() => {
+    if (Object.keys(data).length > 0) {
+      tableTabQuotation.handler.updateData(data.items)
+    }
+  }, [data])
 
   return (
-    <pageCtx.getProvider
+    <SalesQuotationDetail.Provider
       value={{
-        state: { ...pageCtx.state, data },
-        handler: pageCtx.handler,
+        state: { ...SalesQuotationDetail.state, data, tableTabQuotation },
+        handler: SalesQuotationDetail.handler,
       }}
     >
-      {props.children}
-    </pageCtx.getProvider>
+      {children}
+    </SalesQuotationDetail.Provider>
   )
 }

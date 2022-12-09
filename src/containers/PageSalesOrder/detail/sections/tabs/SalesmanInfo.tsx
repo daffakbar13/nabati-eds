@@ -2,13 +2,12 @@ import { Col, Row } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import TitleDataList from 'src/components/TitleDataList'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 
-interface SalesmanInfoProps {
-  data: any
-}
-
-export default function SalesmanInfo(props: SalesmanInfoProps) {
-  const { data } = props
+export default function SalesmanInfo() {
+  const {
+    state: { data },
+  } = useSalesSalesOrderDetailContext()
   const { salesman } = data
 
   const generalInformation = [

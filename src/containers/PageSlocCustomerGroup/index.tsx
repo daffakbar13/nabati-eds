@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { Card, SearchQueryParams, Modal } from 'src/components'
-import {
-  getListCustomerGroup,
-  UpdateStatusCustomerGroup,
-} from 'src/api/logistic/configuration-sloc-costumer-group'
-import { useSimpleTable } from 'src/hooks'
+import { Card, SearchQueryParams, Modal, Pagination } from 'src/components'
+import { UpdateStatusCustomerGroup } from 'src/api/logistic/configuration-sloc-costumer-group'
+import { useTable } from 'src/hooks'
+import { getListPoSto } from 'src/api/logistic/po-sto'
 import { columns } from './columns'
-
 import CreateModal from './create'
 
 export default function PageConfigurationSloc() {
   const [filters, setFilters] = useState([])
+  const [showCreateModal, setShowCreateModal] = useState(false)
   const router = useRouter()
 
-  const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
 
   const goToDetailPage = (row: any) => {
@@ -44,11 +41,12 @@ export default function PageConfigurationSloc() {
     return false
   }
 
-  const table = useSimpleTable({
-    funcApi: getListCustomerGroup,
+  const table = useTable({
+    funcApi: getListPoSto,
     columns: columns(goToDetailPage, onClickSwitch),
-    filters,
   })
+
+  const hasData = table.state.total > 0
 
   useEffect(() => {
     if (router.query.search) {
@@ -60,6 +58,10 @@ export default function PageConfigurationSloc() {
       })
     }
   }, [router.query.search])
+
+  useEffect(() => {
+    table.handler.handleFilter(filters)
+  }, [filters])
 
   return (
     <>
@@ -80,8 +82,9 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} {...table} />
+          <Table {...table.state.tableProps} />
         </div>
+        {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <CreateModal

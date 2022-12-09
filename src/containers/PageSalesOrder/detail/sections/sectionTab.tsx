@@ -2,23 +2,16 @@ import { Tabs } from 'antd'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { TabDocumentFlow } from 'src/components'
-import {
-  CustomerInfo,
-  PricingCondition,
-  PromotionList,
-  SalesmanInfo,
-  SalesOrder,
-} from './tabs'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
+import { CustomerInfo, PricingCondition, PromotionList, SalesmanInfo, SalesOrder } from './tabs'
 
-interface SectionTabProps {
-  data: any
-}
-
-export default function SectionTab(props: SectionTabProps) {
-  const { data } = props
+export default function SectionTab() {
+  const {
+    state: { data },
+  } = useSalesSalesOrderDetailContext()
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
-  const hasData = Object.keys(data).length > 0
+  const hasData = Object.keys(data || {}).length > 0
 
   const createTabs = (label: string, key: string) => ({
     label,
@@ -48,12 +41,12 @@ export default function SectionTab(props: SectionTabProps) {
       />
       {hasData && (
         <>
-          {currentTab === '1' && <SalesOrder data={data} />}
-          {currentTab === '2' && <PricingCondition data={data} />}
-          {currentTab === '3' && <PromotionList data={data} />}
+          {currentTab === '1' && <SalesOrder />}
+          {currentTab === '2' && <PricingCondition />}
+          {currentTab === '3' && <PromotionList />}
           {currentTab === '4' && <TabDocumentFlow document_id={router.query.id as string} />}
-          {currentTab === '5' && <CustomerInfo data={data} />}
-          {currentTab === '6' && <SalesmanInfo data={data} />}
+          {currentTab === '5' && <CustomerInfo />}
+          {currentTab === '6' && <SalesmanInfo />}
         </>
       )}
     </>

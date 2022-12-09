@@ -22,7 +22,7 @@ export default function ConfirmSubmit(props: ConfirmSubmitProps) {
     handleSubmittedDeliveryOrder,
     selectedDeliveryOrder,
   } = props
-  const oneSelected = table.selected.length === 1
+  const oneSelected = table.state.selected.length === 1
 
   return (
     <Popup>
@@ -58,7 +58,7 @@ export default function ConfirmSubmit(props: ConfirmSubmitProps) {
           variant="primary"
           onClick={() => {
             handleProcess('Wait for submitting Delivery Order')
-            table.selected.forEach((id) => {
+            table.state.selected.forEach((id) => {
               manualSubmitDeliveryOrder(id)
                 .then((response) => response.data)
                 .then((data) => {

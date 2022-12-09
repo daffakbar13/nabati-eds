@@ -14,11 +14,13 @@ export default function SectionConfirm(props: SectionConfirmProps) {
   const { table, handleProcess, showConfirm, handleShowConfirm } = props
   const [submittedDeliveryOrder, setSubmittedDeliveryOrder] = React.useState([])
 
-  const oneSelected = table.selected.length === 1
-  const firstSelected = table.selected[0]
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = table.state.selected[0]
   const selectedDeliveryOrder = {
-    text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
-    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, +${table.state.selected.length - 1} more`,
+    content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
 
   return (

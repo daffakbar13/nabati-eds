@@ -39,7 +39,7 @@ export default function PageApproval(props: PageApprovalProps) {
   ])
   const table = useTable({
     funcApi: getApprovalList,
-    haveCheckbox: { headCell: 'status_approved_name', member: ['Wait For Approval'] },
+    haveCheckBox: { rowKey: 'status_approved_name', member: ['Wait For Approval'] },
     columns: useColumnApproval,
   })
   const titlePage = useTitlePage('list')
@@ -49,14 +49,16 @@ export default function PageApproval(props: PageApprovalProps) {
   const [submittedQuotation, setSubmittedQuotation] = React.useState([])
   const [processing, setProcessing] = React.useState('')
   const onProcess = processing !== ''
-  const hasData = table.total > 0
+  const hasData = table.state.total > 0
   const router = useRouter()
-  const oneSelected = table.selected.length === 1
-  const firstSelected = table.selected[0]
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = table.state.selected[0]
 
   const selectedSalesOrder = {
-    text: oneSelected ? firstSelected : `${firstSelected}, +${table.selected.length - 1} more`,
-    content: <div style={{ textAlign: 'center' }}>{table.selected.join(', ')}</div>,
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, +${table.state.selected.length - 1} more`,
+    content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
 
   const moreContent = () => (
@@ -97,7 +99,7 @@ export default function PageApproval(props: PageApprovalProps) {
         Are you sure to approve Sales Order
         <Typography.Text
           copyable={{
-            text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
+            text: oneSelected ? selectedSalesOrder.text : table.state.selected.join(', '),
           }}
         >
           {oneSelected ? (
@@ -126,7 +128,7 @@ export default function PageApproval(props: PageApprovalProps) {
           onClick={() => {
             setProcessing('Wait for submitting Quotation')
             multipleSubmitApproval({
-              order_list: table.selected.map((id) => ({ id })),
+              order_list: table.state.selected.map((id) => ({ id })),
               status_approved_id: '01',
             })
               .then((response) => response.data)
@@ -244,7 +246,7 @@ export default function PageApproval(props: PageApprovalProps) {
           onClick={() => {
             setProcessing('Wait for rejecting Sales Order')
             multipleSubmitApproval({
-              order_list: table.selected.map((id) => ({ id })),
+              order_list: table.state.selected.map((id) => ({ id })),
               status_approved_id: '02',
               reject_reason_id: reason,
             })
@@ -286,7 +288,7 @@ export default function PageApproval(props: PageApprovalProps) {
           Sales Order
           <Typography.Text
             copyable={{
-              text: oneSelected ? selectedSalesOrder.text : table.selected.join(', '),
+              text: oneSelected ? selectedSalesOrder.text : table.state.selected.join(', '),
             }}
           >
             {oneSelected ? (
@@ -341,9 +343,9 @@ export default function PageApproval(props: PageApprovalProps) {
               onChange={(e) => {
                 const { value } = e.target
                 if (value === '') {
-                  table.handleFilter([])
+                  table.handler.handleFilter([])
                 } else {
-                  table.handleFilter([
+                  table.handler.handleFilter([
                     {
                       field: 'eds_order.id',
                       option: 'CP',
@@ -364,7 +366,7 @@ export default function PageApproval(props: PageApprovalProps) {
                     to_value: obj.toValue?.value,
                   }))
                 setFilters(newVal)
-                table.handleFilter(newFiltered)
+                table.handler.handleFilter(newFiltered)
               }}
               filters={filters}
             />
@@ -386,28 +388,10 @@ export default function PageApproval(props: PageApprovalProps) {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'id'}
-          />
+          <Table {...table.state.tableProps} />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
-          />
-        )}
-        {table.selected.length > 0 && (
+        {hasData && <Pagination {...table.state.paginationProps} />}
+        {table.state.selected.length > 0 && (
           <FloatAction>
             <div
               style={{
@@ -416,7 +400,7 @@ export default function PageApproval(props: PageApprovalProps) {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.selected.length} Document Sales Order are Selected</b>
+              <b>{table.state.selected.length} Document Sales Order are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <Button

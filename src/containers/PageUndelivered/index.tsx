@@ -20,7 +20,7 @@ function showTotal(total: number, range: number[]) {
 export default function PageUndelivered() {
   const table = useTable({
     funcApi: getUndeliveredList,
-    haveCheckbox: { headCell: 'status', member: ['new'] },
+    haveCheckBox: { rowKey: 'status', member: ['new'] },
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
@@ -51,26 +51,9 @@ export default function PageUndelivered() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
-          <Table
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
-            showSorterTooltip={false}
-            rowSelection={table.rowSelection}
-            rowKey={'shipment_id'}
-            pagination={false}
-            onChange={(_, __, sorter) => console.log(sorter)}
-          />
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
-            onChange={(page, limit) => {
-              table.handlePagination(page, limit)
-            }}
-          />
+          <Table {...table.state.tableProps} />
         </div>
+        {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )

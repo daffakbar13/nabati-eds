@@ -5,13 +5,12 @@ import React from 'react'
 import { PATH } from 'src/configs/menus'
 import { Text, Button } from 'pink-lava-ui'
 import { useTitlePage } from 'src/hooks'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 
-interface SectionActionProps {
-  handleShowConfirm: (confirm: string) => void
-}
-
-export default function SectionAction(props: SectionActionProps) {
-  const { handleShowConfirm } = props
+export default function SectionAction() {
+  const {
+    handler: { showConfirm },
+  } = useSalesSalesOrderDetailContext()
   const titlePage = useTitlePage('detail')
   const router = useRouter()
 
@@ -40,7 +39,7 @@ export default function SectionAction(props: SectionActionProps) {
                 size="big"
                 variant="tertiary"
                 onClick={() => {
-                  handleShowConfirm('cancel')
+                  showConfirm('cancel')
                 }}
               >
                 Cancel Process

@@ -6,25 +6,24 @@ import { Button } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
 import { cancelSalesOrder } from 'src/api/sales-order'
 import { fieldReason } from 'src/configs/fieldFetches'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 
-interface ConfirmCancelProps {
-  handleShowConfirm: (confirm: string) => void
-  handleProcess: (process: string) => void
-}
-
-export default function ConfirmCancel(props: ConfirmCancelProps) {
-  const { handleShowConfirm, handleProcess } = props
+export default function ConfirmCancel() {
+  const {
+    handler: { showConfirm, unShowConfirm, runProcess, stopProcess },
+  } = useSalesSalesOrderDetailContext()
   const [reason, setReason] = React.useState<string>()
   const [optionsReason, setOptionsReason] = React.useState([])
   const router = useRouter()
 
   React.useEffect(() => {
+    runProcess('Wait for get Reasons')
     fieldReason('B')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)
       })
-      .catch(() => setOptionsReason([]))
+      .catch(() => stopProcess())
   }, [])
 
   return (
@@ -46,7 +45,7 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
           style={{ flexGrow: 1 }}
           variant="secondary"
           onClick={() => {
-            handleShowConfirm(undefined)
+            unShowConfirm()
           }}
         >
           No
@@ -56,16 +55,16 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            handleProcess('Wait for cancelling Sales Order')
+            runProcess('Wait for cancelling Sales Order')
             cancelSalesOrder({
               order_list: [{ id: router.query.id }],
               cancel_reason_id: reason,
             })
               .then(() => {
-                handleShowConfirm('success-cancel')
-                handleProcess(undefined)
+                showConfirm('success-cancel')
+                stopProcess()
               })
-              .catch((err) => console.log(err))
+              .catch(() => stopProcess())
           }}
         >
           Yes

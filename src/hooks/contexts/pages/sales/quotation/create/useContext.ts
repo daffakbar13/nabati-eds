@@ -1,14 +1,22 @@
 /* eslint-disable space-before-function-paren */
 import React from 'react'
+import { useCreatePageProvider } from 'src/hooks/contexts/useCreateProvider'
 import { SalesQuotationCreateCtx } from './context'
 import { baseHandler } from './handler'
 import { baseReducer, DispatchType } from './reducer'
 import { StateType } from './state'
 
-export function useSalesQuotationCreateContext<T extends (...args: any) => any>() {
+interface ctxType {
+    state: StateType
+    handler: ReturnType<typeof baseHandler>
+}
+const ctx = React.createContext<ctxType>(undefined)
+
+export function useSalesQuotationCreateProvider() {
     const now = new Date().toISOString()
     const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
-    const defaultPayload: StateType<T> | any = {
+    const initialValue: StateType = {
+        dataForm: {
         company_id: 'PP01',
         source_id: 'Z02',
         order_date: now,
@@ -18,14 +26,16 @@ export function useSalesQuotationCreateContext<T extends (...args: any) => any>(
         valid_to: tomorrow,
         customer_ref: '',
         currency_id: 'IDR',
+        },
     }
-    const reducer = (state: StateType<T>, action: DispatchType<T>) => baseReducer<T>(state, action)
-    const [state, dispatch] = React.useReducer(reducer, { dataForm: defaultPayload })
+    return useCreatePageProvider<
+        ctxType,
+        StateType,
+        DispatchType,
+        typeof baseHandler
+    >(ctx, baseReducer, baseHandler, initialValue)
+}
 
-    const handler = baseHandler<T>(dispatch)
-    const ctx = SalesQuotationCreateCtx
-    const getProvider = ctx.Provider
-    const getConsumer = ctx.Consumer
-
-    return { getProvider, getConsumer, state, handler }
+export function useSalesQuotationCreateContext() {
+    return React.useContext(ctx)
 }

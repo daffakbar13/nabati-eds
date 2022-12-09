@@ -3,8 +3,7 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, SearchQueryParams, Modal } from 'src/components'
 import { getListSlocman, UpdateStatusSlocman } from 'src/api/logistic/sloc-salesman'
-import Pagination from 'src/components/Pagination'
-import { useSimpleTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
@@ -38,10 +37,9 @@ export default function PageConfigurationSloc() {
     return false
   }
 
-  const table = useSimpleTable({
+  const table = useTable({
     funcApi: getListSlocman,
     columns: columns(goToDetailPage, onClickSwitch),
-    filters,
   })
 
   useEffect(() => {
@@ -74,7 +72,7 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} {...table} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
 

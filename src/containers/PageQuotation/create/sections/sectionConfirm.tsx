@@ -4,20 +4,15 @@ import { useTableProduct } from '../columns'
 import { ConfirmCancel, ConfirmSuccessSubmit } from './alerts'
 
 export default function SectionConfirm() {
-  const pageCtx = useSalesQuotationCreateContext<typeof useTableProduct>()
-  return (
-    <pageCtx.getConsumer>
-      {({ state }) => {
-        const { newQuotation, draftQuotation, cancel, tableProduct } = state
+  const {
+    state: { newQuotation, draftQuotation, cancel, tableProduct },
+  } = useSalesQuotationCreateContext()
 
-        return (
-          <>
-            {(newQuotation || draftQuotation) && <ConfirmSuccessSubmit />}
-            {cancel && <ConfirmCancel />}
-            {<tableProduct.ConfirmDelete />}
-          </>
-        )
-      }}
-    </pageCtx.getConsumer>
+  return (
+    <>
+      {(newQuotation || draftQuotation) && <ConfirmSuccessSubmit />}
+      {cancel && <ConfirmCancel />}
+      {<tableProduct.ConfirmDelete />}
+    </>
   )
 }

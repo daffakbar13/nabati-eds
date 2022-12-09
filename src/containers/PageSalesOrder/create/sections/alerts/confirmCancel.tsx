@@ -1,16 +1,15 @@
-import { Col, Row, Typography } from 'antd'
+import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
+import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
 
-interface ConfirmCancelProps {
-  handleCancel: (cancel: boolean) => void
-}
-
-export default function ConfirmCancel(props: ConfirmCancelProps) {
-  const { handleCancel } = props
+export default function ConfirmCancel() {
+  const {
+    handler: { setCancel },
+  } = useSalesSalesOrderCreateContext()
   const router = useRouter()
 
   return (
@@ -19,40 +18,36 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
         Confirm Cancellation
       </Typography.Title>
       <b>Are you sure want to cancel? Change you made so far will not saved</b>
-      <Row gutter={10}>
-        <Col span={12}>
-          <Button
-            size="big"
-            style={{ width: '100%', flexGrow: 1 }}
-            variant="secondary"
-            onClick={() => {
-              handleCancel(false)
-            }}
-          >
-            No
-          </Button>
-        </Col>
-        <Col span={12}>
-          <Button
-            size="big"
-            style={{ width: '100%', flexGrow: 1 }}
-            variant="primary"
-            onClick={() => {
-              if (router.query.status) {
-                const { status, id } = router.query
-                router.push({
-                  pathname: `${PATH.SALES}/sales-order/detail/`,
-                  query: { status, id },
-                })
-              } else {
-                router.push(`${PATH.SALES}/sales-order`)
-              }
-            }}
-          >
-            Yes
-          </Button>
-        </Col>
-      </Row>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setCancel(false)
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            if (router.query.status) {
+              const { status, id } = router.query
+              router.push({
+                pathname: `${PATH.SALES}/sales-order/detail/${id}`,
+                query: { status },
+              })
+            } else {
+              router.push(`${PATH.SALES}/sales-order`)
+            }
+          }}
+        >
+          Yes
+        </Button>
+      </div>
     </Popup>
   )
 }

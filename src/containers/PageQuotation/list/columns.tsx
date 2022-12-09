@@ -6,9 +6,11 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import DateFormat from 'src/components/DateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { concatString } from 'src/utils/concatString'
+import { useTable } from 'src/hooks'
+
+const { addColum } = useTable
 
 interface LinkedProps {
   link: string
@@ -62,7 +64,7 @@ export const useColumnQuotation = [
     dataIndex: 'id',
     fixed: true,
     render: (link: string, { status_name }: any) => (
-      <Linked link={link} type="id" status={status_name}/>
+      <Linked link={link} type="id" status={status_name} />
     ),
     sorter: true,
   }),
@@ -73,7 +75,6 @@ export const useColumnQuotation = [
   addColumn({
     title: 'Order Date',
     dataIndex: 'order_date',
-    render: (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
   }),
   addColumn({
     title: 'Sales Org.',
@@ -102,9 +103,12 @@ export const useColumnQuotation = [
     render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
   }),
   addColumn({
+    title: 'Currency',
+    dataIndex: 'currency',
+  }),
+  addColumn({
     title: 'Total Amount',
     dataIndex: 'total_amount',
-    render: (total_amount) => parseInt(total_amount).toLocaleString(),
   }),
   addColumn({
     title: 'Create From',
@@ -123,8 +127,6 @@ export const useColumnQuotation = [
   addColumn({
     title: 'Action',
     dataIndex: 'id',
-    render: (link, { status_name }) => (
-      <Linked link={link} type="action" status={status_name}/>
-    ),
+    render: (_, { id, status_name }) => <Linked link={id} type="action" status={status_name} />,
   }),
 ]

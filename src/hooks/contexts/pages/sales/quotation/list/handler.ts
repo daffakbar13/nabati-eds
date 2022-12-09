@@ -1,33 +1,25 @@
 import { DispatchType } from './reducer'
+import { StateType } from './state'
 
-export function baseHandler(dispatch: React.Dispatch<DispatchType>) {
-    function runProcess(process: string): void {
-        dispatch({
-            type: 'RUN_PROCESS',
-            payload: process,
-        })
+export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchType>) {
+    function runProcess(payload: string) {
+        dispatch({ type: 'processing', payload })
     }
 
-    function stopProcess(): void {
-        dispatch({ type: 'STOP_PROCESS' })
+    function stopProcess() {
+        dispatch({ type: 'processing', payload: undefined })
     }
 
-    function showConfirm(confirm: string): void {
-        dispatch({
-            type: 'SHOW_CONFIRM',
-            payload: confirm,
-        })
+    function showConfirm(payload: string) {
+        dispatch({ type: 'confirm', payload })
     }
 
-    function unShowConfirm(): void {
-        dispatch({ type: 'UNSHOW_CONFIRM' })
+    function unShowConfirm() {
+        dispatch({ type: 'confirm', payload: 'undefined' })
     }
 
-    function changeSubmittedQuotation(id: string[]): void {
-        dispatch({
-            type: 'CHANGE_SUBMITTED_QUOTATION',
-            payload: id,
-        })
+    function changeSubmittedQuotation(payload: string[]) {
+        dispatch({ type: 'submittedQuotation', payload })
     }
 
     return {

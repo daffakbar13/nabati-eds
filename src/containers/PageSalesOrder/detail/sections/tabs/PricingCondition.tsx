@@ -3,15 +3,14 @@ import { Table, Spacer } from 'pink-lava-ui'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 import dateFormat from 'src/utils/dateFormat'
 import { ColumnsPricingCondition } from '../../columns'
 
-interface PricingConditionProps {
-  data: any
-}
-
-export default function PricingCondition(props: PricingConditionProps) {
-  const { data } = props
+export default function PricingCondition() {
+  const {
+    state: { data },
+  } = useSalesSalesOrderDetailContext()
 
   return (
     <>

@@ -1,1 +1,1 @@
-export { useSalesQuotationDetailContext } from './useContext'
+export * from './useContext'

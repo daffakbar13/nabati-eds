@@ -10,80 +10,81 @@ import { colors } from 'src/configs/colors'
 import { useSalesQuotationListContext } from 'src/hooks/contexts'
 
 export default function SectionAction() {
-  const pageCtx = useSalesQuotationListContext()
+  const {
+    state: {
+      table: {
+        handler: { handleFilter },
+      },
+    },
+  } = useSalesQuotationListContext()
   const router = useRouter()
   const componentRef = React.useRef()
 
-  return (
-    <pageCtx.getConsumer>
-      {({ state }) => {
-        const { table } = state
-
-        const moreContent = (
-          <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
-            <Col span={24}>
-              <ReactToPrint
-                onBeforeGetContent={async () => {
-                  await downloadTemplateQuotation().then(() => {})
-                }}
-                removeAfterPrint
-                trigger={() => (
-                  <Row gutter={10}>
-                    <Col>
-                      <ICDownloadTemplate />
-                    </Col>
-                    <Col> Download Template</Col>
-                  </Row>
-                )}
-                content={() => componentRef.current}
-              />
-            </Col>
-            <Col span={24}>
-              <Row gutter={10}>
-                <Col>
-                  <ICUploadTemplate />
-                </Col>
-                <Col> Upload Template</Col>
-              </Row>
-            </Col>
-            <Col span={24}>
-              <Row gutter={10}>
-                <Col>
-                  <ICSyncData />
-                </Col>
-                <Col> Sync Data</Col>
-              </Row>
-            </Col>
-          </Row>
-        )
-
-        return (
-          <Row justify="space-between">
+  const moreContent = (
+    <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
+      <Col span={24}>
+        <ReactToPrint
+          onBeforeGetContent={async () => {
+            await downloadTemplateQuotation().then(() => {})
+          }}
+          removeAfterPrint
+          trigger={() => (
             <Row gutter={10}>
               <Col>
-                <Search
-                  width="380px"
-                  nameIcon="SearchOutlined"
-                  placeholder="Search Quotation ID"
-                  colorIcon={colors.grey.regular}
-                  onChange={(e) => {
-                    const { value } = e.target
-                    if (value === '') {
-                      table.handleFilter([])
-                    } else {
-                      table.handleFilter([
-                        {
-                          field: 'eds_order.id',
-                          option: 'CP',
-                          from_value: `%${e.target.value}%`,
-                        },
-                      ])
-                    }
-                  }}
-                />
+                <ICDownloadTemplate />
               </Col>
-              <Col>
-                {/* <SmartFilter
+              <Col> Download Template</Col>
+            </Row>
+          )}
+          content={() => componentRef.current}
+        />
+      </Col>
+      <Col span={24}>
+        <Row gutter={10}>
+          <Col>
+            <ICUploadTemplate />
+          </Col>
+          <Col> Upload Template</Col>
+        </Row>
+      </Col>
+      <Col span={24}>
+        <Row gutter={10}>
+          <Col>
+            <ICSyncData />
+          </Col>
+          <Col> Sync Data</Col>
+        </Row>
+      </Col>
+    </Row>
+  )
+
+  return (
+    <Row justify="space-between">
+      <Row gutter={10}>
+        <Col>
+          <Search
+            width="380px"
+            nameIcon="SearchOutlined"
+            placeholder="Search Quotation ID"
+            colorIcon={colors.grey.regular}
+            onChange={(e) => {
+              const { value } = e.target
+              if (value === '') {
+                handleFilter([])
+              } else {
+                handleFilter([
+                  {
+                    field: 'eds_order.id',
+                    option: 'CP',
+                    from_value: `%${e.target.value}%`,
+                  },
+                ])
+              }
+            }}
+          />
+        </Col>
+        <Col>
+          {/* <SmartFilter
               onOk={(newVal) => {
                 const newFiltered = newVal
                   .filter((obj) => obj.fromValue)
@@ -98,34 +99,31 @@ export default function SectionAction() {
               }}
               filters={filters}
             /> */}
-              </Col>
-            </Row>
-            <Row gutter={10}>
-              <Col>
-                <Popover placement="bottom" content={moreContent} trigger="click">
-                  <Button
-                    size="big"
-                    variant="secondary"
-                    onClick={downloadTemplateQuotation}
-                    style={{ gap: 5 }}
-                  >
-                    More <DownOutlined />
-                  </Button>
-                </Popover>
-              </Col>
-              <Col>
-                <Button
-                  size="big"
-                  variant="primary"
-                  onClick={() => router.push(`${router.pathname}/create`)}
-                >
-                  Create
-                </Button>
-              </Col>
-            </Row>
-          </Row>
-        )
-      }}
-    </pageCtx.getConsumer>
+        </Col>
+      </Row>
+      <Row gutter={10}>
+        <Col>
+          <Popover placement="bottom" content={moreContent} trigger="click">
+            <Button
+              size="big"
+              variant="secondary"
+              onClick={downloadTemplateQuotation}
+              style={{ gap: 5 }}
+            >
+              More <DownOutlined />
+            </Button>
+          </Popover>
+        </Col>
+        <Col>
+          <Button
+            size="big"
+            variant="primary"
+            onClick={() => router.push(`${router.pathname}/create`)}
+          >
+            Create
+          </Button>
+        </Col>
+      </Row>
+    </Row>
   )
 }

@@ -1,30 +1,27 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
-import { createSalesOrder, updateSalesOrder } from 'src/api/sales-order'
 import { useRouter } from 'next/router'
+import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
+import { createSalesOrder, updateSalesOrder } from 'src/api/sales-order'
 
-interface SectionActionProps {
-  handleCancel: (cancel: boolean) => void
-  canSave: boolean
-  handleProcess: (process: string) => void
-  isCreateOrOrderAgain: boolean
-  dataSubmitted: (status_id: number) => any
-  handleDraftSalesOrder: (id: string) => void
-  handleNewSalesOrder: (id: string) => void
-}
-
-export default function SectionAction(props: SectionActionProps) {
+export default function SectionAction() {
   const {
-    handleCancel,
-    canSave,
-    handleProcess,
-    isCreateOrOrderAgain,
-    dataSubmitted,
-    handleDraftSalesOrder,
-    handleNewSalesOrder,
-  } = props
+    state: { canSave, dataForm },
+    handler: {
+      stopProcess,
+      runProcess,
+      setCancel,
+      dataSubmitted,
+      setDraftSalesOrder,
+      setNewSalesOrder,
+    },
+  } = useSalesSalesOrderCreateContext()
   const router = useRouter()
+  const isCreatePage = router.asPath.split('/').includes('create')
+  const isEditPage = router.asPath.split('/').includes('edit')
+  const isOrderAgainPage = !isCreatePage && !isEditPage
+  const isCreateOrOrderAgain = isCreatePage || isOrderAgainPage
 
   return (
     <Row justify="end" gutter={10}>
@@ -33,7 +30,7 @@ export default function SectionAction(props: SectionActionProps) {
           size="big"
           variant="tertiary"
           onClick={() => {
-            handleCancel(true)
+            setCancel(true)
           }}
         >
           Cancel
@@ -46,21 +43,21 @@ export default function SectionAction(props: SectionActionProps) {
           disabled={!canSave}
           onClick={() => {
             if (canSave) {
-              handleProcess('Wait for save Sales Order')
+              runProcess('Wait for save Sales Order')
               if (isCreateOrOrderAgain) {
-                createSalesOrder(dataSubmitted(10))
+                createSalesOrder(dataSubmitted(10, dataForm))
                   .then((response) => {
-                    handleDraftSalesOrder(response.data.id)
-                    handleProcess(undefined)
+                    setDraftSalesOrder(response.data.id)
+                    stopProcess()
                   })
-                  .catch(() => handleProcess(undefined))
+                  .catch(() => stopProcess())
               } else {
-                updateSalesOrder(dataSubmitted(10), router.query.id as string)
+                updateSalesOrder(dataSubmitted(10, dataForm), router.query.id as string)
                   .then((response) => {
-                    handleDraftSalesOrder(response.data.id)
-                    handleProcess(undefined)
+                    setDraftSalesOrder(response.data.id)
+                    stopProcess()
                   })
-                  .catch(() => handleProcess(undefined))
+                  .catch(() => stopProcess())
               }
             }
           }}
@@ -75,21 +72,21 @@ export default function SectionAction(props: SectionActionProps) {
           disabled={!canSave}
           onClick={() => {
             if (canSave) {
-              handleProcess('Wait for save Sales Order')
+              runProcess('Wait for save Sales Order')
               if (isCreateOrOrderAgain) {
-                createSalesOrder(dataSubmitted(1))
+                createSalesOrder(dataSubmitted(1, dataForm))
                   .then((response) => {
-                    handleNewSalesOrder(response.data.id)
-                    handleProcess(undefined)
+                    setNewSalesOrder(response.data.id)
+                    stopProcess()
                   })
-                  .catch(() => handleProcess(undefined))
+                  .catch(() => stopProcess())
               } else {
-                updateSalesOrder(dataSubmitted(1), router.query.id as string)
+                updateSalesOrder(dataSubmitted(1, dataForm), router.query.id as string)
                   .then((response) => {
-                    handleNewSalesOrder(response.data.id)
-                    handleProcess(undefined)
+                    setNewSalesOrder(response.data.id)
+                    stopProcess()
                   })
-                  .catch(() => handleProcess(undefined))
+                  .catch(() => stopProcess())
               }
             }
           }}

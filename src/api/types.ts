@@ -27,8 +27,15 @@ export interface CommonDetailParams {
   doc_type?: string
 }
 
+export interface CommonFiltersPayload {
+  field: string
+  option: string
+  from_value?: string
+  to_value?: string
+}
+
 export interface CommonListParams {
   page?: number
   limit?: number
-  filters?: any[]
+  filters?: CommonFiltersPayload[]
 }

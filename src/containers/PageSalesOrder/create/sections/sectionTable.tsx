@@ -2,23 +2,19 @@ import React from 'react'
 import { Row } from 'antd'
 import { Button, Table } from 'pink-lava-ui'
 import Total from 'src/components/Total'
-import { payloadCreate } from '..'
+import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
 import { useTableProduct } from '../columns'
 
-interface SectionTableProps {
-  dataForm: payloadCreate
-  tableProduct: ReturnType<typeof useTableProduct>
-}
-
-export default function SectionTable(props: SectionTableProps) {
-  const { dataForm, tableProduct } = props
-
+export default function SectionTable() {
+  const {
+    state: { dataForm, tableProduct },
+  } = useSalesSalesOrderCreateContext()
   return (
     <>
       <Row style={{ overflow: 'scroll' }}>
-        <Table data={dataForm.customer_id && tableProduct.data} columns={tableProduct.columns} />
+        <Table data={dataForm?.customer_id && tableProduct.data} columns={tableProduct.columns} />
       </Row>
-      {dataForm.customer_id && (
+      {dataForm?.customer_id && (
         <Button size="small" variant="primary" onClick={tableProduct.handleAddItem}>
           Add Item
         </Button>

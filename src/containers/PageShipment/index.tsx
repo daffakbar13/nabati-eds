@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 /* eslint-disable arrow-spacing */
@@ -31,7 +32,7 @@ export default function PageShipment() {
 
   const table = useTable({
     funcApi: getShipment,
-    haveCheckbox: { headCell: 'status', member: ['New'] },
+    haveCheckBox: { rowKey: 'status', member: ['New'] },
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
@@ -39,9 +40,9 @@ export default function PageShipment() {
   const [processing, setProcessing] = React.useState('')
   const [pending, setPending] = React.useState(0)
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
-  const hasData = table.total > 0
+  const hasData = table.state.total > 0
   const router = useRouter()
-  const oneSelected = table.selected.length === 1
+  const oneSelected = table.state.selected.length === 1
 
   const ConfirmPGI = () => (
     <Popup
@@ -79,11 +80,11 @@ export default function PageShipment() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            table.selected.forEach((shipment_id, index) => {
+            table.state.selected.forEach((shipment_id, index) => {
               setPending((curr) => ++curr)
               PGIShipment(shipment_id, { posting_date: postingDate }).then(() => {
                 setPending((curr) => --curr)
-                if (index === table.selected.length - 1) {
+                if (index === table.state.selected.length - 1) {
                   setShowConfirm('success-PGI')
                 }
               })
@@ -120,13 +121,15 @@ export default function PageShipment() {
         <div>
           Shipment
           <Typography.Text
-            copyable={{ text: oneSelected ? table.selected[0] : table.selected.join(', ') }}
+            copyable={{
+              text: oneSelected ? table.state.selected[0] : table.state.selected.join(', '),
+            }}
           >
             {oneSelected ? (
-              ` ${table.selected[0]} `
+              ` ${table.state.selected[0]} `
             ) : (
-              <Popover content={table.selected.join(', ')}>
-                {` ${table.selected[0]}, +${table.selected.length - 1} more `}
+              <Popover content={table.state.selected.join(', ')}>
+                {` ${table.state.selected[0]}, +${table.state.selected.length - 1} more `}
               </Popover>
             )}
           </Typography.Text>
@@ -165,9 +168,9 @@ export default function PageShipment() {
               onChange={(e) => {
                 const { value } = e.target
                 if (value === '') {
-                  table.handleFilter([])
+                  table.handler.handleFilter([])
                 } else {
-                  table.handleFilter([
+                  table.handler.handleFilter([
                     {
                       field: 'id',
                       option: 'CP',
@@ -198,11 +201,11 @@ export default function PageShipment() {
         <div style={{ overflow: 'scroll', width: '' }}>
           <Table
             scroll={{ x: 'max-content', y: 600 }}
-            loading={table.loading}
-            columns={table.columns}
-            dataSource={table.data}
+            loading={table.state.loading}
+            columns={table.state.columns}
+            dataSource={table.state.data}
             showSorterTooltip={false}
-            rowSelection={table.rowSelection}
+            rowSelection={table.state.rowSelection}
             rowKey={'shipment_id'}
             pagination={false}
             onChange={(_, __, sorter) => console.log(sorter)}
@@ -212,14 +215,14 @@ export default function PageShipment() {
           <Pagination
             defaultPageSize={20}
             pageSizeOptions={[20, 50, 100]}
-            total={table.total}
-            totalPage={table.totalPage}
+            total={table.state.total}
+            totalPage={table.state.totalPage}
             onChange={(page, limit) => {
-              table.handlePagination(page, limit)
+              table.handler.handlePagination(page, limit)
             }}
           />
         )}
-        {table.selected.length > 0 && (
+        {table.state.selected.length > 0 && (
           <FloatAction>
             <div
               style={{
@@ -228,7 +231,7 @@ export default function PageShipment() {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.selected.length} Document Shipment are Selected</b>
+              <b>{table.state.selected.length} Document Shipment are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <Button
@@ -247,7 +250,7 @@ export default function PageShipment() {
                   setShowConfirm('PGI')
                 }}
               >
-                PGI ({table.selected.length})
+                PGI ({table.state.selected.length})
               </Button>
             </div>
           </FloatAction>

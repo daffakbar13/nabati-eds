@@ -3,19 +3,13 @@ import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
 import { ConfirmCancel, ConfirmSuccessCancel } from './alerts'
 
 export default function SectionConfirm() {
-  const pageCtx = useSalesQuotationDetailContext()
-
+  const {
+    state: { confirm },
+  } = useSalesQuotationDetailContext()
   return (
-    <pageCtx.getConsumer>
-      {({ state }) => {
-        const { confirm } = state
-        return (
-          <>
-            {confirm === 'cancel' && <ConfirmCancel />}
-            {confirm === 'success-cancel' && <ConfirmSuccessCancel />}
-          </>
-        )
-      }}
-    </pageCtx.getConsumer>
+    <>
+      {confirm === 'cancel' && <ConfirmCancel />}
+      {confirm === 'success-cancel' && <ConfirmSuccessCancel />}
+    </>
   )
 }

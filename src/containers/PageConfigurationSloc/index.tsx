@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router'
-import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
-import { PATH } from 'src/configs/menus'
+import { Card, SearchQueryParams } from 'src/components'
 
 import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 
-import { useSimpleTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
@@ -25,10 +24,9 @@ export default function PageConfigurationSloc() {
     console.log('a', a)
   }
 
-  const tableProps = useSimpleTable({
+  const table = useTable({
     funcApi: getConfigSlocList,
     columns: columns(goToDetailPage, onChangeActive),
-    filters,
   })
 
   return (
@@ -50,7 +48,7 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...tableProps} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
 
