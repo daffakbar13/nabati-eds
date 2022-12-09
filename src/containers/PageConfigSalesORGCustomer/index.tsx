@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, SearchQueryParams, Modal } from 'src/components'
+import Pagination from 'src/components/Pagination'
 import {
   getListSalesORGCustomer,
   UpdateStatusSalesORGCustomer,
@@ -51,6 +52,8 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
     // filters,
   })
 
+  const hasData = table.state.total > 0
+
   useEffect(() => {
     if (router.query.search) {
       filters.push({
@@ -83,6 +86,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <CreateModal
