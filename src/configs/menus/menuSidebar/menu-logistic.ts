@@ -275,6 +275,49 @@ export const menuLogistic = [
         content: () => 'Auto SO to DO',
         onClick: () => Router.push(`${PATH.LOGISTIC}/auto-so-to-do`),
       },
+      {
+        key: 'tax-regulator',
+        title: 'Tax Regulator',
+        content: () => 'Tax Regulator',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-tax-regulator`),
+      },
+      {
+        key: 'item-category',
+        title: 'Item Category',
+        content: () => 'Item Category',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-item-category`),
+      },
+      {
+        key: 'branch-location',
+        title: 'Branch Location',
+        content: () => 'Branch Location',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-branch-location`),
+      },
+    ],
+  },
+  {
+    key: 'sales-order-block',
+    title: 'Sales Order Block',
+    icon: LogisticIcConfiguration,
+    children: [
+      {
+        key: 'sales-organization-customer-group-material',
+        title: 'Sales Organization, Customer Group, Material',
+        content: () => 'Sales Organization, Customer Group, Material',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer-group-material`),
+      },
+      {
+        key: 'sales-organization-customer-group-salesman-grop',
+        title: 'Sales Organization, Customer Group, Salesman Group',
+        content: () => 'Sales Organization, Customer Group, Salesman Group',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer-group-salesman-grop`),
+      },
+      {
+        key: 'sales-organization-customer',
+        title: 'Sales Organization, Customer',
+        content: () => 'Sales Organization, Customer',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer`),
+      },
     ],
   },
 ]

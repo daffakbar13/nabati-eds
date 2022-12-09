@@ -5,6 +5,7 @@ import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldSlocFromBranch, fieldSalesmanAll } from 'src/configs/fieldFetches'
 import { getDetailSlocman, updateSlocman, createSlocman } from 'src/api/logistic/sloc-salesman'
+import { PATH } from 'src/configs/menus'
 
 const { Label, LabelRequired } = Text
 
@@ -149,7 +150,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.reload()
+          router.push(`${PATH.LOGISTIC}/sloc-salesman`)
         }}
         successContent={(res: any) => 'SLoc Salesman has been successfully Updated'}
         successOkText="OK"

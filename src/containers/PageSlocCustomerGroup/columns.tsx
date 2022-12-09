@@ -1,58 +1,43 @@
-/* eslint-disable radix */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-expressions */
-import React, { useState } from 'react'
+import moment from 'moment'
 import CreateColumns from 'src/utils/createColumns'
 import { Button, Switch } from 'pink-lava-ui'
+import { Tag } from 'antd'
+import Link from 'src/components/Link'
 
-// const [showUpdateModal, setShowUpdateModal] = useState(false)
-
-const onChange = (checked) => {
-  console.log(`switch to ${checked}`)
-}
-
-export const selectData = (record) => {
-  return record
-}
-
-export const columns = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1, 55),
+export const columns = (
+  onClickDetail: (rec: any) => void,
+  onClickSwitch: (a: boolean, rec: any) => void,
+) => [
+  CreateColumns('No', '', false, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
+  CreateColumns('Company', 'company_id', true, (text: string, rec) => (
+    <>
+      {rec.company_id} - {rec.company_name}
+    </>
+  )),
+  CreateColumns('Sales Org', 'sales_org_id', true, (text: string, rec) => (
+    <>
+      {rec.sales_org_id} -{rec.sales_org_name}
+    </>
+  )),
+  CreateColumns('Customer Group', 'customer_group2_id', true, (text: string, rec) => (
+    <>
+      {rec.customer_group2_id} -{rec.customer_group_name}
+    </>
+  )),
+  CreateColumns('SLoc', 'sloc_id'),
   CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-  ),
-  CreateColumns(
-    'Supplying Branch',
-    'sales_org_id',
-    false,
-    (sales_org_id, record) => <>{`${sales_org_id || ''} - ${record.sales_org_name || ''}`}</>,
-    200,
-  ),
-  CreateColumns(
-    'Customer Group',
-    'customer_group_id',
-    false,
-    (customer_group_id, record) => (
-      <>{`${customer_group_id || ''} - ${record.customer_group_name || ''}`}</>
-    ),
-    200,
-  ),
-  CreateColumns('SLoc', 'sloc_id', false, (sloc_id, record) => <>{`${sloc_id || ''}`}</>, 200),
-  CreateColumns(
-    'Active / Inactive',
+    'Active/Inactive',
     'status',
     false,
-    (sloc_id, record) => (
+    (status: string, rec) => (
       <>
-        <Switch defaultChecked onChange={onChange} />
+        <Switch checked={status} onChange={(bool: boolean) => onClickSwitch(bool, rec)} />
       </>
     ),
-    200,
+    150,
   ),
-  CreateColumns('Action', 'id', false, (id: string, record: any) => (
-    <Button size="big" variant="tertiary" onClick={() => selectData(record)}>
+  CreateColumns('Action', 'gr_number', false, (text, rec) => (
+    <Button size="big" variant="tertiary" onClick={() => onClickDetail(rec)}>
       View Detail
     </Button>
   )),
