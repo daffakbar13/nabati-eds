@@ -1,9 +1,12 @@
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Select, SelectMasterData, Spacer, Table, Text } from 'pink-lava-ui'
+import { Col, Row, Select, SelectMasterData, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { exportExcelMaterialDocument, getMaterialDocumentList } from 'src/api/logistic/material-document'
+import {
+  exportExcelMaterialDocument,
+  getMaterialDocumentList,
+} from 'src/api/logistic/material-document'
 import { Card, DownloadButton, SearchQueryParams, SmartFilter } from 'src/components'
-import { useSimpleTable, useTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 export default function PageRealTime() {

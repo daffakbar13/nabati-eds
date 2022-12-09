@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, SearchQueryParams, Modal, Pagination } from 'src/components'
-import {
-  getListCustomerGroup,
-  UpdateStatusCustomerGroup,
-} from 'src/api/logistic/configuration-sloc-costumer-group'
-import { useSimpleTable, useTable } from 'src/hooks'
+import { UpdateStatusCustomerGroup } from 'src/api/logistic/configuration-sloc-costumer-group'
+import { useTable } from 'src/hooks'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { columns } from './columns'
 import CreateModal from './create'

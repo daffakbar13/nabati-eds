@@ -6,7 +6,7 @@ import {
   getListSOtoDO,
   UpdateStatusSOtoDO,
 } from 'src/api/logistic/configuration-auto-so-to-do'
-import { useSimpleTable, useTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'

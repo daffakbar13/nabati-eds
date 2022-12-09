@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router'
-import { Button, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
-import { PATH } from 'src/configs/menus'
+import { Card, SearchQueryParams } from 'src/components'
 
 import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 
-import { useSimpleTable, useTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'

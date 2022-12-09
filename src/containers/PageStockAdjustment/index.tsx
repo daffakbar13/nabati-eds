@@ -6,7 +6,7 @@ import { PATH } from 'src/configs/menus'
 import { ExclamationBrownIc } from 'src/assets'
 
 import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
-import { useSimpleTable, useTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import FreezeSlocModal from './modals/freezeSloc'

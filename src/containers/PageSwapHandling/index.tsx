@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from '
 import { PATH } from 'src/configs/menus'
 
 import { getListSwapHandling } from 'src/api/logistic/swap-handling'
-import { useSimpleTable, useTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 export default function PageSwapHandling() {

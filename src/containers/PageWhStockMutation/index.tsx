@@ -1,10 +1,20 @@
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, DownloadButton, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
+import {
+  Card,
+  DownloadButton,
+  SearchQueryParams,
+  Select,
+  SelectMasterData,
+  SmartFilter,
+} from 'src/components'
 
-import { exportExcelListSwapHandling, getListSwapHandling } from 'src/api/logistic/wh-stock-mutation'
-import { useSimpleTable, useTable } from 'src/hooks'
+import {
+  exportExcelListSwapHandling,
+  getListSwapHandling,
+} from 'src/api/logistic/wh-stock-mutation'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import { Props } from './types'

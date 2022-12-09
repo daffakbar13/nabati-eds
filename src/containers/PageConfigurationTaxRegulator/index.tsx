@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Card, SearchQueryParams, Modal } from 'src/components'
 
 import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
-import { useSimpleTable } from 'src/hooks'
+import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
@@ -38,10 +38,10 @@ export default function PageConfigurationTaxRegulator() {
     return false
   }
 
-  const tableProps = useSimpleTable({
+  const table = useTable({
     funcApi: getConfigSlocCompanyList,
     columns: columns(goToDetailPage, onClickSwitch),
-    filters,
+    // filters,
   })
 
   console.log('selectedRow', selectedRow)
@@ -65,7 +65,7 @@ export default function PageConfigurationTaxRegulator() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...tableProps} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
 

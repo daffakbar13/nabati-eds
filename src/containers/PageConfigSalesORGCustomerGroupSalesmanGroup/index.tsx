@@ -6,14 +6,13 @@ import {
   getListSalesORGCustomerGroupCustomerGroup,
   UpdateStatusSalesORGCustomerGroupCustomerGroup,
 } from 'src/api/logistic/config-salesorg-customer-group-salesman-group'
-import Pagination from 'src/components/Pagination'
-import { useSimpleTable } from 'src/hooks'
-import { columns } from './columns'
+import { useTable } from 'src/hooks'
 import { PATH } from 'src/configs/menus'
+import { columns } from './columns'
 
 import CreateModal from './create'
 
-export default function pageConfigSalesORGCustomerGroupMaterial() {
+export default function PageConfigSalesORGCustomerGroupMaterial() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
@@ -50,10 +49,10 @@ export default function pageConfigSalesORGCustomerGroupMaterial() {
     return false
   }
 
-  const table = useSimpleTable({
+  const table = useTable({
     funcApi: getListSalesORGCustomerGroupCustomerGroup,
     columns: columns(goToDetailPage, onClickSwitch),
-    filters,
+    // filters,
   })
 
   useEffect(() => {
@@ -86,7 +85,7 @@ export default function pageConfigSalesORGCustomerGroupMaterial() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} {...table} />
+          <Table {...table.state.tableProps} />
         </div>
       </Card>
 
@@ -110,7 +109,9 @@ export default function pageConfigSalesORGCustomerGroupMaterial() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Sales Organization, Customer Group, Material?`}
         onOkSuccess={() => {
-          router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer-group-salesman-grop`)
+          router.push(
+            `${PATH.LOGISTIC}/configuration-sales-organization-customer-group-salesman-grop`,
+          )
         }}
         successContent={(
           res: any,
