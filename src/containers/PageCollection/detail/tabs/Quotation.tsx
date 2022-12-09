@@ -4,6 +4,7 @@ import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import useTable from 'src/hooks/useTable'
 import { Spacer, Table } from 'pink-lava-ui'
+import { getCollectionDetail } from 'src/api/collection'
 import { TableQuotation } from '../columns'
 
 interface QuotationProps {}
@@ -11,6 +12,11 @@ interface QuotationProps {}
 // const DataList.createDataList = (label: string, value: string) => ({ label, value })
 
 export default function Quotation(props: QuotationProps) {
+  const table = useTable({
+    funcApi: getCollectionDetail,
+    haveCheckBox: { rowKey: 'status', member: ['new'] },
+    columns: TableQuotation,
+  })
   const {} = props
   // const table = useTable({ api: '', columns: TableQuotation })
   const dataList = [
@@ -33,24 +39,6 @@ export default function Quotation(props: QuotationProps) {
 
   return (
     <>
-      <Row gutter={8}>
-        <Col span={8}>
-          {dataList.slice(0, 5).map(({ label, value }, i) => (
-            <DataList key={i} label={label} value={value} />
-          ))}
-        </Col>
-        <Col span={8}>
-          {dataList.slice(5, 10).map(({ label, value }, i) => (
-            <DataList key={i} label={label} value={value} />
-          ))}
-        </Col>
-        <Col span={8}>
-          {dataList.slice(10).map(({ label, value }, i) => (
-            <DataList key={i} label={label} value={value} />
-          ))}
-        </Col>
-      </Row>
-      <Divider />
       <div style={{ overflow: 'scroll' }}>
         <Table columns={TableQuotation} dataSource={[]} />
       </div>

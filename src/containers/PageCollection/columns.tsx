@@ -7,9 +7,7 @@ import React from 'react'
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    // status === 'PGI Complete'
-    // ? router.push(`${PATH.SALES}/billing/detail/${link}`)
-    // : router.push(`${PATH.SALES}/billing/detail/${link}?status=${status}`)
+    router.push(`${PATH.SALES}/collection/detail/${link}`)
   }
   const [hover, setHover] = React.useState(false)
 
