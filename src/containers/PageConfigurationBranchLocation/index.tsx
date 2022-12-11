@@ -24,26 +24,31 @@ export default function PageConfigurationBranchLocation() {
     setShowCreateModal(true)
   }
 
-  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
-  const onClickSwitch = (a: boolean, rec: any) => {
-    setChangeStatusPayload(rec)
-    setShowChangeStatusModal(true)
+
+  const onClickDelete = (a: boolean, rec: any) => {
+    // setChangeStatusPayload(rec)
+    setShowDeleteModal(true)
   }
 
-  const handleChangeStatus = async () => {
+  const handleDelete = async () => {
     const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
-    try {
-      return await updateStatus(reqBody, changeStatusPayload)
-    } catch (error) {
-      console.error(error)
-    }
+    // TO DO DELETE HERE...
+
+    // try {
+    //   return await updateStatus(reqBody, changeStatusPayload)
+    // } catch (error) {
+    //   console.error(error)
+    // }
+
     return false
   }
 
   const table = useTable({
     funcApi: getConfigBranchLocationList,
-    columns: columns(goToDetailPage, onClickSwitch),
+    columns: columns(goToDetailPage),
+    haveCheckBox: { rowKey: 'branch_from_id', member: ['New'] },
     // filters,
   })
 
@@ -59,6 +64,9 @@ export default function PageConfigurationBranchLocation() {
             <SearchQueryParams />
           </Row>
           <Row gap="16px">
+            <Button size="big" variant="tertiary" onClick={onClickDelete}>
+              Delete
+            </Button>
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
               Create
             </Button>
@@ -83,10 +91,10 @@ export default function PageConfigurationBranchLocation() {
 
       <Modal
         title={'Confirm Submit'}
-        open={showChangeStatusModal}
-        onOk={handleChangeStatus}
+        open={showDeleteModal}
+        onOk={handleDelete}
         onCancel={() => {
-          setShowChangeStatusModal(false)
+          setShowDeleteModal(false)
         }}
         content={`Are you sure want to ${
           changeStatusPayload?.status ? 'inactivate' : 'activate'
@@ -96,6 +104,21 @@ export default function PageConfigurationBranchLocation() {
         }}
         successContent={(res: any) => `Config sloc company has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={'Confirm Delete'}
+        open={showDeleteModal}
+        onOk={handleDelete}
+        onCancel={() => {
+          setShowDeleteModal(false)
+        }}
+        content={'Are you sure want to delete this Branch?'}
+        onOkSuccess={() => {
+          router.reload()
+        }}
+        successContent={(res: any) => 'This branch has been successfully deleted'}
         successOkText="OK"
         width={432}
       />

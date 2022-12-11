@@ -4,10 +4,7 @@ import { Button, Switch } from 'pink-lava-ui'
 import { Tag } from 'antd'
 import Link from 'src/components/Link'
 
-export const columns = (
-  goToDetail: (rec: any) => void,
-  onClickSwitch: (a: boolean, rec: any) => void,
-) => [
+export const columns = (goToDetail: (rec: any) => void) => [
   CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   CreateColumns(
     'Company',
