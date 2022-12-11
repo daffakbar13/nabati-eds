@@ -3,7 +3,10 @@ import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
 import { Card, SearchQueryParams, Modal } from 'src/components'
 
-import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
+import {
+  getConfigSlocCompanyList,
+  updateStatus,
+} from 'src/api/logistic/configuration-item-category'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
