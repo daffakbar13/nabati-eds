@@ -11,7 +11,7 @@ export const columns = (
   CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   CreateColumns(
     'Company',
-    'company_name',
+    'company_id',
     true,
     (text, rec) => (
       <>
@@ -22,27 +22,27 @@ export const columns = (
   ),
   CreateColumns(
     'Branch From',
-    'company_name',
+    'branch_from_id',
     true,
     (text, rec) => (
       <>
-        {text}-{rec.company_name}
+        {text}-{rec.branch_from_name}
       </>
     ),
     200,
   ),
   CreateColumns(
     'Branch To',
-    'company_name',
+    'branch_to_id',
     true,
     (text, rec) => (
       <>
-        {text}-{rec.company_name}
+        {text}-{rec.branch_to_name}
       </>
     ),
     200,
   ),
-  CreateColumns('Action', 'gr_number', false, (text, rec) => (
+  CreateColumns('Action', 'company_id', false, (text, rec) => (
     <Button
       size="big"
       variant="tertiary"

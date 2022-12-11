@@ -6,10 +6,10 @@ import { Input, Modal, SelectMasterData, Text } from 'src/components'
 import { DatePickerInput } from 'pink-lava-ui'
 
 import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+  createConfigItemCategory,
+  getConfigBranchLocationDetail,
+  updateConfigItemCategory,
+} from 'src/api/logistic/configuration-branch-location'
 
 const { Label, LabelRequired } = Text
 
@@ -29,7 +29,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigItemCategory(reqBody, reqBody.branch_from_id)
       setLoading(false)
       return res
     } catch (error) {
@@ -41,7 +41,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigItemCategory(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -54,11 +54,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     const values = form.getFieldsValue(true)
     const reqBody = {
       company_id: values.company_id.value,
-      sloc_id: values.sloc_id.value,
-      key: values.key,
-      value: values.value,
-      description: values.description,
-      console_group: values.console_group,
+      branch_from_id: values.branch_from_id.value,
+      branch_to_id: values.branch_to_id.value,
+      same_location: 1,
     }
 
     if (!isOnEditMode) {
@@ -85,20 +83,21 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     const fetchData = async () => {
       try {
         setLoading(true)
-        const res = await getConfigSlocCompanyDetail(
-          payload.company_id,
-          payload.sloc_id,
-          payload.key,
-        )
+        const res = await getConfigBranchLocationDetail(payload.branch_from_id)
         console.log('res', res)
         form.setFieldsValue({
           company_id: {
             value: res?.data?.company_id,
             label: `${res?.data?.company_id} - ${res?.data?.company_name}`,
           },
-          sloc_id: { value: res?.data?.sloc_id },
-          description: res?.data?.description,
-          key: res?.data?.key,
+          branch_from_id: {
+            value: res?.data?.branch_from_id,
+            label: `${res?.data?.branch_from_id} - ${res?.data?.branch_from_name}`,
+          },
+          branch_to_id: {
+            value: res?.data?.branch_to_id,
+            label: `${res?.data?.branch_to_id} - ${res?.data?.branch_to_name}`,
+          },
         })
         setLoading(false)
       } catch (error) {
@@ -130,7 +129,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
-          name="tax_subject"
+          name="branch_from_id"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Branch From</LabelRequired>}
           rules={[{ required: true }]}
@@ -138,7 +137,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
-          name="tax_subject"
+          name="branch_to_id"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Branch To</LabelRequired>}
           rules={[{ required: true }]}
@@ -168,13 +167,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit config sloc company?"
+        content="Are you sure want to submit config branch location?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.reload()
         }}
-        successContent={(res: any) => 'Config sloc company has been successfully Updated'}
+        successContent={(res: any) => 'Config branch location has been successfully Updated'}
         successOkText="OK"
         width={432}
       />

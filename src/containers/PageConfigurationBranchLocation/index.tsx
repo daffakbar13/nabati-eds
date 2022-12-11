@@ -3,13 +3,16 @@ import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
 import { Card, SearchQueryParams, Modal } from 'src/components'
 
-import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
+import {
+  getConfigBranchLocationList,
+  updateStatus,
+} from 'src/api/logistic/configuration-branch-location'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
 
-export default function PageConfigurationTaxRegulator() {
+export default function PageConfigurationBranchLocation() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
@@ -39,7 +42,7 @@ export default function PageConfigurationTaxRegulator() {
   }
 
   const table = useTable({
-    funcApi: getConfigSlocCompanyList,
+    funcApi: getConfigBranchLocationList,
     columns: columns(goToDetailPage, onClickSwitch),
     // filters,
   })
