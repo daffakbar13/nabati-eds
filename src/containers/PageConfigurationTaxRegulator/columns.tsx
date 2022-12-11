@@ -31,12 +31,14 @@ export const columns = (
     ),
     200,
   ),
-  CreateColumns('Tax Subject', 'key', true),
-  CreateColumns('Tax CL Material', 'key', true),
-  CreateColumns('Tax Name', 'key', true),
-  CreateColumns('Amount', 'key', true),
-  CreateColumns('Valid From', 'key', true),
-  CreateColumns('Valid To', 'key', true),
+  CreateColumns('Tax Subject', 'tax_subject', true),
+  CreateColumns('Tax CL Material', 'tax_cl_material', true),
+  CreateColumns('Tax Name', 'tax_name', true),
+  CreateColumns('Amount', 'amount', true),
+  CreateColumns('Valid From', 'valid_from', true, (date) => (
+    <>{moment(date).format('DD-MM-YYYY')}</>
+  )),
+  CreateColumns('Valid To', 'valid_to', true, (date) => <>{moment(date).format('DD-MM-YYYY')}</>),
   CreateColumns('Action', 'gr_number', false, (text, rec) => (
     <Button
       size="big"
