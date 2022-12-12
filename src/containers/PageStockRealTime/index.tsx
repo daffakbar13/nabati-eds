@@ -54,7 +54,10 @@ export default function PageRealTime() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table
+            {...table.state.tableProps}
+            dataSource={table.state.tableProps?.dataSource.map((i) => i.list[0])}
+          />
         </div>
       </Card>
     </Col>
