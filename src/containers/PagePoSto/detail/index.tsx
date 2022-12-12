@@ -10,6 +10,7 @@ import { getPoStoDetail } from 'src/api/logistic/po-sto'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import { columns } from './column'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 export default function PagePoSToDetail() {
   const titlePage = useTitlePage('detail')
@@ -76,6 +77,12 @@ export default function PagePoSToDetail() {
         <Text variant={'h4'}>View PO STO - {router.query.id}</Text>
       </div>
       <Spacer size={20} />
+      <Card style={{ overflow: 'unset' }}>
+        <Text variant={'h5'}>
+          <TaggedStatus status={data.status} size="h5" />
+        </Text>
+      </Card>
+      <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <Row gutter={8}>
           <Col span={8}>

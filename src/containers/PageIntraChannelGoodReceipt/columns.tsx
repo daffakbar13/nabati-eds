@@ -88,13 +88,13 @@ export const TableIntraChannelGoodReceipt = [
         (text: string, record: any) => `${record.company_id} - ${record.company_name}`,
     ),
     CreateColumns(
-        'Supplying Plant',
+        'Supplying Branch',
         'suppl_branch_id',
         false,
         (text: string, record: any) => `${record.suppl_branch_id} - ${record.suppl_branch_name}`,
     ),
     CreateColumns(
-        'Receiving Plant',
+        'Receiving Branch',
         'receive_plant_id',
         false,
         (text: string, record: any) => `${record.receive_plant_id} - ${record.receive_plant_name}`,
