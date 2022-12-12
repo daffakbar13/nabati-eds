@@ -18,7 +18,7 @@ export const useTableEditItem = (props: propsUseTable) => {
   const initialValue = {
     item: '',
     uom: '',
-    quantity: 0,
+    quantity: 1,
     based_price: 0,
     gross: 0,
     discount: 0,
@@ -233,7 +233,7 @@ export const useTableEditItem = (props: propsUseTable) => {
 
   React.useEffect(() => {
     if (fetching) {
-      data.forEach(({ item, uom, based_price }, index) => {
+      data.forEach(({ item, uom, based_price, quantity }, index) => {
         if (item !== '') {
           fieldUom(item).then((value) => {
             // console.log('value :', value)
@@ -249,9 +249,11 @@ export const useTableEditItem = (props: propsUseTable) => {
             if (value[2]?.key) {
               let newPrice = based_price === 0 ? value[2].key : based_price
               handleChangeData('based_price', newPrice, index)
+              handleChangeData('sub_total', quantity * newPrice, index)
             } else {
               let newPrice = based_price
               handleChangeData('based_price', newPrice, index)
+              handleChangeData('sub_total', quantity * newPrice, index)
             }
 
             newOptionsUom[index] = value

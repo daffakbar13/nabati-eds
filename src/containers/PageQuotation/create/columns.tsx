@@ -26,7 +26,7 @@ export const useTableProduct = () => {
   const initialValue = {
     product_id: '',
     uom_id: '',
-    order_qty: 0,
+    order_qty: 1,
     price: 0,
     sub_total: 0,
     remarks: '',

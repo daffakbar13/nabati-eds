@@ -16,7 +16,7 @@ interface propsUseTable {
 export const useTableAddItem = (props: propsUseTable) => {
   const initialValue = {
     product_id: '',
-    qty: 0,
+    qty: 1,
     uom_id: '',
     batch: '',
     remarks: '',
