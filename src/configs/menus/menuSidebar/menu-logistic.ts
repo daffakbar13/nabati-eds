@@ -293,6 +293,12 @@ export const menuLogistic = [
         content: () => 'Branch Location',
         onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-branch-location`),
       },
+      {
+        key: 'mapping-product-intra',
+        title: 'Mapping Product Intra',
+        content: () => 'Mapping Product Intra',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-mapping-product-intra`),
+      },
     ],
   },
   {
