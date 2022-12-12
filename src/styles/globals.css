@@ -31,7 +31,7 @@ body {
   -webkit-font-smoothing: antialiased;
   font-family: Nunito Sans;
   scrollbar-width: none !important; /* Firefox 64 */
-  -ms-overflow-style: none;  /* Disable scrollbar IE 10+ */
+  -ms-overflow-style: none; /* Disable scrollbar IE 10+ */
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 /*
@@ -151,15 +151,15 @@ p {
   box-shadow: none;
 }
 
-table.eds_paper{
+table.eds_paper {
   width: 100%;
 }
 
-table.eds_paper th{
+table.eds_paper th {
   text-align: center !important;
 }
 
-table.eds_paper td{
+table.eds_paper td {
   vertical-align: top;
 }
 
@@ -198,3 +198,7 @@ table.eds_create_shipment tbody tr td {
 th.ant-table-cell {
   width: fit-content !important;
 } */
+
+.ant-table-tbody > tr > td {
+  vertical-align: top;
+}
