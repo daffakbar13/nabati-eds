@@ -5,6 +5,7 @@ import moment from 'moment'
 import { Col, Tag } from 'antd'
 import { Button, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, GoBackArrow, Modal } from 'src/components'
+import dateFormat from 'src/utils/dateFormat'
 import List from 'src/components/List'
 
 import { getDetailBadStock, updateStatusBadStock } from 'src/api/logistic/bad-stock'
@@ -13,7 +14,6 @@ import { getTagColor } from 'src/utils/getTagColor'
 import { toTitleCase } from 'src/utils/caseConverter'
 import { columns } from './columns'
 
-const DATE_FORMAT = 'DD-MMM-YYYY'
 export default function PageQuotationDetail() {
   const [loading, setLoading] = useState(false)
   const [details, setDetails] = useState(null)
@@ -122,17 +122,14 @@ export default function PageQuotationDetail() {
             value={`${details?.sloc_id}-${toTitleCase(details?.sloc_name)}`}
           />
 
-          <List.Item
-            label="Requirement Date"
-            value={moment(details?.document_date).format(DATE_FORMAT)}
-          />
+          <List.Item label="Requirement Date" value={dateFormat(details?.document_date)} />
           <List.Item label="Header Text" value={details?.header_text} />
           <List.Item label="" value={''} />
           <List.Item label="" value={''} />
 
-          <List.Item label="Created On" value={moment(details?.created_at).format(DATE_FORMAT)} />
+          <List.Item label="Created On" value={dateFormat(details?.created_at)} />
           <List.Item label="Created By" value={details?.created_by} />
-          <List.Item label="Modified On" value={details?.modified_at} />
+          <List.Item label="Modified On" value={dateFormat(details?.modified_at)} />
           <List.Item label="Modified By" value={details?.modified_by} />
         </List>
         <div style={{ borderTop: '1px solid #AAAAAA', margin: '32px auto 0' }} />

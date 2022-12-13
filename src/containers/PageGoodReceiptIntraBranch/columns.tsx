@@ -5,8 +5,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import moment from 'moment'
-import DateFormat from 'src/components/DateFormat'
+import dateFormat from 'src/utils/dateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
 
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
@@ -106,7 +105,7 @@ export const columns = [
     'Posting Date',
     'posting_date',
     false,
-    (date) => <DateFormat date={date} format="DD-MM-YYYY" />,
+    (date) => dateFormat(date),
     180,
   ),
   CreateColumns('Company', 'company_id', false, (company_id, rec) => (

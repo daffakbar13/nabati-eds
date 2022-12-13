@@ -7,9 +7,10 @@ import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import DateFormat from 'src/components/DateFormat'
 import { Tag } from 'antd'
 import TaggedStatus from 'src/components/TaggedStatus'
+import dateFormat from 'src/utils/dateFormat'
+
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -60,7 +61,7 @@ export const columns = [
     'Posting Date',
     'created_at',
     false,
-    (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
+    (date) => dateFormat(date),
     180,
   ),
   CreateColumns(
