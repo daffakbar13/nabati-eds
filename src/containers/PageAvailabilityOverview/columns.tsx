@@ -49,7 +49,7 @@ export const columns = [
         const isLast = arr?.length === ind + 1
         return (
           <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-            {a.status_data || '-'}
+            {a.status_data || '-'}-{a.status_description}
           </p>
         )
       })
