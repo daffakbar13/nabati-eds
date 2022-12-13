@@ -21,12 +21,14 @@ export default function ConfirmCancel() {
   const [optionsReason, setOptionsReason] = React.useState([])
 
   React.useEffect(() => {
+    runProcess('Wait For get Reasons')
     fieldReason('B')
       .then((data) => {
         setOptionsReason(data)
         setReason(data[0].value)
+        stopProcess()
       })
-      .catch((err) => console.log(err))
+      .catch(() => stopProcess())
   }, [])
   return (
     <Popup>
@@ -66,7 +68,7 @@ export default function ConfirmCancel() {
                 showConfirm('success-cancel')
                 stopProcess()
               })
-              .catch((err) => console.log(err))
+              .catch(() => stopProcess())
           }}
         >
           Yes

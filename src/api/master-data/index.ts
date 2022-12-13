@@ -147,7 +147,7 @@ export const getPricingByCompany = async (): Promise<CommonDetailResponse<any>> 
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: subUrl.getPricing,
+    subUrl: `${subUrl.getPricing}/z2`,
   })
 
   return response.data
@@ -347,7 +347,6 @@ export const getSalesOrgByCompanyDynamic = async (company_id: string): Promise<C
 
   return response.data
 }
-
 
 export const getCustomerGroupCompanyDynamic = async (company_id: string): Promise<CommonDetailResponse<any>> => {
   const response = await call({

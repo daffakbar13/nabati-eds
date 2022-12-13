@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useRouter } from 'next/router'
 import React from 'react'
 import { addColumn } from 'src/utils/createColumns'
 import { baseHandler, baseReducer } from './states'
@@ -37,16 +38,16 @@ export default function useTable(props: useTableProps) {
   }
   const [state, dispatch] = React.useReducer(baseReducer, initialValue)
   const handler = baseHandler(state, dispatch)
-  console.log('col', columns)
 
   React.useEffect(() => {
     handler.getApi(funcApi)
+    handler.handleLocalStorage(funcApi)
   }, [state.body])
 
   React.useEffect(() => {
     handler.handleDefineTableProps(haveCheckBox, removeHideShowColums, columns)
     handler.handleDefineDescription()
-  }, [state.loading, state.data, state.hiddenColumns, state.rowSelection])
+  }, [state.body, state.loading, state.data, state.hiddenColumns, state.rowSelection])
 
   React.useEffect(() => {
     handler.handleRowSelection(haveCheckBox)
@@ -54,13 +55,11 @@ export default function useTable(props: useTableProps) {
 
   React.useEffect(() => {
     handler.handleDefinePaginationProps()
-  }, [state.total, state.totalPage])
+  }, [state.page, state.limit, state.total, state.totalPage])
 
   React.useEffect(() => {
     handler.handleTightColumns(columns)
   }, [state.columns])
-
-  console.log(state.tableProps)
 
   return { state, handler }
 }

@@ -9,7 +9,7 @@ import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
 
 export default function ConfirmSuccessSubmit() {
   const {
-    state: { newSalesOrder, draftSalesOrder },
+    state: { salesOrderId, confirm },
   } = useSalesSalesOrderCreateContext()
   const router = useRouter()
 
@@ -34,11 +34,11 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {'New Sales Order '}
-          <Typography.Text copyable>{newSalesOrder || draftSalesOrder}</Typography.Text>
+          {'New SalesOrder '}
+          <Typography.Text copyable>{salesOrderId}</Typography.Text>
           {' has been'}
         </div>
-        <div>successfully {newSalesOrder ? 'created' : 'saved'}</div>
+        <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button

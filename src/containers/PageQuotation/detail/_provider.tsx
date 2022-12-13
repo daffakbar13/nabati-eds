@@ -12,7 +12,7 @@ export default function SalesQuotationDetailProvider(
   const { children } = props
   const router = useRouter()
   const SalesQuotationDetail = useSalesQuotationDetailProvider()
-  const data = useDetail(getDetailQuotation, { id: router.query.id as string })
+  const data = useDetail(getDetailQuotation, { id: router.query.id as string }, false)
   const tableTabQuotation = useTable({
     columns: ColumnsQuotation,
     data: [],

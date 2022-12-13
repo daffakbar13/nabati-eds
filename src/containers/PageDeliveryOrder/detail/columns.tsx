@@ -9,11 +9,17 @@ import CreateColumns from 'src/utils/createColumns'
 
 export const ColumnsDeliveryOrder = [
   CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
-  CreateColumns('Item', 'description', false, undefined, 300),
-  CreateColumns('Item Category', 'item_category_id', false, undefined, 137),
-  CreateColumns('Uom', 'uom_id', false, undefined, 70),
-  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
-  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
+  CreateColumns('Item', 'item', false, undefined, 300),
+  CreateColumns('Item Category', 'item_category', false, undefined, 137),
+  CreateColumns('Uom', 'uom', false, undefined, 70),
+  CreateColumns('Quantity', 'qty', false, undefined, 100),
+  CreateColumns(
+    'Based Price',
+    'base_price',
+    false,
+    (price) => parseInt(price).toLocaleString(),
+    120,
+  ),
   // FIXME Sub Total
   CreateColumns(
     'Gross',
@@ -24,19 +30,19 @@ export const ColumnsDeliveryOrder = [
   ),
   CreateColumns(
     'Discount',
-    'discount_value',
+    'discount',
     false,
-    (discount_value) => parseInt(discount_value).toLocaleString(),
+    (discount) => parseInt(discount).toLocaleString(),
     100,
   ),
   CreateColumns(
     'Sub Total',
     'sub_total',
     false,
-    (_, { price, order_qty }) => (parseInt(price) * parseInt(order_qty)).toLocaleString(),
+    (sub_total) => parseInt(sub_total).toLocaleString(),
     110,
   ),
-  CreateColumns('Remarks', 'remarks', false, undefined, 120),
+  CreateColumns('Remarks', 'remarks', false, (r) => r || '-', 120),
 ]
 
 export const ColumnsDocumentFlow = [

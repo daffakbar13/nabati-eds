@@ -375,20 +375,13 @@ export default function PageApproval(props: PageApprovalProps) {
             <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
-            >
-              Create
-            </Button>
           </Row>
         </Row>
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (

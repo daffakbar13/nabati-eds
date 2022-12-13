@@ -65,7 +65,7 @@ export default function ConfirmSuccessCancel(props: ConfirmSuccessCancelProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.reload()
+            router.push(router.pathname)
           }}
         >
           OK

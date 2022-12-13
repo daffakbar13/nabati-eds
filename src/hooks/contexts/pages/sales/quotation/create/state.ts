@@ -28,14 +28,14 @@ interface PayloadCreate {
 export interface StateType {
     dataForm?: PayloadCreate
     tableProduct?: ReturnType<typeof useTableProduct>
-    newQuotation?: string
-    draftQuotation?: string
-    cancel?: boolean
-    optionsOrderType?: OptionsType[]
-    optionsSalesman?: OptionsType[]
-    optionsSalesOrg?: OptionsType[]
-    optionsBranch?: OptionsType[]
+    quotationId?: string
+    confirm?: 'newQuo' | 'draftQuo' | 'cancel'
+    optionsOrderType: OptionsType[]
+    optionsSalesman: OptionsType[]
+    optionsSalesOrg: OptionsType[]
+    optionsBranch: OptionsType[]
     fetching?: 'customer' | 'load-options'
     processing?: string
     canSave?: boolean
+    canSaveAsDraft: boolean
 }

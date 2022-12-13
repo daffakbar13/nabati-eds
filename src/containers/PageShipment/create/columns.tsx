@@ -96,8 +96,8 @@ export const ColumnsDeliveryOrder = [
   CreateColumns('Salesman', 'salesman_id', false, undefined, 200),
   CreateColumns('Route', '', false, undefined, 120),
   CreateColumns('Status', 'status_name', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Size M', '', false, undefined, 120),
-  CreateColumns('Missing Size M', '', false, undefined, 200),
+  CreateColumns('Size M³', '', false, undefined, 120),
+  CreateColumns('Missing Size M³', '', false, undefined, 200),
 ]
 
 export const ColumnsSelectedDeliveryOrder = (handleReduceItem: (removedItem) => void) => [

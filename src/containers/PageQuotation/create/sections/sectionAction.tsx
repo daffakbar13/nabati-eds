@@ -7,15 +7,8 @@ import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
 
 export default function SectionAction() {
   const {
-    state: { canSave, dataForm },
-    handler: {
-      stopProcess,
-      runProcess,
-      setCancel,
-      dataSubmitted,
-      setDraftQuotation,
-      setNewQuotation,
-    },
+    state: { canSave, canSaveAsDraft, dataForm },
+    handler: { stopProcess, runProcess, dataSubmitted, showConfirm, setQuotationId },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
   const isCreatePage = router.asPath.split('/').includes('create')
@@ -30,41 +23,45 @@ export default function SectionAction() {
           size="big"
           variant="tertiary"
           onClick={() => {
-            setCancel(true)
+            showConfirm('cancel')
           }}
         >
           Cancel
         </Button>
       </Col>
-      <Col>
-        <Button
-          size="big"
-          variant="secondary"
-          disabled={!canSave}
-          onClick={() => {
-            if (canSave) {
-              runProcess('Wait for save Quotation')
-              if (isCreateOrOrderAgain) {
-                createQuotation(dataSubmitted(6, dataForm))
-                  .then((response) => {
-                    setDraftQuotation(response.data.id)
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
-              } else {
-                updateQuotation(dataSubmitted(6, dataForm), router.query.id as string)
-                  .then((response) => {
-                    setDraftQuotation(response.data.id)
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
+      {(canSaveAsDraft || isOrderAgainPage) && (
+        <Col>
+          <Button
+            size="big"
+            variant="secondary"
+            disabled={!canSave}
+            onClick={() => {
+              if (canSave) {
+                runProcess('Wait for save Quotation')
+                if (isCreateOrOrderAgain) {
+                  createQuotation(dataSubmitted(6))
+                    .then((response) => {
+                      setQuotationId(response.data.id)
+                      showConfirm('draftQuo')
+                      stopProcess()
+                    })
+                    .catch(() => stopProcess())
+                } else {
+                  updateQuotation(dataSubmitted(6), router.query.id as string)
+                    .then((response) => {
+                      setQuotationId(response.data.id)
+                      showConfirm('draftQuo')
+                      stopProcess()
+                    })
+                    .catch(() => stopProcess())
+                }
               }
-            }
-          }}
-        >
-          Save As Draft
-        </Button>
-      </Col>
+            }}
+          >
+            Save As Draft
+          </Button>
+        </Col>
+      )}
       <Col>
         <Button
           size="big"
@@ -74,16 +71,18 @@ export default function SectionAction() {
             if (canSave) {
               runProcess('Wait for save Quotation')
               if (isCreateOrOrderAgain) {
-                createQuotation(dataSubmitted(1, dataForm))
+                createQuotation(dataSubmitted(1))
                   .then((response) => {
-                    setNewQuotation(response.data.id)
+                    setQuotationId(response.data.id)
+                    showConfirm('newQuo')
                     stopProcess()
                   })
                   .catch(() => stopProcess())
               } else {
-                updateQuotation(dataSubmitted(1, dataForm), router.query.id as string)
+                updateQuotation(dataSubmitted(1), router.query.id as string)
                   .then((response) => {
-                    setNewQuotation(response.data.id)
+                    setQuotationId(response.data.id)
+                    showConfirm('newQuo')
                     stopProcess()
                   })
                   .catch(() => stopProcess())

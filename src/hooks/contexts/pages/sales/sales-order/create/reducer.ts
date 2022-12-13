@@ -15,20 +15,5 @@ export function baseReducer(
   action: DispatchType,
 ): StateType {
   const { payload, type } = action
-
-  switch (type) {
-    case 'dataForm':
-      return {
-        ...state,
-        dataForm: {
-          ...state.dataForm,
-          ...payload,
-        },
-      }
-    default:
-      return {
-        ...state,
-        [type]: payload,
-      }
-  }
+  return { ...state, [type]: payload }
 }
