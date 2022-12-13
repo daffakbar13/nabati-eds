@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { addColumn } from 'src/utils/createColumns'
 // import { useRouter } from 'next/router'
 // import React from 'react'
@@ -27,103 +28,266 @@ export const columns = [
   }),
   addColumn({
     title: 'SLoc',
-    dataIndex: 'sloc',
+    dataIndex: 'group_by_sloc',
     fixed: true,
-    render: (text) => <>{text}</>,
+    render: (arr: any[], record) =>
+      arr.map((a, ind) => {
+        const isLast = arr.length === ind + 1
+        return (
+          <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+            {a.sloc_id}
+          </p>
+        )
+      }),
   }),
   addColumn({
     title: 'Status Data',
-    dataIndex: 'status_data',
-    render: (text) => <>{text}</>,
+    dataIndex: 'group_by_sloc',
+    render: (arr: any[] = []) => {
+      console.log('arr', arr)
+      return arr.map((a, ind) => {
+        const isLast = arr?.length === ind + 1
+        return (
+          <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+            {a.status_data || '-'}-{a.status_description}
+          </p>
+        )
+      })
+    },
   }),
-  // addColumn({
-  //   title: 'Stock',
-  //   children: [
-  //     addColumn({
-  //       title: 'Large',
-  //       dataIndex: 'stock large',
-  //       // render: (stock, record) => <>{record.stock.large}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Middle',
-  //       dataIndex: 'stock middle',
-  //       render: (stock, record) => <>{record.stock.middle}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Small',
-  //       dataIndex: 'stock small',
-  //       render: (stock, record) => <>{record.stock.small}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Total In Small',
-  //       dataIndex: 'stock total small',
-  //       render: (stock, record) => <>{record.stock.total_in_small}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Total In Large',
-  //       dataIndex: 'stock total large',
-  //       render: (stock, record) => <>{record.stock.total_in_large}</>,
-  //     }),
-  //   ],
-  // }),
-  // addColumn({
-  //   title: 'Booking',
-  //   children: [
-  //     addColumn({
-  //       title: 'Large',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.booking.large}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Middle',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.booking.middle}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Small',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.booking.small}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Total In Small',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.booking.total_in_small}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Total In Large',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.booking.total_in_large}</>,
-  //     }),
-  //   ],
-  // }),
-  // addColumn({
-  //   title: 'Available Stock',
-  //   children: [
-  //     addColumn({
-  //       title: 'Large',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.available_stock.large}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Middle',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.available_stock.middle}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Small',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.available_stock.small}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Total In Small',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.available_stock.total_in_small}</>,
-  //     }),
-  //     addColumn({
-  //       title: 'Total In Large',
-  //       dataIndex: 'stock',
-  //       render: (stock, record) => <>{record.available_stock.total_in_large}</>,
-  //     }),
-  //   ],
-  // }),
+  addColumn({
+    title: 'Stock',
+    children: [
+      addColumn({
+        title: 'Large',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.stock?.large || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Middle',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.stock?.middle || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Small',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.stock?.small || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Total in large',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.stock?.total_in_large || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Total in small',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.stock?.total_in_small || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      // addColumn({
+      //   title: 'Total In Small',
+      //   dataIndex: 'stock total small',
+      //   render: (stock, record) => <>{record.stock.total_in_small}</>,
+      // }),
+      // addColumn({
+      //   title: 'Total In Large',
+      //   dataIndex: 'stock total large',
+      //   render: (stock, record) => <>{record.stock.total_in_large}</>,
+      // }),
+    ],
+  }),
+  addColumn({
+    title: 'Booking Order',
+    children: [
+      addColumn({
+        title: 'Large',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.booking_order?.large || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Middle',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.booking_order?.middle || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Small',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.booking_order?.small || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Total in large',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.booking_order?.total_in_large || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Total in small',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.booking_order?.total_in_small || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+    ],
+  }),
+  addColumn({
+    title: 'Available Stock',
+    children: [
+      addColumn({
+        title: 'Large',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.available?.large || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Middle',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.available?.middle || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Small',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.available?.small || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Total in large',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.available?.total_in_large || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+      addColumn({
+        title: 'Total in small',
+        dataIndex: 'group_by_sloc',
+        render: (arr: any[] = []) => {
+          return arr.map((a, ind) => {
+            const isLast = arr?.length === ind + 1
+            return (
+              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.available?.total_in_small || '-'}
+              </p>
+            )
+          })
+        },
+      }),
+    ],
+  }),
 ]

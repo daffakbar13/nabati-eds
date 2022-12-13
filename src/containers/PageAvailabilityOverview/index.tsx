@@ -76,10 +76,7 @@ export default function PageAvailabilityOverview() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            {...table.state.tableProps}
-            dataSource={table.state.tableProps?.dataSource.map((i) => i.list[0])}
-          />
+          <Table {...table.state.tableProps} dataSource={table.state.tableProps?.dataSource} />
         </div>
       </Card>
     </Col>
