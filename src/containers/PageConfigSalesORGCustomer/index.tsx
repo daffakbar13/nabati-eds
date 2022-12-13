@@ -51,6 +51,8 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
     // filters,
   })
 
+  const hasData = table.state.total > 0
+
   useEffect(() => {
     if (router.query.search) {
       filters.push({
@@ -84,6 +86,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
           <Table {...table.state.tableProps} />
         </div>
         {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
+        {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <CreateModal

@@ -1,8 +1,7 @@
 import moment from 'moment'
 import CreateColumns from 'src/utils/createColumns'
 import { Button, Switch } from 'pink-lava-ui'
-import { Tag } from 'antd'
-import Link from 'src/components/Link'
+import dateFormat from 'src/utils/dateFormat'
 
 export const columns = (
   goToDetail: (rec: any) => void,
@@ -31,12 +30,12 @@ export const columns = (
     ),
     200,
   ),
-  CreateColumns('Tax Subject', 'key', true),
-  CreateColumns('Tax CL Material', 'key', true),
-  CreateColumns('Tax Name', 'key', true),
-  CreateColumns('Amount', 'key', true),
-  CreateColumns('Valid From', 'key', true),
-  CreateColumns('Valid To', 'key', true),
+  CreateColumns('Tax Subject', 'tax_subject', true),
+  CreateColumns('Tax CL Material', 'tax_cl_material', true),
+  CreateColumns('Tax Name', 'tax_name', true),
+  CreateColumns('Amount', 'amount', true),
+  CreateColumns('Valid From', 'valid_from', true, (date) => dateFormat(date)),
+  CreateColumns('Valid To', 'valid_to', true, (date) => <>{dateFormat(date)}</>),
   CreateColumns('Action', 'gr_number', false, (text, rec) => (
     <Button
       size="big"

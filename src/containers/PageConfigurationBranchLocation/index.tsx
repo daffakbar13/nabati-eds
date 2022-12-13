@@ -3,13 +3,16 @@ import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
 import { Card, SearchQueryParams, Modal } from 'src/components'
 
-import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
+import {
+  getConfigBranchLocationList,
+  updateStatus,
+} from 'src/api/logistic/configuration-branch-location'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
 
-export default function PageConfigurationTaxRegulator() {
+export default function PageConfigurationBranchLocation() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
 
@@ -21,26 +24,31 @@ export default function PageConfigurationTaxRegulator() {
     setShowCreateModal(true)
   }
 
-  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
-  const onClickSwitch = (a: boolean, rec: any) => {
-    setChangeStatusPayload(rec)
-    setShowChangeStatusModal(true)
+
+  const onClickDelete = (a: boolean, rec: any) => {
+    // setChangeStatusPayload(rec)
+    setShowDeleteModal(true)
   }
 
-  const handleChangeStatus = async () => {
+  const handleDelete = async () => {
     const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
-    try {
-      return await updateStatus(reqBody, changeStatusPayload)
-    } catch (error) {
-      console.error(error)
-    }
+    // TO DO DELETE HERE...
+
+    // try {
+    //   return await updateStatus(reqBody, changeStatusPayload)
+    // } catch (error) {
+    //   console.error(error)
+    // }
+
     return false
   }
 
   const table = useTable({
-    funcApi: getConfigSlocCompanyList,
-    columns: columns(goToDetailPage, onClickSwitch),
+    funcApi: getConfigBranchLocationList,
+    columns: columns(goToDetailPage),
+    haveCheckBox: { rowKey: 'branch_from_id', member: ['New'] },
     // filters,
   })
 
@@ -56,6 +64,9 @@ export default function PageConfigurationTaxRegulator() {
             <SearchQueryParams />
           </Row>
           <Row gap="16px">
+            <Button size="big" variant="tertiary" onClick={onClickDelete}>
+              Delete
+            </Button>
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
               Create
             </Button>
@@ -80,10 +91,10 @@ export default function PageConfigurationTaxRegulator() {
 
       <Modal
         title={'Confirm Submit'}
-        open={showChangeStatusModal}
-        onOk={handleChangeStatus}
+        open={showDeleteModal}
+        onOk={handleDelete}
         onCancel={() => {
-          setShowChangeStatusModal(false)
+          setShowDeleteModal(false)
         }}
         content={`Are you sure want to ${
           changeStatusPayload?.status ? 'inactivate' : 'activate'
@@ -93,6 +104,21 @@ export default function PageConfigurationTaxRegulator() {
         }}
         successContent={(res: any) => `Config sloc company has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={'Confirm Delete'}
+        open={showDeleteModal}
+        onOk={handleDelete}
+        onCancel={() => {
+          setShowDeleteModal(false)
+        }}
+        content={'Are you sure want to delete this Branch?'}
+        onOkSuccess={() => {
+          router.reload()
+        }}
+        successContent={(res: any) => 'This branch has been successfully deleted'}
         successOkText="OK"
         width={432}
       />

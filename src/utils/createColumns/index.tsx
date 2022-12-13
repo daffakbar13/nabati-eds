@@ -49,7 +49,7 @@ export default function CreateColumns(
 }
 
 interface addColumnProps extends ColumnType<any> {
-  render?: (text: string, record?: any, index?: number) => React.ReactNode
+  render?: (text: any, record?: any, index?: number) => React.ReactNode
   children?: addColumnProps[]
 }
 

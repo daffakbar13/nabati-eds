@@ -16,8 +16,8 @@ export const useTableAddItem = (props: propsUseTable) => {
   const initialValue = {
     product_id: '',
     product: '',
-    qty: '',
-    uom_id: 0,
+    qty: 1,
+    uom_id: '',
     qty_residual: 0,
     uom_residual: '',
     qty_sold: 0,

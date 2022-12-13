@@ -6,8 +6,8 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import DateFormat from 'src/components/DateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
+import dateFormat from 'src/utils/dateFormat'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -62,7 +62,7 @@ export const columns = [
     'Posting Date',
     'posting_date',
     false,
-    (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
+    (date) => dateFormat(date),
   ),
   CreateColumns(
     'Company ',

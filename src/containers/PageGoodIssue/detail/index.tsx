@@ -9,6 +9,7 @@ import useDetail from 'src/hooks/useDetail'
 import { getGoodIssueDetail } from 'src/api/logistic/good-issue-intra-branch'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
+import TaggedStatus from 'src/components/TaggedStatus'
 import { column } from './columns'
 
 export default function PageIntraChannelGoodIssueDetail() {
@@ -70,14 +71,18 @@ export default function PageIntraChannelGoodIssueDetail() {
             cursor: 'pointer',
           }}
           onClick={() => {
-            router.push('/logistic/goods-issue')
+            router.push('/logistic/good-issue')
           }}
         >
           <ArrowLeftOutlined style={{ fontSize: 25 }} />
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
-      <Card style={{ padding: '16px 20px' }}>Done</Card>
+      <Card style={{ overflow: 'unset' }}>
+        <Text variant={'h5'}>
+          <TaggedStatus status={data.status} size="h5" />
+        </Text>
+      </Card>
       <Spacer size={20} />
       <Card style={{ padding: '16px 20px' }}>
         <Row gutter={8}>

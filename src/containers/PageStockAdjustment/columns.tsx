@@ -3,6 +3,8 @@ import { Button, Tooltip } from 'pink-lava-ui'
 import Link from 'src/components/Link'
 import TaggedStatus from 'src/components/TaggedStatus'
 import CreateColumns from 'src/utils/createColumns'
+import dateFormat from 'src/utils/dateFormat'
+
 
 export const columns = (goToDetail: (id: string) => {}) => [
   CreateColumns(
@@ -25,7 +27,7 @@ export const columns = (goToDetail: (id: string) => {}) => [
     'Posting Date',
     'posting_date',
     true,
-    (date) => <>{moment(date).format('DD-MMM-YYYY')}</>,
+    (date) => <>{dateFormat(date)}</>,
     180,
   ),
   CreateColumns(

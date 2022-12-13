@@ -17,8 +17,8 @@ export const useTableAddItem = (props: propsUseTable) => {
   const initialValue = {
     product_sender_id: '',
     product_receiver_id: '',
-    qty: 0,
-    base_qty: 0,
+    qty: 1,
+    base_qty: 1,
     uom_id: '',
     base_uom_id: '',
     batch: '',

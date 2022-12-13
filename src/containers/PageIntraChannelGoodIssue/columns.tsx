@@ -6,147 +6,123 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import moment from 'moment'
-import DateFormat from 'src/components/DateFormat'
+import dateFormat from 'src/utils/dateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-
-function Linked({ link, linkType, type }: { link: string; linkType: string; type: 'id' | 'action' }) {
-    const router = useRouter()
-    const navigate = () => {
-        if (linkType == 'id') {
-            router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel/detail/${link}`)
-        } else if (linkType == 'deliveryNumber') {
-            router.push(`${PATH.LOGISTIC}/request-intra-channel/detail/${link}`)
-        }
+function Linked({
+  link,
+  linkType,
+  type,
+}: {
+  link: string
+  linkType: string
+  type: 'id' | 'action'
+}) {
+  const router = useRouter()
+  const navigate = () => {
+    if (linkType == 'id') {
+      router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel/detail/${link}`)
+    } else if (linkType == 'deliveryNumber') {
+      router.push(`${PATH.LOGISTIC}/request-intra-channel/detail/${link}`)
     }
-    const [hover, setHover] = React.useState(false)
+  }
+  const [hover, setHover] = React.useState(false)
 
-    return (
-        <>
-            {type === 'id' ? (
-                <div
-                    onClick={navigate}
-                    onMouseEnter={() => {
-                        setHover(true)
-                    }}
-                    onMouseLeave={() => {
-                        setHover(false)
-                    }}
-                    style={{
-                        cursor: 'pointer',
-                        ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
-                    }}
-                >
-                    {link}
-                </div>
-            ) : (
-                <Button size="big" variant="tertiary" onClick={navigate}>
-                    View Detail
-                </Button>
-            )}
-        </>
-    )
+  return (
+    <>
+      {type === 'id' ? (
+        <div
+          onClick={navigate}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
+          style={{
+            cursor: 'pointer',
+            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
+          }}
+        >
+          {link}
+        </div>
+      ) : (
+        <Button size="big" variant="tertiary" onClick={navigate}>
+          View Detail
+        </Button>
+      )}
+    </>
+  )
 }
 
 export const TableIntraChannelGoodIssue = [
-    CreateColumns(
-        'Request Number',
-        'delivery_number',
-        true,
-        (link: string, record: any) => <Linked link={link} type="id" linkType='deliveryNumber' />,
-        175,
-        'left',
-    ),
-    CreateColumns(
-        'GI Number',
-        'id',
-        true,
-        (link: string, record: any) => <Linked link={link} type="id" linkType='id' />,
-        175,
-        'left',
-    ),
-    CreateColumns(
-        'Posting Date',
-        'posting_date',
-        false,
-        (date) => <DateFormat date={date} format='DD-MM-YYYY' />,
-    ),
-    CreateColumns(
-        'Company',
-        'company_id',
-        false,
-        (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-    ),
-    CreateColumns(
-        'Supplying Plant',
-        'suppl_branch_id',
-        false,
-        (text: string, record: any) => `${record.suppl_branch_id || ''} - ${record.suppl_branch_name || ''}`,
-    ),
-    CreateColumns(
-        'Receiving Plant',
-        'branch_id',
-        false,
-        (text: string, record: any) => `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
-    ),
-    CreateColumns(
-        'Mov. Type',
-        'branch_id',
-        false,
-        (text: string, record: any) => `${record.movement_type_id || ''} - ${record.movement_type_name || ''}`,
-    ),
-    CreateColumns(
-        'Status',
-        'status',
-        false,
-        (status) => <TaggedStatus status={status} />,
-    ),
-    CreateColumns(
-        'Action',
-        'id',
-        false,
-        (link, record) => <Linked link={link} type="action" linkType='id' />,
-    ),
+  CreateColumns(
+    'Request Number',
+    'delivery_number',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="deliveryNumber" />,
+    175,
+    'left',
+  ),
+  CreateColumns(
+    'GI Number',
+    'id',
+    true,
+    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    175,
+    'left',
+  ),
+  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
+  CreateColumns(
+    'Company',
+    'company_id',
+    false,
+    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
+  ),
+  CreateColumns(
+    'Supplying Branch',
+    'suppl_branch_id',
+    false,
+    (text: string, record: any) =>
+      `${record.suppl_branch_id || ''} - ${record.suppl_branch_name || ''}`,
+  ),
+  CreateColumns(
+    'Receiving Branch',
+    'branch_id',
+    false,
+    (text: string, record: any) =>
+      `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
+  ),
+  CreateColumns(
+    'Mov. Type',
+    'branch_id',
+    false,
+    (text: string, record: any) =>
+      `${record.movement_type_id || ''} - ${record.movement_type_name || ''}`,
+  ),
+  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
+  CreateColumns('Action', 'id', false, (link, record) => (
+    <Linked link={link} type="action" linkType="id" />
+  )),
 ]
 
 export const TableIntraChannelGoodIssueDetail = [
-    CreateColumns(
-        'No',
-        'id',
-        false,
-        (text: string, record: any, index: number) => index + 1,
-    ),
-    CreateColumns(
-        'Item Sender',
-        'product_id',
-        false,
-        (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
-    ),
-    CreateColumns(
-        'Item Receiver',
-        'product_receiver_id',
-        false,
-        (text: string, record: any) => `${record.product_receiver_id || ''} - ${record.product_receiver_name || ''}`,
-    ),
-    CreateColumns(
-        'Qty',
-        'qty',
-        false,
-    ),
-    CreateColumns(
-        'UoM',
-        'uom_id',
-        false,
-    ),
-    CreateColumns(
-        'Batch',
-        'batch',
-        false,
-    ),
-    CreateColumns(
-        'Remarks',
-        'remarks',
-        false,
-    ),
+  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
+  CreateColumns(
+    'Item Sender',
+    'product_id',
+    false,
+    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
+  ),
+  CreateColumns(
+    'Item Receiver',
+    'product_receiver_id',
+    false,
+    (text: string, record: any) =>
+      `${record.product_receiver_id || ''} - ${record.product_receiver_name || ''}`,
+  ),
+  CreateColumns('Qty', 'qty', false),
+  CreateColumns('UoM', 'uom_id', false),
+  CreateColumns('Batch', 'batch', false),
+  CreateColumns('Remarks', 'remarks', false),
 ]

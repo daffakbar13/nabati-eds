@@ -6,8 +6,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import moment from 'moment'
-import DateFormat from 'src/components/DateFormat'
+import dateFormat from 'src/utils/dateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
@@ -56,7 +55,7 @@ export const TableIntraChannelRequest = [
     'left',
   ),
   CreateColumns('Posting Date', 'posting_date', false, (date) => (
-    <DateFormat date={date} format="DD-MM-YYYY" />
+    dateFormat(date)
   )),
   CreateColumns(
     'Company',
