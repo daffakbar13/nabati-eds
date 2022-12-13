@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, DatePickerInput, Spacer, Text, Table } from 'pink-lava-ui'
+import { Button, Col, Row, DatePickerInput, Spacer, Text, Table, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography, Tooltip } from 'antd'
@@ -14,6 +14,7 @@ import { fieldBranchAll } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { PageQuotationProps } from './types'
 import { TableIntraChannelGoodIssue } from './columns'
+import { colors } from 'src/configs/colors'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -46,26 +47,14 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
   }
 
   const statusOption = [
-    { label: 'All', value: null },
-    { label: 'Pending', value: 'Pending' },
-    { label: 'Done', value: 'Done' },
-    { label: 'Canceled', value: 'Canceled' },
+    { label: 'Approved', value: '01' },
+    { label: 'Rejected', value: '02' },
+    { label: 'Wait For Approval', value: '00' },
   ]
 
   useEffect(() => {
     table.handler.handleFilter(filters)
   }, [filters])
-
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
 
   return (
     <Col>
@@ -74,7 +63,41 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by GI Number" />
+            <Search
+              autofocus
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search by GI Number"
+              colorIcon={colors.grey.regular}
+              onChange={(e) => {
+                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
+                if (idIndex > -1) {
+                  if (e.target.value === '') {
+                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
+                  } else {
+                    const updateId = filters.map((data, i) => {
+                      if (i === idIndex) {
+                        return { ...data, from_value: `%${e.target.value}%` }
+                      } else {
+                        return { ...data }
+                      }
+                    })
+                    setFilters(updateId)
+                  }
+                } else {
+                  setFilters([
+                    ...filters,
+                    {
+                      field: 'id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                      data_type: 'S',
+                    },
+                  ])
+                }
+              }}
+              allowClear
+            />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
                 field="suppl_sloc_id"
@@ -113,7 +136,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>
