@@ -50,6 +50,9 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
           {dataList.slice(9).map(({ label, value }, i) => (
             <DataList key={i} label={label} value={value} />
           ))}
+          {data.status === 'Cancel' && (
+            <DataList label={'Reason Cancel'} value={data.cancel_reason_name} />
+          )}
         </Col>
       </Row>
       <Divider />

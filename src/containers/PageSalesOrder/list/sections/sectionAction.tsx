@@ -13,12 +13,25 @@ export function SectionAction() {
   const {
     state: {
       table: {
+        state: {
+          body: { filters },
+        },
         handler: { handleFilter },
       },
     },
   } = useSalesSalesOrderListContext()
+  const [filterById, setFilterById] = React.useState<string>()
   const componentRef = React.useRef()
   const router = useRouter()
+
+  React.useEffect(() => {
+    const getFilterId = filters.find(({ field }) => field === 'eds_order.id')
+    if (getFilterId) {
+      setFilterById(getFilterId.from_value.split('%').join(''))
+    } else {
+      setFilterById(undefined)
+    }
+  }, [filters])
 
   const moreContent = (
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
@@ -65,8 +78,9 @@ export function SectionAction() {
           <Search
             width="380px"
             nameIcon="SearchOutlined"
-            placeholder="Search SalesOrder ID"
+            placeholder="Search Sales Order ID"
             colorIcon={colors.grey.regular}
+            {...(filterById && { value: filterById })}
             onChange={(e) => {
               const { value } = e.target
               if (value === '') {

@@ -4,16 +4,17 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { PATH } from 'src/configs/menus'
 import { Text, Button } from 'pink-lava-ui'
-import { useTitlePage } from 'src/hooks'
+import { requestPreviousTable, useTitlePage } from 'src/hooks'
 import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
 
 export default function SectionAction() {
   const {
+    state: { data },
     handler: { showConfirm },
   } = useSalesQuotationDetailContext()
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+  const isStatus = (...value: string[]) => value.includes(data.status_id)
 
   return (
     <Row justify="space-between">
@@ -21,7 +22,8 @@ export default function SectionAction() {
         <Col>
           <ArrowLeftOutlined
             onClick={() => {
-              router.push(`${PATH.SALES}/quotation`)
+              requestPreviousTable()
+              router.push({ pathname: `${PATH.SALES}/quotation` })
             }}
             style={{ fontSize: 25, lineHeight: '48px' }}
           />
@@ -31,7 +33,7 @@ export default function SectionAction() {
         </Col>
       </Row>
       <Row gutter={10}>
-        {isStatus('New') && (
+        {isStatus('1') && (
           <>
             <Col>
               <Button
@@ -59,7 +61,7 @@ export default function SectionAction() {
             </Col>
           </>
         )}
-        {isStatus('Complete', 'New') && (
+        {isStatus('3', '1') && (
           <Col>
             <Button
               size="big"

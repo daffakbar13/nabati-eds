@@ -11,7 +11,7 @@ export default function SalesQuotationListProvider(
   const table = useTable({
     funcApi: getQuotation,
     haveCheckBox: { rowKey: 'status_name', member: ['New'] },
-    columns: useColumnQuotation,
+    columns: useColumnQuotation(),
   })
   const SalesQuotationList = useSalesQuotationListProvider()
 

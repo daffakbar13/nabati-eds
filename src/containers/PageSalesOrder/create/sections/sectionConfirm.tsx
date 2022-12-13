@@ -4,13 +4,13 @@ import { ConfirmCancel, ConfirmSuccessSubmit } from './alerts'
 
 export default function SectionConfirm() {
   const {
-    state: { newSalesOrder, draftSalesOrder, cancel, tableProduct },
+    state: { confirm, tableProduct },
   } = useSalesSalesOrderCreateContext()
 
   return (
     <>
-      {(newSalesOrder || draftSalesOrder) && <ConfirmSuccessSubmit />}
-      {cancel && <ConfirmCancel />}
+      {(confirm === 'draftQuo' || confirm === 'newQuo') && <ConfirmSuccessSubmit />}
+      {confirm === 'cancel' && <ConfirmCancel />}
       {<tableProduct.ConfirmDelete />}
     </>
   )

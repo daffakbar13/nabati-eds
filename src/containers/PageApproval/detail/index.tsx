@@ -307,6 +307,10 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
               {dataList.slice(0, 5).map(({ label, value }, i) => (
                 <DataList key={i} label={label} value={value} />
               ))}
+              <DataList label="Block Status" value="Not Implement" />
+              {data.status_approved_id === '02' && (
+                <DataList label="Reason Reject" value="Not Implement" />
+              )}
             </Col>
             <Col span={12}>
               {dataList.slice(5, 10).map(({ label, value }, i) => (

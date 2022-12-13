@@ -6,6 +6,8 @@ export interface StateType {
     columns?: any[]
     columnsAreSetted?: any[]
     body?: CommonListParams
+    page?: number
+    limit?: number
     total?: number
     totalPage?: number
     rowSelection?: any

@@ -1,13 +1,13 @@
 /* eslint-disable space-before-function-paren */
 import React from 'react'
 import { useCreatePageProvider } from 'src/hooks/contexts/useCreateProvider'
-import { baseHandler } from './handler'
+import { useHandler } from './handler'
 import { baseReducer, DispatchType } from './reducer'
 import { StateType } from './state'
 
 interface ctxType {
     state: StateType
-    handler: ReturnType<typeof baseHandler>
+    handler: ReturnType<typeof useHandler>
 }
 const ctx = React.createContext<ctxType>(undefined)
 
@@ -15,6 +15,11 @@ export function useSalesSalesOrderCreateProvider() {
     const now = new Date().toISOString()
     const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
     const initialValue: StateType = {
+        canSaveAsDraft: true,
+        optionsBranch: [],
+        optionsOrderType: [],
+        optionsSalesman: [],
+        optionsSalesOrg: [],
         dataForm: {
             company_id: 'PP01',
             source_id: 'Z02',
@@ -25,14 +30,15 @@ export function useSalesSalesOrderCreateProvider() {
             valid_to: tomorrow,
             customer_ref: '',
             currency_id: 'IDR',
+            term_id: 'Z000',
         },
     }
     return useCreatePageProvider<
         ctxType,
         StateType,
         DispatchType,
-        typeof baseHandler
-    >(ctx, baseReducer, baseHandler, initialValue)
+        typeof useHandler
+    >(ctx, baseReducer, useHandler, initialValue)
 }
 
 export function useSalesSalesOrderCreateContext() {

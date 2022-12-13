@@ -1,21 +1,14 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
+import { createSalesOrder, updateSalesOrder } from 'src/api/sales-order'
 import { useRouter } from 'next/router'
 import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
-import { createSalesOrder, updateSalesOrder } from 'src/api/sales-order'
 
 export default function SectionAction() {
   const {
-    state: { canSave, dataForm },
-    handler: {
-      stopProcess,
-      runProcess,
-      setCancel,
-      dataSubmitted,
-      setDraftSalesOrder,
-      setNewSalesOrder,
-    },
+    state: { canSave, canSaveAsDraft, dataForm },
+    handler: { stopProcess, runProcess, dataSubmitted, showConfirm, setSalesOrderId },
   } = useSalesSalesOrderCreateContext()
   const router = useRouter()
   const isCreatePage = router.asPath.split('/').includes('create')
@@ -30,65 +23,71 @@ export default function SectionAction() {
           size="big"
           variant="tertiary"
           onClick={() => {
-            setCancel(true)
+            showConfirm('cancel')
           }}
         >
           Cancel
         </Button>
       </Col>
-      <Col>
-        <Button
-          size="big"
-          variant="secondary"
-          disabled={!canSave}
-          onClick={() => {
-            if (canSave) {
-              runProcess('Wait for save Sales Order')
-              if (isCreateOrOrderAgain) {
-                createSalesOrder(dataSubmitted(10, dataForm))
-                  .then((response) => {
-                    setDraftSalesOrder(response.data.id)
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
-              } else {
-                updateSalesOrder(dataSubmitted(10, dataForm), router.query.id as string)
-                  .then((response) => {
-                    setDraftSalesOrder(response.data.id)
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
+      {(canSaveAsDraft || isOrderAgainPage) && (
+        <Col>
+          <Button
+            size="big"
+            variant="secondary"
+            // disabled={!canSave}
+            onClick={() => {
+              if (canSave) {
+                runProcess('Wait for save Sales Order')
+                if (isCreateOrOrderAgain) {
+                  createSalesOrder(dataSubmitted(6))
+                    .then((response) => {
+                      setSalesOrderId(response.data.id)
+                      showConfirm('draftSO')
+                      stopProcess()
+                    })
+                    .catch(() => stopProcess())
+                } else {
+                  updateSalesOrder(dataSubmitted(6), router.query.id as string)
+                    .then((response) => {
+                      setSalesOrderId(response.data.id)
+                      showConfirm('draftSO')
+                      stopProcess()
+                    })
+                    .catch(() => stopProcess())
+                }
               }
-            }
-          }}
-        >
-          Save As Draft
-        </Button>
-      </Col>
+            }}
+          >
+            Save As Draft
+          </Button>
+        </Col>
+      )}
       <Col>
         <Button
           size="big"
           variant="primary"
-          disabled={!canSave}
+          // disabled={!canSave}
           onClick={() => {
-            if (canSave) {
-              runProcess('Wait for save Sales Order')
-              if (isCreateOrOrderAgain) {
-                createSalesOrder(dataSubmitted(1, dataForm))
-                  .then((response) => {
-                    setNewSalesOrder(response.data.id)
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
-              } else {
-                updateSalesOrder(dataSubmitted(1, dataForm), router.query.id as string)
-                  .then((response) => {
-                    setNewSalesOrder(response.data.id)
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
-              }
+            // if (canSave) {
+            runProcess('Wait for save Sales Order')
+            if (isCreateOrOrderAgain) {
+              createSalesOrder(dataSubmitted(1))
+                .then((response) => {
+                  setSalesOrderId(response.data.id)
+                  showConfirm('newSO')
+                  stopProcess()
+                })
+                .catch(() => stopProcess())
+            } else {
+              updateSalesOrder(dataSubmitted(1), router.query.id as string)
+                .then((response) => {
+                  setSalesOrderId(response.data.id)
+                  showConfirm('newSO')
+                  stopProcess()
+                })
+                .catch(() => stopProcess())
             }
+            // }
           }}
         >
           Submit

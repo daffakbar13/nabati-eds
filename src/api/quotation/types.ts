@@ -14,6 +14,7 @@ export interface QuotationItem {
 }
 
 export interface QuotationDetailResult {
+  status_id: any
   branch_name: string
   sales_org_name: any
   salesman_name: any

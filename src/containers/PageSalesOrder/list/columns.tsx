@@ -100,6 +100,10 @@ export const useColumnSalesOrder = [
     render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
   }),
   addColumn({
+    title: 'Currency',
+    dataIndex: 'currency_id',
+  }),
+  addColumn({
     title: 'Total Amount',
     dataIndex: 'total_amount',
   }),

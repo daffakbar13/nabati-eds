@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { addColumn } from 'src/utils/createColumns'
 import dateFormat from 'src/utils/dateFormat'
+import Link from '../Link'
 
 const createData = (title: string, dataIndex: string) => ({ title, dataIndex })
 
@@ -18,6 +19,12 @@ function Linked(props: { process: string; id: string; status: string }) {
       break
     case 'Order':
       document = 'sales-order'
+      break
+    case 'Delivery':
+      document = 'delivery-order'
+      break
+    case 'Shipment':
+      document = 'shipment'
       break
     default:
       break
@@ -34,7 +41,7 @@ function Linked(props: { process: string; id: string; status: string }) {
           })
         }
       >
-        {id}
+        <Link style={{ display: 'inline' }}>{id}</Link>
       </Typography.Text>
     </div>
   )

@@ -95,12 +95,12 @@ export const useColumnDeliveryOrder = [
     dataIndex: 'salesman_id',
   }),
   addColumn({
-    title: 'Total Amount',
-    dataIndex: 'total_amount',
-  }),
-  addColumn({
     title: 'Currency',
     dataIndex: 'currency_id',
+  }),
+  addColumn({
+    title: 'Total Amount',
+    dataIndex: 'total_amount',
   }),
   addColumn({
     title: 'Create From',

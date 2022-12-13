@@ -13,7 +13,7 @@ export default function Quotation() {
   } = useSalesQuotationDetailContext()
 
   const dataList = [
-    DataList.createDataList('Quotation', data.id),
+    DataList.createDataList('Quotation Type', concatString(data.order_type_id, data.doc_type_name)),
     DataList.createDataList('Customer', concatString(data.customer_id, data.customer_name)),
     DataList.createDataList('Sales Org.', concatString(data.sales_org_id, data.sales_org_name)),
     DataList.createDataList('Branch', concatString(data.branch_id, data.branch_name)),
@@ -47,6 +47,9 @@ export default function Quotation() {
           {dataList.slice(10).map(({ label, value }, i) => (
             <DataList key={i} label={label} value={value} />
           ))}
+          {data.status_id === '5' && (
+            <DataList label={'Reason Cancel'} value={data.cancel_reason_name} />
+          )}
         </Col>
       </Row>
       <Divider />

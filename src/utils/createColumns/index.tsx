@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable prefer-rest-params */
 import { ColumnType } from 'antd/lib/table'
 import moment from 'moment'
 import React from 'react'
@@ -17,23 +19,32 @@ export default function CreateColumns(
   className?: string,
   children?: any,
 ) {
+  const idx = dataIndex as string
+  const randomChar = () => (Math.random() + 1).toString(36).substring(7)
+  const unique = `${randomChar() + randomChar()}`
+  // let a: {}
+  // for (let index = 0; index < arguments.length; index++) {
+  //   Object.assign(a, {[CreateColumns.arguments]: 1})
+
+  // }
+  console.log('args', Array.prototype.slice.call(arguments))
+
   return {
+    ...arguments,
+    key: unique,
     title: (
-      <div id={title as string} style={{ ...(!children && { width: 'max-content' }) }}>
+      <div id={unique} style={{ ...(!children && { width: 'max-content' }) }}>
         {title}
       </div>
     ),
     dataIndex,
-    sorter: sorter
-      ? { compare: (a: string, b: string) => a[dataIndex].localeCompare(b[dataIndex]) }
-      : false,
-    render,
-    fixed,
+    sorter: sorter ? { compare: (a: string, b: string) => a[idx].localeCompare(b[idx]) } : false,
     ellipsis: true,
-    width: width || 170,
+    width: width || 0,
+    render,
+    // ...(!render ? { render: (text) => logicRender(title, text) } : render),
+    ...(!children && { align: isRightAlign(title) ? 'right' : 'left' }),
     className,
-    align: isRightAlign(title) ? 'right' : 'left',
-    children,
   }
 }
 

@@ -19,10 +19,10 @@ import { Popup } from 'src/components'
 import { Text, Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import { getPricingByCompany, getProductByCompany } from 'src/api/master-data'
-import { getDetailSalesOrder } from 'src/api/sales-order'
+import { getDetailQuotation } from 'src/api/quotation'
 import useTable from 'src/hooks/useTable/index'
 
-export const useTableProduct = () => {
+export function useTableProduct() {
   const initialValue = {
     product_id: '',
     uom_id: '',
@@ -295,7 +295,7 @@ export const useTableProduct = () => {
   React.useEffect(() => {
     if (router.query.id) {
       setPending((current) => ++current)
-      getDetailSalesOrder({ id: router.query.id as string })
+      getDetailQuotation({ id: router.query.id as string })
         .then((response) => {
           setPending((current) => --current)
           setData(
@@ -306,13 +306,12 @@ export const useTableProduct = () => {
               description: `${items.product_id} - ${items.description}`,
             })) as any,
           )
+          setFetching(undefined)
           setFetching('load product')
         })
-        .catch(() => router.push(`${PATH.SALES}/sales-order`))
+        .catch(() => router.push(`${PATH.SALES}/quotation`))
     }
   }, [router])
-
-  // console.log(data);
 
   React.useEffect(() => {
     const now = new Date().toISOString()

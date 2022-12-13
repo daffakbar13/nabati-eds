@@ -199,29 +199,9 @@ export default function PageShipment() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll', width: '' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            loading={table.state.loading}
-            columns={table.state.columns}
-            dataSource={table.state.data}
-            showSorterTooltip={false}
-            rowSelection={table.state.rowSelection}
-            rowKey={'shipment_id'}
-            pagination={false}
-            onChange={(_, __, sorter) => console.log(sorter)}
-          />
+          <Table {...table.state.tableProps} rowKey="shipment_id" />
         </div>
-        {hasData && (
-          <Pagination
-            defaultPageSize={20}
-            pageSizeOptions={[20, 50, 100]}
-            total={table.state.total}
-            totalPage={table.state.totalPage}
-            onChange={(page, limit) => {
-              table.handler.handlePagination(page, limit)
-            }}
-          />
-        )}
+        {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
           <FloatAction>
             <div

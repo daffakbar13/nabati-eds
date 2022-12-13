@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { Card, SearchQueryParams, Modal } from 'src/components'
+import { Card, SearchQueryParams, Modal, Pagination } from 'src/components'
 import {
   getListSalesORGCustomer,
   UpdateStatusSalesORGCustomer,
@@ -83,6 +83,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <CreateModal

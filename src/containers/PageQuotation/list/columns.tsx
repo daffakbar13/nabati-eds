@@ -1,132 +1,95 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import { addColumn } from 'src/utils/createColumns'
-import { useRouter } from 'next/router'
 import React from 'react'
-import { Button } from 'pink-lava-ui'
-import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { concatString } from 'src/utils/concatString'
-import { useTable } from 'src/hooks'
+import ActionTable from 'src/components/ActionTable'
+import { useRouter } from 'next/router'
 
-const { addColum } = useTable
-
-interface LinkedProps {
-  link: string
-  status: string
-  type: 'id' | 'action'
-}
-
-function Linked(props: LinkedProps) {
-  const { link, status, type } = props
+export function useColumnQuotation() {
   const router = useRouter()
-  const navigate = () => {
-    status === 'Draft'
-      ? router.push(`${PATH.SALES}/quotation/edit/${link}`)
-      : router.push({
-          pathname: `${PATH.SALES}/quotation/detail/${link}`,
-          query: { status },
-        })
+  function logicRoute(id: string, status: string): string {
+    if (status === 'Draft') {
+      return `${router.pathname}/edit/${id}`
+    }
+    return `${router.pathname}/detail/${id}`
   }
-  const [hover, setHover] = React.useState(false)
-
-  return (
-    <>
-      {type === 'id' ? (
-        <div
-          onClick={navigate}
-          onMouseEnter={() => {
-            setHover(true)
-          }}
-          onMouseLeave={() => {
-            setHover(false)
-          }}
-          style={{
-            cursor: 'pointer',
-            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
-          }}
-        >
-          {link}
-        </div>
-      ) : (
-        <Button size="big" variant="tertiary" onClick={navigate}>
-          View Detail
-        </Button>
-      )}
-    </>
-  )
+  return [
+    addColumn({
+      title: 'Quotation',
+      dataIndex: 'id',
+      fixed: true,
+      render: (_, { id, status_name }) => (
+        <ActionTable link={logicRoute(id, status_name)} type="id" label={id} />
+      ),
+      sorter: true,
+    }),
+    addColumn({
+      title: 'Order Type',
+      render: (_, { order_type_id, order_type_name }) =>
+        concatString(order_type_id, order_type_name),
+    }),
+    addColumn({
+      title: 'Order Date',
+      dataIndex: 'order_date',
+    }),
+    addColumn({
+      title: 'Sales Org.',
+      render: (_, { sales_org_id, sales_org_name }) => concatString(sales_org_id, sales_org_name),
+    }),
+    addColumn({
+      title: 'Branch',
+      render: (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
+    }),
+    addColumn({
+      title: 'Sold To Customer',
+      dataIndex: 'sold_to_customer_id',
+      render: (id, { customer_name }) => concatString(id, customer_name),
+    }),
+    addColumn({
+      title: 'Ship To Customer',
+      dataIndex: 'ship_to_customer_id',
+      render: (id, { customer_name }) => concatString(id, customer_name),
+    }),
+    addColumn({
+      title: 'Salesman',
+      render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
+    }),
+    addColumn({
+      title: 'Salesman',
+      render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
+    }),
+    addColumn({
+      title: 'Currency',
+      dataIndex: 'currency_id',
+    }),
+    addColumn({
+      title: 'Total Amount',
+      dataIndex: 'total_amount',
+    }),
+    addColumn({
+      title: 'Create From',
+      dataIndex: 'created_from',
+    }),
+    addColumn({
+      title: 'Status',
+      dataIndex: 'status_name',
+      render: (status) => <TaggedStatus status={status} />,
+    }),
+    addColumn({
+      title: 'Status Process',
+      dataIndex: 'status_process_id',
+      render: (status_process) => <TaggedStatus status={status_process || 'Not Implemented'} />,
+    }),
+    addColumn({
+      title: 'Action',
+      dataIndex: 'id',
+      render: (_, { id, status_name }) => (
+        <ActionTable link={logicRoute(id, status_name)} type="action" />
+      ),
+    }),
+  ]
 }
-
-export const useColumnQuotation = [
-  addColumn({
-    title: 'Quotation',
-    dataIndex: 'id',
-    fixed: true,
-    render: (link: string, { status_name }: any) => (
-      <Linked link={link} type="id" status={status_name} />
-    ),
-    sorter: true,
-  }),
-  addColumn({
-    title: 'Order Type',
-    render: (_, { order_type_id, order_type_name }) => concatString(order_type_id, order_type_name),
-  }),
-  addColumn({
-    title: 'Order Date',
-    dataIndex: 'order_date',
-  }),
-  addColumn({
-    title: 'Sales Org.',
-    render: (_, { sales_org_id, sales_org_name }) => concatString(sales_org_id, sales_org_name),
-  }),
-  addColumn({
-    title: 'Branch',
-    render: (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
-  }),
-  addColumn({
-    title: 'Sold To Customer',
-    dataIndex: 'sold_to_customer_id',
-    render: (id, { customer_name }) => concatString(id, customer_name),
-  }),
-  addColumn({
-    title: 'Ship To Customer',
-    dataIndex: 'ship_to_customer_id',
-    render: (id, { customer_name }) => concatString(id, customer_name),
-  }),
-  addColumn({
-    title: 'Salesman',
-    render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
-  }),
-  addColumn({
-    title: 'Salesman',
-    render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
-  }),
-  addColumn({
-    title: 'Currency',
-    dataIndex: 'currency',
-  }),
-  addColumn({
-    title: 'Total Amount',
-    dataIndex: 'total_amount',
-  }),
-  addColumn({
-    title: 'Create From',
-    dataIndex: 'created_from',
-  }),
-  addColumn({
-    title: 'Status',
-    dataIndex: 'status_name',
-    render: (status) => <TaggedStatus status={status} />,
-  }),
-  addColumn({
-    title: 'Status Process',
-    dataIndex: 'status_process_id',
-    render: (status_process) => <TaggedStatus status={status_process || 'Not Implemented'} />,
-  }),
-  addColumn({
-    title: 'Action',
-    dataIndex: 'id',
-    render: (_, { id, status_name }) => <Linked link={id} type="action" status={status_name} />,
-  }),
-]

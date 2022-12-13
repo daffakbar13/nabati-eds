@@ -3,8 +3,11 @@
 import { Col, InputNumber, Row, Select } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import React from 'react'
+import { useRouter } from 'next/router'
 
 interface PaginationProps {
+  page: number
+  limit: number
   defaultPageSize: number
   pageSizeOptions: number[]
   total: number
@@ -13,9 +16,9 @@ interface PaginationProps {
 }
 
 export default function Pagination(props: PaginationProps) {
-  const { defaultPageSize, onChange, pageSizeOptions, total, totalPage } = props
-  const [limit, setLimit] = React.useState(defaultPageSize)
-  const [page, setPage] = React.useState(1)
+  const { defaultPageSize, onChange, pageSizeOptions, page, limit, total, totalPage } = props
+  // const [limit, setLimit] = React.useState<number>(defaultPageSize)
+  // const [page, setPage] = React.useState<number>(1)
   const [optionsPage, setOptionsPage] = React.useState<{ label: string; value: number }[]>()
   const isFirstPage = page === 1
   const isLastPage = page === totalPage
@@ -32,31 +35,28 @@ export default function Pagination(props: PaginationProps) {
 
   function handleBackPage() {
     if (!isFirstPage) {
-      setPage((curr) => --curr)
+      // setPage((curr) => --curr)
+      onChange(page - 1, limit)
     }
   }
 
   function handleNextPage() {
     if (!isLastPage) {
-      setPage((curr) => ++curr)
+      // setPage((curr) => ++curr)
+      onChange(page + 1, limit)
     }
   }
 
-  function handleChangeLimit(value: number) {
-    setLimit(value)
-    setPage(1)
+  function handleChangeLimit(value: number, passFromParams: boolean = false) {
+    if (pageSizeOptions.includes(value)) {
+      onChange(1, value)
+    }
   }
 
   function handleChangePage(value: number) {
-    if (value > 0 && value <= totalPage) setPage(value)
-  }
-
-  function handleChangeOptionsPage() {
-    const newOptionsPage = []
-    for (let index = 1; index <= totalPage; index++) {
-      newOptionsPage.push({ label: index, value: index })
+    if (value > 0 && value <= totalPage) {
+      onChange(value, limit)
     }
-    setOptionsPage(newOptionsPage)
   }
 
   function VerticalMiddle({ children, style }: { children?; style? }) {
@@ -74,15 +74,6 @@ export default function Pagination(props: PaginationProps) {
       </div>
     )
   }
-
-  React.useEffect(() => {
-    onChange(page, limit)
-    handleChangeOptionsPage()
-  }, [page, limit])
-
-  React.useEffect(() => {
-    handleChangeOptionsPage()
-  }, [totalPage])
 
   return (
     <Row justify="space-between" style={{ fontWeight: '600', margin: '20px 0' }}>
