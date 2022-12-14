@@ -38,7 +38,7 @@ const subUrl = {
   getCustomerGroupCompanyDynamic: 'v1/master/get-customer-group',
   getConfigSlocCompanyDynamic: 'v1/master/get-config-sloc',
 }
-const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = 'https://dist-system.nabatisnack.co.id:3002/'
 
 export const getCompanies = async (): Promise<CommonDetailResponse<any>> => {

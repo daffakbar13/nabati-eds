@@ -30,7 +30,7 @@ export interface StateType {
     dataForm?: PayloadCreate
     tableProduct?: ReturnType<typeof useTableProduct>
     salesOrderId?: string
-    confirm?: 'newQuo' | 'draftQuo' | 'cancel'
+    confirm?: 'newSO' | 'draftSO' | 'cancel'
     optionsOrderType: OptionsType[]
     optionsSalesman: OptionsType[]
     optionsSalesOrg: OptionsType[]

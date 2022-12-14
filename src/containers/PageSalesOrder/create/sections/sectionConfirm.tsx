@@ -9,7 +9,7 @@ export default function SectionConfirm() {
 
   return (
     <>
-      {(confirm === 'draftQuo' || confirm === 'newQuo') && <ConfirmSuccessSubmit />}
+      {(confirm === 'newSO' || confirm === 'draftSO') && <ConfirmSuccessSubmit />}
       {confirm === 'cancel' && <ConfirmCancel />}
       {<tableProduct.ConfirmDelete />}
     </>

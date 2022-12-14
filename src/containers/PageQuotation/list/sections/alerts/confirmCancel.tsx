@@ -6,7 +6,7 @@ import { Button } from 'pink-lava-ui'
 import { cancelBatchOrder } from 'src/api/quotation'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListContext } from '../../states'
 
 export default function ConfirmCancel() {
   const {

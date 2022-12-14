@@ -52,7 +52,7 @@ export default function SalesSalesOrderCreateProvider(
 
   React.useEffect(() => {
     handleCanSubmit()
-  }, [dataForm])
+  }, [dataForm, tableProduct.data])
 
   React.useEffect(() => {
     getDocType()

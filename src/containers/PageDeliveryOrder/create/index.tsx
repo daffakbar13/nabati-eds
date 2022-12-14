@@ -14,7 +14,7 @@ import { PATH } from 'src/configs/menus'
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import Loader from 'src/components/Loader'
 import { getDeliveryOrderDetail } from 'src/api/delivery-order'
-import dateFormat from 'src/utils/dateFormat'
+import moment from 'moment'
 import { SectionAction, SectionConfirm, SectionField, SectionTable } from './sections'
 import { useTableProduct } from './columns'
 
@@ -42,8 +42,8 @@ const initialValue: payloadCreate = {
   order_type: 'ZDCC',
   route_id: 'ID0080',
   document_date: now,
-  delivery_date: dateFormat(tomorrow, 'YYYY-MM-DD'),
-  loading_date: dateFormat(now, 'YYYY-MM-DD'),
+  delivery_date: moment(tomorrow).format('YYYY-MM-DD'),
+  loading_date: moment(now).format('YYYY-MM-DD'),
   pricing_date: now,
   reference: '',
 }

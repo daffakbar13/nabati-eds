@@ -1,10 +1,11 @@
 import React from 'react'
 import { Loader } from 'src/components'
-import { useSalesQuotationListContext } from '../states'
+import { useSalesShipmentCreateContext } from '../states'
 
 export default function SectionLoader() {
   const {
     state: { processing },
-  } = useSalesQuotationListContext()
+  } = useSalesShipmentCreateContext()
+
   return <>{processing && <Loader type="process" text={processing} />}</>
 }

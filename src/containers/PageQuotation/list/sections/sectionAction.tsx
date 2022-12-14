@@ -7,7 +7,7 @@ import ReactToPrint from 'react-to-print'
 import { downloadTemplateQuotation } from 'src/api/quotation'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { colors } from 'src/configs/colors'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListContext } from '../states'
 
 export default function SectionAction() {
   const {

@@ -1,6 +1,6 @@
 /* eslint-disable object-curly-newline */
 import React from 'react'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListContext } from '../states'
 import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessCancel, ConfirmSuccessSubmit } from './alerts'
 
 export default function SectionConfirm() {

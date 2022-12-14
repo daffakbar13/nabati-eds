@@ -56,7 +56,7 @@ export default function SalesQuotationCreateProvider(
 
   React.useEffect(() => {
     handleCanSubmit()
-  }, [dataForm])
+  }, [dataForm, tableProduct.data])
 
   React.useEffect(() => {
     getDocType()
