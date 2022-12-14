@@ -263,15 +263,26 @@ export function itemReceiver(productId: string) {
 }
 
 export function fieldPoSto(search: string) {
-    return getListDoSto({ filters: [], limit: 20, page: 1 })
+    return getListDoSto({
+        filters: [{
+            field: 'id',
+            option: 'CP',
+            from_value: `%${search}%`,
+            data_type: 'S',
+        }], limit: 20, page: 1
+    })
         .then((result) => result.data.result
             .map(({ purchase_id }) => purchase_id))
-        .then((allDo) => getListPoSto({ filters: [], limit: 20, page: 1 })
+        .then((allDo) => getListPoSto({
+            filters: [{
+                field: 'id',
+                option: 'CP',
+                from_value: `%${search}%`,
+                data_type: 'S',
+            }], limit: 20, page: 1
+        })
             .then((result) =>
                 result.data.result
-                    .filter(({ id }) =>
-                        (id.toLowerCase().includes(search.toLowerCase()))
-                        && allDo.includes(id))
                     .splice(0, 10)
                     .map(({ id }) => ({
                         label: id,

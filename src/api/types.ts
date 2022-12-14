@@ -32,6 +32,7 @@ export interface CommonFiltersPayload {
   option: string
   from_value?: string
   to_value?: string
+  data_type?: string
 }
 
 export interface CommonListParams {
