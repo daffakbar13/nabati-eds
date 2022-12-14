@@ -64,7 +64,7 @@ export default function SectionAction() {
                     placeholder={'Select'}
                     value={filter?.salesman}
                     style={{ borderRadius: 64 }}
-                    options={options.salesman}
+                    options={filter.branch === '' ? [] : options.salesman}
                     onChange={(e: any) => {
                       handleChangeFilter('salesman', e.value)
                     }}
@@ -89,7 +89,10 @@ export default function SectionAction() {
                     style={{ width: '100%' }}
                     variant="tertiary"
                     disabled={Object.keys(filter || {}).length === 0}
-                    onClick={handleClearFilter}
+                    onClick={() => {
+                      handleClearFilter()
+                      table.handler.handleSelected([])
+                    }}
                   >
                     Clear All
                   </Button>
