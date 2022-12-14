@@ -28,6 +28,7 @@ export const useTableAddItem = (props: propsUseTable) => {
     batch: '',
   }
   const [data, setData] = React.useState([])
+  const [placeholder, setPlaceholder] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [valueItemSender, setValueItemSender] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
@@ -36,11 +37,16 @@ export const useTableAddItem = (props: propsUseTable) => {
   React.useEffect(() => {
     if (props.idSupplyingBranch != '' && props.idReceivingBranch != '') {
       setData([initialValue])
+      setPlaceholder([initialValue])
     }
   }, [props.idSupplyingBranch, props.idReceivingBranch])
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
+  }
+
+  function handleChangePlaceHolder(key: string, value: string | number, index: number) {
+    setPlaceholder((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
   }
 
   function isNullProductId(index: number) {
@@ -53,6 +59,7 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   function handleAddItem() {
     setData([...data, initialValue])
+    setPlaceholder([...placeholder, initialValue])
   }
 
   const styleInputNumber = {
@@ -88,12 +95,12 @@ export const useTableAddItem = (props: propsUseTable) => {
       (product_id, __, index) => (
         <DebounceSelect
           type="select"
-          value={product_id as any}
+          value={placeholder[index].product_id as any}
           fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
           onChange={(e) => {
             handleChangeData('product_id', e.value, index)
             handleChangeData('description', e.label.split(' - ')[1] || '', index)
-            handleChangeData('remarks', '', index)
+            handleChangePlaceHolder('product_id', e.label, index)
             setFetching(true)
           }}
         />
@@ -174,10 +181,11 @@ export const useTableAddItem = (props: propsUseTable) => {
       (product_id, __, index) => (
         <DebounceSelect
           type="select"
-          value={product_id as any}
+          value={placeholder[index].product_id as any}
           fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
           onChange={(e) => {
             handleChangeData('product_id', e.value, index)
+            handleChangePlaceHolder('product_id', e.label, index)
             setFetching(true)
           }}
         />

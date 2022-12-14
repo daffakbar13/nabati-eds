@@ -49,7 +49,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
   const statusOption = [
     { label: 'Approved', value: '01' },
     { label: 'Rejected', value: '02' },
-    { label: 'Wait For Approval', value: '00' },
+    { label: 'Pending', value: '00' },
   ]
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
 
   return (
     <Col>
-      <Text variant={'h4'}>Goods Issue Intra Channel</Text>
+      <Text variant={'h4'}>Goods Issue Intra Channels</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

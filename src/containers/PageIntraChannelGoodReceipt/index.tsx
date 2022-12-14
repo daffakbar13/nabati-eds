@@ -45,10 +45,9 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
   }
 
   const statusOption = [
-    { label: 'All', value: null },
-    { label: 'Pending', value: 'Pending' },
-    { label: 'Done', value: 'Done' },
-    { label: 'Canceled', value: 'Canceled' },
+    { label: 'Approved', value: '01' },
+    { label: 'Rejected', value: '02' },
+    { label: 'Pending', value: '00' },
   ]
 
   useEffect(() => {
@@ -135,7 +134,7 @@ export default function PageIntraChannelGoodIssue(props: PageQuotationProps) {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>
