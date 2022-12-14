@@ -4,6 +4,7 @@ import { addColumn } from 'src/utils/createColumns'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'
 // import { PATH } from 'src/configs/menus'
+import { Tag } from 'antd'
 
 export const columns = [
   addColumn({
@@ -289,5 +290,21 @@ export const columns = [
         },
       }),
     ],
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'group_by_sloc',
+    render: (arr: any[] = []) => {
+      return arr.map((a, ind) => {
+        const isLast = arr?.length === ind + 1
+        return (
+          <div key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+            <Tag color={a.status_id_name === 'PGI Complete' ? 'green' : ''}>
+              {a.status_id_name || '-'}
+            </Tag>
+          </div>
+        )
+      })
+    },
   }),
 ]

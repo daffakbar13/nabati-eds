@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
@@ -10,18 +10,11 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { getListDoSto } from 'src/api/logistic/do-sto'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { Props } from './types'
 import { columns } from './columns'
-
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
+import { colors } from 'src/configs/colors'
 
 export default function PageDoSto(props: Props) {
   const [filters, setFilters] = useState([])
@@ -45,25 +38,14 @@ export default function PageDoSto(props: Props) {
   }
 
   const statusOption = [
-    { label: 'All', value: null },
-    { label: 'Done', value: 'Done' },
-    { label: 'GI Done', value: 'GI Done' },
+    { label: 'Approved', value: '01' },
+    { label: 'Rejected', value: '02' },
+    { label: 'Wait For Approval', value: '00' },
   ]
 
   useEffect(() => {
     table.handler.handleFilter(filters)
   }, [filters])
-
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'e.id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
 
   return (
     <Col>
@@ -72,10 +54,47 @@ export default function PageDoSto(props: Props) {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by DO Number" />
+            <Search
+              autofocus
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search by DO Number"
+              colorIcon={colors.grey.regular}
+              onChange={(e) => {
+                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
+                if (idIndex > -1) {
+                  if (e.target.value === '') {
+                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
+                  } else {
+                    const updateId = filters.map((data, i) => {
+                      if (i === idIndex) {
+                        return { ...data, from_value: `%${e.target.value}%` }
+                      } else {
+                        return { ...data }
+                      }
+                    })
+                    setFilters(updateId)
+                  }
+                } else {
+                  setFilters([
+                    ...filters,
+                    {
+                      field: 'id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                      data_type: 'S',
+                    },
+                  ])
+                }
+              }}
+              allowClear
+            />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="suppl_branch_id"
                 dataType="S"
                 label="Supplying Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -84,7 +103,7 @@ export default function PageDoSto(props: Props) {
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="receive_plant_id"
+                field="receive_branch_id"
                 dataType="S"
                 label="Receiving Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -111,7 +130,7 @@ export default function PageDoSto(props: Props) {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>

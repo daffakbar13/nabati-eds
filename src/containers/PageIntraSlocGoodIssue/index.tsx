@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
@@ -9,9 +9,10 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
+import { colors } from 'src/configs/colors'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -46,9 +47,9 @@ export default function PageIntraSlocGoodIssue() {
   }
 
   const statusOption = [
-    { label: 'Done', value: 'Done' },
-    { label: 'Pending', value: 'Pending' },
-    { label: 'Canceled', value: 'Canceled' },
+    { label: 'Done', value: '01' },
+    { label: 'Canceled', value: '02' },
+    { label: 'Pending', value: '00' },
   ]
 
   const movTypeOption = [{ label: 'Z54 - GR Phys. Inv', value: 'Z54' }]
@@ -56,17 +57,6 @@ export default function PageIntraSlocGoodIssue() {
   useEffect(() => {
     table.handler.handleFilter(filters)
   }, [filters])
-
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
@@ -82,10 +72,47 @@ export default function PageIntraSlocGoodIssue() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by GI Number" />
+            <Search
+              autofocus
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search by GI Number"
+              colorIcon={colors.grey.regular}
+              onChange={(e) => {
+                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
+                if (idIndex > -1) {
+                  if (e.target.value === '') {
+                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
+                  } else {
+                    const updateId = filters.map((data, i) => {
+                      if (i === idIndex) {
+                        return { ...data, from_value: `%${e.target.value}%` }
+                      } else {
+                        return { ...data }
+                      }
+                    })
+                    setFilters(updateId)
+                  }
+                } else {
+                  setFilters([
+                    ...filters,
+                    {
+                      field: 'id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                      data_type: 'S',
+                    },
+                  ])
+                }
+              }}
+              allowClear
+            />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -108,7 +135,7 @@ export default function PageIntraSlocGoodIssue() {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="sloc_id"
                 dataType="S"
                 label="SLoc"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -144,7 +171,7 @@ export default function PageIntraSlocGoodIssue() {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>

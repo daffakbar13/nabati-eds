@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
@@ -9,9 +9,10 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListStockReservation } from 'src/api/logistic/stock-reservation'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSloc } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSloc, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
+import { colors } from 'src/configs/colors'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -53,17 +54,6 @@ export default function PageStockReservation() {
     table.handler.handleFilter(filters)
   }, [filters])
 
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'doc_number',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
-
   return (
     <Col>
       <Text variant={'h4'}>Stock Reservation</Text>
@@ -71,8 +61,47 @@ export default function PageStockReservation() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Doc. Number" />
+            <Search
+              autofocus
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search by Doc. Number"
+              colorIcon={colors.grey.regular}
+              onChange={(e) => {
+                const idIndex = filters.findIndex((obj) => obj?.field == 'doc_number')
+                if (idIndex > -1) {
+                  if (e.target.value === '') {
+                    setFilters((oldFilter) =>
+                      oldFilter.filter((data) => data?.field != 'doc_number'),
+                    )
+                  } else {
+                    const updateId = filters.map((data, i) => {
+                      if (i === idIndex) {
+                        return { ...data, from_value: `%${e.target.value}%` }
+                      } else {
+                        return { ...data }
+                      }
+                    })
+                    setFilters(updateId)
+                  }
+                } else {
+                  setFilters([
+                    ...filters,
+                    {
+                      field: 'doc_number',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                      data_type: 'S',
+                    },
+                  ])
+                }
+              }}
+              allowClear
+            />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"

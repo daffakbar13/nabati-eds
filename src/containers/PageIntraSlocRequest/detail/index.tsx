@@ -83,7 +83,7 @@ export default function PageIntraSlocRequestDetail() {
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
       <Card style={{ overflow: 'unset' }}>
-        {data.status == 'Canceled' ? (
+        {data.status == 'Canceled' || data.status == 'Done' ? (
           <Text variant={'h5'}>
             <TaggedStatus status={data.status} size="h5" />
           </Text>
@@ -92,20 +92,7 @@ export default function PageIntraSlocRequestDetail() {
         )}
         <Row justifyContent="space-between" reverse>
           {(() => {
-            if (data.status == 'Done') {
-              return (
-                <>
-                  <Row gap="16px">
-                    <Button size="big" variant="tertiary">
-                      Cancel Process
-                    </Button>
-                  </Row>
-                  <Text variant={'h5'}>
-                    <TaggedStatus status={data.status} size="h5" />
-                  </Text>
-                </>
-              )
-            } else if (data.status == 'Pending') {
+            if (data.status == 'Pending') {
               return (
                 <>
                   <Row gap="16px">
