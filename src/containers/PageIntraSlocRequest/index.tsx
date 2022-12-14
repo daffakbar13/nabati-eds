@@ -9,7 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListSloc } from 'src/api/logistic/request-intra-sloc'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { PageSlocRequest } from './types'
 import { column } from './columns'
@@ -107,8 +107,11 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
               allowClear
             />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -131,7 +134,7 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="sloc_id"
                 dataType="S"
                 label="SLoc"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}

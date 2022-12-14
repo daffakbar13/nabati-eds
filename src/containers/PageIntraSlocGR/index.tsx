@@ -9,7 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListGRSloc } from 'src/api/logistic/gr-intra-sloc'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
 import { colors } from 'src/configs/colors'
@@ -108,8 +108,11 @@ export default function PageIntraSlocGoodIssue() {
               allowClear
             />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -132,7 +135,7 @@ export default function PageIntraSlocGoodIssue() {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="sloc_id"
                 dataType="S"
                 label="SLoc"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}

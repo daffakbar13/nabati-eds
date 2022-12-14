@@ -9,7 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getGoodIssueList } from 'src/api/logistic/good-issue-intra-branch'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { Props } from './types'
 import { columns } from './columns'
@@ -88,8 +88,11 @@ export default function PageGoodsIssue(props: Props) {
               allowClear
             />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="suppl_branch_id"
                 dataType="S"
                 label="Supplying Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -98,7 +101,7 @@ export default function PageGoodsIssue(props: Props) {
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="receive_plant_id"
+                field="receive_branch_id"
                 dataType="S"
                 label="Receiving Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
