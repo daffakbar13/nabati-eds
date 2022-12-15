@@ -94,9 +94,12 @@ export default function PageDoStoDetail() {
           {data.status == 'Pending' || data.status == 'Wait For Approval' ? (
             <>
               <RowPinkLava gap="16px">
+                <Button size="big" variant="tertiary">
+                  Cancel
+                </Button>
                 <Button
                   size="big"
-                  variant="tertiary"
+                  variant="secondary"
                   onClick={() => {
                     router.push(`/logistic/do-sto/edit/${router.query.id}`)
                   }}
