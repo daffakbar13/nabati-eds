@@ -153,7 +153,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
         })
     }
     function handleFilterChanges() {
-        if (Object.keys(state.filter || {}).includes('branch')) {
+        if (state.filter.branch !== '' && !state.filter.salesman) {
             runProcess('Wait for get data Salesman')
             getCustomerByFilter({
                 branch_id: state.filter?.branch.split(' - ')[0],
