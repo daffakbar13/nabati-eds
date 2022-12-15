@@ -9,7 +9,7 @@ import {
 import { GoodIssueIntraChannelItem, GoodIssueIntraChannelItemDetail } from './types'
 
 const subUrl = 'v1/material-doc'
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getRequestIntraChannel = async (
   params: CommonListParams = {},

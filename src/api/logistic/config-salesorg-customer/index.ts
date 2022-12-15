@@ -11,7 +11,7 @@ import { ListSalesORGCustomer } from './types'
 
 const url = 'v1/configuration/sales_organization_customer'
 
-const overrideBaseUrl = API_BASE_URL_2
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListSalesORGCustomer = async (
     params: CommonListParams = {},
