@@ -1,9 +1,10 @@
 import React from 'react'
-import { Button, Spacer, Text, Table } from 'pink-lava-ui'
+import { Button, Spacer, Text, Table, Row as RowPinkLava } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Row, Col, Divider } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
+import TaggedStatus from 'src/components/TaggedStatus'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
 import { getPoStoDetail } from 'src/api/logistic/do-sto'
@@ -80,9 +81,47 @@ export default function PageDoStoDetail() {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
-      {/* <Card style={{ padding: '16px 20px' }}>
-                Done
-            </Card> */}
+      <Spacer size={20} />
+      <Card style={{ overflow: 'unset' }}>
+        {data.status != 'Pending' && data.status != 'Wait For Approval' ? (
+          <Text variant={'h5'}>
+            <TaggedStatus status={data.status} size="h5" />
+          </Text>
+        ) : (
+          ''
+        )}
+        <RowPinkLava justifyContent="space-between" reverse>
+          {data.status == 'Pending' || data.status == 'Wait For Approval' ? (
+            <>
+              <RowPinkLava gap="16px">
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    router.push(`/logistic/do-sto/edit/${router.query.id}`)
+                  }}
+                >
+                  Edit
+                </Button>
+                <Button
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    router.push('/logistic/do-sto')
+                  }}
+                >
+                  PGI
+                </Button>
+              </RowPinkLava>
+              <Text variant={'h5'}>
+                <TaggedStatus status={data.status} size="h5" />
+              </Text>
+            </>
+          ) : (
+            ''
+          )}
+        </RowPinkLava>
+      </Card>
       <Spacer size={20} />
       <Card style={{ padding: '16px 20px' }}>
         <Row gutter={8}>
