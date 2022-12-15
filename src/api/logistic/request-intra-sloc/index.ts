@@ -11,7 +11,7 @@ import { SlocList, SlocListDetail } from './types'
 
 const url = 'v1/intra-sloc'
 
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListSloc = async (
     params: CommonListParams = {},

@@ -11,7 +11,7 @@ import { StockRealTime } from './types'
 
 const url = 'v1/stocks'
 
-const overrideBaseUrl = API_BASE_URL_2
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getStockRealtimeList = async (
   params: CommonListParams = {},

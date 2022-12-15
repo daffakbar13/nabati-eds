@@ -11,7 +11,7 @@ import { StockRealTime } from './types'
 
 const url = 'v1/inventory/material_document'
 
-const overrideBaseUrl = API_BASE_URL_2
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getMaterialDocumentList = async (
   params: CommonListParams = {},

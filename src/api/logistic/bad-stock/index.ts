@@ -11,7 +11,7 @@ import { BadStockList, BadStockDetail } from './types'
 
 const url = 'v1/bad_stock'
 
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListBadStock = async (
     params: CommonListParams = {},

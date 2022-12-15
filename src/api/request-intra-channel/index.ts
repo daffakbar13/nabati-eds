@@ -10,8 +10,8 @@ import { RequestIntraChannelItem, RequestIntraChannelItemDetail, slocList } from
 
 const subUrl = 'v1/intra-channel'
 const subUrlMaster = 'v1/master'
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
-const overrideBaseUrlMaster = 'https://dist-system.nabatisnack.co.id:3001/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
+const overrideBaseUrlMaster = process.env.NEXT_PUBLIC_API_BASE_URL_1
 
 export const getRequestIntraChannel = async (
   params: CommonListParams = {},

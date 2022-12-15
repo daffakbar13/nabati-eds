@@ -13,7 +13,7 @@ const url = 'v1/configuration/list_so_customer_group_mat'
 const urlSO = 'v1/configuration/so_customer_group_mat'
 const urlCreateSO = 'v1/configuration/create_so_customer_group_mat'
 
-const overrideBaseUrl = API_BASE_URL_2
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListSalesORGCustomerGroupMaterial = async (
     params: CommonListParams = {},

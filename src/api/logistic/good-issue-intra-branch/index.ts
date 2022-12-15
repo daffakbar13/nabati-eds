@@ -12,7 +12,7 @@ import { GoodIssueList, GoodIssueDetail } from './type'
 const url = 'v1/material-doc/sto-delivery/issue'
 const urlDetail = 'v1/material-doc/goodIssue'
 
-const overrideBaseUrl = API_BASE_URL_2
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getGoodIssueList = async (
     params: CommonListParams = {},
