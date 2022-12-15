@@ -29,12 +29,14 @@ interface FormData {
   min_amount: number
 }
 
-export default function CreateConfigurationCompany({ visible = false, close = () => {} }) {
+export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const [placeHolder, setPlaceHolder] = useState<FormData>()
+  const [optionUom, setOptionsUom] = useState([])
+  const isOnEditMode = !!payload
 
   const initialValue = {
     company_id: 'PP01',
@@ -61,8 +63,32 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
+  const changePlaceHolder = (form: string, value: any) => {
+    setPlaceHolder((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
   const onClickSubmit = async () => {
     setConfirmModal(true)
+  }
+
+  const doUpdate = async (reqBody: any) => {
+    try {
+      setLoading(true)
+      const res = updateSalesORGCustomerGroupCustomerGroup(
+        reqBody.company_id as string,
+        reqBody.sales_org_id as string,
+        reqBody.channel_id as string,
+        reqBody.customer_group_id as string,
+        reqBody.salesman_group_id as string,
+        reqBody.min_line as string,
+        reqBody,
+      )
+      setLoading(false)
+      return res
+    } catch (error) {
+      console.error(error)
+    }
+    return false
   }
 
   const doCreate = async (reqBody: any) => {
@@ -80,7 +106,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const handleSubmit = async () => {
     setPlaceHolder(undefined)
     const reqBody = { ...initialValue, ...dataForm }
-    return doCreate(reqBody)
+
+    if (!isOnEditMode) {
+      return doCreate(reqBody)
+    }
+
+    if (isOnEditMode) {
+      return doUpdate(reqBody)
+    }
+
+    return false
   }
 
   const handleCancel = () => {
@@ -89,11 +124,43 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     close()
   }
 
+  useEffect(() => {
+    if (!isOnEditMode) return
+    onChangeForm('company_id', payload.company_id)
+    onChangeForm('sales_org_id', payload.sales_org_id)
+    onChangeForm('channel_id', payload.channel_id)
+    onChangeForm('customer_group_id', payload.customer_group_id)
+    onChangeForm('salesman_group_id', payload.salesman_group_id)
+    onChangeForm('min_line', payload.min_line)
+    onChangeForm('min_qty', payload.min_qty)
+    onChangeForm('uom', payload.uom)
+    onChangeForm('min_amount', payload.min_amount)
+
+    changePlaceHolder('company_id', `${payload.company_id || ''} - ${payload.company_name || ''}`)
+    changePlaceHolder(
+      'sales_org_id',
+      `${payload.salesman_group_id || ''} - ${payload.sales_org_name || ''}`,
+    )
+    changePlaceHolder('channel_id', `${payload.channel_id || ''} - ${payload.channel_name || ''}`)
+    changePlaceHolder(
+      'customer_group_id',
+      `${payload.customer_group_id || ''} - ${payload.customer_group_name || ''}`,
+    )
+    changePlaceHolder(
+      'salesman_group_id',
+      `${payload.salesman_group_id || ''} - ${payload.salesman_group_name || ''}`,
+    )
+    changePlaceHolder('min_line', payload.min_line)
+    changePlaceHolder('min_qty', payload.min_qty)
+    changePlaceHolder('uom', payload.uom)
+    changePlaceHolder('min_amount', payload.min_amount)
+  }, [isOnEditMode, payload])
+
   const content = (
     <>
       <Spacer size={20} />
       <DebounceSelect
-        label="Company"
+        label="Trans Type"
         required
         type="select"
         fetchOptions={fieldUomList}
@@ -103,33 +170,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       />
       <Spacer size={10} />
       <DebounceSelect
-        label="Key"
+        label="Product GT"
         required
-        type="input"
+        type="select"
+        fetchOptions={fieldUomList}
         onChange={(val: any) => {
           onChangeForm('uom', val.value)
         }}
       />
       <Spacer size={10} />
       <DebounceSelect
-        label="Value"
+        label="Product MT"
         required
-        type="input"
-        onChange={(val: any) => {
-          onChangeForm('uom', val.value)
-        }}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Description"
-        type="input"
-        onChange={(val: any) => {
-          onChangeForm('uom', val.value)
-        }}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Console Group"
         type="select"
         fetchOptions={fieldUomList}
         onChange={(val: any) => {
@@ -143,29 +195,29 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title="Create Mapping Product Intra"
+        title="View Mapping Product Intra"
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
         content={content}
         loading={loading}
         cancelText="Cancel"
-        okText="Submit"
+        okText="Update"
       />
       <Modal
-        title="Confirm Submit"
+        title="Confirm Edit"
         open={showConfirmModal}
         onOk={handleSubmit}
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to mapping product intra?"
+        content="Are you sure want to update mapping product intra?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.push(`${PATH.LOGISTIC}/configuration-mapping-product-intra`)
         }}
-        successContent={(res: any) => 'Mapping product intra has been successfully Created'}
+        successContent={(res: any) => 'mapping product intra has been successfully Updated'}
         successOkText="OK"
         width={432}
       />
