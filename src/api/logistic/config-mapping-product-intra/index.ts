@@ -28,26 +28,26 @@ export const getListProductIntraChannel = async (
 export const createProductIntraChannel = async (payload: any) => {
     const response = await call({
         method: METHODS.POST,
-        subUrl: `${url}/create`,
+        subUrl: `${url}`,
         overrideBaseUrl,
         data: payload,
     })
     return response.data
 }
 
-export const getDetailProductIntraChannel = async (company_id: string, customer_id: string) => {
+export const getDetailProductIntraChannel = async (product_gt: string) => {
     const response = await call({
         method: METHODS.GET,
-        subUrl: `${url}/detail/${company_id}/${customer_id}`,
+        subUrl: `${url}/detail/${product_gt}`,
         overrideBaseUrl,
     })
     return response.data
 }
 
-export const updateProductIntraChannel = async (company_id: string, customer_id: string, payload: any) => {
+export const updateProductIntraChannel = async (trans_type: string, product_gt: string, payload: any) => {
     const response = await call({
-        method: METHODS.PUT,
-        subUrl: `${url}/update/${company_id}/${customer_id}`,
+        method: METHODS.POST,
+        subUrl: `${url}/update/${trans_type}/${product_gt}`,
         overrideBaseUrl,
         data: payload,
     })

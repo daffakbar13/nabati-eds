@@ -1,4 +1,4 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getChannelByCompany, getSalesmanGroupByCompany, getUomList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getChannelByCompany, getSalesmanGroupByCompany, getUomList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic, getProductMasterData } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -440,6 +440,37 @@ export function fieldUomList(search = '') {
                 .map(({ id, name }) => ({
                     label: [id, name].join(' - '),
                     value: id,
+                })))
+}
+
+export function fieldProductMasterData(search = '', oldProduct = '') {
+    return getProductMasterData({
+        filters: [{
+            field: 'name',
+            option: 'CP',
+            from_value: `%${search}%`,
+        }], limit: 20, page: 1
+    }).then((result) => result.data.results
+        .filter(({ product_id, name }) => product_id != oldProduct && name != oldProduct)
+        .splice(0, 10)
+        .map(({ product_id, name }) => ({
+            label: [product_id, name].join(' - '),
+            value: product_id,
+        })))
+}
+
+export function fieldProductByCompany(search: string, oldProduct = '') {
+    return getProductByCompany()
+        .then((result) =>
+            result.data
+                .filter(({ name, product_id }) =>
+                    (name.toLowerCase().includes(search.toLowerCase())
+                        || product_id.toLowerCase().includes(search.toLowerCase()))
+                    && (name != oldProduct && product_id != oldProduct))
+                .splice(0, 10)
+                .map(({ name, product_id }) => ({
+                    label: [product_id, name].join(' - '),
+                    value: product_id,
                 })))
 }
 
