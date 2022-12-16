@@ -1,13 +1,14 @@
-interface DataProduct {
-    product: string
-    uom: string
+export interface DataProduct {
+    product_id: string
+    name: string
+    uom_id: string
     price: number
-    quantity: number
+    order_qty: number
     sub_total: number
-    remarks: string
+    remarks?: string
 }
 
 export interface States {
-    data: DataProduct
+    data: DataProduct[]
     allProduct: any[]
 }

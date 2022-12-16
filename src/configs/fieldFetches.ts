@@ -1,7 +1,9 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getChannelByCompany, getSalesmanGroupByCompany, getUomList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getChannelByCompany, getSalesmanGroupByCompany, getUomList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic, getListProduct } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
+import { CommonListParams } from 'src/api/types';
+import { concatString } from 'src/utils/concatString';
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -133,7 +135,6 @@ export function fieldSalesman(search: string, branch: string) {
                 })))
 }
 
-
 export function fieldItem(search: string) {
     const now = new Date().toISOString()
     return getPricingByCompany()
@@ -152,6 +153,33 @@ export function fieldItem(search: string) {
                         label: [product_id, name].join(' - '),
                         value: product_id,
                     }))))
+}
+
+export function fieldListProduct(search: string) {
+    const bodyProduct = (type: 'product_id' | 'name'): CommonListParams => ({
+        filters: [{
+            field: type,
+            option: 'CP',
+            from_value: `%${search}%`,
+        }],
+        page: 1,
+        limit: 10,
+    })
+    return getListProduct(bodyProduct('name'))
+        .then((res) => res.data.results)
+        .then((arr) => getListProduct(bodyProduct('product_id'))
+            .then((res) => {
+                const { results } = res.data
+                const additionalData = [...results]
+                    .filter(({ product_id }) => !arr.map((e) => e.product_id).includes(product_id))
+                return [...arr, ...additionalData]
+                    .sort((a, b) => a.product_id - b.product_id)
+                    .slice(0, 10)
+                    .map(({ product_id, name }) => ({
+                        label: concatString(product_id, name),
+                        value: concatString(product_id, name),
+                    }))
+            })).catch(() => []);
 }
 
 export function fieldUom(product_id: string): Promise<any> {
@@ -269,7 +297,9 @@ export function fieldPoSto(search: string) {
             option: 'CP',
             from_value: `%${search}%`,
             data_type: 'S',
-        }], limit: 20, page: 1
+        }],
+        limit: 20,
+        page: 1,
     })
         .then((result) => result.data.result
             .map(({ purchase_id }) => purchase_id))
@@ -279,7 +309,9 @@ export function fieldPoSto(search: string) {
                 option: 'CP',
                 from_value: `%${search}%`,
                 data_type: 'S',
-            }], limit: 20, page: 1
+            }],
+            limit: 20,
+            page: 1,
         })
             .then((result) =>
                 result.data.result
@@ -413,7 +445,6 @@ export function fieldChannelCompany(search = '') {
                     value: id,
                 })))
 }
-
 
 export function fieldSalesmanGroup(search = '') {
     return getSalesmanGroupByCompany()

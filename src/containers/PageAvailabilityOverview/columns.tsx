@@ -50,7 +50,7 @@ export const columns = [
         const isLast = arr?.length === ind + 1
         return (
           <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-            {a.status_data || '-'}-{a.status_description}
+            {a.status_data}-{a.status_description}
           </p>
         )
       })
@@ -67,7 +67,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.large || '-'}
+                {a.stock?.large}
               </p>
             )
           })
@@ -81,7 +81,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.middle || '-'}
+                {a.stock?.middle}
               </p>
             )
           })
@@ -95,7 +95,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.small || '-'}
+                {a.stock?.small}
               </p>
             )
           })
@@ -109,7 +109,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.total_in_large || '-'}
+                {a.stock?.total_in_large}
               </p>
             )
           })
@@ -123,7 +123,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.total_in_small || '-'}
+                {a.stock?.total_in_small}
               </p>
             )
           })
@@ -152,7 +152,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.large || '-'}
+                {a.booking_order?.large}
               </p>
             )
           })
@@ -166,7 +166,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.middle || '-'}
+                {a.booking_order?.middle}
               </p>
             )
           })
@@ -180,7 +180,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.small || '-'}
+                {a.booking_order?.small}
               </p>
             )
           })
@@ -194,7 +194,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.total_in_large || '-'}
+                {a.booking_order?.total_in_large}
               </p>
             )
           })
@@ -208,7 +208,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.total_in_small || '-'}
+                {a.booking_order?.total_in_small}
               </p>
             )
           })
@@ -227,7 +227,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.large || '-'}
+                {a.available?.large}
               </p>
             )
           })
@@ -241,7 +241,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.middle || '-'}
+                {a.available?.middle}
               </p>
             )
           })
@@ -255,7 +255,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.small || '-'}
+                {a.available?.small}
               </p>
             )
           })
@@ -269,7 +269,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.total_in_large || '-'}
+                {a.available?.total_in_large}
               </p>
             )
           })
@@ -283,7 +283,7 @@ export const columns = [
             const isLast = arr?.length === ind + 1
             return (
               <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.total_in_small || '-'}
+                {a.available?.total_in_small}
               </p>
             )
           })
@@ -300,7 +300,7 @@ export const columns = [
         return (
           <div key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
             <Tag color={a.status_id_name === 'PGI Complete' ? 'green' : ''}>
-              {a.status_id_name || '-'}
+              {a.status_id_name}
             </Tag>
           </div>
         )

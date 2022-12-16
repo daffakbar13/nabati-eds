@@ -9,10 +9,12 @@ export const ColumnsQuotation = [
   addColumn({
     title: 'No',
     render: (_, __, i) => ++i,
+    fixed: true,
   }),
   addColumn({
     title: 'Item',
     dataIndex: 'description',
+    fixed: true,
   }),
   addColumn({
     title: 'Item Category',
@@ -26,6 +28,10 @@ export const ColumnsQuotation = [
     title: 'Quantity',
     dataIndex: 'order_qty',
   }),
+  // addColumn({
+  //   title: 'Quantity Booking',
+  //   dataIndex: 'order_qty',
+  // }),
   addColumn({
     title: 'Based Price',
     dataIndex: 'price',

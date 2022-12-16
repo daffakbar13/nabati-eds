@@ -99,8 +99,11 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     })
   }
   function handleRowSelection(haveCheckBox?: Parameters<typeof useTable>['0']['haveCheckBox']) {
-    function isHaveCheckbox(key: string) {
-      return haveCheckBox !== 'All' && !haveCheckBox.member.includes(key)
+    function haventCheckBox(record) {
+      if (haveCheckBox !== 'All') {
+        return haveCheckBox.map((h) => h.member.includes(record[h.rowKey])).includes(false)
+      }
+      return true
     }
     if (haveCheckBox) {
       const defineRowSelection = {
@@ -110,9 +113,9 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
         },
         ...(haveCheckBox !== 'All' && {
           getCheckboxProps: (record) => ({
-            style: { ...(isHaveCheckbox(record[haveCheckBox.rowKey]) && { display: 'none' }) },
-            disabled: isHaveCheckbox(record[haveCheckBox.rowKey]),
-            name: record[haveCheckBox.rowKey],
+            style: { ...(haventCheckBox(record) && { display: 'none' }) },
+            disabled: haventCheckBox(record),
+            name: 'a',
           }),
         }),
         fixed: 'left',

@@ -9,11 +9,13 @@ export const tagColors = {
         'SAP SO Complete',
     ],
     red: [
+        'Out of Stock',
         'Canceled',
         'Cancel',
         'Rejected',
     ],
     blue: [
+        'Partial',
         'Approved',
         'SAP SO Complete',
     ],
