@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
@@ -9,10 +9,11 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListSloc } from 'src/api/logistic/request-intra-sloc'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { PageSlocRequest } from './types'
 import { column } from './columns'
+import { colors } from 'src/configs/colors'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -47,25 +48,14 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
   }
 
   const statusOption = [
-    { label: 'Done', value: 'Done' },
-    { label: 'Pending', value: 'Pending' },
-    { label: 'Canceled', value: 'Canceled' },
+    { label: 'Done', value: '01' },
+    { label: 'Canceled', value: '02' },
+    { label: 'Pending', value: '00' },
   ]
 
   useEffect(() => {
     table.handler.handleFilter(filters)
   }, [filters])
-
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
@@ -81,10 +71,47 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Request Number" />
+            <Search
+              autofocus
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search by GR Number"
+              colorIcon={colors.grey.regular}
+              onChange={(e) => {
+                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
+                if (idIndex > -1) {
+                  if (e.target.value === '') {
+                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
+                  } else {
+                    const updateId = filters.map((data, i) => {
+                      if (i === idIndex) {
+                        return { ...data, from_value: `%${e.target.value}%` }
+                      } else {
+                        return { ...data }
+                      }
+                    })
+                    setFilters(updateId)
+                  }
+                } else {
+                  setFilters([
+                    ...filters,
+                    {
+                      field: 'id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                      data_type: 'S',
+                    },
+                  ])
+                }
+              }}
+              allowClear
+            />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
                 label="Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -107,7 +134,7 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="sloc_id"
                 dataType="S"
                 label="SLoc"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
@@ -134,7 +161,7 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>

@@ -8,7 +8,7 @@ import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
 
 export default function ConfirmCancel() {
   const {
-    handler: { setCancel },
+    handler: { unShowConfirm },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
 
@@ -24,7 +24,7 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="secondary"
           onClick={() => {
-            setCancel(false)
+            unShowConfirm()
           }}
         >
           No

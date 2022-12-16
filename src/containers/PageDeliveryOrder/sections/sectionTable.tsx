@@ -16,7 +16,7 @@ export default function SectionTable(props: SectionTableProps) {
   return (
     <>
       <Row style={{ overflow: 'scroll' }}>
-        <Table {...table.state.tableProps} />
+        <Table {...table.state.tableProps} rowKey="delivery_order_id" />
       </Row>
       {hasData && <Pagination {...table.state.paginationProps} />}
       {table.state.selected.length > 0 && (

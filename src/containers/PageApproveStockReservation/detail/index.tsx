@@ -15,7 +15,7 @@ export default function ApproveStocReservationDetail() {
   const data: any = useDetail(
     getListApprovalReservationDetail,
     { id: router.query.id as string },
-    true,
+    false,
   )
 
   return (

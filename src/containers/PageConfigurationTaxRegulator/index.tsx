@@ -3,7 +3,10 @@ import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
 import { Card, SearchQueryParams, Modal } from 'src/components'
 
-import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
+import {
+  getConfigTaxRegulatorList,
+  updateStatus,
+} from 'src/api/logistic/configuration-tax-regulator'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
@@ -39,7 +42,7 @@ export default function PageConfigurationTaxRegulator() {
   }
 
   const table = useTable({
-    funcApi: getConfigSlocCompanyList,
+    funcApi: getConfigTaxRegulatorList,
     columns: columns(goToDetailPage, onClickSwitch),
     // filters,
   })

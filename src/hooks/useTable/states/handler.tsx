@@ -8,12 +8,14 @@ import { DispatchType } from './reducer'
 import { StateType } from './state'
 
 export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchType>) {
-  function updateData(payload: any[]) {
-    let result: any[]
-    if (Array.isArray(payload) && payload.length > 0) {
-      result = payload
-    } else {
-      result = []
+  function updateData(newData: any[], page?: number, limit?: number) {
+    const result = []
+    if (Array.isArray(newData) && newData.length > 0) {
+      if (page && limit) {
+        result.push(...newData.map((e) => ({ ...e, memorize_pagination: { page, limit } })))
+      } else {
+        result.push(...newData)
+      }
     }
     dispatch({
       type: 'data',
@@ -140,6 +142,18 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
       payload,
     })
   }
+  function handlePage(payload: number) {
+    dispatch({
+      type: 'page',
+      payload,
+    })
+  }
+  function handleLimit(payload: number) {
+    dispatch({
+      type: 'limit',
+      payload,
+    })
+  }
   function handleColumns(payload: any[]) {
     dispatch({
       type: 'columns',
@@ -199,6 +213,8 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
   function handleDefinePaginationProps() {
     const result = {
       defaultPageSize: 20,
+      page: state.page,
+      limit: state.limit,
       pageSizeOptions: [20, 50, 100],
       total: state.total,
       totalPage: state.totalPage,
@@ -218,14 +234,30 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
         .then((response) => response.data)
         .then((resdata) => {
           if (resdata.result) {
-            updateData(resdata.result)
+            updateData(resdata.result, resdata.current_page, resdata.limit_per_page)
           } else {
-            updateData(resdata.results)
+            updateData(resdata.results, resdata.current_page, resdata.limit_per_page)
           }
+          handlePage(resdata.current_page)
+          handleLimit(resdata.limit_per_page)
           handleTotal(resdata.total_rows)
           handleTotalPage(resdata.total_page)
         })
         .catch(() => updateData([]))
+    }
+  }
+  function handleLocalStorage(funcApi?: Parameters<typeof useTable>['0']['funcApi']) {
+    if (funcApi) {
+      const isRequest = localStorage.getItem('REQ_PREV_TABLE') === 'true'
+      if (isRequest) {
+        dispatch({
+          type: 'body',
+          payload: JSON.parse(localStorage.getItem('TABLE_LOG')),
+        })
+        localStorage.setItem('REQ_PREV_TABLE', 'false')
+      } else {
+        localStorage.setItem('TABLE_LOG', JSON.stringify(state.body))
+      }
     }
   }
   return {
@@ -245,5 +277,6 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     handleDefineTableProps,
     handleDefinePaginationProps,
     getApi,
+    handleLocalStorage,
   }
 }

@@ -13,7 +13,7 @@ export default function SingleField({
   options = [],
   label = '',
   children,
-  handleChange = (a: any) => { },
+  handleChange = (a: any) => {},
   value = { option: '', fromValue: '', toValue: '' },
   field,
   dataType,
@@ -22,7 +22,11 @@ export default function SingleField({
   const hasOneChildren = !hasMultipleChildren
   const hasNoChildren = !!children
 
-  if (!hasNoChildren) throw new Error('Smart FIlter wajib memiliki children Input, Select, TextArea, atau Date picker')
+  if (!hasNoChildren) {
+    throw new Error(
+      'Smart FIlter wajib memiliki children Input, Select, TextArea, atau Date picker',
+    )
+  }
 
   const onFromValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
@@ -53,25 +57,29 @@ export default function SingleField({
       <Text width="fluid" variant="headingSmall" textAlign="right" style={{ fontSize: 16 }}>
         {label}
       </Text>
-      <SelectOptionIcon
-        options={options}
-        onChange={onOptionChange}
-        value={value?.option}
-      />
+      <SelectOptionIcon options={options} onChange={onOptionChange} value={value?.option} />
 
-      {hasOneChildren && React.cloneElement(children, {
-        ...children.props,
-        style: { ...children.props.style, gridColumnStart: 'span 3' },
-        onChange: onFromValueChange,
-        value: value?.fromValue || undefined,
-      })}
+      {hasOneChildren &&
+        React.cloneElement(children, {
+          ...children.props,
+          style: { ...children.props.style, gridColumnStart: 'span 3' },
+          onChange: (...arg: any) => {
+            onFromValueChange(arg)
+            children.props.onChange(arg)
+          },
+          value: value?.fromValue || undefined,
+        })}
 
       <>
         {hasMultipleChildren && (
           <>
             {React.cloneElement(children[0], {
               ...children[0].props,
-              onChange: onFromValueChange,
+              // onChange: onFromValueChange,
+              onChange: (...arg: any) => {
+                onFromValueChange(arg)
+                children[0].props.onChange(arg)
+              },
               value: value?.fromValue || undefined,
             })}
             <Text width="fluid" variant="headingSmall" textAlign="center" style={{ fontSize: 16 }}>
@@ -79,7 +87,11 @@ export default function SingleField({
             </Text>
             {React.cloneElement(children[1], {
               ...children[1].props,
-              onChange: onToValueChange,
+              // onChange: onToValueChange,
+              onChange: (...arg: any) => {
+                onToValueChange(arg)
+                children[0].props.onChange(arg)
+              },
               value: value?.toValue || undefined,
             })}
           </>

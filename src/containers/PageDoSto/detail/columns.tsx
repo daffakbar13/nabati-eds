@@ -2,25 +2,27 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import { Children } from 'react'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 export const column = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
-  CreateColumns(
-    'Item',
-    'product_id',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.description || ''}`,
-  ),
-  CreateColumns(
-    'Po',
-    'po',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
-    150,
-    false,
-    '',
-    [
+  addColumn({
+    title: 'No',
+    dataIndex: 'id',
+    render: (text: string, record: any, index: number) => index + 1,
+    width: 50,
+  }),
+  addColumn({
+    title: 'Item',
+    dataIndex: 'product_id',
+    render: (text: string, record: any) =>
+      `${record.product_id || ''} - ${record.description || ''}`,
+    width: 400,
+  }),
+  addColumn({
+    title: 'Po',
+    dataIndex: 'po',
+    width: 400,
+    children: [
       {
         title: 'Qty',
         dataIndex: 'qty',
@@ -34,16 +36,12 @@ export const column = [
         width: 75,
       },
     ],
-  ),
-  CreateColumns(
-    'Outstanding',
-    'outstanding',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
-    150,
-    false,
-    '',
-    [
+  }),
+  addColumn({
+    title: 'Outstanding',
+    dataIndex: 'outstanding',
+    width: 400,
+    children: [
       {
         title: 'Qty',
         dataIndex: 'qty',
@@ -57,16 +55,12 @@ export const column = [
         width: 75,
       },
     ],
-  ),
-  CreateColumns(
-    'Received',
-    'received',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
-    150,
-    false,
-    '',
-    [
+  }),
+  addColumn({
+    title: 'Received',
+    dataIndex: 'received',
+    width: 400,
+    children: [
       {
         title: 'Qty',
         dataIndex: 'qty',
@@ -80,13 +74,23 @@ export const column = [
         width: 75,
       },
     ],
-  ),
-  CreateColumns(
-    'Storage Location',
-    'sloc_id',
-    false,
-    (text: string, record: any) => `${record.sloc_id || ''} - ${record.sloc_name || ''}`,
-  ),
-  CreateColumns('Batch', 'batch', false),
-  CreateColumns('Remarks', 'remarks', false),
+  }),
+  addColumn({
+    title: 'Storage Location',
+    dataIndex: 'sloc_id',
+    render: (text: string, record: any) => `${record.sloc_id || ''} - ${record.sloc_name || ''}`,
+    width: 200,
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'batch',
+    render: (text: string, record: any) => `${record.batch || '-'}`,
+    width: 300,
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+    render: (text: string, record: any) => `${record.remarks || '-'}`,
+    width: 300,
+  }),
 ]

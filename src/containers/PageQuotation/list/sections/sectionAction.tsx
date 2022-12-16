@@ -7,18 +7,31 @@ import ReactToPrint from 'react-to-print'
 import { downloadTemplateQuotation } from 'src/api/quotation'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { colors } from 'src/configs/colors'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListContext } from '../states'
 
 export default function SectionAction() {
   const {
     state: {
       table: {
+        state: {
+          body: { filters },
+        },
         handler: { handleFilter },
       },
     },
   } = useSalesQuotationListContext()
+  const [filterById, setFilterById] = React.useState<string>()
   const router = useRouter()
   const componentRef = React.useRef()
+
+  React.useEffect(() => {
+    const getFilterId = filters.find(({ field }) => field === 'eds_order.id')
+    if (getFilterId) {
+      setFilterById(getFilterId.from_value.split('%').join(''))
+    } else {
+      setFilterById(undefined)
+    }
+  }, [filters])
 
   const moreContent = (
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
@@ -67,6 +80,7 @@ export default function SectionAction() {
             nameIcon="SearchOutlined"
             placeholder="Search Quotation ID"
             colorIcon={colors.grey.regular}
+            {...(filterById && { value: filterById })}
             onChange={(e) => {
               const { value } = e.target
               if (value === '') {

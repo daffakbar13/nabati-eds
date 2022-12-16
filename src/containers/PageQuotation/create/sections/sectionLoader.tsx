@@ -1,7 +1,6 @@
 import React from 'react'
 import { Loader } from 'src/components'
 import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
-import { useTableProduct } from '../columns'
 
 export default function SectionLoader() {
   const {
@@ -10,7 +9,7 @@ export default function SectionLoader() {
   return (
     <>
       {(processing || tableProduct.isLoading) && (
-        <Loader type="process" text={processing || 'Wait for get data items'} />
+        <Loader type="process" text={processing || 'Wait for get data products'} />
       )}
     </>
   )

@@ -4,7 +4,7 @@ import { Button } from 'pink-lava-ui'
 import { Tag } from 'antd'
 import Link from 'src/components/Link'
 
-export const columns = (goToDetail: (id: string) => {}) => [
+export const columns = (goToDetail: (id: string) => void) => [
   CreateColumns(
     'GR Number',
     'gr_number',

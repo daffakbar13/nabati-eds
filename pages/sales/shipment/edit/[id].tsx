@@ -1,5 +1,5 @@
 import React from 'react'
-import PageCreateShipment from 'src/containers/PageShipment/create'
+import PageCreateShipment from 'src/containers/PageShipment/create/neww'
 
 interface ShipmentEditProps {}
 

@@ -66,7 +66,7 @@ export default function PageCreateQuotation() {
     to_channel: 'GT',
     suppl_sloc_id: 'GS00',
     receive_sloc_id: 'GS00',
-    status_id: '00',
+    status_id: '01',
     document_date: moment(now).format('YYYY-MM-DD'),
     posting_date: moment(now).format('YYYY-MM-DD'),
     remarks: '',

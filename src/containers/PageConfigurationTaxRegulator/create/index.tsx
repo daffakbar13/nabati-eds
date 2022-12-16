@@ -3,13 +3,13 @@ import { useRouter } from 'next/router'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Input, Modal, SelectMasterData, Text } from 'src/components'
-import { DatePickerInput } from 'pink-lava-ui'
+import { DatePickerInput, RangePicker } from 'pink-lava-ui'
 
 import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+  createConfigTaxRegulator,
+  getConfigTaxRegulatorDetail,
+  updateConfigTaxRegulator,
+} from 'src/api/logistic/configuration-tax-regulator'
 
 const { Label, LabelRequired } = Text
 
@@ -29,7 +29,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigTaxRegulator(reqBody, reqBody.tax_subject)
       setLoading(false)
       return res
     } catch (error) {
@@ -41,7 +41,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigTaxRegulator(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -52,13 +52,15 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     const values = form.getFieldsValue(true)
+    console.log('values', values)
     const reqBody = {
       company_id: values.company_id.value,
-      sloc_id: values.sloc_id.value,
-      key: values.key,
-      value: values.value,
-      description: values.description,
-      console_group: values.console_group,
+      tax_subject: values.tax_subject,
+      tax_cl_material: values.tax_cl_material,
+      tax_name: values.tax_name,
+      amount: +values.amount,
+      valid_from: values.valid_from.format('YYYY-MM-DD'),
+      valid_to: values.valid_to.format('YYYY-MM-DD'),
     }
 
     if (!isOnEditMode) {
@@ -85,20 +87,19 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     const fetchData = async () => {
       try {
         setLoading(true)
-        const res = await getConfigSlocCompanyDetail(
-          payload.company_id,
-          payload.sloc_id,
-          payload.key,
-        )
+        const res = await getConfigTaxRegulatorDetail(payload.company_id, payload.tax_subject)
         console.log('res', res)
         form.setFieldsValue({
           company_id: {
             value: res?.data?.company_id,
             label: `${res?.data?.company_id} - ${res?.data?.company_name}`,
           },
-          sloc_id: { value: res?.data?.sloc_id },
-          description: res?.data?.description,
-          key: res?.data?.key,
+          tax_subject: res?.data?.tax_subject,
+          tax_cl_material: res?.data?.tax_cl_material,
+          tax_name: res?.data?.tax_name,
+          amount: res?.data?.amount,
+          valid_from: moment(res?.data?.valid_from),
+          valid_to: moment(res?.data?.valid_to),
         })
         setLoading(false)
       } catch (error) {
@@ -121,14 +122,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       preserve={false}
     >
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginTop: 40 }}>
-        <Form.Item
+        {/* <Form.Item
           name="country"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Country</LabelRequired>}
           rules={[{ required: true }]}
         >
           <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           name="company_id"
           style={{ marginTop: -12, marginBottom: 0 }}
@@ -146,7 +147,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
         </Form.Item>
         <Form.Item
-          name="tax_subject"
+          name="tax_cl_material"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Tax CL Material</LabelRequired>}
           rules={[{ required: true }]}
@@ -154,7 +155,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
         </Form.Item>
         <Form.Item
-          name="tax_subject"
+          name="tax_name"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Tax Name</LabelRequired>}
           rules={[{ required: true }]}
@@ -162,28 +163,43 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
         </Form.Item>
         <Form.Item
-          name="tax_subject"
+          name="amount"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Amount</LabelRequired>}
           rules={[{ required: true }]}
         >
           <Input type="number" style={{ marginTop: -12 }} placeholder="Type" size="large" />
         </Form.Item>
-        <Form.Item
-          name="tax_subject"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Valid From To</LabelRequired>}
-          rules={[{ required: true }]}
-        >
-          {/* <Input type="number" style={{ marginTop: -12 }} placeholder="Type" size="large" /> */}
-          <DatePickerInput
-            style={{ height: 54 }}
-            fullWidth
-            label={''}
-            defaultValue={moment()}
-            format={'DD-MMM-YYYY'}
-          />
-        </Form.Item>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <Form.Item
+            name="valid_from"
+            style={{ marginTop: -12, marginBottom: 0 }}
+            label={<LabelRequired>Valid From</LabelRequired>}
+            rules={[{ required: true }]}
+          >
+            <DatePickerInput
+              style={{ height: 54, marginTop: -12 }}
+              fullWidth
+              label={''}
+              // defaultValue={moment()}
+              format={'DD-MMM-YYYY'}
+            />
+          </Form.Item>
+          <Form.Item
+            name="valid_to"
+            style={{ marginTop: -12, marginBottom: 0 }}
+            label={<LabelRequired>Valid To</LabelRequired>}
+            rules={[{ required: true }]}
+          >
+            <DatePickerInput
+              style={{ height: 54, marginTop: -12 }}
+              fullWidth
+              label={''}
+              // defaultValue={moment()}
+              format={'DD-MMM-YYYY'}
+            />
+          </Form.Item>
+        </div>
       </div>
     </Form>
   )
@@ -207,13 +223,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit config sloc company?"
+        content="Are you sure want to submit config Tax Regulator?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.reload()
         }}
-        successContent={(res: any) => 'Config sloc company has been successfully Updated'}
+        successContent={(res: any) => 'Config Tax Regulator has been successfully Updated'}
         successOkText="OK"
         width={432}
       />

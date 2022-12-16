@@ -31,7 +31,7 @@ body {
   -webkit-font-smoothing: antialiased;
   font-family: Nunito Sans;
   scrollbar-width: none !important; /* Firefox 64 */
-  -ms-overflow-style: none;  /* Disable scrollbar IE 10+ */
+  -ms-overflow-style: none; /* Disable scrollbar IE 10+ */
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 /*
@@ -151,15 +151,15 @@ p {
   box-shadow: none;
 }
 
-table.eds_paper{
+table.eds_paper {
   width: 100%;
 }
 
-table.eds_paper th{
+table.eds_paper th {
   text-align: center !important;
 }
 
-table.eds_paper td{
+table.eds_paper td {
   vertical-align: top;
 }
 
@@ -184,6 +184,7 @@ table.eds_create_shipment thead tr {
   color: grey;
   border-top: 1px dashed #88888888;
   border-bottom: 1px dashed #88888888;
+  background: #ffffffff;
 }
 
 table.eds_create_shipment tbody tr td {
@@ -191,10 +192,34 @@ table.eds_create_shipment tbody tr td {
   padding: 10px 0;
 }
 
-/* th.ant-table-cell {
-  width: max-content !important;
+table.eds_promotion_list {
+  width: 100%;
 }
 
-th.ant-table-cell {
-  width: fit-content !important;
-} */
+table.eds_promotion_list tr {
+  background: #ffffffff;
+  font-weight: bold;
+}
+
+table.eds_promotion_list thead tr {
+  background: #f4f4f4f4;
+}
+
+table.eds_promotion_list tbody tr td,
+table.eds_promotion_list thead tr th {
+  text-align: center;
+  border: 0.5px solid #88888888;
+  padding: 10px;
+}
+
+table.eds_promotion_log {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.eds_promotion_log tbody tr td,
+table.eds_promotion_log thead tr th {
+  border: 0px;
+  padding: 5px 0;
+  border-spacing: 0;
+}

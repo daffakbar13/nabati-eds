@@ -1,6 +1,6 @@
 import React from 'react'
 import { Loader } from 'src/components'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListContext } from '../states'
 
 export default function SectionLoader() {
   const {

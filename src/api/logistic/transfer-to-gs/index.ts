@@ -11,7 +11,7 @@ import { TransgerToGSList, TransgerToGSDetail } from './types'
 
 const url = 'v1/canvas/transfer_goodstock'
 
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListTransferGS = async (
     params: CommonListParams = {},

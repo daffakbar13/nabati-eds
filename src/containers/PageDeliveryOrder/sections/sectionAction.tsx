@@ -71,7 +71,7 @@ export default function SectionAction(props: SectionActionProps) {
               } else {
                 handleFilter([
                   {
-                    field: 'eds_order.id',
+                    field: 'id',
                     option: 'CP',
                     from_value: `%${e.target.value}%`,
                   },

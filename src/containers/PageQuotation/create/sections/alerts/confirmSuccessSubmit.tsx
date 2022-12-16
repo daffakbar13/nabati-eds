@@ -10,7 +10,7 @@ import { useTableProduct } from '../../columns'
 
 export default function ConfirmSuccessSubmit() {
   const {
-    state: { newQuotation, draftQuotation },
+    state: { quotationId, confirm },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
 
@@ -36,10 +36,10 @@ export default function ConfirmSuccessSubmit() {
       >
         <div>
           {'New Quotation '}
-          <Typography.Text copyable>{newQuotation || draftQuotation}</Typography.Text>
+          <Typography.Text copyable>{quotationId}</Typography.Text>
           {' has been'}
         </div>
-        <div>successfully {newQuotation ? 'created' : 'saved'}</div>
+        <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button

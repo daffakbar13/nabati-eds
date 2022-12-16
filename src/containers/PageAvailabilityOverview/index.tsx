@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import { Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
-// import { Select } from 'antd'
 import { useState } from 'react'
 import {
   Card,
@@ -77,7 +76,7 @@ export default function PageAvailabilityOverview() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} dataSource={table.state.tableProps?.dataSource} />
         </div>
       </Card>
     </Col>

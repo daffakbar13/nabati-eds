@@ -1,4 +1,5 @@
 export interface SalesOrderItem {
+  status_id: string
   items: any
   delivery_date: any
   pricing_date: string

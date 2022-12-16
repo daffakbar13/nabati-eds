@@ -94,6 +94,10 @@ export const useColumnApproval = [
   }),
   addColumn({ title: 'Salesman', dataIndex: 'salesman_id' }),
   addColumn({
+    title: 'Currency',
+    dataIndex: 'currency_id',
+  }),
+  addColumn({
     title: 'Total Amount',
     dataIndex: 'total_amount',
   }),

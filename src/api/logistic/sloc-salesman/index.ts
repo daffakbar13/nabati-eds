@@ -11,7 +11,7 @@ import { ListSlocman } from './types'
 
 const url = 'v1/sloc-salesman'
 
-const overrideBaseUrl = API_BASE_URL_2
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListSlocman = async (
   params: CommonListParams = {},

@@ -8,11 +8,15 @@ export const columns = (
   goToDetail: (rec: any) => void,
   onClickSwitch: (a: boolean, rec: any) => void,
 ) => [
-  CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 50, 'left'),
-  CreateColumns('Sales Org', 'key', true, (a) => a, 300),
-  CreateColumns('Order Type', 'key', true, (a) => a, 300),
-  CreateColumns('Item Category', 'key', true),
-  CreateColumns('Action', 'gr_number', false, (text, rec) => (
+  CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
+  CreateColumns('Sales Org', 'sales_org_id', true, (a) => a, 300),
+  CreateColumns('Order Type', 'order_type_id', true, (a) => a, 300),
+  CreateColumns('Item Category', 'item_category_id', true, (text, record) => (
+    <>
+      {text}-{record.item_category_name}
+    </>
+  )),
+  CreateColumns('Action', 'sales_org_id', false, (text, rec) => (
     <Button
       size="big"
       variant="tertiary"

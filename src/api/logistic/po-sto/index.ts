@@ -11,7 +11,7 @@ import { StockRealTime, StockRealTimeDetailResult } from './types'
 
 const url = 'v1/sto-purchase'
 
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListPoSto = async (
   params: CommonListParams = {},

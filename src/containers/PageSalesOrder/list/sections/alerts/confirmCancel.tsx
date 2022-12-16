@@ -23,10 +23,11 @@ export default function ConfirmCancel() {
 
   React.useEffect(() => {
     runProcess('Wait For get Reasons')
-    fieldReason('B')
+    fieldReason('C')
       .then((data) => {
         setOptionsReason(data)
         setReason(data[0].value)
+        stopProcess()
       })
       .catch(() => stopProcess())
   }, [])
@@ -39,7 +40,7 @@ export default function ConfirmCancel() {
       <DebounceSelect
         type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
-        label={'Reason Cancel Process SalesOrder'}
+        label={'Reason Cancel Process Sales Order'}
         required
         options={optionsReason}
         onChange={({ value }) => setReason(value)}
@@ -60,7 +61,7 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            runProcess('Wait for cancelling SalesOrder')
+            runProcess('Wait for cancelling Sales Order')
             cancelSalesOrder({
               order_list: selected.map((id) => ({ id })),
               cancel_reason_id: reason,
@@ -69,7 +70,7 @@ export default function ConfirmCancel() {
                 showConfirm('success-cancel')
                 stopProcess()
               })
-              .catch((err) => console.log(err))
+              .catch(() => stopProcess())
           }}
         >
           Yes

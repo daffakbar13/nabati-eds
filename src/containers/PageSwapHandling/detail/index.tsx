@@ -10,11 +10,11 @@ import { toTitleCase } from 'src/utils/caseConverter'
 import { useRouter } from 'next/router'
 import { getDetailSwapHandling } from 'src/api/logistic/swap-handling'
 import { PATH } from 'src/configs/menus'
+import dateFormat from 'src/utils/dateFormat'
 
 import { getTagColor } from 'src/utils/getTagColor'
 import { columns } from './columns'
 
-const DATE_FORMAT = 'DD-MMM-YYYY'
 export default function DetailStockAdjustment() {
   const [loading, setLoading] = useState(false)
   const [details, setDetails] = useState(null)
@@ -76,16 +76,13 @@ export default function DetailStockAdjustment() {
             label="Receiving SLoc"
             value={`${details?.to_sloc}-${toTitleCase(details?.to_sloc_name)}`}
           />
-          <List.Item label="Doc Date" value={moment(details?.document_date).format(DATE_FORMAT)} />
-          <List.Item
-            label="Posting Date"
-            value={moment(details?.posting_date).format(DATE_FORMAT)}
-          />
+          <List.Item label="Doc Date" value={dateFormat(details?.document_date)} />
+          <List.Item label="Posting Date" value={dateFormat(details?.posting_date)} />
           <List.Item label="Header Text" value={details?.header_text} />
           <List.Item label="" value={''} />
-          <List.Item label="Created On" value={moment(details?.created_at).format(DATE_FORMAT)} />
+          <List.Item label="Created On" value={dateFormat(details?.created_at)} />
           <List.Item label="Created By" value={details?.created_by} />
-          <List.Item label="Modified On" value={details?.modified_at} />
+          <List.Item label="Modified On" value={dateFormat(details?.modified_at)} />
           <List.Item label="Modified By" value={details?.modified_by} />
         </List>
         <div style={{ borderTop: '1px solid #AAAAAA', margin: '32px auto 0' }} />

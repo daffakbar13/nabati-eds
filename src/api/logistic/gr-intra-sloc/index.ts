@@ -11,7 +11,7 @@ import { SlocGRList, SlocGRDetail } from './types'
 
 const url = 'v1/material-doc/intra-sloc/receipt'
 
-const overrideBaseUrl = 'https://dist-system.nabatisnack.co.id:3002/'
+const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListGRSloc = async (
     params: CommonListParams = {},

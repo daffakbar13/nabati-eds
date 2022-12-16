@@ -1,4 +1,4 @@
-import { useTableProduct } from 'src/containers/PageQuotation/create/columns'
+import { useTableProduct } from 'src/containers/PageSalesOrder/create/columns'
 
 interface OptionsType {
     key?: string
@@ -22,20 +22,21 @@ interface PayloadCreate {
     valid_to?: string
     customer_ref?: string
     currency_id?: string
+    term_id?: string
     items?: any[]
 }
 
 export interface StateType {
     dataForm?: PayloadCreate
     tableProduct?: ReturnType<typeof useTableProduct>
-    newSalesOrder?: string
-    draftSalesOrder?: string
-    cancel?: boolean
-    optionsOrderType?: OptionsType[]
-    optionsSalesman?: OptionsType[]
-    optionsSalesOrg?: OptionsType[]
-    optionsBranch?: OptionsType[]
+    salesOrderId?: string
+    confirm?: 'newSO' | 'draftSO' | 'cancel'
+    optionsOrderType: OptionsType[]
+    optionsSalesman: OptionsType[]
+    optionsSalesOrg: OptionsType[]
+    optionsBranch: OptionsType[]
     fetching?: 'customer' | 'load-options'
     processing?: string
     canSave?: boolean
+    canSaveAsDraft: boolean
 }

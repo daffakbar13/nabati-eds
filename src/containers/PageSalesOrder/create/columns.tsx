@@ -15,17 +15,18 @@ import { fieldPrice, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
 import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { getDetailSalesOrder } from 'src/api/sales-order'
 import { Popup } from 'src/components'
 import { Text, Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import { getPricingByCompany, getProductByCompany } from 'src/api/master-data'
+import { getDetailSalesOrder } from 'src/api/sales-order'
+import useTable from 'src/hooks/useTable/index'
 
 export const useTableProduct = () => {
   const initialValue = {
     product_id: '',
     uom_id: '',
-    order_qty: 0,
+    order_qty: 1,
     price: 0,
     sub_total: 0,
     remarks: '',
@@ -42,7 +43,7 @@ export const useTableProduct = () => {
   const [isLoading, setIsLoading] = React.useState(false)
   const router = useRouter()
   const total_amount = data
-    .map(({ sub_total, price }) => sub_total)
+    .map(({ sub_total }) => sub_total)
     .reduce((accumulator, value) => accumulator + value, 0)
 
   function handleChangeData(key: string, value: string | number, index: number) {
@@ -176,6 +177,7 @@ export const useTableProduct = () => {
           }}
         />
       ),
+      width: 200,
     }),
   ]
 
@@ -263,7 +265,6 @@ export const useTableProduct = () => {
     }
     if (fetching !== '') {
       data.forEach(({ product_id, uom_id, order_qty }, index) => {
-        const lastIndex = index === data.length - 1
         if (product_id !== '') {
           setPending((current) => ++current)
           api(product_id, uom_id, order_qty, index).then(() => {
@@ -305,12 +306,13 @@ export const useTableProduct = () => {
               description: `${items.product_id} - ${items.description}`,
             })) as any,
           )
-          setFetching(undefined)
           setFetching('load product')
         })
         .catch(() => router.push(`${PATH.SALES}/sales-order`))
     }
   }, [router])
+
+  // console.log(data);
 
   React.useEffect(() => {
     const now = new Date().toISOString()

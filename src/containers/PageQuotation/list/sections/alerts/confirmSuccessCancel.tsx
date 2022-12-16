@@ -7,7 +7,7 @@ import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListContext } from '../../states'
 
 export default function ConfirmSuccessCancel() {
   const {

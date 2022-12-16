@@ -6,10 +6,10 @@ import { Input, Modal, SelectMasterData, Text } from 'src/components'
 import { DatePickerInput } from 'pink-lava-ui'
 
 import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+  createConfigItemCategory,
+  getConfigItemCategoryDetail,
+  updateConfigItemCategory,
+} from 'src/api/logistic/configuration-item-category'
 
 const { Label, LabelRequired } = Text
 
@@ -29,7 +29,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigItemCategory(reqBody, reqBody.sales_org_id, reqBody.order_type_id)
       setLoading(false)
       return res
     } catch (error) {
@@ -41,7 +41,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigItemCategory(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -54,11 +54,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     const values = form.getFieldsValue(true)
     const reqBody = {
       company_id: values.company_id.value,
-      sloc_id: values.sloc_id.value,
-      key: values.key,
-      value: values.value,
-      description: values.description,
-      console_group: values.console_group,
+      sales_org_id: values.sales_org_id,
+      order_type_id: values.order_type_id,
+      item_category_id: values.item_category_id,
     }
 
     if (!isOnEditMode) {
@@ -85,20 +83,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     const fetchData = async () => {
       try {
         setLoading(true)
-        const res = await getConfigSlocCompanyDetail(
-          payload.company_id,
-          payload.sloc_id,
-          payload.key,
-        )
+        const res = await getConfigItemCategoryDetail(payload.sales_org_id, payload.order_type_id)
         console.log('res', res)
         form.setFieldsValue({
           company_id: {
             value: res?.data?.company_id,
             label: `${res?.data?.company_id} - ${res?.data?.company_name}`,
           },
-          sloc_id: { value: res?.data?.sloc_id },
-          description: res?.data?.description,
-          key: res?.data?.key,
+          sales_org_id: res?.data?.sales_org_id,
+          order_type_id: res?.data?.order_type_id,
+          item_category_id: res?.data?.item_category_id,
         })
         setLoading(false)
       } catch (error) {
@@ -122,28 +116,40 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     >
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginTop: 40 }}>
         <Form.Item
-          name="country"
+          name="company_id"
           style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Sales Org</LabelRequired>}
+          label={<LabelRequired>Company ID</LabelRequired>}
           rules={[{ required: true }]}
         >
           <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
         </Form.Item>
         <Form.Item
-          name="company_id"
+          name="sales_org_id"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Order Type</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
+          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+          {/* <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} /> */}
         </Form.Item>
         <Form.Item
-          name="company_id"
+          name="order_type_id"
+          style={{ marginTop: -12, marginBottom: 0 }}
+          label={<LabelRequired>Order Type</LabelRequired>}
+          rules={[{ required: true }]}
+        >
+          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+          {/* <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} /> */}
+        </Form.Item>
+        <Form.Item
+          name="item_category_id"
           style={{ marginTop: -12, marginBottom: 0 }}
           label={<LabelRequired>Item Category</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
+          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+
+          {/* <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} /> */}
         </Form.Item>
       </div>
     </Form>
@@ -168,13 +174,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit config sloc company?"
+        content="Are you sure want to submit config item category?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.reload()
         }}
-        successContent={(res: any) => 'Config sloc company has been successfully Updated'}
+        successContent={(res: any) => 'Config item category has been successfully Updated'}
         successOkText="OK"
         width={432}
       />

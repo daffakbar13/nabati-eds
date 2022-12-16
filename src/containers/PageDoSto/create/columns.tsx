@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react'
 import { InputNumber, Radio } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldSloc, fieldUom } from 'src/configs/fieldFetches'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { Input } from 'pink-lava-ui'
 
 interface DataType {
@@ -30,9 +30,9 @@ export const useTableAddItem = (props: any) => {
     product_id: '',
     description: '',
     description_show: '',
-    qty: 0,
-    base_qty: 0,
-    po_qty: 0,
+    qty: 1,
+    base_qty: 1,
+    po_qty: 1,
     uom_id: '',
     base_uom_id: '',
     po_uom_id: '',
@@ -115,24 +115,19 @@ export const useTableAddItem = (props: any) => {
   }
 
   const columns = [
-    CreateColumns(
-      'Item Po',
-      'description',
-      false,
-      (description, __, index) => (
+    addColumn({
+      title: 'Item PO',
+      dataIndex: 'description',
+      render: (_, { description }, index) => (
         <DebounceSelect type="input" disabled value={data[index].description_show || ''} />
       ),
-      400,
-    ),
-    CreateColumns(
-      'Po',
-      'qty_po',
-      false,
-      (qty, __, index) => <Input type="text" disabled value={qty || ''} />,
-      400,
-      false,
-      '',
-      [
+      width: 400,
+    }),
+    addColumn({
+      title: 'PO',
+      dataIndex: 'qty_po',
+      width: 100,
+      children: [
         {
           title: 'Qty',
           render: (rows, __, index) => (
@@ -150,16 +145,12 @@ export const useTableAddItem = (props: any) => {
           width: 100,
         },
       ],
-    ),
-    CreateColumns(
-      'Outstanding',
-      'qty_outstanding',
-      false,
-      (qty, __, index) => <Input type="text" disabled value={qty || ''} />,
-      400,
-      false,
-      '',
-      [
+    }),
+    addColumn({
+      title: 'Outstanding',
+      dataIndex: 'qty_outstanding',
+      width: 100,
+      children: [
         {
           title: 'Qty',
           render: (rows, __, index) => (
@@ -177,16 +168,12 @@ export const useTableAddItem = (props: any) => {
           width: 100,
         },
       ],
-    ),
-    CreateColumns(
-      'Received',
-      'qty_receiving',
-      false,
-      (qty, __, index) => <Input type="text" disabled value={qty || ''} />,
-      400,
-      false,
-      '',
-      [
+    }),
+    addColumn({
+      title: 'Received',
+      dataIndex: 'qty_receiving',
+      width: 100,
+      children: [
         {
           title: 'Qty',
           render: (rows, __, index) => (
@@ -223,12 +210,11 @@ export const useTableAddItem = (props: any) => {
           width: 150,
         },
       ],
-    ),
-    CreateColumns(
-      'SLoc',
-      'sloc_id',
-      false,
-      (sloc_id, __, index) => (
+    }),
+    addColumn({
+      title: 'SLoc',
+      dataIndex: 'description',
+      render: (sloc_id, __, index) => (
         <DebounceSelect
           type="select"
           required
@@ -239,22 +225,20 @@ export const useTableAddItem = (props: any) => {
           }}
         />
       ),
-      200,
-    ),
-    CreateColumns(
-      'Batch',
-      'batch',
-      false,
-      (batch, __, index) => (
+      width: 100,
+    }),
+    addColumn({
+      title: 'Batch',
+      dataIndex: 'batch',
+      render: (batch, __, index) => (
         <DebounceSelect type="input" disabled value={data[index]?.batch || ''} />
       ),
-      250,
-    ),
-    CreateColumns(
-      'Remarks',
-      'remarks',
-      false,
-      (batch, __, index) => (
+      width: 250,
+    }),
+    addColumn({
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      render: (remarks, __, index) => (
         <DebounceSelect
           type="input"
           onChange={(e: any) => {
@@ -262,8 +246,8 @@ export const useTableAddItem = (props: any) => {
           }}
         />
       ),
-      250,
-    ),
+      width: 250,
+    }),
   ]
 
   React.useEffect(() => {

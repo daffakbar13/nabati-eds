@@ -4,7 +4,7 @@ import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
 import { multipleSubmitQuotation } from 'src/api/quotation'
-import { useSalesQuotationListContext } from 'src/hooks/contexts'
+import { useSalesQuotationListContext } from '../../states'
 
 export default function ConfirmSubmit() {
   const {
