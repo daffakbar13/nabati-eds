@@ -1,4 +1,4 @@
-import React, { Children } from 'react'
+import React, { Children, useEffect, useState } from 'react'
 import { Text } from 'pink-lava-ui'
 import { Container } from './styledComponent'
 import SelectOptionIcon from './OptionIcon'
@@ -19,9 +19,24 @@ export default function SingleField({
   field,
   dataType,
 }) {
-  const hasMultipleChildren = Array.isArray(children)
-  const hasOneChildren = !hasMultipleChildren
+  const [hasMultipleChildren, setMultipleChildren] = useState(Array.isArray(children))
+  const [hasOneChildren, sethasOneChildren] = useState(!hasMultipleChildren)
   const hasNoChildren = !!children
+
+  useEffect(() => {
+    if (
+      value?.option == 'EQ' ||
+      value?.option == 'NE' ||
+      options[0] == 'EQ' ||
+      options[0] == 'NE'
+    ) {
+      setMultipleChildren(false)
+      sethasOneChildren(true)
+    } else {
+      setMultipleChildren(true)
+      sethasOneChildren(false)
+    }
+  }, [value?.option, options])
 
   if (!hasNoChildren) {
     throw new Error(
@@ -29,42 +44,24 @@ export default function SingleField({
     )
   }
 
-  const onFromValueChange = (val: any, inputType: string) => {
+  const onFromValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
-    if (inputType == 'date') {
-      handleChange({
-        field,
-        dataType,
-        fromValue: moment(val).format('YYYY-MM-DD'),
-        option: value?.option || options[0],
-      })
-    } else {
-      handleChange({
-        field,
-        dataType,
-        fromValue: isEvent ? val.target.value : val,
-        option: value?.option || options[0],
-      })
-    }
+    handleChange({
+      field,
+      dataType,
+      fromValue: isEvent ? val.target.value : val,
+      option: value?.option || options[0],
+    })
   }
 
-  const onToValueChange = (val: any, inputType: string) => {
+  const onToValueChange = (val: any) => {
     const isEvent = checkIsEvent(val) // Input return event instead of value
-    if (inputType == 'date') {
-      handleChange({
-        field,
-        dataType,
-        fromValue: moment(val).format('YYYY-MM-DD'),
-        option: value?.option || options[0],
-      })
-    } else {
-      handleChange({
-        field,
-        dataType,
-        fromValue: isEvent ? val.target.value : val,
-        option: value?.option || options[0],
-      })
-    }
+    handleChange({
+      field,
+      dataType,
+      toValue: isEvent ? val.target.value : val,
+      option: value?.option || options[0],
+    })
   }
 
   const onOptionChange = (val: any) => {
@@ -79,13 +76,28 @@ export default function SingleField({
       <SelectOptionIcon options={options} onChange={onOptionChange} value={value?.option} />
 
       {hasOneChildren &&
+        !Array.isArray(children) &&
         React.cloneElement(children, {
           ...children.props,
           style: { ...children.props.style, gridColumnStart: 'span 3' },
           onChange: (arg: any) => {
-            // onFromValueChange(arg)
+            onFromValueChange(arg)
             if (children.props.onChange) {
               children.props.onChange(arg)
+            }
+          },
+          value: value?.fromValue || undefined,
+        })}
+
+      {hasOneChildren &&
+        Array.isArray(children) &&
+        React.cloneElement(children[0], {
+          ...children[0].props,
+          style: { ...children[0].props.style, gridColumnStart: 'span 3' },
+          onChange: (arg: any) => {
+            onFromValueChange(arg)
+            if (children[0].props.onChange) {
+              children[0].props.onChange(arg)
             }
           },
           value: value?.fromValue || undefined,
@@ -98,12 +110,9 @@ export default function SingleField({
               ...children[0].props,
               // onChange: onFromValueChange,
               onChange: (arg: any) => {
-                onFromValueChange(arg, 'select')
+                onFromValueChange(arg)
                 if (children[0].props.onChange) {
                   children[0].props.onChange(arg)
-                }
-                if (children[0].props.picker) {
-                  onFromValueChange(arg, children[0].props.picker)
                 }
               },
               value: value?.fromValue || undefined,
@@ -115,12 +124,9 @@ export default function SingleField({
               ...children[1].props,
               // onChange: onToValueChange,
               onChange: (arg: any) => {
-                onToValueChange(arg, 'select')
+                onToValueChange(arg)
                 if (children[0].props.onChange) {
                   children[0].props.onChange(arg)
-                }
-                if (children[0].props.picker) {
-                  onToValueChange(arg, children[0].props.picker)
                 }
               },
               value: value?.toValue || undefined,
