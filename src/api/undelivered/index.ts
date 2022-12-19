@@ -23,21 +23,24 @@ export const getUndeliveredDetail = async (
 ): Promise<CommonListResponse<Undelivered>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${subUrl}/${params.id}/detail`,
+    subUrl: `${subUrl}/${params.id}`,
   })
   return response.data
 }
 
-export const createUndelivered = async (payload: any) => {
-  const response = await call({ method: METHODS.POST, subUrl, data: payload })
+export const multipleSubmitUndelivered = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${subUrl}/update`,
+    data: payload,
+  })
   return response.data
 }
 
-export const editUndelivered = async (payload: Undelivered) => {
+export const downloadUndelivered = async () => {
   const response = await call({
-    method: METHODS.PATCH,
-    subUrl: `${subUrl}/${payload.id}`,
-    data: payload,
+    method: METHODS.POST,
+    subUrl: `${subUrl}/generate`,
   })
   return response.data
 }

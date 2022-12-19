@@ -13,6 +13,29 @@ const CreateTabs = (label: React.ReactNode, key: string, children: React.ReactNo
   destroyInactiveTabPane: true,
 })
 
-const AllTabs = [CreateTabs(`Undelivered Shipment`, '1', '')]
+const AllTabs = [
+  // {
+  //     label: 'Quotation',
+  //     key: 'Quotation',
+  //     children: <Quotation />,
+  // },
+  // {
+  //     label: 'Document Flow',
+  //     key: 'Document Flow',
+  //     children: <DocumentFlow />,
+  // }, {
+  //     label: 'Customer Info',
+  //     key: 'Customer Info',
+  //     children: <CustomerInfo />,
+  // }, {
+  //     label: 'Salesman Info',
+  //     key: 'Salesman Info',
+  //     children: <SalesmanInfo />,
+  // },
+  CreateTabs(`Quotation`, '1', ''),
+  CreateTabs(`Document Flow`, '2', ''),
+  CreateTabs(`Customer Info`, '3', ''),
+  CreateTabs(`Salesman Info`, '4', ''),
+]
 
 export default AllTabs

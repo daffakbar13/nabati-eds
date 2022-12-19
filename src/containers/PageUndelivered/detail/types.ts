@@ -1,1 +1,1 @@
-export interface PageUndeliveredDetailProps {}
+export interface PageApprovalDetailProps { }
