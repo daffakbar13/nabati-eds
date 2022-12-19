@@ -104,7 +104,7 @@ export default function PagePoSto(props: Props) {
                 field="suppl_branch_id"
                 dataType="S"
                 label="Supplying Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE']}
               >
                 <DebounceSelect
                   type="select"
@@ -113,15 +113,13 @@ export default function PagePoSto(props: Props) {
                     console.log('OKE CHANGED')
                   }}
                 />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="receive_branch_id"
                 dataType="S"
                 label="Receiving Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
