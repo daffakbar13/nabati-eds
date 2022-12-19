@@ -22,6 +22,7 @@ export const useTableAddItem = (props: propsUseTable) => {
     remarks: '',
   }
   const [data, setData] = React.useState([])
+  const [placeholder, setPlaceholder] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
   const [valueItemSender, setValueItemSender] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
@@ -30,11 +31,16 @@ export const useTableAddItem = (props: propsUseTable) => {
   React.useEffect(() => {
     if (props.idbranch) {
       setData([initialValue])
+      setPlaceholder([initialValue])
     }
   }, [props.idbranch])
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
+  }
+
+  function handleChangePlaceholder(key: string, value: string | number, index: number) {
+    setPlaceholder((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
   }
 
   function isNullProductId(index: number) {
@@ -43,10 +49,12 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   function handleDeleteRows(index: number) {
     setData(data.filter((_, i) => i !== index))
+    setPlaceholder(placeholder.filter((_, i) => i !== index))
   }
 
   function handleAddItem() {
     setData([...data, initialValue])
+    setPlaceholder([...placeholder, initialValue])
   }
 
   const styleInputNumber = {
@@ -82,10 +90,11 @@ export const useTableAddItem = (props: propsUseTable) => {
       (product_id, __, index) => (
         <DebounceSelect
           type="select"
-          value={product_id as any}
+          value={placeholder[index]?.product_id as any}
           fetchOptions={(search) => productBranch(search, props.idbranch)}
           onChange={(e) => {
             handleChangeData('product_id', e.value, index)
+            handleChangePlaceholder('product_id', e.label, index)
             setFetching(true)
           }}
         />
