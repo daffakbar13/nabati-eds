@@ -59,7 +59,7 @@ export const columns = [
   ),
   CreateColumns(
     'Posting Date',
-    'created_at',
+    'posting_date',
     false,
     (date) => dateFormat(date),
     180,

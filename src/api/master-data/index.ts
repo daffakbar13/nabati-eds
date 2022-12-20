@@ -35,12 +35,13 @@ const subUrl = {
   getCustomerGroupCompany: 'v1/master/get-customer-group/PP01',
   getChannelByCompany: '/v1/master/get-channel/PP01',
   getSalesmanGroupByCompany: '/v1/master/get-salesman-group/PP01',
+  getProductMasterData: '/v1/master/list/product',
   getSalesOrgByCompanyDynamic: 'v1/master/get-sales-org',
   getCustomerGroupCompanyDynamic: 'v1/master/get-customer-group',
   getConfigSlocCompanyDynamic: 'v1/master/get-config-sloc',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
-const BaseUrl2 = 'https://dist-system.nabatisnack.co.id:3002/'
+const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getCompanies = async (): Promise<CommonDetailResponse<any>> => {
   const response = await call({
@@ -347,6 +348,17 @@ export const getSalesmanGroupByCompany = async (): Promise<CommonDetailResponse<
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getSalesmanGroupByCompany}`,
+  })
+
+  return response.data
+}
+
+export const getProductMasterData = async (payload: CommonListParams): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getProductMasterData}`,
+    data: payload
   })
 
   return response.data

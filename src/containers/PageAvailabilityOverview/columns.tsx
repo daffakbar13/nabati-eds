@@ -4,17 +4,29 @@ import { addColumn } from 'src/utils/createColumns'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'
 // import { PATH } from 'src/configs/menus'
-import { Tag } from 'antd'
+import { Tag, Row, Col } from 'antd'
+import ControlledExpandIcon from 'src/components/ControlledExpandIcon'
 
 export const columns = [
   addColumn({
     title: 'Branch',
     dataIndex: 'branch_id',
     fixed: true,
+    width: 900,
     render: (text, rec) => (
-      <>
-        {text}-{rec.branch_name}
-      </>
+      <Row>
+        <Col span={4}>
+          <ControlledExpandIcon
+            expanded={true}
+            onChange={(expanded) => {
+              console.log('expanded', expanded)
+            }}
+          />
+        </Col>
+        <Col span={20}>
+          {text}-{rec.branch_name}
+        </Col>
+      </Row>
     ),
   }),
   addColumn({

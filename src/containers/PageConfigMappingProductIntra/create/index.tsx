@@ -4,71 +4,80 @@ import { Modal } from 'src/components'
 import { Spacer, Text } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { InputNumber } from 'antd'
+import { fieldProductByCompany } from 'src/configs/fieldFetches'
 import {
-  fieldSalesOrganization,
-  fieldChannelCompany,
-  fieldCustomerGroupCompany,
-  fieldSalesmanGroup,
-  fieldUomList,
-} from 'src/configs/fieldFetches'
-import {
-  updateSalesORGCustomerGroupCustomerGroup,
-  createSalesORGCustomerGroupCustomerGroup,
-} from 'src/api/logistic/config-salesorg-customer-group-salesman-group'
+  updateProductIntraChannel,
+  createProductIntraChannel,
+} from 'src/api/logistic/config-mapping-product-intra'
 import { PATH } from 'src/configs/menus'
 
 interface FormData {
   company_id: string
-  sales_org_id: string
-  channel_id: string
-  customer_group_id: string
-  salesman_group_id: string
-  min_line: number
-  min_qty: number
-  uom: string
-  min_amount: number
+  trans_type: string
+  product_gt: string
+  product_mt: string
+  trans_id: string
+  gt_id: string
 }
 
-export default function CreateConfigurationCompany({ visible = false, close = () => {} }) {
+export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const [placeHolder, setPlaceHolder] = useState<FormData>()
+  const isOnEditMode = !!payload
+  const transtypeOptions = [
+    {
+      label: 'Channel',
+      value: 'Channel',
+    },
+    {
+      label: 'Channel_IDG',
+      value: 'Channel_IDG',
+    },
+    {
+      label: 'Sloc',
+      value: 'Sloc',
+    },
+  ]
 
   const initialValue = {
     company_id: 'PP01',
-    sales_org_id: 'P1D1',
-    channel_id: '12',
-    customer_group_id: '15',
-    salesman_group_id: '20',
-    min_line: 5,
-    min_qty: 10,
-    uom: 'CTN',
-    min_amount: 59.091,
-  }
-
-  const styleInputNumber = {
-    border: '1px solid #AAAAAA',
-    borderRadius: 8,
-    height: 46,
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
   }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
+  const changePlaceHolder = (form: string, value: any) => {
+    setPlaceHolder((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
   const onClickSubmit = async () => {
     setConfirmModal(true)
+  }
+
+  const doUpdate = async (reqBody: any) => {
+    try {
+      setLoading(true)
+      const res = updateProductIntraChannel(
+        reqBody.trans_id as string,
+        reqBody.gt_id as string,
+        reqBody,
+      )
+      setLoading(false)
+      return res
+    } catch (error) {
+      console.error(error)
+    }
+    return false
   }
 
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createSalesORGCustomerGroupCustomerGroup(reqBody)
+      const res = createProductIntraChannel(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -79,8 +88,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setPlaceHolder(undefined)
+    setDataForm(undefined)
     const reqBody = { ...initialValue, ...dataForm }
-    return doCreate(reqBody)
+
+    if (!isOnEditMode) {
+      return doCreate(reqBody)
+    }
+
+    if (isOnEditMode) {
+      return doUpdate(reqBody)
+    }
+
+    return false
   }
 
   const handleCancel = () => {
@@ -89,51 +108,61 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     close()
   }
 
+  useEffect(() => {
+    if (!isOnEditMode) return
+    onChangeForm('trans_type', payload.trans_type)
+    onChangeForm('product_gt', payload.product_gt)
+    onChangeForm('product_mt', payload.product_mt)
+    onChangeForm('trans_id', payload.trans_type)
+    onChangeForm('gt_id', payload.product_gt)
+
+    changePlaceHolder('trans_type', payload.trans_type)
+    changePlaceHolder(
+      'product_gt',
+      `${payload.product_gt || ''} - ${payload.product_gt_name || ''}`,
+    )
+    changePlaceHolder(
+      'product_mt',
+      `${payload.product_mt || ''} - ${payload.product_mt_name || ''}`,
+    )
+  }, [isOnEditMode, payload])
+
   const content = (
     <>
       <Spacer size={20} />
       <DebounceSelect
-        label="Company"
+        label="Trans Type"
         required
         type="select"
-        fetchOptions={fieldUomList}
+        options={transtypeOptions}
+        value={placeHolder?.trans_type || ''}
         onChange={(val: any) => {
-          onChangeForm('uom', val.value)
+          onChangeForm('trans_type', val.value)
+          changePlaceHolder('trans_type', val.label)
         }}
       />
       <Spacer size={10} />
       <DebounceSelect
-        label="Key"
+        label="Product GT"
         required
-        type="input"
-        onChange={(val: any) => {
-          onChangeForm('uom', val.value)
-        }}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Value"
-        required
-        type="input"
-        onChange={(val: any) => {
-          onChangeForm('uom', val.value)
-        }}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Description"
-        type="input"
-        onChange={(val: any) => {
-          onChangeForm('uom', val.value)
-        }}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Console Group"
         type="select"
-        fetchOptions={fieldUomList}
+        fetchOptions={fieldProductByCompany}
+        value={placeHolder?.product_gt || ''}
         onChange={(val: any) => {
-          onChangeForm('uom', val.value)
+          onChangeForm('product_gt', val.value)
+          changePlaceHolder('product_gt', val.label)
+        }}
+      />
+      <Spacer size={10} />
+      <DebounceSelect
+        label="Product MT"
+        required
+        type="select"
+        fetchOptions={(search) => fieldProductByCompany(search, dataForm?.product_gt || '')}
+        value={placeHolder?.product_mt || ''}
+        onChange={(val: any) => {
+          onChangeForm('product_mt', val.value)
+          changePlaceHolder('product_mt', val.label)
         }}
       />
       <Spacer size={10} />
@@ -143,29 +172,33 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title="Create Mapping Product Intra"
+        title={isOnEditMode ? 'View Mapping Product Intra' : 'Create Mapping Product Intra'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
         content={content}
         loading={loading}
         cancelText="Cancel"
-        okText="Submit"
+        okText={isOnEditMode ? 'Update' : 'Create'}
       />
       <Modal
-        title="Confirm Submit"
+        title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
         open={showConfirmModal}
         onOk={handleSubmit}
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to mapping product intra?"
+        content={
+          isOnEditMode
+            ? 'Are you sure want to update mapping product intra?'
+            : 'Are you sure want to submit mapping product intra?'
+        }
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.push(`${PATH.LOGISTIC}/configuration-mapping-product-intra`)
         }}
-        successContent={(res: any) => 'Mapping product intra has been successfully Created'}
+        successContent={(res: any) => 'mapping product intra has been successfully Submited'}
         successOkText="OK"
         width={432}
       />
