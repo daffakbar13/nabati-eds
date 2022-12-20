@@ -119,7 +119,7 @@ export default function PagePoSto(props: Props) {
                     console.log('OKE CHANGED')
                   }}
                 />
-                 <DebounceSelect
+                <DebounceSelect
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
@@ -134,12 +134,13 @@ export default function PagePoSto(props: Props) {
                 options={['EQ', 'NE', 'GE', 'LE', 'GT', 'LT']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
                 dataType="S"
                 label="Posting Date"
-                options={['GE', 'LE', 'GT', 'LT','EQ', 'NE']}
+                options={['GE', 'LE', 'GT', 'LT', 'EQ', 'NE']}
               >
                 <DatePickerInput
                   label={''}
