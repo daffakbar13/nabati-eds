@@ -379,6 +379,12 @@ export function fieldPoSto(search: string) {
             from_value: `%${search}%`,
             data_type: 'S',
           },
+          {
+            field: 'status_id',
+            option: 'EQ',
+            from_value: '01',
+            data_type: 'S',
+          },
         ],
         limit: 20,
         page: 1,
