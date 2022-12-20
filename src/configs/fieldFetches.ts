@@ -248,7 +248,7 @@ export function fieldBranchSupply(search: string, channel = '', supplybranch = '
             result.data
                 .filter(({ id, name, branch_type }) =>
                     (id.toLowerCase().includes(search.toLowerCase())
-                        || name.toLowerCase().includes(search.toLowerCase())) && branch_type !== channel && id !== supplybranch)
+                        || name.toLowerCase().includes(search.toLowerCase())) && (branch_type !== channel) && (id !== supplybranch))
                 .splice(0, 10)
                 .map(({ id, name, branch_type }) => ({
                     label: [id, name].join(' - '),
