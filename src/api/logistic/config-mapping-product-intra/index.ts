@@ -35,10 +35,10 @@ export const createProductIntraChannel = async (payload: any) => {
     return response.data
 }
 
-export const getDetailProductIntraChannel = async (product_gt: string) => {
+export const getDetailProductIntraChannel = async (product_gt: string, trans_type: string) => {
     const response = await call({
         method: METHODS.GET,
-        subUrl: `${url}/detail/${product_gt}`,
+        subUrl: `${url}/detail/${trans_type}/${product_gt}`,
         overrideBaseUrl,
     })
     return response.data
