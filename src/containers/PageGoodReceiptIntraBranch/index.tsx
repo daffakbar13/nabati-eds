@@ -27,7 +27,7 @@ export default function PageGoodsIssue(props: Props) {
   const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getGoodReceiptList,
-    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
   const [showConfirm, setShowConfirm] = React.useState('')

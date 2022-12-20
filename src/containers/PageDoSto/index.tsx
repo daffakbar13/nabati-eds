@@ -20,7 +20,7 @@ export default function PageDoSto(props: Props) {
   const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getListDoSto,
-    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
   const titlePage = useTitlePage('list')

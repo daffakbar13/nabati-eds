@@ -28,7 +28,7 @@ export default function PageApproval(props: Props) {
 
   const table = useTable({
     funcApi: getListPoSto,
-    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
   const [showConfirm, setShowConfirm] = React.useState('')

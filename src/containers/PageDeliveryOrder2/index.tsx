@@ -11,7 +11,11 @@ import { MoreOutlined, CheckCircleFilled, DownOutlined } from '@ant-design/icons
 import useTitlePage from 'src/hooks/useTitlePage'
 
 import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
-import { cancelDeliveryOrder, getDeliveryOrderList, manualSubmitDeliveryOrder } from 'src/api/delivery-order'
+import {
+  cancelDeliveryOrder,
+  getDeliveryOrderList,
+  manualSubmitDeliveryOrder,
+} from 'src/api/delivery-order'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 // import { cancelBatchOrder, multipleSubmitDeliveryOrder } from 'src/api/DeliveryOrder'
 import { PATH } from 'src/configs/menus'
@@ -40,7 +44,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
 
   const table = useTable({
     funcApi: getDeliveryOrderList,
-    haveCheckbox: { headCell: 'status_name', member: ['New', 'Draft'] },
+    haveCheckbox: [{ headCell: 'status_name', member: ['New', 'Draft'] }],
     columns: TableDeliveryOrder,
   })
   const titlePage = useTitlePage('list')
@@ -101,7 +105,9 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
           {oneSelected ? (
             ` ${selectedDeliveryOrder.text}`
           ) : (
-            <Popover content={selectedDeliveryOrder.content}>{` ${selectedDeliveryOrder.text}`}</Popover>
+            <Popover
+              content={selectedDeliveryOrder.content}
+            >{` ${selectedDeliveryOrder.text}`}</Popover>
           )}
         </Typography.Text>
         {' ?'}

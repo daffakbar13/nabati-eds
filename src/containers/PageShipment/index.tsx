@@ -32,7 +32,7 @@ export default function PageShipment() {
 
   const table = useTable({
     funcApi: getShipment,
-    haveCheckBox: { rowKey: 'status', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')

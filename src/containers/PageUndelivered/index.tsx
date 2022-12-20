@@ -20,7 +20,7 @@ function showTotal(total: number, range: number[]) {
 export default function PageUndelivered() {
   const table = useTable({
     funcApi: getUndeliveredList,
-    haveCheckBox: { rowKey: 'status', member: ['new'] },
+    haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
