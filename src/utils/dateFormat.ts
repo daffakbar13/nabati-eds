@@ -1,7 +1,7 @@
-import moment from 'moment';
+import moment from 'moment'
 
 export default function dateFormat(date: string, format?: string) {
-    const isValid = moment(date).isValid() === true
-    const dateFormated = isValid ? moment(date).format('DD MMMM YYYY') : '-'
-    return dateFormated
+  const isValid = moment(date).isValid() === true
+  const dateFormated = isValid ? moment(date).format('DD MMMM YYYY') : '-'
+  return dateFormated
 }

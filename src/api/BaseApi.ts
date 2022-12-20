@@ -28,7 +28,8 @@ export function call({
   options,
   overrideBaseUrl,
 }: CallOptions): AxiosPromise {
-  const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgwNTY2ODMsImlzcyI6InNhbGVzLWVkcy1hcGkiLCJ1c2VyX2lkIjoiMSIsImVtYWlsIjoicmV5Z2FfdmlyZ2lhd2FuQG5hYmF0aXNuYWNrLmNvLmlkIiwiY29tcGFueV9pZCI6IlBQMDEifQ.nRSrclvhE2YmHZyI9bNn5wgWgBW0-cobM8f6Bx8yXos'
+  const token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NjgwNTY2ODMsImlzcyI6InNhbGVzLWVkcy1hcGkiLCJ1c2VyX2lkIjoiMSIsImVtYWlsIjoicmV5Z2FfdmlyZ2lhd2FuQG5hYmF0aXNuYWNrLmNvLmlkIiwiY29tcGFueV9pZCI6IlBQMDEifQ.nRSrclvhE2YmHZyI9bNn5wgWgBW0-cobM8f6Bx8yXos'
   const config: AxiosRequestConfig = {
     ...options,
     baseURL: overrideBaseUrl || API_BASE_URL_3,

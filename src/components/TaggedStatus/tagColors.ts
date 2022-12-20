@@ -1,4 +1,4 @@
-import { tagColors } from 'src/configs/tagColor';
+import { tagColors } from 'src/configs/tagColor'
 
 // const tagColors = {
 //     green: [

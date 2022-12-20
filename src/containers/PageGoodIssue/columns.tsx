@@ -10,7 +10,15 @@ import TaggedStatus from 'src/components/TaggedStatus'
 
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 
-function Linked({ link, linkType, type }: { link: string; linkType: string; type: 'id' | 'action' }) {
+function Linked({
+  link,
+  linkType,
+  type,
+}: {
+  link: string
+  linkType: string
+  type: 'id' | 'action'
+}) {
   const router = useRouter()
   const navigate = () => {
     if (linkType == 'id') {
@@ -55,7 +63,7 @@ export const columns = [
     'PO Number',
     'po_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='PO' />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType="PO" />,
     180,
     'left',
   ),
@@ -63,7 +71,7 @@ export const columns = [
     'DO Number',
     'delivery_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='DO' />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType="DO" />,
     180,
     'left',
   ),
@@ -71,23 +79,14 @@ export const columns = [
     'GI Number',
     'id',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType='id' />,
+    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType="id" />,
     180,
     'left',
   ),
-  CreateColumns(
-    'Posting Date',
-    'posting_date',
-    false,
-    (date) => dateFormat(date),
-    180,
-  ),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (company_id, rec) => <>{`${company_id} - ${rec.company_name}`}</>,
-  ),
+  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date), 180),
+  CreateColumns('Company', 'company_id', false, (company_id, rec) => (
+    <>{`${company_id} - ${rec.company_name}`}</>
+  )),
   CreateColumns(
     'Supplying Branch',
     'suppl_branch_id',
@@ -102,21 +101,9 @@ export const columns = [
     (receive_plant_id, rec) => <>{`${receive_plant_id} - ${rec.receive_plant_name}`}</>,
     250,
   ),
-  CreateColumns(
-    'Mov. Type',
-    'movement_type_id',
-    false,
-  ),
-  CreateColumns(
-    'Status',
-    'status',
-    false,
-    (status) => <TaggedStatus status={status} />,
-  ),
-  CreateColumns(
-    'Action',
-    'id',
-    false,
-    (link, record) => <Linked link={link} type="action" linkType='id' />,
-  ),
+  CreateColumns('Mov. Type', 'movement_type_id', false),
+  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
+  CreateColumns('Action', 'id', false, (link, record) => (
+    <Linked link={link} type="action" linkType="id" />
+  )),
 ]

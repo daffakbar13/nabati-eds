@@ -15,7 +15,6 @@ import {
 } from 'src/api/logistic/configuration-sloc-costumer-group'
 import { PATH } from 'src/configs/menus'
 
-
 const { Label, LabelRequired } = Text
 
 interface FormData {

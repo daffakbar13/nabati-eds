@@ -1,10 +1,10 @@
 import React from 'react'
 import PageIntraChannelGoodIssueDetail from 'src/containers/PageIntraChannelGoodIssue/detail/index'
 
-interface PageIntraChannelGoodIssueProps { }
+interface PageIntraChannelGoodIssueProps {}
 
 export default function QuotationDetail(props: PageIntraChannelGoodIssueProps) {
-    const { } = props
+  const {} = props
 
-    return <PageIntraChannelGoodIssueDetail />
+  return <PageIntraChannelGoodIssueDetail />
 }

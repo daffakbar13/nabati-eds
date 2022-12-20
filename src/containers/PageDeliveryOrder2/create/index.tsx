@@ -268,7 +268,8 @@ export default function PageCreateDeliveryOrder() {
         result.data.map(({ id, name }) => ({
           label: [id, name.split('-').join(' - ')].join(' - '),
           value: [id, name.split('-').join(' - ')].join(' - '),
-        })))
+        })),
+      )
       .then((data) => {
         onChangeForm('order_type', data.find(({ value }) => value.includes('ZDP1'))?.value)
         setOptionsOrderType(data)

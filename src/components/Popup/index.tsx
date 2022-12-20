@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface PopupProps {
-  children?: React.ReactNode,
+  children?: React.ReactNode
   onOutsideClick?: () => void
   gap?: number
 }
@@ -13,7 +13,7 @@ const useOutsideClick = (ref, handleOutsideClick) => {
         handleOutsideClick()
       }
     }
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('click', handleClickOutside)
   }, [handleOutsideClick, ref])
 }
 

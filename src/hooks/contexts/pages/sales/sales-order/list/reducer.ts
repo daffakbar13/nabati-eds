@@ -6,10 +6,7 @@ export interface DispatchType {
   payload?: StateType[keyof StateType]
 }
 
-export function baseReducer(
-  state: StateType,
-  action: DispatchType,
-): StateType {
+export function baseReducer(state: StateType, action: DispatchType): StateType {
   const { payload, type } = action
   return { ...state, [type]: payload }
 }

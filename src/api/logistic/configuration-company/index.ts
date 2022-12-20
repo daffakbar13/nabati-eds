@@ -59,7 +59,6 @@ export const getConfigCompanyDetail = async (
     method: METHODS.GET,
     subUrl: `${url}/detail_company/${companyId}/${key}`,
     overrideBaseUrl,
-
   })
   return response.data
 }

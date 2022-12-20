@@ -13,14 +13,8 @@ export default function SalesmanInfo(props: SalesmanInfoProps) {
   const { data } = props
 
   const generalInformation = [
-    DataList.createDataList(
-      'Employee Name',
-      data?.salesman_info?.employee_name || '',
-    ),
-    DataList.createDataList(
-      'Division Name',
-      data?.salesman_info?.division_name || '',
-    ),
+    DataList.createDataList('Employee Name', data?.salesman_info?.employee_name || ''),
+    DataList.createDataList('Division Name', data?.salesman_info?.division_name || ''),
     DataList.createDataList('Branch', data?.salesman_info?.branch || ''),
     DataList.createDataList('ID Card Number', data?.salesman_info?.id_card_number || ''),
     DataList.createDataList('Mobile Number', data?.salesman_info?.mobile_number || ''),

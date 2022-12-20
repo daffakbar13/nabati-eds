@@ -120,7 +120,9 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
               label: concatString(product_id, name),
               value: concatString(product_id, name),
             }))
-        })).catch(() => [])
+        }),
+      )
+      .catch(() => [])
   }
   function handleChangeQty(value: string, index: number) {
     const current = state.data[index]

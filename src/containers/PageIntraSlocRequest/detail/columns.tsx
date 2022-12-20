@@ -10,7 +10,8 @@ export const column = [
     'Item',
     'product_id',
     false,
-    (text: string, record: any) => `${record.product_sender_id || ''} - ${record.product_sender_name || ''}`,
+    (text: string, record: any) =>
+      `${record.product_sender_id || ''} - ${record.product_sender_name || ''}`,
   ),
   CreateColumns('Qty', 'qty', false),
   CreateColumns('UoM', 'uom_id', false),

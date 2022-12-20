@@ -25,8 +25,8 @@ export type DataTypes = 'S' | 'N' | 'D' | 'T'
 // }
 
 export interface FilterTypesInterface {
-  code: OptionType,
-  label: string,
+  code: OptionType
+  label: string
   icon: React.ReactNode
 }
 export const FILTER_TYPES = {

@@ -63,8 +63,9 @@ export const getCustomerByCompany = async (): Promise<CommonDetailResponse<any>>
   return response.data
 }
 
-export const getCustomerList = async (payload: CommonListParams)
-  : Promise<CommonDetailResponse<any>> => {
+export const getCustomerList = async (
+  payload: CommonListParams,
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
@@ -249,9 +250,7 @@ export const getRouteByCompany = async (): Promise<CommonDetailResponse<any>> =>
   return response.data
 }
 
-export const getProductByBranch = async (
-  idbranch: string,
-): Promise<CommonDetailResponse<any>> => {
+export const getProductByBranch = async (idbranch: string): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${BaseUrl2}${subUrl.getRouteIntraChannel}/product-branch/${idbranch}/list`,
@@ -260,9 +259,7 @@ export const getProductByBranch = async (
   return response.data
 }
 
-export const getItemReceiver = async (
-  idProduct: string,
-): Promise<CommonDetailResponse<any>> => {
+export const getItemReceiver = async (idProduct: string): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${BaseUrl2}${subUrl.getRouteIntraChannel}/product/${idProduct}/detail`,
@@ -301,9 +298,7 @@ export const getVehicleByCompany = async (): Promise<CommonDetailResponse<any>> 
   return response.data
 }
 
-export const getDocFlow = async (
-  document_id: string,
-): Promise<CommonDetailResponse<any>> => {
+export const getDocFlow = async (document_id: string): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
@@ -353,18 +348,22 @@ export const getSalesmanGroupByCompany = async (): Promise<CommonDetailResponse<
   return response.data
 }
 
-export const getProductMasterData = async (payload: CommonListParams): Promise<CommonDetailResponse<any>> => {
+export const getProductMasterData = async (
+  payload: CommonListParams,
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${subUrl.getProductMasterData}`,
-    data: payload
+    data: payload,
   })
 
   return response.data
 }
 
-export const getSalesOrgByCompanyDynamic = async (company_id: string): Promise<CommonDetailResponse<any>> => {
+export const getSalesOrgByCompanyDynamic = async (
+  company_id: string,
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
@@ -374,7 +373,9 @@ export const getSalesOrgByCompanyDynamic = async (company_id: string): Promise<C
   return response.data
 }
 
-export const getCustomerGroupCompanyDynamic = async (company_id: string): Promise<CommonDetailResponse<any>> => {
+export const getCustomerGroupCompanyDynamic = async (
+  company_id: string,
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
@@ -384,7 +385,9 @@ export const getCustomerGroupCompanyDynamic = async (company_id: string): Promis
   return response.data
 }
 
-export const getConfigSlocCompanyDynamic = async (company_id: string): Promise<CommonDetailResponse<any>> => {
+export const getConfigSlocCompanyDynamic = async (
+  company_id: string,
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,

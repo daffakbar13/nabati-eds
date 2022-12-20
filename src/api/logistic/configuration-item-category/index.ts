@@ -59,7 +59,6 @@ export const getConfigItemCategoryDetail = async (
     method: METHODS.GET,
     subUrl: `${url}/detail/${salesOrgId}/${orderTypeId}`,
     overrideBaseUrl,
-
   })
   return response.data
 }

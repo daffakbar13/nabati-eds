@@ -5,42 +5,11 @@
 import CreateColumns from 'src/utils/createColumns'
 
 export const TableDeliveryOrder = [
-  CreateColumns(
-    'No',
-    'no',
-    false,
-    (_, __, index) => ++index,
-    60,
-    true,
-  ),
-  CreateColumns(
-    'Item',
-    'item',
-    false,
-    undefined,
-    380,
-  ),
-  CreateColumns(
-    'Item Category',
-    'item_category',
-    false,
-    undefined,
-    150,
-  ),
-  CreateColumns(
-    'Uom',
-    'uom',
-    false,
-    undefined,
-    100,
-  ),
-  CreateColumns(
-    'Quantity',
-    'qty',
-    false,
-    undefined,
-    100,
-  ),
+  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
+  CreateColumns('Item', 'item', false, undefined, 380),
+  CreateColumns('Item Category', 'item_category', false, undefined, 150),
+  CreateColumns('Uom', 'uom', false, undefined, 100),
+  CreateColumns('Quantity', 'qty', false, undefined, 100),
   CreateColumns(
     'Based Price',
     'base_price',
@@ -56,10 +25,7 @@ export const TableDeliveryOrder = [
     (sub_total) => parseInt(sub_total).toLocaleString(),
     120,
   ),
-  CreateColumns(
-    'Remarks',
-    'remarks',
-  ),
+  CreateColumns('Remarks', 'remarks'),
 ]
 
 export const TableDocumentFlow = [

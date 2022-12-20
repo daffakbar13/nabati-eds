@@ -87,11 +87,7 @@ export const columns = (goToDetail) => [
     (date) => <>{moment(date).isValid ?? moment(date).format('YYYY-MM-DD HH:mm')}</>,
     180,
   ),
-  CreateColumns(
-    'Company',
-    'company_id',
-    true,
-  ),
+  CreateColumns('Company', 'company_id', true),
   CreateColumns(
     'Branch',
     'branch_id',
@@ -106,31 +102,13 @@ export const columns = (goToDetail) => [
     (vendor, rec) => <>{`${vendor} - ${rec.vendor_name}`}</>,
     250,
   ),
-  CreateColumns(
-    'Move Type',
-    'movement_type_id',
-    true,
-  ),
-  CreateColumns(
-    'Header Text',
-    'header_text',
-    true,
-  ),
-  CreateColumns(
-    'Delivery Note',
-    'delivery_note',
-    true,
-  ),
-  CreateColumns(
-    'Status ID',
-    'status_id',
-    false,
-    (statusId) => <>{statusId !== '' && <Tag>{statusId}</Tag>}</>,
-  ),
-  CreateColumns(
-    'Action',
-    'id',
-    false,
-    (link, record) => <Linked link={link} type="action" status={record.status_id} />,
-  ),
+  CreateColumns('Move Type', 'movement_type_id', true),
+  CreateColumns('Header Text', 'header_text', true),
+  CreateColumns('Delivery Note', 'delivery_note', true),
+  CreateColumns('Status ID', 'status_id', false, (statusId) => (
+    <>{statusId !== '' && <Tag>{statusId}</Tag>}</>
+  )),
+  CreateColumns('Action', 'id', false, (link, record) => (
+    <Linked link={link} type="action" status={record.status_id} />
+  )),
 ]

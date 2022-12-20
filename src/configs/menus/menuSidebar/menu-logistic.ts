@@ -310,13 +310,17 @@ export const menuLogistic = [
         key: 'sales-organization-customer-group-material',
         title: 'Sales Organization, Customer Group, Material',
         content: () => 'Sales Organization, Customer Group, Material',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer-group-material`),
+        onClick: () =>
+          Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer-group-material`),
       },
       {
         key: 'sales-organization-customer-group-salesman-grop',
         title: 'Sales Organization, Customer Group, Salesman Group',
         content: () => 'Sales Organization, Customer Group, Salesman Group',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer-group-salesman-grop`),
+        onClick: () =>
+          Router.push(
+            `${PATH.LOGISTIC}/configuration-sales-organization-customer-group-salesman-grop`,
+          ),
       },
       {
         key: 'sales-organization-customer',

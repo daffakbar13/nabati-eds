@@ -7,7 +7,13 @@ const CreateColors = (
   darker: string,
   darkest: string,
 ) => ({
- lightest, lighter, light, regular, dark, darker, darkest,
+  lightest,
+  lighter,
+  light,
+  regular,
+  dark,
+  darker,
+  darkest,
 })
 
 export const colors = {

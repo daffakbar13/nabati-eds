@@ -1,6 +1,6 @@
 import { Col, Divider, Row } from 'antd'
 import React from 'react'
-import { Table } from 'pink-lava-ui';
+import { Table } from 'pink-lava-ui'
 import DataList from 'src/components/DataList'
 import TitleDataList from 'src/components/TitleDataList'
 import useTable from 'src/hooks/useTable'

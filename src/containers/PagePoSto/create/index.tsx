@@ -109,7 +109,9 @@ export default function CreateBilling() {
             type="select"
             label="Receiving Branch"
             required
-            fetchOptions={(search) => fieldBranchSupply(search, '', dataForm?.suppl_branch_id || '')}
+            fetchOptions={(search) =>
+              fieldBranchSupply(search, '', dataForm?.suppl_branch_id || '')
+            }
             onChange={(val: any) => {
               onChangeForm('receive_plant_id', val.label.split(' - ')[0])
               setReceivingBranch(val.label)
@@ -131,7 +133,9 @@ export default function CreateBilling() {
             type="select"
             label="Supplying Branch"
             required
-            fetchOptions={(search) => fieldBranchSupply(search, '', dataForm?.receive_plant_id || '')}
+            fetchOptions={(search) =>
+              fieldBranchSupply(search, '', dataForm?.receive_plant_id || '')
+            }
             onChange={(val: any) => {
               onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
               setSupplyingBranch(val.label)

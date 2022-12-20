@@ -60,5 +60,7 @@ export const ColumnsDocumentFlow = [
 
 export const ColumnsCustomerInfo = [
   CreateColumns('Salesman', 'id', false, (id, { name }) => [id, name].join(' - ')),
-  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) => [id, salesman_group_name].join(' - ')),
+  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) =>
+    [id, salesman_group_name].join(' - '),
+  ),
 ]

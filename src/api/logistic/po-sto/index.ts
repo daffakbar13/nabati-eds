@@ -55,9 +55,8 @@ export const updateStatusPoSto = async (
     subUrl: `${url}/edit/${params.id}`,
     overrideBaseUrl,
     data: {
-      status_id: params.status_id
+      status_id: params.status_id,
     },
   })
   return response.data
 }
-
