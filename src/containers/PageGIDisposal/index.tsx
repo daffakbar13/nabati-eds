@@ -9,7 +9,7 @@ import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListBadStock } from 'src/api/logistic/bad-stock'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import { column } from './columns'
 
 export default function PageIntraSlocRequest() {
@@ -75,6 +75,15 @@ export default function PageIntraSlocRequest() {
           <Row gap="16px">
             <SearchQueryParams placeholder="Search by Reservation Number" />
             <SmartFilter onOk={setFilters}>
+              <SmartFilter.Field
+                field="company_id"
+                dataType="S"
+                label="Company"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+              </SmartFilter.Field>
               <SmartFilter.Field
                 field="suppl_branch_id"
                 dataType="S"

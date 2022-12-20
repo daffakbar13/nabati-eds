@@ -107,7 +107,13 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
               allowClear
             />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+              <SmartFilter.Field
+                field="company_id"
+                dataType="S"
+                label="Company"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
