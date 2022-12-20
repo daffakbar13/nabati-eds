@@ -58,12 +58,7 @@ export const columns = [
     180,
     'left',
   ),
-  CreateColumns(
-    'Posting Date',
-    'posting_date',
-    false,
-    (date) => dateFormat(date),
-  ),
+  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
   CreateColumns(
     'Company ',
     'company_id',
@@ -84,16 +79,8 @@ export const columns = [
     (branch, rec) => <>{`${branch} - ${rec.receive_plant_name}`}</>,
     250,
   ),
-  CreateColumns(
-    'Status',
-    'status',
-    false,
-    (status) => <TaggedStatus status={status} />,
-  ),
-  CreateColumns(
-    'Action',
-    'id',
-    false,
-    (link, record) => <Linked link={link} type="action" status={record.status_name} />,
-  ),
+  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
+  CreateColumns('Action', 'id', false, (link, record) => (
+    <Linked link={link} type="action" status={record.status_name} />
+  )),
 ]

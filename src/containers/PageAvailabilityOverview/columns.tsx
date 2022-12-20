@@ -311,9 +311,7 @@ export const columns = [
         const isLast = arr?.length === ind + 1
         return (
           <div key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-            <Tag color={a.status_id_name === 'PGI Complete' ? 'green' : ''}>
-              {a.status_id_name}
-            </Tag>
+            <Tag color={a.status_id_name === 'PGI Complete' ? 'green' : ''}>{a.status_id_name}</Tag>
           </div>
         )
       })

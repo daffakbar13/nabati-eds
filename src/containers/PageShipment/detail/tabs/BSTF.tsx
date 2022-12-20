@@ -124,7 +124,10 @@ export default function BSTF(props: BSTFProps) {
       </Row>
       <Row>
         <Col span={8}>
-          <Information label="Tanggal Kirim" value={dateFormat(data.delivery_date, 'DD.MM.YYYY-hh:mm:ss')} />
+          <Information
+            label="Tanggal Kirim"
+            value={dateFormat(data.delivery_date, 'DD.MM.YYYY-hh:mm:ss')}
+          />
         </Col>
         <Col offset={6} span={10}>
           <Information label="No. BSTF" value="?" />

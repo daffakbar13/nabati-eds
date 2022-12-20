@@ -183,7 +183,7 @@ export const useTableAddItem = (props: propsUseTable) => {
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
           })
-          itemReceiver(product_sender_id,'Sloc').then((response) => {
+          itemReceiver(product_sender_id, 'Sloc').then((response) => {
             const newValueItemSender = [...valueItemSender]
             handleChangeData('product_receiver_id', response.product_mt, index)
             newValueItemSender[index] = `${response.product_mt} - ${response.product_mt_name}`

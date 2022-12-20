@@ -1,10 +1,10 @@
 import React from 'react'
 import PageApprovalDetail from 'src/containers/PageIntraBranchApproval/detail/index'
 
-interface ApprovalDetailProps { }
+interface ApprovalDetailProps {}
 
 export default function QuotationDetail(props: ApprovalDetailProps) {
-    const { } = props
+  const {} = props
 
-    return <PageApprovalDetail />
+  return <PageApprovalDetail />
 }

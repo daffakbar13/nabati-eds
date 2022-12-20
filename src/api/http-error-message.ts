@@ -6,7 +6,8 @@ export const HTTP_INTERNAL_SERVER_ERROR = 'Internal server error'
 export const HTTP_UNPROCESSED_REQUEST = 'Request can not be processed'
 export const HTTP_UNKNOWN_ERROR = 'Unknown Error'
 export const HTTP_NETWORK_ERROR = 'Network Error'
-export const HTTP_NETWORK_ISSUE_ERROR = 'This could be server network issue or dropped internet connection'
+export const HTTP_NETWORK_ISSUE_ERROR =
+  'This could be server network issue or dropped internet connection'
 
 const ERROR_MESSAGE = {
   HTTP_ERROR,

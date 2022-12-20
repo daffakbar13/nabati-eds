@@ -154,8 +154,8 @@ export default function SectionField() {
           type="input"
           label="Reference"
           placeholder="e.g Type Here..."
-          value={dataForm?.customer_ref}
-          onChange={(e: any) => {
+          value={dataForm.customer_ref as any}
+          onChange={(e) => {
             onChangeForm('customer_ref', e.target.value)
           }}
         />

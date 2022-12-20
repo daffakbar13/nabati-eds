@@ -59,7 +59,7 @@ export const useTableAddItem = (props: any) => {
   }
 
   useEffect(() => {
-   console.log("selection", rowSelection)
+    console.log('selection', rowSelection)
   }, [rowSelection])
 
   useEffect(() => {

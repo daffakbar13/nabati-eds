@@ -139,10 +139,7 @@ export default function DetailStockAdjustment() {
           <List.Item label="" value={''} />
 
           <List.Item label="Doc Date" value={dateFormat(details?.document_date)} />
-          <List.Item
-            label="Posting Date"
-            value={dateFormat(details?.posting_date)}
-          />
+          <List.Item label="Posting Date" value={dateFormat(details?.posting_date)} />
           <List.Item label="Header Text" value={details?.header_text} />
           <List.Item label="" value={''} />
 

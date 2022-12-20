@@ -1,21 +1,32 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable object-curly-newline */
-import React from 'react';
-import { baseHandler } from './handler';
-import { baseReducer } from './reducer';
-import { States } from './states';
+import React from 'react'
+import { baseHandler } from './handler'
+import { baseReducer } from './reducer'
+import { States } from './states'
 
 export function useTableProductStates() {
-    const initialValue: States = {
-        allProduct: [],
-        data: [
-            { product: '', order_qty: 1, sub_total: 0 },
-            { product: '', order_qty: 1, sub_total: 0 },
-            { product: '', order_qty: 1, sub_total: 0 },
-            { product: '', order_qty: 1, sub_total: 0 },
-        ],
-    }
-    const [state, dispatch] = React.useReducer(baseReducer, initialValue)
-    const handler = baseHandler(state, dispatch)
+  const initialData: any[] = []
+  for (let i = 0; i < 10; i++) {
+    initialData.push({
+      product_id: '',
+      name: '',
+      uom_id: '',
+      order_qty: 1,
+      sub_total: 0,
+      discount: 0,
+      discOption: 'Rp',
+      price: 0,
+      remarks: '',
+    })
+  }
+  const initialValue: States = {
+    allProduct: [],
+    data: initialData,
+    size: { discount: 0, product: 0, quantity: 0 },
+  }
+  const [state, dispatch] = React.useReducer(baseReducer, initialValue)
+  const handler = baseHandler(state, dispatch)
 
-    return { state, handler }
+  return { state, handler }
 }

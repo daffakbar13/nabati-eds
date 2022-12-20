@@ -14,13 +14,7 @@ export const columns = (goToDetail: (id: string) => {}) => [
     180,
     'left',
   ),
-  CreateColumns(
-    'Posting Date',
-    'posting_date',
-    true,
-    (date) => <>{dateFormat(date)}</>,
-    180,
-  ),
+  CreateColumns('Posting Date', 'posting_date', true, (date) => <>{dateFormat(date)}</>, 180),
   CreateColumns(
     'Company',
     'company_id',

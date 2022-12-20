@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, SearchQueryParams, Modal, Pagination } from 'src/components'
-import {
-  getListSOtoDO,
-  UpdateStatusSOtoDO,
-} from 'src/api/logistic/configuration-auto-so-to-do'
+import { getListSOtoDO, UpdateStatusSOtoDO } from 'src/api/logistic/configuration-auto-so-to-do'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
@@ -33,10 +30,7 @@ export default function PageConfigurationSloc() {
   const handleChangeStatus = async () => {
     const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
     try {
-      return await UpdateStatusSOtoDO(
-        changeStatusPayload.sales_org_id as string,
-        reqBody,
-      )
+      return await UpdateStatusSOtoDO(changeStatusPayload.sales_org_id as string, reqBody)
     } catch (error) {
       console.error(error)
     }
@@ -85,9 +79,7 @@ export default function PageConfigurationSloc() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
-        {hasData && (
-          <Pagination {...table.state.paginationProps} />
-        )}
+        {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <CreateModal

@@ -7,10 +7,7 @@ import { Radio } from 'antd'
 import { PATH } from 'src/configs/menus'
 
 import { fieldSalesOrganization } from 'src/configs/fieldFetches'
-import {
-  CreateSOtoDO,
-  updateSOtoDO,
-} from 'src/api/logistic/configuration-auto-so-to-do'
+import { CreateSOtoDO, updateSOtoDO } from 'src/api/logistic/configuration-auto-so-to-do'
 
 interface FormData {
   company_id: string
@@ -63,10 +60,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateSOtoDO(
-        reqBody.id_sales_org as string,
-        reqBody,
-      )
+      const res = updateSOtoDO(reqBody.id_sales_org as string, reqBody)
       setLoading(false)
       return res
     } catch (error) {

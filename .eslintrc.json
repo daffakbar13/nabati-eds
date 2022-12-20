@@ -1,7 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "airbnb-base"],
   "rules": {
-    "no-unused-vars": "off",
+    "no-unused-vars": "warn",
     "import/no-cycle": "off",
     "import/named": "off",
     "no-undef": "off",
@@ -10,6 +10,7 @@
     "no-empty-pattern": "off",
     "import/no-named-as-default": 0,
     "linebreak-style": 0,
+    "implicit-arrow-linebreak": 0,
     "object-curly-newline": [
       "error",
       {
@@ -20,7 +21,7 @@
       }
     ],
     "semi": "off",
-    "indent": 0,
+    "indent": 1,
     "import/extensions": [
       "error",
       "ignorePackages",

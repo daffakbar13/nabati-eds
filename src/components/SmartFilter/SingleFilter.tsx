@@ -36,8 +36,8 @@ export default function SingleFilter({ option: opt, onChange, funcApi, isDate })
         {opt.label}
       </Text>
       <OptionTypeIcon option={opt.option} onChange={onChangeTypeIcon} />
-      {isDate
-        ? <DatePickerInput
+      {isDate ? (
+        <DatePickerInput
           fullWidth
           onChange={(val: any) => {
             setFromValue({ key: val, label: val, value: val })
@@ -46,19 +46,20 @@ export default function SingleFilter({ option: opt, onChange, funcApi, isDate })
           defaultValue={moment(opt.fromValue)}
           format={'DD-MMM-YYYY'}
         />
-        : <DebounceSelect
-          type='select'
+      ) : (
+        <DebounceSelect
+          type="select"
           value={opt.fromValue}
           placeholder="Type To Search"
           {...(funcApi && { fetchOptions: funcApi })}
           onChange={onChangeFromValue}
         />
-      }
+      )}
       <Text width="fluid" variant="headingSmall" textAlign="center" style={{ fontSize: 16 }}>
         to
       </Text>
-      {isDate
-        ? <DatePickerInput
+      {isDate ? (
+        <DatePickerInput
           fullWidth
           onChange={(val: any) => {
             setToValue({ key: val, label: val, value: val })
@@ -67,14 +68,15 @@ export default function SingleFilter({ option: opt, onChange, funcApi, isDate })
           defaultValue={moment(opt.toValue)}
           format={'DD-MMM-YYYY'}
         />
-        : <DebounceSelect
-          type='select'
+      ) : (
+        <DebounceSelect
+          type="select"
           value={opt.toValue}
           placeholder="Type To Search"
           {...(funcApi && { fetchOptions: funcApi })}
           onChange={onChangeToValue}
         />
-      }
+      )}
       <ICFilterAddFolder />
     </Container>
   )

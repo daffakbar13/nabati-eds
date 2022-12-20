@@ -26,7 +26,9 @@ export const getGoodReceiptList = async (
   return response.data
 }
 
-export const getGoodReceiptDetail = async (params: any): Promise<CommonListResponse<GoodRecepitListDetail>> => {
+export const getGoodReceiptDetail = async (
+  params: any,
+): Promise<CommonListResponse<GoodRecepitListDetail>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${urlGoodReceipt}/${params.id}/detail`,

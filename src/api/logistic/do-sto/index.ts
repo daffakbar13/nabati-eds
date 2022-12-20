@@ -25,9 +25,7 @@ export const getListDoSto = async (
   return response.data
 }
 
-export const getPoStoDetail = async (
-  params: any,
-): Promise<CommonListResponse<StockRealTime>> => {
+export const getPoStoDetail = async (params: any): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${url}/${params.id}/detail`,

@@ -2,7 +2,12 @@
 /* eslint-disable camelcase */
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
-import { CommonListParams, CommonListResponse, CommonDetailParams, CommonDetailResponse } from 'src/api/types'
+import {
+  CommonListParams,
+  CommonListResponse,
+  CommonDetailParams,
+  CommonDetailResponse,
+} from 'src/api/types'
 import { API_BASE_URL_3 } from 'src/configs/env'
 import { DeliveryOrder } from './types'
 
@@ -65,7 +70,10 @@ export const manualSubmitDeliveryOrder = async (
   return response.data
 }
 
-export const cancelDeliveryOrder = async (delivery_id: string, payload: any): Promise<CommonDetailResponse<any>> => {
+export const cancelDeliveryOrder = async (
+  delivery_id: string,
+  payload: any,
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     overrideBaseUrl,
     method: METHODS.POST,

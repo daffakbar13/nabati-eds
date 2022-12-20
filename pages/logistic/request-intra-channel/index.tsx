@@ -1,10 +1,10 @@
 import React from 'react'
 import PageIntraChannelRequest from 'src/containers/PageIntraChannelRequest'
 
-interface RequestIntraChannelProps { }
+interface RequestIntraChannelProps {}
 
 export default function RequestIntraChannel(props: RequestIntraChannelProps) {
-    const { } = props
+  const {} = props
 
-    return <PageIntraChannelRequest />
+  return <PageIntraChannelRequest />
 }
