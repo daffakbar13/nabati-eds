@@ -1,8 +1,9 @@
 /* eslint-disable camelcase */
 import { MinusCircleFilled } from '@ant-design/icons'
-import { Input, InputNumber } from 'antd'
+import { Form, Input, InputNumber, InputRef } from 'antd'
 import React from 'react'
 import DebounceSelect from 'src/components/DebounceSelect'
+import { EditableCellProps } from 'src/components/TableEditable/types'
 import { concatString } from 'src/utils/concatString'
 import { addColumn } from 'src/utils/createColumns'
 import { useTableProductStates } from './states/useTableProductStates'
@@ -14,6 +15,8 @@ const styleInputNumber = {
   minHeight: 46,
   display: 'flex',
   alignItems: 'center',
+  color: 'black',
+  '::placeholder': { color: 'black' },
 }
 
 const styleDisabledInput: React.CSSProperties = {
@@ -25,7 +28,7 @@ const styleDisabledInput: React.CSSProperties = {
 
 export function useTableProduct() {
   const {
-    state: { data },
+    state: { data, focus, isEdit },
     handler: {
       bookingProduct,
       getAllProduct,
@@ -34,14 +37,32 @@ export function useTableProduct() {
       handleChangeQty,
       handleChangeRemarks,
       handleDeleteRows,
+      handleChangeUom,
+      isNullProduct,
+      handleFocus,
+      handleUnFocus,
+      handleTyping,
+      handleEdit,
     },
   } = useTableProductStates()
-  const [focus, setFocus] = React.useState('')
+  const [width, setWidth] = React.useState(0)
+
   // const columns =
+  // function isNullProduct(index: number) {
+  //   const { product_id } = data[index]
+  //   return ![...new Set(...allProduct.map((p) => p.product_id))].includes(product_id)
+  // }
+
+  // console.log([...new Set(allProduct.map((p) => p.product_id))])
 
   React.useEffect(() => {
     getAllProduct()
   }, [])
+
+  React.useEffect(() => {
+    const getWidth = Math.max(...data.map((d) => d.sub_total)).toString().length * 14
+    setWidth(getWidth)
+  }, [data])
 
   return {
     data,
@@ -68,7 +89,7 @@ export function useTableProduct() {
             type="select"
             value={concatString(product_id, name) as any}
             fetchOptions={fieldListProduct}
-            onClick={() => setFocus('')}
+            // onClick={() => setFocus('')}
             onChange={(e) => {
               bookingProduct(e.value, index)
             }}
@@ -84,11 +105,10 @@ export function useTableProduct() {
             type="select"
             value={uom_id as any}
             options={getOptionsUom(index)}
-            // disabled={isNullProductId(index)}
-            // onChange={(e) => {
-            //   handleChangeData('uom_id', e.value, index)
-            //   setFetching('uom')
-            // }}
+            disabled={isNullProduct(index)}
+            onChange={(e) => {
+              handleChangeUom(e.value, index)
+            }}
           />
         ),
         width: 150,
@@ -98,16 +118,19 @@ export function useTableProduct() {
         dataIndex: 'order_qty',
         render: (_, { product_id, order_qty, price }, index) => (
           <InputNumber
-            disabled={product_id === ''}
+            id={`order-qty-${index}`}
+            disabled={isNullProduct(index)}
+            controls={false}
             min={product_id === '' ? '0' : '1'}
-            // onClick={() => setFocus(`order-qty-${index}`)}
-            // autoFocus={focus === `order-qty-${index}`}
-            value={order_qty?.toLocaleString()}
-            // value={data[index].order_qty}
-            onChange={(newVal) => {
-              // setFocus(`order-qty-${index}`)
-              handleChangeQty(newVal, index)
+            max={'999999'}
+            value={data[index].order_qty as any}
+            onBlur={(e) => {
+              handleChangeQty(e.target.value, index)
             }}
+            onPressEnter={(e) => {
+              handleChangeQty(e.target.value, index)
+            }}
+            onClick={(e) => e.currentTarget.focus()}
             style={styleInputNumber}
           />
         ),
@@ -124,17 +147,24 @@ export function useTableProduct() {
         dataIndex: 'sub_total',
         render: (sub_total) => (
           <Input.TextArea
-            style={{ ...styleInputNumber, padding: '10px', textAlign: 'right' }}
+            style={{
+              ...styleInputNumber,
+              padding: '10px',
+              textAlign: 'right',
+              minWidth: 80,
+              width,
+            }}
             rows={1}
             autoSize={{ minRows: 1 }}
             value={sub_total?.toLocaleString()}
+            // value={width.toLocaleString()}
             disabled
             // onChange={(e) => {
             //   handleChangeData('remarks', e.target.value, index)
             // }}
           />
         ),
-        width: 130,
+        width: 110,
       }),
       addColumn({
         title: 'Remarks',
@@ -144,11 +174,20 @@ export function useTableProduct() {
             style={{ ...styleInputNumber, padding: '10px' }}
             rows={1}
             autoSize={{ minRows: 1 }}
-            // onClick={() => setFocus(`remarks-${index}`)}
-            // autoFocus={focus === `remarks-${index}`}
-            value={remarks}
-            onChange={(e) => {
+            id={`remarks-${index}`}
+            placeholder={data[index].remarks}
+            color="black"
+            onBlur={(e) => {
               handleChangeRemarks(e.target.value, index)
+            }}
+            onPressEnter={(e) => {
+              handleChangeRemarks(e.target.value, index)
+            }}
+            onChange={(e) => {
+              e.target.setAttribute('placeholder', e.target.value)
+            }}
+            onFocus={(e) => {
+              e.currentTarget.innerHTML = data[index].remarks
             }}
           />
         ),

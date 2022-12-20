@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { getListProduct, getPricingByCompany } from 'src/api/master-data';
 import { CommonListParams } from 'src/api/types';
+import { StateType } from 'src/hooks/useTable/states';
 import { concatString } from 'src/utils/concatString';
 import { baseReducer } from './reducer';
 import { DataProduct } from './states';
@@ -124,7 +125,10 @@ export function baseHandler(
                 })).catch(() => []);
     }
     function handleChangeQty(value: string, index: number) {
-        const order_qty = parseInt(value, 10)
+        let order_qty = parseInt(value, 10)
+        if (order_qty > 999999) {
+            order_qty = 999999
+        }
         const newData = [...state.data]
         newData[index] = {
             ...state.data[index],
@@ -179,6 +183,60 @@ export function baseHandler(
             payload: newData,
         })
     }
+    function handleChangeUom(uom_id: string, index: number) {
+        const current = state.data[index]
+        const newAllProduct = state.allProduct
+            .map((p) => {
+                if (current.product_id === p.product_id && uom_id === p.uom_id) {
+                    return { ...p, booked: true, bookByIndex: index }
+                }
+                if (p.bookByIndex === index) {
+                    return { ...p, booked: false, bookByIndex: '' }
+                }
+                return p
+            })
+        const { price } = newAllProduct
+            .find((p) => p.product_id === current.product_id && p.uom_id === uom_id)
+        const newData = [...state.data]
+        newData[index] = { ...current, uom_id, price, sub_total: price * current.order_qty }
+        dispatch({
+            type: 'allProduct',
+            payload: newAllProduct,
+        })
+        dispatch({
+            type: 'data',
+            payload: newData,
+        })
+    }
+    function isNullProduct(index: number) {
+        const { product_id } = state.data[index]
+        return ![...new Set(state.allProduct.map((p) => p.product_id))].includes(product_id)
+    }
+    function handleTyping(payload: boolean) {
+        dispatch({
+            type: 'isTyping',
+            payload,
+        })
+    }
+    function handleFocus(type: 'order-qty' | 'remarks', index: number) {
+        const id = [type, index].join('-')
+        dispatch({
+            type: 'focus',
+            payload: id,
+        })
+    }
+    function handleUnFocus() {
+        dispatch({
+            type: 'focus',
+            payload: '',
+        })
+    }
+    function handleEdit(payload: boolean) {
+        dispatch({
+            type: 'isEdit',
+            payload,
+        })
+    }
 
     return {
         getAllProduct,
@@ -188,5 +246,11 @@ export function baseHandler(
         handleChangeQty,
         handleChangeRemarks,
         handleDeleteRows,
+        handleChangeUom,
+        isNullProduct,
+        handleTyping,
+        handleFocus,
+        handleUnFocus,
+        handleEdit,
     }
 }

@@ -12,16 +12,20 @@ export default function SectionTable() {
   return (
     <>
       <Row style={{ overflow: 'scroll' }}>
-        <Table data={dataForm?.customer_id && tableProduct.data} columns={tableProduct.columns} />
+        <Table
+          scroll={{ x: 'max-content' }}
+          dataSource={tableProduct.data}
+          columns={tableProduct.columns}
+        />
       </Row>
-      {dataForm?.customer_id && (
+      {/* {dataForm?.customer_id && (
         <Button size="small" variant="primary" onClick={tableProduct.handleAddItem}>
           Add Item
         </Button>
       )}
       <Row justify="end">
         <Total label="Total Amount" value={tableProduct.total_amount.toLocaleString()} />
-      </Row>
+      </Row> */}
     </>
   )
 }

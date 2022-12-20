@@ -11,6 +11,8 @@ export default function PageQuotation() {
   const titlePage = useTitlePage('list')
   const table = useTableProduct()
 
+  console.log(table.columns)
+
   return (
     <SalesQuotationListProvider>
       <Row gutter={[20, 20]}>
@@ -25,9 +27,6 @@ export default function PageQuotation() {
         <Col span={24}>
           <Card>
             <SectionTable />
-            <div style={{ display: 'flex', overflow: 'scroll' }}>
-              <Table dataSource={table.data} columns={table.columns} />
-            </div>
           </Card>
         </Col>
       </Row>

@@ -8,10 +8,10 @@ export function useTableProductStates() {
     const initialValue: States = {
         allProduct: [],
         data: [
-            { product: '' },
-            { product: '' },
-            { product: '' },
-            { product: '' },
+            { product: '', order_qty: 1, sub_total: 0 },
+            { product: '', order_qty: 1, sub_total: 0 },
+            { product: '', order_qty: 1, sub_total: 0 },
+            { product: '', order_qty: 1, sub_total: 0 },
         ],
     }
     const [state, dispatch] = React.useReducer(baseReducer, initialValue)

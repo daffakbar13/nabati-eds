@@ -11,7 +11,7 @@ export default function SectionConfirm() {
     <>
       {(confirm === 'draftQuo' || confirm === 'newQuo') && <ConfirmSuccessSubmit />}
       {confirm === 'cancel' && <ConfirmCancel />}
-      {<tableProduct.ConfirmDelete />}
+      {/* {<tableProduct.ConfirmDelete />} */}
     </>
   )
 }

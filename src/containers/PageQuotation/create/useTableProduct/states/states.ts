@@ -11,4 +11,7 @@ export interface DataProduct {
 export interface States {
     data: DataProduct[]
     allProduct: any[]
+    isTyping?: boolean
+    focus?: string
+    isEdit?: boolean
 }
