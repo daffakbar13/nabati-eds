@@ -48,7 +48,7 @@ export default function PageConfigurationBranchLocation() {
   const table = useTable({
     funcApi: getConfigBranchLocationList,
     columns: columns(goToDetailPage),
-    haveCheckBox: { rowKey: 'branch_from_id', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'branch_from_id', member: ['New'] }],
     // filters,
   })
 

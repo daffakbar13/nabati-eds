@@ -3,7 +3,7 @@ import moment from 'moment'
 import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Card, Popup } from 'src/components'
+import { Card, Modal } from 'src/components'
 import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
@@ -48,7 +48,8 @@ export default function CreateBilling() {
     idSupplyingBranch: supplyingBranch.split(' - ')[0] || '',
     idReceivingBranch: receivingBranch.split(' - ')[0] || '',
   })
-  const [cancel, setCancel] = useState(false)
+  const [modalCancel, setModalCancel] = useState(false)
+  const [modalSubmit, setModalSubmit] = useState(false)
   const [newPoSTO, setNewPoSTO] = useState()
   const [dataForm, setDataForm] = React.useState<dataForm>()
 
@@ -73,11 +74,6 @@ export default function CreateBilling() {
       setAllSloc(response)
     })
   }, [dataForm?.suppl_branch_id])
-
-  useEffect(() => {
-    console.log('Receiving Channel :', receivingChannel)
-    console.log('Supplying Channel :', supplyingChannel)
-  }, [receivingChannel, supplyingChannel])
   return (
     <Col>
       <Text variant={'h4'}>Create New PO STO</Text>
@@ -89,7 +85,7 @@ export default function CreateBilling() {
               size="big"
               variant="tertiary"
               onClick={() => {
-                setCancel(true)
+                setModalCancel(true)
               }}
             >
               Cancel
@@ -98,9 +94,7 @@ export default function CreateBilling() {
               size="big"
               variant="primary"
               onClick={() => {
-                createPoSto({ ...initialValue, ...dataForm })
-                  .then((response) => setNewPoSTO(response.data.id))
-                  .catch((e) => console.log(e))
+                setModalSubmit(true)
               }}
             >
               Submit
@@ -115,7 +109,7 @@ export default function CreateBilling() {
             type="select"
             label="Receiving Branch"
             required
-            fetchOptions={(search) => fieldBranchSupply(search, '', receivingBranch)}
+            fetchOptions={(search) => fieldBranchSupply(search, '', dataForm?.suppl_branch_id || '')}
             onChange={(val: any) => {
               onChangeForm('receive_plant_id', val.label.split(' - ')[0])
               setReceivingBranch(val.label)
@@ -136,7 +130,8 @@ export default function CreateBilling() {
           <DebounceSelect
             type="select"
             label="Supplying Branch"
-            fetchOptions={(search) => fieldBranchSupply(search, '', supplyingBranch)}
+            required
+            fetchOptions={(search) => fieldBranchSupply(search, '', dataForm?.receive_plant_id || '')}
             onChange={(val: any) => {
               onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
               setSupplyingBranch(val.label)
@@ -202,78 +197,43 @@ export default function CreateBilling() {
           )}
         </div>
       </Card>
-      {(newPoSTO || cancel) && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              variant="headingSmall"
-              textAlign="center"
-              style={{
-                ...(!cancel && { color: 'green' }),
-                fontSize: 16,
-                fontWeight: 'bold',
-                marginBottom: 8,
-              }}
-            >
-              {cancel ? 'Confirm Cancellation' : 'Success'}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {cancel ? (
-              'Are you sure want to cancel? Change you made so far will not saved'
-            ) : (
-              <>
-                Request Number
-                <Typography.Text copyable> {newPoSTO}</Typography.Text>
-                has been
-              </>
-            )}
-          </div>
-          {!cancel && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully created</div>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {cancel && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setCancel(false)
-                  }}
-                >
-                  No
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.LOGISTIC}/po-sto`)
-                  }}
-                >
-                  Yes
-                </Button>
-              </>
-            )}
-            {newPoSTO && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.LOGISTIC}/po-sto`)
-                  }}
-                >
-                  OK
-                </Button>
-              </>
-            )}
-          </div>
-        </Popup>
-      )}
+      <Modal
+        title={'Confirm Cancellation'}
+        open={modalCancel}
+        onOk={() => {
+          router.push(`${PATH.LOGISTIC}/po-sto`)
+        }}
+        onCancel={() => {
+          setModalCancel(false)
+        }}
+        content={`Are you sure want to cancel? Change you made so far will not saved`}
+        width={432}
+      />
+      <Modal
+        title={'Confirm Submit'}
+        open={modalSubmit}
+        onOk={() => {
+          createPoSto({ ...initialValue, ...dataForm })
+            .then((response) => setNewPoSTO(response.data.id))
+            .catch((e) => console.log(e))
+        }}
+        onCancel={() => {
+          setModalSubmit(false)
+        }}
+        content={`Are you sure want to Submit This PO STO ?`}
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/po-sto`)
+        }}
+        successContent={(res: any) => (
+          <>
+            PO Number
+            <Typography.Text copyable> {newPoSTO}</Typography.Text>
+            has been
+          </>
+        )}
+        successOkText="OK"
+        width={432}
+      />
     </Col>
   )
 }

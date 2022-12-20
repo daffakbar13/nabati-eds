@@ -19,22 +19,29 @@ export default function SingleField({
   field,
   dataType,
 }) {
-  const [hasMultipleChildren, setMultipleChildren] = useState(Array.isArray(children))
-  const [hasOneChildren, sethasOneChildren] = useState(!hasMultipleChildren)
+  const [hasMultipleChildren, setMultipleChildren] = useState<Boolean>()
+  const [hasOneChildren, sethasOneChildren] = useState<Boolean>()
   const hasNoChildren = !!children
 
   useEffect(() => {
-    if (
-      value?.option == 'EQ' ||
-      value?.option == 'NE' ||
-      options[0] == 'EQ' ||
-      options[0] == 'NE'
-    ) {
-      setMultipleChildren(false)
-      sethasOneChildren(true)
+    if (value?.option) {
+      if (value?.option == 'EQ' || value?.option == 'NE') {
+        setMultipleChildren(false)
+        sethasOneChildren(true)
+      }
+
+      if (value?.option != 'EQ' && value?.option != 'NE' && value?.option != '') {
+        setMultipleChildren(true)
+        sethasOneChildren(false)
+      }
     } else {
-      setMultipleChildren(true)
-      sethasOneChildren(false)
+      if (options[0] == 'EQ' || options[0] == 'NE') {
+        setMultipleChildren(false)
+        sethasOneChildren(true)
+      } else {
+        setMultipleChildren(true)
+        sethasOneChildren(false)
+      }
     }
   }, [value?.option, options])
 

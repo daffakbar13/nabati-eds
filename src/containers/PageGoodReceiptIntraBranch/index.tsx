@@ -27,7 +27,7 @@ export default function PageGoodsIssue(props: Props) {
   const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getGoodReceiptList,
-    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
   const [showConfirm, setShowConfirm] = React.useState('')
@@ -96,7 +96,13 @@ export default function PageGoodsIssue(props: Props) {
               allowClear
             />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+              <SmartFilter.Field
+                field="company_id"
+                dataType="S"
+                label="Company"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field

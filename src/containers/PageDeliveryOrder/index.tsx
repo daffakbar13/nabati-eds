@@ -11,7 +11,7 @@ import { SectionAction, SectionConfirm, SectionTable } from './sections'
 export default function PageDeliveryOrder() {
   const table = useTable({
     funcApi: getDeliveryOrderList,
-    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns: useColumnDeliveryOrder,
   })
   const titlePage = useTitlePage('list')

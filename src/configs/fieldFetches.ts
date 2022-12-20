@@ -1,7 +1,8 @@
-import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getItemReceiver, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getChannelByCompany, getSalesmanGroupByCompany, getUomList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic, getProductMasterData, getListProduct } from 'src/api/master-data';
+import { getCustomerByCompany, getSalesOrgByCompany, getSalesmanByCompany, getProductByCompany, getPricingByIdAndUom, getProductById, getBranch, getOrderTypeByCompany, getPricingByCompany, getPricingByProductId, getReason, getCustomerByFilter, getConfigSloc, getRouteByCompany, getProductByBranch, getCustomerList, getDriverByCompanyId, getVehicleByCompany, getDocTypeByCategory, getCompanyList, getCustomerGroupCompany, getChannelByCompany, getSalesmanGroupByCompany, getUomList, getSalesOrgByCompanyDynamic, getCustomerGroupCompanyDynamic, getConfigSlocCompanyDynamic, getProductMasterData, getListProduct } from 'src/api/master-data';
 import { getCustomerByFilterProps } from 'src/api/master-data/types';
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
+import { getDetailProductIntraChannel } from 'src/api/logistic/config-mapping-product-intra'
 import { CommonListParams } from 'src/api/types';
 import { concatString } from 'src/utils/concatString';
 
@@ -247,7 +248,7 @@ export function fieldBranchSupply(search: string, channel = '', supplybranch = '
             result.data
                 .filter(({ id, name, branch_type }) =>
                     (id.toLowerCase().includes(search.toLowerCase())
-                        || name.toLowerCase().includes(search.toLowerCase())) && branch_type !== channel && id !== supplybranch)
+                        || name.toLowerCase().includes(search.toLowerCase())) && (branch_type !== channel) && (id !== supplybranch))
                 .splice(0, 10)
                 .map(({ id, name, branch_type }) => ({
                     label: [id, name].join(' - '),
@@ -284,8 +285,8 @@ export function productBranch(search: string, branchId: string) {
                 })))
 }
 
-export function itemReceiver(productId: string) {
-    return getItemReceiver(productId)
+export function itemReceiver(productId: string, transType: string) {
+    return getDetailProductIntraChannel(productId, transType)
         .then((result) =>
             result.data)
 }
@@ -481,8 +482,8 @@ export function fieldProductMasterData(search = '', oldProduct = '') {
             option: 'CP',
             from_value: `%${search}%`,
         }],
-limit: 20,
-page: 1,
+        limit: 20,
+        page: 1,
     }).then((result) => result.data.results
         .filter(({ product_id, name }) => product_id != oldProduct && name != oldProduct)
         .splice(0, 10)
