@@ -24,19 +24,24 @@ export default function SingleField({
   const hasNoChildren = !!children
 
   useEffect(() => {
-    if (
-      value?.option == 'EQ' ||
-      value?.option == 'NE' ||
-      options[0] == 'EQ' ||
-      options[0] == 'NE'
-    ) {
+    if (value?.option == 'EQ' || value?.option == 'NE') {
       setMultipleChildren(false)
       sethasOneChildren(true)
     } else {
       setMultipleChildren(true)
       sethasOneChildren(false)
     }
-  }, [value?.option, options])
+  }, [value?.option])
+
+  useEffect(() => {
+    if (options[0] == 'EQ' || options[0] == 'NE') {
+      setMultipleChildren(false)
+      sethasOneChildren(true)
+    } else {
+      setMultipleChildren(true)
+      sethasOneChildren(false)
+    }
+  }, [options])
 
   if (!hasNoChildren) {
     throw new Error(
