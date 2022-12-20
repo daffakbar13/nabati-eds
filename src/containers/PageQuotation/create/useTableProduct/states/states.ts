@@ -4,6 +4,8 @@ export interface DataProduct {
     uom_id: string
     price: number
     order_qty: number
+    discount?: number
+    discOption?: string
     sub_total: number
     remarks?: string
 }
@@ -11,7 +13,5 @@ export interface DataProduct {
 export interface States {
     data: DataProduct[]
     allProduct: any[]
-    isTyping?: boolean
-    focus?: string
-    isEdit?: boolean
+    size: { product: number, discount: number, quantity: number }
 }

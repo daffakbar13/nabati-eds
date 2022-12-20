@@ -1,17 +1,9 @@
-/* eslint-disable function-paren-newline */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import { useRouter } from 'next/router'
 import React from 'react'
-import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
-import { getDetailQuotation } from 'src/api/quotation'
-import { PATH } from 'src/configs/menus'
 import { useSalesQuotationCreateProvider } from 'src/hooks/contexts'
-import { concatString } from 'src/utils/concatString'
 import { useTableProduct } from './useTableProduct'
-// import { useTableProduct } from './columns'
 
 export interface PayloadCreate {
   company_id?: string

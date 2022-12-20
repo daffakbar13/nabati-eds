@@ -1,4 +1,4 @@
-import { useTableProduct } from 'src/containers/PageQuotation/create/columns'
+import { useTableProduct } from 'src/containers/PageQuotation/create/useTableProduct'
 
 interface OptionsType {
     key?: string

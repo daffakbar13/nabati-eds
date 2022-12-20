@@ -1,9 +1,8 @@
 /* eslint-disable camelcase */
 import { MinusCircleFilled } from '@ant-design/icons'
-import { Form, Input, InputNumber, InputRef } from 'antd'
+import { Input, InputNumber, Select } from 'antd'
 import React from 'react'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { EditableCellProps } from 'src/components/TableEditable/types'
 import { concatString } from 'src/utils/concatString'
 import { addColumn } from 'src/utils/createColumns'
 import { useTableProductStates } from './states/useTableProductStates'
@@ -16,7 +15,6 @@ const styleInputNumber = {
   display: 'flex',
   alignItems: 'center',
   color: 'black',
-  '::placeholder': { color: 'black' },
 }
 
 const styleDisabledInput: React.CSSProperties = {
@@ -28,40 +26,28 @@ const styleDisabledInput: React.CSSProperties = {
 
 export function useTableProduct() {
   const {
-    state: { data, focus, isEdit },
+    state: { data, size },
     handler: {
       bookingProduct,
       getAllProduct,
       getOptionsUom,
       fieldListProduct,
       handleChangeQty,
+      handleChangeDiscount,
       handleChangeRemarks,
       handleDeleteRows,
       handleChangeUom,
       isNullProduct,
-      handleFocus,
-      handleUnFocus,
-      handleTyping,
-      handleEdit,
+      handleSize,
     },
   } = useTableProductStates()
-  const [width, setWidth] = React.useState(0)
-
-  // const columns =
-  // function isNullProduct(index: number) {
-  //   const { product_id } = data[index]
-  //   return ![...new Set(...allProduct.map((p) => p.product_id))].includes(product_id)
-  // }
-
-  // console.log([...new Set(allProduct.map((p) => p.product_id))])
 
   React.useEffect(() => {
     getAllProduct()
   }, [])
 
   React.useEffect(() => {
-    const getWidth = Math.max(...data.map((d) => d.sub_total)).toString().length * 14
-    setWidth(getWidth)
+    handleSize()
   }, [data])
 
   return {
@@ -89,13 +75,13 @@ export function useTableProduct() {
             type="select"
             value={concatString(product_id, name) as any}
             fetchOptions={fieldListProduct}
-            // onClick={() => setFocus('')}
             onChange={(e) => {
               bookingProduct(e.value, index)
             }}
           />
         ),
-        width: 550,
+        width: size.product,
+        fixed: true,
       }),
       addColumn({
         title: 'Uom',
@@ -112,59 +98,81 @@ export function useTableProduct() {
           />
         ),
         width: 150,
+        fixed: true,
       }),
       addColumn({
         title: 'Quantity',
         dataIndex: 'order_qty',
-        render: (_, { product_id, order_qty, price }, index) => (
+        render: (_, __, index) => (
           <InputNumber
-            id={`order-qty-${index}`}
             disabled={isNullProduct(index)}
             controls={false}
-            min={product_id === '' ? '0' : '1'}
+            min={'1'}
             max={'999999'}
-            value={data[index].order_qty as any}
+            value={data[index].order_qty.toLocaleString() as any}
             onBlur={(e) => {
               handleChangeQty(e.target.value, index)
             }}
             onPressEnter={(e) => {
               handleChangeQty(e.target.value, index)
             }}
-            onClick={(e) => e.currentTarget.focus()}
-            style={styleInputNumber}
+            onClick={(e) => {
+              e.target.value = data[index].order_qty.toString()
+              e.currentTarget.focus()
+            }}
+            onChange={(e) => e.toLocaleString('fullwide', { useGrouping: false })}
+            style={{ ...styleInputNumber, width: '100%' }}
           />
         ),
-        width: 130,
+        width: size.quantity,
       }),
       addColumn({
         title: 'Based Price',
         dataIndex: 'price',
         render: (price) => <div style={styleDisabledInput}>{price?.toLocaleString()}</div>,
+        // width: 130,
+      }),
+      addColumn({
+        title: 'Discount',
+        dataIndex: 'discount',
+        render: (_, __, index) => (
+          <Input.Group compact style={{ ...styleInputNumber }}>
+            <Select defaultValue="Rp" bordered={false}>
+              <Select.Option value="Rp">Rp</Select.Option>
+              <Select.Option value="%">%</Select.Option>
+            </Select>
+            <InputNumber
+              controls={false}
+              min={'0'}
+              max={'999999'}
+              value={data[index].discount.toLocaleString() as any}
+              disabled={isNullProduct(index)}
+              onBlur={(e) => {
+                handleChangeDiscount(e.target.value, index)
+              }}
+              onPressEnter={(e) => {
+                handleChangeDiscount(e.target.value, index)
+              }}
+              onClick={(e) => {
+                e.target.value = data[index].discount
+                e.currentTarget.focus()
+              }}
+              style={{
+                width: size.discount,
+                border: 'none',
+                backgroundColor: 'transparent',
+                textAlign: 'right',
+              }}
+            />
+          </Input.Group>
+        ),
         width: 130,
       }),
       addColumn({
         title: 'Sub Total',
         dataIndex: 'sub_total',
-        render: (sub_total) => (
-          <Input.TextArea
-            style={{
-              ...styleInputNumber,
-              padding: '10px',
-              textAlign: 'right',
-              minWidth: 80,
-              width,
-            }}
-            rows={1}
-            autoSize={{ minRows: 1 }}
-            value={sub_total?.toLocaleString()}
-            // value={width.toLocaleString()}
-            disabled
-            // onChange={(e) => {
-            //   handleChangeData('remarks', e.target.value, index)
-            // }}
-          />
-        ),
-        width: 110,
+        render: (sub_total) => <div style={styleDisabledInput}>{sub_total.toLocaleString()}</div>,
+        // width: 110,
       }),
       addColumn({
         title: 'Remarks',
