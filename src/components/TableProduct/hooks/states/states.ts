@@ -14,4 +14,6 @@ export interface States {
   data: DataProduct[]
   allProduct: any[]
   size: { product: number; discount: number; quantity: number }
+  confirmRemove?: string
+  isLoading: boolean
 }

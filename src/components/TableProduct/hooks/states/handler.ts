@@ -1,28 +1,38 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable camelcase */
-import React from 'react'
 import { getListProduct, getPricingByCompany } from 'src/api/master-data'
 import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
 import { DataProduct, States } from './states'
+import { baseReducer } from './reducer'
 
-export function baseHandler(state: States, dispatch: ReturnType<typeof React.useReducer>[1]) {
+export function baseHandler(
+  state: States,
+  dispatch: (args: Parameters<typeof baseReducer>['1']) => void,
+) {
+  function setLoading(payload: boolean) {
+    dispatch({
+      type: 'isLoading',
+      payload,
+    })
+  }
   function getAllProduct() {
     getPricingByCompany()
       .then((response) => {
         const { data } = response
-        const payload = [...data]
-          // .filter(({ valid_from, valid_to }) => now > valid_from && now < valid_to)
-          .map((obj) => ({ ...obj, booked: false, bookByIndex: '' }))
+        const payload = [...data].map((obj) => ({ ...obj, booked: false, bookByIndex: '' }))
         dispatch({
           type: 'allProduct',
           payload,
         })
+        setLoading(false)
       })
       .catch(() => {
         dispatch({
           type: 'allProduct',
           payload: [],
         })
+        setLoading(false)
       })
   }
   function bookingProduct(product: string, index: number) {
@@ -66,10 +76,12 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
   }
   function getOptionsUom(index: number) {
     const allProduct = [...state.allProduct]
-    const { product_id } = state.data[index]
-    if (product_id !== '') {
+    const current = state.data[index]
+    if (current?.product_id !== '') {
       return allProduct
-        .filter((p) => p.product_id === product_id && (p.bookByIndex === index || !p.booked))
+        .filter(
+          (p) => p.product_id === current?.product_id && (p.bookByIndex === index || !p.booked),
+        )
         .map(({ uom_id }) => ({ label: uom_id, value: uom_id }))
     }
     return []
@@ -124,6 +136,23 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
       )
       .catch(() => [])
   }
+  function configDiscount(discount: number, current: DataProduct) {
+    const grossValue = current.price * current.order_qty
+    if (current.discOption === '%' && discount > 100) {
+      return 100
+    }
+    if (discount > grossValue) {
+      return grossValue
+    }
+    return discount
+  }
+  function configSubTotal(order_qty: number, price: number, discount: number, discOption: string) {
+    const grossValue = order_qty * price
+    if (discOption === '%') {
+      return (grossValue * (100 - discount)) / 100
+    }
+    return grossValue - discount
+  }
   function handleChangeQty(value: string, index: number) {
     const current = state.data[index]
     let order_qty = Number(value)
@@ -134,7 +163,7 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
     newData[index] = {
       ...current,
       order_qty,
-      sub_total: order_qty * state.data[index].price - current.discount,
+      sub_total: configSubTotal(order_qty, current.price, current.discount, current.discOption),
     }
     if (!Number.isNaN(order_qty) && order_qty > 0) {
       dispatch({
@@ -145,16 +174,12 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
   }
   function handleChangeDiscount(value: string, index: number) {
     const current = state.data[index]
-    const totalExDiscount = current.price * current.order_qty
-    let discount = parseInt(value, 10)
-    if (discount > totalExDiscount) {
-      discount = totalExDiscount
-    }
+    const discount = configDiscount(Number(value), current)
     const newData = [...state.data]
     newData[index] = {
       ...current,
       discount,
-      sub_total: current.order_qty * current.price - discount,
+      sub_total: configSubTotal(current.order_qty, current.price, discount, current.discOption),
     }
     if (!Number.isNaN(discount) && discount >= 0) {
       dispatch({
@@ -162,6 +187,20 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
         payload: newData,
       })
     }
+  }
+  function handleChangeDiscOption(value: string, index: number) {
+    const current = state.data[index]
+    const newData = [...state.data]
+    newData[index] = {
+      ...current,
+      discount: 0,
+      discOption: value,
+      sub_total: current.order_qty * current.price,
+    }
+    dispatch({
+      type: 'data',
+      payload: newData,
+    })
   }
   function handleChangeRemarks(value: string, index: number) {
     const newData = [...state.data]
@@ -228,8 +267,8 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
     })
   }
   function isNullProduct(index: number) {
-    const { product_id } = state.data[index]
-    return ![...new Set(state.allProduct.map((p) => p.product_id))].includes(product_id)
+    const current = state.data[index]
+    return ![...new Set(state.allProduct.map((p) => p.product_id))].includes(current.product_id)
   }
   function handleSize() {
     function getWidth(key: keyof DataProduct) {
@@ -261,9 +300,56 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
     })
   }
   function addDataFromFetch(payload: States['data']) {
+    const ids = payload.map((p) => p.product_id)
+    const newAllProduct = [...state.allProduct].map((p) => {
+      if (ids.includes(p.product_id)) {
+        const uoms = payload.filter((e) => e.product_id === p.product_id).map((e) => e.uom_id)
+        if (uoms.includes(p.uom_id)) {
+          const findIndex = payload.findIndex(
+            (e) => e.product_id === p.product_id && e.uom_id === p.uom_id,
+          )
+          return { ...p, booked: true, bookByIndex: findIndex }
+        }
+        return p
+      }
+      return p
+    })
+    dispatch({
+      type: 'allProduct',
+      payload: newAllProduct,
+    })
     dispatch({
       type: 'data',
       payload,
+    })
+  }
+  function addItem() {
+    const newLine: DataProduct = {
+      name: '',
+      order_qty: 1,
+      price: 0,
+      product_id: '',
+      sub_total: 0,
+      uom_id: '',
+      discOption: 'Rp',
+      discount: 0,
+      remarks: '',
+    }
+    dispatch({
+      type: 'data',
+      payload: [...state.data, newLine],
+    })
+  }
+  function handleConfirmRemove(payload: string) {
+    dispatch({
+      type: 'confirmRemove',
+      payload,
+    })
+  }
+  function hideConfirmRemove() {
+    dispatch({
+      type: 'confirmRemove',
+      payload: undefined,
     })
   }
 
@@ -280,5 +366,9 @@ export function baseHandler(state: States, dispatch: ReturnType<typeof React.use
     isNullProduct,
     handleSize,
     addDataFromFetch,
+    addItem,
+    handleConfirmRemove,
+    hideConfirmRemove,
+    handleChangeDiscOption,
   }
 }

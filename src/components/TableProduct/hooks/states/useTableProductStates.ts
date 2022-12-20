@@ -6,9 +6,8 @@ import { baseReducer } from './reducer'
 import { States } from './states'
 
 export function useTableProductStates() {
-  const initialData: any[] = []
-  for (let i = 0; i < 10; i++) {
-    initialData.push({
+  const initialData: any[] = [
+    {
       product_id: '',
       name: '',
       uom_id: '',
@@ -18,11 +17,12 @@ export function useTableProductStates() {
       discOption: 'Rp',
       price: 0,
       remarks: '',
-    })
-  }
+    },
+  ]
   const initialValue: States = {
     allProduct: [],
     data: initialData,
+    isLoading: true,
     size: { discount: 0, product: 0, quantity: 0 },
   }
   const [state, dispatch] = React.useReducer(baseReducer, initialValue)
