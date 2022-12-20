@@ -30,24 +30,25 @@ export default function SectionField() {
       <Col span={8}>
         <DebounceSelect
           type="select"
-          label="Sales Organization"
-          placeholder={'Select'}
-          value={dataForm?.sales_org_id}
-          options={optionsSalesOrg}
+          label="Sold To Customer"
+          required
+          value={dataForm?.customer_id}
+          fetchOptions={fieldCustomer}
           onChange={(e: any) => {
-            onChangeForm('sales_org_id', e.value)
+            onChangeForm('customer_id', e.value)
+            setFetching('customer')
           }}
         />
       </Col>
       <Col span={8}>
         <DebounceSelect
           type="select"
-          label="Branch"
+          label="Ship To Customer"
           placeholder={'Select'}
-          value={dataForm?.branch_id}
-          options={optionsBranch}
+          value={dataForm?.ship_to_id}
+          options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
           onChange={(e: any) => {
-            onChangeForm('branch_id', e.value)
+            onChangeForm('ship_to_id', e.value)
           }}
         />
       </Col>
@@ -69,25 +70,24 @@ export default function SectionField() {
       <Col span={8}>
         <DebounceSelect
           type="select"
-          label="Sold To Customer"
-          required
-          value={dataForm?.customer_id}
-          fetchOptions={fieldCustomer}
+          label="Sales Organization"
+          placeholder={'Select'}
+          value={dataForm?.sales_org_id}
+          options={optionsSalesOrg}
           onChange={(e: any) => {
-            onChangeForm('customer_id', e.value)
-            setFetching('customer')
+            onChangeForm('sales_org_id', e.value)
           }}
         />
       </Col>
       <Col span={8}>
         <DebounceSelect
           type="select"
-          label="Ship To Customer"
+          label="Branch"
           placeholder={'Select'}
-          value={dataForm?.ship_to_id}
-          options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+          value={dataForm?.branch_id}
+          options={optionsBranch}
           onChange={(e: any) => {
-            onChangeForm('ship_to_id', e.value)
+            onChangeForm('branch_id', e.value)
           }}
         />
       </Col>

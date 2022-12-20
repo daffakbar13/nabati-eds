@@ -3,14 +3,24 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable radix */
 import { ColumnsType } from 'antd/lib/table'
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 
 export const ColumnsSalesOrder = [
   CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
   CreateColumns('Item', 'description', false, undefined, 300),
   CreateColumns('Item Category', 'item_category_id', false, undefined, 137),
   CreateColumns('Uom', 'uom_id', false, undefined, 70),
-  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
+  CreateColumns('Quantity Order', 'order_qty', false, undefined, 170),
+  CreateColumns('Quantity Booking', 'confirm_qty', false, undefined, 170),
+
+  // addColumn({
+  //   title: 'Quantity Order',
+  //   dataIndex: 'order_qty',
+  // }),
+  // addColumn({
+  //   title: 'Quantity Booking',
+  //   dataIndex: 'confirm_qty',
+  // }),
   CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
   // FIXME Sub Total
   CreateColumns(
@@ -49,7 +59,9 @@ export const ColumnsDocumentFlow = [
 
 export const ColumnsCustomerInfo = [
   CreateColumns('Salesman', 'id', false, (id, { name }) => [id, name].join(' - ')),
-  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) => [id, salesman_group_name].join(' - ')),
+  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) =>
+    [id, salesman_group_name].join(' - '),
+  ),
 ]
 
 export const ColumnsPricingCondition = [
@@ -60,7 +72,15 @@ export const ColumnsPricingCondition = [
   CreateColumns('Promotion Type', 'Doc. Number', false, undefined, 150),
   CreateColumns('Name', 'description', false, undefined, 250),
   CreateColumns('Uom', 'uom_id', false, undefined, 80),
-  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
+  addColumn({
+    title: 'Quantity Order',
+    dataIndex: 'order_qty',
+  }),
+  addColumn({
+    title: 'Quantity Booking',
+    dataIndex: 'confirm_qty',
+  }),
+  // CreateColumns('Quantity', 'order_qty', false, undefined, 100),
   CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
   CreateColumns(
     'Gross',

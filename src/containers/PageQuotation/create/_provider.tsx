@@ -10,7 +10,8 @@ import { getDetailQuotation } from 'src/api/quotation'
 import { PATH } from 'src/configs/menus'
 import { useSalesQuotationCreateProvider } from 'src/hooks/contexts'
 import { concatString } from 'src/utils/concatString'
-import { useTableProduct } from './columns'
+import { useTableProduct } from './useTableProduct'
+// import { useTableProduct } from './columns'
 
 export interface PayloadCreate {
   company_id?: string

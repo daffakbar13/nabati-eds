@@ -12,7 +12,8 @@ export const ColumnsDeliveryOrder = [
   CreateColumns('Item', 'item', false, undefined, 300),
   CreateColumns('Item Category', 'item_category', false, undefined, 137),
   CreateColumns('Uom', 'uom', false, undefined, 70),
-  CreateColumns('Quantity', 'qty', false, undefined, 100),
+  CreateColumns('Quantity Order', 'qty', false, undefined, 170),
+  CreateColumns('Quantity DO', 'confrim_qty', false, undefined, 170),
   CreateColumns(
     'Based Price',
     'base_price',
