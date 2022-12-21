@@ -2,8 +2,8 @@
 /* eslint-disable camelcase */
 import { useRouter } from 'next/router'
 import React from 'react'
+import { useTableProduct } from 'src/components/TableProduct/hooks'
 import { useSalesQuotationCreateProvider } from 'src/hooks/contexts'
-import { useTableProduct } from './useTableProduct'
 
 export interface PayloadCreate {
   company_id?: string
@@ -36,12 +36,12 @@ export default function SalesQuotationCreateProvider(
   const router = useRouter()
 
   React.useEffect(() => {
-    onChangeForm('items', tableProduct.data)
-  }, [tableProduct.data])
+    onChangeForm('items', tableProduct.state.data)
+  }, [tableProduct.state.data])
 
   React.useEffect(() => {
-    getDataFromDetail()
-  }, [router, optionsOrderType])
+    getDataFromDetail(tableProduct)
+  }, [router, optionsOrderType, tableProduct.state.isLoading])
 
   React.useEffect(() => {
     handleFetching()
@@ -49,7 +49,7 @@ export default function SalesQuotationCreateProvider(
 
   React.useEffect(() => {
     handleCanSubmit()
-  }, [dataForm, tableProduct.data])
+  }, [dataForm, tableProduct.state.data])
 
   React.useEffect(() => {
     getDocType()

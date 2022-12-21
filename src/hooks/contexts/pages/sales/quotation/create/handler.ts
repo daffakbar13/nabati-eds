@@ -1,9 +1,11 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable space-before-function-paren */
 /* eslint-disable camelcase */
 import { useRouter } from 'next/router'
 import React from 'react'
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import { getDetailQuotation } from 'src/api/quotation'
+import { useTableProduct } from 'src/components/TableProduct/hooks'
 import { PATH } from 'src/configs/menus'
 import { concatString } from 'src/utils/concatString'
 import { DispatchType } from './reducer'
@@ -129,9 +131,12 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
     })
   }
 
-  function getDataFromDetail() {
+  function getDataFromDetail(table: ReturnType<typeof useTableProduct>) {
     const now = new Date().toISOString()
-    if (router.query.id && optionsOrderType?.length > 0) {
+    console.log(table.state.allProduct.filter((e) => e.booked))
+
+    if (router.query.id && optionsOrderType?.length > 0 && !table.state.isLoading) {
+      runProcess('Wait for get data')
       getDetailQuotation({ id: router.query.id as string })
         .then((response) => {
           const { data } = response
@@ -152,6 +157,19 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
             customer_ref: data.customer_ref,
             currency_id: 'IDR',
           })
+          const dataItems: typeof table.state.data = data.items.map((p) => ({
+            name: p.description,
+            order_qty: p.order_qty,
+            price: p.price,
+            product_id: p.product_id,
+            sub_total: p.gross_value,
+            uom_id: p.uom_id,
+            discOption: 'Rp',
+            discount: p.discount_value,
+            remarks: p.remarks,
+          }))
+          table.handler.addDataFromFetch(dataItems)
+          stopProcess()
           setFetching('load-options')
           if (data.status_id === '1') setCanSaveAsDraft(false)
         })

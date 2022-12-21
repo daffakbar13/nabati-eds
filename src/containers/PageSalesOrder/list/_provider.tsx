@@ -12,7 +12,7 @@ export default function SalesSalesOrderListProvider(
     funcApi: getSalesOrder,
     haveCheckBox: [
       { rowKey: 'status_name', member: ['New'] },
-      { rowKey: 'Availibility', member: ['Available', 'Partial'] },
+      { rowKey: 'status_availability_name', member: ['Available', 'Partial'] },
     ],
     columns: useColumnSalesOrder,
   })
