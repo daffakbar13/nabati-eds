@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 /* eslint-disable no-shadow */
 import React from 'react'
 import { CommonDetailParams } from 'src/api/types'
@@ -16,15 +16,16 @@ export default function useDetail(
   }
 
   React.useEffect(() => {
-    if (!Object.values(params).includes(undefined)) { // handling for bugs error when refresh page
+    if (!Object.values(params).includes(undefined)) {
+      // handling for bugs error when refresh page
       if (strict && (router.query.status === 'Draft' || !router.query.status)) {
         throwToPageList()
-    }
+      }
       funcApi(params)
         .then((results) => setData(results.data))
         .catch(() => {
-        throwToPageList()
-      })
+          throwToPageList()
+        })
     }
   }, [router.query])
 

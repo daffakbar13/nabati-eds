@@ -61,7 +61,6 @@ export const getConfigSlocCompanyDetail = async (
     method: METHODS.GET,
     subUrl: `${url}/detail_sloc_company/${companyId}/${key}/${slocId}`,
     overrideBaseUrl,
-
   })
   return response.data
 }

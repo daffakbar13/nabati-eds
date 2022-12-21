@@ -58,7 +58,6 @@ export const getConfigTaxRegulatorDetail = async (
     method: METHODS.GET,
     subUrl: `${url}/detail/${companyId}/${taxSubject}`,
     overrideBaseUrl,
-
   })
   return response.data
 }

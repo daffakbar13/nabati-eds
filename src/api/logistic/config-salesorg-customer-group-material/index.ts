@@ -1,10 +1,10 @@
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
 import {
-    CommonListResponse,
-    CommonDetailResponse,
-    CommonListParams,
-    CommonDetailParams,
+  CommonListResponse,
+  CommonDetailResponse,
+  CommonListParams,
+  CommonDetailParams,
 } from 'src/api/types'
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { ListSalesORGCustomerGroupMaterial } from './types'
@@ -16,52 +16,69 @@ const urlCreateSO = 'v1/configuration/create_so_customer_group_mat'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getListSalesORGCustomerGroupMaterial = async (
-    params: CommonListParams = {},
+  params: CommonListParams = {},
 ): Promise<CommonListResponse<ListSalesORGCustomerGroupMaterial>> => {
-    const response = await call({
-        method: METHODS.POST,
-        subUrl: `${url}`,
-        overrideBaseUrl,
-        data: params,
-    })
-    return response.data
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
 }
 
 export const createSalesORGCustomerGroupMaterial = async (payload: any) => {
-    const response = await call({
-        method: METHODS.POST,
-        subUrl: `${urlCreateSO}`,
-        overrideBaseUrl,
-        data: payload,
-    })
-    return response.data
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${urlCreateSO}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
 }
 
-export const getDetailSalesORGCustomerGroupMaterial = async (company_id: string, sales_org_id: string, customer_group_id: string, product_id: string) => {
-    const response = await call({
-        method: METHODS.GET,
-        subUrl: `${urlSO}/detail/${company_id}/${sales_org_id}/${customer_group_id}/${product_id}`,
-        overrideBaseUrl,
-    })
-    return response.data
+export const getDetailSalesORGCustomerGroupMaterial = async (
+  company_id: string,
+  sales_org_id: string,
+  customer_group_id: string,
+  product_id: string,
+) => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${urlSO}/detail/${company_id}/${sales_org_id}/${customer_group_id}/${product_id}`,
+    overrideBaseUrl,
+  })
+  return response.data
 }
 
-export const updateSalesORGCustomerGroupMaterial = async (company_id: string, sales_org_id: string, customer_group_id: string, product_id: string, payload: any) => {
-    const response = await call({
-        method: METHODS.PUT,
-        subUrl: `${urlSO}/edit/${company_id}/${sales_org_id}/${customer_group_id}/${product_id}`,
-        overrideBaseUrl,
-        data: payload,
-    })
-    return response.data
+export const updateSalesORGCustomerGroupMaterial = async (
+  company_id: string,
+  sales_org_id: string,
+  customer_group_id: string,
+  product_id: string,
+  payload: any,
+) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${urlSO}/edit/${company_id}/${sales_org_id}/${customer_group_id}/${product_id}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
 }
 
-export const UpdateStatusSalesORGCustomerGroupMaterial = async (company_id: string, sales_org_id: string, customer_group_id: string, product_id: string, payload: any) => {
-    const response = await call({
-        method: METHODS.PUT,
-        subUrl: `${urlSO}/edit_status/${company_id}/${sales_org_id}/${customer_group_id}/${product_id}`,
-        overrideBaseUrl,
-        data: payload,
-    })
-    return response.data
+export const UpdateStatusSalesORGCustomerGroupMaterial = async (
+  company_id: string,
+  sales_org_id: string,
+  customer_group_id: string,
+  product_id: string,
+  payload: any,
+) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${urlSO}/edit_status/${company_id}/${sales_org_id}/${customer_group_id}/${product_id}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
 }

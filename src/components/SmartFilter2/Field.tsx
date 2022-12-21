@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { Children, useEffect, useState } from 'react'
 import { Text } from 'pink-lava-ui'
 import { Container } from './styledComponent'
 import SelectOptionIcon from './OptionIcon'
+import moment from 'moment'
 
 const checkIsEvent = (obj: any) => !!obj?.target
 
@@ -18,9 +19,31 @@ export default function SingleField({
   field,
   dataType,
 }) {
-  const hasMultipleChildren = Array.isArray(children)
-  const hasOneChildren = !hasMultipleChildren
+  const [hasMultipleChildren, setMultipleChildren] = useState<Boolean>()
+  const [hasOneChildren, sethasOneChildren] = useState<Boolean>()
   const hasNoChildren = !!children
+
+  useEffect(() => {
+    if (value?.option) {
+      if (value?.option == 'EQ' || value?.option == 'NE') {
+        setMultipleChildren(false)
+        sethasOneChildren(true)
+      }
+
+      if (value?.option != 'EQ' && value?.option != 'NE' && value?.option != '') {
+        setMultipleChildren(true)
+        sethasOneChildren(false)
+      }
+    } else {
+      if (options[0] == 'EQ' || options[0] == 'NE') {
+        setMultipleChildren(false)
+        sethasOneChildren(true)
+      } else {
+        setMultipleChildren(true)
+        sethasOneChildren(false)
+      }
+    }
+  }, [value?.option, options])
 
   if (!hasNoChildren) {
     throw new Error(
@@ -60,12 +83,29 @@ export default function SingleField({
       <SelectOptionIcon options={options} onChange={onOptionChange} value={value?.option} />
 
       {hasOneChildren &&
+        !Array.isArray(children) &&
         React.cloneElement(children, {
           ...children.props,
           style: { ...children.props.style, gridColumnStart: 'span 3' },
-          onChange: (...arg: any) => {
+          onChange: (arg: any) => {
             onFromValueChange(arg)
-            children.props.onChange(arg)
+            if (children.props.onChange) {
+              children.props.onChange(arg)
+            }
+          },
+          value: value?.fromValue || undefined,
+        })}
+
+      {hasOneChildren &&
+        Array.isArray(children) &&
+        React.cloneElement(children[0], {
+          ...children[0].props,
+          style: { ...children[0].props.style, gridColumnStart: 'span 3' },
+          onChange: (arg: any) => {
+            onFromValueChange(arg)
+            if (children[0].props.onChange) {
+              children[0].props.onChange(arg)
+            }
           },
           value: value?.fromValue || undefined,
         })}
@@ -76,9 +116,11 @@ export default function SingleField({
             {React.cloneElement(children[0], {
               ...children[0].props,
               // onChange: onFromValueChange,
-              onChange: (...arg: any) => {
+              onChange: (arg: any) => {
                 onFromValueChange(arg)
-                children[0].props.onChange(arg)
+                if (children[0].props.onChange) {
+                  children[0].props.onChange(arg)
+                }
               },
               value: value?.fromValue || undefined,
             })}
@@ -88,9 +130,11 @@ export default function SingleField({
             {React.cloneElement(children[1], {
               ...children[1].props,
               // onChange: onToValueChange,
-              onChange: (...arg: any) => {
+              onChange: (arg: any) => {
                 onToValueChange(arg)
-                children[0].props.onChange(arg)
+                if (children[0].props.onChange) {
+                  children[0].props.onChange(arg)
+                }
               },
               value: value?.toValue || undefined,
             })}

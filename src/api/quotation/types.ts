@@ -72,12 +72,12 @@ export interface QuotationDetailResult {
       readonly sloc_id: string
       readonly status_id: string
       readonly description: string
-      readonly order_qty: string
+      readonly order_qty: number
       readonly confirm_qty: string
       readonly base_qty: string
-      readonly price: string
-      readonly gross_value: string
-      readonly discount_value: string
+      readonly price: number
+      readonly gross_value: number
+      readonly discount_value: number
       readonly tax_value: string
       readonly dpp_value: string
       readonly net_exclude: string

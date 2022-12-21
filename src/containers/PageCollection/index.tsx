@@ -21,7 +21,7 @@ function showTotal(total: number, range: number[]) {
 export default function PageCollection(props: PageCollectionProps) {
   const table = useTable({
     funcApi: getCollectionList,
-    haveCheckBox: { rowKey: 'status', member: ['new'] },
+    haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')

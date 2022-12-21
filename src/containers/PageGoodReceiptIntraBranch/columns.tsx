@@ -101,13 +101,7 @@ export const columns = [
     180,
     'left',
   ),
-  CreateColumns(
-    'Posting Date',
-    'posting_date',
-    false,
-    (date) => dateFormat(date),
-    180,
-  ),
+  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date), 180),
   CreateColumns('Company', 'company_id', false, (company_id, rec) => (
     <>{`${company_id} - ${rec.company_name}`}</>
   )),

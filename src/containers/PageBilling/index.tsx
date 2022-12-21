@@ -28,7 +28,7 @@ export default function PageBilling(props: PageBillingProps) {
   const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getBilling,
-    haveCheckBox: { rowKey: 'status', member: ['New'] },
+    haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
     columns: TableBilling,
   })
   const hasData = table.state.total > 0

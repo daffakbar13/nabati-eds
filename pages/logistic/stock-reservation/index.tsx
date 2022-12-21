@@ -1,10 +1,10 @@
 import React from 'react'
 import PageStockReservation from 'src/containers/PageStockReservation'
 
-interface Props { }
+interface Props {}
 
 export default function StockReservation(props: Props) {
-    const { } = props
+  const {} = props
 
-    return <PageStockReservation />
+  return <PageStockReservation />
 }

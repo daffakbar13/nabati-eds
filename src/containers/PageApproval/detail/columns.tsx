@@ -5,48 +5,12 @@
 import CreateColumns from 'src/utils/createColumns'
 
 export const tableApproval = [
-  CreateColumns(
-    'No',
-    'no',
-    false,
-    (_, __, index) => ++index,
-    60,
-  ),
-  CreateColumns(
-    'Item',
-    'description',
-    false,
-    undefined,
-    300,
-  ),
-  CreateColumns(
-    'Item Category',
-    'item_category_id',
-    false,
-    undefined,
-    150,
-  ),
-  CreateColumns(
-    'Uom',
-    'uom_id',
-    false,
-    undefined,
-    100,
-  ),
-  CreateColumns(
-    'Quantity',
-    'order_qty',
-    false,
-    undefined,
-    100,
-  ),
-  CreateColumns(
-    'Based Price',
-    'price',
-    false,
-    (price) => parseInt(price).toLocaleString(),
-    120,
-  ),
+  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60),
+  CreateColumns('Item', 'description', false, undefined, 300),
+  CreateColumns('Item Category', 'item_category_id', false, undefined, 150),
+  CreateColumns('Uom', 'uom_id', false, undefined, 100),
+  CreateColumns('Quantity', 'order_qty', false, undefined, 100),
+  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
   CreateColumns(
     'Gross',
     'gross_value',
@@ -69,10 +33,7 @@ export const tableApproval = [
     (_, record) => ((record.price - record.discount_value) * record.order_qty).toLocaleString(),
     130,
   ),
-  CreateColumns(
-    'Remarks',
-    'remarks',
-  ),
+  CreateColumns('Remarks', 'remarks'),
 ]
 
 export const TableDocumentFlow = [

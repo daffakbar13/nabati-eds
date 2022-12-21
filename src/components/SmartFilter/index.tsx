@@ -2,7 +2,13 @@ import React, { useState, useCallback, useRef, useMemo } from 'react'
 import { FilterOption } from 'src/configs/filterType'
 import { Button, Row, Modal } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
-import { fieldBranchAll, fieldQuotationType, fieldSalesOrg, fieldShipToCustomer, fieldSoldToCustomer } from 'src/configs/fieldFetches'
+import {
+  fieldBranchAll,
+  fieldQuotationType,
+  fieldSalesOrg,
+  fieldShipToCustomer,
+  fieldSoldToCustomer,
+} from 'src/configs/fieldFetches'
 import SingleFilter from './SingleFilter'
 
 interface FILTER_TYPE {

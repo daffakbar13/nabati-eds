@@ -1,10 +1,10 @@
 import React from 'react'
 import PageGIDisposalDetail from 'src/containers/PageGIDisposal/detail'
 
-interface Props { }
+interface Props {}
 
 export default function GIDisposalDetail(props: Props) {
-    const { } = props
+  const {} = props
 
-    return <PageGIDisposalDetail />
+  return <PageGIDisposalDetail />
 }

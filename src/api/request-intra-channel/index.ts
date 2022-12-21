@@ -36,9 +36,7 @@ export const getDetailRequestIntraChannel = async (
   return response.data
 }
 
-export const getSloc = async (
-  params: CommonDetailParams,
-): Promise<CommonDetailResponse<any>> => {
+export const getSloc = async (params: CommonDetailParams): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${overrideBaseUrlMaster}${subUrlMaster}/get-config-sloc/${params.id}`,
@@ -62,7 +60,7 @@ export const ChangeStatus = async (payload: any) => {
     overrideBaseUrl,
     subUrl: `${subUrl}/edit/${payload.id}`,
     data: {
-      status_id: payload.status_id
+      status_id: payload.status_id,
     },
   })
   return response.data

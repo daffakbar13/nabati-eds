@@ -1,10 +1,10 @@
 import React from 'react'
 import PageIntraSlocRequest from 'src/containers/PageIntraSlocRequest'
 
-interface Props { }
+interface Props {}
 
 export default function RequestIntraSloc(props: Props) {
-    const { } = props
+  const {} = props
 
-    return <PageIntraSlocRequest />
+  return <PageIntraSlocRequest />
 }

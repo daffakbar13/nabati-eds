@@ -3,3 +3,4 @@ __generated__
 .now
 .vscode/settings.json
 .devcontainer
+vendor

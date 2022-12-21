@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
-import { InputNumber } from 'antd'
+import { InputNumber, Input } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { productBranch, fieldUom, itemReceiver } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
@@ -41,12 +41,18 @@ export const useTableAddItem = (props: propsUseTable) => {
     }
   }, [props.idSupplyingBranch, props.idReceivingBranch])
 
+  React.useEffect(() => {
+    console.log('data submit :', data)
+  }, [data])
+
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
   }
 
   function handleChangePlaceHolder(key: string, value: string | number, index: number) {
-    setPlaceholder((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
+    setPlaceholder((old_placeholder) =>
+      old_placeholder.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })),
+    )
   }
 
   function isNullProductId(index: number) {
@@ -55,6 +61,7 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   function handleDeleteRows(index: number) {
     setData(data.filter((_, i) => i !== index))
+    setPlaceholder(placeholder.filter((_, i) => i !== index))
   }
 
   function handleAddItem() {
@@ -144,16 +151,23 @@ export const useTableAddItem = (props: propsUseTable) => {
       ),
       150,
     ),
-    CreateColumns('Batch', 'batch', false, (_, __, index) => (
-      <DebounceSelect
-        type="input"
-        placeholder="e.g Testing"
-        onChange={(e) => {
-          console.log(e)
-          handleChangeData('batch', e.target.value, index)
-        }}
-      />
-    )),
+    CreateColumns(
+      'Batch',
+      'batch',
+      false,
+      (batch, __, index) => (
+        <DebounceSelect
+          type="input"
+          placeholder="e.g Testing"
+          value={batch as any}
+          onChange={(e) => {
+            console.log(e)
+            handleChangeData('batch', e.target.value, index)
+          }}
+        />
+      ),
+      150,
+    ),
   ]
 
   const columnsSender = [
@@ -238,10 +252,11 @@ export const useTableAddItem = (props: propsUseTable) => {
       ),
       150,
     ),
-    CreateColumns('Batch', 'batch', false, (_, __, index) => (
+    CreateColumns('Batch', 'batch', false, (batch, __, index) => (
       <DebounceSelect
         type="input"
         placeholder="e.g Testing"
+        value={batch as any}
         onChange={(e) => {
           console.log(e)
           handleChangeData('batch', e.target.value, index)
@@ -269,10 +284,10 @@ export const useTableAddItem = (props: propsUseTable) => {
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)
           })
-          itemReceiver(product_id).then((response) => {
+          itemReceiver(product_id, 'Channel').then((response) => {
             const newValueItemSender = [...valueItemSender]
-            handleChangeData('product_receiver_id', response.product_mt, index)
-            newValueItemSender[index] = `${response.product_mt} - ${response.product_mt_name}`
+            handleChangeData('product_receiver_id', response?.product_mt || '', index)
+            newValueItemSender[index] = `${response?.product_mt} - ${response?.product_mt_name}`
             setValueItemSender(newValueItemSender)
           })
         }

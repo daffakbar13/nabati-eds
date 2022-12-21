@@ -1,10 +1,10 @@
 import React from 'react'
 import PagePoSToDetail from 'src/containers/PagePoSto/detail/index'
 
-interface PoSToDetailProps { }
+interface PoSToDetailProps {}
 
 export default function QuotationDetail(props: PoSToDetailProps) {
-    const { } = props
+  const {} = props
 
-    return <PagePoSToDetail />
+  return <PagePoSToDetail />
 }

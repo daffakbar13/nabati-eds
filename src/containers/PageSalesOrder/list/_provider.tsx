@@ -10,7 +10,10 @@ export default function SalesSalesOrderListProvider(
   const { children } = props
   const table = useTable({
     funcApi: getSalesOrder,
-    haveCheckBox: { rowKey: 'status_name', member: ['New'] },
+    haveCheckBox: [
+      { rowKey: 'status_name', member: ['New'] },
+      { rowKey: 'status_availability_name', member: ['Available', 'Partial'] },
+    ],
     columns: useColumnSalesOrder,
   })
   const SalesQuotationList = useSalesSalesOrderListProvider()

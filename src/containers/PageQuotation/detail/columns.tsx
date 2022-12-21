@@ -9,10 +9,12 @@ export const ColumnsQuotation = [
   addColumn({
     title: 'No',
     render: (_, __, i) => ++i,
+    fixed: true,
   }),
   addColumn({
     title: 'Item',
     dataIndex: 'description',
+    fixed: true,
   }),
   addColumn({
     title: 'Item Category',
@@ -26,6 +28,10 @@ export const ColumnsQuotation = [
     title: 'Quantity',
     dataIndex: 'order_qty',
   }),
+  // addColumn({
+  //   title: 'Quantity Booking',
+  //   dataIndex: 'order_qty',
+  // }),
   addColumn({
     title: 'Based Price',
     dataIndex: 'price',
@@ -54,5 +60,7 @@ export const ColumnsDocumentFlow = [
 
 export const ColumnsCustomerInfo = [
   CreateColumns('Salesman', 'id', false, (id, { name }) => [id, name].join(' - ')),
-  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) => [id, salesman_group_name].join(' - ')),
+  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) =>
+    [id, salesman_group_name].join(' - '),
+  ),
 ]

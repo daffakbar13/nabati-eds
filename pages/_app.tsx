@@ -1,5 +1,5 @@
 /* eslint-disable no-plusplus */
-import { useState, useEffect } from 'react'
+import React from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
@@ -10,6 +10,7 @@ import 'pink-lava-ui/index.css'
 import 'src/styles/globals.css'
 import { useTitle } from 'src/hooks'
 import Loader from 'src/components/Loader'
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   // eslint-disable-next-line no-unused-vars
@@ -21,7 +22,8 @@ type AppPropsWithLayout = AppProps & {
 }
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
-  const [loading, setLoading] = useState(false)
+  const [queryClient] = React.useState(() => new QueryClient())
+  const [loading, setLoading] = React.useState(false)
   const router = useRouter()
 
   // Use the layout defined at the page level, if available
@@ -52,7 +54,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     setLoading(false)
   }
 
-  useEffect(() => {
+  React.useEffect(() => {
     router.events.on('routeChangeStart', handleStart)
     router.events.on('routeChangeComplete', handleStop)
     router.events.on('routeChangeError', handleStop)
@@ -66,7 +68,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, [router])
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Head>
         <title>EDS - {title}</title>
       </Head>
@@ -74,6 +76,6 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         {loading && getLayout(<Loader />)}
         {!loading && getLayout(<Component {...pageProps} />)}
       </>
-    </>
+    </QueryClientProvider>
   )
 }

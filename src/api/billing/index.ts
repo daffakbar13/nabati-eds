@@ -53,4 +53,3 @@ export const UpdateBilling = async (payload: any) => {
   })
   return response.data
 }
-

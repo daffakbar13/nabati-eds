@@ -8,7 +8,7 @@ export default function SectionLoader() {
   } = useSalesQuotationCreateContext()
   return (
     <>
-      {(processing || tableProduct.isLoading) && (
+      {(processing || tableProduct.state.isLoading) && (
         <Loader type="process" text={processing || 'Wait for get data products'} />
       )}
     </>

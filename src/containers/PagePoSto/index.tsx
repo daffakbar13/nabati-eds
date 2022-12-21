@@ -97,14 +97,20 @@ export default function PagePoSto(props: Props) {
               allowClear
             />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field="company_id" dataType="S" label="Company" options={['EQ']}>
+              <SmartFilter.Field
+                field="company_id"
+                dataType="S"
+                label="Company"
+                options={['EQ', 'NE', 'GE', 'LE', 'GT', 'LT']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="suppl_branch_id"
                 dataType="S"
                 label="Supplying Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'GE', 'LE', 'GT', 'LT']}
               >
                 <DebounceSelect
                   type="select"
@@ -113,13 +119,19 @@ export default function PagePoSto(props: Props) {
                     console.log('OKE CHANGED')
                   }}
                 />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('OKE CHANGED')
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="receive_branch_id"
                 dataType="S"
                 label="Receiving Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'GE', 'LE', 'GT', 'LT']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
@@ -128,7 +140,7 @@ export default function PagePoSto(props: Props) {
                 field="posting_date"
                 dataType="S"
                 label="Posting Date"
-                options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
+                options={['GE', 'LE', 'GT', 'LT', 'EQ', 'NE']}
               >
                 <DatePickerInput
                   label={''}

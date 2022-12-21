@@ -39,7 +39,7 @@ export default function PageApproval(props: PageApprovalProps) {
   ])
   const table = useTable({
     funcApi: getApprovalList,
-    haveCheckBox: { rowKey: 'status_approved_name', member: ['Wait For Approval'] },
+    haveCheckBox: [{ rowKey: 'status_approved_name', member: ['Wait For Approval'] }],
     columns: useColumnApproval,
   })
   const titlePage = useTitlePage('list')

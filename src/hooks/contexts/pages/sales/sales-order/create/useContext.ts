@@ -6,41 +6,41 @@ import { baseReducer, DispatchType } from './reducer'
 import { StateType } from './state'
 
 interface ctxType {
-    state: StateType
-    handler: ReturnType<typeof useHandler>
+  state: StateType
+  handler: ReturnType<typeof useHandler>
 }
 const ctx = React.createContext<ctxType>(undefined)
 
 export function useSalesSalesOrderCreateProvider() {
-    const now = new Date().toISOString()
-    const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
-    const initialValue: StateType = {
-        canSaveAsDraft: true,
-        optionsBranch: [],
-        optionsOrderType: [],
-        optionsSalesman: [],
-        optionsSalesOrg: [],
-        dataForm: {
-            company_id: 'PP01',
-            source_id: 'Z02',
-            order_date: now,
-            delivery_date: tomorrow,
-            pricing_date: now,
-            valid_from: now,
-            valid_to: tomorrow,
-            customer_ref: '',
-            currency_id: 'IDR',
-            term_id: 'Z000',
-        },
-    }
-    return useCreatePageProvider<
-        ctxType,
-        StateType,
-        DispatchType,
-        typeof useHandler
-    >(ctx, baseReducer, useHandler, initialValue)
+  const now = new Date().toISOString()
+  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()
+  const initialValue: StateType = {
+    canSaveAsDraft: true,
+    optionsBranch: [],
+    optionsOrderType: [],
+    optionsSalesman: [],
+    optionsSalesOrg: [],
+    dataForm: {
+      company_id: 'PP01',
+      source_id: 'Z02',
+      order_date: now,
+      delivery_date: tomorrow,
+      pricing_date: now,
+      valid_from: now,
+      valid_to: tomorrow,
+      customer_ref: '',
+      currency_id: 'IDR',
+      term_id: 'Z000',
+    },
+  }
+  return useCreatePageProvider<ctxType, StateType, DispatchType, typeof useHandler>(
+    ctx,
+    baseReducer,
+    useHandler,
+    initialValue,
+  )
 }
 
 export function useSalesSalesOrderCreateContext() {
-    return React.useContext(ctx)
+  return React.useContext(ctx)
 }

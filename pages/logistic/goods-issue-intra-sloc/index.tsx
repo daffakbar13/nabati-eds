@@ -1,10 +1,10 @@
 import React from 'react'
 import PageIntraSlocGoodIssue from 'src/containers/PageIntraSlocGoodIssue'
 
-interface Props { }
+interface Props {}
 
 export default function GoodIssueIntraSloc(props: Props) {
-    const { } = props
+  const {} = props
 
-    return <PageIntraSlocGoodIssue />
+  return <PageIntraSlocGoodIssue />
 }

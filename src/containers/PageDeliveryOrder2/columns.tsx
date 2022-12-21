@@ -4,7 +4,7 @@
 import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
-import { PATH } from 'src/configs/menus';
+import { PATH } from 'src/configs/menus'
 import React from 'react'
 import TaggedStatus from 'src/components/TaggedStatus'
 

@@ -1,16 +1,9 @@
-/* eslint-disable function-paren-newline */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import { useRouter } from 'next/router'
 import React from 'react'
-import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
-import { getDetailQuotation } from 'src/api/quotation'
-import { PATH } from 'src/configs/menus'
+import { useTableProduct } from 'src/components/TableProduct/hooks'
 import { useSalesQuotationCreateProvider } from 'src/hooks/contexts'
-import { concatString } from 'src/utils/concatString'
-import { useTableProduct } from './columns'
 
 export interface PayloadCreate {
   company_id?: string
@@ -43,12 +36,12 @@ export default function SalesQuotationCreateProvider(
   const router = useRouter()
 
   React.useEffect(() => {
-    onChangeForm('items', tableProduct.data)
-  }, [tableProduct.data])
+    onChangeForm('items', tableProduct.state.data)
+  }, [tableProduct.state.data])
 
   React.useEffect(() => {
-    getDataFromDetail()
-  }, [router, optionsOrderType])
+    getDataFromDetail(tableProduct)
+  }, [router, optionsOrderType, tableProduct.state.isLoading])
 
   React.useEffect(() => {
     handleFetching()
@@ -56,7 +49,7 @@ export default function SalesQuotationCreateProvider(
 
   React.useEffect(() => {
     handleCanSubmit()
-  }, [dataForm, tableProduct.data])
+  }, [dataForm, tableProduct.state.data])
 
   React.useEffect(() => {
     getDocType()

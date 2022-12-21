@@ -1,10 +1,10 @@
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
 import {
-    CommonListResponse,
-    CommonDetailResponse,
-    CommonListParams,
-    CommonDetailParams,
+  CommonListResponse,
+  CommonDetailResponse,
+  CommonListParams,
+  CommonDetailParams,
 } from 'src/api/types'
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { GoodIssueList, GoodIssueDetail } from './type'
@@ -15,24 +15,24 @@ const urlDetail = 'v1/material-doc/goodIssue'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
 export const getGoodIssueList = async (
-    params: CommonListParams = {},
+  params: CommonListParams = {},
 ): Promise<CommonListResponse<GoodIssueList>> => {
-    const response = await call({
-        method: METHODS.POST,
-        subUrl: `${url}/list`,
-        overrideBaseUrl,
-        data: params,
-    })
-    return response.data
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/list`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
 }
 
 export const getGoodIssueDetail = async (
-    params: any = {},
+  params: any = {},
 ): Promise<CommonListResponse<GoodIssueDetail>> => {
-    const response = await call({
-        method: METHODS.GET,
-        subUrl: `${urlDetail}/${params.id}/detail?doc_type=${params.doc_type}`,
-        overrideBaseUrl,
-    })
-    return response.data
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${urlDetail}/${params.id}/detail?doc_type=${params.doc_type}`,
+    overrideBaseUrl,
+  })
+  return response.data
 }

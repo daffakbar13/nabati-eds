@@ -12,7 +12,7 @@ interface HaveCheckBoxType {
 
 interface useTableProps {
   funcApi?: (body: any) => Promise<any>
-  haveCheckBox?: HaveCheckBoxType | 'All'
+  haveCheckBox?: HaveCheckBoxType[] | 'All'
   columns: any[]
   data?: any[]
   removeHideShowColums?: boolean

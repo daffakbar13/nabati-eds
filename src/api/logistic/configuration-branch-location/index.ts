@@ -57,7 +57,6 @@ export const getConfigBranchLocationDetail = async (
     method: METHODS.GET,
     subUrl: `${url}/detail/${branchFromId}`,
     overrideBaseUrl,
-
   })
   return response.data
 }

@@ -1,10 +1,10 @@
 import React from 'react'
 import PageIntraSlocGR from 'src/containers/PageIntraSlocGR'
 
-interface Props { }
+interface Props {}
 
 export default function GRIntraSloc(props: Props) {
-    const { } = props
+  const {} = props
 
-    return <PageIntraSlocGR />
+  return <PageIntraSlocGR />
 }

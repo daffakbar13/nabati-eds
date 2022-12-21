@@ -44,7 +44,9 @@ export default function PageBillingDetail(props: PageBillingDetailProps) {
         <Row
           gutter={10}
           onClick={() => {
-            router.push(`/sales/billing/order-again/${router.query.id}?status=${router.query.status}`)
+            router.push(
+              `/sales/billing/order-again/${router.query.id}?status=${router.query.status}`,
+            )
           }}
           style={{ cursor: 'pointer' }}
         >
@@ -100,7 +102,9 @@ export default function PageBillingDetail(props: PageBillingDetailProps) {
                   size="big"
                   variant="secondary"
                   onClick={() => {
-                    router.push(`/sales/billing/order-again/${router.query.id}?status=${router.query.status}`)
+                    router.push(
+                      `/sales/billing/order-again/${router.query.id}?status=${router.query.status}`,
+                    )
                   }}
                 >
                   Order Again

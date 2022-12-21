@@ -1,10 +1,10 @@
 import React from 'react'
 import PageApproveStockReservationDetail from 'src/containers/PageApproveStockReservation/detail'
 
-interface Props { }
+interface Props {}
 
 export default function ApproveStockReservation(props: Props) {
-    const { } = props
+  const {} = props
 
-    return <PageApproveStockReservationDetail/>
+  return <PageApproveStockReservationDetail />
 }

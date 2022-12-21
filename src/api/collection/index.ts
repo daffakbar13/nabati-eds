@@ -7,37 +7,37 @@ const subUrl = 'v1/collection'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getCollectionList = async (
-    params: CommonListParams,
+  params: CommonListParams,
 ): Promise<CommonListResponse<Collection>> => {
-    const response = await call({
-        method: METHODS.POST,
-        overrideBaseUrl,
-        subUrl: `${subUrl}/list`,
-        data: params,
-    })
-    return response.data
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${subUrl}/list`,
+    data: params,
+  })
+  return response.data
 }
 
 export const getCollectionDetail = async (
-    params: CommonDetailParams,
+  params: CommonDetailParams,
 ): Promise<CommonListResponse<Collection>> => {
-    const response = await call({
-        method: METHODS.GET,
-        subUrl: `${subUrl}/${params.id}/detail`,
-    })
-    return response.data
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${subUrl}/${params.id}/detail`,
+  })
+  return response.data
 }
 
 export const createCollection = async (payload: any) => {
-    const response = await call({ method: METHODS.POST, subUrl, data: payload })
-    return response.data
+  const response = await call({ method: METHODS.POST, subUrl, data: payload })
+  return response.data
 }
 
 export const editCollection = async (payload: Collection) => {
-    const response = await call({
-        method: METHODS.PATCH,
-        subUrl: `${subUrl}/${payload.id}`,
-        data: payload,
-    })
-    return response.data
+  const response = await call({
+    method: METHODS.PATCH,
+    subUrl: `${subUrl}/${payload.id}`,
+    data: payload,
+  })
+  return response.data
 }

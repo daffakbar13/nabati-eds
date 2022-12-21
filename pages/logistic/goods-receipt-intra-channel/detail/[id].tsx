@@ -1,10 +1,10 @@
 import React from 'react'
 import PageIntraChannelGoodReceiptDetail from 'src/containers/PageIntraChannelGoodReceipt/detail/index'
 
-interface PageIntraChannelGoodIssueProps { }
+interface PageIntraChannelGoodIssueProps {}
 
 export default function GoodReceiptDetailIntraBranch(props: PageIntraChannelGoodIssueProps) {
-    const { } = props
+  const {} = props
 
-    return <PageIntraChannelGoodReceiptDetail />
+  return <PageIntraChannelGoodReceiptDetail />
 }

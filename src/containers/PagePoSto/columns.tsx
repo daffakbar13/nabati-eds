@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import React from 'react'
-import moment from 'moment';
+import moment from 'moment'
 import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
@@ -10,7 +10,6 @@ import { PATH } from 'src/configs/menus'
 import { Tag } from 'antd'
 import TaggedStatus from 'src/components/TaggedStatus'
 import dateFormat from 'src/utils/dateFormat'
-
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -57,13 +56,7 @@ export const columns = [
     180,
     'left',
   ),
-  CreateColumns(
-    'Posting Date',
-    'created_at',
-    false,
-    (date) => dateFormat(date),
-    180,
-  ),
+  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date), 180),
   CreateColumns(
     'Company',
     'company_id',
@@ -84,16 +77,8 @@ export const columns = [
     (branch, rec) => <>{`${branch} - ${rec.receive_plant_name}`}</>,
     250,
   ),
-  CreateColumns(
-    'Status',
-    'status',
-    false,
-    (status) => <TaggedStatus status={status} />,
-  ),
-  CreateColumns(
-    'Action',
-    'id',
-    false,
-    (link, record) => <Linked link={link} type="action" status={record.status_name} />,
-  ),
+  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
+  CreateColumns('Action', 'id', false, (link, record) => (
+    <Linked link={link} type="action" status={record.status_name} />
+  )),
 ]

@@ -54,9 +54,7 @@ export const TableIntraChannelRequest = [
     175,
     'left',
   ),
-  CreateColumns('Posting Date', 'posting_date', false, (date) => (
-    dateFormat(date)
-  )),
+  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
   CreateColumns(
     'Company',
     'company_id',
