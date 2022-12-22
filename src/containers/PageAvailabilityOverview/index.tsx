@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { useState } from 'react'
+import { Col, Row, Spacer, Table, Text, Button } from 'pink-lava-ui'
+import { useState, useEffect } from 'react'
 import {
   Card,
   Select,
@@ -9,23 +9,41 @@ import {
   DownloadButton,
   SelectMasterData,
 } from 'src/components'
-
+import DebounceSelect from 'src/components/DebounceSelect'
 import {
   exportExcelAvailabilityOverview,
   getAvailabilityOverview,
 } from 'src/api/logistic/availability-overview'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
+import {
+  fieldBranchAll,
+  fieldSlocFromBranch,
+  fieldProductByCompany,
+} from 'src/configs/fieldFetches'
 
 export default function PageAvailabilityOverview() {
   const [filters, setFilters] = useState([])
   const router = useRouter()
+  const [allSloc, setAllScloc] = useState([])
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
 
   const table = useTable({
     funcApi: getAvailabilityOverview,
     columns,
-    // filters,
   })
+
+  useEffect(() => {
+    table.handler.handleFilter(filters)
+  }, [filters])
+
+  useEffect(() => {
+    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+      console.log('response Branch', response)
+      setAllScloc(response)
+    })
+  }, [branchfrom, branchTo])
 
   return (
     <Col>
@@ -39,37 +57,59 @@ export default function PageAvailabilityOverview() {
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"
-                label="Branch ID"
-                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+                label="Branch"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <SelectMasterData type="PLANT" />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="product_id"
                 dataType="S"
                 label="Material"
-                options={['EQ', 'CP']}
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <SelectMasterData type="MATERIAL" />
-              </SmartFilter.Field>
-              <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>
-                <SelectMasterData type="SLOC" />
+                <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
+                <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="status_data"
+                field="sloc_id"
                 dataType="S"
-                label="Status Data"
-                options={['EQ']}
+                label="SLoc"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
-              </SmartFilter.Field>
-              <SmartFilter.Field field="status_data" dataType="S" label="Status" options={['EQ']}>
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <DownloadButton downloadApi={exportExcelAvailabilityOverview} />
+            <Button
+              size="big"
+              variant="secondary"
+              onClick={() =>
+                exportExcelAvailabilityOverview({
+                  filters: filters,
+                  limit: table.state.limit,
+                  page: table.state.page,
+                })
+              }
+            >
+              Download
+            </Button>
           </Row>
         </Row>
       </Card>

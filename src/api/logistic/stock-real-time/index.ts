@@ -25,12 +25,14 @@ export const getStockRealtimeList = async (
   return response.data
 }
 
-export const exportExcelStockRealTime = async (): Promise<CommonListResponse<StockRealTime>> => {
+export const exportExcelStockRealTime = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.GET,
+    method: METHODS.POST,
     subUrl: `${url}/export_excel`,
     overrideBaseUrl,
-    // data: params,
+    data: params,
   })
   return response.data
 }
