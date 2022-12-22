@@ -43,8 +43,8 @@ export default function SalesSalesOrderCreateProvider(
   }, [tableProduct.state.data])
 
   React.useEffect(() => {
-    getDataFromDetail()
-  }, [router, optionsOrderType])
+    getDataFromDetail(tableProduct)
+  }, [router, optionsOrderType, tableProduct.state.isLoading])
 
   React.useEffect(() => {
     handleFetching()
