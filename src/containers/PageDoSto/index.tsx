@@ -100,7 +100,7 @@ export default function PageDoSto(props: Props) {
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="supply_branch_id"
                 dataType="S"
                 label="Supplying Branch"
                 options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
