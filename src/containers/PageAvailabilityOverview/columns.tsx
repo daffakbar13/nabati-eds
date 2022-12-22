@@ -31,38 +31,60 @@ export const columns = [
   }),
   addColumn({
     title: 'Material',
-    dataIndex: 'product_id',
+    dataIndex: 'group_by_product',
     fixed: true,
-    render: (text, rec) => (
-      <>
-        {text}-{rec.product_name}
-      </>
-    ),
-  }),
-  addColumn({
-    title: 'SLoc',
-    dataIndex: 'group_by_sloc',
-    fixed: true,
-    render: (arr: any[], record) =>
-      arr.map((a, ind) => {
-        const isLast = arr.length === ind + 1
+    render: (arr: any[] = []) => {
+      return arr.map((a, ind) => {
+        const isLast = arr?.length === ind + 1
         return (
-          <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-            {a.sloc_id}
+          <p key={a.product_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+            {a.product_id}-{a.product_name}
           </p>
         )
-      }),
+      })
+    },
+  }),
+  addColumn({
+    title: 'Sloc',
+    dataIndex: 'group_by_product',
+    render: (arr: any[] = []) => {
+      console.log('arr :', arr)
+      return arr.map((a, ind) => {
+        const isLast = arr?.length === ind + 1
+        return (
+          <p key={a.group_by_sloc.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
+            {a.group_by_sloc.sloc_id}
+          </p>
+        )
+      })
+    },
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'group_by_product',
+    render: (arr: any[] = []) => {
+      return arr.map((a, ind) => {
+        const isLast = arr?.length === ind + 1
+        return (
+          <div key={a.group_by_sloc.status_description} style={{ marginBottom: isLast ? 0 : 16 }}>
+            <Tag color={a.group_by_sloc.status_description === 'PGI Complete' ? 'green' : ''}>
+              {a.group_by_sloc.status_description}
+            </Tag>
+          </div>
+        )
+      })
+    },
   }),
   addColumn({
     title: 'Status Data',
-    dataIndex: 'group_by_sloc',
+    dataIndex: 'group_by_product',
     render: (arr: any[] = []) => {
       console.log('arr', arr)
       return arr.map((a, ind) => {
         const isLast = arr?.length === ind + 1
         return (
-          <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-            {a.status_data}-{a.status_description}
+          <p key={a.group_by_sloc.status_description} style={{ marginBottom: isLast ? 0 : 16 }}>
+            {a.group_by_sloc.status_data}-{a.group_by_sloc.status_description}
           </p>
         )
       })
@@ -73,13 +95,13 @@ export const columns = [
     children: [
       addColumn({
         title: 'Large',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.large}
+              <p key={a.group_by_sloc.stock.large} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.group_by_sloc.stock.large}
               </p>
             )
           })
@@ -87,13 +109,13 @@ export const columns = [
       }),
       addColumn({
         title: 'Middle',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.middle}
+              <p key={a.group_by_sloc.stock.middle} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.group_by_sloc.stock.middle}
               </p>
             )
           })
@@ -101,13 +123,13 @@ export const columns = [
       }),
       addColumn({
         title: 'Small',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.small}
+              <p key={a.group_by_sloc.stock.small} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.group_by_sloc.stock.small}
               </p>
             )
           })
@@ -115,13 +137,16 @@ export const columns = [
       }),
       addColumn({
         title: 'Total in large',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.total_in_large}
+              <p
+                key={a.group_by_sloc.stock.total_in_large}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.stock.total_in_large}
               </p>
             )
           })
@@ -129,28 +154,21 @@ export const columns = [
       }),
       addColumn({
         title: 'Total in small',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.stock?.total_in_small}
+              <p
+                key={a.group_by_sloc.stock.total_in_small}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.stock.total_in_small}
               </p>
             )
           })
         },
       }),
-      // addColumn({
-      //   title: 'Total In Small',
-      //   dataIndex: 'stock total small',
-      //   render: (stock, record) => <>{record.stock.total_in_small}</>,
-      // }),
-      // addColumn({
-      //   title: 'Total In Large',
-      //   dataIndex: 'stock total large',
-      //   render: (stock, record) => <>{record.stock.total_in_large}</>,
-      // }),
     ],
   }),
   addColumn({
@@ -158,13 +176,16 @@ export const columns = [
     children: [
       addColumn({
         title: 'Large',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.large}
+              <p
+                key={a.group_by_sloc.booking_order.large}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.booking_order.large}
               </p>
             )
           })
@@ -172,13 +193,16 @@ export const columns = [
       }),
       addColumn({
         title: 'Middle',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.middle}
+              <p
+                key={a.group_by_sloc.booking_order.middle}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.booking_order.middle}
               </p>
             )
           })
@@ -186,13 +210,16 @@ export const columns = [
       }),
       addColumn({
         title: 'Small',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.small}
+              <p
+                key={a.group_by_sloc.booking_order.small}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.booking_order.small}
               </p>
             )
           })
@@ -200,13 +227,16 @@ export const columns = [
       }),
       addColumn({
         title: 'Total in large',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.total_in_large}
+              <p
+                key={a.group_by_sloc.booking_order.total_in_large}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.booking_order.total_in_large}
               </p>
             )
           })
@@ -214,13 +244,16 @@ export const columns = [
       }),
       addColumn({
         title: 'Total in small',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.booking_order?.total_in_small}
+              <p
+                key={a.group_by_sloc.booking_order.total_in_small}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.booking_order.total_in_small}
               </p>
             )
           })
@@ -233,13 +266,13 @@ export const columns = [
     children: [
       addColumn({
         title: 'Large',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.large}
+              <p key={a.group_by_sloc.available.large} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.group_by_sloc.available.large}
               </p>
             )
           })
@@ -247,13 +280,13 @@ export const columns = [
       }),
       addColumn({
         title: 'Middle',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.middle}
+              <p key={a.group_by_sloc.available.middle} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.group_by_sloc.available.middle}
               </p>
             )
           })
@@ -261,13 +294,13 @@ export const columns = [
       }),
       addColumn({
         title: 'Small',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.small}
+              <p key={a.group_by_sloc.available.small} style={{ marginBottom: isLast ? 0 : 16 }}>
+                {a.group_by_sloc.available.small}
               </p>
             )
           })
@@ -275,13 +308,16 @@ export const columns = [
       }),
       addColumn({
         title: 'Total in large',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.total_in_large}
+              <p
+                key={a.group_by_sloc.available.total_in_large}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.available.total_in_large}
               </p>
             )
           })
@@ -289,32 +325,21 @@ export const columns = [
       }),
       addColumn({
         title: 'Total in small',
-        dataIndex: 'group_by_sloc',
+        dataIndex: 'group_by_product',
         render: (arr: any[] = []) => {
           return arr.map((a, ind) => {
             const isLast = arr?.length === ind + 1
             return (
-              <p key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-                {a.available?.total_in_small}
+              <p
+                key={a.group_by_sloc.available.total_in_small}
+                style={{ marginBottom: isLast ? 0 : 16 }}
+              >
+                {a.group_by_sloc.available.total_in_small}
               </p>
             )
           })
         },
       }),
     ],
-  }),
-  addColumn({
-    title: 'Status',
-    dataIndex: 'group_by_sloc',
-    render: (arr: any[] = []) => {
-      return arr.map((a, ind) => {
-        const isLast = arr?.length === ind + 1
-        return (
-          <div key={a.sloc_id} style={{ marginBottom: isLast ? 0 : 16 }}>
-            <Tag color={a.status_id_name === 'PGI Complete' ? 'green' : ''}>{a.status_id_name}</Tag>
-          </div>
-        )
-      })
-    },
   }),
 ]
