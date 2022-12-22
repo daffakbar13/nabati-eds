@@ -133,8 +133,6 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
 
   function getDataFromDetail(table: ReturnType<typeof useTableProduct>) {
     const now = new Date().toISOString()
-    console.log(table.state.allProduct.filter((e) => e.booked))
-
     if (router.query.id && optionsOrderType?.length > 0 && !table.state.isLoading) {
       runProcess('Wait for get data')
       getDetailQuotation({ id: router.query.id as string })
