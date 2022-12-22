@@ -60,7 +60,6 @@ export const columns = [
   addColumn({
     title: 'Large',
     dataIndex: 'group_by_sloc',
-    fixed: true,
     render: (arr: any[], record) =>
       arr.map((a, ind) => {
         const isLast = arr.length === ind + 1
@@ -74,7 +73,6 @@ export const columns = [
   addColumn({
     title: 'Middle',
     dataIndex: 'group_by_sloc',
-    fixed: true,
     render: (arr: any[], record) =>
       arr.map((a, ind) => {
         const isLast = arr.length === ind + 1
@@ -88,7 +86,6 @@ export const columns = [
   addColumn({
     title: 'Small',
     dataIndex: 'group_by_sloc',
-    fixed: true,
     render: (arr: any[], record) =>
       arr.map((a, ind) => {
         const isLast = arr.length === ind + 1
@@ -102,7 +99,6 @@ export const columns = [
   addColumn({
     title: 'Total in Small',
     dataIndex: 'group_by_sloc',
-    fixed: true,
     render: (arr: any[], record) =>
       arr.map((a, ind) => {
         const isLast = arr.length === ind + 1
@@ -116,7 +112,6 @@ export const columns = [
   addColumn({
     title: 'Total in Large',
     dataIndex: 'group_by_sloc',
-    fixed: true,
     render: (arr: any[], record) =>
       arr.map((a, ind) => {
         const isLast = arr.length === ind + 1
