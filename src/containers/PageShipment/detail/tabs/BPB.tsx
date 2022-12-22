@@ -117,13 +117,13 @@ export default function BPB(props: BPBProps) {
       </Row>
       <Row>
         <Col span={8}>
-          <Information label="Tanggal Kirim" value="?" />
+          <Information label="Tanggal Kirim" value={dateFormat(data.delivery_date)} />
           <Information label="Kendaraan" value={data.vehicle_id} />
           <Information label="Driver / Helper" value={data.driver_name} />
         </Col>
         <Col offset={6} span={10}>
-          <Information label="No. BPB" value="?" />
-          <Information label="Pengiriman" value="?" />
+          <Information label="No. BPB" value={data.shipment_id} />
+          <Information label="Pengiriman" value={data.ritase} />
           <Information label="Jumlah Toko" value={data.total_store} />
         </Col>
       </Row>

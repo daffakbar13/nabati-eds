@@ -7,30 +7,32 @@ import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import { Table, Spacer } from 'pink-lava-ui'
 
+import dateFormat from 'src/utils/dateFormat'
 import { TableDocumentHeader } from '../columns'
 
 interface DocumentHeaderProps {
   data: any
 }
 
-const createDataList = (label: string, value: string) => ({ label, value })
-
 export default function DocumentHeader(props: DocumentHeaderProps) {
   const { data } = props
   const { shipment_detail, shipment_items_detail } = data
 
   const dataList = [
-    createDataList('Sales Org.', shipment_detail?.sales_org_name),
-    createDataList('Plant', shipment_detail?.plant_name),
-    createDataList('Vehicle', shipment_detail?.vehicle_id),
-    createDataList('Driver', shipment_detail?.driver_name),
-    createDataList('Loading Date', shipment_detail?.loading_date),
-    createDataList('Posting Date', shipment_detail?.posting_date),
-    createDataList('Actual Delivery Date', shipment_detail?.actual_delivery_date),
-    createDataList('Created On', shipment_detail?.created_date),
-    createDataList('Created By', shipment_detail?.created_by),
-    createDataList('Modified On', shipment_detail?.modified_at),
-    createDataList('Modified By', shipment_detail?.modified_by),
+    DataList.createDataList('Sales Org.', shipment_detail?.sales_org_name),
+    DataList.createDataList('Branch', shipment_detail?.plant_name),
+    DataList.createDataList('Vehicle', shipment_detail?.vehicle_id),
+    DataList.createDataList('Driver', shipment_detail?.driver_name),
+    DataList.createDataList('Loading Date', dateFormat(shipment_detail?.loading_date)),
+    DataList.createDataList('Posting Date', dateFormat(shipment_detail?.posting_date)),
+    DataList.createDataList(
+      'Actual Delivery Date',
+      dateFormat(shipment_detail?.actual_delivery_date),
+    ),
+    DataList.createDataList('Created On', dateFormat(shipment_detail?.created_date)),
+    DataList.createDataList('Created By', shipment_detail?.created_by),
+    DataList.createDataList('Modified On', dateFormat(shipment_detail?.modified_at)),
+    DataList.createDataList('Modified By', shipment_detail?.modified_by),
   ]
 
   shipment_items_detail?.map((obj, index) => Object.assign(obj, { no: ++index }))

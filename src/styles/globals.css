@@ -223,3 +223,8 @@ table.eds_promotion_log thead tr th {
   padding: 5px 0;
   border-spacing: 0;
 }
+
+.antd-table-thead tr th,
+.antd-table-tbody tr td{
+  padding: 10px !important;
+}

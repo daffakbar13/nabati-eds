@@ -130,7 +130,7 @@ export default function BSTF(props: BSTFProps) {
           />
         </Col>
         <Col offset={6} span={10}>
-          <Information label="No. BSTF" value="?" />
+          <Information label="No. BSTF" value={data.shipment_id} />
         </Col>
       </Row>
       <div>
@@ -146,7 +146,7 @@ export default function BSTF(props: BSTFProps) {
               <td>KM Berangkat</td>
               <td>?</td>
               <td>Jml. Kublikasi</td>
-              <td>{data.total_cubication}</td>
+              <td>{`${Math.round(data.total_cubication / 10)} M³`}</td>
             </tr>
             <tr>
               <td>Pengiriman</td>
@@ -202,27 +202,23 @@ export default function BSTF(props: BSTFProps) {
                 <td>{e.item_number}</td>
                 <td>{e.item_number}</td>
                 <td>{e.total_qty_item}</td>
-                <td>{e.total_qty_item}</td>
-                <td>{e.total_qty_item}</td>
+                <td></td>
+                <td></td>
                 <td>{e.item_number}</td>
-                <td>{e.item_number}</td>
-                <td>{e.cubication}</td>
+                <td></td>
+                <td>{Math.round(e.cubication / 10)}</td>
               </tr>
             ))}
             <tr>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
+              {[...new Array(5)].map((_, i) => (
+                <td key={i} />
+              ))}
               <th colSpan={4}>Total</th>
-              <td>?</td>
-              <td colSpan={2} className="right-align">
-                ?
-              </td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
+              <td>{data.items.reduce((a, b) => a.total_qty_item + b.total_qty_item)}</td>
+              <td colSpan={2} className="right-align"></td>
+              <td>{data.items.reduce((a, b) => a.item_number + b.item_number)}</td>
+              <td></td>
+              <td>{Math.round(data.items.reduce((a, b) => a.cubication + b.cubication) / 10)}</td>
             </tr>
           </tbody>
         </table>

@@ -101,11 +101,8 @@ export default function HPH(props: HPHProps) {
           <Information label="Jumlah Toko" value={data.total_store} />
         </Col>
         <Col offset={6} span={8}>
-          <Information label="No. HPH" value="?" />
-          <Information
-            label="Tanggal Kirim"
-            value={moment(data.delivery_date).format('DD.MM.YYYY-hh:mm:ss')}
-          />
+          <Information label="No. HPH" value={data.shipment_id} />
+          <Information label="Tanggal Kirim" value={dateFormat(data.delivery_date)} />
         </Col>
       </Row>
       <table className="eds_paper">
