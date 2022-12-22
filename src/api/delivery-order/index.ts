@@ -62,7 +62,7 @@ export const manualSubmitDeliveryOrder = async (
   delivery_id: string,
 ): Promise<CommonDetailResponse<any>> => {
   const response = await call({
-    overrideBaseUrl: 'http://203.194.112.76:3001/',
+    overrideBaseUrl,
     method: METHODS.POST,
     subUrl: `${url}/${delivery_id}/submit`,
     // data: params
