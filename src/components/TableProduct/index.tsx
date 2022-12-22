@@ -5,16 +5,19 @@ import Total from 'src/components/Total'
 import { useTableProduct } from './hooks'
 
 interface TableProductProps {
-  state: ReturnType<typeof useTableProduct>['state']
-  handler: ReturnType<typeof useTableProduct>['handler']
+  TableProps: ReturnType<typeof useTableProduct>
   hideData?: boolean
+  withDiscount?: boolean
 }
 
 export default function TableProduct(props: TableProductProps) {
   const {
-    handler: { addItem },
-    state: { data, columns, isLoading },
+    TableProps: {
+      state: { data, columns, isLoading },
+      handler: { addItem },
+    },
     hideData,
+    withDiscount,
   } = props
   const subTotal = data.map((d) => d.sub_total).reduce((prev, curr) => prev + curr)
 
@@ -30,7 +33,7 @@ export default function TableProduct(props: TableProductProps) {
       <div style={{ overflow: 'scroll' }}>
         <Table
           data={hideData ? [] : data}
-          columns={columns}
+          columns={!withDiscount ? columns.filter((c) => c.dataIndex !== 'discount') : columns}
           loading={isLoading}
           scroll={{ x: 'max-content' }}
         />
