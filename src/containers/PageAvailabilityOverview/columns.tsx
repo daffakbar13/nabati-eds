@@ -4,8 +4,9 @@ import { addColumn } from 'src/utils/createColumns'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'
 // import { PATH } from 'src/configs/menus'
-import { Tag, Row, Col } from 'antd'
+import { Row, Col } from 'antd'
 import ControlledExpandIcon from 'src/components/ControlledExpandIcon'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 export const columns = [
   addColumn({
@@ -66,10 +67,8 @@ export const columns = [
       return arr.map((a, ind) => {
         const isLast = arr?.length === ind + 1
         return (
-          <div key={a.group_by_sloc.status_description} style={{ marginBottom: isLast ? 0 : 16 }}>
-            <Tag color={a.group_by_sloc.status_description === 'PGI Complete' ? 'green' : ''}>
-              {a.group_by_sloc.status_description}
-            </Tag>
+          <div key={a.group_by_sloc.status_id_name} style={{ marginBottom: isLast ? 0 : 16 }}>
+            <TaggedStatus status={a.group_by_sloc.status_id_name} />
           </div>
         )
       })
