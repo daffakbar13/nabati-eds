@@ -50,7 +50,6 @@ export default function CreateBilling() {
   })
   const [modalCancel, setModalCancel] = useState(false)
   const [modalSubmit, setModalSubmit] = useState(false)
-  const [newPoSTO, setNewPoSTO] = useState()
   const [dataForm, setDataForm] = React.useState<dataForm>()
 
   const initialValue = {
@@ -74,6 +73,16 @@ export default function CreateBilling() {
       setAllSloc(response)
     })
   }, [dataForm?.suppl_branch_id])
+
+  const handleCreate = async () => {
+    try {
+      return await createPoSto({ ...initialValue, ...dataForm })
+    } catch (error) {
+      console.error(error)
+    }
+    return false
+  }
+
   return (
     <Col>
       <Text variant={'h4'}>Create New PO STO</Text>
@@ -216,28 +225,41 @@ export default function CreateBilling() {
       <Modal
         title={'Confirm Submit'}
         open={modalSubmit}
-        onOk={() => {
-          createPoSto({ ...initialValue, ...dataForm })
-            .then((response) => setNewPoSTO(response.data.id))
-            .catch((e) => console.log(e))
-        }}
+        onOk={handleCreate}
         onCancel={() => {
           setModalSubmit(false)
         }}
         content={`Are you sure want to Submit This PO STO ?`}
+        successTitle="Success"
         onOkSuccess={() => {
           router.push(`${PATH.LOGISTIC}/po-sto`)
         }}
         successContent={(res: any) => (
           <>
             PO Number
-            <Typography.Text copyable> {newPoSTO}</Typography.Text>
-            has been
+            <Typography.Text copyable> {res?.data?.id}</Typography.Text>
+            has been successfully created
           </>
         )}
         successOkText="OK"
         width={432}
       />
+      {/* <SuccessModal
+        onCancel={() => {
+          close()
+          setShowSuccessModal(false)
+        }}
+        open={showSuccessModal}
+        onOk={() => {
+          router.push(`${PATH.LOGISTIC}/po-sto`)
+        }}
+        title={typeof successTitle === 'function' ? successTitle(onOkResponse) : successTitle}
+        content={
+          typeof successContent === 'function' ? successContent(onOkResponse) : successContent
+        }
+        okText={successOkText}
+        cancelText={successCancelText}
+      /> */}
     </Col>
   )
 }

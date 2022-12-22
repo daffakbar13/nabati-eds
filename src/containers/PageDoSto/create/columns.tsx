@@ -214,13 +214,15 @@ export const useTableAddItem = (props: any) => {
     addColumn({
       title: 'SLoc',
       dataIndex: 'description',
-      render: (sloc_id, __, index) => (
+      render: (rows, __, index) => (
         <DebounceSelect
           type="select"
           required
+          value={data[index].sloc_id}
           placeholder="Select SLoc"
           options={optionsSloc}
           onChange={(e: any) => {
+            console.log('change', e)
             handleChangeData('sloc_id', e.value, index)
           }}
         />
