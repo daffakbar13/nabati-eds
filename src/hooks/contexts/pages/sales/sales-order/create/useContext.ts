@@ -21,6 +21,7 @@ export function useSalesSalesOrderCreateProvider() {
     optionsSalesman: [],
     optionsSalesOrg: [],
     dataForm: {
+      order_type_id: '',
       company_id: 'PP01',
       source_id: 'Z02',
       order_date: now,
