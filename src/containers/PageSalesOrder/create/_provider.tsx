@@ -5,8 +5,8 @@
 /* eslint-disable camelcase */
 import { useRouter } from 'next/router'
 import React from 'react'
+import { useTableProduct } from 'src/components/TableProduct/hooks'
 import { useSalesSalesOrderCreateProvider } from 'src/hooks/contexts'
-import { useTableProduct } from './columns'
 
 export interface PayloadCreate {
   company_id?: string
@@ -39,8 +39,8 @@ export default function SalesSalesOrderCreateProvider(
   const router = useRouter()
 
   React.useEffect(() => {
-    onChangeForm('items', tableProduct.data)
-  }, [tableProduct.data])
+    onChangeForm('items', tableProduct.state.data)
+  }, [tableProduct.state.data])
 
   React.useEffect(() => {
     getDataFromDetail()
@@ -52,7 +52,7 @@ export default function SalesSalesOrderCreateProvider(
 
   React.useEffect(() => {
     handleCanSubmit()
-  }, [dataForm, tableProduct.data])
+  }, [dataForm, tableProduct.state.data])
 
   React.useEffect(() => {
     getDocType()

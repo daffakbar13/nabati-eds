@@ -1,27 +1,18 @@
 import React from 'react'
-import { Row } from 'antd'
-import { Button, Table } from 'pink-lava-ui'
-import Total from 'src/components/Total'
 import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
-import { useTableProduct } from '../columns'
+import { TableProduct } from 'src/components'
 
 export default function SectionTable() {
   const {
     state: { dataForm, tableProduct },
   } = useSalesSalesOrderCreateContext()
+  const [orderTypeId] = dataForm.order_type_id.split(' - ')
+
   return (
-    <>
-      <Row style={{ overflow: 'scroll' }}>
-        <Table data={dataForm?.customer_id && tableProduct.data} columns={tableProduct.columns} />
-      </Row>
-      {dataForm?.customer_id && (
-        <Button size="small" variant="primary" onClick={tableProduct.handleAddItem}>
-          Add Item
-        </Button>
-      )}
-      <Row justify="end">
-        <Total label="Total Amount" value={tableProduct.total_amount.toLocaleString()} />
-      </Row>
-    </>
+    <TableProduct
+      TableProps={tableProduct}
+      hideData={dataForm.customer_id === undefined}
+      withDiscount={['ZRE1', 'ZRE2', 'ZRE3', 'ZWE1'].includes(orderTypeId)}
+    />
   )
 }

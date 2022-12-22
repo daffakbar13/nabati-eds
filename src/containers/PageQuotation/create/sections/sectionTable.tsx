@@ -4,13 +4,15 @@ import { TableProduct } from 'src/components'
 
 export default function SectionTable() {
   const {
-    state: {
-      dataForm,
-      tableProduct: { state, handler },
-    },
+    state: { dataForm, tableProduct },
   } = useSalesQuotationCreateContext()
+  const [orderTypeId] = dataForm.order_type_id.split(' - ')
 
   return (
-    <TableProduct state={state} handler={handler} hideData={dataForm.customer_id === undefined} />
+    <TableProduct
+      TableProps={tableProduct}
+      hideData={dataForm.customer_id === undefined}
+      withDiscount={['ZQR1', 'ZQW1'].includes(orderTypeId)}
+    />
   )
 }

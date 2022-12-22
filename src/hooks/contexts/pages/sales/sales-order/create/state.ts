@@ -1,4 +1,4 @@
-import { useTableProduct } from 'src/containers/PageSalesOrder/create/columns'
+import { useTableProduct } from 'src/components/TableProduct/hooks'
 
 interface OptionsType {
   key?: string
