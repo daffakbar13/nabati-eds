@@ -1,16 +1,51 @@
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
+import dateFormat from 'src/utils/dateFormat'
 
 export const TableDocumentHeader = [
-  CreateColumns('No', 'no'),
-  CreateColumns('Delivery Order', 'delivery_order_id'),
-  CreateColumns('Order Type', 'order_type'),
-  CreateColumns('Order Date', 'order_date'),
-  CreateColumns('Delivery Date', 'delivery_date'),
-  CreateColumns('Sales Org.', 'sales_org_name'),
-  CreateColumns('Plant', 'plant_name'),
-  CreateColumns('Ship To Customer', 'ship_to_customer'),
-  CreateColumns('Salesman', 'salesman_name'),
-  CreateColumns('Status', 'status'),
+  addColumn({
+    title: 'No',
+    dataIndex: 'no',
+    width: 55,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Delivery Order',
+    dataIndex: 'delivery_order_id',
+  }),
+  addColumn({
+    title: 'Order Type',
+    dataIndex: 'order_type',
+  }),
+  addColumn({
+    title: 'Order Date',
+    dataIndex: 'order_date',
+    render: (d) => dateFormat(d),
+  }),
+  addColumn({
+    title: 'Delivery Date',
+    dataIndex: 'delivery_date',
+    render: (d) => dateFormat(d),
+  }),
+  addColumn({
+    title: 'Sales Org.',
+    dataIndex: 'sales_org_name',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'plant_name',
+  }),
+  addColumn({
+    title: 'Ship To Customer',
+    dataIndex: 'ship_to_customer',
+  }),
+  addColumn({
+    title: 'Salesman',
+    dataIndex: 'salesman_name',
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status',
+  }),
 ]
 
 export const TableDocumentFlow = [

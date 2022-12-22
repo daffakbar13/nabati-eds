@@ -58,14 +58,18 @@ export default function DocumentHeader(props: DocumentHeaderProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TableDocumentHeader} dataSource={shipment_items_detail} />
+        <Table
+          columns={TableDocumentHeader}
+          dataSource={shipment_items_detail}
+          scroll={{ x: 'max-content' }}
+        />
       </div>
       <Spacer size={30} />
-      <Row>
+      {/* <Row>
         <Col span={12} offset={12}>
           <Total label="Total Amount" value={123} />
         </Col>
-      </Row>
+      </Row> */}
     </>
   )
 }

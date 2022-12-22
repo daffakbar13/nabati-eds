@@ -81,10 +81,7 @@ export default function HPH(props: HPHProps) {
           </CustomText>
         </Col>
         <Col offset={6} span={8}>
-          <Information
-            label="Tanggal Cetak"
-            value={dateFormat(new Date().toISOString(), 'DD.MM.YYYY-hh:mm:ss')}
-          />
+          <Information label="Tanggal Cetak" value={dateFormat(new Date().toISOString())} />
           <Information label="Halaman" value="1" />
           <Information label="Cetakan Ke" value="1/1" />
         </Col>

@@ -214,11 +214,13 @@ export default function BSTF(props: BSTFProps) {
                 <td key={i} />
               ))}
               <th colSpan={4}>Total</th>
-              <td>{data.items.reduce((a, b) => a.total_qty_item + b.total_qty_item)}</td>
+              <td>{data.items.map((e) => e.total_qty_item).reduce((a, b) => a + b)}</td>
               <td colSpan={2} className="right-align"></td>
-              <td>{data.items.reduce((a, b) => a.item_number + b.item_number)}</td>
+              <td>{data.items.map((e) => e.item_number).reduce((a, b) => a + b)}</td>
               <td></td>
-              <td>{Math.round(data.items.reduce((a, b) => a.cubication + b.cubication) / 10)}</td>
+              <td>
+                {Math.round(data.items.map((e) => e.cubication).reduce((a, b) => a + b) / 10)}
+              </td>
             </tr>
           </tbody>
         </table>
