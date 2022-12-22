@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { useState } from 'react'
+import { Col, Row, Spacer, Table, Text, Button } from 'pink-lava-ui'
+import { useState, useEffect } from 'react'
 import {
   Card,
   DownloadButton,
@@ -8,18 +8,38 @@ import {
   SmartFilter,
   SelectMasterData,
 } from 'src/components'
+import DebounceSelect from 'src/components/DebounceSelect'
 import { exportExcelStockRealTime, getStockRealtimeList } from 'src/api/logistic/stock-real-time'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
+import {
+  fieldBranchAll,
+  fieldSlocFromBranch,
+  fieldProductByCompany,
+} from 'src/configs/fieldFetches'
 
 export default function PageRealTime() {
   const [filters, setFilters] = useState([])
+  const [allSloc, setAllScloc] = useState([])
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
   const router = useRouter()
 
   const table = useTable({
     funcApi: getStockRealtimeList,
     columns,
   })
+
+  useEffect(() => {
+    table.handler.handleFilter(filters)
+  }, [filters])
+
+  useEffect(() => {
+    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+      console.log('response Branch', response)
+      setAllScloc(response)
+    })
+  }, [branchfrom, branchTo])
 
   return (
     <Col>
@@ -30,24 +50,62 @@ export default function PageRealTime() {
           <Row gap="16px">
             <SearchQueryParams />
             <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field field="branch_id" dataType="S" label="Branch ID" options={['EQ']}>
-                <SelectMasterData type="PLANT" />
-              </SmartFilter.Field>
-              <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>
-                <SelectMasterData type="SLOC" />
+              <SmartFilter.Field
+                field="branch_id"
+                dataType="S"
+                label="Branch"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    console.log('branch changed')
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="product_id"
                 dataType="S"
                 label="Material"
-                options={['EQ', 'CP']}
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
               >
-                <SelectMasterData type="MATERIAL" />
+                <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
+                <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="sloc_id"
+                dataType="S"
+                label="SLoc"
+                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <DownloadButton downloadApi={exportExcelStockRealTime} />
+            <Button
+              size="big"
+              variant="secondary"
+              onClick={() =>
+                exportExcelStockRealTime({
+                  filters: filters,
+                  limit: table.state.limit,
+                  page: table.state.page,
+                })
+              }
+            >
+              Download
+            </Button>
           </Row>
         </Row>
       </Card>
