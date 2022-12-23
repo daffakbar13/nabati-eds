@@ -2,7 +2,7 @@ import { useState } from 'react'
 import moment from 'moment'
 import { Divider, Form } from 'antd'
 import { useRouter } from 'next/router'
-
+import DebounceSelect from 'src/components/DebounceSelect'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
 import { PATH } from 'src/configs/menus'
@@ -13,6 +13,7 @@ import {
   getSlocListByBranch,
 } from 'src/api/logistic/good-receipt'
 import { CommonSelectValue } from 'src/configs/commonTypes'
+import { fieldPoGRPrincipal } from 'src/configs/fieldFetches'
 
 import { columns } from './columns'
 
@@ -149,16 +150,25 @@ export default function CreateGoodsReceipt() {
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item
-              name="po_number"
+              // name="po_number"
               style={{ marginTop: -12, marginBottom: 0 }}
               label={<LabelRequired>PO Number</LabelRequired>}
               rules={[{ required: true }]}
             >
-              <SelectMasterData
+              {/* <SelectMasterData
                 type="PO_NUMBER"
                 style={{ marginTop: -8 }}
                 onChange={(opt: any) => onChangePoNumber(opt.value)}
                 loading={loading}
+              /> */}
+              <DebounceSelect
+                type="select"
+                // label="PO Number"
+                required
+                fetchOptions={(search) => fieldPoGRPrincipal(search)}
+                onChange={(val: any) => {
+                  onChangePoNumber(val.value)
+                }}
               />
             </Form.Item>
             <Form.Item
