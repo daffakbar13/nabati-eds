@@ -32,7 +32,7 @@ export default function SalesQuotationDetailProvider(
         handler: SalesQuotationDetail.handler,
       }}
     >
-      {children}
+      {data && children}
     </SalesQuotationDetail.Provider>
   )
 }

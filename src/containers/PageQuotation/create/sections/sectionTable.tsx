@@ -8,6 +8,8 @@ export default function SectionTable() {
   } = useSalesQuotationCreateContext()
   const [orderTypeId] = dataForm.order_type_id.split(' - ')
 
+  console.log(dataForm)
+
   return (
     <TableProduct
       TableProps={tableProduct}

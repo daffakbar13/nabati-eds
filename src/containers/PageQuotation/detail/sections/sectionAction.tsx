@@ -51,9 +51,7 @@ export default function SectionAction() {
                 size="big"
                 variant="secondary"
                 onClick={() => {
-                  router.push(
-                    `${PATH.SALES}/quotation/edit/${router.query.id}?status=${router.query.status}`,
-                  )
+                  router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`)
                 }}
               >
                 Edit
