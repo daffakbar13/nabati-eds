@@ -49,14 +49,14 @@ function SmartFilter({ onOk, children }) {
 
   const content = (
     <div style={{ paddingBottom: 20 }}>
-      {React.Children.map(children, (child) =>
+      {React.Children.map(children, (child) => {
         React.cloneElement(child, {
           ...child.props,
           key: child.field,
           value: filterValues.find((f) => f.field === child.props.field),
           handleChange,
-        }),
-      )}
+        })
+      })}
       <Row gap="16px" reverse>
         <Button onClick={handleApply}>Apply</Button>
         <Button variant="tertiary" onClick={clearAllValue}>

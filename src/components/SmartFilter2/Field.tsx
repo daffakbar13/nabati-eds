@@ -2,7 +2,6 @@ import React, { Children, useEffect, useState } from 'react'
 import { Text } from 'pink-lava-ui'
 import { Container } from './styledComponent'
 import SelectOptionIcon from './OptionIcon'
-import moment from 'moment'
 
 const checkIsEvent = (obj: any) => !!obj?.target
 
@@ -25,23 +24,23 @@ export default function SingleField({
 
   useEffect(() => {
     if (value?.option) {
-      if (value?.option == 'EQ' || value?.option == 'NE') {
+      if (value?.option === 'EQ' || value?.option === 'NE') {
         setMultipleChildren(false)
         sethasOneChildren(true)
       }
 
-      if (value?.option != 'EQ' && value?.option != 'NE' && value?.option != '') {
+      if (value?.option !== 'EQ' && value?.option !== 'NE' && value?.option !== '') {
         setMultipleChildren(true)
         sethasOneChildren(false)
       }
+    }
+
+    if (!value?.option && (options[0] === 'EQ' || options[0] === 'NE')) {
+      setMultipleChildren(false)
+      sethasOneChildren(true)
     } else {
-      if (options[0] == 'EQ' || options[0] == 'NE') {
-        setMultipleChildren(false)
-        sethasOneChildren(true)
-      } else {
-        setMultipleChildren(true)
-        sethasOneChildren(false)
-      }
+      setMultipleChildren(true)
+      sethasOneChildren(false)
     }
   }, [value?.option, options])
 
@@ -82,33 +81,33 @@ export default function SingleField({
       </Text>
       <SelectOptionIcon options={options} onChange={onOptionChange} value={value?.option} />
 
-      {hasOneChildren &&
-        !Array.isArray(children) &&
-        React.cloneElement(children, {
-          ...children.props,
-          style: { ...children.props.style, gridColumnStart: 'span 3' },
-          onChange: (arg: any) => {
-            onFromValueChange(arg)
-            if (children.props.onChange) {
-              children.props.onChange(arg)
-            }
-          },
-          value: value?.fromValue || undefined,
-        })}
+      {hasOneChildren && !Array.isArray(children)
+        ? React.cloneElement(children, {
+            ...children.props,
+            style: { ...children.props.style, gridColumnStart: 'span 3' },
+            onChange: (arg: any) => {
+              onFromValueChange(arg)
+              if (children.props.onChange) {
+                children.props.onChange(arg)
+              }
+            },
+            value: value?.fromValue || undefined,
+          })
+        : ''}
 
-      {hasOneChildren &&
-        Array.isArray(children) &&
-        React.cloneElement(children[0], {
-          ...children[0].props,
-          style: { ...children[0].props.style, gridColumnStart: 'span 3' },
-          onChange: (arg: any) => {
-            onFromValueChange(arg)
-            if (children[0].props.onChange) {
-              children[0].props.onChange(arg)
-            }
-          },
-          value: value?.fromValue || undefined,
-        })}
+      {hasOneChildren && Array.isArray(children)
+        ? React.cloneElement(children[0], {
+            ...children[0].props,
+            style: { ...children[0].props.style, gridColumnStart: 'span 3' },
+            onChange: (arg: any) => {
+              onFromValueChange(arg)
+              if (children[0].props.onChange) {
+                children[0].props.onChange(arg)
+              }
+            },
+            value: value?.fromValue || undefined,
+          })
+        : ''}
 
       <>
         {hasMultipleChildren && (
