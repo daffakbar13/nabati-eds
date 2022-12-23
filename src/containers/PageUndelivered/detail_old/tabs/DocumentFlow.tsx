@@ -9,5 +9,5 @@ export default function DocumentFlow(props: DocumentFlowProps) {
   const {} = props
   const table = useTable({ api: '', columns: TableDocumentFlow })
 
-  return <Table scroll={{ x: 'max-content', y: 600 }} columns={table.columns} dataSource={[]} />
+  return <Table columns={table.columns} dataSource={[]} />
 }

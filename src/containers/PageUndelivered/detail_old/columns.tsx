@@ -2,7 +2,7 @@ import CreateColumns from 'src/utils/createColumns'
 
 export const TableQuotation = [
   CreateColumns('No', 'no'),
-  CreateColumns('Item', 'item'),
+  CreateColumns('Delivery Order', 'delivery_order'),
   CreateColumns('Item Category', 'item_category'),
   CreateColumns('Uom', 'uom'),
   CreateColumns('Quantity', 'quantity'),

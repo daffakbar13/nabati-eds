@@ -3,30 +3,36 @@ import { Button as ButtonPinkLava, Col, Spacer, Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Button, Tabs } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { PageCollectionDetailProps } from './types'
+import { PageUndeliveredDetailProps } from './types'
 import AllTabs from './tabs'
 import Quotation from './tabs/Quotation'
-import DocumentFlow from './tabs/DocumentFlow'
-import CustomerInfo from './tabs/CustomerInfo'
-import SalesmanInfo from './tabs/SalesmanInfo'
 
-export default function PageCollectionDetail(props: PageCollectionDetailProps) {
-  const titlePage = useTitlePage('edit')
+export default function PageUndeliveredDetail(props: PageUndeliveredDetailProps) {
+  const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
 
   return (
     <Col>
       <div style={{ display: 'flex' }}>
-        <Text variant={'h4'}>Confirm {titlePage}</Text>
+        <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
           <Button>asd</Button>
           <ButtonPinkLava size="big" variant="primary" onClick={() => {}}>
-            Finish
+            Confirm
           </ButtonPinkLava>
         </div>
       </div>
       <Spacer size={20} />
-      <Card style={{ padding: '16px 20px' }}>{currentTab === '1' && <Quotation />}</Card>
+      <Card style={{ padding: '16px 20px' }}>
+        <Tabs
+          defaultActiveKey="1"
+          onChange={(asd) => {
+            setCurrentTab(asd)
+          }}
+          items={AllTabs}
+        />
+        {currentTab === '1' && <Quotation />}
+      </Card>
     </Col>
   )
 }
