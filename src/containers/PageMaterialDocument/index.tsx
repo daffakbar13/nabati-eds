@@ -31,16 +31,18 @@ export default function PageRealTime() {
                 field="branch_id"
                 dataType="S"
                 label="Branch ID"
-                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
+                <SelectMasterData type="PLANT" />
                 <SelectMasterData type="PLANT" />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="product_id"
                 dataType="S"
                 label="Material"
-                options={['EQ', 'CP']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
+                <SelectMasterData type="MATERIAL" />
                 <SelectMasterData type="MATERIAL" />
               </SmartFilter.Field>
               <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>

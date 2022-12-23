@@ -1,13 +1,13 @@
 import React from 'react'
 import { Button, Spacer, Text, Table, Row as RowPinkLava } from 'pink-lava-ui'
-import { Card } from 'src/components'
-import { Row, Col, Divider, Tabs } from 'antd'
+import { Card, Modal } from 'src/components'
+import { Row, Col, Divider, Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getPoStoDetail } from 'src/api/logistic/do-sto'
+import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/do-sto'
 import AllTabs from './tabs'
 import DOSTO from './tabs/DOSTO'
 import DeliveryNote from './tabs/DeliveryNote'
@@ -19,6 +19,16 @@ export default function PageDoStoDetail() {
   const data: any = useDetail(getPoStoDetail, { id: router.query.id as string }, false)
   const hasData = Object.keys(data).length > 0
   const componentRef = React.useRef()
+  const [modalPGI, setModalPGI] = React.useState(false)
+
+  const handleUpdateStatus = async () => {
+    try {
+      return await updateStatusPoSto(router.query.id as string, { status_id: '07' })
+    } catch (error) {
+      console.error(error)
+    }
+    return false
+  }
 
   return (
     <Col>
@@ -67,14 +77,14 @@ export default function PageDoStoDetail() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push('/logistic/do-sto')
+                    setModalPGI(true)
                   }}
                 >
                   PGI
                 </Button>
               </RowPinkLava>
               <Text variant={'h5'}>
-                <TaggedStatus status={data.status} size="h5" />
+                <TaggedStatus status="Pending" size="h5" />
               </Text>
             </>
           ) : (
@@ -112,6 +122,28 @@ export default function PageDoStoDetail() {
           </>
         )}
       </Card>
+      <Modal
+        title={'Confirm Submit'}
+        open={modalPGI}
+        onOk={handleUpdateStatus}
+        onCancel={() => {
+          setModalPGI(false)
+        }}
+        content={`Are you sure want to PGI This DO STO ?`}
+        successTitle="Success"
+        onOkSuccess={() => {
+          router.push('/logistic/do-sto')
+        }}
+        successContent={(res: any) => (
+          <>
+            DO STO
+            <Typography.Text copyable> {router.query.id}</Typography.Text>
+            status has been successfully changed
+          </>
+        )}
+        successOkText="OK"
+        width={432}
+      />
     </Col>
   )
 }

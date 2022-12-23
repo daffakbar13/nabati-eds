@@ -83,7 +83,7 @@ export default function PageBilling(props: PageBillingProps) {
                 field="sales_org"
                 dataType="S"
                 label="Sales Organization"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
                 <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
@@ -92,7 +92,7 @@ export default function PageBilling(props: PageBillingProps) {
                 field="branch"
                 dataType="S"
                 label="Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
@@ -101,7 +101,7 @@ export default function PageBilling(props: PageBillingProps) {
                 field="ship_to_customer"
                 dataType="S"
                 label="Sold to Customer"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldCustomer} />
                 <DebounceSelect type="select" fetchOptions={fieldCustomer} />
@@ -110,7 +110,7 @@ export default function PageBilling(props: PageBillingProps) {
                 field="order_type"
                 dataType="S"
                 label="Order Type"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" options={optionsOrderType} />
                 <DebounceSelect type="select" options={optionsOrderType} />
@@ -134,7 +134,13 @@ export default function PageBilling(props: PageBillingProps) {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field
+                field="status"
+                dataType="S"
+                label="Status"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>

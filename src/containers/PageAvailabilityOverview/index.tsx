@@ -58,7 +58,7 @@ export default function PageAvailabilityOverview() {
                 field="branch_id"
                 dataType="S"
                 label="Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect
                   type="select"
@@ -80,7 +80,7 @@ export default function PageAvailabilityOverview() {
                 field="product_id"
                 dataType="S"
                 label="Material"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
                 <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
@@ -89,7 +89,7 @@ export default function PageAvailabilityOverview() {
                 field="sloc_id"
                 dataType="S"
                 label="SLoc"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" options={allSloc} />
                 <DebounceSelect type="select" options={allSloc} />

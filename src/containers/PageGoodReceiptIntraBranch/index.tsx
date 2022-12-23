@@ -100,7 +100,7 @@ export default function PageGoodsIssue(props: Props) {
                 field="company_id"
                 dataType="S"
                 label="Company"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
@@ -109,7 +109,7 @@ export default function PageGoodsIssue(props: Props) {
                 field="suppl_branch_id"
                 dataType="S"
                 label="Supplying Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
@@ -118,7 +118,7 @@ export default function PageGoodsIssue(props: Props) {
                 field="receive_branch_id"
                 dataType="S"
                 label="Receiving Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
@@ -142,7 +142,13 @@ export default function PageGoodsIssue(props: Props) {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field
+                field="status_id"
+                dataType="S"
+                label="Status"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>
