@@ -3,11 +3,11 @@ import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { createQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
-import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
+import { useSalesQuotationCreateContext } from '../states'
 
 export default function SectionAction() {
   const {
-    state: { canSave, canSaveAsDraft, dataForm },
+    state: { canSave, canSaveAsDraft },
     handler: { stopProcess, runProcess, dataSubmitted, showConfirm, setQuotationId },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
@@ -82,7 +82,7 @@ export default function SectionAction() {
                 updateQuotation(dataSubmitted(1), router.query.id as string)
                   .then((response) => {
                     setQuotationId(response.data.id)
-                    showConfirm('newQuo')
+                    showConfirm('draftQuo')
                     stopProcess()
                   })
                   .catch(() => stopProcess())
