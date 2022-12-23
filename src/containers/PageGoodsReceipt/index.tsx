@@ -32,27 +32,36 @@ export default function PageGoodsReceipt() {
                 field="company_id"
                 dataType="S"
                 label="Company ID"
-                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
+                <SelectMasterData type="COMPANY" />
                 <SelectMasterData type="COMPANY" />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"
                 label="Branch ID"
-                options={['EQ', 'NB', 'NP', 'GT', 'LT']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
+                <SelectMasterData type="PLANT" />
                 <SelectMasterData type="PLANT" />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="product_id"
                 dataType="S"
                 label="Material"
-                options={['EQ', 'CP']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <SelectMasterData type="MATERIAL" />
+                <SelectMasterData type="MATERIAL" />
               </SmartFilter.Field>
-              <SmartFilter.Field field="sloc_id" dataType="S" label="Sloc" options={['EQ', 'NB']}>
+              <SmartFilter.Field
+                field="sloc_id"
+                dataType="S"
+                label="Sloc"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <SelectMasterData type="SLOC" />
                 <SelectMasterData type="SLOC" />
               </SmartFilter.Field>
               <SmartFilter.Field
@@ -68,7 +77,13 @@ export default function PageGoodsReceipt() {
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status_data" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field
+                field="status_data"
+                dataType="S"
+                label="Status"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <Select options={[{ label: 'YES', value: 'yes' }]} />
                 <Select options={[{ label: 'YES', value: 'yes' }]} />
               </SmartFilter.Field>
             </SmartFilter>

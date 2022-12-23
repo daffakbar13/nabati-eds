@@ -103,7 +103,7 @@ export default function PageStockReservation() {
                 field="company_id"
                 dataType="S"
                 label="Company"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
@@ -112,7 +112,7 @@ export default function PageStockReservation() {
                 field="branch_id"
                 dataType="S"
                 label="Branch"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
@@ -121,7 +121,7 @@ export default function PageStockReservation() {
                 field="movement_type_id"
                 dataType="S"
                 label="Mov. Type"
-                options={['EQ', 'GE', 'LE', 'GT', 'LT', 'NE']}
+                options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
                 <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
@@ -145,7 +145,13 @@ export default function PageStockReservation() {
                   placeholder="Requirement Date"
                 />
               </SmartFilter.Field>
-              <SmartFilter.Field field="status_id" dataType="S" label="Status" options={['EQ']}>
+              <SmartFilter.Field
+                field="status_id"
+                dataType="S"
+                label="Status"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
                 <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>
