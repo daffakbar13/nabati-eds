@@ -97,4 +97,30 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/approval`),
     ),
   ]),
+  CreateMenu('master-data', 'Master Data', null, NabatiIcons.LogisticIcSwapHandling, null, null, [
+    CreateMenu(
+      'customer',
+      'Customer',
+      null,
+      null,
+      () => 'Customer',
+      () => Router.push(`${PATH.SALES}/customer`),
+    ),
+    CreateMenu(
+      'customer-noo',
+      'Customer NOO',
+      null,
+      null,
+      () => 'Customer NOO',
+      () => Router.push(`${PATH.SALES}/customer-noo`),
+    ),
+    CreateMenu(
+      'approval-noo',
+      'Approval NOO',
+      null,
+      null,
+      () => 'Approval NOO',
+      () => Router.push(`${PATH.SALES}/approval-noo`),
+    ),
+  ]),
 ]

@@ -14,13 +14,13 @@ function Action({ link }: { link: string }) {
 }
 
 export const TableBilling = [
-  CreateColumns('Shipment', 'shipment_id', true),
-  CreateColumns('Vehicle Number', 'vechile_number'),
-  CreateColumns('Driver', 'driver'),
-  CreateColumns('Created Date', 'create_date'),
-  CreateColumns('Total Undelivered', 'total_undelivered'),
-  CreateColumns('Sales Org.', 'sales_org'),
-  CreateColumns('Branch', 'branch'),
-  CreateColumns('Status', 'status'),
+  CreateColumns('ID', 'id', true),
+  CreateColumns('Name', 'name'),
+  CreateColumns('Sales Org', 'driver'),
+  CreateColumns('Sales Group', 'create_date'),
+  CreateColumns('Branch', 'total_undelivered'),
+  CreateColumns('Channel', 'sales_org'),
+  CreateColumns('Customer Group', 'branch'),
+  CreateColumns('Active/Inactive', 'status'),
   CreateColumns('Action', 'shipment_id', false, (link: string) => <Action link={link} />),
 ]

@@ -1,5 +1,9 @@
 /* eslint-disable quotes */
 import React from 'react'
+import CustomerInfo from './CustomerInfo'
+import DocumentFlow from './DocumentFlow'
+import Quotation from './Quotation'
+import SalesmanInfo from './SalesmanInfo'
 
 const CreateTabs = (label: React.ReactNode, key: string, children: React.ReactNode) => ({
   label,
@@ -29,6 +33,9 @@ const AllTabs = [
   //     children: <SalesmanInfo />,
   // },
   CreateTabs(`Quotation`, '1', ''),
+  CreateTabs(`Document Flow`, '2', ''),
+  CreateTabs(`Customer Info`, '3', ''),
+  CreateTabs(`Salesman Info`, '4', ''),
 ]
 
 export default AllTabs
