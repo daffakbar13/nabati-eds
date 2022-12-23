@@ -1,8 +1,9 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable camelcase */
-import { Row } from 'antd'
 import React from 'react'
 import { Table } from 'pink-lava-ui'
 import { getDocFlow } from 'src/api/master-data'
+import { useQuery } from 'react-query'
 import { useColumnsDocumentFlow } from './columns'
 
 interface TabDocumentFlowProps {
@@ -11,22 +12,16 @@ interface TabDocumentFlowProps {
 
 export default function TabDocumentFlow(props: TabDocumentFlowProps) {
   const { document_id } = props
-  const [data, setData] = React.useState([])
-  const [loading, setLoading] = React.useState(false)
-
-  React.useEffect(() => {
-    setLoading(true)
-    getDocFlow(document_id || '')
-      .then((response) => {
-        setData(response.data)
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [])
+  const { data, isSuccess, isLoading } = useQuery('data', () =>
+    getDocFlow(document_id || '').then((res) => res.data),
+  )
 
   return (
-    <Row style={{ overflow: 'scroll' }}>
-      <Table columns={useColumnsDocumentFlow} dataSource={data} loading={loading} />
-    </Row>
+    <Table
+      columns={useColumnsDocumentFlow}
+      dataSource={isSuccess ? data : []}
+      scroll={{ x: 'max-content' }}
+      loading={isLoading}
+    />
   )
 }
