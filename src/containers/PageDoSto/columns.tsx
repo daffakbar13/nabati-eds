@@ -100,7 +100,7 @@ export const columns = [
     250,
   ),
   CreateColumns('Status', 'status', false, (status_process) => (
-    <TaggedStatus status={status_process} />
+    <TaggedStatus status={status_process == 'Wait For Approval' ? 'Pending' : status_process} />
   )),
   CreateColumns('Action', 'id', false, (link, record) => (
     <Linked link={link} type="action" status={record.status_name} linkType="do-sto" />

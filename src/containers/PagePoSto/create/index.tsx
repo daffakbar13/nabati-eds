@@ -244,22 +244,6 @@ export default function CreateBilling() {
         successOkText="OK"
         width={432}
       />
-      {/* <SuccessModal
-        onCancel={() => {
-          close()
-          setShowSuccessModal(false)
-        }}
-        open={showSuccessModal}
-        onOk={() => {
-          router.push(`${PATH.LOGISTIC}/po-sto`)
-        }}
-        title={typeof successTitle === 'function' ? successTitle(onOkResponse) : successTitle}
-        content={
-          typeof successContent === 'function' ? successContent(onOkResponse) : successContent
-        }
-        okText={successOkText}
-        cancelText={successCancelText}
-      /> */}
     </Col>
   )
 }
