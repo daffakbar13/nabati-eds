@@ -38,7 +38,7 @@ export default function SingleField({
     if (!value?.option && (options[0] === 'EQ' || options[0] === 'NE')) {
       setMultipleChildren(false)
       sethasOneChildren(true)
-    } else {
+    } else if (!value?.option) {
       setMultipleChildren(true)
       sethasOneChildren(false)
     }
