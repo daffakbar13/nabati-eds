@@ -12,7 +12,7 @@ import { DispatchType } from './reducer'
 import { StateType } from './state'
 
 export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchType>) {
-  const { dataForm, tableProduct, optionsOrderType, fetching } = state
+  const { dataForm, optionsOrderType, fetching } = state
 
   const router = useRouter()
   const splitString = (data: string) => data.split(' - ')[0]

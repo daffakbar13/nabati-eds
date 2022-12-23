@@ -3,7 +3,7 @@
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useTableProduct } from 'src/components/TableProduct/hooks'
-import { useSalesQuotationCreateProvider } from 'src/hooks/contexts'
+import { useSalesQuotationCreateProvider } from './states'
 
 export interface PayloadCreate {
   company_id?: string

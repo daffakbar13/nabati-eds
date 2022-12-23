@@ -1,14 +1,12 @@
 import React from 'react'
-import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
 import { TableProduct } from 'src/components'
+import { useSalesQuotationCreateContext } from '../states'
 
 export default function SectionTable() {
   const {
     state: { dataForm, tableProduct },
   } = useSalesQuotationCreateContext()
   const [orderTypeId] = dataForm.order_type_id.split(' - ')
-
-  console.log(dataForm)
 
   return (
     <TableProduct

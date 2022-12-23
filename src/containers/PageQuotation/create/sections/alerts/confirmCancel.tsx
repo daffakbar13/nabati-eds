@@ -4,13 +4,14 @@ import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
+import { useSalesQuotationCreateContext } from '../../states'
 
 export default function ConfirmCancel() {
   const {
     handler: { unShowConfirm },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
+  const isFromDetail = Object.keys(router.query).includes('id')
 
   return (
     <Popup>
@@ -34,15 +35,8 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            if (router.query.status) {
-              const { status, id } = router.query
-              router.push({
-                pathname: `${PATH.SALES}/quotation/detail/${id}`,
-                query: { status },
-              })
-            } else {
-              router.push(`${PATH.SALES}/quotation`)
-            }
+            const additional = isFromDetail ? `/detail${router.query.id}` : ''
+            router.push(`${PATH.SALES}/quotation${additional}`)
           }}
         >
           Yes

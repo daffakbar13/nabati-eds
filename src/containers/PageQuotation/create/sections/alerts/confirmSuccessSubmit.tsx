@@ -5,14 +5,15 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { Typography } from 'antd'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
-import { useSalesQuotationCreateContext } from 'src/hooks/contexts'
-import { useTableProduct } from '../../columns'
+import { useSalesQuotationCreateContext } from '../../states'
 
 export default function ConfirmSuccessSubmit() {
   const {
     state: { quotationId, confirm },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
+  const isEditPage = router.asPath.includes('edit')
+  const isFromDetail = Object.keys(router.query).includes('id')
 
   return (
     <Popup>
@@ -35,7 +36,7 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {'New Quotation '}
+          {!isEditPage ? 'New' : ''} {' Quotation '}
           <Typography.Text copyable>{quotationId}</Typography.Text>
           {' has been'}
         </div>
@@ -47,7 +48,8 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/quotation`)
+            const additional = isFromDetail ? `/detail/${router.query.id}` : ''
+            router.push(`${PATH.SALES}/quotation${additional}`)
           }}
         >
           OK
