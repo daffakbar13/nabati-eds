@@ -18,7 +18,7 @@ export default function useDetail(
   React.useEffect(() => {
     if (!Object.values(params).includes(undefined)) {
       // handling for bugs error when refresh page
-      if (strict && (router.query.status === 'Draft' || !router.query.status)) {
+      if (strict && router.query.status === 'Draft') {
         throwToPageList()
       }
       funcApi(params)

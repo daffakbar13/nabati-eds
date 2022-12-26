@@ -35,7 +35,7 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            const additional = isFromDetail ? `/detail${router.query.id}` : ''
+            const additional = isFromDetail ? `/detail/${router.query.id}` : ''
             router.push(`${PATH.SALES}/quotation${additional}`)
           }}
         >

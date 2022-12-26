@@ -90,7 +90,7 @@ export default function SectionAction() {
             }
           }}
         >
-          Submit
+          {canSaveAsDraft ? 'Submit' : 'Save'}
         </Button>
       </Col>
     </Row>

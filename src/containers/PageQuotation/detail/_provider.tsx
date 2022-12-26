@@ -12,23 +12,26 @@ export default function SalesQuotationDetailProvider(
   const { children } = props
   const router = useRouter()
   const SalesQuotationDetail = useSalesQuotationDetailProvider()
-  const data = useDetail(getDetailQuotation, { id: router.query.id as string }, false)
-  const tableTabQuotation = useTable({
-    columns: ColumnsQuotation,
-    data: [],
-    removeHideShowColums: true,
-  })
+  const data = useDetail(getDetailQuotation, { id: router.query.id as string })
+  // const tableTabQuotation = useTable({
+  //   columns: ColumnsQuotation,
+  //   data: [],
+  //   removeHideShowColums: true,
+  // })
 
-  React.useEffect(() => {
-    if (Object.keys(data).length > 0) {
-      tableTabQuotation.handler.updateData(data.items)
-    }
-  }, [data])
+  // React.useEffect(() => {
+  //   if (Object.keys(data).length > 0) {
+  //     tableTabQuotation.handler.updateData(data.items)
+  //   }
+  // }, [data])
 
   return (
     <SalesQuotationDetail.Provider
       value={{
-        state: { ...SalesQuotationDetail.state, data, tableTabQuotation },
+        state: {
+          ...SalesQuotationDetail.state,
+          data, // tableTabQuotation
+        },
         handler: SalesQuotationDetail.handler,
       }}
     >

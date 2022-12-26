@@ -6,6 +6,7 @@ import { Spacer, Table } from 'pink-lava-ui'
 import dateFormat from 'src/utils/dateFormat'
 import { concatString } from 'src/utils/concatString'
 import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
+import { ColumnsQuotation } from '../../columns'
 
 export default function Quotation() {
   const {
@@ -53,9 +54,9 @@ export default function Quotation() {
         </Col>
       </Row>
       <Divider />
-      <Row style={{ overflow: 'scroll' }}>
-        <Table {...tableTabQuotation.state.tableProps} tableLayout="auto" />
-      </Row>
+      {/* <Row style={{ overflow: 'scroll' }}> */}
+      <Table columns={ColumnsQuotation} data={data.items} scroll={{ x: 'max-content' }} />
+      {/* </Row> */}
       <Spacer size={30} />
       <Row>
         <Col span={12} offset={12}>
