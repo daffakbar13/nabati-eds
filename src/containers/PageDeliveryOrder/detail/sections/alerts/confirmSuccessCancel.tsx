@@ -31,11 +31,11 @@ export default function ConfirmCancel() {
         }}
       >
         <div>
-          Sales Order
+          {'Delivery Order '}
           <Typography.Text copyable={{ text: router.query.id as string }}>
-            {` ${router.query.id} `}
+            {`${router.query.id}`}
           </Typography.Text>
-          has been
+          {' has been'}
         </div>
         <div>successfully canceled</div>
       </div>
@@ -45,7 +45,7 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/sales-order`)
+            router.push(`${PATH.SALES}/delivery-order`)
           }}
         >
           OK
