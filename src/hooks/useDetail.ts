@@ -25,8 +25,6 @@ export default function useDetail(
       funcApi(params)
         .then((results) => setData(results.data))
         .catch(() => {
-          console.log('masuk')
-
           // throwToPageList()
           router.push('/not-found-404')
         })
