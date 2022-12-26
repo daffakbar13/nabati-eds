@@ -23,10 +23,12 @@ export default function PageRealTime() {
   const [allSloc, setAllScloc] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')
-  const router = useRouter()
-
+  const [dataTable, setdataTable] = useState([])
+  const data = []
+  
   const table = useTable({
     funcApi: getStockRealtimeList,
+    data,
     columns,
   })
 
@@ -36,10 +38,53 @@ export default function PageRealTime() {
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
-      console.log('response Branch', response)
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
+
+  useEffect(() => {
+    const dataApi = table.state.data.map((item: any, index) => {
+      if (item?.group_by_sloc?.length > 1) {
+        return {
+          key: index,
+          branch: `${item.branch_id} - ${item.branch_name}`,
+          sloc: item?.group_by_sloc?.[0].sloc_id,
+          material: `${item?.group_by_sloc?.[0].group_by_product.product_id} - ${item?.group_by_sloc?.[0].group_by_product.product_name}`,
+          large: item?.group_by_sloc?.[0].group_by_product.large,
+          middle: item?.group_by_sloc?.[0].group_by_product.middle,
+          small: item?.group_by_sloc?.[0].group_by_product.small,
+          total_in_small: item?.group_by_sloc?.[0].group_by_product.total_in_small,
+          total_in_large: item?.group_by_sloc?.[0].group_by_product.total_in_large,
+          children: item?.group_by_sloc?.slice(1).map((itemChild: any, indexChild) => {
+            return {
+              key: `${index}-${indexChild}`,
+              branch: `${item.branch_id} - ${item.branch_name}`,
+              sloc: itemChild.sloc_id,
+              material: `${itemChild?.group_by_product.product_id} - ${itemChild?.group_by_product.product_name}`,
+              large: itemChild?.group_by_product.large,
+              middle: itemChild?.group_by_product.middle,
+              small: itemChild?.group_by_product.small,
+              total_in_small: itemChild?.group_by_product.total_in_small,
+              total_in_large: itemChild?.group_by_product.total_in_large,
+            }
+          }),
+        }
+      } else {
+        return {
+          key: index,
+          branch: `${item.branch_id} - ${item.branch_name}`,
+          sloc: item?.group_by_sloc?.[0].sloc_id,
+          material: `${item?.group_by_sloc?.[0].group_by_product.product_id} - ${item?.group_by_sloc?.[0].group_by_product.product_name}`,
+          large: item?.group_by_sloc?.[0].group_by_product.large,
+          middle: item?.group_by_sloc?.[0].group_by_product.middle,
+          small: item?.group_by_sloc?.[0].group_by_product.small,
+          total_in_small: item?.group_by_sloc?.[0].group_by_product.total_in_small,
+          total_in_large: item?.group_by_sloc?.[0].group_by_product.total_in_large,
+        }
+      }
+    })
+    setdataTable(dataApi);
+  }, [table?.state?.data])
 
   return (
     <Col>
@@ -112,7 +157,7 @@ export default function PageRealTime() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} dataSource={dataTable} />
         </div>
       </Card>
     </Col>

@@ -28,10 +28,13 @@ export default function PageAvailabilityOverview() {
   const [allSloc, setAllScloc] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')
+  const [dataTable, setdataTable] = useState([])
+  const data = []
 
   const table = useTable({
     funcApi: getAvailabilityOverview,
     columns,
+    data,
   })
 
   useEffect(() => {
@@ -44,6 +47,92 @@ export default function PageAvailabilityOverview() {
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
+
+  useEffect(() => {
+    const dataApi = table.state.data.map((item: any, index) => {
+      if (item?.group_by_product?.length > 1) {
+        return {
+          key: index,
+          branch: `${item.branch_id} - ${item.branch_name}`,
+          material: `${item.group_by_product?.[0].product_id} - ${item.group_by_product?.[0].product_name}`,
+          sloc: item.group_by_product?.[0].group_by_sloc.sloc_id,
+          status: item.group_by_product?.[0].group_by_sloc.status_id_name,
+          status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
+            item.group_by_product?.[0].group_by_sloc.status_description || ''
+          }`,
+          stock_large: item.group_by_product?.[0].group_by_sloc.stock.large,
+          stock_middle: item.group_by_product?.[0].group_by_sloc.stock.middle,
+          stock_small: item.group_by_product?.[0].group_by_sloc.stock.small,
+          stock_in_small: item.group_by_product?.[0].group_by_sloc.stock.total_in_small,
+          stock_in_large: item.group_by_product?.[0].group_by_sloc.stock.total_in_large,
+          bo_large: item.group_by_product?.[0].group_by_sloc.booking_order.large,
+          bo_middle: item.group_by_product?.[0].group_by_sloc.booking_order.middle,
+          bo_small: item.group_by_product?.[0].group_by_sloc.booking_order.small,
+          bo_in_large: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small,
+          bo_in_small: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large,
+          available_large: item.group_by_product?.[0].group_by_sloc.available.large,
+          available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
+          available_small: item.group_by_product?.[0].group_by_sloc.available.small,
+          available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
+          available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+          children: item?.group_by_product?.slice(1).map((itemChild: any, indexChild) => {
+            return {
+              key: `${index}-${indexChild}`,
+              branch: `${item.branch_id} - ${item.branch_name}`,
+              material: `${itemChild?.product_id} - ${itemChild?.product_name}`,
+              sloc: itemChild?.group_by_sloc.sloc_id,
+              status: itemChild?.group_by_sloc.status_id_name,
+              status_data: `${itemChild?.group_by_sloc.status_data || ''} - ${
+                itemChild?.group_by_sloc.status_description || ''
+              }`,
+              stock_large: itemChild?.group_by_sloc.stock.large,
+              stock_middle: itemChild?.group_by_sloc.stock.middle,
+              stock_small: itemChild?.group_by_sloc.stock.small,
+              stock_in_small: itemChild?.group_by_sloc.stock.total_in_small,
+              stock_in_large: itemChild?.group_by_sloc.stock.total_in_large,
+              bo_large: itemChild?.group_by_sloc.booking_order.large,
+              bo_middle: itemChild?.group_by_sloc.booking_order.middle,
+              bo_small: itemChild?.group_by_sloc.booking_order.small,
+              bo_in_large: itemChild?.group_by_sloc.booking_order.total_in_small,
+              bo_in_small: itemChild?.group_by_sloc.booking_order.total_in_large,
+              available_large: itemChild?.group_by_sloc.available.large,
+              available_middle: itemChild?.group_by_sloc.available.middle,
+              available_small: itemChild?.group_by_sloc.available.small,
+              available_in_large: itemChild?.group_by_sloc.available.total_in_small,
+              available_in_small: itemChild?.group_by_sloc.available.total_in_large,
+            }
+          }),
+        }
+      } else {
+        return {
+          key: index,
+          branch: `${item.branch_id} - ${item.branch_name}`,
+          material: `${item.group_by_product?.[0].product_id} - ${item.group_by_product?.[0].product_name}`,
+          sloc: item.group_by_product?.[0].group_by_sloc.sloc_id,
+          status: item.group_by_product?.[0].group_by_sloc.status_id_name,
+          status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
+            item.group_by_product?.[0].group_by_sloc.status_description || ''
+          }`,
+          stock_large: item.group_by_product?.[0].group_by_sloc.stock.large,
+          stock_middle: item.group_by_product?.[0].group_by_sloc.stock.middle,
+          stock_small: item.group_by_product?.[0].group_by_sloc.stock.small,
+          stock_in_small: item.group_by_product?.[0].group_by_sloc.stock.total_in_small,
+          stock_in_large: item.group_by_product?.[0].group_by_sloc.stock.total_in_large,
+          bo_large: item.group_by_product?.[0].group_by_sloc.booking_order.large,
+          bo_middle: item.group_by_product?.[0].group_by_sloc.booking_order.middle,
+          bo_small: item.group_by_product?.[0].group_by_sloc.booking_order.small,
+          bo_in_large: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small,
+          bo_in_small: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large,
+          available_large: item.group_by_product?.[0].group_by_sloc.available.large,
+          available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
+          available_small: item.group_by_product?.[0].group_by_sloc.available.small,
+          available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
+          available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+        }
+      }
+    })
+    setdataTable(dataApi)
+  }, [table?.state?.data])
 
   return (
     <Col>
@@ -116,7 +205,7 @@ export default function PageAvailabilityOverview() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={table.state.tableProps?.dataSource} />
+          <Table {...table.state.tableProps} dataSource={dataTable} />
         </div>
       </Card>
     </Col>
