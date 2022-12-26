@@ -33,7 +33,7 @@ export default function ConfirmCancel() {
         <div>
           {'Delivery Order '}
           <Typography.Text copyable={{ text: router.query.id as string }}>
-            {`${router.query.id}`}
+            {router.query.id}
           </Typography.Text>
           {' has been'}
         </div>

@@ -18,7 +18,7 @@ export default function ConfirmCancel() {
 
   React.useEffect(() => {
     runProcess('Wait for get Reasons')
-    fieldReason('B')
+    fieldReason('C')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)

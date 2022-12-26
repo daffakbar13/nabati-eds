@@ -31,11 +31,11 @@ export default function ConfirmCancel() {
         }}
       >
         <div>
-          Sales Order
+          {'Sales Order '}
           <Typography.Text copyable={{ text: router.query.id as string }}>
-            {` ${router.query.id} `}
+            {router.query.id}
           </Typography.Text>
-          has been
+          {' has been'}
         </div>
         <div>successfully canceled</div>
       </div>
