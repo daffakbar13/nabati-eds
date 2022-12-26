@@ -1,24 +1,18 @@
 /* eslint-disable */
 import { addColumn } from 'src/utils/createColumns'
-// import { useRouter } from 'next/router'
-// import React from 'react'
-// import { Button } from 'pink-lava-ui'
-// import { PATH } from 'src/configs/menus'
-import { Tag, Row, Col } from 'antd'
-import ControlledExpandIcon from 'src/components/ControlledExpandIcon'
 
 export const columns = [
   addColumn({
     title: 'SLoc',
     dataIndex: 'sloc',
     fixed: true,
-    width: 500,
+    width: 150,
   }),
   addColumn({
     title: 'Branch',
     dataIndex: 'branch',
     fixed: true,
-    width: 950,
+    // width: 950,
   }),
   addColumn({
     title: 'Material',

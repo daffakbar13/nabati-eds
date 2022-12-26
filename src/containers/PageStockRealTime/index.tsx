@@ -1,22 +1,15 @@
-import { useRouter } from 'next/router'
 import { Col, Row, Spacer, Table, Text, Button } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import {
-  Card,
-  DownloadButton,
-  SearchQueryParams,
-  SmartFilter,
-  SelectMasterData,
-} from 'src/components'
+import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { exportExcelStockRealTime, getStockRealtimeList } from 'src/api/logistic/stock-real-time'
 import { useTable } from 'src/hooks'
-import { columns } from './columns'
 import {
   fieldBranchAll,
   fieldSlocFromBranch,
   fieldProductByCompany,
 } from 'src/configs/fieldFetches'
+import { columns } from './columns'
 
 export default function PageRealTime() {
   const [filters, setFilters] = useState([])
@@ -25,7 +18,7 @@ export default function PageRealTime() {
   const [branchTo, setBranchTo] = useState('')
   const [dataTable, setdataTable] = useState([])
   const data = []
-  
+
   const table = useTable({
     funcApi: getStockRealtimeList,
     data,
@@ -55,35 +48,32 @@ export default function PageRealTime() {
           small: item?.group_by_sloc?.[0].group_by_product.small,
           total_in_small: item?.group_by_sloc?.[0].group_by_product.total_in_small,
           total_in_large: item?.group_by_sloc?.[0].group_by_product.total_in_large,
-          children: item?.group_by_sloc?.slice(1).map((itemChild: any, indexChild) => {
-            return {
-              key: `${index}-${indexChild}`,
-              branch: `${item.branch_id} - ${item.branch_name}`,
-              sloc: itemChild.sloc_id,
-              material: `${itemChild?.group_by_product.product_id} - ${itemChild?.group_by_product.product_name}`,
-              large: itemChild?.group_by_product.large,
-              middle: itemChild?.group_by_product.middle,
-              small: itemChild?.group_by_product.small,
-              total_in_small: itemChild?.group_by_product.total_in_small,
-              total_in_large: itemChild?.group_by_product.total_in_large,
-            }
-          }),
-        }
-      } else {
-        return {
-          key: index,
-          branch: `${item.branch_id} - ${item.branch_name}`,
-          sloc: item?.group_by_sloc?.[0].sloc_id,
-          material: `${item?.group_by_sloc?.[0].group_by_product.product_id} - ${item?.group_by_sloc?.[0].group_by_product.product_name}`,
-          large: item?.group_by_sloc?.[0].group_by_product.large,
-          middle: item?.group_by_sloc?.[0].group_by_product.middle,
-          small: item?.group_by_sloc?.[0].group_by_product.small,
-          total_in_small: item?.group_by_sloc?.[0].group_by_product.total_in_small,
-          total_in_large: item?.group_by_sloc?.[0].group_by_product.total_in_large,
+          children: item?.group_by_sloc?.slice(1).map((itemChild: any, indexChild) => ({
+            key: `${index}-${indexChild}`,
+            branch: `${item.branch_id} - ${item.branch_name}`,
+            sloc: itemChild.sloc_id,
+            material: `${itemChild?.group_by_product.product_id} - ${itemChild?.group_by_product.product_name}`,
+            large: itemChild?.group_by_product.large,
+            middle: itemChild?.group_by_product.middle,
+            small: itemChild?.group_by_product.small,
+            total_in_small: itemChild?.group_by_product.total_in_small,
+            total_in_large: itemChild?.group_by_product.total_in_large,
+          })),
         }
       }
+      return {
+        key: index,
+        branch: `${item.branch_id} - ${item.branch_name}`,
+        sloc: item?.group_by_sloc?.[0].sloc_id,
+        material: `${item?.group_by_sloc?.[0].group_by_product.product_id} - ${item?.group_by_sloc?.[0].group_by_product.product_name}`,
+        large: item?.group_by_sloc?.[0].group_by_product.large,
+        middle: item?.group_by_sloc?.[0].group_by_product.middle,
+        small: item?.group_by_sloc?.[0].group_by_product.small,
+        total_in_small: item?.group_by_sloc?.[0].group_by_product.total_in_small,
+        total_in_large: item?.group_by_sloc?.[0].group_by_product.total_in_large,
+      }
     })
-    setdataTable(dataApi);
+    setdataTable(dataApi)
   }, [table?.state?.data])
 
   return (
@@ -143,7 +133,7 @@ export default function PageRealTime() {
               variant="secondary"
               onClick={() =>
                 exportExcelStockRealTime({
-                  filters: filters,
+                  filters,
                   limit: table.state.limit,
                   page: table.state.page,
                 })

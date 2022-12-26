@@ -20,31 +20,31 @@ export const responseInterceptor = (response: AxiosResponse) => ({
 
 export const errorInterceptor = (err: AxiosError): Promise<never> => {
   const { response } = err
-  if (response) {
-    const message: string = response?.data?.message
-    const url: string = response?.config?.url || ''
-    if (response.status === 401 && url.includes(LOGIN_SUB_URL)) {
-      yell(message || HTTP_LOGIN_ERROR)
-      localStorage.clear()
-    } else if (response.status === 401) {
-      yell(message || HTTP_SESSION_EXPIRED)
-      window.setTimeout(() => {
-        localStorage.clear()
-        window.location.href = `${PUBLIC_URL}/login`
-      }, 1500)
-    } else if (response.status === 400) {
-      yell(message || HTTP_UNAUTHORIZED_ACTION)
-    } else if (response.status === 403) {
-      yell(HTTP_UNAUTHORIZED_ACTION)
-    } else if (message || response.status === 500) {
-      yell(HTTP_INTERNAL_SERVER_ERROR)
-    } else if (message || response.status === 503) {
-      Router.push('/maintenance')
-    } else {
-      yell(HTTP_NETWORK_ISSUE_ERROR)
-    }
-  } else {
-    yell(HTTP_NETWORK_ERROR)
-  }
+  // if (response) {
+  //   const message: string = response?.data?.message
+  //   const url: string = response?.config?.url || ''
+  //   if (response.status === 401 && url.includes(LOGIN_SUB_URL)) {
+  //     yell(message || HTTP_LOGIN_ERROR)
+  //     localStorage.clear()
+  //   } else if (response.status === 401) {
+  //     yell(message || HTTP_SESSION_EXPIRED)
+  //     window.setTimeout(() => {
+  //       localStorage.clear()
+  //       window.location.href = `${PUBLIC_URL}/login`
+  //     }, 1500)
+  //   } else if (response.status === 400) {
+  //     yell(message || HTTP_UNAUTHORIZED_ACTION)
+  //   } else if (response.status === 403) {
+  //     yell(HTTP_UNAUTHORIZED_ACTION)
+  //   } else if (message || response.status === 500) {
+  //     yell(HTTP_INTERNAL_SERVER_ERROR)
+  //   } else if (message || response.status === 503) {
+  //     Router.push('/maintenance')
+  //   } else {
+  //     yell(HTTP_NETWORK_ISSUE_ERROR)
+  //   }
+  // } else {
+  //   yell(HTTP_NETWORK_ERROR)
+  // }
   return Promise.reject(err)
 }
