@@ -6,6 +6,7 @@ import { Button } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
 import { cancelSalesOrder } from 'src/api/sales-order'
 import { fieldReason } from 'src/configs/fieldFetches'
+import { cancelDeliveryOrder } from 'src/api/delivery-order'
 
 interface ConfirmCancelProps {
   handleShowConfirm: (confirm: string) => void
@@ -19,10 +20,12 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
   const router = useRouter()
 
   React.useEffect(() => {
-    fieldReason('B')
+    handleProcess('Wait for get data Reasons')
+    fieldReason('J')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)
+        handleProcess(undefined)
       })
       .catch(() => setOptionsReason([]))
   }, [])
@@ -35,10 +38,10 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
       <DebounceSelect
         type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
-        label={'Reason Cancel Process Sales Order'}
+        label={'Reason Cancel Process Delivery Order'}
         required
         options={optionsReason}
-        onChange={({ value }) => setReason(value)}
+        onChange={(e) => setReason(e.value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -56,11 +59,8 @@ export default function ConfirmCancel(props: ConfirmCancelProps) {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            handleProcess('Wait for cancelling Sales Order')
-            cancelSalesOrder({
-              order_list: [{ id: router.query.id }],
-              cancel_reason_id: reason,
-            })
+            handleProcess('Wait for cancelling Delivery Order')
+            cancelDeliveryOrder(router.query.id as string, { cancel_reason_id: reason })
               .then(() => {
                 handleShowConfirm('success-cancel')
                 handleProcess(undefined)
