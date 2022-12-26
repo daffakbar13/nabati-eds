@@ -35,6 +35,7 @@ import { getListDoSto } from 'src/api/logistic/do-sto'
 import { getDetailProductIntraChannel } from 'src/api/logistic/config-mapping-product-intra'
 import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
+import { getPoNumberList } from 'src/api/logistic/good-receipt'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -661,5 +662,25 @@ export function fieldSlocFromBranchCompanyDynamic(
         label: sloc_id,
         value: sloc_id,
       })),
+  )
+}
+
+export function fieldPoGRPrincipal(search: string) {
+  return getPoNumberList({
+    filters: [
+      {
+        field: 'po_number',
+        option: 'CP',
+        from_value: `${search}`,
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result.data.result.splice(0, 10).map(({ po_id }) => ({
+      label: po_id,
+      value: po_id,
+    })),
   )
 }

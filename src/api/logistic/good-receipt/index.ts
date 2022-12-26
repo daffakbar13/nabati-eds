@@ -76,13 +76,10 @@ export const getGrReturnByRefDocNo = async (
   return response.data
 }
 
-export const getPoNumberList = async (
-  poNumber?: string | null,
-  params: CommonListParams = {},
-): Promise<CommonDetailResponse<any>> => {
+export const getPoNumberList = async (params: {}): Promise<CommonDetailResponse<any>> => {
   const response = await call({
-    method: METHODS.GET,
-    subUrl: `${url}/get_purchase_id/:po_number`,
+    method: METHODS.POST,
+    subUrl: `${url}/get_purchase_id`,
     overrideBaseUrl,
     data: params,
   })

@@ -12,7 +12,7 @@
     "linebreak-style": 0,
     "implicit-arrow-linebreak": 0,
     "object-curly-newline": [
-      "error",
+      "warn",
       {
         "ObjectExpression": {
           "multiline": true,

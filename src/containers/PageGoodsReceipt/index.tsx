@@ -76,6 +76,12 @@ export default function PageGoodsReceipt() {
                   format={'DD-MMM-YYYY'}
                   placeholder="Posting Date"
                 />
+                <DatePickerInput
+                  label={''}
+                  fullWidth
+                  format={'DD-MMM-YYYY'}
+                  placeholder="Posting Date"
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="status_data"
