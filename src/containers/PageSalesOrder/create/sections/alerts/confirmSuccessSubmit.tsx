@@ -35,7 +35,7 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {'New SalesOrder '}
+          {'New Sales Order '}
           <Typography.Text copyable>{salesOrderId}</Typography.Text>
           {' has been'}
         </div>
