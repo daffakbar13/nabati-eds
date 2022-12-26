@@ -22,9 +22,9 @@ function Linked(props: LinkedProps) {
     status === 'Draft'
       ? router.push(`${PATH.SALES}/sales-order/edit/${link}`)
       : router.push({
-          pathname: `${PATH.SALES}/sales-order/detail/${link}`,
-          query: { status },
-        })
+        pathname: `${PATH.SALES}/sales-order/detail/${link}`,
+        query: { status },
+      })
   }
   const [hover, setHover] = React.useState(false)
 
@@ -90,10 +90,6 @@ export const useColumnSalesOrder = [
     title: 'Ship To Customer',
     dataIndex: 'ship_to_customer_id',
     render: (id, { customer_name }) => concatString(id, customer_name),
-  }),
-  addColumn({
-    title: 'Salesman',
-    render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
   }),
   addColumn({
     title: 'Salesman',

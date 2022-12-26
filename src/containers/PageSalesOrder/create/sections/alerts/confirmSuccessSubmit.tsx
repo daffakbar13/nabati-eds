@@ -12,6 +12,7 @@ export default function ConfirmSuccessSubmit() {
     state: { salesOrderId, confirm },
   } = useSalesSalesOrderCreateContext()
   const router = useRouter()
+  const isCreate = confirm === 'newSO'
 
   return (
     <Popup>
@@ -21,7 +22,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> Submit Success
+            <CheckCircleFilled /> {isCreate ? 'Submit' : 'Saved'} Success
           </>
         </Text>
       </div>
@@ -34,11 +35,11 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {'New SalesOrder '}
+          {'New Sales Order '}
           <Typography.Text copyable>{salesOrderId}</Typography.Text>
           {' has been'}
         </div>
-        <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
+        <div>successfully {isCreate ? 'created' : 'saved'}</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button

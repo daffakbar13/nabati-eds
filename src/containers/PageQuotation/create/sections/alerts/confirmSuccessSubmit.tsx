@@ -14,6 +14,7 @@ export default function ConfirmSuccessSubmit() {
   const router = useRouter()
   const isEditPage = router.asPath.includes('edit')
   const isFromDetail = Object.keys(router.query).includes('id')
+  const isCreate = confirm === 'newQuo'
 
   return (
     <Popup>
@@ -23,7 +24,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> Submit Success
+            <CheckCircleFilled /> {isCreate ? 'Submit' : 'Saved'} Success
           </>
         </Text>
       </div>

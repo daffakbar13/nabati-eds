@@ -22,7 +22,7 @@ export default function SectionTab() {
   })
 
   const AllTabs = [
-    createTabs('Quotation', '1'),
+    createTabs('Sales Order', '1'),
     createTabs('Pricing Condition', '2'),
     createTabs('Promotion List', '3'),
     createTabs('Document Flow', '4'),

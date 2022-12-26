@@ -18,15 +18,15 @@ export default function useDetail(
   React.useEffect(() => {
     if (!Object.values(params).includes(undefined)) {
       // handling for bugs error when refresh page
-      if (strict && (router.query.status === 'Draft' || !router.query.status)) {
-        throwToPageList()
+      if (strict && router.query.status === 'Draft') {
+        // throwToPageList()
+        router.push('/not-found-404')
       }
       funcApi(params)
         .then((results) => setData(results.data))
         .catch(() => {
-          console.log('masuk')
-
-          throwToPageList()
+          // throwToPageList()
+          router.push('/not-found-404')
         })
     }
   }, [router.query])

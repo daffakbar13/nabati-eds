@@ -156,8 +156,8 @@ export function baseHandler(
   function handleChangeQty(value: string, index: number) {
     const current = state.data[index]
     let order_qty = Number(value)
-    if (order_qty > 999999999999999) {
-      order_qty = 999999999999999
+    if (order_qty > 99999) {
+      order_qty = 99999
     }
     const newData = [...state.data]
     newData[index] = {

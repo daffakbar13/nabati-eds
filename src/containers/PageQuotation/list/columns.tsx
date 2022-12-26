@@ -59,10 +59,6 @@ export function useColumnQuotation() {
       render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
     }),
     addColumn({
-      title: 'Salesman',
-      render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
-    }),
-    addColumn({
       title: 'Currency',
       dataIndex: 'currency_id',
     }),

@@ -82,7 +82,7 @@ export default function SectionAction() {
                 updateSalesOrder(dataSubmitted(1), router.query.id as string)
                   .then((response) => {
                     setSalesOrderId(response.data.id)
-                    showConfirm('newSO')
+                    showConfirm('draftSO')
                     stopProcess()
                   })
                   .catch(() => stopProcess())
@@ -90,7 +90,7 @@ export default function SectionAction() {
             }
           }}
         >
-          Submit
+          {canSaveAsDraft ? 'Submit' : 'Save'}
         </Button>
       </Col>
     </Row>

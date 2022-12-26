@@ -23,13 +23,6 @@ export default function TableProduct(props: TableProductProps) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-      {!hideData && (
-        <Row>
-          <Button size="small" variant="tertiary" onClick={() => addItem()}>
-            + Add Item
-          </Button>
-        </Row>
-      )}
       <div style={{ overflow: 'scroll' }}>
         <Table
           data={hideData ? [] : data}
@@ -38,6 +31,13 @@ export default function TableProduct(props: TableProductProps) {
           scroll={{ x: 'max-content' }}
         />
       </div>
+      {!hideData && (
+        <Row>
+          <Button size="small" variant="tertiary" onClick={() => addItem()}>
+            + Add Item
+          </Button>
+        </Row>
+      )}
       <div style={{ justifyContent: 'end' }}>
         <Total label="Total Amount" value={subTotal.toLocaleString()} />
       </div>
