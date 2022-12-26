@@ -22,6 +22,7 @@ export default function ConfirmCancel() {
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)
+        stopProcess()
       })
       .catch(() => stopProcess())
   }, [])
@@ -37,7 +38,7 @@ export default function ConfirmCancel() {
         label={'Reason Cancel Process Sales Order'}
         required
         options={optionsReason}
-        onChange={({ value }) => setReason(value)}
+        onChange={(e) => setReason(e.value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
