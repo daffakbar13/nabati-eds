@@ -6,7 +6,7 @@ export const columns = [
     title: 'SLoc',
     dataIndex: 'sloc',
     fixed: true,
-    width: 150,
+    width: 120,
   }),
   addColumn({
     title: 'Branch',

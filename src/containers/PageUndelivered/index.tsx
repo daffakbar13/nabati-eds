@@ -42,9 +42,6 @@ export default function PageUndelivered() {
             <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
-              Create
-            </Button>
           </Row>
         </Row>
       </Card>

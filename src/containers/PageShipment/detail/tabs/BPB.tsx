@@ -159,12 +159,12 @@ export default function BPB(props: BPBProps) {
               <td>{findQty(item.item_qty, 'large')}</td>
               <td>{findQty(item.item_qty, 'middle')}</td>
               <td>{findQty(item.item_qty, 'small')}</td>
-              <td>{findQty(item.item_qty, 'large')}</td>
-              <td>{findQty(item.item_qty, 'middle')}</td>
-              <td>{findQty(item.item_qty, 'small')}</td>
-              <td>{findQty(item.item_qty, 'large')}</td>
-              <td>{findQty(item.item_qty, 'middle')}</td>
-              <td>{findQty(item.item_qty, 'small')}</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           ))}
           <tr>
@@ -174,12 +174,12 @@ export default function BPB(props: BPBProps) {
             <td>{total.large}</td>
             <td>{total.middle}</td>
             <td>{total.small}</td>
-            <td>{total.large}</td>
-            <td>{total.middle}</td>
-            <td>{total.small}</td>
-            <td>{total.large}</td>
-            <td>{total.middle}</td>
-            <td>{total.small}</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>

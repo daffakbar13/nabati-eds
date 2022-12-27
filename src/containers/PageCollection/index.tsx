@@ -43,9 +43,6 @@ export default function PageCollection(props: PageCollectionProps) {
             <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
-            <Button size="big" variant="primary" onClick={() => {}}>
-              Create
-            </Button>
           </Row>
         </Row>
       </Card>

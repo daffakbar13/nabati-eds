@@ -9,12 +9,13 @@ import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 
 export default function SectionAction() {
   const {
+    state: { data },
     handler: { showConfirm },
   } = useSalesSalesOrderDetailContext()
   const titlePage = useTitlePage('detail')
   const router = useRouter()
 
-  const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+  const isStatus = (...value: string[]) => value.includes(data.status_id)
 
   return (
     <Row justify="space-between">
@@ -33,7 +34,7 @@ export default function SectionAction() {
         </Col>
       </Row>
       <Row gutter={10}>
-        {isStatus('New') && (
+        {isStatus('1') && (
           <>
             <Col>
               <Button
@@ -51,9 +52,7 @@ export default function SectionAction() {
                 size="big"
                 variant="secondary"
                 onClick={() => {
-                  router.push(
-                    `${PATH.SALES}/sales-order/edit/${router.query.id}?status=${router.query.status}`,
-                  )
+                  router.push(`${PATH.SALES}/sales-order/edit/${router.query.id}`)
                 }}
               >
                 Edit
@@ -61,15 +60,13 @@ export default function SectionAction() {
             </Col>
           </>
         )}
-        {isStatus('Complete', 'New') && (
+        {isStatus('5', '1') && (
           <Col>
             <Button
               size="big"
               variant="primary"
               onClick={() => {
-                router.push(
-                  `${PATH.SALES}/sales-order/create?id=${router.query.id}&status=${router.query.status}`,
-                )
+                router.push(`${PATH.SALES}/sales-order/create?id=${router.query.id}`)
               }}
             >
               Order Again

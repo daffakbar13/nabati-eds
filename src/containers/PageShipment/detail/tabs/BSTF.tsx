@@ -111,7 +111,7 @@ export default function BSTF(props: BSTFProps) {
         <Col offset={6} span={10}>
           <Information
             label="Tanggal Cetak"
-            value={dateFormat(new Date().toISOString(), 'DD.MM.YYYY-hh:mm:ss')}
+            value={dateFormat(new Date().toISOString(), 'DD.MM.YYYY-HH:mm:ss')}
           />
           <Information label="Halaman" value="1" />
           <Information label="Cetakan Ke" value="1/1" />
@@ -142,22 +142,22 @@ export default function BSTF(props: BSTFProps) {
               <td>Driver</td>
               <td>{data.driver_name}</td>
               <td>Jam Berangkat</td>
-              <td>?</td>
+              <td></td>
               <td>KM Berangkat</td>
-              <td>?</td>
+              <td></td>
               <td>Jml. Kublikasi</td>
               <td>{`${Math.round(data.total_cubication / 10)} M³`}</td>
             </tr>
             <tr>
               <td>Pengiriman</td>
-              <td>?</td>
+              <td>{data.ritase > 0 ? `Rit.${data.ritase}` : ''}</td>
               <td>Helper</td>
-              <td>?</td>
+              <td></td>
               <td>Jam Kembali</td>
-              <td>?</td>
+              <td></td>
               <td>KM Kembali</td>
-              <td>?</td>
-              <td colSpan={2}>?</td>
+              <td></td>
+              <td colSpan={2}></td>
             </tr>
             <tr>
               <td colSpan={10}>Jumlah Toko: {data.total_store}</td>
@@ -198,15 +198,15 @@ export default function BSTF(props: BSTFProps) {
                 <td>{e.customer_address}</td>
                 <td>{e.billing_to}</td>
                 <td>{e.doc_type}</td>
-                <td>{e.item_number}</td>
-                <td>{e.item_number}</td>
-                <td>{e.item_number}</td>
+                <td></td>
+                <td></td>
+                <td></td>
                 <td>{e.total_qty_item}</td>
                 <td></td>
                 <td></td>
-                <td>{e.item_number}</td>
                 <td></td>
-                <td>{Math.round(e.cubication / 10)}</td>
+                <td></td>
+                <td>{`${Math.round(e.cubication / 10)} M³`}</td>
               </tr>
             ))}
             <tr>
@@ -216,10 +216,12 @@ export default function BSTF(props: BSTFProps) {
               <th colSpan={4}>Total</th>
               <td>{data.items.map((e) => e.total_qty_item).reduce((a, b) => a + b)}</td>
               <td colSpan={2} className="right-align"></td>
-              <td>{data.items.map((e) => e.item_number).reduce((a, b) => a + b)}</td>
+              <td></td>
               <td></td>
               <td>
-                {Math.round(data.items.map((e) => e.cubication).reduce((a, b) => a + b) / 10)}
+                {`${Math.round(
+                  data.items.map((e) => e.cubication).reduce((a, b) => a + b) / 10,
+                )} M³`}
               </td>
             </tr>
           </tbody>

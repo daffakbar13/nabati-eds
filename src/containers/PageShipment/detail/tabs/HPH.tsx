@@ -94,7 +94,7 @@ export default function HPH(props: HPHProps) {
       <Row>
         <Col span={8}>
           <Information label="No. Kendaraan" value={data.vehicle_id} />
-          <Information label="Pengiriman" value="?" />
+          <Information label="Pengiriman" value={data.ritase > 0 ? `Rit.${data.ritase}` : ''} />
           <Information label="Jumlah Toko" value={data.total_store} />
         </Col>
         <Col offset={6} span={8}>
@@ -134,32 +134,32 @@ export default function HPH(props: HPHProps) {
               <td>{e.item_number}</td>
               <td>{e.customer_id}</td>
               <td>{e.customer_name}</td>
-              <td>?</td>
-              <td>?</td>
+              <td></td>
+              <td></td>
               <td>{e.doc_type}</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
-              <td>?</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
             </tr>
           ))}
           <tr>
             <td></td>
             <td></td>
             <th>Total</th>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
-            <td>?</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
           </tr>
         </tbody>
       </table>
