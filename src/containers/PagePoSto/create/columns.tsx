@@ -199,6 +199,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
           onChange={(e) => {
             handleChangeData('product_id', e.value, index)
+            handleChangeData('description', e.label.split(' - ')[1] || '', index)
             handleChangePlaceHolder('product_id', e.label, index)
             setFetching(true)
           }}
