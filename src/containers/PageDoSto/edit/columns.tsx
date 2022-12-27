@@ -246,6 +246,7 @@ export const useTableAddItem = (props: any) => {
       render: (remarks, __, index) => (
         <DebounceSelect
           type="input"
+          value={data[index]?.remarks || ''}
           onChange={(e: any) => {
             handleChangeData('remarks', e.target.value, index)
           }}

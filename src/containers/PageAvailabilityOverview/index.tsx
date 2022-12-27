@@ -78,8 +78,8 @@ export default function PageAvailabilityOverview() {
           available_large: item.group_by_product?.[0].group_by_sloc.available.large,
           available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
           available_small: item.group_by_product?.[0].group_by_sloc.available.small,
-          available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
-          available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+          available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+          available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
           children: item?.group_by_product?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
             branch: `${item.branch_id} - ${item.branch_name}`,
@@ -104,8 +104,8 @@ export default function PageAvailabilityOverview() {
             available_large: itemChild?.group_by_sloc.available.large,
             available_middle: itemChild?.group_by_sloc.available.middle,
             available_small: itemChild?.group_by_sloc.available.small,
-            available_in_large: itemChild?.group_by_sloc.available.total_in_small,
-            available_in_small: itemChild?.group_by_sloc.available.total_in_large,
+            available_in_large: itemChild?.group_by_sloc.available.total_in_large,
+            available_in_small: itemChild?.group_by_sloc.available.total_in_small,
           })),
         }
       }
@@ -136,8 +136,8 @@ export default function PageAvailabilityOverview() {
         available_large: item.group_by_product?.[0].group_by_sloc.available.large,
         available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
         available_small: item.group_by_product?.[0].group_by_sloc.available.small,
-        available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
-        available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+        available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+        available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
       }
     })
     setdataTable(dataApi)

@@ -46,6 +46,16 @@ export const createDoSto = async (payload: any) => {
   return response.data
 }
 
+export const updateDoSto = async (id: string, payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/data/edit/${id}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}
+
 export const updateStatusPoSto = async (
   id: string,
   params: {},
@@ -59,9 +69,9 @@ export const updateStatusPoSto = async (
   return response.data
 }
 
-export const updateBookingStock = async (
-  params: {},
-): Promise<CommonListResponse<StockRealTime>> => {
+export const updateBookingStock = async (params: {}): Promise<
+  CommonListResponse<StockRealTime>
+> => {
   const response = await call({
     method: METHODS.PUT,
     subUrl: `${urlBooking}/update/booking_stock/doc_id_status`,
