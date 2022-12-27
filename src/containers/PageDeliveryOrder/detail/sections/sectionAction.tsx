@@ -8,14 +8,15 @@ import { requestPreviousTable, useTitlePage } from 'src/hooks'
 
 interface SectionActionProps {
   handleShowConfirm: (confirm: string) => void
+  data: any
 }
 
 export default function SectionAction(props: SectionActionProps) {
-  const { handleShowConfirm } = props
+  const { handleShowConfirm, data } = props
   const titlePage = useTitlePage('detail')
   const router = useRouter()
 
-  const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+  const isStatus = (...value: string[]) => value.includes(data.status)
 
   return (
     <Row justify="space-between">

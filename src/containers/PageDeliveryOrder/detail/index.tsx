@@ -16,7 +16,7 @@ export default function PageSalesOrderDetail() {
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        <SectionAction handleShowConfirm={setShowConfirm} />
+        <SectionAction handleShowConfirm={setShowConfirm} data={data} />
       </Col>
       <Col span={24}>
         <Card>

@@ -1,100 +1,121 @@
-import { Col, Divider, Row } from 'antd'
+/* eslint-disable camelcase */
 import React from 'react'
-import { Table } from 'pink-lava-ui'
-import DataList from 'src/components/DataList'
-import TitleDataList from 'src/components/TitleDataList'
-import useTable from 'src/hooks/useTable'
-import { ColumnsDeliveryOrder } from 'src/containers/PageShipment/create/columns'
+import { TabCustomerInfo } from 'src/components'
+import { concatString } from 'src/utils/concatString'
+import { AllDataCustomer, TableInformation } from 'src/components/TabCustomerInfo/types'
+import dateFormat from 'src/utils/dateFormat'
 
 interface CustomerInfoProps {
   data: any
 }
 
-const CreateDataList = (label: string, value: string) => ({ label, value: value || '-' })
-
 export default function CustomerInfo(props: CustomerInfoProps) {
   const { data } = props
+  const {
+    customer_detail: { customer_sales_data, customer, customer_group },
+  } = data
 
-  const customerInformation = [
-    CreateDataList('Name', data.customer),
-    CreateDataList('Active Customer', data.active),
-    CreateDataList('Short Name', data.customer.short_name),
-    CreateDataList('KTP', data.customer.id),
-    CreateDataList('Phone Number', data.customer.phone),
-    CreateDataList('Email', data.customer.email),
-  ]
+  const dataCustomer: AllDataCustomer = {
+    'Customer Information': {
+      Name: concatString(data.customer),
+      'Active Customer': customer.is_active ? 'Yes' : 'No',
+      KTP: customer.ktp,
+      'Short Name': customer.short_name,
+      'Phone Number': customer.phone,
+      Email: customer.email,
+    },
+    'Customer Group Information': {
+      'Customer Group': concatString(
+        customer_group.customer_group_id,
+        customer_group.customer_group_name,
+      ),
+      'Customer Group 1': concatString(
+        customer_group.customer_group_1_id,
+        customer_group.customer_group_1_name,
+      ),
+      'Customer Group 2': concatString(
+        customer_group.customer_group_2_id,
+        customer_group.customer_group_2_name,
+      ),
+      'Customer Group 3': concatString(
+        customer_group.customer_group_3_id,
+        customer_group.customer_group_3_name,
+      ),
+      'Customer Group 4': concatString(
+        customer_group.customer_group_4_id,
+        customer_group.customer_group_4_name,
+      ),
+      'Customer Group 5': concatString(
+        customer_group.customer_group_5_id,
+        customer_group.customer_group_5_name,
+      ),
+    },
+    'Company Information': {
+      'Sales Organization': data.sales_org,
+      Company: concatString(customer_sales_data.company_id, customer_sales_data.company_name),
+      Branch: data.branch,
+      Stock: customer_sales_data.sloc_id,
+      'Sales Office': concatString(
+        customer_sales_data.sales_offfice_id,
+        customer_sales_data.sales_offfice_name,
+      ),
+      'Sales Division': concatString(
+        customer_sales_data.division_id,
+        customer_sales_data.division_name,
+      ),
+      'Sales Channel': concatString(
+        customer_sales_data.channel_id,
+        customer_sales_data.channel_name,
+      ),
+      'Sales Group': concatString(
+        customer_sales_data.sales_group_id,
+        customer_sales_data.sales_group_name,
+      ),
+    },
+    'Payment Information': {
+      'Term of Payment': concatString(customer_sales_data.term_id, customer_sales_data.term_name),
+      'Method of Payment': concatString(
+        customer_sales_data.payment_method_id,
+        customer_sales_data.payment_method_name,
+      ),
+      Block: customer_sales_data.is_blocked ? 'Yes' : 'No',
+      'Credit Limit': customer_sales_data.credit_limit.toString(),
+      'Credit Limit Valid To': dateFormat(customer_sales_data.credit_limit_valid_to),
+      'Remaining Credit Limit': customer_sales_data.credit_limit_usage.toString(),
+      'Status Overdue': customer_sales_data.is_overdue ? 'Active' : 'Non Active',
+      'Price Group': concatString(
+        customer_sales_data.price_group_id,
+        customer_sales_data.price_group_name,
+      ),
+      'Taxable Enter Num. (SPPKP)': customer_sales_data.taxable,
+      'Risk Class': concatString(
+        customer_sales_data.risk_class_id,
+        customer_sales_data.risk_class_name,
+      ),
+      'Modified Date': dateFormat(data.modified_at),
+      'Price List': concatString(
+        customer_sales_data.price_list_id,
+        customer_sales_data.price_list_name,
+      ),
+      'Tax Subject': customer_sales_data.tax_subject ? 'With Tax' : 'Without Tax',
+      'Tax Reg Num. (NPWP)': customer_sales_data.tax_reg_num,
+      Rules: customer_sales_data.rules,
+      'Check Rule': concatString(
+        customer_sales_data.check_rule_id,
+        customer_sales_data.check_rule_name,
+      ),
+      'Inco 1': customer_sales_data.incoterm1,
+      'Inco 2': customer_sales_data.incoterm2,
+    },
+  }
 
-  const customerGroupInformation = [
-    CreateDataList('Customer Group', data.customer_group?.name),
-    CreateDataList('Customer Group 1', data.customer_group_1?.name),
-    CreateDataList('Customer Group 2', data.customer_group_2?.name),
-    CreateDataList('Customer Group 3', data.customer_group_3?.name),
-    CreateDataList('Customer Group 4', data.customer_group_4?.name),
-    CreateDataList('Customer Group 5', data.customer_group_5?.name),
-  ]
+  const dataTable: TableInformation = {
+    Salesman: data.salesman,
+    'Salesman Group': concatString(
+      customer_sales_data.sales_group_id,
+      customer_sales_data.sales_group_name,
+    ),
+  }
 
-  const companyInformation = [
-    CreateDataList('Sales Organization', data.sales_org_name),
-    CreateDataList('Company', data.company),
-    CreateDataList('Branch', data.branch_name),
-    CreateDataList('Sloc', data.sloc),
-    CreateDataList('Sales Office', data.sales_office_id),
-    CreateDataList('Sales Division', data.division_id),
-    CreateDataList('Sales Channel', data.channel_id),
-    CreateDataList('Sales Group', data.sales_group_id),
-  ]
-
-  const paymentInformation = [
-    CreateDataList('Term of Payment', data.term_id),
-    CreateDataList('Method of Payment', data.method),
-    CreateDataList('Block', data.status_block_id),
-    CreateDataList('Credit Limit', data.credit_limit),
-    CreateDataList('Credit Limit Valid To', data.credit_limit_valid_to),
-    CreateDataList('Remaining Credit Limit', data.remaining_credit_limit),
-    CreateDataList('Status Overdue', data.status_overdue),
-    CreateDataList('Price Group', data.price_group),
-    CreateDataList('Taxable Enter Num. (SPPKP)', data.tax_enter_num),
-    CreateDataList('Risk Class', data.risk_class),
-    CreateDataList('Modified Date', data.modified_at),
-    CreateDataList('Price List', data.price_list),
-    CreateDataList('Tax Subject', data.tax_subject),
-    CreateDataList('Tax Reg Num. (NPWP)', data.tax_reg_num),
-    CreateDataList('Rules', data.rules),
-    CreateDataList('Check Rule', data.check_rule),
-    CreateDataList('Inco 1', data.inco_1),
-    CreateDataList('Inco 2', data.inco_2),
-  ]
-
-  const dataList = [
-    { title: 'Customer Information', content: customerInformation, limit: 3 },
-    { title: 'Customer Group Information', content: customerGroupInformation, limit: 4 },
-    { title: 'Company Information', content: companyInformation, limit: 4 },
-    { title: 'Payment Information', content: paymentInformation, limit: 9 },
-  ]
-
-  return (
-    <>
-      {dataList.map(({ content, limit, title }) => (
-        <>
-          <Row>
-            <TitleDataList title={title} />
-          </Row>
-          <Row>
-            <Col span={12}>
-              {content.slice(0, limit).map(({ label, value }, index) => (
-                <DataList key={index} label={label} value={value} />
-              ))}
-            </Col>
-            <Col span={12}>
-              {content.slice(limit).map(({ label, value }, index) => (
-                <DataList key={index} label={label} value={value} />
-              ))}
-            </Col>
-          </Row>
-          <Divider />
-        </>
-      ))}
-      <Table dataSource={data.items} columns={ColumnsDeliveryOrder} />
-    </>
-  )
+  return <TabCustomerInfo data={dataCustomer} table={dataTable} />
 }
