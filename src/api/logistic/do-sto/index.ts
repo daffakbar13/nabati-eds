@@ -10,6 +10,7 @@ import { API_BASE_URL_2 } from 'src/configs/env'
 import { StockRealTime } from './types'
 
 const url = 'v1/sto-delivery'
+const urlBooking = 'v1/inventory'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
@@ -52,6 +53,18 @@ export const updateStatusPoSto = async (
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}/edit/${id}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const updateBookingStock = async (
+  params: {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${urlBooking}/update/booking_stock/doc_id_status`,
     overrideBaseUrl,
     data: params,
   })
