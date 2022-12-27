@@ -63,7 +63,7 @@ export const updateBookingStock = async (
   params: {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
+    method: METHODS.PUT,
     subUrl: `${urlBooking}/update/booking_stock/doc_id_status`,
     overrideBaseUrl,
     data: params,

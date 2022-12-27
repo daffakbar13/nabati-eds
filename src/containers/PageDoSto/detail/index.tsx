@@ -7,7 +7,7 @@ import { ArrowLeftOutlined } from '@ant-design/icons'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/do-sto'
+import { getPoStoDetail, updateStatusPoSto, updateBookingStock } from 'src/api/logistic/do-sto'
 import AllTabs from './tabs'
 import DOSTO from './tabs/DOSTO'
 import DeliveryNote from './tabs/DeliveryNote'
@@ -23,7 +23,14 @@ export default function PageDoStoDetail() {
 
   const handleUpdateStatus = async () => {
     try {
-      return await updateStatusPoSto(router.query.id as string, { status_id: '07' })
+      await updateStatusPoSto(router.query.id as string, { status_id: '07' })
+      return await updateBookingStock({
+        document_id: router.query.id,
+        order_type_id: 'ZDST',
+        update_document_id: router.query.id,
+        doc_category_id: 'C',
+        status_id: '07',
+      })
     } catch (error) {
       console.error(error)
     }
