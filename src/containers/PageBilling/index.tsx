@@ -149,13 +149,6 @@ export default function PageBilling(props: PageBillingProps) {
             <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
-            >
-              Create
-            </Button>
           </Row>
         </Row>
       </Card>
