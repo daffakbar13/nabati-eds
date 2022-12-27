@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Divider, Form } from 'antd'
 import { useRouter } from 'next/router'
@@ -26,6 +26,7 @@ export default function CreateGoodsReceipt() {
   const [selectedTableData, setSelectedTableData] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [numberPO, setnumberPO] = useState('')
 
   // Sloc options for table
   const [slocOptions, setSlocOptions] = useState<[]>([])
@@ -44,7 +45,7 @@ export default function CreateGoodsReceipt() {
 
   const handleCreate = async () => {
     const payload: any = {
-      po_number: headerData?.po_number?.value,
+      po_number: numberPO,
       delivery_number: headerData?.delivery_number,
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
@@ -68,7 +69,7 @@ export default function CreateGoodsReceipt() {
       setDisableSomeFields(false)
       return
     }
-
+    setnumberPO(poNumber)
     try {
       setLoading(true)
       const { data } = await getGoodReceiptByPo(poNumber)
