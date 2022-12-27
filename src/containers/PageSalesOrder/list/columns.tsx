@@ -18,13 +18,11 @@ interface LinkedProps {
 function Linked(props: LinkedProps) {
   const { link, status, type } = props
   const router = useRouter()
+  const redirectTo = (page: 'edit' | 'detail') => {
+    router.push(`${PATH.SALES}/sales-order/${page}/${link}`)
+  }
   const navigate = () => {
-    status === 'Draft'
-      ? router.push(`${PATH.SALES}/sales-order/edit/${link}`)
-      : router.push({
-        pathname: `${PATH.SALES}/sales-order/detail/${link}`,
-        query: { status },
-      })
+    status === 'Draft' ? redirectTo('edit') : redirectTo('detail')
   }
   const [hover, setHover] = React.useState(false)
 

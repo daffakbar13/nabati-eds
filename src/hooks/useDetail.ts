@@ -10,22 +10,16 @@ export default function useDetail(
 ) {
   const [data, setData] = React.useState<any>({})
   const router = useRouter()
-  const pageList = router.asPath.split('/').splice(0, 3).join('/')
-  const throwToPageList = () => {
-    router.push(pageList)
-  }
+  // const pageList = router.asPath.split('/').splice(0, 3).join('/')
+  // const throwToPageList = () => {
+  //   router.push(pageList)
+  // }
 
   React.useEffect(() => {
     if (!Object.values(params).includes(undefined)) {
-      // handling for bugs error when refresh page
-      if (strict && router.query.status === 'Draft') {
-        // throwToPageList()
-        router.push('/not-found-404')
-      }
       funcApi(params)
         .then((results) => setData(results.data))
         .catch(() => {
-          // throwToPageList()
           router.push('/not-found-404')
         })
     }
