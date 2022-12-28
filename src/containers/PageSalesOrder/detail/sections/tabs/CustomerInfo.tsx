@@ -87,5 +87,5 @@ export default function CustomerInfo() {
     'Salesman Group': concatString(salesman.salesman_group_id, salesman.salesman_group_name),
   }
 
-  return <TabCustomerInfo data={dataCustomer} table={dataTable} />
+  return <TabCustomerInfo data={dataCustomer} table={[dataTable]} />
 }

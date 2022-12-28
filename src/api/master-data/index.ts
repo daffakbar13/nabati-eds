@@ -19,7 +19,7 @@ const subUrl = {
   getSalesmanByCompany: 'v1/master/get-salesman/PP01',
   getProductByCompany: 'v1/master/get-product/PP01',
   getUom: 'v1/master/get-uom',
-  getListProduct: '/v1/master/list/product/',
+  getListProduct: '/v1/master/list/product',
   getProductById: '/v1/master/get-product/PP01/',
   getPricing: 'v1/master/get-pricing-group/PP01',
   getOrderType: 'v1/master/get-order-type/PP01',
@@ -134,6 +134,20 @@ export const getListProduct = async (
     overrideBaseUrl,
     data: params,
     subUrl: subUrl.getListProduct,
+  })
+
+  return response.data
+}
+
+export const getListProductBySalesman = async (
+  salesman_id: string,
+  params: CommonListParams,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    data: params,
+    subUrl: `${subUrl.getListProduct}/${salesman_id}`,
   })
 
   return response.data

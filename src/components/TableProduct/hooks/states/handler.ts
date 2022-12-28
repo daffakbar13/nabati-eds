@@ -1,6 +1,6 @@
 /* eslint-disable function-paren-newline */
 /* eslint-disable camelcase */
-import { getListProduct, getPricingByCompany } from 'src/api/master-data'
+import { getListProduct, getListProductBySalesman, getPricingByCompany } from 'src/api/master-data'
 import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
 import { DataProduct, States } from './states'
@@ -103,7 +103,7 @@ export function baseHandler(
     const bodyProduct = (type: 'product_id' | 'name'): CommonListParams => ({
       filters: [
         {
-          field: type,
+          field: `eds_product.${type}`,
           option: 'CP',
           from_value: `%${search}%`,
         },
@@ -116,15 +116,27 @@ export function baseHandler(
       page: 1,
       limit: 10,
     })
-    return getListProduct(bodyProduct('name'))
-      .then((res) => res.data.results)
-      .then((arr) =>
-        getListProduct(bodyProduct('product_id')).then((res) => {
+    return getListProductBySalesman(state.salesman_id, bodyProduct('name'))
+      .then((res) => {
+        const { results } = res.data
+        if (results === null) {
+          return []
+        }
+        return results
+      })
+      .then((firstArr) =>
+        getListProductBySalesman(state.salesman_id, bodyProduct('product_id')).then((res) => {
           const { results } = res.data
-          const additionalData = [...results].filter(
-            ({ product_id }) => !arr.map((e) => e.product_id).includes(product_id),
-          )
-          return [...arr, ...additionalData]
+          const secondArr = []
+
+          if (Array.isArray(results)) {
+            const additionalData = [...results].filter(
+              ({ product_id }) => !firstArr.map((e) => e.product_id).includes(product_id),
+            )
+            secondArr.push(additionalData)
+          }
+
+          return [...firstArr, ...secondArr]
             .filter((p) => productList.includes(p.product_id))
             .sort((a, b) => a.product_id - b.product_id)
             .slice(0, 10)
@@ -213,7 +225,7 @@ export function baseHandler(
       payload: newData,
     })
   }
-  function handleDeleteRows(index: number) {
+  function deleteRows(index: number) {
     const { product_id } = state.data[index]
     const { allProduct } = state
     const newData = [...state.data].filter((_, i) => i !== index)
@@ -240,6 +252,29 @@ export function baseHandler(
       type: 'data',
       payload: newData,
     })
+  }
+  function unShowConfirmRemove() {
+    dispatch({
+      type: 'confirmRemove',
+      payload: undefined,
+    })
+  }
+  function showConfirmRemove(payload: States['confirmRemove']) {
+    dispatch({
+      type: 'confirmRemove',
+      payload,
+    })
+  }
+  function handleDeleteRows(index: number, hard?: boolean) {
+    const { product_id, name } = state.data[index]
+    if (state.data.length > 1) {
+      if (product_id === '' || hard) {
+        deleteRows(index)
+        unShowConfirmRemove()
+      } else {
+        showConfirmRemove({ index, name, product_id })
+      }
+    }
   }
   function handleChangeUom(uom_id: string, index: number) {
     const current = state.data[index]
@@ -340,16 +375,44 @@ export function baseHandler(
       payload: [...state.data, newLine],
     })
   }
-  function handleConfirmRemove(payload: string) {
-    dispatch({
-      type: 'confirmRemove',
-      payload,
-    })
-  }
   function hideConfirmRemove() {
     dispatch({
       type: 'confirmRemove',
       payload: undefined,
+    })
+  }
+  function resetData() {
+    const newAllProduct = [...state.allProduct].map((p) => ({
+      ...p,
+      booked: false,
+      bookByIndex: '',
+    }))
+    const newData: States['data'] = [
+      {
+        name: '',
+        order_qty: 1,
+        price: 0,
+        product_id: '',
+        sub_total: 0,
+        uom_id: '',
+        discOption: 'Rp',
+        discount: 0,
+        remarks: '',
+      },
+    ]
+    dispatch({
+      type: 'allProduct',
+      payload: newAllProduct,
+    })
+    dispatch({
+      type: 'data',
+      payload: newData,
+    })
+  }
+  function changeSalesman(payload: string) {
+    dispatch({
+      type: 'salesman_id',
+      payload,
     })
   }
 
@@ -367,8 +430,10 @@ export function baseHandler(
     handleSize,
     addDataFromFetch,
     addItem,
-    handleConfirmRemove,
     hideConfirmRemove,
     handleChangeDiscOption,
+    resetData,
+    changeSalesman,
+    unShowConfirmRemove,
   }
 }
