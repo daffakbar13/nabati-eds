@@ -56,12 +56,13 @@ export default function PageAvailabilityOverview() {
           branch: `${item.branch_id} - ${item.branch_name}`,
           material: `${item.group_by_product?.[0].product_id} - ${item.group_by_product?.[0].product_name}`,
           sloc: item.group_by_product?.[0].group_by_sloc.sloc_id,
-          status:
-            item.group_by_product?.[0].group_by_sloc.status_id_name
-              .toLowerCase()
-              .charAt(0)
-              .toUpperCase() +
-            item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase(),
+          status: item.group_by_product?.[0].group_by_sloc.status_id_name
+            ? item.group_by_product?.[0].group_by_sloc.status_id_name
+                .toLowerCase()
+                .charAt(0)
+                .toUpperCase() +
+              item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase()
+            : '',
           status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
             item.group_by_product?.[0].group_by_sloc.status_description || ''
           }`,
@@ -85,9 +86,10 @@ export default function PageAvailabilityOverview() {
             branch: `${item.branch_id} - ${item.branch_name}`,
             // material: `${itemChild?.product_id} - ${itemChild?.product_name}`,
             sloc: itemChild?.group_by_sloc.sloc_id,
-            status:
-              itemChild?.group_by_sloc.status_id_name.toLowerCase().charAt(0).toUpperCase() +
-              itemChild?.group_by_sloc.status_id_name.slice(1).toLowerCase(),
+            status: itemChild?.group_by_sloc.status_id_name
+              ? itemChild?.group_by_sloc.status_id_name.toLowerCase().charAt(0).toUpperCase() +
+                itemChild?.group_by_sloc.status_id_name.slice(1).toLowerCase()
+              : '',
             status_data: `${itemChild?.group_by_sloc.status_data || ''} - ${
               itemChild?.group_by_sloc.status_description || ''
             }`,
@@ -114,12 +116,13 @@ export default function PageAvailabilityOverview() {
         branch: `${item.branch_id} - ${item.branch_name}`,
         material: `${item.group_by_product?.[0].product_id} - ${item.group_by_product?.[0].product_name}`,
         sloc: item.group_by_product?.[0].group_by_sloc.sloc_id,
-        status:
-          item.group_by_product?.[0].group_by_sloc.status_id_name
-            .toLowerCase()
-            .charAt(0)
-            .toUpperCase() +
-          item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase(),
+        status: item.group_by_product?.[0].group_by_sloc.status_id_name
+          ? item.group_by_product?.[0].group_by_sloc.status_id_name
+              .toLowerCase()
+              .charAt(0)
+              .toUpperCase() +
+            item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase()
+          : '',
         status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
           item.group_by_product?.[0].group_by_sloc.status_description || ''
         }`,
