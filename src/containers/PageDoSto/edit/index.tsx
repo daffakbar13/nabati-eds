@@ -9,7 +9,7 @@ import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { fieldPoSto } from 'src/configs/fieldFetches'
-import { createDoSto } from 'src/api/logistic/do-sto'
+import { updateDoSto } from 'src/api/logistic/do-sto'
 import { getPoStoDetail } from 'src/api/logistic/do-sto'
 import useDetail from 'src/hooks/useDetail'
 
@@ -26,7 +26,6 @@ interface ItemsState {
 }
 
 interface dataForm {
-  sto_doc_type: string
   document_date: string
   posting_date: string
   planned_gi_date: string
@@ -51,15 +50,14 @@ export default function CreateBilling() {
   const [receivingVal, setReceivingVal] = React.useState('')
   const tableAddItems = useTableAddItem({ items: dataPo?.items } || { items: [] })
 
-  const initialValue = {
-    sto_doc_type: 'ZDST',
-    document_date: moment(now).format('YYYY-MM-DD'),
-    posting_date: moment(now).format('YYYY-MM-DD'),
-    planned_gi_date: moment(now).format('YYYY-MM-DD'),
-    supply_branch_id: 'P105',
-    receive_branch_id: 'P104',
-    purchase_id: '1041400000004',
-    header_text: '',
+  const initialValue: dataForm = {
+    document_date: moment(data?.document_date || now).format('YYYY-MM-DD'),
+    posting_date: moment(data?.posting_date || now).format('YYYY-MM-DD'),
+    planned_gi_date: moment(data?.planned_gi_date || now).format('YYYY-MM-DD'),
+    supply_branch_id: data?.supply_branch_id,
+    receive_branch_id: data?.receive_branch_id,
+    purchase_id: data?.purchase_id,
+    header_text: data?.header_text,
     status_id: '00',
     items: tableAddItems.dataSubmit,
   }
@@ -95,11 +93,11 @@ export default function CreateBilling() {
             <Button
               size="big"
               variant="primary"
-              // onClick={() => {
-              //   createDoSto({ ...initialValue, ...dataForm })
-              //     .then((response) => setNewDoSTO(response.data.id))
-              //     .catch((e) => console.log(e))
-              // }}
+              onClick={() => {
+                updateDoSto(router.query.id as string, { ...initialValue, ...dataForm })
+                  .then((response) => setNewDoSTO(response.data.id))
+                  .catch((e) => console.log(e))
+              }}
             >
               Submit
             </Button>

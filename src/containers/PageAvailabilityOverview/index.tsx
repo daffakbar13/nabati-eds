@@ -56,12 +56,13 @@ export default function PageAvailabilityOverview() {
           branch: `${item.branch_id} - ${item.branch_name}`,
           material: `${item.group_by_product?.[0].product_id} - ${item.group_by_product?.[0].product_name}`,
           sloc: item.group_by_product?.[0].group_by_sloc.sloc_id,
-          status:
-            item.group_by_product?.[0].group_by_sloc.status_id_name
-              .toLowerCase()
-              .charAt(0)
-              .toUpperCase() +
-            item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase(),
+          status: item.group_by_product?.[0].group_by_sloc.status_id_name
+            ? item.group_by_product?.[0].group_by_sloc.status_id_name
+                .toLowerCase()
+                .charAt(0)
+                .toUpperCase() +
+              item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase()
+            : '',
           status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
             item.group_by_product?.[0].group_by_sloc.status_description || ''
           }`,
@@ -78,16 +79,17 @@ export default function PageAvailabilityOverview() {
           available_large: item.group_by_product?.[0].group_by_sloc.available.large,
           available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
           available_small: item.group_by_product?.[0].group_by_sloc.available.small,
-          available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
-          available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+          available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+          available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
           children: item?.group_by_product?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
             branch: `${item.branch_id} - ${item.branch_name}`,
             // material: `${itemChild?.product_id} - ${itemChild?.product_name}`,
             sloc: itemChild?.group_by_sloc.sloc_id,
-            status:
-              itemChild?.group_by_sloc.status_id_name.toLowerCase().charAt(0).toUpperCase() +
-              itemChild?.group_by_sloc.status_id_name.slice(1).toLowerCase(),
+            status: itemChild?.group_by_sloc.status_id_name
+              ? itemChild?.group_by_sloc.status_id_name.toLowerCase().charAt(0).toUpperCase() +
+                itemChild?.group_by_sloc.status_id_name.slice(1).toLowerCase()
+              : '',
             status_data: `${itemChild?.group_by_sloc.status_data || ''} - ${
               itemChild?.group_by_sloc.status_description || ''
             }`,
@@ -104,8 +106,8 @@ export default function PageAvailabilityOverview() {
             available_large: itemChild?.group_by_sloc.available.large,
             available_middle: itemChild?.group_by_sloc.available.middle,
             available_small: itemChild?.group_by_sloc.available.small,
-            available_in_large: itemChild?.group_by_sloc.available.total_in_small,
-            available_in_small: itemChild?.group_by_sloc.available.total_in_large,
+            available_in_large: itemChild?.group_by_sloc.available.total_in_large,
+            available_in_small: itemChild?.group_by_sloc.available.total_in_small,
           })),
         }
       }
@@ -114,12 +116,13 @@ export default function PageAvailabilityOverview() {
         branch: `${item.branch_id} - ${item.branch_name}`,
         material: `${item.group_by_product?.[0].product_id} - ${item.group_by_product?.[0].product_name}`,
         sloc: item.group_by_product?.[0].group_by_sloc.sloc_id,
-        status:
-          item.group_by_product?.[0].group_by_sloc.status_id_name
-            .toLowerCase()
-            .charAt(0)
-            .toUpperCase() +
-          item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase(),
+        status: item.group_by_product?.[0].group_by_sloc.status_id_name
+          ? item.group_by_product?.[0].group_by_sloc.status_id_name
+              .toLowerCase()
+              .charAt(0)
+              .toUpperCase() +
+            item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase()
+          : '',
         status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
           item.group_by_product?.[0].group_by_sloc.status_description || ''
         }`,
@@ -136,8 +139,8 @@ export default function PageAvailabilityOverview() {
         available_large: item.group_by_product?.[0].group_by_sloc.available.large,
         available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
         available_small: item.group_by_product?.[0].group_by_sloc.available.small,
-        available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
-        available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+        available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
+        available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
       }
     })
     setdataTable(dataApi)
