@@ -1,75 +1,98 @@
-import { Spin } from 'antd'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { Button, Table } from 'pink-lava-ui'
-import { Modal, Text } from 'src/components'
-import { createConfigSloc } from 'src/api/logistic/configuration-sloc'
-import { columns } from './columns'
+import { Row, Col } from 'antd'
+import { Spacer, Button, Table } from 'pink-lava-ui'
+import { useState, useEffect } from 'react'
+import { Modal } from 'src/components'
+import { createConfigSloc, updateConfigSloc } from 'src/api/logistic/configuration-sloc'
+import { useTableAddItem } from './columns'
 import SlocForm from './slocForm'
 
-export default function CreateSlocModal({ visible = false, close = () => {}, payload }) {
-  const [tableData, setTableData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const isOnEditMode = !!payload
-  const router = useRouter()
+interface slocList {
+  branch_id: string
+  sales_org: string
+  sloc_id: string
+  sloc_name: string
+  sloc_type: string
+}
 
-  // Modal
+interface FormData {
+  company_id: string
+  branch_id: string
+  sloc_list: Array<slocList>
+}
+
+export default function CreateSlocModal({ visible = false, close = () => {}, payload }) {
+  const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
+  const [disableBranch, setdisableBranch] = useState(false)
+  const router = useRouter()
+  const [dataForm, setDataForm] = useState<FormData>()
+  const isOnEditMode = !!payload
+  const tableAddItems = useTableAddItem(payload, isOnEditMode)
+
+  const initialValue = {
+    company_id: 'PP01',
+    branch_id: 'P104',
+    sloc_list: tableAddItems.data,
+  }
 
   const handleSubmit = async () => {
-    const reqBody: any = {
-      sloc_list: tableData.map((row) => ({
-        branch_id: row.branch_id,
-        sales_org: row.sales_org,
-        sloc_id: row.sloc_id,
-        sloc_name: row.sloc_name,
-        sloc_type: row.sloc_type,
-      })),
+    setDataForm(undefined)
+    const reqBody = { ...initialValue, ...dataForm }
+
+    if (!isOnEditMode) {
+      try {
+        return await createConfigSloc({ sloc_list: reqBody?.sloc_list })
+      } catch (error) {
+        console.error(error)
+      }
     }
-    try {
-      setLoading(true)
-      const res = await createConfigSloc(reqBody)
-      setLoading(false)
-      return res
-    } catch (error) {
-      setLoading(false)
-      console.error(error)
-      setLoading(false)
+
+    if (isOnEditMode) {
+      try {
+        return await updateConfigSloc(
+          reqBody.sloc_list,
+          reqBody.company_id as string,
+          reqBody.branch_id as string,
+        )
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     return false
   }
 
-  const handleAdd = (newRow: any) => {
-    setTableData([newRow, ...tableData])
-  }
-
-  const deleteRow = (index: number) => {
-    setTableData([...tableData].filter((row, ind) => ind !== index))
-  }
-
-  const onChangeSlocType = (value: any, index: number) => {
-    setTableData(
-      tableData.map((row, i) => {
-        if (i === index) return { ...row, sloc_type: value }
-        return row
-      }),
-    )
-  }
-
   const handleClose = () => {
-    setTableData([])
+    setDataForm(undefined)
+    tableAddItems.resetItem()
     close()
   }
 
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
+  const handleAdd = async (reqBody: any) => {
+    onChangeForm('branch_id', reqBody.branch_id)
+    tableAddItems.handleAddItem(reqBody)
+  }
+
   const content = (
-    <div>
-      <SlocForm handleAdd={handleAdd} disableSomeFields={tableData.length > 0} />
-      <Table
-        data={tableData}
-        style={{ marginTop: 20 }}
-        columns={columns(onChangeSlocType, deleteRow)}
+    <>
+      <SlocForm
+        handleAdd={handleAdd}
+        disableSomeFields={tableAddItems.data.length > 0}
+        payload={payload}
       />
+      <Table
+        scroll={{ x: 'max-content', y: 600 }}
+        editable
+        data={tableAddItems.data}
+        columns={tableAddItems.columns}
+        loading={tableAddItems.loading}
+      />
+      <Spacer size={20} />
       <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
         <Button
           size="big"
@@ -85,11 +108,10 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
           variant="primary"
           onClick={() => setConfirmModal(true)}
         >
-          {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
           <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>Submit</span>
         </Button>
       </div>
-    </div>
+    </>
   )
 
   return (
@@ -98,7 +120,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         open={visible}
         onOk={() => {}}
         onCancel={handleClose}
-        title="Create Sloc"
+        title={isOnEditMode ? 'Update Sloc' : 'Create Sloc'}
         content={content}
         width={1132}
         footer={null}
@@ -111,7 +133,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to create sloc?"
+        content={`Are you sure want to ${isOnEditMode ? 'Update' : 'create'} sloc?`}
         loading={loading}
         onOkSuccess={() => {
           handleClose()

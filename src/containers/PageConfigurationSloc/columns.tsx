@@ -1,41 +1,36 @@
-import moment from 'moment'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { Button, Switch } from 'pink-lava-ui'
-import { Tag } from 'antd'
-import Link from 'src/components/Link'
-import { ExpandMinusIc, ExpandPlusIc } from 'src/assets'
 
-export const columns = (goToDetail: (a: any) => void, onChangeActive: (a: boolean) => void) => [
-  CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
-  // CreateColumns('Company ID', 'company_id', true),
-  CreateColumns(
-    'Branch ',
-    'branch_id',
-    true,
-    (text, rec) => (
+export const columns = (goToDetail: (a: any) => void) => [
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch',
+  }),
+  addColumn({
+    title: 'Sloc ID',
+    dataIndex: 'sloc_id',
+  }),
+  addColumn({
+    title: 'Sloc Function',
+    dataIndex: 'sloc_function',
+  }),
+  addColumn({
+    title: 'Sloc Type',
+    dataIndex: 'sloc_type',
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'action',
+    render: (text: string, record: any) => (
       <>
-        {text} + {rec.branch_name}
+        {text != '' ? (
+          <Button size="big" variant="tertiary" onClick={() => goToDetail(record)}>
+            View Detail
+          </Button>
+        ) : (
+          ''
+        )}
       </>
     ),
-    200,
-  ),
-  CreateColumns(
-    '',
-    '',
-    true,
-    (text, rec) => (
-      <div style={{ cursor: 'pointer' }}>
-        <ExpandPlusIc />
-      </div>
-    ),
-    200,
-  ),
-  CreateColumns('Sloc ID', 'sloc_id', true),
-  CreateColumns('Sloc Function', 'sloc_function', true),
-  CreateColumns('Sloc Type', 'sloc_type', true),
-  CreateColumns('Action', 'gr_number', false, (text, rec) => (
-    <Button size="big" variant="tertiary" onClick={() => goToDetail(rec)}>
-      View Detail
-    </Button>
-  )),
+  }),
 ]

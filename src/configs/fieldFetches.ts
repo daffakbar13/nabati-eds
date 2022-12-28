@@ -468,7 +468,11 @@ export function fieldOrderType(doc_type: string, search = '') {
 export function fieldSalesOrganization(search = '') {
   return getSalesOrgByCompany().then((result) =>
     result.data
-      .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
       .splice(0, 10)
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
