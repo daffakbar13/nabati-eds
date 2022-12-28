@@ -14,6 +14,7 @@ export interface States {
   data: DataProduct[]
   allProduct: any[]
   size: { product: number; discount: number; quantity: number }
-  confirmRemove?: string
+  confirmRemove?: Pick<DataProduct, 'product_id' | 'name'> & { index: number }
   isLoading: boolean
+  salesman_id?: string
 }

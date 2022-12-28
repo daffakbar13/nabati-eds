@@ -12,7 +12,7 @@ interface CustomerInfoProps {
 export default function CustomerInfo(props: CustomerInfoProps) {
   const { data } = props
   const {
-    customer_detail: { customer_sales_data, customer, customer_group },
+    customer_detail: { customer_sales_data, customer, customer_group, salesman },
   } = data
 
   const dataCustomer: AllDataCustomer = {
@@ -109,13 +109,10 @@ export default function CustomerInfo(props: CustomerInfoProps) {
     },
   }
 
-  const dataTable: TableInformation = {
-    Salesman: data.salesman,
-    'Salesman Group': concatString(
-      customer_sales_data.sales_group_id,
-      customer_sales_data.sales_group_name,
-    ),
-  }
+  const dataTable: TableInformation[] = salesman.map((s) => ({
+    Salesman: concatString(s.salesman_id, s.salesman_name),
+    'Salesman Group': concatString(s.salesman_group_id, s.salesman_group_name),
+  }))
 
   return <TabCustomerInfo data={dataCustomer} table={dataTable} />
 }

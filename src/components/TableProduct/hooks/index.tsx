@@ -63,11 +63,7 @@ export function useTableProduct() {
               <MinusCircleFilled
                 style={{ color: 'red', margin: 'auto' }}
                 onClick={() => {
-                  if (product_id !== '') {
-                    handleConfirmRemove(concatString(product_id, name))
-                  } else {
-                    handleDeleteRows(index)
-                  }
+                  handleDeleteRows(index)
                 }}
               />
             </div>

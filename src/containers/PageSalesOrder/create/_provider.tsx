@@ -55,6 +55,14 @@ export default function SalesSalesOrderCreateProvider(
   }, [dataForm, tableProduct.state.data])
 
   React.useEffect(() => {
+    if (dataForm.salesman_id) {
+      const [id] = dataForm.salesman_id.split(' - ')
+      tableProduct.handler.changeSalesman(id)
+      tableProduct.handler.resetData()
+    }
+  }, [dataForm.salesman_id])
+
+  React.useEffect(() => {
     getDocType()
   }, [])
 

@@ -17,7 +17,7 @@ const LimitData = {
 
 interface TabCustomerInfoProps {
   data: AllDataCustomer
-  table: TableInformation
+  table: TableInformation[]
 }
 
 export default function TabCustomerInfo(props: TabCustomerInfoProps) {
@@ -54,8 +54,12 @@ export default function TabCustomerInfo(props: TabCustomerInfoProps) {
         </>
       ))}
       <Table
-        dataSource={[table]}
-        columns={Object.keys(table).map((title) => ({ title, dataIndex: title }))}
+        dataSource={table}
+        columns={[
+          { title: 'Salesman', dataIndex: 'Salesman' },
+          { title: 'Salesman Group', dataIndex: 'Salesman Group' },
+        ]}
+        scroll={{ x: 'max-content' }}
       />
     </>
   )
