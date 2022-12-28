@@ -1,10 +1,11 @@
 import { Form, Col, Row } from 'antd'
+import { useEffect } from 'react'
 import { Button, Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
 import { fieldBranchAll, fieldSalesOrganization } from 'src/configs/fieldFetches'
 
-export default function SlocForm({ handleAdd, disableSomeFields, payload }) {
+export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, payload }) {
   const [form] = Form.useForm()
 
   const onClickAdd = async () => {
@@ -30,6 +31,15 @@ export default function SlocForm({ handleAdd, disableSomeFields, payload }) {
       sloc_type: undefined,
     })
   }
+
+  useEffect(() => {
+    if (payload) {
+      form.setFieldsValue({
+        branch_id: payload.action,
+        sales_org: payload.sales_org,
+      })
+    }
+  }, [isOnEditMode, payload])
 
   return (
     <Form

@@ -83,6 +83,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
       <SlocForm
         handleAdd={handleAdd}
         disableSomeFields={tableAddItems.data.length > 0}
+        isOnEditMode={isOnEditMode}
         payload={payload}
       />
       <Table
