@@ -147,7 +147,7 @@ export const useTableAddItem = (props: any) => {
       ],
     }),
     addColumn({
-      title: 'Outstanding',
+      title: 'PO Outstanding',
       dataIndex: 'qty_outstanding',
       width: 100,
       children: [
@@ -170,7 +170,7 @@ export const useTableAddItem = (props: any) => {
       ],
     }),
     addColumn({
-      title: 'Received',
+      title: 'DO Receiver',
       dataIndex: 'qty_receiving',
       width: 100,
       children: [

@@ -38,7 +38,7 @@ export const column = [
     ],
   }),
   addColumn({
-    title: 'Outstanding',
+    title: 'PO Outstanding',
     dataIndex: 'outstanding',
     width: 400,
     children: [
@@ -57,7 +57,7 @@ export const column = [
     ],
   }),
   addColumn({
-    title: 'Received',
+    title: 'DO Receiver',
     dataIndex: 'received',
     width: 400,
     children: [
