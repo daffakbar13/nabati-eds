@@ -10,15 +10,18 @@ import { addColumn } from 'src/utils/createColumns'
 import { Input } from 'pink-lava-ui'
 
 interface DataType {
+  key: number
   product_id: string
   description: string
   description_show: string
   qty: number
+  qty_show: number
   base_qty: number
-  po_qty: number
+  received_qty: number
   uom_id: string
+  uom_show: string
   base_uom_id: string
-  po_uom_id: string
+  received_uom_id: string
   sloc_id: string
   remarks: string
   batch: string
@@ -31,11 +34,13 @@ export const useTableAddItem = (props: any) => {
     description: '',
     description_show: '',
     qty: 1,
+    qty_show: 1,
     base_qty: 1,
-    po_qty: 1,
+    received_qty: 1,
     uom_id: '',
+    uom_id_show: '',
     base_uom_id: '',
-    po_uom_id: '',
+    received_uom_id: '',
     sloc_id: '',
     remarks: '',
     batch: '',
@@ -66,13 +71,15 @@ export const useTableAddItem = (props: any) => {
         description: item.description,
         description_show: `${item.product_id} - ${item.description}`,
         qty: item.qty,
-        base_qty: item.qty,
-        po_qty: item.qty,
+        qty_show: item.qty,
+        base_qty: item.base_qty,
+        received_qty: item.qty,
         uom_id: item.uom_id,
-        base_uom_id: item.uom_id,
-        po_uom_id: item.uom_id,
+        uom_id_show: item.uom_id,
+        base_uom_id: item.base_uom_id,
+        received_uom_id: item.uom_id,
         sloc_id: item.sloc_id,
-        remarks: '',
+        remarks: item.remarks,
         batch: item.batch,
       }
     })
@@ -125,23 +132,23 @@ export const useTableAddItem = (props: any) => {
     }),
     addColumn({
       title: 'PO',
-      dataIndex: 'qty_po',
+      dataIndex: 'qty',
       width: 100,
       children: [
         {
           title: 'Qty',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_qty || ''} />
+            <DebounceSelect type="input" disabled value={rows.qty_show || ''} />
           ),
-          key: 'qty_po',
+          key: 'qty',
           width: 100,
         },
         {
           title: 'UoM',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_uom_id || ''} />
+            <DebounceSelect type="input" disabled value={rows.uom_id_show || ''} />
           ),
-          key: 'uom_po',
+          key: 'uom_id',
           width: 100,
         },
       ],
@@ -154,17 +161,17 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'Qty',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_qty || ''} />
+            <DebounceSelect type="input" disabled value={rows.qty_show || ''} />
           ),
-          key: 'qty_po',
+          key: 'qty',
           width: 100,
         },
         {
           title: 'UoM',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.po_uom_id || ''} />
+            <DebounceSelect type="input" disabled value={rows.uom_id_show || ''} />
           ),
-          key: 'uom_po',
+          key: 'uom_id',
           width: 100,
         },
       ],
@@ -183,12 +190,11 @@ export const useTableAddItem = (props: any) => {
               value={rows.qty?.toLocaleString()}
               onChange={(newVal) => {
                 handleChangeData('qty', newVal, index)
-                handleChangeData('base_qty', newVal, index)
               }}
               style={styleInputNumber}
             />
           ),
-          key: 'qty_po',
+          key: 'qty',
           width: 130,
         },
         {
@@ -201,12 +207,11 @@ export const useTableAddItem = (props: any) => {
               disabled={isNullProductId(index)}
               onChange={(e) => {
                 handleChangeData('uom_id', e.value, index)
-                handleChangeData('base_uom_id', e.value, index)
                 setFetching(true)
               }}
             />
           ),
-          key: 'uom_po',
+          key: 'uom_id',
           width: 150,
         },
       ],
