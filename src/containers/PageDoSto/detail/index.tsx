@@ -84,7 +84,7 @@ export default function PageDoStoDetail() {
             <>
               <RowPinkLava gap="16px">
                 <Button size="big" variant="tertiary">
-                  Cancel
+                  Cancel Process
                 </Button>
                 <Button
                   size="big"
