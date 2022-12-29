@@ -57,7 +57,7 @@ export const column = [
     ],
   }),
   addColumn({
-    title: 'DO Receiver',
+    title: 'DO',
     dataIndex: 'received',
     width: 400,
     children: [
@@ -76,7 +76,7 @@ export const column = [
     ],
   }),
   addColumn({
-    title: 'Storage Location',
+    title: 'SLoc',
     dataIndex: 'sloc_id',
     render: (text: string, record: any) => `${record.sloc_id || ''} - ${record.sloc_name || ''}`,
     width: 200,

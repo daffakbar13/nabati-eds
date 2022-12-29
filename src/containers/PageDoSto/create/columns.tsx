@@ -177,7 +177,7 @@ export const useTableAddItem = (props: any) => {
       ],
     }),
     addColumn({
-      title: 'DO Receiver',
+      title: 'DO',
       dataIndex: 'qty_receiving',
       width: 100,
       children: [

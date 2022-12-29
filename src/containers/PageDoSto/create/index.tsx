@@ -9,7 +9,7 @@ import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { fieldPoSto } from 'src/configs/fieldFetches'
-import { createDoSto } from 'src/api/logistic/do-sto'
+import { createDoSto, updateBookingStock } from 'src/api/logistic/do-sto'
 import { getPoStoDetail } from 'src/api/logistic/po-sto'
 
 interface ItemsState {
@@ -101,9 +101,16 @@ export default function CreateBilling() {
               size="big"
               variant="primary"
               onClick={() => {
-                createDoSto({ ...initialValue, ...dataForm })
-                  .then((response) => setNewDoSTO(response.data.id))
-                  .catch((e) => console.log(e))
+                createDoSto({ ...initialValue, ...dataForm }).then((response) => {
+                  updateBookingStock({
+                    document_id: response.data.id,
+                    order_type_id: 'ZDST',
+                    update_document_id: response.data.id,
+                    doc_category_id: 'C',
+                    status_id: '12',
+                  })
+                  setNewDoSTO(response.data.id)
+                })
               }}
             >
               Submit
