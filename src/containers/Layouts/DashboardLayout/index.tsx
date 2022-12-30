@@ -32,7 +32,7 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
   const router = useRouter()
   const currentModulePath = `/${router.asPath.split('/')[1]}`
 
-  const handleLogout = (e: any) => {
+  const handleLogout = () => {
     localStorage.clear()
     window.location.href = '/login'
   }
