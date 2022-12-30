@@ -87,7 +87,7 @@ export function baseHandler(
     return []
   }
   async function fieldListProduct(search: string) {
-    const areBookedAll = [
+    const boookedProducts = [
       ...new Set(
         [...state.allProduct]
           .filter((p, _, arr) => {
@@ -97,9 +97,11 @@ export function baseHandler(
           .map((p) => p.product_id),
       ),
     ]
-    const productList = [
-      ...new Set(state.allProduct.filter((p) => !p.booked).map((p) => p.product_id)),
-    ]
+    const filterBookedProducts = boookedProducts.map((p) => ({
+      field: 'eds_product.product_id',
+      option: 'NE',
+      from_value: p,
+    }))
     const bodyProduct = (type: 'product_id' | 'name'): CommonListParams => ({
       filters: [
         {
@@ -107,15 +109,14 @@ export function baseHandler(
           option: 'CP',
           from_value: `%${search}%`,
         },
-        ...areBookedAll.map((p) => ({
-          field: 'product_id',
-          option: 'NE',
-          from_value: p,
-        })),
+        ...filterBookedProducts,
       ],
       page: 1,
       limit: 10,
     })
+    const productList = [
+      ...new Set(state.allProduct.filter((p) => !p.booked).map((p) => p.product_id)),
+    ]
     return getListProductBySalesman(state.salesman_id, bodyProduct('name'))
       .then((res) => {
         const { results } = res.data
@@ -128,14 +129,12 @@ export function baseHandler(
         getListProductBySalesman(state.salesman_id, bodyProduct('product_id')).then((res) => {
           const { results } = res.data
           const secondArr = []
-
           if (Array.isArray(results)) {
             const additionalData = [...results].filter(
               ({ product_id }) => !firstArr.map((e) => e.product_id).includes(product_id),
             )
             secondArr.push(additionalData)
           }
-
           return [...firstArr, ...secondArr]
             .filter((p) => productList.includes(p.product_id))
             .sort((a, b) => a.product_id - b.product_id)
