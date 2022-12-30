@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable camelcase */
 import { MinusCircleFilled } from '@ant-design/icons'
-import { Input, InputNumber, Select, TableProps } from 'antd'
+import { Input, InputNumber, Select } from 'antd'
 import React from 'react'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { concatString } from 'src/utils/concatString'
@@ -40,7 +40,6 @@ export function useTableProduct() {
     handleChangeUom,
     isNullProduct,
     handleSize,
-    handleConfirmRemove,
     handleChangeDiscOption,
   } = handler
 
@@ -58,10 +57,14 @@ export function useTableProduct() {
       ...state,
       columns: [
         addColumn({
-          render: (_, { product_id, name }, index) => (
+          render: (_, __, index) => (
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <MinusCircleFilled
-                style={{ color: 'red', margin: 'auto' }}
+                style={{
+                  color: data.length > 1 ? 'red' : 'gray',
+                  margin: 'auto',
+                  ...(data.length === 1 && { cursor: 'not-allowed' }),
+                }}
                 onClick={() => {
                   handleDeleteRows(index)
                 }}
@@ -77,14 +80,14 @@ export function useTableProduct() {
           render: (_, { product_id, name }, index) => (
             <DebounceSelect
               type="select"
-              value={concatString(product_id, name) as any}
+              value={isNullProduct(index) ? '' : (concatString(product_id, name) as any)}
               fetchOptions={fieldListProduct}
               onChange={(e) => {
                 bookingProduct(e.value, index)
               }}
             />
           ),
-          width: size.product,
+          width: 550,
           fixed: true,
         }),
         addColumn({
