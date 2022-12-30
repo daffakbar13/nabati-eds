@@ -45,3 +45,13 @@ export const UpdateApprovalReservation = async (id: string, payload: any) => {
   })
   return response.data
 }
+
+export const UpdateApprovalReservationMultiple = async (payload: any) => {
+  const response = await call({
+    method: METHODS.PUT,
+    overrideBaseUrl,
+    subUrl: `${url}/multiple_edit`,
+    data: payload,
+  })
+  return response.data
+}

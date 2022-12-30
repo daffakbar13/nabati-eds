@@ -7,12 +7,16 @@ import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
-import { getListApprovalReservation } from 'src/api/logistic/approve-stock-reservation'
+import {
+  getListApprovalReservation,
+  UpdateApprovalReservationMultiple,
+} from 'src/api/logistic/approve-stock-reservation'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSloc, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
 import { colors } from 'src/configs/colors'
+import { CheckCircleFilled } from '@ant-design/icons'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -28,6 +32,7 @@ export default function PageStockReservation() {
   const table = useTable({
     funcApi: getListApprovalReservation,
     columns: column,
+    haveCheckBox: [{ rowKey: 'status_name', member: ['Wait For Approval'] }],
   })
 
   const [showConfirm, setShowConfirm] = React.useState('')
@@ -160,7 +165,7 @@ export default function PageStockReservation() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey="reservation_number" />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -172,7 +177,7 @@ export default function PageStockReservation() {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.state.selected.length} Document Quotation are Selected</b>
+              <b>{table.state.selected.length} Document Stock Reservation are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <Button size="big" variant="tertiary" onClick={() => {}}>
@@ -200,7 +205,7 @@ export default function PageStockReservation() {
               Confirm Submit
             </Typography.Title>
             <Typography.Title level={5} style={{ margin: 0 }}>
-              Are you sure to submit quotation
+              Are you sure to submit Stock Reservation
               {oneSelected ? (
                 ` ${selectedQuotation.text} ?`
               ) : (
@@ -215,7 +220,7 @@ export default function PageStockReservation() {
                 style={{ flexGrow: 1 }}
                 variant="secondary"
                 onClick={() => {
-                  router.reload()
+                  setShowConfirm('')
                 }}
               >
                 Cancel Proccess
@@ -225,10 +230,52 @@ export default function PageStockReservation() {
                 style={{ flexGrow: 1 }}
                 variant="primary"
                 onClick={() => {
-                  router.reload()
+                  UpdateApprovalReservationMultiple({
+                    status_id: '01',
+                    id_reservations: table.state.selected,
+                  })
+                    .then((response) => setShowConfirm('UpdateStatus'))
+                    .catch((e) => console.log(e))
                 }}
               >
                 Submit
+              </Button>
+            </div>
+          </Popup>
+        )}
+
+        {showConfirm === 'UpdateStatus' && (
+          <Popup>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Text
+                textAlign="center"
+                style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+              >
+                <>
+                  <CheckCircleFilled /> Update Status Stock Reservation Success
+                </>
+              </Text>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: 4,
+                flexDirection: 'column',
+                textAlign: 'center',
+              }}
+            >
+              <div> successfully update status stock reservation success</div>
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <Button
+                size="big"
+                style={{ flexGrow: 1 }}
+                variant="primary"
+                onClick={() => {
+                  router.push('/logistic/approval-stock-reservation')
+                }}
+              >
+                OK
               </Button>
             </div>
           </Popup>

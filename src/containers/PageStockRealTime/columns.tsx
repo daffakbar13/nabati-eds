@@ -1,13 +1,16 @@
 /* eslint-disable */
 import { addColumn } from 'src/utils/createColumns'
-
 export const columns = [
-  addColumn({
+  {
     title: 'SLoc',
     dataIndex: 'sloc',
-    fixed: true,
-    width: 120,
-  }),
+    fixed: 'left',
+  },
+  // addColumn({
+  //   title: 'SLoc',
+  //   dataIndex: 'sloc',
+  //   fixed: true,
+  // }),
   addColumn({
     title: 'Branch',
     dataIndex: 'branch',

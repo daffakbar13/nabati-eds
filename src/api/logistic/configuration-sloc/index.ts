@@ -25,9 +25,7 @@ export const getConfigSlocList = async (
   return response.data
 }
 
-export const createConfigSloc = async (
-  params: CommonListParams = {},
-): Promise<CommonListResponse<StockRealTime>> => {
+export const createConfigSloc = async (params = {}): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}/create_sloc`,

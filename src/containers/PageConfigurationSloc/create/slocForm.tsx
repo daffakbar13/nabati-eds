@@ -1,11 +1,11 @@
-import { Form } from 'antd'
-import { Button } from 'pink-lava-ui'
-import { Input, Select, SelectMasterData, Text } from 'src/components'
+import { Form, Col, Row } from 'antd'
+import { useEffect } from 'react'
+import { Button, Spacer } from 'pink-lava-ui'
+import DebounceSelect from 'src/components/DebounceSelect'
 import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
+import { fieldBranchAll, fieldSalesOrganization } from 'src/configs/fieldFetches'
 
-const { Label, LabelRequired } = Text
-
-export default function SlocForm({ handleAdd, disableSomeFields }) {
+export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, payload }) {
   const [form] = Form.useForm()
 
   const onClickAdd = async () => {
@@ -24,12 +24,22 @@ export default function SlocForm({ handleAdd, disableSomeFields }) {
     }
 
     handleAdd(newRow)
+
     form.setFieldsValue({
       sloc_id: '',
       sloc_name: '',
       sloc_type: undefined,
     })
   }
+
+  useEffect(() => {
+    if (payload) {
+      form.setFieldsValue({
+        branch_id: payload.action,
+        sales_org: payload.sales_org,
+      })
+    }
+  }, [isOnEditMode, payload])
 
   return (
     <Form
@@ -41,60 +51,60 @@ export default function SlocForm({ handleAdd, disableSomeFields }) {
       scrollToFirstError
       preserve={false}
     >
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '164px 164px 164px 164px 164px 164px',
-          gap: 20,
-          marginTop: 40,
-          alignItems: 'end',
-        }}
-      >
-        <Form.Item
-          name="branch_id"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Branch</LabelRequired>}
-          rules={[{ required: true }]}
-        >
-          <SelectMasterData
-            disabled={disableSomeFields}
-            type="PLANT"
-            style={{ marginTop: -8, maxWidth: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item
-          name="sales_org"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Sales Org</LabelRequired>}
-          rules={[{ required: true }]}
-        >
-          <SelectMasterData disabled={disableSomeFields} type="COMPANY" style={{ marginTop: -8 }} />
-        </Form.Item>
-        <Form.Item
-          name="sloc_id"
-          style={{ marginTop: -12, marginBottom: -4 }}
-          label={<Label>Sloc ID</Label>}
-        >
-          <Input style={{ height: 48, marginTop: -8 }} placeholder="Sloc ID" />
-        </Form.Item>
-        <Form.Item
-          name="sloc_name"
-          style={{ marginTop: -12, marginBottom: -4 }}
-          label={<Label>Sloc Name</Label>}
-        >
-          <Input style={{ height: 48, marginTop: -8 }} placeholder="Sloc Name" />
-        </Form.Item>
-        <Form.Item
-          name="sloc_type"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<Label>Sloc Type</Label>}
-        >
-          <Select style={{ marginTop: -8 }} placeholder="Sloc Type" options={SLOC_TYPES_OPTIONS} />
-        </Form.Item>
-        <Button size="big" style={{ flexGrow: 1 }} variant="secondary" onClick={onClickAdd}>
-          Add
-        </Button>
-      </div>
+      <Spacer size={20} />
+      <Row gutter={16}>
+        <Col span={4}>
+          <Form.Item name="branch_id" rules={[{ required: true }]}>
+            <DebounceSelect
+              label="Branch"
+              required
+              type="select"
+              fetchOptions={fieldBranchAll}
+              placeholder={payload?.branch}
+              disabled={disableSomeFields}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={4}>
+          <Form.Item name="sales_org" rules={[{ required: true }]}>
+            <DebounceSelect
+              label="Sales Org"
+              required
+              type="select"
+              placeholder={payload?.sales_org}
+              fetchOptions={fieldSalesOrganization}
+              disabled={disableSomeFields}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={4}>
+          <Form.Item name="sloc_id" rules={[{ required: true }]}>
+            <DebounceSelect label="Sloc ID" required type="input" placeholder="e.g GS00" />
+          </Form.Item>
+        </Col>
+        <Col span={4}>
+          <Form.Item name="sloc_name" rules={[{ required: true }]}>
+            <DebounceSelect label="Sloc Name" required type="input" placeholder="e.g Good Stock" />
+          </Form.Item>
+        </Col>
+        <Col span={4}>
+          <Form.Item name="sloc_type" rules={[{ required: true }]}>
+            <DebounceSelect
+              label="Sloc Type"
+              required
+              type="select"
+              placeholder="Select"
+              options={SLOC_TYPES_OPTIONS}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={4}>
+          <Spacer size={25} />
+          <Button size="big" style={{ flexGrow: 1 }} variant="secondary" onClick={onClickAdd}>
+            Add
+          </Button>
+        </Col>
+      </Row>
     </Form>
   )
 }

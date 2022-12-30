@@ -37,7 +37,7 @@ export default function PageDoStoDetail() {
         status_id: '07',
       })
       return await updateTotalBookingStock({
-        branch_id: data.receive_branch_id,
+        branch_id: data.supply_branch_id,
         items: data.items?.map((item: any, index) => {
           return {
             product_id: item.product_id,
@@ -84,7 +84,7 @@ export default function PageDoStoDetail() {
             <>
               <RowPinkLava gap="16px">
                 <Button size="big" variant="tertiary">
-                  Cancel
+                  Cancel Process
                 </Button>
                 <Button
                   size="big"
