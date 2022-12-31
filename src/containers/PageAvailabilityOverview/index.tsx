@@ -66,21 +66,66 @@ export default function PageAvailabilityOverview() {
           status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
             item.group_by_product?.[0].group_by_sloc.status_description || ''
           }`,
-          stock_large: item.group_by_product?.[0].group_by_sloc.stock.large,
-          stock_middle: item.group_by_product?.[0].group_by_sloc.stock.middle,
-          stock_small: item.group_by_product?.[0].group_by_sloc.stock.small,
-          stock_in_small: item.group_by_product?.[0].group_by_sloc.stock.total_in_small,
-          stock_in_large: item.group_by_product?.[0].group_by_sloc.stock.total_in_large,
-          bo_large: item.group_by_product?.[0].group_by_sloc.booking_order.large,
-          bo_middle: item.group_by_product?.[0].group_by_sloc.booking_order.middle,
-          bo_small: item.group_by_product?.[0].group_by_sloc.booking_order.small,
-          bo_in_large: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large,
-          bo_in_small: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small,
-          available_large: item.group_by_product?.[0].group_by_sloc.available.large,
-          available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
-          available_small: item.group_by_product?.[0].group_by_sloc.available.small,
-          available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
-          available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
+          stock_large:
+            item.group_by_product?.[0].group_by_sloc.stock.large != '0'
+              ? item.group_by_product?.[0].group_by_sloc.stock.large
+              : '',
+          stock_middle:
+            item.group_by_product?.[0].group_by_sloc.stock.middle != '0'
+              ? item.group_by_product?.[0].group_by_sloc.stock.middle
+              : '',
+          stock_small:
+            item.group_by_product?.[0].group_by_sloc.stock.small != '0'
+              ? item.group_by_product?.[0].group_by_sloc.stock.small
+              : '',
+          stock_in_small:
+            item.group_by_product?.[0].group_by_sloc.stock.total_in_small != '0'
+              ? item.group_by_product?.[0].group_by_sloc.stock.total_in_small
+              : '',
+          stock_in_large:
+            item.group_by_product?.[0].group_by_sloc.stock.total_in_large != '0'
+              ? item.group_by_product?.[0].group_by_sloc.stock.total_in_large
+              : '',
+          bo_large:
+            item.group_by_product?.[0].group_by_sloc.booking_order.large != '0'
+              ? item.group_by_product?.[0].group_by_sloc.booking_order.large
+              : '',
+          bo_middle:
+            item.group_by_product?.[0].group_by_sloc.booking_order.middle != '0'
+              ? item.group_by_product?.[0].group_by_sloc.booking_order.middle
+              : '',
+          bo_small:
+            item.group_by_product?.[0].group_by_sloc.booking_order.small != '0'
+              ? item.group_by_product?.[0].group_by_sloc.booking_order.small
+              : '',
+          bo_in_large:
+            item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large != '0'
+              ? item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large
+              : '',
+          bo_in_small:
+            item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small != '0'
+              ? item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small
+              : '',
+          available_large:
+            item.group_by_product?.[0].group_by_sloc.available.large != '0'
+              ? item.group_by_product?.[0].group_by_sloc.available.large
+              : '',
+          available_middle:
+            item.group_by_product?.[0].group_by_sloc.available.middle != '0'
+              ? item.group_by_product?.[0].group_by_sloc.available.middle
+              : '',
+          available_small:
+            item.group_by_product?.[0].group_by_sloc.available.small != '0'
+              ? item.group_by_product?.[0].group_by_sloc.available.small
+              : '',
+          available_in_large:
+            item.group_by_product?.[0].group_by_sloc.available.total_in_large != '0'
+              ? item.group_by_product?.[0].group_by_sloc.available.total_in_large
+              : '',
+          available_in_small:
+            item.group_by_product?.[0].group_by_sloc.available.total_in_small != '0'
+              ? item.group_by_product?.[0].group_by_sloc.available.total_in_small
+              : '',
           children: item?.group_by_product?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
             branch: `${item.branch_id} - ${item.branch_name}`,
@@ -93,21 +138,66 @@ export default function PageAvailabilityOverview() {
             status_data: `${itemChild?.group_by_sloc.status_data || ''} - ${
               itemChild?.group_by_sloc.status_description || ''
             }`,
-            stock_large: itemChild?.group_by_sloc.stock.large,
-            stock_middle: itemChild?.group_by_sloc.stock.middle,
-            stock_small: itemChild?.group_by_sloc.stock.small,
-            stock_in_small: itemChild?.group_by_sloc.stock.total_in_small,
-            stock_in_large: itemChild?.group_by_sloc.stock.total_in_large,
-            bo_large: itemChild?.group_by_sloc.booking_order.large,
-            bo_middle: itemChild?.group_by_sloc.booking_order.middle,
-            bo_small: itemChild?.group_by_sloc.booking_order.small,
-            bo_in_large: itemChild?.group_by_sloc.booking_order.total_in_large,
-            bo_in_small: itemChild?.group_by_sloc.booking_order.total_in_small,
-            available_large: itemChild?.group_by_sloc.available.large,
-            available_middle: itemChild?.group_by_sloc.available.middle,
-            available_small: itemChild?.group_by_sloc.available.small,
-            available_in_large: itemChild?.group_by_sloc.available.total_in_large,
-            available_in_small: itemChild?.group_by_sloc.available.total_in_small,
+            stock_large:
+              itemChild?.group_by_sloc.stock.large != '0'
+                ? itemChild?.group_by_sloc.stock.large
+                : '',
+            stock_middle:
+              itemChild?.group_by_sloc.stock.middle != '0'
+                ? itemChild?.group_by_sloc.stock.middle
+                : '',
+            stock_small:
+              itemChild?.group_by_sloc.stock.small != '0'
+                ? itemChild?.group_by_sloc.stock.small
+                : '',
+            stock_in_small:
+              itemChild?.group_by_sloc.stock.total_in_small != '0'
+                ? itemChild?.group_by_sloc.stock.total_in_small
+                : '',
+            stock_in_large:
+              itemChild?.group_by_sloc.stock.total_in_large != '0'
+                ? itemChild?.group_by_sloc.stock.total_in_large
+                : '',
+            bo_large:
+              itemChild?.group_by_sloc.booking_order.large != '0'
+                ? itemChild?.group_by_sloc.booking_order.large
+                : '',
+            bo_middle:
+              itemChild?.group_by_sloc.booking_order.middle != '0'
+                ? itemChild?.group_by_sloc.booking_order.middle
+                : '',
+            bo_small:
+              itemChild?.group_by_sloc.booking_order.small != '0'
+                ? itemChild?.group_by_sloc.booking_order.small
+                : '',
+            bo_in_large:
+              itemChild?.group_by_sloc.booking_order.total_in_large != '0'
+                ? itemChild?.group_by_sloc.booking_order.total_in_large
+                : '',
+            bo_in_small:
+              itemChild?.group_by_sloc.booking_order.total_in_small != '0'
+                ? itemChild?.group_by_sloc.booking_order.total_in_small
+                : '',
+            available_large:
+              itemChild?.group_by_sloc.available.large != '0'
+                ? itemChild?.group_by_sloc.available.large
+                : '',
+            available_middle:
+              itemChild?.group_by_sloc.available.middle != '0'
+                ? itemChild?.group_by_sloc.available.middle
+                : '',
+            available_small:
+              itemChild?.group_by_sloc.available.small != '0'
+                ? itemChild?.group_by_sloc.available.small
+                : '',
+            available_in_large:
+              itemChild?.group_by_sloc.available.total_in_large != '0'
+                ? itemChild?.group_by_sloc.available.total_in_large
+                : '',
+            available_in_small:
+              itemChild?.group_by_sloc.available.total_in_small != '0'
+                ? itemChild?.group_by_sloc.available.total_in_small
+                : '',
           })),
         }
       }
@@ -126,21 +216,66 @@ export default function PageAvailabilityOverview() {
         status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
           item.group_by_product?.[0].group_by_sloc.status_description || ''
         }`,
-        stock_large: item.group_by_product?.[0].group_by_sloc.stock.large,
-        stock_middle: item.group_by_product?.[0].group_by_sloc.stock.middle,
-        stock_small: item.group_by_product?.[0].group_by_sloc.stock.small,
-        stock_in_small: item.group_by_product?.[0].group_by_sloc.stock.total_in_small,
-        stock_in_large: item.group_by_product?.[0].group_by_sloc.stock.total_in_large,
-        bo_large: item.group_by_product?.[0].group_by_sloc.booking_order.large,
-        bo_middle: item.group_by_product?.[0].group_by_sloc.booking_order.middle,
-        bo_small: item.group_by_product?.[0].group_by_sloc.booking_order.small,
-        bo_in_large: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large,
-        bo_in_small: item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small,
-        available_large: item.group_by_product?.[0].group_by_sloc.available.large,
-        available_middle: item.group_by_product?.[0].group_by_sloc.available.middle,
-        available_small: item.group_by_product?.[0].group_by_sloc.available.small,
-        available_in_large: item.group_by_product?.[0].group_by_sloc.available.total_in_large,
-        available_in_small: item.group_by_product?.[0].group_by_sloc.available.total_in_small,
+        stock_large:
+          item.group_by_product?.[0].group_by_sloc.stock.large != '0'
+            ? item.group_by_product?.[0].group_by_sloc.stock.large
+            : '',
+        stock_middle:
+          item.group_by_product?.[0].group_by_sloc.stock.middle != '0'
+            ? item.group_by_product?.[0].group_by_sloc.stock.middle
+            : '',
+        stock_small:
+          item.group_by_product?.[0].group_by_sloc.stock.small != '0'
+            ? item.group_by_product?.[0].group_by_sloc.stock.small
+            : '',
+        stock_in_small:
+          item.group_by_product?.[0].group_by_sloc.stock.total_in_small != '0'
+            ? item.group_by_product?.[0].group_by_sloc.stock.total_in_small
+            : '',
+        stock_in_large:
+          item.group_by_product?.[0].group_by_sloc.stock.total_in_large != '0'
+            ? item.group_by_product?.[0].group_by_sloc.stock.total_in_large
+            : '',
+        bo_large:
+          item.group_by_product?.[0].group_by_sloc.booking_order.large != '0'
+            ? item.group_by_product?.[0].group_by_sloc.booking_order.large
+            : '',
+        bo_middle:
+          item.group_by_product?.[0].group_by_sloc.booking_order.middle != '0'
+            ? item.group_by_product?.[0].group_by_sloc.booking_order.middle
+            : '',
+        bo_small:
+          item.group_by_product?.[0].group_by_sloc.booking_order.small != '0'
+            ? item.group_by_product?.[0].group_by_sloc.booking_order.small
+            : '',
+        bo_in_large:
+          item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large != '0'
+            ? item.group_by_product?.[0].group_by_sloc.booking_order.total_in_large
+            : '',
+        bo_in_small:
+          item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small != '0'
+            ? item.group_by_product?.[0].group_by_sloc.booking_order.total_in_small
+            : '',
+        available_large:
+          item.group_by_product?.[0].group_by_sloc.available.large != '0'
+            ? item.group_by_product?.[0].group_by_sloc.available.large
+            : '',
+        available_middle:
+          item.group_by_product?.[0].group_by_sloc.available.middle != '0'
+            ? item.group_by_product?.[0].group_by_sloc.available.middle
+            : '',
+        available_small:
+          item.group_by_product?.[0].group_by_sloc.available.small != '0'
+            ? item.group_by_product?.[0].group_by_sloc.available.small
+            : '',
+        available_in_large:
+          item.group_by_product?.[0].group_by_sloc.available.total_in_large != '0'
+            ? item.group_by_product?.[0].group_by_sloc.available.total_in_large
+            : '',
+        available_in_small:
+          item.group_by_product?.[0].group_by_sloc.available.total_in_small != '0'
+            ? item.group_by_product?.[0].group_by_sloc.available.total_in_small
+            : '',
       }
     })
     setdataTable(dataApi)
