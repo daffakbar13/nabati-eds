@@ -123,4 +123,22 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/approval-noo`),
     ),
   ]),
+  CreateMenu('saleman', 'Salesman', null, NabatiIcons.LogisticIcSwapHandling, null, null, [
+    CreateMenu(
+      'salesman-division',
+      'Salesman Division',
+      null,
+      null,
+      () => 'Salesman Division',
+      () => Router.push(`${PATH.SALES}/salesman-division`),
+    ),
+    CreateMenu(
+      'salesman-division-product',
+      'Salesman Division Product',
+      null,
+      null,
+      () => 'Salesman Division Product',
+      () => Router.push(`${PATH.SALES}/salesman-division-product`),
+    ),
+  ]),
 ]
