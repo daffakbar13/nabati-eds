@@ -189,7 +189,11 @@ export const useTableAddItem = (props: any) => {
               min={isNullProductId(index) ? '0' : '1'}
               value={rows.received_qty?.toLocaleString()}
               onChange={(newVal) => {
-                handleChangeData('received_qty', newVal, index)
+                if (newVal > rows.qty) {
+                  handleChangeData('received_qty', rows.qty, index)
+                } else {
+                  handleChangeData('received_qty', newVal, index)
+                }
               }}
               style={styleInputNumber}
             />
@@ -245,9 +249,10 @@ export const useTableAddItem = (props: any) => {
     addColumn({
       title: 'Remarks',
       dataIndex: 'remarks',
-      render: (remarks, __, index) => (
+      render: (row, __, index) => (
         <DebounceSelect
           type="input"
+          value={row.remarks}
           onChange={(e: any) => {
             handleChangeData('remarks', e.target.value, index)
           }}
