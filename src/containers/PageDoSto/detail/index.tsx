@@ -42,7 +42,7 @@ export default function PageDoStoDetail() {
           return {
             product_id: item.product_id,
             sloc_id: item.sloc_id,
-            base_qty: item.base_qty,
+            base_qty: item.received_qty,
           }
         }),
       })
