@@ -9,7 +9,7 @@ import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { fieldPoSto } from 'src/configs/fieldFetches'
-import { createDoSto, updateBookingStock } from 'src/api/logistic/do-sto'
+import { createDoSto, updateBookingStock, updateTotalBookingStock } from 'src/api/logistic/do-sto'
 import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/po-sto'
 
 interface ItemsState {
@@ -100,6 +100,16 @@ export default function CreateBilling() {
               status_id: '12',
             })
             setNewDoSTO(response.data.id)
+            updateTotalBookingStock({
+              branch_id: dataForm.supply_branch_id,
+              items: tableAddItems.dataSubmit?.map((item: any, index) => {
+                return {
+                  product_id: item.product_id,
+                  sloc_id: item.sloc_id,
+                  base_qty: item.base_qty,
+                }
+              }),
+            })
           })
         })
       } else {
@@ -112,6 +122,16 @@ export default function CreateBilling() {
             status_id: '12',
           })
           setNewDoSTO(response.data.id)
+          updateTotalBookingStock({
+            branch_id: dataForm.supply_branch_id,
+            items: tableAddItems.dataSubmit?.map((item: any, index) => {
+              return {
+                product_id: item.product_id,
+                sloc_id: item.sloc_id,
+                base_qty: item.base_qty,
+              }
+            }),
+          })
         })
       }
     }
