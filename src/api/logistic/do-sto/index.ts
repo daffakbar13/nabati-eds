@@ -81,6 +81,18 @@ export const updateBookingStock = async (params: {}): Promise<
   return response.data
 }
 
+export const updateBookingStockPGI = async (params: {}): Promise<
+  CommonListResponse<StockRealTime>
+> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${urlBooking}/update/booking_stock`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
 export const updateTotalBookingStock = async (params: {}): Promise<
   CommonListResponse<StockRealTime>
 > => {

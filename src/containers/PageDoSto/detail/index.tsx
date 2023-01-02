@@ -11,7 +11,7 @@ import {
   getPoStoDetail,
   updateStatusPoSto,
   updateBookingStock,
-  updateTotalBookingStock,
+  updateBookingStockPGI,
 } from 'src/api/logistic/do-sto'
 import AllTabs from './tabs'
 import DOSTO from './tabs/DOSTO'
@@ -36,7 +36,7 @@ export default function PageDoStoDetail() {
         doc_category_id: 'C',
         status_id: '07',
       })
-      return await updateTotalBookingStock({
+      return await updateBookingStockPGI({
         branch_id: data.supply_branch_id,
         items: data.items?.map((item: any, index) => {
           return {
