@@ -86,7 +86,7 @@ export const updateBookingStockPGI = async (params: {}): Promise<
 > => {
   const response = await call({
     method: METHODS.PUT,
-    subUrl: `${urlBooking}/update/booking_stock`,
+    subUrl: `${urlBooking}/pgi_update/booking_stock`,
     overrideBaseUrl,
     data: params,
   })
