@@ -10,6 +10,7 @@ import {
   fieldProductByCompany,
 } from 'src/configs/fieldFetches'
 import { columns } from './columns'
+import ConfigurationSlocSalesman from 'pages/logistic/sloc-salesman'
 
 export default function PageRealTime() {
   const [filters, setFilters] = useState([])
@@ -21,8 +22,8 @@ export default function PageRealTime() {
 
   const table = useTable({
     funcApi: getStockRealtimeList,
-    data,
     columns,
+    data,
   })
 
   useEffect(() => {
@@ -37,43 +38,47 @@ export default function PageRealTime() {
 
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => {
-      if (item?.group_by_sloc?.length > 1) {
+      if (item?.ProductBySloc?.length > 1) {
         return {
           key: index,
-          branch: `${item.branch_id} - ${item.branch_name}`,
-          sloc: item?.group_by_sloc?.[0].sloc_id,
-          material: `${item?.group_by_sloc?.[0].group_by_product.product_id} - ${item?.group_by_sloc?.[0].group_by_product.product_name}`,
-          large: item?.group_by_sloc?.[0].group_by_product.large,
-          middle: item?.group_by_sloc?.[0].group_by_product.middle,
-          small: item?.group_by_sloc?.[0].group_by_product.small,
-          total_in_small: item?.group_by_sloc?.[0].group_by_product.total_in_small,
-          total_in_large: item?.group_by_sloc?.[0].group_by_product.total_in_large,
-          children: item?.group_by_sloc?.slice(1).map((itemChild: any, indexChild) => ({
+          branch: `${item?.ProductBySloc?.[0].branch_id} - ${item?.ProductBySloc?.[0].branch_name}`,
+          sloc: item?.sloc_id,
+          material: `${item?.ProductBySloc?.[0].product_id} - ${item?.ProductBySloc?.[0].product_name}`,
+          large: item?.ProductBySloc?.[0].large,
+          middle: item?.ProductBySloc?.[0].middle,
+          small: item?.ProductBySloc?.[0].small,
+          total_in_small: item?.ProductBySloc?.[0].total_in_small,
+          total_in_large: item?.ProductBySloc?.[0].total_in_large,
+          unrestricted_use: item?.ProductBySloc?.[0].unrestricted_use,
+          children: item?.ProductBySloc?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
-            branch: `${item.branch_id} - ${item.branch_name}`,
-            sloc: itemChild.sloc_id,
-            material: `${itemChild?.group_by_product.product_id} - ${itemChild?.group_by_product.product_name}`,
-            large: itemChild?.group_by_product.large,
-            middle: itemChild?.group_by_product.middle,
-            small: itemChild?.group_by_product.small,
-            total_in_small: itemChild?.group_by_product.total_in_small,
-            total_in_large: itemChild?.group_by_product.total_in_large,
+            branch: `${itemChild?.branch_id} - ${itemChild?.branch_name}`,
+            // sloc: item?.sloc_id,
+            material: `${itemChild?.product_id} - ${itemChild?.product_name}`,
+            large: itemChild?.large,
+            middle: itemChild?.middle,
+            small: itemChild?.small,
+            total_in_small: itemChild?.total_in_small,
+            total_in_large: itemChild?.total_in_large,
+            unrestricted_use: itemChild?.unrestricted_use,
           })),
         }
       }
       return {
         key: index,
-        branch: `${item.branch_id} - ${item.branch_name}`,
-        sloc: item?.group_by_sloc?.[0].sloc_id,
-        material: `${item?.group_by_sloc?.[0].group_by_product.product_id} - ${item?.group_by_sloc?.[0].group_by_product.product_name}`,
-        large: item?.group_by_sloc?.[0].group_by_product.large,
-        middle: item?.group_by_sloc?.[0].group_by_product.middle,
-        small: item?.group_by_sloc?.[0].group_by_product.small,
-        total_in_small: item?.group_by_sloc?.[0].group_by_product.total_in_small,
-        total_in_large: item?.group_by_sloc?.[0].group_by_product.total_in_large,
+        branch: `${item?.ProductBySloc?.[0].branch_id} - ${item?.ProductBySloc?.[0].branch_name}`,
+        sloc: item?.sloc_id,
+        material: `${item?.ProductBySloc?.[0].product_id} - ${item?.ProductBySloc?.[0].product_name}`,
+        large: item?.ProductBySloc?.[0].large,
+        middle: item?.ProductBySloc?.[0].middle,
+        small: item?.ProductBySloc?.[0].small,
+        total_in_small: item?.ProductBySloc?.[0].total_in_small,
+        total_in_large: item?.ProductBySloc?.[0].total_in_large,
+        unrestricted_use: item?.ProductBySloc?.[0].unrestricted_use,
       }
     })
     setdataTable(dataApi)
+    console.log('dataApi ', dataApi)
   }, [table?.state?.data])
 
   return (
