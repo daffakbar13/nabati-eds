@@ -63,9 +63,9 @@ export default function PageAvailabilityOverview() {
                 .toUpperCase() +
               item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase()
             : '',
-          status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
-            item.group_by_product?.[0].group_by_sloc.status_description || ''
-          }`,
+          status_data: item.group_by_product?.[0].group_by_sloc.status_data
+            ? `${item.group_by_product?.[0].group_by_sloc.status_data} - ${item.group_by_product?.[0].group_by_sloc.status_description}`
+            : '',
           stock_large:
             item.group_by_product?.[0].group_by_sloc.stock.large != '0'
               ? item.group_by_product?.[0].group_by_sloc.stock.large
@@ -135,9 +135,9 @@ export default function PageAvailabilityOverview() {
               ? itemChild?.group_by_sloc.status_id_name.toLowerCase().charAt(0).toUpperCase() +
                 itemChild?.group_by_sloc.status_id_name.slice(1).toLowerCase()
               : '',
-            status_data: `${itemChild?.group_by_sloc.status_data || ''} - ${
-              itemChild?.group_by_sloc.status_description || ''
-            }`,
+            status_data: itemChild?.group_by_sloc.status_data
+              ? `${itemChild?.group_by_sloc.status_data} - ${itemChild?.group_by_sloc.status_description}`
+              : '',
             stock_large:
               itemChild?.group_by_sloc.stock.large != '0'
                 ? itemChild?.group_by_sloc.stock.large
@@ -213,9 +213,9 @@ export default function PageAvailabilityOverview() {
               .toUpperCase() +
             item.group_by_product?.[0].group_by_sloc.status_id_name.slice(1).toLowerCase()
           : '',
-        status_data: `${item.group_by_product?.[0].group_by_sloc.status_data || ''} - ${
-          item.group_by_product?.[0].group_by_sloc.status_description || ''
-        }`,
+        status_data: item.group_by_product?.[0].group_by_sloc.status_data
+          ? `${item.group_by_product?.[0].group_by_sloc.status_data} - ${item.group_by_product?.[0].group_by_sloc.status_description}`
+          : '',
         stock_large:
           item.group_by_product?.[0].group_by_sloc.stock.large != '0'
             ? item.group_by_product?.[0].group_by_sloc.stock.large
