@@ -74,11 +74,11 @@ export const useTableAddItem = (props: any) => {
         batch: item.batch,
         qty: item.qty,
         base_qty: item.base_qty,
-        received_qty: item.qty,
+        received_qty: item.do_qty,
         do_qty: item.do_qty,
         uom_id: item.uom_id,
         base_uom_id: item.base_uom_id,
-        received_uom_id: item.uom_id,
+        received_uom_id: item.do_uom_id,
         do_uom_id: item.do_uom_id,
         sloc_id: item.sloc_id,
       }
@@ -189,9 +189,13 @@ export const useTableAddItem = (props: any) => {
               min={isNullProductId(index) ? '0' : '1'}
               value={rows.received_qty?.toLocaleString()}
               onChange={(newVal) => {
-                if (newVal > rows.qty) {
-                  handleChangeData('received_qty', rows.qty, index)
-                } else {
+                if (rows.do_qty) {
+                  if (newVal > rows.do_qty) {
+                    handleChangeData('received_qty', rows.do_qty, index)
+                  } else {
+                    handleChangeData('received_qty', newVal, index)
+                  }
+                }else{
                   handleChangeData('received_qty', newVal, index)
                 }
               }}
