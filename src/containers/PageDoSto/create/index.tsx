@@ -103,17 +103,15 @@ export default function CreateBilling() {
           })
         })
       } else {
-        updateStatusPoSto({ id: dataForm.purchase_id, status_id: '02' }).then(() => {
-          createDoSto({ ...initialValue, ...dataForm }).then((response) => {
-            updateBookingStock({
-              document_id: response.data.id,
-              order_type_id: 'ZDST',
-              update_document_id: response.data.id,
-              doc_category_id: 'C',
-              status_id: '12',
-            })
-            setNewDoSTO(response.data.id)
+        createDoSto({ ...initialValue, ...dataForm }).then((response) => {
+          updateBookingStock({
+            document_id: response.data.id,
+            order_type_id: 'ZDST',
+            update_document_id: response.data.id,
+            doc_category_id: 'C',
+            status_id: '12',
           })
+          setNewDoSTO(response.data.id)
         })
       }
     }
