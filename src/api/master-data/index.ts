@@ -39,6 +39,7 @@ const subUrl = {
   getSalesOrgByCompanyDynamic: 'v1/master/get-sales-org',
   getCustomerGroupCompanyDynamic: 'v1/master/get-customer-group',
   getConfigSlocCompanyDynamic: 'v1/master/get-config-sloc',
+  getSlocbyConfigLogistic: 'v1/configuration/get_config_sloc',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -406,6 +407,17 @@ export const getConfigSlocCompanyDynamic = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getConfigSlocCompanyDynamic}/${company_id}`,
+  })
+
+  return response.data
+}
+
+export const getSlocbyConfigLogistic = async (
+  idbranch: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${BaseUrl2}${subUrl.getSlocbyConfigLogistic}/${idbranch}`,
   })
 
   return response.data

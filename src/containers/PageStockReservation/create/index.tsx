@@ -9,9 +9,8 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { createRequestStockReservation } from 'src/api/logistic/stock-reservation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
-import { getSloc } from 'src/api/request-intra-channel'
 
 interface ItemsState {
   product_id: string
@@ -57,14 +56,8 @@ export default function PageStockReservationCreate() {
   }
 
   const onChangeBranch = (value: any) => {
-    getSloc({ id: 'PP01' }).then((result) => {
-      const datalist = result.data
-        .filter(({ doc_type_id, branch_id }) => doc_type_id == 'ZOP3' && branch_id == value)
-        .map(({ sloc_id }) => ({
-          label: sloc_id,
-          value: sloc_id,
-        }))
-      setAllScloc(datalist)
+    fieldSlocByConfigLogistic(value).then((result) => {
+      setAllScloc(result)
     })
   }
 

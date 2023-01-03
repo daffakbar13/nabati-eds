@@ -44,13 +44,13 @@ export const column = [
     children: [
       {
         title: 'Qty',
-        dataIndex: 'qty',
+        dataIndex: 'received_base_qty',
         key: 'qty_outstanding',
         width: 75,
       },
       {
         title: 'UoM',
-        dataIndex: 'uom_id',
+        dataIndex: 'received_base_uom_id',
         key: 'uom_outstanding',
         width: 75,
       },
@@ -63,13 +63,13 @@ export const column = [
     children: [
       {
         title: 'Qty',
-        dataIndex: 'qty',
+        dataIndex: 'received_qty',
         key: 'qty_received',
         width: 75,
       },
       {
         title: 'UoM',
-        dataIndex: 'uom_id',
+        dataIndex: 'received_uom_id',
         key: 'uom_received',
         width: 75,
       },

@@ -14,17 +14,17 @@ interface DataType {
   product_id: string
   description: string
   description_show: string
-  qty: number
-  qty_show: number
-  base_qty: number
-  received_qty: number
-  uom_id: string
-  uom_show: string
-  base_uom_id: string
-  received_uom_id: string
-  sloc_id: string
   remarks: string
   batch: string
+  qty: number
+  base_qty: number
+  received_qty: number
+  do_qty: number
+  uom_id: string
+  base_uom_id: string
+  received_uom_id: string
+  do_uom_id: string
+  sloc_id: string
 }
 
 export const useTableAddItem = (props: any) => {
@@ -34,13 +34,13 @@ export const useTableAddItem = (props: any) => {
     description: '',
     description_show: '',
     qty: 1,
-    qty_show: 1,
     base_qty: 1,
     received_qty: 1,
+    do_qty: 1,
     uom_id: '',
-    uom_id_show: '',
     base_uom_id: '',
     received_uom_id: '',
+    do_uom_id: '',
     sloc_id: '',
     remarks: '',
     batch: '',
@@ -70,17 +70,17 @@ export const useTableAddItem = (props: any) => {
         product_id: item.product_id,
         description: item.description,
         description_show: `${item.product_id} - ${item.description}`,
-        qty: item.qty,
-        qty_show: item.qty,
-        base_qty: item.base_qty,
-        received_qty: item.qty,
-        uom_id: item.uom_id,
-        uom_id_show: item.uom_id,
-        base_uom_id: item.base_uom_id,
-        received_uom_id: item.uom_id,
-        sloc_id: item.sloc_id,
         remarks: item.remarks,
         batch: item.batch,
+        qty: item.qty,
+        base_qty: item.base_qty,
+        received_qty: item.do_qty,
+        do_qty: item.do_qty,
+        uom_id: item.uom_id,
+        base_uom_id: item.base_uom_id,
+        received_uom_id: item.do_uom_id,
+        do_uom_id: item.do_uom_id,
+        sloc_id: item.sloc_id,
       }
     })
 
@@ -138,7 +138,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'Qty',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.qty_show || ''} />
+            <DebounceSelect type="input" disabled value={rows.qty || ''} />
           ),
           key: 'qty',
           width: 100,
@@ -146,7 +146,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'UoM',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.uom_id_show || ''} />
+            <DebounceSelect type="input" disabled value={rows.uom_id || ''} />
           ),
           key: 'uom_id',
           width: 100,
@@ -161,7 +161,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'Qty',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.qty_show || ''} />
+            <DebounceSelect type="input" disabled value={rows.do_qty || ''} />
           ),
           key: 'qty',
           width: 100,
@@ -169,7 +169,7 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'UoM',
           render: (rows, __, index) => (
-            <DebounceSelect type="input" disabled value={rows.uom_id_show || ''} />
+            <DebounceSelect type="input" disabled value={rows.do_uom_id || ''} />
           ),
           key: 'uom_id',
           width: 100,
@@ -187,14 +187,22 @@ export const useTableAddItem = (props: any) => {
             <InputNumber
               disabled={isNullProductId(index)}
               min={isNullProductId(index) ? '0' : '1'}
-              value={rows.qty?.toLocaleString()}
+              value={rows.received_qty?.toLocaleString()}
               onChange={(newVal) => {
-                handleChangeData('qty', newVal, index)
+                if (rows.do_qty) {
+                  if (newVal > rows.do_qty) {
+                    handleChangeData('received_qty', rows.do_qty, index)
+                  } else {
+                    handleChangeData('received_qty', newVal, index)
+                  }
+                }else{
+                  handleChangeData('received_qty', newVal, index)
+                }
               }}
               style={styleInputNumber}
             />
           ),
-          key: 'qty',
+          key: 'received_qty',
           width: 130,
         },
         {
@@ -202,16 +210,16 @@ export const useTableAddItem = (props: any) => {
           render: (rows, __, index) => (
             <DebounceSelect
               type="select"
-              value={rows.uom_id as any}
+              value={rows.received_uom_id as any}
               options={optionsUom[index] || []}
               disabled={isNullProductId(index)}
               onChange={(e) => {
-                handleChangeData('uom_id', e.value, index)
+                handleChangeData('received_uom_id', e.value, index)
                 setFetching(true)
               }}
             />
           ),
-          key: 'uom_id',
+          key: 'received_uom_id',
           width: 150,
         },
       ],
@@ -245,9 +253,10 @@ export const useTableAddItem = (props: any) => {
     addColumn({
       title: 'Remarks',
       dataIndex: 'remarks',
-      render: (remarks, __, index) => (
+      render: (row, __, index) => (
         <DebounceSelect
           type="input"
+          value={row.remarks}
           onChange={(e: any) => {
             handleChangeData('remarks', e.target.value, index)
           }}

@@ -28,6 +28,7 @@ import {
   getConfigSlocCompanyDynamic,
   getProductMasterData,
   getListProduct,
+  getSlocbyConfigLogistic,
 } from 'src/api/master-data'
 import { getCustomerByFilterProps } from 'src/api/master-data/types'
 import { getListPoSto } from 'src/api/logistic/po-sto'
@@ -685,6 +686,15 @@ export function fieldPoGRPrincipal(search: string) {
     result.data.result.splice(0, 10).map(({ po_id }) => ({
       label: po_id,
       value: po_id,
+    })),
+  )
+}
+
+export function fieldSlocByConfigLogistic(search: string) {
+  return getSlocbyConfigLogistic(search).then((result) =>
+    result.data.splice(0, 10).map(({ sloc_id, sloc_name }) => ({
+      label: [sloc_id, sloc_name].join(' - '),
+      value: sloc_id,
     })),
   )
 }

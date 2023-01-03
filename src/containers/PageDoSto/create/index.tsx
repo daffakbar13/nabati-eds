@@ -9,8 +9,8 @@ import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { fieldPoSto } from 'src/configs/fieldFetches'
-import { createDoSto, updateBookingStock } from 'src/api/logistic/do-sto'
-import { getPoStoDetail } from 'src/api/logistic/po-sto'
+import { createDoSto, updateBookingStock, updateTotalBookingStock } from 'src/api/logistic/do-sto'
+import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/po-sto'
 
 interface ItemsState {
   product_id: string
@@ -77,6 +77,66 @@ export default function CreateBilling() {
     })
   }
 
+  const onSubmitFunction = async () => {
+    let totalSisa = 0
+    await tableAddItems.dataSubmit?.map((item: any) => {
+      if (item.uom_id == item.received_uom_id) {
+        const totalSementara = item.qty - item.received_qty
+        totalSisa += totalSementara
+      } else {
+        const totalSementara = 1
+        totalSisa += totalSementara
+      }
+    })
+    if (dataForm.purchase_id) {
+      if (totalSisa == 0) {
+        updateStatusPoSto({ id: dataForm.purchase_id, status_id: '01' }).then(() => {
+          createDoSto({ ...initialValue, ...dataForm }).then((response) => {
+            updateBookingStock({
+              document_id: response.data.id,
+              order_type_id: 'ZDST',
+              update_document_id: response.data.id,
+              doc_category_id: 'C',
+              status_id: '12',
+            })
+            setNewDoSTO(response.data.id)
+            updateTotalBookingStock({
+              branch_id: dataForm.supply_branch_id,
+              items: tableAddItems.dataSubmit?.map((item: any, index) => {
+                return {
+                  product_id: item.product_id,
+                  sloc_id: item.sloc_id,
+                  base_qty: item.received_qty,
+                }
+              }),
+            })
+          })
+        })
+      } else {
+        createDoSto({ ...initialValue, ...dataForm }).then((response) => {
+          updateBookingStock({
+            document_id: response.data.id,
+            order_type_id: 'ZDST',
+            update_document_id: response.data.id,
+            doc_category_id: 'C',
+            status_id: '12',
+          })
+          setNewDoSTO(response.data.id)
+          updateTotalBookingStock({
+            branch_id: dataForm.supply_branch_id,
+            items: tableAddItems.dataSubmit?.map((item: any, index) => {
+              return {
+                product_id: item.product_id,
+                sloc_id: item.sloc_id,
+                base_qty: item.received_qty,
+              }
+            }),
+          })
+        })
+      }
+    }
+  }
+
   // useEffect(() => {
   //   console.log(dataForm)
   // }, [dataForm])
@@ -97,22 +157,7 @@ export default function CreateBilling() {
             >
               Cancel
             </Button>
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => {
-                createDoSto({ ...initialValue, ...dataForm }).then((response) => {
-                  updateBookingStock({
-                    document_id: response.data.id,
-                    order_type_id: 'ZDST',
-                    update_document_id: response.data.id,
-                    doc_category_id: 'C',
-                    status_id: '12',
-                  })
-                  setNewDoSTO(response.data.id)
-                })
-              }}
-            >
+            <Button size="big" variant="primary" onClick={onSubmitFunction}>
               Submit
             </Button>
           </Row>
