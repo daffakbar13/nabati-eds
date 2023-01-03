@@ -27,22 +27,19 @@ export default function PageDoStoDetail() {
 
   const handleUpdateStatus = async () => {
     try {
-      await updateStatusPoSto(router.query.id as string, { status_id: '07' })
-      return await updatePGIinventoryBooking(
-        {
-          sto_doc_type: 'ZDST',
-          supply_branch_id: data.supply_branch_id,
-          items: data.items?.map((item: any, index) => {
-            return {
-              product_id: item.product_id,
-              received_qty: item.received_qty,
-              received_uom_id: item.received_uom_id,
-              sloc_id: item.sloc_id,
-            }
-          }),
-        },
-        router.query.id as string,
-      )
+      await updatePGIinventoryBooking(router.query.id as string, {
+        sto_doc_type: 'ZDST',
+        supply_branch_id: data.supply_branch_id,
+        items: data.items?.map((item: any, index) => {
+          return {
+            product_id: item.product_id,
+            received_qty: item.received_qty,
+            received_uom_id: item.received_uom_id,
+            sloc_id: item.sloc_id,
+          }
+        }),
+      })
+      return await updateStatusPoSto(router.query.id as string, { status_id: '07' })
     } catch (error) {
       console.error(error)
     }
