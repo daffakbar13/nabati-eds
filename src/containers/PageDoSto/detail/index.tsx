@@ -25,24 +25,28 @@ export default function PageDoStoDetail() {
   const hasData = Object.keys(data).length > 0
   const componentRef = React.useRef()
   const [modalPGI, setModalPGI] = React.useState(false)
+  const [cancelProses, setCancelProses] = React.useState(false)
 
   const handleUpdateStatus = async () => {
-    try {
-      await updatePGIinventoryBooking(router.query.id as string, {
-        sto_doc_type: 'ZDST',
-        supply_branch_id: data.supply_branch_id,
-        items: data.items?.map((item: any, index) => {
-          return {
-            product_id: item.product_id,
-            received_qty: item.received_qty,
-            received_uom_id: item.received_uom_id,
-            sloc_id: item.sloc_id,
-          }
-        }),
-      })
-      return await updateStatusPoSto(router.query.id as string, { status_id: '07' })
-    } catch (error) {
-      console.error(error)
+    if (cancelProses) {
+    } else {
+      try {
+        await updatePGIinventoryBooking(router.query.id as string, {
+          sto_doc_type: 'ZDST',
+          supply_branch_id: data.supply_branch_id,
+          items: data.items?.map((item: any, index) => {
+            return {
+              product_id: item.product_id,
+              received_qty: item.received_qty,
+              received_uom_id: item.received_uom_id,
+              sloc_id: item.sloc_id,
+            }
+          }),
+        })
+        return await updateStatusPoSto(router.query.id as string, { status_id: '07' })
+      } catch (error) {
+        console.error(error)
+      }
     }
     return false
   }
@@ -68,7 +72,9 @@ export default function PageDoStoDetail() {
       </div>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
-        {data.status != 'Pending' && data.status != 'Wait For Approval' ? (
+        {data.status != 'Pending' &&
+        data.status != 'Wait For Approval' &&
+        data.status != 'PGI Done' ? (
           <Text variant={'h5'}>
             <TaggedStatus status={data.status} size="h5" />
           </Text>
@@ -79,9 +85,6 @@ export default function PageDoStoDetail() {
           {data.status == 'Pending' || data.status == 'Wait For Approval' ? (
             <>
               <RowPinkLava gap="16px">
-                <Button size="big" variant="tertiary">
-                  Cancel Process
-                </Button>
                 <Button
                   size="big"
                   variant="secondary"
@@ -103,6 +106,27 @@ export default function PageDoStoDetail() {
               </RowPinkLava>
               <Text variant={'h5'}>
                 <TaggedStatus status="Pending" size="h5" />
+              </Text>
+            </>
+          ) : (
+            ''
+          )}
+          {data.status == 'PGI Done' ? (
+            <>
+              <RowPinkLava gap="16px">
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    setModalPGI(true)
+                    setCancelProses(true)
+                  }}
+                >
+                  Cancel Process
+                </Button>
+              </RowPinkLava>
+              <Text variant={'h5'}>
+                <TaggedStatus status="PGI Done" size="h5" />
               </Text>
             </>
           ) : (
@@ -141,13 +165,18 @@ export default function PageDoStoDetail() {
         )}
       </Card>
       <Modal
-        title={'Confirm Submit'}
+        title={cancelProses ? 'Confirm Cancel Process' : 'Confirm Submit'}
         open={modalPGI}
         onOk={handleUpdateStatus}
         onCancel={() => {
           setModalPGI(false)
+          setCancelProses(false)
         }}
-        content={`Are you sure want to PGI This DO STO ?`}
+        content={
+          cancelProses
+            ? `Are you sure want to Cancel Process This DO STO ?`
+            : `Are you sure want to PGI This DO STO ?`
+        }
         successTitle="Success"
         onOkSuccess={() => {
           router.push('/logistic/do-sto')
@@ -159,7 +188,9 @@ export default function PageDoStoDetail() {
               {' '}
               {router.query.id}
             </Typography.Text>
-            status has been successfully changed
+            {cancelProses
+              ? 'cancel process successfully changed'
+              : 'status has been successfully changed'}
           </>
         )}
         successOkText="OK"
