@@ -158,7 +158,7 @@ export default function CreateBilling() {
             }
             onChange={(val: any) => {
               onChangeForm('receive_branch_id', val.value)
-              setSuplyingVal(val.value)
+              setReceivingVal(val.value)
             }}
           />
           <DatePickerInput
@@ -180,7 +180,7 @@ export default function CreateBilling() {
             }
             onChange={(val: any) => {
               onChangeForm('supply_branch_id', val.value)
-              setReceivingVal(val.value)
+              setSuplyingVal(val.value)
             }}
           />
           <DatePickerInput
