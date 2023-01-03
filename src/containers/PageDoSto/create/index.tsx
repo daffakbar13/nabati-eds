@@ -4,12 +4,12 @@ import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput, Input } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
-import useTitlePage from 'src/hooks/useTitlePage'
+import { requestPreviousTable } from 'src/hooks'
 import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
-import { fieldPoSto } from 'src/configs/fieldFetches'
-import { createDoSto, updateBookingStock, updateTotalBookingStock } from 'src/api/logistic/do-sto'
+import { fieldPoStoByBranch, fieldBranchSupply } from 'src/configs/fieldFetches'
+import { createDoSto, updateBookingStock } from 'src/api/logistic/do-sto'
 import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/po-sto'
 
 interface ItemsState {
@@ -41,14 +41,15 @@ export default function CreateBilling() {
   const now = new Date().toISOString()
 
   const router = useRouter()
-  const titlePage = useTitlePage('create')
   const [cancel, setCancel] = useState(false)
+  const [disabledPO, setdisabledPO] = useState(true)
   const [newDoSTO, setNewDoSTO] = useState()
   const [dataForm, setDataForm] = React.useState<dataForm>()
   const [dataPo, setDataPo] = React.useState<any>({})
   const [suplyingVal, setSuplyingVal] = React.useState('')
   const [receivingVal, setReceivingVal] = React.useState('')
   const tableAddItems = useTableAddItem({ items: dataPo?.items } || { items: [] })
+  const [optionPONumber, setoptionPONumber] = React.useState([])
 
   const initialValue = {
     sto_doc_type: 'ZDST',
@@ -70,10 +71,8 @@ export default function CreateBilling() {
   const onPoChange = (value: any) => {
     getPoStoDetail({ id: value as string }).then((response) => {
       setDataPo(response.data)
-      onChangeForm('supply_branch_id', response.data.suppl_branch_id)
-      onChangeForm('receive_branch_id', response.data.receive_plant_id)
-      setSuplyingVal(`${response.data.suppl_branch_id} - ${response.data.suppl_branch_name}`)
-      setReceivingVal(`${response.data.receive_plant_id} - ${response.data.receive_plant_name}`)
+      setSuplyingVal(`${response.data.suppl_branch_id}`)
+      setReceivingVal(`${response.data.receive_plant_id}`)
     })
   }
 
@@ -117,9 +116,13 @@ export default function CreateBilling() {
     }
   }
 
-  // useEffect(() => {
-  //   console.log(dataForm)
-  // }, [dataForm])
+  useEffect(() => {
+    if (suplyingVal != '' && receivingVal != '') {
+      setdisabledPO(false)
+    } else {
+      setdisabledPO(true)
+    }
+  }, [suplyingVal, receivingVal])
 
   return (
     <Col>
@@ -148,11 +151,14 @@ export default function CreateBilling() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
           <DebounceSelect
             type="select"
-            label="Po Number"
-            fetchOptions={fieldPoSto}
+            label="Receiving Branch"
+            required
+            fetchOptions={(search) =>
+              fieldBranchSupply(search, '', dataForm?.supply_branch_id || '')
+            }
             onChange={(val: any) => {
-              onChangeForm('purchase_id', val.label.split(' - ')[0])
-              onPoChange(val.label.split(' - ')[0])
+              onChangeForm('receive_branch_id', val.value)
+              setSuplyingVal(val.value)
             }}
           />
           <DatePickerInput
@@ -165,7 +171,18 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          <Input type="text" label="Supplying Branch" disabled value={suplyingVal} />
+          <DebounceSelect
+            type="select"
+            label="Supplying Branch"
+            required
+            fetchOptions={(search) =>
+              fieldBranchSupply(search, '', dataForm?.receive_branch_id || '')
+            }
+            onChange={(val: any) => {
+              onChangeForm('supply_branch_id', val.value)
+              setReceivingVal(val.value)
+            }}
+          />
           <DatePickerInput
             fullWidth
             onChange={(val: any) => {
@@ -176,7 +193,18 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          <Input type="text" label="Receiving Branch" disabled value={receivingVal} />
+          <DebounceSelect
+            type="select"
+            label="Po Number"
+            disabled={disabledPO}
+            fetchOptions={(search) =>
+              fieldPoStoByBranch(search, suplyingVal || '-', receivingVal || '-')
+            }
+            onChange={(val: any) => {
+              onChangeForm('purchase_id', val.label.split(' - ')[0])
+              onPoChange(val.label.split(' - ')[0])
+            }}
+          />
           <DatePickerInput
             fullWidth
             onChange={(val: any) => {
@@ -259,6 +287,7 @@ export default function CreateBilling() {
                   size="big"
                   variant="primary"
                   onClick={() => {
+                    requestPreviousTable()
                     router.push(`${PATH.LOGISTIC}/do-sto`)
                   }}
                 >

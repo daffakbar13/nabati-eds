@@ -698,3 +698,41 @@ export function fieldSlocByConfigLogistic(search: string) {
     })),
   )
 }
+
+export function fieldPoStoByBranch(search: string, supplybranch: string, recevingbranch: string) {
+  return getListPoSto({
+    filters: [
+      {
+        field: 'id',
+        option: 'CP',
+        from_value: `%${search}%`,
+        data_type: 'S',
+      },
+      {
+        field: 'suppl_branch_id',
+        option: 'EQ',
+        from_value: supplybranch,
+        data_type: 'S',
+      },
+      {
+        field: 'receive_branch_id',
+        option: 'EQ',
+        from_value: recevingbranch,
+        data_type: 'S',
+      },
+      {
+        field: 'status_id',
+        option: 'EQ',
+        from_value: '01',
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result.data.result.splice(0, 10).map(({ id }) => ({
+      label: id,
+      value: id,
+    })),
+  )
+}
