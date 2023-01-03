@@ -10,8 +10,7 @@ import useDetail from 'src/hooks/useDetail'
 import {
   getPoStoDetail,
   updateStatusPoSto,
-  updateBookingStock,
-  updateBookingStockPGI,
+  updatePGIinventoryBooking,
 } from 'src/api/logistic/do-sto'
 import AllTabs from './tabs'
 import DOSTO from './tabs/DOSTO'
@@ -29,23 +28,21 @@ export default function PageDoStoDetail() {
   const handleUpdateStatus = async () => {
     try {
       await updateStatusPoSto(router.query.id as string, { status_id: '07' })
-      await updateBookingStock({
-        document_id: router.query.id,
-        order_type_id: 'ZDST',
-        update_document_id: router.query.id,
-        doc_category_id: 'C',
-        status_id: '07',
-      })
-      return await updateBookingStockPGI({
-        branch_id: data.supply_branch_id,
-        items: data.items?.map((item: any, index) => {
-          return {
-            product_id: item.product_id,
-            sloc_id: item.sloc_id,
-            base_qty: item.received_qty,
-          }
-        }),
-      })
+      return await updatePGIinventoryBooking(
+        {
+          sto_doc_type: 'ZDST',
+          supply_branch_id: data.supply_branch_id,
+          items: data.items?.map((item: any, index) => {
+            return {
+              product_id: item.product_id,
+              received_qty: item.received_qty,
+              received_uom_id: item.received_uom_id,
+              sloc_id: item.sloc_id,
+            }
+          }),
+        },
+        router.query.id as string,
+      )
     } catch (error) {
       console.error(error)
     }
