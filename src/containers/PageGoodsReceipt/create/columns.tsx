@@ -102,7 +102,6 @@ export const columns = (slocOptions: [], onTableValuesChange: (opt: any) => void
         placeholder="Select Sloc"
         value={rec?.sloc_id ? { value: text, label: text } : { value: 'GS00', label: 'GS00' }}
         onChange={(val: any) => {
-          console.log('rec', rec)
           onTableValuesChange({ field: 'sloc_id', value: val.value, index })
         }}
       />
