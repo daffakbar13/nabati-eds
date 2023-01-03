@@ -47,7 +47,7 @@ export default function SectionConfirm() {
       >
         <div>
           {'New Shipment '}
-          <Typography.Text copyable>{shipmentID}</Typography.Text>
+          <Typography.Text copyable={{ text: shipmentID as string }}>{shipmentID}</Typography.Text>
           {' has been'}
         </div>
         <div>successfully {shipmentID ? 'created' : 'saved'}</div>

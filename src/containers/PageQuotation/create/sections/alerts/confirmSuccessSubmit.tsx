@@ -38,7 +38,9 @@ export default function ConfirmSuccessSubmit() {
       >
         <div>
           {!isEditPage ? 'New' : ''} {' Quotation '}
-          <Typography.Text copyable>{quotationId}</Typography.Text>
+          <Typography.Text copyable={{ text: quotationId as string }}>
+            {quotationId}
+          </Typography.Text>
           {' has been'}
         </div>
         <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>

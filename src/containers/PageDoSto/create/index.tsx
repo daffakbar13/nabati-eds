@@ -100,16 +100,6 @@ export default function CreateBilling() {
               status_id: '12',
             })
             setNewDoSTO(response.data.id)
-            updateTotalBookingStock({
-              branch_id: dataForm.supply_branch_id,
-              items: tableAddItems.dataSubmit?.map((item: any, index) => {
-                return {
-                  product_id: item.product_id,
-                  sloc_id: item.sloc_id,
-                  base_qty: item.received_qty,
-                }
-              }),
-            })
           })
         })
       } else {
@@ -122,16 +112,6 @@ export default function CreateBilling() {
             status_id: '12',
           })
           setNewDoSTO(response.data.id)
-          updateTotalBookingStock({
-            branch_id: dataForm.supply_branch_id,
-            items: tableAddItems.dataSubmit?.map((item: any, index) => {
-              return {
-                product_id: item.product_id,
-                sloc_id: item.sloc_id,
-                base_qty: item.received_qty,
-              }
-            }),
-          })
         })
       }
     }
@@ -250,7 +230,10 @@ export default function CreateBilling() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable> {newDoSTO}</Typography.Text>
+                <Typography.Text copyable={{ text: newDoSTO as string }}>
+                  {' '}
+                  {newDoSTO}
+                </Typography.Text>
                 has been
               </>
             )}

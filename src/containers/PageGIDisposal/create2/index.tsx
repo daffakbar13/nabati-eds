@@ -176,7 +176,7 @@ export default function PageCreateQuotation() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable> {newQuotation}</Typography.Text>
+                <Typography.Text copyable={{ text: newQuotation as string }}> {newQuotation}</Typography.Text>
                 has been
               </>
             )}

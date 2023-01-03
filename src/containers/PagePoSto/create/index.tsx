@@ -237,7 +237,10 @@ export default function CreateBilling() {
         successContent={(res: any) => (
           <>
             PO Number
-            <Typography.Text copyable> {res?.data?.id}</Typography.Text>
+            <Typography.Text copyable={{ text: res?.data?.id as string }}>
+              {' '}
+              {res?.data?.id}
+            </Typography.Text>
             has been successfully created
           </>
         )}

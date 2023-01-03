@@ -159,7 +159,10 @@ export default function PageDoStoDetail() {
         successContent={(res: any) => (
           <>
             DO STO
-            <Typography.Text copyable> {router.query.id}</Typography.Text>
+            <Typography.Text copyable={{ text: router.query.id as string }}>
+              {' '}
+              {router.query.id}
+            </Typography.Text>
             status has been successfully changed
           </>
         )}

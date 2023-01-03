@@ -37,7 +37,9 @@ export default function ConfirmSuccessSubmit(props: ConfirmSuccessSubmitProps) {
       >
         <div>
           {'New Delivery Order '}
-          <Typography.Text copyable>{newDeliveryOrder || draftDeliveryOrder}</Typography.Text>
+          <Typography.Text copyable={{ text: newDeliveryOrder || (draftDeliveryOrder as string) }}>
+            {newDeliveryOrder || draftDeliveryOrder}
+          </Typography.Text>
           {' has been'}
         </div>
         <div>successfully {newDeliveryOrder ? 'created' : 'saved'}</div>

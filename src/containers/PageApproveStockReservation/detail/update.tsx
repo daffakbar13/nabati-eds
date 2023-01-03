@@ -168,7 +168,10 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
             {approveSuccess ? (
               <>
                 Request Number
-                <Typography.Text copyable> {props.data.reservation_number}</Typography.Text>
+                <Typography.Text copyable={{ text: props.data.reservation_number as string }}>
+                  {' '}
+                  {props.data.reservation_number}
+                </Typography.Text>
                 has been
               </>
             ) : (

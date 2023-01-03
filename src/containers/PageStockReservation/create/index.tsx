@@ -202,7 +202,9 @@ export default function PageStockReservationCreate() {
             ) : (
               <>
                 Doc Number
-                <Typography.Text copyable>{newQuotation}</Typography.Text>
+                <Typography.Text copyable={{ text: newQuotation as string }}>
+                  {newQuotation}
+                </Typography.Text>
                 has been
               </>
             )}

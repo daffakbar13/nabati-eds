@@ -202,7 +202,7 @@ export default function PageBillingDetail() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable> {newData}</Typography.Text>
+                <Typography.Text copyable={{ text: newData as string }}> {newData}</Typography.Text>
                 has been
               </>
             )}
