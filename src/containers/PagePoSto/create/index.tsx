@@ -9,6 +9,7 @@ import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { createPoSto } from 'src/api/logistic/po-sto'
 import { fieldBranchSupply, fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import { requestPreviousTable } from 'src/hooks'
 
 interface ItemsState {
   product_id: string
@@ -58,7 +59,7 @@ export default function CreateBilling() {
     posting_date: moment(now).format('YYYY-MM-DD'),
     suppl_branch_id: 'P100',
     receive_plant_id: 'P104',
-    sloc_id: 'C1624021',
+    sloc_id: 'GS00',
     remarks: '',
     status_id: '00',
     items: tableAddItems.data,
@@ -162,22 +163,6 @@ export default function CreateBilling() {
             format={'DD/MM/YYYY'}
             required
           />
-          {receivingChannel != '' &&
-          supplyingChannel != '' &&
-          receivingChannel != supplyingChannel ? (
-            <>
-              <DebounceSelect
-                type="select"
-                label="SLoc"
-                options={allSloc}
-                onChange={(val: any) => {
-                  onChangeForm('sloc_id', val.label.split(' - ')[0])
-                }}
-              />
-            </>
-          ) : (
-            ''
-          )}
         </div>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         {dataForm?.suppl_branch_id ? (
@@ -214,6 +199,7 @@ export default function CreateBilling() {
         title={'Confirm Cancellation'}
         open={modalCancel}
         onOk={() => {
+          requestPreviousTable()
           router.push(`${PATH.LOGISTIC}/po-sto`)
         }}
         onCancel={() => {
