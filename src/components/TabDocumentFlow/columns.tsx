@@ -33,7 +33,7 @@ function Linked(props: { process: string; id: string; status: string }) {
   return (
     <div>
       <Typography.Text
-        copyable
+        copyable={{ text: id }}
         onClick={() =>
           router.push({
             pathname: `${PATH.SALES}/${document}/detail/${id}`,

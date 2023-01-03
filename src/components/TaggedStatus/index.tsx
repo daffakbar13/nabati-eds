@@ -36,7 +36,7 @@ export default function TaggedStatus(props: TaggedStatusProps) {
   }
 
   return (
-    <Tag {...(color !== 'no-color' && { color })}>
+    <Tag {...(color !== 'no-color' && { color })} {...(status === '' && { display: 'none' })}>
       {size ? (
         <Text variant={props.size} {...{ color }}>
           {status}
