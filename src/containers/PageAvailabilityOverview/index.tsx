@@ -283,7 +283,7 @@ export default function PageAvailabilityOverview() {
 
   return (
     <Col>
-      <Text variant={'h4'}>Availability Overviews</Text>
+      <Text variant={'h4'}>Availability Overview</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
