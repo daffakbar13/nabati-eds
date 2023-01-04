@@ -15,7 +15,6 @@ const createDataList = (label: string, value: string) => ({ label, value: value 
 
 export default function DeliveryOrder(props: DeliveryOrderProps) {
   const { data } = props
-  const format = 'DD MMMM YYYY'
 
   const dataList = [
     createDataList('Order Type', data.order_type),
@@ -27,9 +26,9 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
     createDataList('Delivery Date', dateFormat(data.delivery_date)),
     createDataList('Quotation', data.quotation_id),
     createDataList('Reference', data.reference),
-    createDataList('Created On', dateFormat(data.created_at, format)),
+    createDataList('Created On', dateFormat(data.created_at)),
     createDataList('Created By', data.created_by),
-    createDataList('Modified On', dateFormat(data.modified_at, format)),
+    createDataList('Modified On', dateFormat(data.modified_at)),
     createDataList('Modified By', data.modified_by),
   ]
 

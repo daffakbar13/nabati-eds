@@ -2,12 +2,10 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import React from 'react'
-import moment from 'moment'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import { Tag } from 'antd'
 import TaggedStatus from 'src/components/TaggedStatus'
 import dateFormat from 'src/utils/dateFormat'
 

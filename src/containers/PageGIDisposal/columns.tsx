@@ -82,12 +82,12 @@ export const column = [
     'header_text',
     false,
     (text: string, record: any) =>
-      `${record.header_text != '' && record.header_text != null ? record.header_text : '-'}`,
+      `${record.header_text !== '' && record.header_text != null ? record.header_text : '-'}`,
   ),
   CreateColumns('Status', 'status_name', false, (status_name) => (
     <TaggedStatus status={status_name} />
   )),
-  CreateColumns('Action', 'reservation_number', false, (link, record) => (
+  CreateColumns('Action', 'reservation_number', false, (link) => (
     <Linked link={link} type="action" />
   )),
 ]

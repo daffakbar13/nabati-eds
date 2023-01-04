@@ -48,7 +48,7 @@ export const column = [
     'Doc. Number',
     'document_number',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" />,
+    (link: string) => <Linked link={link} type="id" />,
     175,
     'left',
   ),
@@ -82,7 +82,5 @@ export const column = [
   CreateColumns('Status', 'status_name', false, (status_name) => (
     <TaggedStatus status={status_name} />
   )),
-  CreateColumns('Action', 'document_number', false, (link, record) => (
-    <Linked link={link} type="action" />
-  )),
+  CreateColumns('Action', 'document_number', false, (link) => <Linked link={link} type="action" />),
 ]

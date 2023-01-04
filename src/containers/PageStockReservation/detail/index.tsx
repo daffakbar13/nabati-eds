@@ -9,9 +9,9 @@ import useDetail from 'src/hooks/useDetail'
 import { getListStockReservationDetail } from 'src/api/logistic/stock-reservation'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
-import { column } from './columns'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { column } from './columns'
 
 export default function PageStockReservationDetail() {
   const titlePage = useTitlePage('detail')
@@ -22,44 +22,39 @@ export default function PageStockReservationDetail() {
     false,
   )
   const createDataList = (label: string, value: string) => ({ label, value })
-  const format = 'DD MMMM YYYY'
-  const [approve, setApprove] = React.useState(false)
+  const [approve] = React.useState(false)
   const [reject, setReject] = React.useState(false)
 
   const dataList = [
-    //row 1
+    // row 1
     createDataList('Movement Type', `${data.movement_type_id} - ${data.movement_type_name}`),
     createDataList('Branch', `${data.branch_id} - ${data.branch_name}`),
     createDataList('Supplying Sloc', `${data.supplying_sloc_id} - ${data.supplying_sloc_name}`),
     createDataList('Receiving Sloc', `${data.receiving_sloc_id} - ${data.receiving_sloc_name}`),
 
-    //row 2
-    createDataList('Requirement Date', dateFormat(data.requirement_date, format)),
+    // row 2
+    createDataList('Requirement Date', dateFormat(data.requirement_date)),
     createDataList(
       'Header Text',
-      data.header_text != '' && data.header_text != null ? data.header_text : '-',
+      data.header_text !== '' && data.header_text !== null ? data.header_text : '-',
     ),
 
     // row 3
     createDataList(
       'Created On',
-      data.created_at != '' && data.created_at != null ? dateFormat(data.created_at, format) : '-',
+      data.created_at !== '' && data.created_at !== null ? dateFormat(data.created_at) : '-',
     ),
     createDataList(
       'Created By',
-      data.created_by != '' && data.created_by != null ? data.created_by : '-',
+      data.created_by !== '' && data.created_by !== null ? data.created_by : '-',
     ),
     createDataList(
       'Modified On',
-      data.modified_at != '' && data.modified_at != null
-        ? dateFormat(data.modified_at, format)
-        : '-',
+      data.modified_at !== '' && data.modified_at !== null ? dateFormat(data.modified_at) : '-',
     ),
     createDataList(
       'Modified By',
-      data.modified_by != '' && data.modified_by != null
-        ? dateFormat(data.modified_by, format)
-        : '-',
+      data.modified_by !== '' && data.modified_by !== null ? dateFormat(data.modified_by) : '-',
     ),
   ]
 
@@ -82,7 +77,7 @@ export default function PageStockReservationDetail() {
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
       <Card style={{ overflow: 'unset' }}>
-        {data.status_name != 'Pending' ? (
+        {data.status_name !== 'Pending' ? (
           <Text variant={'h5'}>
             <TaggedStatus status={data.status_name} size="h5" />
           </Text>
@@ -90,22 +85,18 @@ export default function PageStockReservationDetail() {
           ''
         )}
         <Row justifyContent="space-between" reverse>
-          {(() => {
-            if (data.status_name == 'Pending') {
-              return (
-                <>
-                  <Row gap="16px">
-                    <Button size="big" variant="tertiary">
-                      Cancel Process
-                    </Button>
-                  </Row>
-                  <Text variant={'h5'}>
-                    <TaggedStatus status={data.status_name} size="h5" />
-                  </Text>
-                </>
-              )
-            }
-          })()}
+          {data.status_name === 'Pending' && (
+            <>
+              <Row gap="16px">
+                <Button size="big" variant="tertiary">
+                  Cancel Process
+                </Button>
+              </Row>
+              <Text variant={'h5'}>
+                <TaggedStatus status={data.status_name} size="h5" />
+              </Text>
+            </>
+          )}
         </Row>
       </Card>
       <Spacer size={20} />

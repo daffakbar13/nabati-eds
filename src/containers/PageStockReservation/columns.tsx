@@ -20,7 +20,7 @@ function Linked({
 }) {
   const router = useRouter()
   const navigate = () => {
-    if (linkType == 'id') {
+    if (linkType === 'id') {
       router.push(`${PATH.LOGISTIC}/stock-reservation/detail/${link}`)
     }
   }
@@ -58,7 +58,7 @@ export const column = [
     'Doc. Number',
     'doc_number',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    (link: string) => <Linked link={link} type="id" linkType="id" />,
     175,
     'left',
   ),
@@ -85,7 +85,7 @@ export const column = [
   CreateColumns('Status', 'status_name', false, (status_name) => (
     <TaggedStatus status={status_name} />
   )),
-  CreateColumns('Action', 'doc_number', false, (link, record) => (
+  CreateColumns('Action', 'doc_number', false, (link) => (
     <Linked link={link} type="action" linkType="id" />
   )),
 ]

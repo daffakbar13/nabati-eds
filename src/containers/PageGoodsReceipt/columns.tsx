@@ -4,7 +4,6 @@ import TaggedStatus from 'src/components/TaggedStatus'
 import Link from 'src/components/Link'
 import dateFormat from 'src/utils/dateFormat'
 
-
 export const columns = (goToDetail: (id: string) => void) => [
   CreateColumns(
     'GR Number',

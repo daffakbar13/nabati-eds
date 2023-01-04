@@ -7,7 +7,6 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import React from 'react'
 import TaggedStatus from 'src/components/TaggedStatus'
-import dateFormat from 'src/utils/dateFormat'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -59,7 +58,6 @@ export const TableBilling = [
   addColumn({
     title: 'Order Date',
     dataIndex: 'order_date',
-    render: (date) => dateFormat(date, 'DD-MM-YYYY'),
   }),
   addColumn({
     title: 'Sales Org.',

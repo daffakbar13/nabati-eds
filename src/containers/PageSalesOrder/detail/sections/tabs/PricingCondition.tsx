@@ -16,7 +16,7 @@ export default function PricingCondition() {
     <>
       <Row gutter={8}>
         <Col span={8}>
-          <DataList label="Pricing Date" value={dateFormat(data.pricing_date, 'DD MMMM YYYY')} />
+          <DataList label="Pricing Date" value={dateFormat(data.pricing_date)} />
         </Col>
       </Row>
       <Divider />

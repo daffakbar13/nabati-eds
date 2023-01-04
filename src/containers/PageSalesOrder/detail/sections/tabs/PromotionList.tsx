@@ -1,12 +1,8 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable camelcase */
-import { Col, Row, Table } from 'antd'
-import { ColumnsType } from 'antd/lib/table'
 import React from 'react'
 import TitleDataList from 'src/components/TitleDataList'
 import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
-import dateFormat from 'src/utils/dateFormat'
-import { ColumnsPromotionList } from '../../columns'
 
 function Line(props: { hidden: boolean }) {
   return (

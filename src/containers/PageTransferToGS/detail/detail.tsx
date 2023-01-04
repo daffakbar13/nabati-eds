@@ -2,24 +2,20 @@ import React from 'react'
 import { Spacer, Text, Table, Row } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Col, Divider } from 'antd'
-import useTitlePage from 'src/hooks/useTitlePage'
-import { useRouter } from 'next/router'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
-import { column } from './columns'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { column } from './columns'
 
 interface propsDetail {
   data: any
 }
 
 export default function TransferToGSDetail(props: propsDetail) {
-  const router = useRouter()
   const createDataList = (label: string, value: string) => ({ label, value })
-  const format = 'DD MMMM YYYY'
 
   const dataList = [
-    //row 1
+    // row 1
     createDataList('Ref. Doc. Number', props.data.ref_doc_number),
     createDataList(
       'Movement Type',
@@ -35,35 +31,35 @@ export default function TransferToGSDetail(props: propsDetail) {
       `${props.data.receiving_sloc_id} - ${props.data.receiving_sloc_name}`,
     ),
 
-    //row 2
-    createDataList('Document Date', dateFormat(props.data.document_date, format)),
-    createDataList('Posting Date', dateFormat(props.data.posting_date, format)),
+    // row 2
+    createDataList('Document Date', dateFormat(props.data.document_date)),
+    createDataList('Posting Date', dateFormat(props.data.posting_date)),
     createDataList(
       'Header Text',
-      props.data.header_text != '' && props.data.header_text != null ? props.data.header_text : '-',
+      props.data.header_text !== '' && props.data.header_text !== null ? props.data.header_text : '-',
     ),
 
     // row 3
     createDataList(
       'Created On',
-      props.data.created_at != '' && props.data.created_at != null
-        ? dateFormat(props.data.created_at, format)
+      props.data.created_at !== '' && props.data.created_at !== null
+        ? dateFormat(props.data.created_at)
         : '-',
     ),
     createDataList(
       'Created By',
-      props.data.created_by != '' && props.data.created_by != null ? props.data.created_by : '-',
+      props.data.created_by !== '' && props.data.created_by !== null ? props.data.created_by : '-',
     ),
     createDataList(
       'Modified On',
-      props.data.modified_at != '' && props.data.modified_at != null
-        ? dateFormat(props.data.modified_at, format)
+      props.data.modified_at !== '' && props.data.modified_at !== null
+        ? dateFormat(props.data.modified_at)
         : '-',
     ),
     createDataList(
       'Modified By',
-      props.data.modified_by != '' && props.data.modified_by != null
-        ? dateFormat(props.data.modified_by, format)
+      props.data.modified_by !== '' && props.data.modified_by !== null
+        ? dateFormat(props.data.modified_by)
         : '-',
     ),
   ]

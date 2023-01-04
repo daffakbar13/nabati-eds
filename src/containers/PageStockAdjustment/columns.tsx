@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { Button, Tooltip } from 'pink-lava-ui'
 import Link from 'src/components/Link'
 import TaggedStatus from 'src/components/TaggedStatus'

@@ -4,10 +4,7 @@ import { Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { addColumn } from 'src/utils/createColumns'
-import dateFormat from 'src/utils/dateFormat'
 import Link from '../Link'
-
-const createData = (title: string, dataIndex: string) => ({ title, dataIndex })
 
 function Linked(props: { process: string; id: string; status: string }) {
   const { id, process, status } = props
@@ -62,7 +59,6 @@ export const useColumnsDocumentFlow = [
   addColumn({
     title: 'Created Date',
     dataIndex: 'created_at',
-    render: (date) => dateFormat(date, 'DD MMMM YYYY'),
   }),
   addColumn({
     title: 'Created By',
@@ -71,7 +67,6 @@ export const useColumnsDocumentFlow = [
   addColumn({
     title: 'Modified Date',
     dataIndex: 'modified_at',
-    render: (date) => dateFormat(date, 'DD MMMM YYYY'),
   }),
   addColumn({
     title: 'Modified By',

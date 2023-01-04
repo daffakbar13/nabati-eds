@@ -4,9 +4,7 @@
 import { Col, Row, Divider } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
-import Total from 'src/components/Total'
 import { Table, Spacer } from 'pink-lava-ui'
-
 import dateFormat from 'src/utils/dateFormat'
 import { TableDocumentHeader } from '../columns'
 

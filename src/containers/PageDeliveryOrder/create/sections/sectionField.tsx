@@ -114,7 +114,7 @@ export default function SectionField(props: SectionFieldProps) {
         <DatePickerInput
           fullWidth
           onChange={(val: any) => {
-            onChangeForm('loading_date', dateFormat(val, 'YYYY-MM-DD'))
+            onChangeForm('loading_date', dateFormat(val))
           }}
           label="Loading Date"
           disabledDate={(current) => current < moment().startOf('day')}
@@ -127,7 +127,7 @@ export default function SectionField(props: SectionFieldProps) {
         <DatePickerInput
           fullWidth
           onChange={(val: any) => {
-            onChangeForm('delivery_date', dateFormat(val, 'YYYY-MM-DD'))
+            onChangeForm('delivery_date', dateFormat(val))
             onChangeForm('pricing_date', new Date(moment(val).format()).toISOString())
           }}
           label="Delivery Date"

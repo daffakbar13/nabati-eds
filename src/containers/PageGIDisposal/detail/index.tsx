@@ -1,13 +1,10 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import moment from 'moment'
-
 import { Col, Tag } from 'antd'
 import { Button, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, GoBackArrow, Modal } from 'src/components'
 import dateFormat from 'src/utils/dateFormat'
 import List from 'src/components/List'
-
 import { getDetailBadStock, updateStatusBadStock } from 'src/api/logistic/bad-stock'
 import { PATH } from 'src/configs/menus'
 import { getTagColor } from 'src/utils/getTagColor'
@@ -30,7 +27,6 @@ export default function PageQuotationDetail() {
       const res = await updateStatusBadStock(id, payload)
       return res
     } catch (error) {
-      console.error(error)
       return false
     }
   }

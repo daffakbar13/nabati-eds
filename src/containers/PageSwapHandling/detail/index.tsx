@@ -2,16 +2,12 @@ import { Tag } from 'antd'
 import { Col, Spacer, Table, Text } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
 import { Card, GoBackArrow } from 'src/components'
-
-import moment from 'moment'
 import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
-
 import { useRouter } from 'next/router'
 import { getDetailSwapHandling } from 'src/api/logistic/swap-handling'
 import { PATH } from 'src/configs/menus'
 import dateFormat from 'src/utils/dateFormat'
-
 import { getTagColor } from 'src/utils/getTagColor'
 import { columns } from './columns'
 
@@ -23,7 +19,6 @@ export default function DetailStockAdjustment() {
 
   useEffect(() => {
     if (!id) return
-    console.log('id useEffect', id)
     const fetchData = async () => {
       try {
         setLoading(true)
@@ -32,7 +27,6 @@ export default function DetailStockAdjustment() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
       }
     }
     fetchData()

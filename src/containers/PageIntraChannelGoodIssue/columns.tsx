@@ -20,9 +20,9 @@ function Linked({
 }) {
   const router = useRouter()
   const navigate = () => {
-    if (linkType == 'id') {
+    if (linkType === 'id') {
       router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel/detail/${link}`)
-    } else if (linkType == 'deliveryNumber') {
+    } else if (linkType === 'deliveryNumber') {
       router.push(`${PATH.LOGISTIC}/request-intra-channel/detail/${link}`)
     }
   }
@@ -101,24 +101,24 @@ export const TableIntraChannelGoodIssue = [
       `${record.movement_type_id || ''} - ${record.movement_type_name || ''}`,
   ),
   CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link, record) => (
+  CreateColumns('Action', 'id', false, (link) => (
     <Linked link={link} type="action" linkType="id" />
   )),
 ]
 
 export const TableIntraChannelGoodIssueDetail = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
+  CreateColumns('No', 'id', false, (_, __, index: number) => index + 1),
   CreateColumns(
     'Item Sender',
     'product_id',
     false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
+    (_, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
   ),
   CreateColumns(
     'Item Receiver',
     'product_receiver_id',
     false,
-    (text: string, record: any) =>
+    (_, record: any) =>
       `${record.product_receiver_id || ''} - ${record.product_receiver_name || ''}`,
   ),
   CreateColumns('Qty', 'qty', false),
