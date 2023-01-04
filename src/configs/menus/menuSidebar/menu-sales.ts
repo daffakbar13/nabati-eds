@@ -122,8 +122,6 @@ export const menuSales = [
       () => 'Approval NOO',
       () => Router.push(`${PATH.SALES}/approval-noo`),
     ),
-  ]),
-  CreateMenu('saleman', 'Salesman', null, NabatiIcons.LogisticIcSwapHandling, null, null, [
     CreateMenu(
       'salesman-division',
       'Salesman Division',
