@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Divider, Typography } from 'antd'
+import { Divider, Typography, Form, Alert } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput, Input } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
@@ -38,6 +38,7 @@ interface dataForm {
 }
 
 export default function CreateBilling() {
+  const [form] = Form.useForm()
   const now = new Date().toISOString()
 
   const router = useRouter()
@@ -49,7 +50,7 @@ export default function CreateBilling() {
   const [suplyingVal, setSuplyingVal] = React.useState('')
   const [receivingVal, setReceivingVal] = React.useState('')
   const tableAddItems = useTableAddItem({ items: dataPo?.items } || { items: [] })
-  const [optionPONumber, setoptionPONumber] = React.useState([])
+  const [ItemCheckedError, setItemCheckedError] = React.useState(false)
 
   const initialValue = {
     sto_doc_type: 'ZDST',
@@ -124,6 +125,16 @@ export default function CreateBilling() {
     }
   }, [suplyingVal, receivingVal])
 
+  const onClickSubmit = async () => {
+    const values = await form.validateFields()
+    if (tableAddItems.dataSubmit.length > 0) {
+      setItemCheckedError(false)
+      onSubmitFunction()
+    } else {
+      setItemCheckedError(true)
+    }
+  }
+
   return (
     <Col>
       <Text variant={'h4'}>Create DO STO</Text>
@@ -140,7 +151,7 @@ export default function CreateBilling() {
             >
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={onSubmitFunction}>
+            <Button size="big" variant="primary" onClick={onClickSubmit}>
               Submit
             </Button>
           </Row>
@@ -148,93 +159,138 @@ export default function CreateBilling() {
       </Card>
       <Spacer size={10} />
       <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect
-            type="select"
-            label="Receiving Branch"
-            required
-            fetchOptions={(search) =>
-              fieldBranchSupply(search, '', dataForm?.supply_branch_id || '')
-            }
-            onChange={(val: any) => {
-              onChangeForm('receive_branch_id', val.value)
-              setReceivingVal(val.value)
-            }}
-          />
-          <DatePickerInput
-            fullWidth
-            onChange={(val: any) => {
-              onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
-            }}
-            label="Posting Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-          <DebounceSelect
-            type="select"
-            label="Supplying Branch"
-            required
-            fetchOptions={(search) =>
-              fieldBranchSupply(search, '', dataForm?.receive_branch_id || '')
-            }
-            onChange={(val: any) => {
-              onChangeForm('supply_branch_id', val.value)
-              setSuplyingVal(val.value)
-            }}
-          />
-          <DatePickerInput
-            fullWidth
-            onChange={(val: any) => {
-              onChangeForm('planned_gi_date', moment(val).format('YYYY-MM-DD'))
-            }}
-            label="Planned GI Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-          <DebounceSelect
-            type="select"
-            label="Po Number"
-            disabled={disabledPO}
-            fetchOptions={(search) =>
-              fieldPoStoByBranch(search, suplyingVal || '-', receivingVal || '-')
-            }
-            onChange={(val: any) => {
-              onChangeForm('purchase_id', val.label.split(' - ')[0])
-              onPoChange(val.label.split(' - ')[0])
-            }}
-          />
-          <DatePickerInput
-            fullWidth
-            onChange={(val: any) => {
-              onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
-            }}
-            label="Doc Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-          <DebounceSelect
-            label="Header Text"
-            type="input"
-            onChange={(e: any) => {
-              onChangeForm('header_text', e.target.value)
-            }}
-          />
-        </div>
-        <Divider style={{ borderColor: '#AAAAAA' }} />
-        <Spacer size={20} />
-        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            editable
-            data={tableAddItems.data}
-            columns={tableAddItems.columns}
-            loading={tableAddItems.loading}
-            rowSelection={tableAddItems.rowSelection}
-          />
-        </div>
+        <Form
+          form={form}
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          autoComplete="off"
+          requiredMark={false}
+          scrollToFirstError
+        >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            <Form.Item
+              name="receive_branch_id"
+              rules={[{ required: true }]}
+              style={{ marginTop: -15, marginBottom: 0 }}
+            >
+              <DebounceSelect
+                type="select"
+                label="Receiving Branch"
+                required
+                fetchOptions={(search) =>
+                  fieldBranchSupply(search, '', dataForm?.supply_branch_id || '')
+                }
+                onChange={(val: any) => {
+                  onChangeForm('receive_branch_id', val.value)
+                  setReceivingVal(val.value)
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="posting_date" style={{ marginTop: -15, marginBottom: 0 }}>
+              <DatePickerInput
+                fullWidth
+                onChange={(val: any) => {
+                  onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
+                }}
+                label="Posting Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+              />
+            </Form.Item>
+            <Form.Item
+              name="supply_branch_id"
+              style={{ marginTop: -15, marginBottom: 0 }}
+              rules={[{ required: true }]}
+            >
+              <DebounceSelect
+                type="select"
+                label="Supplying Branch"
+                required
+                fetchOptions={(search) =>
+                  fieldBranchSupply(search, '', dataForm?.receive_branch_id || '')
+                }
+                onChange={(val: any) => {
+                  onChangeForm('supply_branch_id', val.value)
+                  setSuplyingVal(val.value)
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="planned_gi_date" style={{ marginTop: -15, marginBottom: 0 }}>
+              <DatePickerInput
+                fullWidth
+                onChange={(val: any) => {
+                  onChangeForm('planned_gi_date', moment(val).format('YYYY-MM-DD'))
+                }}
+                label="Planned GI Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+              />
+            </Form.Item>
+            <Form.Item
+              name="po_number"
+              style={{ marginTop: -15, marginBottom: 0 }}
+              rules={[{ required: true }]}
+            >
+              <DebounceSelect
+                type="select"
+                required
+                label="Po Number"
+                disabled={disabledPO}
+                fetchOptions={(search) =>
+                  fieldPoStoByBranch(search, suplyingVal || '-', receivingVal || '-')
+                }
+                onChange={(val: any) => {
+                  onChangeForm('purchase_id', val.label.split(' - ')[0])
+                  onPoChange(val.label.split(' - ')[0])
+                }}
+              />
+            </Form.Item>
+            <Form.Item name="document_date" style={{ marginTop: -15, marginBottom: 0 }}>
+              <DatePickerInput
+                fullWidth
+                onChange={(val: any) => {
+                  onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
+                }}
+                label="Doc Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+              />
+            </Form.Item>
+            <Form.Item name="header_text" style={{ marginTop: -15, marginBottom: 0 }}>
+              <DebounceSelect
+                label="Header Text"
+                type="input"
+                onChange={(e: any) => {
+                  onChangeForm('header_text', e.target.value)
+                }}
+              />
+            </Form.Item>
+          </div>
+          <Divider style={{ borderColor: '#AAAAAA' }} />
+          <Spacer size={20} />
+          {ItemCheckedError ? (
+            <>
+              <Alert message="Item do belum terpilih" type="error" showIcon />
+              <Spacer size={20} />
+            </>
+          ) : (
+            ''
+          )}
+
+          <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+            <Table
+              scroll={{ x: 'max-content', y: 600 }}
+              editable
+              data={tableAddItems.data}
+              columns={tableAddItems.columns}
+              loading={tableAddItems.loading}
+              rowSelection={tableAddItems.rowSelection}
+            />
+          </div>
+        </Form>
       </Card>
       {(newDoSTO || cancel) && (
         <Popup>

@@ -80,18 +80,19 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   const columns = [
     addColumn({
-      title: 'Action',
+      title: '',
       dataIndex: 'action',
       render: (_, __, index) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MinusCircleFilled
-            style={{ color: 'red', margin: 'auto' }}
-            onClick={() => {
-              handleDeleteRows(index)
-              console.log('delete', index)
-            }}
-          />
-        </div>
+        <Form.Item name={`action.${index}`}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <MinusCircleFilled
+              style={{ color: 'red', margin: 'auto' }}
+              onClick={() => {
+                handleDeleteRows(index)
+              }}
+            />
+          </div>
+        </Form.Item>
       ),
       width: 55,
     }),
@@ -178,15 +179,16 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: '',
       dataIndex: 'action',
       render: (_, __, index) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MinusCircleFilled
-            style={{ color: 'red', margin: 'auto' }}
-            onClick={() => {
-              handleDeleteRows(index)
-              console.log('delete', index)
-            }}
-          />
-        </div>
+        <Form.Item name={`action.${index}`}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <MinusCircleFilled
+              style={{ color: 'red', margin: 'auto' }}
+              onClick={() => {
+                handleDeleteRows(index)
+              }}
+            />
+          </div>
+        </Form.Item>
       ),
       width: 55,
     }),

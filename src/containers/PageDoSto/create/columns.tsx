@@ -7,7 +7,7 @@ import { InputNumber, Radio } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldSloc, fieldUom } from 'src/configs/fieldFetches'
 import { addColumn } from 'src/utils/createColumns'
-import { Input } from 'pink-lava-ui'
+import { Form } from 'antd'
 
 interface DataType {
   key: number
@@ -125,7 +125,7 @@ export const useTableAddItem = (props: any) => {
     addColumn({
       title: 'Item PO',
       dataIndex: 'description',
-      render: (_, { description }, index) => (
+      render: (rows, _, index) => (
         <DebounceSelect type="input" disabled value={data[index].description_show || ''} />
       ),
       width: 400,
@@ -195,7 +195,7 @@ export const useTableAddItem = (props: any) => {
                   } else {
                     handleChangeData('received_qty', newVal, index)
                   }
-                }else{
+                } else {
                   handleChangeData('received_qty', newVal, index)
                 }
               }}

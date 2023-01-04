@@ -145,18 +145,23 @@ export default function CreateBilling() {
                 value={receivingBranch}
               />
             </Form.Item>
-
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
-              }}
-              label="Doc Date"
-              defaultValue={moment()}
-              format={'DD/MM/YYYY'}
-              required
-            />
-            <Form.Item name="suppl_branch_id" rules={[{ required: true }]}>
+            <Form.Item name="document_date">
+              <DatePickerInput
+                fullWidth
+                onChange={(val: any) => {
+                  onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
+                }}
+                label="Doc Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+              />
+            </Form.Item>
+            <Form.Item
+              name="suppl_branch_id"
+              rules={[{ required: true }]}
+              style={{ marginTop: -30, marginBottom: 0 }}
+            >
               <DebounceSelect
                 type="select"
                 label="Supplying Branch"
@@ -172,16 +177,18 @@ export default function CreateBilling() {
                 value={supplyingBranch}
               />
             </Form.Item>
-            <DatePickerInput
-              fullWidth
-              onChange={(val: any) => {
-                onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
-              }}
-              label="Posting Date"
-              defaultValue={moment()}
-              format={'DD/MM/YYYY'}
-              required
-            />
+            <Form.Item name="posting_date" style={{ marginTop: -30, marginBottom: 0 }}>
+              <DatePickerInput
+                fullWidth
+                onChange={(val: any) => {
+                  onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
+                }}
+                label="Posting Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+              />
+            </Form.Item>
           </div>
           <Divider style={{ borderColor: '#AAAAAA' }} />
           {dataForm?.suppl_branch_id ? (
