@@ -7,8 +7,7 @@ import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
 import dateFormat from 'src/utils/dateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
-
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 function Linked({
   link,
@@ -24,11 +23,7 @@ function Linked({
   const router = useRouter()
   const navigate = () => {
     if (linkType === 'id') {
-      if (status === 'Pending') {
-        router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/edit/${link}`)
-      } else {
-        router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/detail/${link}`)
-      }
+      router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/detail/${link}`)
     } else if (linkType === 'PO') {
       router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
     } else if (linkType === 'DO') {
@@ -67,61 +62,84 @@ function Linked({
 }
 
 export const columns = [
-  CreateColumns(
-    'PO Number',
-    'po_number',
-    true,
-    (link: string) => <Linked link={link} type="id" linkType="PO" />,
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'DO Number',
-    'delivery_number',
-    true,
-    (link: string) => <Linked link={link} type="id" linkType="DO" />,
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'GI Number',
-    'gi_number',
-    true,
-    (link: string) => <Linked link={link} type="id" linkType="GI" />,
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'GR Number',
-    'id',
-    true,
-    (link: string, { status }: any) => (
-      <Linked link={link} type="id" linkType="id" status={status} />
+  addColumn({
+    title: 'Item PO',
+    dataIndex: 'po_number',
+    render: (po_number, rows, index) => <Linked link={po_number} type="id" linkType="PO" />,
+    width: 180,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'DO Number',
+    dataIndex: 'delivery_number',
+    render: (delivery_number, rows, index) => (
+      <Linked link={delivery_number} type="id" linkType="DO" />
     ),
-    180,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date), 180),
-  CreateColumns('Company', 'company_id', false, (company_id, rec) => (
-    <>{`${company_id} - ${rec.company_name}`}</>
-  )),
-  CreateColumns(
-    'Supplying Branch',
-    'suppl_branch_id',
-    false,
-    (suppl_branch_id, rec) => <>{`${suppl_branch_id} - ${rec.suppl_branch_name}`}</>,
-    250,
-  ),
-  CreateColumns(
-    'Receiving Branch',
-    'receive_plant_id',
-    false,
-    (receive_plant_id, rec) => <>{`${receive_plant_id} - ${rec.receive_plant_name}`}</>,
-    250,
-  ),
-  CreateColumns('Mov. Type', 'movement_type_id', false),
-  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link, record) => (
-    <Linked link={link} type="action" linkType="id" status={record.status} />
-  )),
+    width: 180,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'GI Number',
+    dataIndex: 'gi_number',
+    render: (gi_number, rows, index) => <Linked link={gi_number} type="id" linkType="GI" />,
+    width: 180,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'GR Number',
+    dataIndex: 'id',
+    render: (id, rows, index) => (
+      <>
+        {rows.status == 'Delivery' ? (
+          ''
+        ) : (
+          <Linked link={id} type="id" linkType="id" status={rows.status} />
+        )}
+      </>
+    ),
+    width: 180,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (company_id, rows, index) => <>{`${company_id} - ${rows.company_name}`}</>,
+  }),
+  addColumn({
+    title: 'Supplying Branch',
+    dataIndex: 'suppl_branch_id',
+    render: (suppl_branch_id, rows, index) => (
+      <>{`${suppl_branch_id} - ${rows.suppl_branch_name}`}</>
+    ),
+    width: 250,
+  }),
+  addColumn({
+    title: 'Receiving Branch',
+    dataIndex: 'receive_plant_id',
+    render: (receive_plant_id, rows, index) => (
+      <>{`${receive_plant_id} - ${rows.receive_plant_name}`}</>
+    ),
+    width: 250,
+  }),
+  addColumn({
+    title: 'Mov. Type',
+    dataIndex: 'movement_type_id',
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status',
+    render: (status, rows, index) => <TaggedStatus status={status} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'status',
+    render: (status, rows, index) => (
+      <Linked link={rows.id} type="action" linkType="id" status={status} />
+    ),
+    width: 250,
+  }),
 ]

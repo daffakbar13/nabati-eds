@@ -2,91 +2,81 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import { Children } from 'react'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 export const column = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1, 60),
-  CreateColumns(
-    'Item',
-    'product_id',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
-  ),
-  CreateColumns(
-    'Po',
-    'po',
-    false,
-    (text: string, record: any) => `${record.base_qty || ''} - ${record.base_uom_id || ''}`,
-    150,
-    false,
-    '',
-    [
+  addColumn({
+    title: 'No',
+    dataIndex: 'id',
+    render: (id, rows, index) => index + 1,
+  }),
+  addColumn({
+    title: 'Item PO',
+    dataIndex: 'product_id',
+    render: (product_id, rows, index) => `${product_id || ''} - ${rows.product_name || ''}`,
+  }),
+  addColumn({
+    title: 'PO',
+    dataIndex: 'po',
+    width: 100,
+    children: [
+      {
+        title: 'Qty',
+        dataIndex: 'qty',
+        width: 100,
+      },
+      {
+        title: 'UoM',
+        dataIndex: 'uom_id',
+        width: 100,
+      },
+    ],
+  }),
+  addColumn({
+    title: 'DO',
+    dataIndex: 'do',
+    width: 100,
+    children: [
       {
         title: 'Qty',
         dataIndex: 'base_qty',
-        key: 'qty_po',
-        width: 75,
+        width: 100,
       },
       {
         title: 'UoM',
         dataIndex: 'base_uom_id',
-        key: 'uom_po',
-        width: 75,
+        width: 100,
       },
     ],
-  ),
-  CreateColumns(
-    'DO',
-    'do',
-    false,
-    (text: string, record: any) => `${record.base_qty || ''} - ${record.base_uom_id || ''}`,
-    150,
-    false,
-    '',
-    [
+  }),
+  addColumn({
+    title: 'GR',
+    dataIndex: 'gr',
+    width: 100,
+    children: [
       {
         title: 'Qty',
-        dataIndex: 'qty',
-        key: 'base_qty',
-        width: 75,
+        dataIndex: 'received_qty',
+        width: 100,
       },
       {
         title: 'UoM',
-        dataIndex: 'uom_id',
-        key: 'base_uom_id',
-        width: 75,
+        dataIndex: 'received_uom_id',
+        width: 100,
       },
     ],
-  ),
-  CreateColumns(
-    'GR',
-    'gr',
-    false,
-    (text: string, record: any) => `${record.qty || ''} - ${record.uom_id || ''}`,
-    150,
-    false,
-    '',
-    [
-      {
-        title: 'Qty',
-        dataIndex: 'qty',
-        key: 'qty_received',
-        width: 75,
-      },
-      {
-        title: 'UoM',
-        dataIndex: 'uom_id',
-        key: 'uom_received',
-        width: 75,
-      },
-    ],
-  ),
-  CreateColumns(
-    'SLoc',
-    'sloc_id',
-    false,
-    (text: string, record: any) => `${record.sloc_id || ''} - ${record.sloc_name || ''}`,
-  ),
-  CreateColumns('Batch', 'batch', false),
-  CreateColumns('Remarks', 'remarks', false),
+  }),
+  addColumn({
+    title: 'SLoc',
+    dataIndex: 'sloc_id',
+    render: (sloc_id, rows, index) => `${sloc_id || ''} - ${rows.sloc_name || ''}`,
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'batch',
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]
