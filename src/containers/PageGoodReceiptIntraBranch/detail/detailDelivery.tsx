@@ -70,7 +70,7 @@ export default function Detail(props: any) {
           <DebounceSelect type="input" label="Delivery Number" value={data.gi_number} disabled />
           <DatePickerInput
             fullWidth
-            label="Planned GI Date"
+            label="Posting Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required

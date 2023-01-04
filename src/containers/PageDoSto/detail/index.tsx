@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import { Button, Spacer, Text, Table, Row as RowPinkLava } from 'pink-lava-ui'
 import { Card, Modal } from 'src/components'
 import { Row, Col, Divider, Tabs, Typography } from 'antd'
@@ -12,12 +13,14 @@ import {
   getPoStoDetail,
   updateStatusPoSto,
   updatePGIinventoryBooking,
+  AutoCreateGR,
 } from 'src/api/logistic/do-sto'
 import AllTabs from './tabs'
 import DOSTO from './tabs/DOSTO'
 import DeliveryNote from './tabs/DeliveryNote'
 
 export default function PageDoStoDetail() {
+  const now = new Date().toISOString()
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
   const router = useRouter()
@@ -31,6 +34,28 @@ export default function PageDoStoDetail() {
     if (cancelProses) {
     } else {
       try {
+        await AutoCreateGR(data.id as string, data.purchase_id as string, {
+          branch_id: data.receive_branch_id,
+          document_type: 'WE',
+          document_date: moment(data.document_date).format('YYYY-MM-DD'),
+          posting_date: moment(now).format('YYYY-MM-DD'),
+          header_text: data.header_text,
+          ref_document_type: "",
+          reference_number: "",
+          from_sloc: "GS00",
+          to_sloc: "GS00",
+          items: data.items?.map((item: any, index) => {
+            return {
+              product_id: item.product_id,
+              description: item.description,
+              qty: item.received_qty,
+              uom_id: item.received_uom_id,
+              sloc_id: item.sloc_id,
+              remarks: item.remarks,
+              batch: item.batch,
+            }
+          }),
+        })
         await updatePGIinventoryBooking(router.query.id as string, {
           sto_doc_type: 'ZDST',
           supply_branch_id: data.supply_branch_id,

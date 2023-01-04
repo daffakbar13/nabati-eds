@@ -117,3 +117,17 @@ export const updatePGIinventoryBooking = async (
   })
   return response.data
 }
+
+export const AutoCreateGR = async (
+  delivery_number: string,
+  po_number: string,
+  params: {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/create/good/receipt_issue/${delivery_number}/${po_number}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
