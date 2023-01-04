@@ -1,50 +1,52 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable camelcase */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
 /* eslint-disable radix */
 import { ColumnsType } from 'antd/lib/table'
+import { concatString } from 'src/utils/concatString'
 import CreateColumns, { addColumn } from 'src/utils/createColumns'
+import localeStringFormat from 'src/utils/currencyFormat'
 
 export const ColumnsSalesOrder = [
-  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
-  CreateColumns('Item', 'description', false, undefined, 300),
-  CreateColumns('Item Category', 'item_category_id', false, undefined, 137),
-  CreateColumns('Uom', 'uom_id', false, undefined, 70),
-  CreateColumns('Quantity Order', 'order_qty', false, undefined, 170),
-  CreateColumns('Quantity Booking', 'confirm_qty', false, undefined, 170),
-
-  // addColumn({
-  //   title: 'Quantity Order',
-  //   dataIndex: 'order_qty',
-  // }),
-  // addColumn({
-  //   title: 'Quantity Booking',
-  //   dataIndex: 'confirm_qty',
-  // }),
-  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
-  // FIXME Sub Total
-  CreateColumns(
-    'Gross',
-    'gross_value',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    80,
-  ),
-  CreateColumns(
-    'Discount',
-    'discount_value',
-    false,
-    (discount_value) => parseInt(discount_value).toLocaleString(),
-    100,
-  ),
-  CreateColumns(
-    'Sub Total',
-    'sub_total',
-    false,
-    (sub_total, { price, order_qty }) => (parseInt(price) * parseInt(order_qty)).toLocaleString(),
-    110,
-  ),
-  CreateColumns('Remarks', 'remarks', false, undefined, 120),
+  addColumn({
+    title: 'No',
+    render: (_, __, i) => ++i,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Item',
+    fixed: true,
+    render: (_, { product_id, description }) => concatString(product_id, description),
+  }),
+  addColumn({
+    title: 'Item Category',
+    dataIndex: 'item_category_id',
+  }),
+  addColumn({
+    title: 'Uom',
+    dataIndex: 'uom_id',
+  }),
+  addColumn({
+    title: 'Quantity Order',
+    dataIndex: 'order_qty',
+  }),
+  addColumn({
+    title: 'Quantity Booking',
+    dataIndex: 'confirm_qty',
+  }),
+  addColumn({
+    title: 'Based Price',
+    render: (_, { price }) => parseInt(price).toLocaleString(),
+  }),
+  addColumn({
+    title: 'Sub Total',
+    render: (_, { price, order_qty }) => localeStringFormat(price * order_qty),
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]
 
 export const ColumnsDocumentFlow = [

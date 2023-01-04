@@ -8,8 +8,6 @@ import { concatString } from 'src/utils/concatString'
 import dateFormat from 'src/utils/dateFormat'
 import { ColumnsSalesOrder } from '../../columns'
 
-const createDataList = (label: string, value: string) => ({ label, value })
-
 export default function SalesOrder() {
   const {
     state: { data },
@@ -55,7 +53,7 @@ export default function SalesOrder() {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={ColumnsSalesOrder} dataSource={data.items} />
+        <Table columns={ColumnsSalesOrder} dataSource={data.items} scroll={{ x: 'max-content' }} />
       </div>
       <Spacer size={30} />
       <Row>
