@@ -65,7 +65,7 @@ export default function CustomerInfo() {
       ),
       Block: customer_sales.is_blocked ? 'Yes' : 'No',
       'Credit Limit': customer_sales.credit_limit.toString(),
-      'Credit Limit Valid To': dateFormat(customer_sales.credit_limit_valid_to, 'DD MMMM YYYY'),
+      'Credit Limit Valid To': dateFormat(customer_sales.credit_limit_valid_to),
       'Remaining Credit Limit': customer_sales.credit_limit_usage.toString(),
       'Status Overdue': customer_sales.is_overdue ? 'Active' : 'Non Active',
       'Price Group': customer_sales.price_group_name,

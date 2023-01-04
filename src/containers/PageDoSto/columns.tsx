@@ -2,8 +2,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import React from 'react'
-import moment from 'moment'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
@@ -23,11 +22,11 @@ function Linked({
 }) {
   const router = useRouter()
   const navigate = () => {
-    if (linkType == 'do-sto') {
+    if (linkType === 'do-sto') {
       status === 'Draft'
         ? router.push(`${PATH.LOGISTIC}/do-sto/edit/${link}`)
         : router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
-    } else if (linkType == 'po-sto') {
+    } else if (linkType === 'po-sto') {
       router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
     }
   }
@@ -100,7 +99,7 @@ export const columns = [
     250,
   ),
   CreateColumns('Status', 'status', false, (status_process) => (
-    <TaggedStatus status={status_process == 'Wait For Approval' ? 'Pending' : status_process} />
+    <TaggedStatus status={status_process === 'Wait For Approval' ? 'Pending' : status_process} />
   )),
   CreateColumns('Action', 'id', false, (link, record) => (
     <Linked link={link} type="action" status={record.status_name} linkType="do-sto" />

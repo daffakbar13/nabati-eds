@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-plusplus */
 import React from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
-import { useRouter } from 'next/router'
+import Router from 'next/router'
 import type { NextPage } from 'next'
 import DashboardLayout from 'src/containers/Layouts/DashboardLayout'
 import 'pink-lava-ui/index.css'
@@ -13,6 +14,7 @@ import Loader from 'src/components/Loader'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  // eslint-disable-next-line no-unused-vars
   getLayout?: (page: ReactElement) => ReactNode
 }
 
@@ -23,13 +25,14 @@ type AppPropsWithLayout = AppProps & {
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const [queryClient] = React.useState(() => new QueryClient())
   const [loading, setLoading] = React.useState(false)
-  const router = useRouter()
 
-  // Use the layout defined at the page level, if available
   const getLayout = Component.getLayout || DashboardLayout
   const title = useTitle()
 
-  const randomChar = () => (Math.random() + 1).toString(36).substring(7)
+  function randomChar(): string {
+    const random = Math.random() + 1
+    return random.toString(36).substring(7)
+  }
 
   const getSecretInfromation = () => {
     const arr = []
@@ -45,7 +48,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     return arr.join('')
   }
 
-  const handleStart = (url: string) => {
+  const handleStart = () => {
     setLoading(true)
   }
 
@@ -54,17 +57,17 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   React.useEffect(() => {
-    router.events.on('routeChangeStart', handleStart)
-    router.events.on('routeChangeComplete', handleStop)
-    router.events.on('routeChangeError', handleStop)
+    Router.events.on('routeChangeStart', handleStart)
+    Router.events.on('routeChangeComplete', handleStop)
+    Router.events.on('routeChangeError', handleStop)
 
     return () => {
-      router.events.off('routeChangeStart', handleStart)
-      router.events.off('routeChangeComplete', handleStop)
-      router.events.off('routeChangeError', handleStop)
+      Router.events.off('routeChangeStart', handleStart)
+      Router.events.off('routeChangeComplete', handleStop)
+      Router.events.off('routeChangeError', handleStop)
       localStorage.setItem('secret_information', getSecretInfromation())
     }
-  }, [router])
+  }, [Router])
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -59,28 +59,25 @@ export const column = [
     'Company',
     'company_id',
     false,
-    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
+    (_, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
   ),
   CreateColumns(
     'Branch',
     'suppl_branch_id',
     false,
-    (text: string, record: any) =>
-      `${record.suppl_branch_id || ''} - ${record.supply_branch_name || ''}`,
+    (_, record: any) => `${record.suppl_branch_id || ''} - ${record.supply_branch_name || ''}`,
   ),
   CreateColumns(
     'From Sloc',
     'suppl_sloc_id',
     false,
-    (text: string, record: any) =>
-      `${record.suppl_sloc_id || ''} - ${record.suppl_sloc_name || ''}`,
+    (_, record: any) => `${record.suppl_sloc_id || ''} - ${record.suppl_sloc_name || ''}`,
   ),
   CreateColumns(
     'To Sloc',
     'receive_sloc_id',
     false,
-    (text: string, record: any) =>
-      `${record.receive_sloc_id || ''} - ${record.receive_sloc_name || ''}`,
+    (_, record: any) => `${record.receive_sloc_id || ''} - ${record.receive_sloc_name || ''}`,
   ),
   CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
   CreateColumns('Action', 'id', false, (link, record) => (

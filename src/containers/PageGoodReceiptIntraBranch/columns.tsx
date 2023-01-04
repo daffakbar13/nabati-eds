@@ -8,7 +8,7 @@ import { PATH } from 'src/configs/menus'
 import dateFormat from 'src/utils/dateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import CreateColumns from 'src/utils/createColumns'
 
 function Linked({
   link,
@@ -23,17 +23,17 @@ function Linked({
 }) {
   const router = useRouter()
   const navigate = () => {
-    if (linkType == 'id') {
-      if (status == 'Pending') {
+    if (linkType === 'id') {
+      if (status === 'Pending') {
         router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/edit/${link}`)
       } else {
         router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/detail/${link}`)
       }
-    } else if (linkType == 'PO') {
+    } else if (linkType === 'PO') {
       router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
-    } else if (linkType == 'DO') {
+    } else if (linkType === 'DO') {
       router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
-    } else if (linkType == 'GI') {
+    } else if (linkType === 'GI') {
       router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}`)
     }
   }
@@ -71,7 +71,7 @@ export const columns = [
     'PO Number',
     'po_number',
     true,
-    (link: string, { status }: any) => <Linked link={link} type="id" linkType="PO" />,
+    (link: string) => <Linked link={link} type="id" linkType="PO" />,
     180,
     'left',
   ),
@@ -79,7 +79,7 @@ export const columns = [
     'DO Number',
     'delivery_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType="DO" />,
+    (link: string) => <Linked link={link} type="id" linkType="DO" />,
     180,
     'left',
   ),
@@ -87,7 +87,7 @@ export const columns = [
     'GI Number',
     'gi_number',
     true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" linkType="GI" />,
+    (link: string) => <Linked link={link} type="id" linkType="GI" />,
     180,
     'left',
   ),

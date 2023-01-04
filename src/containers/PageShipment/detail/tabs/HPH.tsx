@@ -1,9 +1,6 @@
 /* eslint-disable camelcase */
 import { Col, Row } from 'antd'
-import moment from 'moment'
 import React from 'react'
-import ReactToPrint from 'react-to-print'
-import { DataList } from 'src/components'
 import PaperA4 from 'src/components/PaperA4'
 import dateFormat from 'src/utils/dateFormat'
 

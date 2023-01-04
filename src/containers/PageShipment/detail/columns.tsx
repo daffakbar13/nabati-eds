@@ -1,5 +1,4 @@
 import CreateColumns, { addColumn } from 'src/utils/createColumns'
-import dateFormat from 'src/utils/dateFormat'
 
 export const TableDocumentHeader = [
   addColumn({
@@ -19,12 +18,10 @@ export const TableDocumentHeader = [
   addColumn({
     title: 'Order Date',
     dataIndex: 'order_date',
-    render: (d) => dateFormat(d),
   }),
   addColumn({
     title: 'Delivery Date',
     dataIndex: 'delivery_date',
-    render: (d) => dateFormat(d),
   }),
   addColumn({
     title: 'Sales Org.',

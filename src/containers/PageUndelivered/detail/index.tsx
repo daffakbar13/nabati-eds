@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card, DataList, Popup } from 'src/components'
 import { Divider, Row, Typography, Col } from 'antd'
@@ -13,14 +13,10 @@ import { fieldReason } from 'src/configs/fieldFetches'
 import Loader from 'src/components/Loader'
 import dateFormat from 'src/utils/dateFormat'
 import TitleDataList from 'src/components/TitleDataList'
-import Total from 'src/components/Total'
-import { concatString } from 'src/utils/concatString'
-import { PageApprovalDetailProps } from './types'
 import { tableUndelivered } from './columns'
 
-export default function PageApprovalDetail(props: PageApprovalDetailProps) {
+export default function PageApprovalDetail() {
   const titlePage = useTitlePage('detail')
-  const [currentTab, setCurrentTab] = React.useState('1')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
@@ -29,7 +25,6 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   const router = useRouter()
   const data = useDetail(getUndeliveredDetail, { id: router.query.id as string }, false)
   const hasData = Object.keys(data).length > 0
-  const format = 'DD MMMM YYYY'
   const [dataTable, setDataTable] = React.useState([])
 
   const dataList = [
@@ -37,7 +32,7 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
     DataList.createDataList('Plant', data.plant),
     DataList.createDataList('Vehicle', data.vechile),
     DataList.createDataList('Driver', data.driver),
-    DataList.createDataList('Loading Date', dateFormat(data.loading_date, format)),
+    DataList.createDataList('Loading Date', dateFormat(data.loading_date)),
     DataList.createDataList('Gl Date', data.gl_date),
     DataList.createDataList('Created On', data.created_on),
     DataList.createDataList('Created By', data.created_by),
@@ -145,11 +140,11 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
       </Typography.Title>
       <DebounceSelect
         type="select"
-        value={optionsReason.find(({ value }) => reason === value)?.label}
+        value={optionsReason.find((e) => reason === e.value)?.label}
         label={'Reason Reject Sales Order'}
         required
         options={optionsReason}
-        onChange={({ value }) => setReason(value)}
+        onChange={(e) => setReason(e.value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button

@@ -4,7 +4,7 @@ import React from 'react'
 import PaperA4 from 'src/components/PaperA4'
 import dateFormat from 'src/utils/dateFormat'
 
-interface props {
+interface DeliveryNoteProps {
   data: any
 }
 
@@ -29,9 +29,8 @@ function Information(props: { label: string; value: string }) {
   )
 }
 
-export default function DeliveryNote(props: props) {
+export default function DeliveryNote(props: DeliveryNoteProps) {
   const { data } = props
-  const format = 'DD MMMM YYYY'
 
   return (
     <PaperA4>
@@ -44,7 +43,7 @@ export default function DeliveryNote(props: props) {
         <Col span={8}>
           <Information label="Delivery Order" value={data.id} />
           <Information label="PO Number" value={data.purchase_id} />
-          <Information label="Date" value={dateFormat(data.document_date, format)} />
+          <Information label="Date" value={dateFormat(data.document_date)} />
           <Information
             label="To Branch"
             value={`${data.receive_branch_id} / ${data.receive_branch_name}`}

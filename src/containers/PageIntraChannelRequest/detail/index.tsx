@@ -9,9 +9,9 @@ import useDetail from 'src/hooks/useDetail'
 import { getDetailRequestIntraChannel, ChangeStatus } from 'src/api/request-intra-channel'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
-import { TableIntraChannelRequestDetail } from '../columns'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { TableIntraChannelRequestDetail } from '../columns'
 
 export default function PageQuotationDetail() {
   const titlePage = useTitlePage('detail')
@@ -22,52 +22,47 @@ export default function PageQuotationDetail() {
     false,
   )
   const createDataList = (label: string, value: string) => ({ label, value })
-  const format = 'DD MMMM YYYY'
   const [approve, setApprove] = React.useState(false)
   const [reject, setReject] = React.useState(false)
 
   const changedStatus = (status: string) => {
     ChangeStatus({ id: data.id, status_id: status })
-    if (status == '02') {
+    if (status === '02') {
       router.push(`${PATH.LOGISTIC}/request-intra-channel`)
     }
   }
 
   const dataList = [
-    //row 1
+    // row 1
     createDataList('Request Number', data.id),
     createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.supply_branch_name}`),
     createDataList('Receiving Branch', `${data.receive_plant_id} - ${data.receive_plant_name}`),
     createDataList('From Channel', data.from_channel || '-'),
     createDataList('To Channel', data.to_channel || '-'),
 
-    //row 2
+    // row 2
     createDataList('From Sloc', `${data.suppl_sloc_id} - ${data.suppl_sloc_name}`),
     createDataList('To Sloc', `${data.receive_sloc_id} - ${data.receive_sloc_name}`),
-    createDataList('Doc Date', dateFormat(data.document_date, format)),
-    createDataList('Posting Date', dateFormat(data.posting_date, format)),
-    createDataList('Remarks', data.remarks != '' && data.remarks != null ? data.remarks : '-'),
+    createDataList('Doc Date', dateFormat(data.document_date)),
+    createDataList('Posting Date', dateFormat(data.posting_date)),
+    createDataList('Remarks', data.remarks !== '' && data.remarks !== null ? data.remarks : '-'),
 
     // row 3
     createDataList(
       'Created On',
-      data.created_at != '' && data.created_at != null ? dateFormat(data.created_at, format) : '-',
+      data.created_at !== '' && data.created_at !== null ? dateFormat(data.created_at) : '-',
     ),
     createDataList(
       'Created By',
-      data.created_by != '' && data.created_by != null ? data.created_by : '-',
+      data.created_by !== '' && data.created_by !== null ? data.created_by : '-',
     ),
     createDataList(
       'Modified On',
-      data.modified_at != '' && data.modified_at != null
-        ? dateFormat(data.modified_at, format)
-        : '-',
+      data.modified_at !== '' && data.modified_at !== null ? dateFormat(data.modified_at) : '-',
     ),
     createDataList(
       'Modified By',
-      data.modified_by != '' && data.modified_by != null
-        ? dateFormat(data.modified_by, format)
-        : '-',
+      data.modified_by !== '' && data.modified_by !== null ? dateFormat(data.modified_by) : '-',
     ),
   ]
 
@@ -90,7 +85,7 @@ export default function PageQuotationDetail() {
         <Text variant={'h4'}>{titlePage}</Text>
       </div>
       <Card style={{ overflow: 'unset' }}>
-        {data.status == 'Canceled' || data.status == 'Done' ? (
+        {data.status === 'Canceled' || data.status === 'Done' ? (
           <Text variant={'h5'}>
             <TaggedStatus status={data.status} size="h5" />
           </Text>
@@ -98,40 +93,34 @@ export default function PageQuotationDetail() {
           ''
         )}
         <Row justifyContent="space-between" reverse>
-          {(() => {
-            if (data.status == 'Pending') {
-              return (
-                <>
-                  <Row gap="16px">
-                    <Button
-                      size="big"
-                      variant="tertiary"
-                      onClick={() => {
-                        setReject(true)
-                      }}
-                    >
-                      Reject
-                    </Button>
-                    <Button
-                      size="big"
-                      variant="primary"
-                      onClick={() => {
-                        setApprove(true)
-                        changedStatus('01')
-                      }}
-                    >
-                      Approve
-                    </Button>
-                  </Row>
-                  <Text variant={'h5'}>
-                    <TaggedStatus status={data.status} size="h5" />
-                  </Text>
-                </>
-              )
-            } else if (data.status == 'Canceled') {
-              return <></>
-            }
-          })()}
+          {data.status === 'Pending' && (
+            <>
+              <Row gap="16px">
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => {
+                    setReject(true)
+                  }}
+                >
+                  Reject
+                </Button>
+                <Button
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    setApprove(true)
+                    changedStatus('01')
+                  }}
+                >
+                  Approve
+                </Button>
+              </Row>
+              <Text variant={'h5'}>
+                <TaggedStatus status={data.status} size="h5" />
+              </Text>
+            </>
+          )}
         </Row>
       </Card>
       <Spacer size={20} />

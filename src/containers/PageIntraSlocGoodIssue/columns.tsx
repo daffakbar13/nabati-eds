@@ -20,9 +20,9 @@ function Linked({
 }) {
   const router = useRouter()
   const navigate = () => {
-    if (linkType == 'id') {
+    if (linkType === 'id') {
       router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${link}`)
-    } else if (linkType == 'deliveryNumber') {
+    } else if (linkType === 'deliveryNumber') {
       router.push(`${PATH.LOGISTIC}/request-intra-sloc/detail/${link}`)
     }
   }
@@ -60,7 +60,7 @@ export const column = [
     'Request Number',
     'delivery_number',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" linkType="deliveryNumber" />,
+    (link: string) => <Linked link={link} type="id" linkType="deliveryNumber" />,
     175,
     'left',
   ),
@@ -68,7 +68,7 @@ export const column = [
     'GI Number',
     'id',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    (link: string) => <Linked link={link} type="id" linkType="id" />,
     175,
     'left',
   ),
@@ -77,35 +77,34 @@ export const column = [
     'Company',
     'company_id',
     false,
-    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
+    (_, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
   ),
   CreateColumns(
     'Branch',
     'branch_id',
     false,
-    (text: string, record: any) =>
-      `${record.suppl_branch_id || ''} - ${record.suppl_branch_name || ''}`,
+    (_, record: any) => `${record.suppl_branch_id || ''} - ${record.suppl_branch_name || ''}`,
   ),
   CreateColumns(
     'From Sloc',
     'from_sloc',
     false,
-    (text: string, record: any) => `${record.from_sloc || ''} - ${record.from_sloc_name || ''}`,
+    (_, record: any) => `${record.from_sloc || ''} - ${record.from_sloc_name || ''}`,
   ),
   CreateColumns(
     'To Sloc',
     'to_sloc',
     false,
-    (text: string, record: any) => `${record.to_sloc || ''} - ${record.to_sloc_name || ''}`,
+    (_, record: any) => `${record.to_sloc || ''} - ${record.to_sloc_name || ''}`,
   ),
   CreateColumns(
     'Mov. Type',
     'branch_id',
     false,
-    (text: string, record: any) => `${record.movement_type_id || ''}`,
+    (_, record: any) => `${record.movement_type_id || ''}`,
   ),
   CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link, record) => (
+  CreateColumns('Action', 'id', false, (link) => (
     <Linked link={link} type="action" linkType="id" />
   )),
 ]

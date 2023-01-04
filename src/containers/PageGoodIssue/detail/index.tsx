@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Spacer, Text, Table } from 'pink-lava-ui'
+import { Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Row, Col, Divider } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -21,42 +21,37 @@ export default function PageIntraChannelGoodIssueDetail() {
     false,
   )
   const createDataList = (label: string, value: string) => ({ label, value })
-  const format = 'DD MMMM YYYY'
 
   const dataList = [
-    //row 1
+    // row 1
     createDataList('Request Number', data.id || '-'),
     createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
     createDataList(
       'Receiving Branch',
       `${data.receive_plant_id} - ${data.receive_plant_name || ''}`,
     ),
-    createDataList('Remarks', data.remarks != '' && data.remarks != null ? data.remarks : '-'),
+    createDataList('Remarks', data.remarks !== '' && data.remarks !== null ? data.remarks : '-'),
 
-    //row 2
-    createDataList('Doc Date', dateFormat(data.document_date, format)),
-    createDataList('Posting Date', dateFormat(data.posting_date, format)),
+    // row 2
+    createDataList('Doc Date', dateFormat(data.document_date)),
+    createDataList('Posting Date', dateFormat(data.posting_date)),
 
     // row 3
     createDataList(
       'Created On',
-      data.created_at != '' && data.created_at != null ? dateFormat(data.created_at, format) : '-',
+      data.created_at !== '' && data.created_at !== null ? dateFormat(data.created_at) : '-',
     ),
     createDataList(
       'Created By',
-      data.created_by != '' && data.created_by != null ? data.created_by : '-',
+      data.created_by !== '' && data.created_by !== null ? data.created_by : '-',
     ),
     createDataList(
       'Modified On',
-      data.modified_at != '' && data.modified_at != null
-        ? dateFormat(data.modified_at, format)
-        : '-',
+      data.modified_at !== '' && data.modified_at !== null ? dateFormat(data.modified_at) : '-',
     ),
     createDataList(
       'Modified By',
-      data.modified_by != '' && data.modified_by != null
-        ? dateFormat(data.modified_by, format)
-        : '-',
+      data.modified_by !== '' && data.modified_by !== null ? dateFormat(data.modified_by) : '-',
     ),
   ]
 

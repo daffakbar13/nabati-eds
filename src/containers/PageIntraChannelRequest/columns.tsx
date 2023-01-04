@@ -65,15 +65,13 @@ export const TableIntraChannelRequest = [
     'Supplying Branch',
     'supply_branch_name',
     false,
-    (text: string, record: any) =>
-      `${record.suppl_branch_id || ''} - ${record.supply_branch_name || ''}`,
+    (_, record: any) => `${record.suppl_branch_id || ''} - ${record.supply_branch_name || ''}`,
   ),
   CreateColumns(
     'Receiving Branch',
     'receive_plant_id',
     false,
-    (text: string, record: any) =>
-      `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
+    (_, record: any) => `${record.receive_plant_id || ''} - ${record.receive_plant_name || ''}`,
   ),
   CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
   CreateColumns('Action', 'id', false, (link, record) => (
@@ -82,19 +80,18 @@ export const TableIntraChannelRequest = [
 ]
 
 export const TableIntraChannelRequestDetail = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
+  CreateColumns('No', 'id', false, (_, __, index: number) => index + 1),
   CreateColumns(
     'Item Sender',
     'product_sender_id',
     false,
-    (text: string, record: any) => `${record.product_sender_id} - ${record.product_sender_name}`,
+    (_, record: any) => `${record.product_sender_id} - ${record.product_sender_name}`,
   ),
   CreateColumns(
     'Item Receiver',
     'product_receiver_id',
     false,
-    (text: string, record: any) =>
-      `${record.product_receiver_id} - ${record.product_receiver_name}`,
+    (_, record: any) => `${record.product_receiver_id} - ${record.product_receiver_name}`,
   ),
   CreateColumns('Qty', 'qty', false),
   CreateColumns('UoM', 'uom_id', false),

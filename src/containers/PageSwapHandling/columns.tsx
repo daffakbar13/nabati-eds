@@ -1,4 +1,3 @@
-import moment from 'moment'
 import CreateColumns from 'src/utils/createColumns'
 import { Button, Tooltip } from 'pink-lava-ui'
 import dateFormat from 'src/utils/dateFormat'

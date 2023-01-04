@@ -2,18 +2,14 @@ import { Tag } from 'antd'
 import { Col, Spacer, Table, Text, Button } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
 import { Card, GoBackArrow, Modal } from 'src/components'
-
-import moment from 'moment'
 import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
-
 import { useRouter } from 'next/router'
 import {
   getDetailStockAdjustment,
   updateStatusStockAdjustment,
 } from 'src/api/logistic/stock-adjustment'
 import { PATH } from 'src/configs/menus'
-
 import { STOCK_ADJUSTMENT_STATUS as S } from 'src/configs/stockAdjustment'
 import dateFormat from 'src/utils/dateFormat'
 import { getTagColor } from 'src/utils/getTagColor'
@@ -35,7 +31,6 @@ export default function DetailStockAdjustment() {
       const res = await updateStatusStockAdjustment(id, payload)
       return res
     } catch (error) {
-      console.error(error)
       return false
     }
   }
@@ -45,14 +40,12 @@ export default function DetailStockAdjustment() {
       const res = await updateStatusStockAdjustment(id, payload)
       return res
     } catch (error) {
-      console.error(error)
       return false
     }
   }
 
   useEffect(() => {
     if (!id) return
-    console.log('id useEffect', id)
     const fetchData = async () => {
       try {
         setLoading(true)
@@ -61,7 +54,6 @@ export default function DetailStockAdjustment() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
       }
     }
     fetchData()
@@ -159,9 +151,9 @@ export default function DetailStockAdjustment() {
         open={rejectModal}
         onOk={handleReject}
         onCancel={() => setRejectModal(false)}
-        onOkSuccess={(res) => router.reload()}
+        onOkSuccess={() => router.reload()}
         content="Are you sure want to reject?"
-        successContent={(res: any) => 'Reject Success'}
+        successContent={() => 'Reject Success'}
         successOkText="OK"
       />
 
@@ -170,9 +162,9 @@ export default function DetailStockAdjustment() {
         open={approveModal}
         onOk={handleApprove}
         onCancel={() => setApproveModal(false)}
-        onOkSuccess={(res) => router.reload()}
+        onOkSuccess={() => router.reload()}
         content="Are you sure want to approve?"
-        successContent={(res: any) => 'Approve Success'}
+        successContent={() => 'Approve Success'}
         successOkText="OK"
       />
     </Col>

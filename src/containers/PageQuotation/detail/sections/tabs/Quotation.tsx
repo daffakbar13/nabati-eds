@@ -10,7 +10,7 @@ import { ColumnsQuotation } from '../../columns'
 
 export default function Quotation() {
   const {
-    state: { data, tableTabQuotation },
+    state: { data },
   } = useSalesQuotationDetailContext()
 
   const dataList = [

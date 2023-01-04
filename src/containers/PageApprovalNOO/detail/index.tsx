@@ -29,7 +29,6 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   const router = useRouter()
   const data = useDetail(getUndeliveredDetail, { id: router.query.id as string }, false)
   const hasData = Object.keys(data).length > 0
-  const format = 'DD MMMM YYYY'
   const [dataTable, setDataTable] = React.useState([])
 
   const dataList = [
@@ -37,7 +36,7 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
     DataList.createDataList('Plant', data.plant),
     DataList.createDataList('Vehicle', data.vechile),
     DataList.createDataList('Driver', data.driver),
-    DataList.createDataList('Loading Date', dateFormat(data.loading_date, format)),
+    DataList.createDataList('Loading Date', dateFormat(data.loading_date)),
     DataList.createDataList('Gl Date', data.gl_date),
     DataList.createDataList('Created On', data.created_on),
     DataList.createDataList('Created By', data.created_by),
@@ -149,7 +148,7 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
         label={'Reason Reject Sales Order'}
         required
         options={optionsReason}
-        onChange={({ value }) => setReason(value)}
+        onChange={(e) => setReason(e.value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button

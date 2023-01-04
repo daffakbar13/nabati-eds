@@ -20,11 +20,11 @@ function Linked({
 }) {
   const router = useRouter()
   const navigate = () => {
-    if (linkType == 'id') {
+    if (linkType === 'id') {
       router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel/detail/${link}`)
-    } else if (linkType == 'deliveryNumber') {
+    } else if (linkType === 'deliveryNumber') {
       router.push(`${PATH.LOGISTIC}/request-intra-channel/detail/${link}`)
-    } else if (linkType == 'goodIssue') {
+    } else if (linkType === 'goodIssue') {
       router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel/detail/${link}`)
     }
   }
@@ -62,7 +62,7 @@ export const TableIntraChannelGoodReceipt = [
     'Request Number',
     'delivery_number',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" linkType="deliveryNumber" />,
+    (link: string) => <Linked link={link} type="id" linkType="deliveryNumber" />,
     175,
     'left',
   ),
@@ -70,7 +70,7 @@ export const TableIntraChannelGoodReceipt = [
     'GI Number',
     'gi_number',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" linkType="goodIssue" />,
+    (link: string) => <Linked link={link} type="id" linkType="goodIssue" />,
     175,
     'left',
   ),
@@ -78,7 +78,7 @@ export const TableIntraChannelGoodReceipt = [
     'GR Number',
     'id',
     true,
-    (link: string, record: any) => <Linked link={link} type="id" linkType="id" />,
+    (link: string) => <Linked link={link} type="id" linkType="id" />,
     175,
     'left',
   ),
@@ -87,28 +87,28 @@ export const TableIntraChannelGoodReceipt = [
     'Company',
     'company_id',
     false,
-    (text: string, record: any) => `${record.company_id} - ${record.company_name}`,
+    (_, record: any) => `${record.company_id} - ${record.company_name}`,
   ),
   CreateColumns(
     'Supplying Branch',
     'suppl_branch_id',
     false,
-    (text: string, record: any) => `${record.suppl_branch_id} - ${record.suppl_branch_name}`,
+    (_, record: any) => `${record.suppl_branch_id} - ${record.suppl_branch_name}`,
   ),
   CreateColumns(
     'Receiving Branch',
     'receive_plant_id',
     false,
-    (text: string, record: any) => `${record.receive_plant_id} - ${record.receive_plant_name}`,
+    (_, record: any) => `${record.receive_plant_id} - ${record.receive_plant_name}`,
   ),
   CreateColumns(
     'Mov. Type',
     'movement_type_id',
     false,
-    (text: string, record: any) => `${record.movement_type_id} - ${record.movement_type_name}`,
+    (_, record: any) => `${record.movement_type_id} - ${record.movement_type_name}`,
   ),
   CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link, record) => (
+  CreateColumns('Action', 'id', false, (link) => (
     <Linked link={link} type="action" linkType="id" />
   )),
 ]
@@ -119,13 +119,13 @@ export const TableIntraChannelGoodReceiptDetail = [
     'Item Sender',
     'product_id',
     false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
+    (_, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
   ),
   CreateColumns(
     'Item Receiver',
     'product_receiver_id',
     false,
-    (text: string, record: any) =>
+    (_, record: any) =>
       `${record.product_receiver_id || ''} - ${record.product_receiver_name || ''}`,
   ),
   CreateColumns('Qty', 'qty', false),

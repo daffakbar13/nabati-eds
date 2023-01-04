@@ -20,7 +20,6 @@ import { tableApproval } from './columns'
 
 export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   const titlePage = useTitlePage('detail')
-  const [currentTab, setCurrentTab] = React.useState('1')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
@@ -29,7 +28,6 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
   const router = useRouter()
   const data = useDetail(getApprovalDetail, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
-  const format = 'DD MMMM YYYY'
 
   const dataList = [
     DataList.createDataList('Quotation', data.document_ref_id),
@@ -38,14 +36,14 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
     DataList.createDataList('Branch', concatString(data.branch_id, data.branch_name)),
     DataList.createDataList('Salesman', concatString(data.salesman_id, data.salesman_name)),
     // FIXME Doc. Date
-    DataList.createDataList('Doc. Date', dateFormat(data.doc_date, format)),
-    DataList.createDataList('Valid From', dateFormat(data.valid_from, format)),
-    DataList.createDataList('Valid To', dateFormat(data.valid_to, format)),
-    DataList.createDataList('Delivery Date', dateFormat(data.delivery_date, format)),
+    DataList.createDataList('Doc. Date', dateFormat(data.doc_date)),
+    DataList.createDataList('Valid From', dateFormat(data.valid_from)),
+    DataList.createDataList('Valid To', dateFormat(data.valid_to)),
+    DataList.createDataList('Delivery Date', dateFormat(data.delivery_date)),
     DataList.createDataList('Reference', data.customer_ref),
-    DataList.createDataList('Created On', dateFormat(data.created_at, format)),
+    DataList.createDataList('Created On', dateFormat(data.created_at)),
     DataList.createDataList('Created By', data.created_by),
-    DataList.createDataList('Modified On', dateFormat(data.modified_at, format)),
+    DataList.createDataList('Modified On', dateFormat(data.modified_at)),
     DataList.createDataList('Modified By', data.modified_by),
     // FIXME Created From
     DataList.createDataList('Created From', data.created_from),
@@ -155,7 +153,7 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
         label={'Reason Reject Sales Order'}
         required
         options={optionsReason}
-        onChange={({ value }) => setReason(value)}
+        onChange={(e) => setReason(e.value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button

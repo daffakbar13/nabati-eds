@@ -117,7 +117,7 @@ export function baseHandler(
     const productList = [
       ...new Set(state.allProduct.filter((p) => !p.booked).map((p) => p.product_id)),
     ]
-    return getListProductBySalesman(state.salesman_id, bodyProduct('name'))
+    return getListProduct(bodyProduct('name'))
       .then((res) => {
         const { results } = res.data
         if (results === null) {
@@ -126,7 +126,7 @@ export function baseHandler(
         return results
       })
       .then((firstArr) =>
-        getListProductBySalesman(state.salesman_id, bodyProduct('product_id')).then((res) => {
+        getListProduct(bodyProduct('product_id')).then((res) => {
           const { results } = res.data
           const secondArr = []
           if (Array.isArray(results)) {

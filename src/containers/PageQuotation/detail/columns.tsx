@@ -1,7 +1,9 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable camelcase */
 /* eslint-disable radix */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-plusplus */
+import { concatString } from 'src/utils/concatString'
 import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import localeStringFormat from 'src/utils/currencyFormat'
 
@@ -13,8 +15,8 @@ export const ColumnsQuotation = [
   }),
   addColumn({
     title: 'Item',
-    dataIndex: 'description',
     fixed: true,
+    render: (_, { product_id, description }) => concatString(product_id, description),
   }),
   addColumn({
     title: 'Item Category',
@@ -28,18 +30,12 @@ export const ColumnsQuotation = [
     title: 'Quantity',
     dataIndex: 'order_qty',
   }),
-  // addColumn({
-  //   title: 'Quantity Booking',
-  //   dataIndex: 'order_qty',
-  // }),
   addColumn({
     title: 'Based Price',
-    dataIndex: 'price',
-    render: (price) => parseInt(price).toLocaleString(),
+    render: (_, { price }) => parseInt(price).toLocaleString(),
   }),
   addColumn({
     title: 'Sub Total',
-    dataIndex: 'sub_total',
     render: (_, { price, order_qty }) => localeStringFormat(price * order_qty),
   }),
   addColumn({
@@ -61,6 +57,6 @@ export const ColumnsDocumentFlow = [
 export const ColumnsCustomerInfo = [
   CreateColumns('Salesman', 'id', false, (id, { name }) => [id, name].join(' - ')),
   CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) =>
-    [id, salesman_group_name].join(' - '),
+    concatString(id, salesman_group_name),
   ),
 ]
