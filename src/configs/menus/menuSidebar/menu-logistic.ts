@@ -132,31 +132,6 @@ export const menuLogistic = [
     ],
   },
   {
-    key: 'intra-channel',
-    title: 'Intra Channel',
-    icon: LogisticIcIntraChannel,
-    children: [
-      {
-        key: 'request',
-        title: 'Request',
-        content: () => 'Request',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/request-intra-channel`),
-      },
-      {
-        key: 'goods-issue-intra-channel',
-        title: 'Goods Issue',
-        content: () => 'Goods Issue',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-issue-intra-channel`),
-      },
-      {
-        key: 'goods-receipt-intra-channel',
-        title: 'Goods Receipt',
-        content: () => 'Goods Receipt',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/goods-receipt-intra-channel`),
-      },
-    ],
-  },
-  {
     key: 'intra-sloc',
     title: 'Intra Sloc',
     icon: LogisticIcIntraSloc,

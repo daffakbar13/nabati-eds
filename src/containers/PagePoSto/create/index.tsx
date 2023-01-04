@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Divider, Typography } from 'antd'
+import { Divider, Typography, Form } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Modal } from 'src/components'
@@ -36,6 +36,7 @@ interface dataForm {
 }
 
 export default function CreateBilling() {
+  const [form] = Form.useForm()
   const now = new Date().toISOString()
 
   const router = useRouter()
@@ -84,6 +85,11 @@ export default function CreateBilling() {
     return false
   }
 
+  const onClickSubmit = async () => {
+    const values = await form.validateFields()
+    setModalSubmit(true)
+  }
+
   return (
     <Col>
       <Text variant={'h4'}>Create New PO STO</Text>
@@ -104,7 +110,7 @@ export default function CreateBilling() {
               size="big"
               variant="primary"
               onClick={() => {
-                setModalSubmit(true)
+                onClickSubmit()
               }}
             >
               Submit
@@ -113,88 +119,114 @@ export default function CreateBilling() {
         </Row>
       </Card>
       <Spacer size={10} />
-      <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect
-            type="select"
-            label="Receiving Branch"
-            required
-            fetchOptions={(search) =>
-              fieldBranchSupply(search, '', dataForm?.suppl_branch_id || '')
-            }
-            onChange={(val: any) => {
-              onChangeForm('receive_plant_id', val.label.split(' - ')[0])
-              setReceivingBranch(val.label)
-              setReceivingChannel(val.key)
-            }}
-            value={receivingBranch}
-          />
-          <DatePickerInput
-            fullWidth
-            onChange={(val: any) => {
-              onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
-            }}
-            label="Doc Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-          <DebounceSelect
-            type="select"
-            label="Supplying Branch"
-            required
-            fetchOptions={(search) =>
-              fieldBranchSupply(search, '', dataForm?.receive_plant_id || '')
-            }
-            onChange={(val: any) => {
-              onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
-              setSupplyingBranch(val.label)
-              setSupplyingChannel(val.key)
-            }}
-            value={supplyingBranch}
-          />
-          <DatePickerInput
-            fullWidth
-            onChange={(val: any) => {
-              onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
-            }}
-            label="Posting Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-          />
-        </div>
-        <Divider style={{ borderColor: '#AAAAAA' }} />
-        {dataForm?.suppl_branch_id ? (
-          <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-            + Add Item
-          </Button>
-        ) : (
-          ''
-        )}
-        <Spacer size={20} />
-        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          {receivingChannel != '' &&
-          supplyingChannel != '' &&
-          receivingChannel != supplyingChannel ? (
-            <Table
-              scroll={{ x: 'max-content', y: 600 }}
-              editable
-              data={tableAddItems.data}
-              columns={tableAddItems.columnsSender}
-              loading={tableAddItems.loading}
-            />
+      <Form
+        form={form}
+        labelCol={{ span: 24 }}
+        wrapperCol={{ span: 24 }}
+        autoComplete="off"
+        requiredMark={false}
+        scrollToFirstError
+      >
+        <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            <Form.Item name="receive_plant_id" rules={[{ required: true }]}>
+              <DebounceSelect
+                type="select"
+                label="Receiving Branch"
+                required
+                fetchOptions={(search) =>
+                  fieldBranchSupply(search, '', dataForm?.suppl_branch_id || '')
+                }
+                onChange={(val: any) => {
+                  onChangeForm('receive_plant_id', val.label.split(' - ')[0])
+                  setReceivingBranch(val.label)
+                  setReceivingChannel(val.key)
+                }}
+                value={receivingBranch}
+              />
+            </Form.Item>
+            <Form.Item name="document_date">
+              <DatePickerInput
+                fullWidth
+                onChange={(val: any) => {
+                  onChangeForm('document_date', moment(val).format('YYYY-MM-DD'))
+                }}
+                label="Doc Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+              />
+            </Form.Item>
+            <Form.Item
+              name="suppl_branch_id"
+              rules={[{ required: true }]}
+              style={{ marginTop: -30, marginBottom: 0 }}
+            >
+              <DebounceSelect
+                type="select"
+                label="Supplying Branch"
+                required
+                fetchOptions={(search) =>
+                  fieldBranchSupply(search, '', dataForm?.receive_plant_id || '')
+                }
+                onChange={(val: any) => {
+                  onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
+                  setSupplyingBranch(val.label)
+                  setSupplyingChannel(val.key)
+                }}
+                value={supplyingBranch}
+              />
+            </Form.Item>
+            <Form.Item name="posting_date" style={{ marginTop: -30, marginBottom: 0 }}>
+              <DatePickerInput
+                fullWidth
+                onChange={(val: any) => {
+                  onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
+                }}
+                label="Posting Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+              />
+            </Form.Item>
+          </div>
+          <Divider style={{ borderColor: '#AAAAAA' }} />
+          {dataForm?.suppl_branch_id ? (
+            <Button
+              size="big"
+              type="button"
+              variant="tertiary"
+              onClick={tableAddItems.handleAddItem}
+            >
+              + Add Item
+            </Button>
           ) : (
-            <Table
-              scroll={{ x: 'max-content', y: 600 }}
-              editable
-              data={tableAddItems.data}
-              columns={tableAddItems.columns}
-              loading={tableAddItems.loading}
-            />
+            ''
           )}
-        </div>
-      </Card>
+          <Spacer size={20} />
+          <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+            {receivingChannel != '' &&
+            supplyingChannel != '' &&
+            receivingChannel != supplyingChannel ? (
+              <Table
+                scroll={{ x: 'max-content', y: 600 }}
+                editable
+                data={tableAddItems.data}
+                columns={tableAddItems.columnsSender}
+                loading={tableAddItems.loading}
+              />
+            ) : (
+              <Table
+                scroll={{ x: 'max-content', y: 600 }}
+                editable
+                data={tableAddItems.data}
+                columns={tableAddItems.columns}
+                loading={tableAddItems.loading}
+              />
+            )}
+          </div>
+        </Card>
+      </Form>
       <Modal
         title={'Confirm Cancellation'}
         open={modalCancel}
