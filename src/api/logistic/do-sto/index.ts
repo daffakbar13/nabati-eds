@@ -124,7 +124,7 @@ export const AutoCreateGR = async (
   params: {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.PUT,
+    method: METHODS.POST,
     subUrl: `${url}/create/good/receipt_issue/${delivery_number}/${po_number}`,
     overrideBaseUrl,
     data: params,
