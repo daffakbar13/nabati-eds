@@ -117,7 +117,9 @@ export default function PageCreateDeliveryOrder() {
       >
         <div>
           {'New Quotation '}
-          <Typography.Text copyable>{newDeliveryOrder || draftDeliveryOrder}</Typography.Text>
+          <Typography.Text copyable={{ text: newDeliveryOrder || (draftDeliveryOrder as string) }}>
+            {newDeliveryOrder || draftDeliveryOrder}
+          </Typography.Text>
           {' has been'}
         </div>
         <div>successfully {newDeliveryOrder ? 'created' : 'saved'}</div>
@@ -530,7 +532,11 @@ export default function PageCreateDeliveryOrder() {
             ) : (
               <>
                 New Quotation
-                <Typography.Text copyable>{newDeliveryOrder || draftDeliveryOrder}</Typography.Text>
+                <Typography.Text
+                  copyable={{ text: newDeliveryOrder || (draftDeliveryOrder as string) }}
+                >
+                  {newDeliveryOrder || draftDeliveryOrder}
+                </Typography.Text>
                 has been
               </>
             )}

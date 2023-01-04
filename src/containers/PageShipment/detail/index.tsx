@@ -112,7 +112,9 @@ export default function PageShipmentDetail(props: PageShipmentDetailProps) {
       >
         <div>
           Shipment
-          <Typography.Text copyable>{router.query.id}</Typography.Text>
+          <Typography.Text copyable={{ text: router.query.id as string }}>
+            {router.query.id}
+          </Typography.Text>
           has been
         </div>
         <div>successfully submitted</div>

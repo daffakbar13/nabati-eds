@@ -207,7 +207,7 @@ export default function PageGoodReceiptIntraBranchEdit() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable> {newDoSTO}</Typography.Text>
+                <Typography.Text copyable={{ text: newDoSTO as string }}> {newDoSTO}</Typography.Text>
                 has been
               </>
             )}

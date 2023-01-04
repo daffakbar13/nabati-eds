@@ -222,7 +222,10 @@ export default function PageCreateQuotation() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable> {newQuotation || draftQuotation}</Typography.Text>
+                <Typography.Text copyable={{ text: newQuotation || (draftQuotation as string) }}>
+                  {' '}
+                  {newQuotation || draftQuotation}
+                </Typography.Text>
                 has been
               </>
             )}

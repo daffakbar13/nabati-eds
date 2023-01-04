@@ -74,9 +74,23 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
   }
 
   const handleAdd = async (reqBody: any) => {
-    onChangeForm('branch_id', reqBody.branch_id)
-    tableAddItems.handleAddItem(reqBody)
+    if (isOnEditMode) {
+      tableAddItems.handleAddItem({
+        branch_id: payload?.action,
+        sales_org: payload?.sales_org,
+        sloc_id: reqBody.sloc_id,
+        sloc_name: reqBody.sloc_name,
+        sloc_type: reqBody.sloc_type,
+      })
+    } else {
+      tableAddItems.handleAddItem(reqBody)
+    }
   }
+
+  useEffect(() => {
+    console.log('payload', payload)
+    onChangeForm('branch_id', payload?.action)
+  }, [isOnEditMode, payload])
 
   const content = (
     <>

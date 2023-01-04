@@ -183,7 +183,7 @@ export default function CreateBilling() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable> {newDoSTO}</Typography.Text>
+                <Typography.Text copyable={{ text: newDoSTO as string }}> {newDoSTO}</Typography.Text>
                 has been
               </>
             )}

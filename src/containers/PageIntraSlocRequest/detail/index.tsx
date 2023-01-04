@@ -165,7 +165,7 @@ export default function PageIntraSlocRequestDetail() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable> {data.id}</Typography.Text>
+                <Typography.Text copyable={{ text: data.id as string }}> {data.id}</Typography.Text>
                 has been
               </>
             )}

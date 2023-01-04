@@ -41,7 +41,7 @@ export const useTableAddItem = (props: any) => {
     base_uom_id: '',
     received_uom_id: '',
     do_uom_id: '',
-    sloc_id: '',
+    sloc_id: 'GS00',
     remarks: '',
     batch: '',
   }
@@ -80,7 +80,7 @@ export const useTableAddItem = (props: any) => {
         base_uom_id: item.base_uom_id,
         received_uom_id: item.do_uom_id,
         do_uom_id: item.do_uom_id,
-        sloc_id: item.sloc_id,
+        sloc_id: 'GS00',
       }
     })
 
