@@ -1,7 +1,7 @@
-export default function localeStringFormat(value: string | number) {
+export default function currency(value: string | number) {
   switch (typeof value) {
     case 'string':
-      return parseInt(value, 10).toLocaleString()
+      return Number(value).toLocaleString()
     case 'number':
       return value.toLocaleString()
     default:

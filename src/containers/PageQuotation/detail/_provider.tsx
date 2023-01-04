@@ -3,8 +3,6 @@ import React from 'react'
 import { getDetailQuotation } from 'src/api/quotation'
 import { useDetail } from 'src/hooks'
 import { useSalesQuotationDetailProvider } from 'src/hooks/contexts'
-import useTable from 'src/hooks/useTable/index'
-import { ColumnsQuotation } from './columns'
 
 export default function SalesQuotationDetailProvider(
   props: React.PropsWithChildren<React.ReactNode>,
@@ -13,17 +11,12 @@ export default function SalesQuotationDetailProvider(
   const router = useRouter()
   const SalesQuotationDetail = useSalesQuotationDetailProvider()
   const data = useDetail(getDetailQuotation, { id: router.query.id as string })
-  // const tableTabQuotation = useTable({
-  //   columns: ColumnsQuotation,
-  //   data: [],
-  //   removeHideShowColums: true,
-  // })
 
-  // React.useEffect(() => {
-  //   if (Object.keys(data).length > 0) {
-  //     tableTabQuotation.handler.updateData(data.items)
-  //   }
-  // }, [data])
+  React.useEffect(() => {
+    if (data.status_id === '6') {
+      router.push(router.asPath.replace('detail', 'edit'))
+    }
+  }, [data])
 
   return (
     <SalesQuotationDetail.Provider
