@@ -1,31 +1,91 @@
-/* eslint-disable function-paren-newline */
-/* eslint-disable camelcase */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-plusplus */
-/* eslint-disable radix */
 import { ColumnsType } from 'antd/lib/table'
 import { concatString } from 'src/utils/concatString'
-import CreateColumns, { addColumn } from 'src/utils/createColumns'
-import localeStringFormat from 'src/utils/currencyFormat'
+import { addColumn } from 'src/utils/createColumns'
+import currency from 'src/utils/currencyFormat'
 
 export const ColumnsSalesOrder = [
   addColumn({
     title: 'No',
-    render: (_, __, i) => ++i,
+    render: (_, __, i) => i + 1,
     fixed: true,
   }),
   addColumn({
     title: 'Item',
-    fixed: true,
     render: (_, { product_id, description }) => concatString(product_id, description),
+    fixed: true,
   }),
   addColumn({
     title: 'Item Category',
     dataIndex: 'item_category_id',
+    fixed: true,
   }),
   addColumn({
     title: 'Uom',
     dataIndex: 'uom_id',
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Quantity Order',
+    dataIndex: 'order_qty',
+    align: 'center',
+  }),
+  addColumn({
+    title: 'Quantity Booking',
+    dataIndex: 'confirm_qty',
+    align: 'center',
+  }),
+  addColumn({
+    title: 'Based Price',
+    render: (_, { price }) => currency(price),
+  }),
+  addColumn({
+    title: 'Gross',
+    render: (_, { gross_value }) => currency(gross_value),
+  }),
+  addColumn({
+    title: 'Discount',
+    render: (_, { discount_value }) => currency(discount_value),
+  }),
+  addColumn({
+    title: 'Sub Total',
+    render: (_, { price, order_qty }) => currency(price * order_qty),
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
+]
+
+export const ColumnsPricingCondition = [
+  addColumn({
+    title: 'No',
+    render: (_, __, index) => index + 1,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Item ID',
+    dataIndex: 'product_id',
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Item Category',
+    dataIndex: 'item_category_id',
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Promotion Type',
+    dataIndex: 'doc',
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Name',
+    dataIndex: 'description',
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Uom',
+    dataIndex: 'uom_id',
+    fixed: true,
   }),
   addColumn({
     title: 'Quantity Order',
@@ -37,127 +97,55 @@ export const ColumnsSalesOrder = [
   }),
   addColumn({
     title: 'Based Price',
-    render: (_, { price }) => parseInt(price).toLocaleString(),
+    dataIndex: 'price',
+    render: (price) => currency(price),
   }),
   addColumn({
-    title: 'Sub Total',
-    render: (_, { price, order_qty }) => localeStringFormat(price * order_qty),
+    title: 'Gross',
+    dataIndex: 'gross_value',
+    render: (gross_value) => currency(gross_value),
   }),
   addColumn({
-    title: 'Remarks',
-    dataIndex: 'remarks',
-  }),
-]
-
-export const ColumnsDocumentFlow = [
-  CreateColumns('Process', 'Process'),
-  CreateColumns('Doc. Number', 'Doc. Number'),
-  CreateColumns('Created Date', 'Created Date'),
-  CreateColumns('Created By', 'Created By'),
-  CreateColumns('Modified Date', 'Modified Date'),
-  CreateColumns('Modified By', 'Modified By'),
-  CreateColumns('Status', 'Status'),
-]
-
-export const ColumnsCustomerInfo = [
-  CreateColumns('Salesman', 'id', false, (id, { name }) => [id, name].join(' - ')),
-  CreateColumns('Salesman Group', 'salesman_group_id', false, (id, { salesman_group_name }) =>
-    [id, salesman_group_name].join(' - '),
-  ),
-]
-
-export const ColumnsPricingCondition = [
-  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
-  CreateColumns('Item ID', 'product_id', false, undefined, 85),
-  CreateColumns('Item Category', 'item_category_id', false, undefined, 140),
-  // FIXME Promotion Type
-  CreateColumns('Promotion Type', 'Doc. Number', false, undefined, 150),
-  CreateColumns('Name', 'description', false, undefined, 250),
-  CreateColumns('Uom', 'uom_id', false, undefined, 80),
-  addColumn({
-    title: 'Quantity Order',
-    dataIndex: 'order_qty',
+    title: 'Disc 1',
+    dataIndex: 'discount_base_calc1',
+    render: (gross_value) => currency(gross_value),
   }),
   addColumn({
-    title: 'Quantity Booking',
-    dataIndex: 'confirm_qty',
+    title: 'Net 1',
+    dataIndex: 'net1',
+    render: (gross_value) => currency(gross_value),
   }),
-  // CreateColumns('Quantity', 'order_qty', false, undefined, 100),
-  CreateColumns('Based Price', 'price', false, (price) => parseInt(price).toLocaleString(), 120),
-  CreateColumns(
-    'Gross',
-    'gross_value',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Disc 1
-  CreateColumns(
-    'Disc 1',
-    'discount_base_calc1',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Net 1
-  CreateColumns(
-    'Net 1',
-    'net1',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Disc 2
-  CreateColumns(
-    'Disc 2',
-    'discount_base_calc2',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Net 2
-  CreateColumns(
-    'Net 2',
-    'net2',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Disc 3
-  CreateColumns(
-    'Disc 3',
-    'discount_base_calc3',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Net 3
-  CreateColumns(
-    'Net 3',
-    'net3',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Disc 4
-  CreateColumns(
-    'Disc 4',
-    'discount_base_calc4',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
-  // FIXME Net 4
-  CreateColumns(
-    'Net 4',
-    'net4',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    85,
-  ),
+  addColumn({
+    title: 'Disc 2',
+    dataIndex: 'discount_base_calc2',
+    render: (gross_value) => currency(gross_value),
+  }),
+  addColumn({
+    title: 'Net 2',
+    dataIndex: 'net2',
+    render: (gross_value) => currency(gross_value),
+  }),
+  addColumn({
+    title: 'Disc 3',
+    dataIndex: 'discount_base_calc3',
+    render: (gross_value) => currency(gross_value),
+  }),
+  addColumn({
+    title: 'Net 3',
+    dataIndex: 'net3',
+    render: (gross_value) => currency(gross_value),
+  }),
+  addColumn({
+    title: 'Disc 4',
+    dataIndex: 'discount_base_calc4',
+    render: (gross_value) => currency(gross_value),
+  }),
+  addColumn({
+    title: 'Net 4',
+    dataIndex: 'net4',
+    render: (gross_value) => currency(gross_value),
+  }),
 ]
-
-// (price) => ({ children: price, props: { colspan: 2 } })
 
 export const ColumnsPromotionList: ColumnsType<any> = [
   {
@@ -188,7 +176,7 @@ export const ColumnsPromotionList: ColumnsType<any> = [
           break
       }
       if (obj.product_id) {
-        return ++index
+        return index + 1
       }
       return {
         children: title,
@@ -264,7 +252,7 @@ export const ColumnsPromotionList: ColumnsType<any> = [
     dataIndex: 'product_id',
     render: (_, obj) => {
       if (obj.price) {
-        return (parseInt(obj.price) * parseInt(obj.order_qty)).toLocaleString()
+        return currency(obj.price * obj.order_qty)
       }
       return obj[Object.keys(obj)[0]].toLocaleString()
     },

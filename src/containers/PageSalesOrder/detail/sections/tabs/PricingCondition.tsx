@@ -21,7 +21,11 @@ export default function PricingCondition() {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={ColumnsPricingCondition} dataSource={data.items} />
+        <Table
+          columns={ColumnsPricingCondition}
+          dataSource={data.items}
+          scroll={{ x: 'max-content' }}
+        />
       </div>
       <Spacer size={30} />
       <Row>

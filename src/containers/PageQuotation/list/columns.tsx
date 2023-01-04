@@ -21,10 +21,10 @@ export function useColumnQuotation() {
     addColumn({
       title: 'Quotation',
       dataIndex: 'id',
-      fixed: true,
       render: (_, { id, status_name }) => (
         <ActionTable link={logicRoute(id, status_name)} type="id" label={id} />
       ),
+      fixed: true,
       sorter: true,
     }),
     addColumn({
@@ -61,6 +61,7 @@ export function useColumnQuotation() {
     addColumn({
       title: 'Currency',
       dataIndex: 'currency_id',
+      align: 'center',
     }),
     addColumn({
       title: 'Total Amount',
@@ -69,6 +70,7 @@ export function useColumnQuotation() {
     addColumn({
       title: 'Create From',
       dataIndex: 'created_from',
+      align: 'center',
     }),
     addColumn({
       title: 'Status',

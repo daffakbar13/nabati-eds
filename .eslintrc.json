@@ -8,6 +8,7 @@
     "eol-last": "off",
     "import/prefer-default-export": "off",
     "no-empty-pattern": "off",
+    "camelcase": "off",
     "import/no-named-as-default": 0,
     "linebreak-style": 0,
     "implicit-arrow-linebreak": 0,

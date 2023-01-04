@@ -35,6 +35,15 @@ export const getDetailSalesOrder = async (
   return response.data
 }
 
+export const getPromotionList = async (params: CommonDetailParams): Promise<any> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${url}/${params.id}/promotion-list`,
+  })
+  return response.data
+}
+
 export const createSalesOrder = async (payload: any) => {
   const response = await call({
     method: METHODS.POST,

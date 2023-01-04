@@ -1,8 +1,59 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable no-plusplus */
 /* eslint-disable camelcase */
+import Router from 'next/router'
 import React from 'react'
+import { useQuery } from 'react-query'
+import { getPromotionList } from 'src/api/sales-order'
+import Link from 'src/components/Link'
 import TitleDataList from 'src/components/TitleDataList'
-import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
+
+function PromotionDetail(props: { data: any }) {
+  const { data } = props
+  const columns = ['No', 'PID', 'Product Name', 'UoM', 'Qty', 'Price', 'Discount %', 'Discount %']
+  const total = [...data.products].map((d) => d.discount).reduce((a, b) => a + b)
+
+  return (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>
+          <b>1. DISC IPT DIVISI 1 RETAIL</b>
+          <div style={{ color: 'red' }}>{data.promotion_id}</div>
+        </div>
+        <b>01 Dec 22 to 31 Dec 22</b>
+      </div>
+      <table className="eds_promotion_list">
+        <thead>
+          <tr>
+            {columns.map((c, i) => (
+              <th key={i}>{c}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[...data.products].map((d, i) => (
+            <tr key={i}>
+              <td>{d.no}</td>
+              <td>{d.product_id}</td>
+              <td>{d.product_name}</td>
+              <td>{d.product_uom}</td>
+              <td>{d.product_qty}</td>
+              <td>{d.price}</td>
+              <td></td>
+              <td>{d.discount}</td>
+            </tr>
+          ))}
+          <tr>
+            <td colSpan={7} style={{ textAlign: 'left' }}>
+              Total Discount
+            </td>
+            <td>{total}</td>
+          </tr>
+        </tbody>
+      </table>
+    </>
+  )
+}
 
 function Line(props: { hidden: boolean }) {
   return (
@@ -26,7 +77,6 @@ function Line(props: { hidden: boolean }) {
     </div>
   )
 }
-
 interface DotPromotionLogProps {
   dotted?: boolean
   hideLeft?: boolean
@@ -51,23 +101,61 @@ function DotPromotionLog(props: DotPromotionLogProps) {
   )
 }
 
-export default function PromotionList() {
-  const {
-    state: { data },
-  } = useSalesSalesOrderDetailContext()
-  const { customer_sales } = data
+function TablePromotionLog(props: { data: any[] }) {
+  const { data } = props
+  const columns = [
+    'Promo ID',
+    'Date Time',
+    'Sales Order',
+    'Cust Attribute',
+    'Product Combination',
+    'Budget',
+  ]
+  return (
+    <table className="eds_promotion_log" cellPadding={0}>
+      <thead>
+        <tr>
+          {columns.map((c, i) => (
+            <th key={i} style={{ textAlign: i === 0 ? 'left' : 'center' }}>
+              {c}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((d, i) => (
+          <tr key={i}>
+            <td style={{ textDecoration: 'underline' }}>
+              <Link>
+                <b style={{ cursor: 'pointer' }}>{d.promotion_id}</b>
+              </Link>
+            </td>
+            <td>
+              <DotPromotionLog dotted={d.datetime_check} hideLeft />
+            </td>
+            <td>
+              <DotPromotionLog dotted={d.sales_order_check} />
+            </td>
+            <td>
+              <DotPromotionLog dotted={d.customer_attribute_check} />
+            </td>
+            <td>
+              <DotPromotionLog dotted={d.product_combination_check} />
+            </td>
+            <td>
+              <DotPromotionLog dotted={d.company_id_check} hideRight />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
 
-  const dataLog = []
-  for (let index = 0; index < 10; index++) {
-    dataLog.push({
-      id: '123123123123123123123',
-      date_time: index % 2 === 0,
-      sales_order: index % 2 === 1,
-      cust_attribute: index % 2 === 0,
-      product_combination: index % 2 === 1,
-      budget: index % 2 === 0,
-    })
-  }
+export default function PromotionList() {
+  const { data, isSuccess } = useQuery('Promotion Lists', () =>
+    getPromotionList({ id: Router.query.id as string }).then((res) => res.data),
+  )
 
   return (
     <div
@@ -77,122 +165,14 @@ export default function PromotionList() {
         gap: 20,
       }}
     >
-      <TitleDataList title="Promotion Detail" />
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <b>1. DISC IPT DIVISI 1 RETAIL</b>
-          <div style={{ color: 'red' }}>123123123123123123</div>
-        </div>
-        <b>01 Dec 22 to 31 Dec 22</b>
-      </div>
-      <table className="eds_promotion_list">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>PID</th>
-            <th>Product Name</th>
-            <th>UoM</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Discount %</th>
-            <th>Discount %</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>300141</td>
-            <td>NABATI RCB 50G GT (60PCS)</td>
-            <td>CTN</td>
-            <td>100</td>
-            <td>100</td>
-            <td>100</td>
-            <td>100</td>
-          </tr>
-          <tr>
-            <td colSpan={7} style={{ textAlign: 'left' }}>
-              Total Discount
-            </td>
-            <td>100</td>
-          </tr>
-        </tbody>
-      </table>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <b>2. KSN-PROMO PAKET WAFER RCO 1000 & TB 2000 - RETAIL</b>
-          <div style={{ color: 'red' }}>123123123123123123</div>
-        </div>
-        <b>01 Dec 22 to 31 Dec 22</b>
-      </div>
-      <table className="eds_promotion_list">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>PID</th>
-            <th>Product Name</th>
-            <th>UoM</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Discount %</th>
-            <th>Discount %</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>300141</td>
-            <td>NABATI RCO 50G GT (60PCS)</td>
-            <td>CTN</td>
-            <td>100</td>
-            <td>100</td>
-            <td>100</td>
-            <td>100</td>
-          </tr>
-          <tr>
-            <td colSpan={7} style={{ textAlign: 'left' }}>
-              Total Discount
-            </td>
-            <td>100</td>
-          </tr>
-        </tbody>
-      </table>
-      <b>Promotion Log</b>
-      <table className="eds_promotion_log" cellPadding={0}>
-        <thead>
-          <tr>
-            <th style={{ textAlign: 'left' }}>Promo ID</th>
-            <th>Date Time</th>
-            <th>Sales Order</th>
-            <th>Cust Attribute</th>
-            <th>Product Combination</th>
-            <th>Budget</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dataLog.map((e, i) => (
-            <tr key={i}>
-              <td style={{ textDecoration: 'underline' }}>
-                <b style={{ cursor: 'pointer' }}>{e.id}</b>
-              </td>
-              <td>
-                <DotPromotionLog dotted={e.date_time} hideLeft />
-              </td>
-              <td>
-                <DotPromotionLog dotted={e.sales_order} />
-              </td>
-              <td>
-                <DotPromotionLog dotted={e.cust_attribute} />
-              </td>
-              <td>
-                <DotPromotionLog dotted={e.product_combination} />
-              </td>
-              <td>
-                <DotPromotionLog dotted={e.budget} hideRight />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {isSuccess && (
+        <>
+          <TitleDataList title="Promotion Detail" />
+          <PromotionDetail data={data.promotion_data} />
+          <TitleDataList title="Promotion Log" />
+          <TablePromotionLog data={data.promotion_logs} />
+        </>
+      )}
     </div>
   )
 }
