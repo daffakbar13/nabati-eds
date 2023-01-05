@@ -3,12 +3,13 @@ import moment from 'moment'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { PATH } from 'src/configs/menus'
-
+import DebounceSelect from 'src/components/DebounceSelect'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { getGrReturnByRefDocNo, getSlocListByBranch } from 'src/api/logistic/good-receipt'
 import { createGrReturn } from 'src/api/logistic/good-return'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
 import { columns } from './columns'
+import { fieldPoGRPrincipal } from 'src/configs/fieldFetches'
 
 const { Label, LabelRequired } = Text
 
@@ -19,6 +20,7 @@ export default function CreateGrReturn() {
   const [selectedTableData, setSelectedTableData] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [numberPO, setnumberPO] = useState('')
 
   // Sloc options for table
   const [slocOptions, setSlocOptions] = useState<[]>([])
@@ -165,11 +167,20 @@ export default function CreateGrReturn() {
               style={{ marginTop: -12, marginBottom: 0 }}
               label={<Label>PO Number</Label>}
             >
-              <SelectMasterData
+              {/* <SelectMasterData
                 loading={loading}
                 disabled={disableSomeFields}
                 type="PO_NUMBER"
                 style={{ marginTop: -8 }}
+              /> */}
+              <DebounceSelect
+                type="select"
+                // label="PO Number"
+                required
+                fetchOptions={(search) => fieldPoGRPrincipal(search)}
+                onChange={(val: any) => {
+                  setnumberPO(val.value)
+                }}
               />
             </Form.Item>
             <Form.Item
