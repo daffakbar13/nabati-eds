@@ -70,7 +70,7 @@ export const useTableAddItem = (props: any) => {
         product_id: item.product_id,
         description: item.description,
         description_show: `${item.product_id} - ${item.product_name}`,
-        remarks: item.remarks,
+        remarks: '-',
         batch: item.batch,
         qty: item.qty,
         base_qty: item.base_qty,
@@ -99,10 +99,7 @@ export const useTableAddItem = (props: any) => {
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
-    const SubmitIDX = dataSubmit.findIndex((x) => x.product_id == data[index].product_id)
-    setDataSubmit((old) =>
-      old.map((obj, i) => ({ ...obj, ...(SubmitIDX === i && { [key]: value }) })),
-    )
+    setDataSubmit((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
   }
 
   function isNullProductId(index: number) {
@@ -162,23 +159,6 @@ export const useTableAddItem = (props: any) => {
         {
           title: 'Qty',
           render: (rows, __, index) => (
-            // <InputNumber
-            //   disabled={isNullProductId(index)}
-            //   min={isNullProductId(index) ? '0' : '1'}
-            //   value={rows.received_qty?.toLocaleString()}
-            //   onChange={(newVal) => {
-            //     if (rows.do_qty) {
-            //       if (newVal > rows.do_qty) {
-            //         handleChangeData('received_qty', rows.do_qty, index)
-            //       } else {
-            //         handleChangeData('received_qty', newVal, index)
-            //       }
-            //     } else {
-            //       handleChangeData('received_qty', newVal, index)
-            //     }
-            //   }}
-            //   style={styleInputNumber}
-            // />
             <DebounceSelect type="input" value={rows.received_qty?.toLocaleString()} disabled />
           ),
           key: 'received_qty',
@@ -237,7 +217,8 @@ export const useTableAddItem = (props: any) => {
           type="input"
           value={row.remarks}
           onChange={(e: any) => {
-            handleChangeData('remarks', e.target.value, index)
+            console.log('remarks', e.target.value as string)
+            handleChangeData('remarks', e.target.value as string, index)
           }}
         />
       ),

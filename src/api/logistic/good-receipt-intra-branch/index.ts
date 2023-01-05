@@ -9,8 +9,7 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { GoodRecepitList, GoodRecepitListDetail } from './type'
 
-const url = 'v1/material-doc/receipt'
-const urlGoodReceipt = 'v1/material-doc/goodReceipt'
+const url = 'v1/material-doc'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
@@ -19,7 +18,7 @@ export const getGoodReceiptList = async (
 ): Promise<CommonListResponse<GoodRecepitList>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/list`,
+    subUrl: `${url}/receipt/list`,
     overrideBaseUrl,
     data: params,
   })
@@ -31,7 +30,7 @@ export const getGoodReceiptDetail = async (
 ): Promise<CommonListResponse<GoodRecepitListDetail>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${urlGoodReceipt}/${params.id}/detail`,
+    subUrl: `${url}/goodReceipt/${params.id}/detail`,
     overrideBaseUrl,
   })
   return response.data
@@ -40,7 +39,17 @@ export const getGoodReceiptDetail = async (
 export const updateReceipt = async (id: any, params: any) => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${urlGoodReceipt}/${id}/update`,
+    subUrl: `${url}/goodReceipt/${id}/update`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const confitmGoodReceipt = async (id: string, params: {}) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/good_receipt/${id}/confirm`,
     overrideBaseUrl,
     data: params,
   })
