@@ -35,6 +35,7 @@ export default function useTable(props: useTableProps) {
     selected: [],
     total: 0,
     totalPage: 0,
+    isRequestPrevious: true,
   }
   const [state, dispatch] = React.useReducer(baseReducer, initialValue)
   const handler = baseHandler(state, dispatch)

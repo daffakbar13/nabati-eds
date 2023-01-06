@@ -259,6 +259,10 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
         })
         localStorage.setItem('REQ_PREV_TABLE', 'false')
       } else {
+        dispatch({
+          type: 'isRequestPrevious',
+          payload: false,
+        })
         localStorage.setItem('TABLE_LOG', JSON.stringify(state.body))
       }
     }
