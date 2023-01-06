@@ -9,6 +9,17 @@ import TaggedStatus from 'src/components/TaggedStatus'
 import { useTableAddItem } from './columnsDelivery'
 import DebounceSelect from 'src/components/DebounceSelect'
 import dateFormat from 'src/utils/dateFormat'
+import { confitmGoodReceipt } from 'src/api/logistic/good-receipt-intra-branch'
+
+interface ItemsState {
+  remarks: string
+}
+
+interface dataForm {
+  posting_date: string
+  header_text: string
+  items: Array<ItemsState>
+}
 
 export default function Detail(props: any) {
   const router = useRouter()
@@ -16,8 +27,34 @@ export default function Detail(props: any) {
   const tableAddItems = useTableAddItem({ items: data?.items } || { items: [] })
   const [ItemCheckedError, setItemCheckedError] = useState(false)
   const [modalConfirm, setModalConfirm] = useState(false)
+  const [dataForm, setDataForm] = React.useState<dataForm>()
+  const now = new Date().toISOString()
 
-  const onClickSubmit = async () => {}
+  const initialValue = {
+    posting_date: moment(now).format('YYYY-MM-DD'),
+    header_text: '',
+    items: tableAddItems.dataSubmit.map((item: any, index) => {
+      return {
+        remarks: item.remarks,
+      }
+    }),
+  }
+
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
+  const onClickSubmit = async () => {
+    if (tableAddItems.dataSubmit.length > 0) {
+      setItemCheckedError(false)
+      setModalConfirm(true)
+    } else {
+      setItemCheckedError(true)
+    }
+  }
+  const onSubmitFunction = async () => {
+    return await confitmGoodReceipt(data.id, { ...initialValue, ...dataForm })
+  }
 
   return (
     <Col>
@@ -45,7 +82,7 @@ export default function Detail(props: any) {
               size="big"
               variant="primary"
               onClick={() => {
-                setModalConfirm(true)
+                onClickSubmit()
               }}
             >
               Confirm
@@ -70,10 +107,13 @@ export default function Detail(props: any) {
           <DebounceSelect type="input" label="Delivery Number" value={data.gi_number} disabled />
           <DatePickerInput
             fullWidth
-            label="Planned GI Date"
+            label="Posting Date"
             defaultValue={moment()}
             format={'DD/MM/YYYY'}
             required
+            onChange={(val: any) => {
+              onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
+            }}
           />
           <DebounceSelect
             type="input"
@@ -81,7 +121,13 @@ export default function Detail(props: any) {
             value={`${data.suppl_branch_id} - ${data.suppl_branch_name}` as any}
             disabled
           />
-          <DebounceSelect type="input" label="Header Text" />
+          <DebounceSelect
+            type="input"
+            label="Header Text"
+            onChange={(e: any) => {
+              onChangeForm('header_text', e.target.value)
+            }}
+          />
           <DebounceSelect
             type="input"
             label="Receiving Branch"
@@ -113,7 +159,7 @@ export default function Detail(props: any) {
       <Modal
         title={'Confirm Submit'}
         open={modalConfirm}
-        onOk={onClickSubmit}
+        onOk={onSubmitFunction}
         onCancel={() => {
           setModalConfirm(false)
         }}
@@ -125,10 +171,7 @@ export default function Detail(props: any) {
         successContent={(res: any) => (
           <>
             GR Number
-            <Typography.Text copyable={{ text: res?.data?.id as string }}>
-              {' '}
-              {res?.data?.id}
-            </Typography.Text>
+            <Typography.Text copyable={{ text: data?.id as string }}> {data?.id}</Typography.Text>
             has been successfully Updated
           </>
         )}

@@ -123,12 +123,6 @@ export const menuLogistic = [
         content: () => 'Goods Receipt',
         onClick: () => Router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch`),
       },
-      {
-        key: 'sync-gr-from-sap',
-        title: 'Sync GR From SAP',
-        content: () => 'Sync GR From SAP',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/sync-gr-from-sap`),
-      },
     ],
   },
   {
