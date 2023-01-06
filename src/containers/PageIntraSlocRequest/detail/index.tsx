@@ -11,6 +11,7 @@ import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { Loader } from 'src/components'
 import { column } from './columns'
 
 export default function PageIntraSlocRequestDetail() {
@@ -20,6 +21,7 @@ export default function PageIntraSlocRequestDetail() {
   const createDataList = (label: string, value: string) => ({ label, value })
   const [approve, setApprove] = React.useState(false)
   const [reject, setReject] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
 
   const changedStatus = (status: string) => {
     // ChangeStatus({ id: data.id, status_id: status })
@@ -59,150 +61,167 @@ export default function PageIntraSlocRequestDetail() {
     ),
   ]
 
+  React.useEffect(() => {
+    if (data.suppl_branch_id) {
+      setLoading(false)
+    } else {
+      setLoading(true)
+    }
+  }, [data])
+
   return (
-    <Col>
-      <div style={{ display: 'flex', gap: 5 }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => {
-            router.push('/logistic/request-intra-sloc')
-          }}
-        >
-          <ArrowLeftOutlined style={{ fontSize: 25 }} />
-        </div>
-        <Text variant={'h4'}>{titlePage}</Text>
-      </div>
-      <Card style={{ overflow: 'unset' }}>
-        {(data.status === 'Canceled' || data.status === 'Done') && (
-          <Text variant={'h5'}>
-            <TaggedStatus status={data.status} size="h5" />
-          </Text>
-        )
-        }
-        <Row justifyContent="space-between" reverse>
-          {data.status === 'Pending' && (
-            <>
-              <Row gap="16px">
-                <Button
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setReject(true)
-                  }}
-                >
-                  Reject
-                </Button>
-                <Button
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    setApprove(true)
-                    changedStatus('01')
-                  }}
-                >
-                  Approve
-                </Button>
-              </Row>
+    <>
+      {loading && <Loader type="process" text="Wait for get data" />}
+      {!loading && (
+        <Col>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                router.push('/logistic/request-intra-sloc')
+              }}
+            >
+              <ArrowLeftOutlined style={{ fontSize: 25 }} />
+            </div>
+            <Text variant={'h4'}>{titlePage}</Text>
+          </div>
+          <Card style={{ overflow: 'unset' }}>
+            {(data.status === 'Canceled' || data.status === 'Done') && (
               <Text variant={'h5'}>
                 <TaggedStatus status={data.status} size="h5" />
               </Text>
-            </>
-          )}
-        </Row>
-      </Card>
-      <Spacer size={20} />
-      <Card style={{ padding: '16px 20px' }}>
-        <Row gutter={8}>
-          <Col span={8}>
-            {dataList.slice(0, 4).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(4, 7).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(7).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-        </Row>
-        <Divider />
-        <div style={{ overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
-        </div>
-      </Card>
+            )}
+            <Row justifyContent="space-between" reverse>
+              {data.status === 'Pending' && (
+                <>
+                  <Row gap="16px">
+                    <Button
+                      size="big"
+                      variant="tertiary"
+                      onClick={() => {
+                        setReject(true)
+                      }}
+                    >
+                      Reject
+                    </Button>
+                    <Button
+                      size="big"
+                      variant="primary"
+                      onClick={() => {
+                        setApprove(true)
+                        changedStatus('01')
+                      }}
+                    >
+                      Approve
+                    </Button>
+                  </Row>
+                  <Text variant={'h5'}>
+                    <TaggedStatus status={data.status} size="h5" />
+                  </Text>
+                </>
+              )}
+            </Row>
+          </Card>
+          <Spacer size={20} />
+          <Card style={{ padding: '16px 20px' }}>
+            <Row gutter={8}>
+              <Col span={8}>
+                {dataList.slice(0, 4).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(4, 7).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(7).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+            </Row>
+            <Divider />
+            <div style={{ overflow: 'scroll' }}>
+              <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
+            </div>
+          </Card>
 
-      {(reject || approve) && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text variant="headingSmall" textAlign="center">
-              {reject ? 'Confirm Cancellation' : 'Success'}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {reject ? (
-              `Are you sure want to Reject Request Intra Channel <strong>${data.id}</strong>?`
-            ) : (
-              <>
-                Request Number
-                <Typography.Text copyable={{ text: data.id as string }}> {data.id}</Typography.Text>
-                has been
-              </>
-            )}
-          </div>
-          {approve && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully approved</div>
+          {(reject || approve) && (
+            <Popup>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Text variant="headingSmall" textAlign="center">
+                  {reject ? 'Confirm Cancellation' : 'Success'}
+                </Text>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                {reject ? (
+                  `Are you sure want to Reject Request Intra Channel <strong>${data.id}</strong>?`
+                ) : (
+                  <>
+                    Request Number
+                    <Typography.Text copyable={{ text: data.id as string }}>
+                      {' '}
+                      {data.id}
+                    </Typography.Text>
+                    has been
+                  </>
+                )}
+              </div>
+              {approve && (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  successfully approved
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+                {reject && (
+                  <>
+                    <Button
+                      style={{ flexGrow: 1 }}
+                      size="big"
+                      variant="tertiary"
+                      onClick={() => {
+                        setReject(false)
+                      }}
+                    >
+                      No
+                    </Button>
+                    <Button
+                      style={{ flexGrow: 1 }}
+                      size="big"
+                      variant="primary"
+                      onClick={() => {
+                        changedStatus('02')
+                      }}
+                    >
+                      Yes
+                    </Button>
+                  </>
+                )}
+                {approve && (
+                  <>
+                    <Button
+                      style={{ flexGrow: 1 }}
+                      size="big"
+                      variant="primary"
+                      onClick={() => {
+                        router.push(`${PATH.LOGISTIC}/request-intra-channel`)
+                      }}
+                    >
+                      Ok
+                    </Button>
+                  </>
+                )}
+              </div>
+            </Popup>
           )}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {reject && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setReject(false)
-                  }}
-                >
-                  No
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    changedStatus('02')
-                  }}
-                >
-                  Yes
-                </Button>
-              </>
-            )}
-            {approve && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.LOGISTIC}/request-intra-channel`)
-                  }}
-                >
-                  Ok
-                </Button>
-              </>
-            )}
-          </div>
-        </Popup>
+        </Col>
       )}
-    </Col>
+    </>
   )
 }

@@ -10,6 +10,7 @@ import { getDetailGRIntraSloc } from 'src/api/logistic/gr-intra-sloc'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { Loader } from 'src/components'
 import { column } from './columns'
 
 export default function PageIntraSlocGoodIssueDetail() {
@@ -17,6 +18,7 @@ export default function PageIntraSlocGoodIssueDetail() {
   const router = useRouter()
   const data: any = useDetail(getDetailGRIntraSloc, { id: router.query.id as string }, false)
   const createDataList = (label: string, value: string) => ({ label, value })
+  const [loading, setLoading] = React.useState(true)
 
   const dataList = [
     // row 1
@@ -51,53 +53,66 @@ export default function PageIntraSlocGoodIssueDetail() {
     ),
   ]
 
+  React.useEffect(() => {
+    if (data.delivery_number) {
+      setLoading(false)
+    } else {
+      setLoading(true)
+    }
+  }, [data])
+
   return (
-    <Col>
-      <div style={{ display: 'flex', gap: 5 }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => {
-            router.push('/logistic/goods-receipt-intra-sloc')
-          }}
-        >
-          <ArrowLeftOutlined style={{ fontSize: 25 }} />
-        </div>
-        <Text variant={'h4'}>{titlePage}</Text>
-      </div>
-      <Card style={{ overflow: 'unset' }}>
-        <Text variant={'h5'}>
-          <TaggedStatus status={data.status} size="h5" />
-        </Text>
-      </Card>
-      <Spacer size={20} />
-      <Card style={{ padding: '16px 20px' }}>
-        <Row gutter={8}>
-          <Col span={8}>
-            {dataList.slice(0, 4).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(4, 9).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(9).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-        </Row>
-        <Divider />
-        <div style={{ overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
-        </div>
-      </Card>
-    </Col>
+    <>
+      {loading && <Loader type="process" text="Wait for get data" />}
+      {!loading && (
+        <Col>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                router.push('/logistic/goods-receipt-intra-sloc')
+              }}
+            >
+              <ArrowLeftOutlined style={{ fontSize: 25 }} />
+            </div>
+            <Text variant={'h4'}>{titlePage}</Text>
+          </div>
+          <Card style={{ overflow: 'unset' }}>
+            <Text variant={'h5'}>
+              <TaggedStatus status={data.status} size="h5" />
+            </Text>
+          </Card>
+          <Spacer size={20} />
+          <Card style={{ padding: '16px 20px' }}>
+            <Row gutter={8}>
+              <Col span={8}>
+                {dataList.slice(0, 4).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(4, 9).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(9).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+            </Row>
+            <Divider />
+            <div style={{ overflow: 'scroll' }}>
+              <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
+            </div>
+          </Card>
+        </Col>
+      )}
+    </>
   )
 }

@@ -11,9 +11,11 @@ import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { columns } from './column'
+import { Loader } from 'src/components'
 
 export default function PagePoSToDetail() {
   const router = useRouter()
+  const [loading, setLoading] = React.useState(true)
   const data: any = useDetail(getPoStoDetail, { id: router.query.id as string }, false)
   const createDataList = (label: string, value: string) => ({ label, value })
 
@@ -52,55 +54,68 @@ export default function PagePoSToDetail() {
     ),
   ]
 
+  React.useEffect(() => {
+    if (data.receive_plant_id) {
+      setLoading(false)
+    } else {
+      setLoading(true)
+    }
+  }, [data])
+
   return (
-    <Col>
-      <div style={{ display: 'flex', gap: 5 }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => {
-            requestPreviousTable()
-            router.push('/logistic/po-sto')
-          }}
-        >
-          <ArrowLeftOutlined style={{ fontSize: 25 }} />
-        </div>
-        <Text variant={'h4'}>View PO STO - {router.query.id}</Text>
-      </div>
-      <Spacer size={20} />
-      <Card style={{ overflow: 'unset' }}>
-        <Text variant={'h5'}>
-          <TaggedStatus status={data.status} size="h5" />
-        </Text>
-      </Card>
-      <Spacer size={10} />
-      <Card style={{ padding: '16px 20px' }}>
-        <Row gutter={8}>
-          <Col span={8}>
-            {dataList.slice(0, 2).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(2, 5).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(5).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-        </Row>
-        <Divider />
-        <div style={{ overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} columns={columns} data={data.items} />
-        </div>
-      </Card>
-    </Col>
+    <>
+      {loading && <Loader type="process" text="Wait for get data" />}
+      {!loading && (
+        <Col>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                requestPreviousTable()
+                router.push('/logistic/po-sto')
+              }}
+            >
+              <ArrowLeftOutlined style={{ fontSize: 25 }} />
+            </div>
+            <Text variant={'h4'}>View PO STO - {router.query.id}</Text>
+          </div>
+          <Spacer size={20} />
+          <Card style={{ overflow: 'unset' }}>
+            <Text variant={'h5'}>
+              <TaggedStatus status={data.status} size="h5" />
+            </Text>
+          </Card>
+          <Spacer size={10} />
+          <Card style={{ padding: '16px 20px' }}>
+            <Row gutter={8}>
+              <Col span={8}>
+                {dataList.slice(0, 2).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(2, 5).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(5).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+            </Row>
+            <Divider />
+            <div style={{ overflow: 'scroll' }}>
+              <Table scroll={{ x: 'max-content', y: 600 }} columns={columns} data={data.items} />
+            </div>
+          </Card>
+        </Col>
+      )}
+    </>
   )
 }

@@ -4,17 +4,31 @@ import useDetail from 'src/hooks/useDetail'
 import { getGoodReceiptDetail } from 'src/api/logistic/good-receipt-intra-branch'
 import ContainerDetail from './detail'
 import ContainerDetailDelivery from './detailDelivery'
+import { Loader } from 'src/components'
 
 export default function PageIntraChannelGoodIssueDetail() {
   const router = useRouter()
   const data: any = useDetail(getGoodReceiptDetail, { id: router.query.id as string }, false)
+  const [loading, setLoading] = React.useState(true)
 
+  React.useEffect(() => {
+    if (data.status) {
+      setLoading(false)
+    } else {
+      setLoading(true)
+    }
+  }, [data])
   return (
     <>
-      {data.status == 'Delivery' ? (
-        <ContainerDetailDelivery data={data} />
-      ) : (
-        <ContainerDetail data={data} />
+      {loading && <Loader type="process" text="Wait for get data" />}
+      {!loading && (
+        <>
+          {data.status == 'Delivery' ? (
+            <ContainerDetailDelivery data={data} />
+          ) : (
+            <ContainerDetail data={data} />
+          )}
+        </>
       )}
     </>
   )
