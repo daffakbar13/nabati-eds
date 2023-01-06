@@ -75,5 +75,6 @@ export const useColumnsDocumentFlow = [
   addColumn({
     title: 'Status',
     dataIndex: 'status_name',
+    render: (s: string) => (s === 'Draft' ? 'New' : s),
   }),
 ]
