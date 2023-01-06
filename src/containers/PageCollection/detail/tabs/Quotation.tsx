@@ -1,46 +1,31 @@
-import { Col, Row, Divider } from 'antd'
+/* eslint-disable function-paren-newline */
+import { Col, Row } from 'antd'
 import React from 'react'
-import DataList from 'src/components/DataList'
 import Total from 'src/components/Total'
 import useTable from 'src/hooks/useTable'
 import { Spacer, Table } from 'pink-lava-ui'
 import { getCollectionDetail } from 'src/api/collection'
+import { useQuery } from 'react-query'
+import Router from 'next/router'
 import { TableQuotation } from '../columns'
 
-interface QuotationProps {}
+export default function Quotation() {
+  const table = useTable({ columns: TableQuotation, removeHideShowColums: true })
 
-// const DataList.createDataList = (label: string, value: string) => ({ label, value })
+  const collections = useQuery('collection-detail', () =>
+    getCollectionDetail({ id: Router.query.id as string }),
+  )
 
-export default function Quotation(props: QuotationProps) {
-  const table = useTable({
-    funcApi: getCollectionDetail,
-    haveCheckBox: { rowKey: 'status', member: ['new'] },
-    columns: TableQuotation,
-  })
-  const {} = props
-  // const table = useTable({ api: '', columns: TableQuotation })
-  const dataList = [
-    DataList.createDataList('Quotation', 'ZOP1'),
-    DataList.createDataList('Customer', 'ZOP1'),
-    DataList.createDataList('Sales Org.', 'ZOP1'),
-    DataList.createDataList('Plant', 'ZOP1'),
-    DataList.createDataList('Salesman', 'ZOP1'),
-    DataList.createDataList('Doc. Date', 'ZOP1'),
-    DataList.createDataList('Valid From', 'ZOP1'),
-    DataList.createDataList('Valid To', 'ZOP1'),
-    DataList.createDataList('Delivery Date', 'ZOP1'),
-    DataList.createDataList('Reference', 'ZOP1'),
-    DataList.createDataList('Created On', 'ZOP1'),
-    DataList.createDataList('Created By', 'ZOP1'),
-    DataList.createDataList('Modified On', 'ZOP1'),
-    DataList.createDataList('Modified By', 'ZOP1'),
-    DataList.createDataList('Created From', 'ZOP1'),
-  ]
+  React.useEffect(() => {
+    if (collections.isSuccess) {
+      table.handler.updateData([collections.data.data])
+    }
+  }, [collections.isSuccess])
 
   return (
     <>
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={TableQuotation} dataSource={[]} />
+        <Table {...table.state.tableProps} dataSource={[{}]} />
       </div>
       <Spacer size={30} />
       <Row>

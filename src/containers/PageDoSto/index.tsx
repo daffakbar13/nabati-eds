@@ -1,29 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
-import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import { getListDoSto } from 'src/api/logistic/do-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { Props } from './types'
-import { columns } from './columns'
 import { colors } from 'src/configs/colors'
+import { columns } from './columns'
 
-export default function PageDoSto(props: Props) {
+export default function PageDoSto() {
   const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getListDoSto,
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
-  const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0
   const router = useRouter()
@@ -61,17 +57,16 @@ export default function PageDoSto(props: Props) {
               placeholder="Search by DO Number"
               colorIcon={colors.grey.regular}
               onChange={(e) => {
-                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
+                const idIndex = filters.findIndex((obj) => obj?.field === 'id')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
-                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
+                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field !== 'id'))
                   } else {
                     const updateId = filters.map((data, i) => {
                       if (i === idIndex) {
                         return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
                       }
+                      return { ...data }
                     })
                     setFilters(updateId)
                   }

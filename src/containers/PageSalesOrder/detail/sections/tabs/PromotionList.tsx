@@ -1,26 +1,31 @@
 /* eslint-disable function-paren-newline */
 /* eslint-disable no-plusplus */
-/* eslint-disable camelcase */
 import Router from 'next/router'
 import React from 'react'
 import { useQuery } from 'react-query'
 import { getPromotionList } from 'src/api/sales-order'
 import Link from 'src/components/Link'
 import TitleDataList from 'src/components/TitleDataList'
+import currency from 'src/utils/currencyFormat'
+import dateFormat from 'src/utils/dateFormat'
 
 function PromotionDetail(props: { data: any }) {
   const { data } = props
   const columns = ['No', 'PID', 'Product Name', 'UoM', 'Qty', 'Price', 'Discount %', 'Discount %']
   const total = [...data.products].map((d) => d.discount).reduce((a, b) => a + b)
 
+  const now = dateFormat(new Date().toISOString())
+
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
-          <b>1. DISC IPT DIVISI 1 RETAIL</b>
+          <b>1. Belanja 100K Discount 20K</b>
           <div style={{ color: 'red' }}>{data.promotion_id}</div>
         </div>
-        <b>01 Dec 22 to 31 Dec 22</b>
+        <b>
+          {now} to {now}
+        </b>
       </div>
       <table className="eds_promotion_list">
         <thead>
@@ -38,7 +43,7 @@ function PromotionDetail(props: { data: any }) {
               <td>{d.product_name}</td>
               <td>{d.product_uom}</td>
               <td>{d.product_qty}</td>
-              <td>{d.price}</td>
+              <td>{currency(d.price)}</td>
               <td></td>
               <td>{d.discount}</td>
             </tr>

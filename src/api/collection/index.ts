@@ -23,7 +23,7 @@ export const getCollectionDetail = async (
 ): Promise<CommonListResponse<Collection>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${subUrl}/${params.id}/detail`,
+    subUrl: `${subUrl}/${params.id}`,
   })
   return response.data
 }
