@@ -80,7 +80,7 @@ export const column = [
       `${record.receiving_sloc_id || ''} - ${record.receiving_sloc_name || ''}`,
   ),
   CreateColumns('Status', 'status_name', false, (status_name) => (
-    <TaggedStatus status={status_name} />
+    <TaggedStatus status={status_name === 'Wait For Approval' ? 'Pending' : status_name} />
   )),
   CreateColumns('Action', 'document_number', false, (link) => <Linked link={link} type="action" />),
 ]

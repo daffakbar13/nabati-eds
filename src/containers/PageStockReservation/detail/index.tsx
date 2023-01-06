@@ -11,6 +11,7 @@ import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { Loader } from 'src/components'
 import { column } from './columns'
 
 export default function PageStockReservationDetail() {
@@ -24,6 +25,7 @@ export default function PageStockReservationDetail() {
   const createDataList = (label: string, value: string) => ({ label, value })
   const [approve] = React.useState(false)
   const [reject, setReject] = React.useState(false)
+  const [loading, setLoading] = React.useState(true)
 
   const dataList = [
     // row 1
@@ -58,128 +60,146 @@ export default function PageStockReservationDetail() {
     ),
   ]
 
+  React.useEffect(() => {
+    if (data.movement_type_id) {
+      setLoading(false)
+    } else {
+      setLoading(true)
+    }
+  }, [data])
+
   return (
-    <Col>
-      <div style={{ display: 'flex', gap: 5 }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => {
-            router.push('/logistic/stock-reservation')
-          }}
-        >
-          <ArrowLeftOutlined style={{ fontSize: 25 }} />
-        </div>
-        <Text variant={'h4'}>{titlePage}</Text>
-      </div>
-      <Card style={{ overflow: 'unset' }}>
-        {data.status_name !== 'Pending' ? (
-          <Text variant={'h5'}>
-            <TaggedStatus status={data.status_name} size="h5" />
-          </Text>
-        ) : (
-          ''
-        )}
-        <Row justifyContent="space-between" reverse>
-          {data.status_name === 'Pending' && (
-            <>
-              <Row gap="16px">
-                <Button size="big" variant="tertiary">
-                  Cancel Process
-                </Button>
-              </Row>
+    <>
+      {loading && <Loader type="process" text="Wait for get data" />}
+      {!loading && (
+        <Col>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}
+              onClick={() => {
+                router.push('/logistic/stock-reservation')
+              }}
+            >
+              <ArrowLeftOutlined style={{ fontSize: 25 }} />
+            </div>
+            <Text variant={'h4'}>{titlePage}</Text>
+          </div>
+          <Card style={{ overflow: 'unset' }}>
+            {data.status_name !== 'Pending' ? (
               <Text variant={'h5'}>
                 <TaggedStatus status={data.status_name} size="h5" />
               </Text>
-            </>
-          )}
-        </Row>
-      </Card>
-      <Spacer size={20} />
-      <Card style={{ padding: '16px 20px' }}>
-        <Row gutter={8}>
-          <Col span={8}>
-            {dataList.slice(0, 4).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(4, 6).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-          <Col span={8}>
-            {dataList.slice(6).map(({ label, value }, i) => (
-              <DataList key={i} label={label} value={value} />
-            ))}
-          </Col>
-        </Row>
-        <Divider />
-        <div style={{ overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.item} />
-        </div>
-      </Card>
-
-      {(reject || approve) && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text variant="headingSmall" textAlign="center">
-              {reject ? 'Confirm Cancellation' : 'Success'}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {reject ? (
-              `Are you sure want to Reject Request Intra Channel <strong>${data.id}</strong>?`
             ) : (
-              <>
-                Request Number
-                <Typography.Text copyable={{ text: data.id as string }}> {data.id}</Typography.Text>
-                has been
-              </>
+              ''
             )}
-          </div>
-          {approve && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully approved</div>
+            <Row justifyContent="space-between" reverse>
+              {data.status_name === 'Pending' && (
+                <>
+                  <Row gap="16px">
+                    <Button size="big" variant="tertiary">
+                      Cancel Process
+                    </Button>
+                  </Row>
+                  <Text variant={'h5'}>
+                    <TaggedStatus status={data.status_name} size="h5" />
+                  </Text>
+                </>
+              )}
+            </Row>
+          </Card>
+          <Spacer size={20} />
+          <Card style={{ padding: '16px 20px' }}>
+            <Row gutter={8}>
+              <Col span={8}>
+                {dataList.slice(0, 4).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(4, 6).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={8}>
+                {dataList.slice(6).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+            </Row>
+            <Divider />
+            <div style={{ overflow: 'scroll' }}>
+              <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.item} />
+            </div>
+          </Card>
+
+          {(reject || approve) && (
+            <Popup>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Text variant="headingSmall" textAlign="center">
+                  {reject ? 'Confirm Cancellation' : 'Success'}
+                </Text>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
+                {reject ? (
+                  `Are you sure want to Reject Request Intra Channel <strong>${data.id}</strong>?`
+                ) : (
+                  <>
+                    Request Number
+                    <Typography.Text copyable={{ text: data.id as string }}>
+                      {' '}
+                      {data.id}
+                    </Typography.Text>
+                    has been
+                  </>
+                )}
+              </div>
+              {approve && (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  successfully approved
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
+                {reject && (
+                  <>
+                    <Button
+                      style={{ flexGrow: 1 }}
+                      size="big"
+                      variant="tertiary"
+                      onClick={() => {
+                        setReject(false)
+                      }}
+                    >
+                      No
+                    </Button>
+                    <Button style={{ flexGrow: 1 }} size="big" variant="primary">
+                      Yes
+                    </Button>
+                  </>
+                )}
+                {approve && (
+                  <>
+                    <Button
+                      style={{ flexGrow: 1 }}
+                      size="big"
+                      variant="primary"
+                      onClick={() => {
+                        router.push(`${PATH.LOGISTIC}/stock-reservation`)
+                      }}
+                    >
+                      Ok
+                    </Button>
+                  </>
+                )}
+              </div>
+            </Popup>
           )}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {reject && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setReject(false)
-                  }}
-                >
-                  No
-                </Button>
-                <Button style={{ flexGrow: 1 }} size="big" variant="primary">
-                  Yes
-                </Button>
-              </>
-            )}
-            {approve && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.LOGISTIC}/stock-reservation`)
-                  }}
-                >
-                  Ok
-                </Button>
-              </>
-            )}
-          </div>
-        </Popup>
+        </Col>
       )}
-    </Col>
+    </>
   )
 }
