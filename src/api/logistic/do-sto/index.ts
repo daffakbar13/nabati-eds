@@ -131,3 +131,16 @@ export const AutoCreateGR = async (
   })
   return response.data
 }
+
+export const CancelProcessDOSTO = async (
+  delivery_number: string,
+  params: {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/cancel_process/${delivery_number}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

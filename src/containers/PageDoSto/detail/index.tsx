@@ -15,6 +15,7 @@ import {
   updateStatusPoSto,
   updatePGIinventoryBooking,
   AutoCreateGR,
+  CancelProcessDOSTO,
 } from 'src/api/logistic/do-sto'
 import AllTabs from './tabs'
 import DOSTO from './tabs/DOSTO'
@@ -34,6 +35,31 @@ export default function PageDoStoDetail() {
 
   const handleUpdateStatus = async () => {
     if (cancelProses) {
+      try {
+        return await CancelProcessDOSTO(router.query.id as string, {
+          company_id: data.company_id,
+          document_date: moment(data.document_date).format('YYYY-MM-DD'),
+          posting_date: moment(data.posting_date).format('YYYY-MM-DD'),
+          planned_gi_date: moment(data.planned_gi_date).format('YYYY-MM-DD'),
+          supply_branch_id: data.supply_branch_id,
+          receive_branch_id: data.receive_branch_id,
+          purchase_id: data.purchase_id,
+          items: data.items?.map((item: any, index) => {
+            return {
+              id: `${index + 1}`,
+              product_id: item.product_id,
+              description: item.description,
+              received_qty: item.received_qty,
+              received_uom_id: item.received_uom_id,
+              sloc_id: item.sloc_id,
+              remarks: item.remarks,
+              batch: item.batch,
+            }
+          }),
+        })
+      } catch (error) {
+        console.error(error)
+      }
     } else {
       try {
         await AutoCreateGR(data.id as string, data.purchase_id as string, {
@@ -213,10 +239,17 @@ export default function PageDoStoDetail() {
             }}
             content={
               cancelProses ? (
-                `Are you sure want to Cancel Process This DO STO ?`
+                <>
+                  Are you sure want to Cancel Process
+                  <Typography.Text copyable={{ text: router.query.id as string }}>
+                    {' '}
+                    {router.query.id}
+                  </Typography.Text>{' '}
+                  DO STO ?
+                </>
               ) : (
                 <>
-                  Are you sure want to PGI{' '}
+                  Are you sure want to PGI
                   <Typography.Text copyable={{ text: router.query.id as string }}>
                     {' '}
                     {router.query.id}
