@@ -9,14 +9,17 @@ import TitleDataList from 'src/components/TitleDataList'
 import currency from 'src/utils/currencyFormat'
 import dateFormat from 'src/utils/dateFormat'
 
-function PromotionDetail(props: { data: any[] }) {
+function PromotionDetail(props: { data: any[] | null }) {
   const { data } = props
   const columns = ['No', 'PID', 'Product Name', 'UoM', 'Qty', 'Price', 'Discount %', 'Discount %']
+
+  if (data === null) {
+    return <></>
+  }
 
   return (
     <>
       {data.map((d, i) => {
-        const total = [...d.products].map((p) => p.discount).reduce((a, b) => a + b)
         const from_date = dateFormat(d.promotion_valid_from)
         const to_date = dateFormat(d.promotion_valid_to)
 
