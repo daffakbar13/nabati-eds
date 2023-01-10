@@ -31,10 +31,17 @@ export default function Detail(props: any) {
   const now = new Date().toISOString()
 
   const initialValue = {
+    company_id: data.company_id,
     posting_date: moment(now).format('YYYY-MM-DD'),
     header_text: '',
+    branch_id: data.receive_plant_id,
     items: tableAddItems.dataSubmit.map((item: any, index) => {
       return {
+        product_id: item.product_id,
+        base_qty: parseInt(item.base_qty),
+        base_uom_id: item.base_uom_id,
+        sloc_id: item.sloc_id,
+        batch: item.batch,
         remarks: item.remarks,
       }
     }),

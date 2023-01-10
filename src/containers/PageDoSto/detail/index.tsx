@@ -105,7 +105,7 @@ export default function PageDoStoDetail() {
             >
               <ArrowLeftOutlined style={{ fontSize: 25 }} />
             </div>
-            <Text variant={'h4'}>{titlePage}</Text>
+            <Text variant={'h4'}>View DO STO {router.query.id}</Text>
           </div>
           <Spacer size={20} />
           <Card style={{ overflow: 'unset' }}>
@@ -212,9 +212,18 @@ export default function PageDoStoDetail() {
               setCancelProses(false)
             }}
             content={
-              cancelProses
-                ? `Are you sure want to Cancel Process This DO STO ?`
-                : `Are you sure want to PGI This DO STO ?`
+              cancelProses ? (
+                `Are you sure want to Cancel Process This DO STO ?`
+              ) : (
+                <>
+                  Are you sure want to PGI{' '}
+                  <Typography.Text copyable={{ text: router.query.id as string }}>
+                    {' '}
+                    {router.query.id}
+                  </Typography.Text>{' '}
+                  DO STO ?
+                </>
+              )
             }
             successTitle="Success"
             onOkSuccess={() => {
