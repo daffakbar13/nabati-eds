@@ -45,6 +45,7 @@ export default function CreateBilling() {
   const [allSloc, setAllSloc] = React.useState([])
   const [receivingChannel, setReceivingChannel] = React.useState('')
   const [supplyingChannel, setSupplyingChannel] = React.useState('')
+  const [disabledButton, setDisabledButton] = React.useState(true)
 
   const tableAddItems = useTableAddItem({
     idSupplyingBranch: supplyingBranch.split(' - ')[0] || '',
@@ -90,6 +91,14 @@ export default function CreateBilling() {
     setModalSubmit(true)
   }
 
+  useEffect(() => {
+    if (tableAddItems?.data?.length > 0 && tableAddItems?.data?.[0].product_id != '') {
+      setDisabledButton(false)
+    } else {
+      setDisabledButton(true)
+    }
+  }, [tableAddItems?.data])
+
   return (
     <Col>
       <Text variant={'h4'}>Create New PO STO</Text>
@@ -109,6 +118,7 @@ export default function CreateBilling() {
             <Button
               size="big"
               variant="primary"
+              disabled={disabledButton}
               onClick={() => {
                 onClickSubmit()
               }}
@@ -191,19 +201,6 @@ export default function CreateBilling() {
             </Form.Item>
           </div>
           <Divider style={{ borderColor: '#AAAAAA' }} />
-          {dataForm?.suppl_branch_id ? (
-            <Button
-              size="big"
-              type="button"
-              variant="tertiary"
-              onClick={tableAddItems.handleAddItem}
-            >
-              + Add Item
-            </Button>
-          ) : (
-            ''
-          )}
-          <Spacer size={20} />
           <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
             {receivingChannel != '' &&
             supplyingChannel != '' &&
@@ -225,6 +222,19 @@ export default function CreateBilling() {
               />
             )}
           </div>
+          <Spacer size={20} />
+          {dataForm?.suppl_branch_id ? (
+            <Button
+              size="big"
+              type="button"
+              variant="tertiary"
+              onClick={tableAddItems.handleAddItem}
+            >
+              + Add Item
+            </Button>
+          ) : (
+            ''
+          )}
         </Card>
       </Form>
       <Modal
