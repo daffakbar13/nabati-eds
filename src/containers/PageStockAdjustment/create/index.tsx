@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import moment from 'moment'
-import { Divider, Form } from 'antd'
+import { Divider, Form, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 
@@ -14,6 +14,7 @@ import { useTableAddItem } from './useTableEditable'
 const { Label, LabelRequired } = Text
 
 export default function CreateStockAdjustment() {
+  const now = new Date().toISOString()
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
   const [disableSomeFields, setDisableSomeFields] = useState(false)
@@ -35,8 +36,6 @@ export default function CreateStockAdjustment() {
   }
 
   const handleCreate = async () => {
-    console.log('headerData', headerData)
-    console.log('tableAddItems', tableAddItems)
     const payload: any = {
       branch_id: headerData.branch_id.value,
       stock_doct_type: 'PI',
@@ -45,11 +44,9 @@ export default function CreateStockAdjustment() {
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
       header_text: headerData.header_text,
       sloc_id: headerData.sloc_id.value,
-      status_id: '00', // ?????
+      status_id: '00',
       items: tableAddItems.data.map((i) => i),
     }
-
-    console.log('payload', payload)
     try {
       setLoading(true)
       const res = await createStockAdjustment(payload)
@@ -61,45 +58,6 @@ export default function CreateStockAdjustment() {
       return newLocal
     }
   }
-
-  // const onChangeRefDocNo = async (refDocNo: any) => {
-  //   if (!refDocNo) {
-  //     setDisableSomeFields(false)
-  //     return
-  //   }
-
-  //   try {
-  //     setLoading(true)
-  //     const { data } = await getGoodReceiptByPo(refDocNo)
-
-  //     setTableData(
-  //       (data.items || []).map((i: any, ind: number) => ({
-  //         ...i,
-  //         rowKey: ind + 1,
-  //         qty_gr: i.qty_po,
-  //       })),
-  //     )
-
-  //     form.setFieldsValue({
-  //       branch_id: { value: data.branch_id },
-  //       delivery_note: data.delivery_note,
-  //       document_type: data.document_type,
-  //       receiving_sloc: data.receiving_sloc,
-  //       supplying_sloc: data.supplying_sloc,
-  //       header_text: data.header_text,
-  //       document_date: moment(),
-  //       posting_date: moment(),
-  //     })
-
-  //     setLoading(false)
-  //   } catch (error) {
-  //     setLoading(false)
-  //     console.error(error)
-  //   }
-  //   setDisableSomeFields(true)
-  // }
-
-  console.log('tableAddItems', tableAddItems)
 
   return (
     <Col>
@@ -141,8 +99,8 @@ export default function CreateStockAdjustment() {
                 placeholder="Movement Type"
                 labelInValue
                 options={[
-                  { label: 'GR Phys. Inv', value: 'Z71' },
-                  { label: 'RE GR Phys. Inv', value: 'Z72' },
+                  { label: 'Z71 - GR Phys. Inv', value: 'Z71' },
+                  { label: 'Z72 - RE GR Phys. Inv', value: 'Z72' },
                 ]}
               />
             </Form.Item>
@@ -157,6 +115,7 @@ export default function CreateStockAdjustment() {
                 size="large"
                 label=""
                 fullWidth
+                defaultValue={moment()}
                 format={'DD/MM/YYYY'}
               />
             </Form.Item>
@@ -185,6 +144,7 @@ export default function CreateStockAdjustment() {
                 label=""
                 fullWidth
                 format={'DD/MM/YYYY'}
+                defaultValue={moment()}
               />
             </Form.Item>
             <Form.Item
@@ -244,10 +204,16 @@ export default function CreateStockAdjustment() {
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Stock Adjustment?"
-        successContent={(res: any) =>
-          // eslint-disable-next-line implicit-arrow-linebreak
-          `Stock Adjusment ID: ${res?.data.stock_adjustment_id} has been successfully created`
-        }
+        successContent={(res: any) => (
+          <>
+            Stock Adjusment ID :
+            <Typography.Text copyable={{ text: res?.data.stock_adjustment_id as string }}>
+              {' '}
+              {res?.data.stock_adjustment_id}
+            </Typography.Text>
+            has been successfully created
+          </>
+        )}
         successOkText="OK"
       />
     </Col>
