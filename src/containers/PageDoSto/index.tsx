@@ -36,8 +36,8 @@ export default function PageDoSto() {
 
   const statusOption = [
     { label: 'Approved', value: '01' },
-    { label: 'Rejected', value: '02' },
-    { label: 'Wait For Approval', value: '00' },
+    { label: 'Cancelled ', value: '02' },
+    { label: 'Pending', value: '00' },
   ]
 
   return (
