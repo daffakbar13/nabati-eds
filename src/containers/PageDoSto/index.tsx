@@ -12,14 +12,15 @@ import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { colors } from 'src/configs/colors'
 import { columns } from './columns'
+import { useFilters } from 'src/hooks'
 
 export default function PageDoSto() {
-  const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getListDoSto,
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
+  const { filters, oldfilters, setFilters } = useFilters(table)
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0
   const router = useRouter()
@@ -38,10 +39,6 @@ export default function PageDoSto() {
     { label: 'Rejected', value: '02' },
     { label: 'Wait For Approval', value: '00' },
   ]
-
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
 
   return (
     <Col>
@@ -84,7 +81,7 @@ export default function PageDoSto() {
               }}
               allowClear
             />
-            <SmartFilter onOk={setFilters}>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"
