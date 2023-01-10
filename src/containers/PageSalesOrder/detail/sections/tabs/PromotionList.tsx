@@ -9,13 +9,9 @@ import TitleDataList from 'src/components/TitleDataList'
 import currency from 'src/utils/currencyFormat'
 import dateFormat from 'src/utils/dateFormat'
 
-function PromotionDetail(props: { data: any[] | null }) {
+function PromotionDetail(props: { data: any[] }) {
   const { data } = props
   const columns = ['No', 'PID', 'Product Name', 'UoM', 'Qty', 'Price', 'Discount %', 'Discount %']
-
-  if (data === null) {
-    return <></>
-  }
 
   return (
     <>
@@ -182,8 +178,12 @@ export default function PromotionList() {
     >
       {isSuccess && (
         <>
-          <TitleDataList title="Promotion Detail" />
-          <PromotionDetail data={data.promotion_data} />
+          {data.promotion_data !== null && (
+            <>
+              <TitleDataList title="Promotion Detail" />
+              <PromotionDetail data={data.promotion_data} />
+            </>
+          )}
           <TitleDataList title="Promotion Log" />
           <TablePromotionLog data={data.promotion_logs} />
         </>
