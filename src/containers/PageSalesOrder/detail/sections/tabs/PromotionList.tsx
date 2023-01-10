@@ -9,53 +9,60 @@ import TitleDataList from 'src/components/TitleDataList'
 import currency from 'src/utils/currencyFormat'
 import dateFormat from 'src/utils/dateFormat'
 
-function PromotionDetail(props: { data: any }) {
+function PromotionDetail(props: { data: any[] }) {
   const { data } = props
   const columns = ['No', 'PID', 'Product Name', 'UoM', 'Qty', 'Price', 'Discount %', 'Discount %']
-  const total = [...data.products].map((d) => d.discount).reduce((a, b) => a + b)
-
-  const now = dateFormat(new Date().toISOString())
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>
-          <b>1. Belanja 100K Discount 20K</b>
-          <div style={{ color: 'red' }}>{data.promotion_id}</div>
-        </div>
-        <b>
-          {now} to {now}
-        </b>
-      </div>
-      <table className="eds_promotion_list">
-        <thead>
-          <tr>
-            {columns.map((c, i) => (
-              <th key={i}>{c}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {[...data.products].map((d, i) => (
-            <tr key={i}>
-              <td>{d.no}</td>
-              <td>{d.product_id}</td>
-              <td>{d.product_name}</td>
-              <td>{d.product_uom}</td>
-              <td>{d.product_qty}</td>
-              <td>{currency(d.price)}</td>
-              <td></td>
-              <td>{d.discount}</td>
-            </tr>
-          ))}
-          <tr>
-            <td colSpan={7} style={{ textAlign: 'left' }}>
-              Total Discount
-            </td>
-            <td>{total}</td>
-          </tr>
-        </tbody>
-      </table>
+      {data.map((d, i) => {
+        const total = [...d.products].map((p) => p.discount).reduce((a, b) => a + b)
+        const from_date = dateFormat(d.promotion_valid_from)
+        const to_date = dateFormat(d.promotion_valid_to)
+
+        return (
+          <div key={i}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div>
+                <b>1. {d.promotion_name}</b>
+                <div style={{ color: 'red' }}>{d.promotion_id}</div>
+              </div>
+              <b>
+                {from_date} to {to_date}
+              </b>
+            </div>
+            <table className="eds_promotion_list">
+              <thead>
+                <tr>
+                  {columns.map((c, idx) => (
+                    <th key={idx}>{c}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[...d.products].map((p, idx) => (
+                  <tr key={idx}>
+                    <td>{p.no}</td>
+                    <td>{p.product_id}</td>
+                    <td>{p.product_name}</td>
+                    <td>{p.product_uom}</td>
+                    <td>{p.product_qty}</td>
+                    <td>{currency(p.price)}</td>
+                    <td></td>
+                    <td>{p.discount}</td>
+                  </tr>
+                ))}
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'left' }}>
+                    Total Discount
+                  </td>
+                  <td>{currency(d.total_amount)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )
+      })}
     </>
   )
 }

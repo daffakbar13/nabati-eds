@@ -9,7 +9,12 @@ import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { colors } from 'src/configs/colors'
-import { fieldBranchAll, fieldCompanyList, fieldSalesOrg } from 'src/configs/fieldFetches'
+import {
+  fieldBranchAll,
+  fieldCompanyList,
+  fieldCustomer,
+  fieldSalesOrg,
+} from 'src/configs/fieldFetches'
 import { useSalesQuotationListContext } from '../states'
 
 export default function SectionAction() {
@@ -28,9 +33,10 @@ export default function SectionAction() {
   const router = useRouter()
   const componentRef = React.useRef()
   const statusOption = [
-    { label: 'Approved', value: '01' },
-    { label: 'Rejected', value: '02' },
-    { label: 'Wait For Approval', value: '00' },
+    { label: 'New', value: '1' },
+    { label: 'Draft', value: '6' },
+    { label: 'Open', value: '7' },
+    { label: 'Cancel', value: '5' },
   ]
 
   React.useEffect(() => {
@@ -113,35 +119,50 @@ export default function SectionAction() {
         <Col>
           <SmartFilter onOk={setSmartFilters}>
             <SmartFilter.Field
-              field="sales_org"
+              field="sales_org_id"
               dataType="S"
-              label="Company"
+              label="Sales Organization"
               options={['EQ', 'NE', 'BT', 'NB']}
             >
               <DebounceSelect type="select" fetchOptions={fieldSalesOrg} />
             </SmartFilter.Field>
             <SmartFilter.Field
-              field="supply_branch_id"
+              field="branch"
               dataType="S"
-              label="Supplying Branch"
+              label="Branch"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="customer"
+              dataType="S"
+              label="Sold To Customer"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="customer"
+              dataType="S"
+              label="Ship To Customer"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="order_type"
+              dataType="S"
+              label="Order Type"
               options={['EQ', 'NE', 'BT', 'NB']}
             >
               <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
             </SmartFilter.Field>
             <SmartFilter.Field
-              field="receive_branch_id"
+              field="order_date"
               dataType="S"
-              label="Receiving Branch"
-              options={['EQ', 'NE', 'BT', 'NB']}
-            >
-              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-            </SmartFilter.Field>
-            <SmartFilter.Field
-              field="posting_date"
-              dataType="S"
-              label="Posting Date"
+              label="Order Date"
               options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
             >
               <DatePickerInput

@@ -25,7 +25,7 @@ export default function PageDeliveryOrder() {
       </Col>
       <Col span={24}>
         <Card>
-          <SectionAction handleFilter={table.handler.handleFilter} />
+          <SectionAction table={table} />
         </Card>
       </Col>
       <Col span={24}>

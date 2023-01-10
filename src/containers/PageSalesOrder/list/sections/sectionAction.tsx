@@ -1,12 +1,15 @@
 import { DownOutlined } from '@ant-design/icons'
 import { Col, Popover, Row } from 'antd'
 import { useRouter } from 'next/router'
-import { Search, Button } from 'pink-lava-ui'
+import { Search, Button, DatePickerInput } from 'pink-lava-ui'
 import React from 'react'
 import ReactToPrint from 'react-to-print'
 import { downloadTemplateSalesOrder } from 'src/api/sales-order'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
+import { SmartFilter } from 'src/components'
+import DebounceSelect from 'src/components/DebounceSelect'
 import { colors } from 'src/configs/colors'
+import { fieldBranchAll, fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
 import { useSalesSalesOrderListContext } from 'src/hooks/contexts'
 
 export function SectionAction() {
@@ -21,8 +24,14 @@ export function SectionAction() {
     },
   } = useSalesSalesOrderListContext()
   const [filterById, setFilterById] = React.useState<string>()
-  const componentRef = React.useRef()
+  const [smartFilters, setSmartFilters] = React.useState([])
   const router = useRouter()
+  const componentRef = React.useRef()
+  const statusOption = [
+    { label: 'New', value: '1' },
+    { label: 'Draft', value: '10' },
+    { label: 'Cancel', value: '7' },
+  ]
 
   React.useEffect(() => {
     const getFilterId = filters.find(({ field }) => field === 'eds_order.id')
@@ -32,6 +41,10 @@ export function SectionAction() {
       setFilterById(undefined)
     }
   }, [filters])
+
+  React.useEffect(() => {
+    handleFilter(smartFilters)
+  }, [smartFilters])
 
   const moreContent = (
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
@@ -98,21 +111,77 @@ export function SectionAction() {
           />
         </Col>
         <Col>
-          {/* <SmartFilter
-                onOk={(newVal) => {
-                  const newFiltered = newVal
-                    .filter((obj) => obj.fromValue)
-                    .map((obj) => ({
-                      field: `eds_order.${obj.field}`,
-                      option: obj.option,
-                      from_value: obj.fromValue.value,
-                      to_value: obj.toValue?.value,
-                    }))
-                  setFilters(newVal)
-                  table.handleFilter(newFiltered)
-                }}
-                filters={filters}
-              /> */}
+          <SmartFilter onOk={setSmartFilters}>
+            <SmartFilter.Field
+              field="sales_org_id"
+              dataType="S"
+              label="Sales Organization"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldSalesOrg} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="branch"
+              dataType="S"
+              label="Branch"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="customer"
+              dataType="S"
+              label="Sold To Customer"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="customer"
+              dataType="S"
+              label="Ship To Customer"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="order_type"
+              dataType="S"
+              label="Order Type"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="order_date"
+              dataType="S"
+              label="Order Date"
+              options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
+            >
+              <DatePickerInput
+                label={''}
+                fullWidth
+                format={'DD-MMM-YYYY'}
+                placeholder="Posting Date"
+              />
+              <DatePickerInput
+                fullWidth
+                label={''}
+                format={'DD-MMM-YYYY'}
+                placeholder="Posting Date"
+              />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="status_id"
+              dataType="S"
+              label="Status"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+              <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+            </SmartFilter.Field>
+          </SmartFilter>
         </Col>
       </Row>
       <Row gutter={10}>
