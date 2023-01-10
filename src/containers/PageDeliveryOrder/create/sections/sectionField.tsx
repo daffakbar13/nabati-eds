@@ -51,43 +51,6 @@ export default function SectionField(props: SectionFieldProps) {
       <Col span={8}>
         <DebounceSelect
           type="select"
-          label="Sales Organization"
-          placeholder={'Select'}
-          value={dataForm.sales_org_id}
-          options={optionsSalesOrg}
-          onChange={(e: any) => {
-            onChangeForm('sales_org_id', e.value)
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
-          label="Branch"
-          placeholder={'Select'}
-          value={dataForm.branch_id}
-          options={optionsBranch}
-          onChange={(e: any) => {
-            onChangeForm('branch_id', e.value)
-          }}
-        />
-      </Col>
-      <Col span={8}>
-        <DatePickerInput
-          fullWidth
-          onChange={(val: any) => {
-            onChangeForm('document_date', new Date(moment(val).format()).toISOString())
-          }}
-          label="Document Date"
-          disabledDate={(current) => current < moment().startOf('day')}
-          value={moment(dataForm.document_date)}
-          format={'DD-MMM-YYYY'}
-          required
-        />
-      </Col>
-      <Col span={8}>
-        <DebounceSelect
-          type="select"
           label="Sold To Customer"
           required
           value={dataForm.sold_to_customer}
@@ -107,6 +70,43 @@ export default function SectionField(props: SectionFieldProps) {
           options={[{ label: dataForm.sold_to_customer, value: dataForm.sold_to_customer }]}
           onChange={(e: any) => {
             onChangeForm('ship_to_customer', e.value)
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DatePickerInput
+          fullWidth
+          onChange={(val: any) => {
+            onChangeForm('document_date', new Date(moment(val).format()).toISOString())
+          }}
+          label="Document Date"
+          disabledDate={(current) => current < moment().startOf('day')}
+          value={moment(dataForm.document_date)}
+          format={'DD-MMM-YYYY'}
+          required
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          label="Sales Organization"
+          placeholder={'Select'}
+          value={dataForm.sales_org_id}
+          options={optionsSalesOrg}
+          onChange={(e: any) => {
+            onChangeForm('sales_org_id', e.value)
+          }}
+        />
+      </Col>
+      <Col span={8}>
+        <DebounceSelect
+          type="select"
+          label="Branch"
+          placeholder={'Select'}
+          value={dataForm.branch_id}
+          options={optionsBranch}
+          onChange={(e: any) => {
+            onChangeForm('branch_id', e.value)
           }}
         />
       </Col>
