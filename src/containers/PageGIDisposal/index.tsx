@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Pagination, Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
 import { getListBadStock } from 'src/api/logistic/bad-stock'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import { column } from './columns'
+import { colors } from 'src/configs/colors'
 
 export default function PageIntraSlocRequest() {
-  const [filters, setFilters] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')
   const [allSloc, setAllScloc] = React.useState([])
@@ -44,9 +44,7 @@ export default function PageIntraSlocRequest() {
     { label: '555 - Withdrawal for scrapping from blocked stock', value: '555' },
   ]
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   useEffect(() => {
     if (router.query.search) {
@@ -73,8 +71,43 @@ export default function PageIntraSlocRequest() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Reservation Number" />
-            <SmartFilter onOk={setFilters}>
+            <Search
+              autofocus
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search by Reservation Number"
+              colorIcon={colors.grey.regular}
+              value={filterId}
+              onChange={(e) => {
+                setFilterId(e.target.value)
+                const idIndex = filters.findIndex((obj) => obj?.field === 'id')
+                if (idIndex > -1) {
+                  if (e.target.value === '') {
+                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field !== 'id'))
+                  } else {
+                    const updateId = filters.map((data, i) => {
+                      if (i === idIndex) {
+                        return { ...data, from_value: `%${e.target.value}%` }
+                      }
+                      return { ...data }
+                    })
+                    setFilters(updateId)
+                  }
+                } else {
+                  setFilters([
+                    ...filters,
+                    {
+                      field: 'id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                      data_type: 'S',
+                    },
+                  ])
+                }
+              }}
+              allowClear
+            />
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"

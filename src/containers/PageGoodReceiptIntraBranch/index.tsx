@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
 import { getGoodReceiptList } from 'src/api/logistic/good-receipt-intra-branch'
 import Popup from 'src/components/Popup'
@@ -15,16 +15,7 @@ import { Props } from './types'
 import { columns } from './columns'
 import { colors } from 'src/configs/colors'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
 export default function PageGoodsIssue(props: Props) {
-  const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getGoodReceiptList,
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
@@ -49,9 +40,7 @@ export default function PageGoodsIssue(props: Props) {
     { label: 'Pending', value: '00' },
   ]
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   return (
     <Col>
@@ -66,7 +55,9 @@ export default function PageGoodsIssue(props: Props) {
               nameIcon="SearchOutlined"
               placeholder="Search by GR Number"
               colorIcon={colors.grey.regular}
+              value={filterId}
               onChange={(e) => {
+                setFilterId(e.target.value)
                 const idIndex = filters.findIndex((obj) => obj?.field == 'id')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
@@ -95,7 +86,7 @@ export default function PageGoodsIssue(props: Props) {
               }}
               allowClear
             />
-            <SmartFilter onOk={setFilters}>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"

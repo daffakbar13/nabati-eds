@@ -1,18 +1,18 @@
 import { useRouter } from 'next/router'
-import { Button, DatePickerInput, Row, Spacer, Table, Text, Switch } from 'pink-lava-ui'
+import { Button, DatePickerInput, Row, Spacer, Table, Text, Switch, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
 import { ExclamationBrownIc } from 'src/assets'
 
 import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
+import { colors } from 'src/configs/colors'
 
 import FreezeSlocModal from './modals/freezeSloc'
 
 export default function PageStockAdjustment() {
-  const [filters, setFilters] = useState([])
   const [freezeModal, setFreezeModal] = useState(false)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -25,6 +25,8 @@ export default function PageStockAdjustment() {
     funcApi: getListStockAdjustment,
     columns: columns(goToDetailPage),
   })
+
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   const [freezeList, setFreezeList] = useState([])
   useEffect(() => {
@@ -49,8 +51,43 @@ export default function PageStockAdjustment() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
-            <SmartFilter onOk={setFilters}>
+            <Search
+              autofocus
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search by Id"
+              colorIcon={colors.grey.regular}
+              value={filterId}
+              onChange={(e) => {
+                setFilterId(e.target.value)
+                const idIndex = filters.findIndex((obj) => obj?.field === 'id')
+                if (idIndex > -1) {
+                  if (e.target.value === '') {
+                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field !== 'id'))
+                  } else {
+                    const updateId = filters.map((data, i) => {
+                      if (i === idIndex) {
+                        return { ...data, from_value: `%${e.target.value}%` }
+                      }
+                      return { ...data }
+                    })
+                    setFilters(updateId)
+                  }
+                } else {
+                  setFilters([
+                    ...filters,
+                    {
+                      field: 'id',
+                      option: 'CP',
+                      from_value: `%${e.target.value}%`,
+                      data_type: 'S',
+                    },
+                  ])
+                }
+              }}
+              allowClear
+            />
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"
@@ -84,6 +121,12 @@ export default function PageStockAdjustment() {
                 label="Posting Date"
                 options={['GT', 'LT', 'EQ', 'CP']}
               >
+                <DatePickerInput
+                  label={''}
+                  fullWidth
+                  format={'DD-MMM-YYYY'}
+                  placeholder="Posting Date"
+                />
                 <DatePickerInput
                   label={''}
                   fullWidth

@@ -17,6 +17,7 @@ export default function useFilters(table: ReturnType<typeof useTable>) {
       )
     } else {
       table.handler.handleFilter(filters)
+      setFilterId(filters.find((f) => f.field === 'id')?.from_value.replaceAll('%', '') || '')
     }
   }, [table.state.isRequestPrevious, filters])
 

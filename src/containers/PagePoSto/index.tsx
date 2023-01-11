@@ -26,7 +26,6 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PagePoSto(props: Props) {
-  const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getListPoSto,
     columns,
@@ -51,11 +50,7 @@ export default function PagePoSto(props: Props) {
     { label: 'Wait For Approval', value: '00' },
   ]
 
-  const {} = useFilters(table)
-
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   return (
     <Col>
@@ -70,7 +65,9 @@ export default function PagePoSto(props: Props) {
               nameIcon="SearchOutlined"
               placeholder="Search by PO Number"
               colorIcon={colors.grey.regular}
+              value={filterId}
               onChange={(e) => {
+                setFilterId(e.target.value)
                 const idIndex = filters.findIndex((obj) => obj?.field == 'id')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
@@ -98,7 +95,7 @@ export default function PagePoSto(props: Props) {
               }}
               allowClear
             />
-            <SmartFilter onOk={setFilters}>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"

@@ -5,6 +5,7 @@ import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
+import { useFilters } from 'src/hooks'
 import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getGoodIssueList } from 'src/api/logistic/good-issue-intra-branch'
@@ -16,7 +17,6 @@ import { columns } from './columns'
 import { colors } from 'src/configs/colors'
 
 export default function PageGoodsIssue(props: Props) {
-  const [filters, setFilters] = useState([])
   const table = useTable({
     funcApi: getGoodIssueList,
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
@@ -41,9 +41,7 @@ export default function PageGoodsIssue(props: Props) {
     { label: 'Pending', value: '00' },
   ]
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   return (
     <Col>
@@ -58,7 +56,9 @@ export default function PageGoodsIssue(props: Props) {
               nameIcon="SearchOutlined"
               placeholder="Search by GI Number"
               colorIcon={colors.grey.regular}
+              value={filterId}
               onChange={(e) => {
+                setFilterId(e.target.value)
                 const idIndex = filters.findIndex((obj) => obj?.field == 'id')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
@@ -87,7 +87,7 @@ export default function PageGoodsIssue(props: Props) {
               }}
               allowClear
             />
-            <SmartFilter onOk={setFilters}>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"

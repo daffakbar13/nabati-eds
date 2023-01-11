@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
 import { getListStockReservation } from 'src/api/logistic/stock-reservation'
 import Popup from 'src/components/Popup'
@@ -14,17 +14,7 @@ import Pagination from 'src/components/Pagination'
 import { column } from './columns'
 import { colors } from 'src/configs/colors'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
 export default function PageStockReservation() {
-  const [filters, setFilters] = useState([])
-
   const table = useTable({
     funcApi: getListStockReservation,
     columns: column,
@@ -50,9 +40,7 @@ export default function PageStockReservation() {
   ]
   const movTypeOption = [{ label: '313 - Transfer Posting Sloc to Sloc', value: '313' }]
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   return (
     <Col>
@@ -67,7 +55,9 @@ export default function PageStockReservation() {
               nameIcon="SearchOutlined"
               placeholder="Search by Doc. Number"
               colorIcon={colors.grey.regular}
+              value={filterId}
               onChange={(e) => {
+                setFilterId(e.target.value)
                 const idIndex = filters.findIndex((obj) => obj?.field == 'doc_number')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
@@ -98,7 +88,7 @@ export default function PageStockReservation() {
               }}
               allowClear
             />
-            <SmartFilter onOk={setFilters}>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"
