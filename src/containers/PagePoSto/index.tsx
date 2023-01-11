@@ -12,9 +12,10 @@ import { getListPoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
+import { colors } from 'src/configs/colors'
+import { useFilters } from 'src/hooks'
 import { Props } from './types'
 import { columns } from './columns'
-import { colors } from 'src/configs/colors'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -50,6 +51,8 @@ export default function PagePoSto(props: Props) {
     { label: 'Wait For Approval', value: '00' },
   ]
 
+  const {} = useFilters(table)
+
   useEffect(() => {
     table.handler.handleFilter(filters)
   }, [filters])
@@ -76,9 +79,8 @@ export default function PagePoSto(props: Props) {
                     const updateId = filters.map((data, i) => {
                       if (i === idIndex) {
                         return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
                       }
+                      return { ...data }
                     })
                     setFilters(updateId)
                   }

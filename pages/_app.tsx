@@ -4,12 +4,12 @@ import React from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import DashboardLayout from 'src/containers/Layouts/DashboardLayout'
 import 'pink-lava-ui/index.css'
 import 'src/styles/globals.css'
-import { useTitle } from 'src/hooks'
+import { requestPreviousTable, usePathHistory, useTitle } from 'src/hooks'
 import Loader from 'src/components/Loader'
 import { QueryClient, QueryClientProvider } from 'react-query'
 
@@ -24,7 +24,9 @@ type AppPropsWithLayout = AppProps & {
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const [queryClient] = React.useState(() => new QueryClient())
+  const { previous } = usePathHistory()
   const [loading, setLoading] = React.useState(false)
+  const router = useRouter()
 
   const getLayout = Component.getLayout || DashboardLayout
   const title = useTitle()
@@ -57,17 +59,26 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   React.useEffect(() => {
-    Router.events.on('routeChangeStart', handleStart)
-    Router.events.on('routeChangeComplete', handleStop)
-    Router.events.on('routeChangeError', handleStop)
+    router.events.on('routeChangeStart', handleStart)
+    router.events.on('routeChangeComplete', handleStop)
+    router.events.on('routeChangeError', handleStop)
 
     return () => {
-      Router.events.off('routeChangeStart', handleStart)
-      Router.events.off('routeChangeComplete', handleStop)
-      Router.events.off('routeChangeError', handleStop)
+      router.events.off('routeChangeStart', handleStart)
+      router.events.off('routeChangeComplete', handleStop)
+      router.events.off('routeChangeError', handleStop)
       localStorage.setItem('secret_information', getSecretInfromation())
     }
-  }, [Router])
+  }, [router])
+
+  React.useEffect(() => {
+    console.log('previous', previous)
+    console.log('isTrue', router.asPath.split('/').includes('detail'))
+
+    if (router.asPath.split('/').includes('detail')) {
+      requestPreviousTable()
+    }
+  }, [router.asPath])
 
   return (
     <QueryClientProvider client={queryClient}>

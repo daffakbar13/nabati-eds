@@ -41,8 +41,15 @@ export default function useTable(props: useTableProps) {
   const handler = baseHandler(state, dispatch)
 
   React.useEffect(() => {
+    const isRequest = localStorage.getItem('REQ_PREV_TABLE') === 'true'
+
     handler.getApi(funcApi)
-    handler.handleLocalStorage(funcApi)
+    handler.handleLocalStorage(funcApi).then(() => {
+      if (!state.loading && isRequest) {
+        console.log('masuk')
+        localStorage.setItem('REQ_PREV_TABLE', 'false')
+      }
+    })
   }, [state.body])
 
   React.useEffect(() => {
@@ -61,6 +68,8 @@ export default function useTable(props: useTableProps) {
   React.useEffect(() => {
     handler.handleTightColumns(columns)
   }, [state.columns])
+
+  React.useEffect(() => {}, [state.loading])
 
   return { state, handler }
 }

@@ -230,7 +230,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
       payload: result,
     })
   }
-  function getApi(funcApi?: Parameters<typeof useTable>['0']['funcApi']) {
+  async function getApi(funcApi?: Parameters<typeof useTable>['0']['funcApi']) {
     if (funcApi) {
       handleLoading(true)
       funcApi(state.body)
@@ -249,15 +249,21 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
         .catch(() => updateData([]))
     }
   }
-  function handleLocalStorage(funcApi?: Parameters<typeof useTable>['0']['funcApi']) {
+  function clearReqPrevTable() {
+    setTimeout(() => {
+      localStorage.setItem('REQ_PREV_TABLE', 'false')
+    }, 100)
+  }
+  async function handleLocalStorage(funcApi?: Parameters<typeof useTable>['0']['funcApi']) {
     if (funcApi) {
       const isRequest = localStorage.getItem('REQ_PREV_TABLE') === 'true'
+      const prevBody = JSON.parse(localStorage.getItem('TABLE_LOG'))
+
       if (isRequest) {
         dispatch({
           type: 'body',
-          payload: JSON.parse(localStorage.getItem('TABLE_LOG')),
+          payload: prevBody,
         })
-        localStorage.setItem('REQ_PREV_TABLE', 'false')
       } else {
         dispatch({
           type: 'isRequestPrevious',

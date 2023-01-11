@@ -1,3 +1,4 @@
+import Router from 'next/router'
 import React from 'react'
 import useTable from '../useTable'
 
@@ -10,7 +11,10 @@ export default function useFilters(table: ReturnType<typeof useTable>) {
     if (table.state.isRequestPrevious) {
       setFilters(table.state.body.filters)
       setOldFilters(table.state.body.filters)
-      setFilterId(table.state.body.filters.find((f) => f.field === 'id')?.from_value.replaceAll('%', '') || '')
+      setFilterId(
+        table.state.body.filters.find((f) => f.field === 'id')?.from_value.replaceAll('%', '') ||
+          '',
+      )
     } else {
       table.handler.handleFilter(filters)
     }
