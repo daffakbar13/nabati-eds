@@ -46,7 +46,6 @@ export default function useTable(props: useTableProps) {
     handler.getApi(funcApi)
     handler.handleLocalStorage(funcApi).then(() => {
       if (!state.loading && isRequest) {
-        console.log('masuk')
         localStorage.setItem('REQ_PREV_TABLE', 'false')
       }
     })
