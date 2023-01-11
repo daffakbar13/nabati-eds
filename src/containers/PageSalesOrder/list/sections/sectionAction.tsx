@@ -10,21 +10,14 @@ import { SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { colors } from 'src/configs/colors'
 import { fieldBranchAll, fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
+import { useFilters } from 'src/hooks'
 import { useSalesSalesOrderListContext } from 'src/hooks/contexts'
 
 export function SectionAction() {
   const {
-    state: {
-      table: {
-        state: {
-          body: { filters },
-        },
-        handler: { handleFilter },
-      },
-    },
+    state: { table },
   } = useSalesSalesOrderListContext()
-  const [filterById, setFilterById] = React.useState<string>()
-  const [smartFilters, setSmartFilters] = React.useState([])
+  const { oldfilters, setFilters } = useFilters(table)
   const router = useRouter()
   const componentRef = React.useRef()
   const statusOption = [
@@ -32,19 +25,6 @@ export function SectionAction() {
     { label: 'Draft', value: '10' },
     { label: 'Cancel', value: '7' },
   ]
-
-  React.useEffect(() => {
-    const getFilterId = filters.find(({ field }) => field === 'eds_order.id')
-    if (getFilterId) {
-      setFilterById(getFilterId.from_value.split('%').join(''))
-    } else {
-      setFilterById(undefined)
-    }
-  }, [filters])
-
-  React.useEffect(() => {
-    handleFilter(smartFilters)
-  }, [smartFilters])
 
   const moreContent = (
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
@@ -93,25 +73,19 @@ export function SectionAction() {
             nameIcon="SearchOutlined"
             placeholder="Search Sales Order ID"
             colorIcon={colors.grey.regular}
-            {...(filterById && { value: filterById })}
             onChange={(e) => {
-              const { value } = e.target
-              if (value === '') {
-                handleFilter([])
-              } else {
-                handleFilter([
-                  {
-                    field: 'eds_order.id',
-                    option: 'CP',
-                    from_value: `%${e.target.value}%`,
-                  },
-                ])
-              }
+              table.handler.handleFilter([
+                {
+                  field: 'eds_order.id',
+                  option: 'CP',
+                  from_value: `%${e.target.value}%`,
+                },
+              ])
             }}
           />
         </Col>
         <Col>
-          <SmartFilter onOk={setSmartFilters}>
+          <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
             <SmartFilter.Field
               field="sales_org_id"
               dataType="S"

@@ -1,11 +1,11 @@
+import React from 'react'
 import useTable from '../useTable'
-import { useEffect, useState } from 'react'
 
 export default function useFilters(table: ReturnType<typeof useTable>) {
-  const [filters, setFilters] = useState([])
-  const [oldfilters, setOldFilters] = useState([])
+  const [filters, setFilters] = React.useState([])
+  const [oldfilters, setOldFilters] = React.useState([])
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (table.state.isRequestPrevious) {
       setFilters(table.state.body.filters)
       setOldFilters(table.state.body.filters)
@@ -17,6 +17,6 @@ export default function useFilters(table: ReturnType<typeof useTable>) {
   return {
     filters,
     setFilters,
-    oldfilters
+    oldfilters,
   }
 }

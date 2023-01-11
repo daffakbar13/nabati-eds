@@ -2,46 +2,31 @@
 /* eslint-disable radix */
 import React from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card } from 'src/components'
+import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Card, SmartFilter } from 'src/components'
 import { colors } from 'src/configs/colors'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
+import { CheckCircleFilled } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import Popup from 'src/components/Popup'
-import SmartFilter, { FILTER, useSmartFilters } from 'src/components/SmartFilter'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldReason } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldCustomer, fieldReason, fieldSalesOrg } from 'src/configs/fieldFetches'
 import { PATH } from 'src/configs/menus'
-import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import Loader from 'src/components/Loader'
-import { downloadApproval, getApprovalList, multipleSubmitApproval } from 'src/api/approval'
+import { getApprovalList, multipleSubmitApproval } from 'src/api/approval'
 import Pagination from 'src/components/Pagination'
-import { PageApprovalProps } from './types'
+import { useFilters } from 'src/hooks'
 import { useColumnApproval } from './columns'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
-export default function PageApproval(props: PageApprovalProps) {
-  const { filters, setFilters } = useSmartFilters([
-    FILTER.SALES_ORG,
-    FILTER.BRANCH,
-    FILTER.SOLD_TO_CUSTOMER,
-    FILTER.SHIP_TO_CUSTOMER,
-    FILTER.ORDER_TYPE,
-    FILTER.ORDER_DATE,
-  ])
+export default function PageApproval() {
   const table = useTable({
     funcApi: getApprovalList,
     haveCheckBox: [{ rowKey: 'status_approved_name', member: ['Wait For Approval'] }],
     columns: useColumnApproval,
   })
+  const { oldfilters, setFilters } = useFilters(table)
   const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
@@ -54,37 +39,18 @@ export default function PageApproval(props: PageApprovalProps) {
   const oneSelected = table.state.selected.length === 1
   const firstSelected = table.state.selected[0]
 
+  const statusOption = [
+    { label: 'New', value: '1' },
+    { label: 'Draft', value: '10' },
+    { label: 'Cancel', value: '7' },
+  ]
+
   const selectedSalesOrder = {
     text: oneSelected
       ? firstSelected
       : `${firstSelected}, +${table.state.selected.length - 1} more`,
     content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
-
-  const moreContent = () => (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 15,
-        fontWeight: 'bold',
-        // padding: 5,
-      }}
-    >
-      <div
-        style={{ display: 'flex', gap: 5, cursor: 'pointer' }}
-        onClick={() => downloadApproval()}
-      >
-        <ICDownloadTemplate /> Download Template
-      </div>
-      <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
-        <ICUploadTemplate /> Upload Template
-      </div>
-      <div style={{ display: 'flex', gap: 5, cursor: 'pointer' }}>
-        <ICSyncData /> Sync Data
-      </div>
-    </div>
-  )
 
   const ConfirmApprove = () => (
     <Popup
@@ -226,7 +192,7 @@ export default function PageApproval(props: PageApprovalProps) {
         label={'Reason Reject Sales Order'}
         required
         options={optionsReason}
-        onChange={({ value }) => setReason(value)}
+        onChange={(e) => setReason(e.value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -355,21 +321,77 @@ export default function PageApproval(props: PageApprovalProps) {
                 }
               }}
             />
-            <SmartFilter
-              onOk={(newVal) => {
-                const newFiltered = newVal
-                  .filter((obj) => obj.fromValue)
-                  .map((obj) => ({
-                    field: `eds_order.${obj.field}`,
-                    option: obj.option,
-                    from_value: obj.fromValue.value,
-                    to_value: obj.toValue?.value,
-                  }))
-                setFilters(newVal)
-                table.handler.handleFilter(newFiltered)
-              }}
-              filters={filters}
-            />
+           <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
+            <SmartFilter.Field
+              field="sales_org_id"
+              dataType="S"
+              label="Sales Organization"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldSalesOrg} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="branch"
+              dataType="S"
+              label="Branch"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="customer"
+              dataType="S"
+              label="Sold To Customer"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="customer"
+              dataType="S"
+              label="Ship To Customer"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="order_type"
+              dataType="S"
+              label="Order Type"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="order_date"
+              dataType="S"
+              label="Order Date"
+              options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
+            >
+              <DatePickerInput
+                label={''}
+                fullWidth
+                format={'DD-MMM-YYYY'}
+                placeholder="Posting Date"
+              />
+              <DatePickerInput
+                fullWidth
+                label={''}
+                format={'DD-MMM-YYYY'}
+                placeholder="Posting Date"
+              />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="status_id"
+              dataType="S"
+              label="Status"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+              <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+            </SmartFilter.Field>
+          </SmartFilter>
           </Row>
           <Row gap="16px">
             <Button size="big" variant="secondary" onClick={() => {}}>

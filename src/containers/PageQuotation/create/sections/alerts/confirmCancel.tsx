@@ -8,10 +8,12 @@ import { useSalesQuotationCreateContext } from '../../states'
 
 export default function ConfirmCancel() {
   const {
+    state: { canSaveAsDraft },
     handler: { unShowConfirm },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
   const isFromDetail = Object.keys(router.query).includes('id')
+  const backToDetailRules = !canSaveAsDraft && isFromDetail
 
   return (
     <Popup>
@@ -35,7 +37,7 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            const additional = isFromDetail ? `/detail/${router.query.id}` : ''
+            const additional = backToDetailRules ? `/detail/${router.query.id}` : ''
             router.push(`${PATH.SALES}/quotation${additional}`)
           }}
         >
