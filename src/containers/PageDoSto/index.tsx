@@ -20,7 +20,7 @@ export default function PageDoSto() {
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
-  const { filters, oldfilters, setFilters } = useFilters(table)
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0
   const router = useRouter()
@@ -40,6 +40,12 @@ export default function PageDoSto() {
     { label: 'Pending', value: '00' },
   ]
 
+  console.log('oldFilters : ', oldfilters)
+  console.log(
+    'oldFilterstest : ',
+    oldfilters.find((f) => f.field === 'id'),
+  )
+
   return (
     <Col>
       <Text variant={'h4'}>DO STO Intra Branch</Text>
@@ -53,7 +59,9 @@ export default function PageDoSto() {
               nameIcon="SearchOutlined"
               placeholder="Search by DO Number"
               colorIcon={colors.grey.regular}
+              value={filterId}
               onChange={(e) => {
+                setFilterId(e.target.value)
                 const idIndex = filters.findIndex((obj) => obj?.field === 'id')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
