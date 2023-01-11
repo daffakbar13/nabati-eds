@@ -2,7 +2,6 @@ import React from 'react'
 import { Spacer, Text, Table, Row } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Col, Divider } from 'antd'
-import { requestPreviousTable } from 'src/hooks'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
@@ -76,7 +75,6 @@ export default function PagePoSToDetail() {
                 cursor: 'pointer',
               }}
               onClick={() => {
-                requestPreviousTable()
                 router.push('/logistic/po-sto')
               }}
             >

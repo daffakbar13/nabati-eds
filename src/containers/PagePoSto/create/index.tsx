@@ -9,7 +9,6 @@ import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { createPoSto } from 'src/api/logistic/po-sto'
 import { fieldBranchSupply, fieldSlocFromBranch } from 'src/configs/fieldFetches'
-import { requestPreviousTable } from 'src/hooks'
 
 interface ItemsState {
   product_id: string
@@ -255,7 +254,6 @@ export default function CreateBilling() {
         title={'Confirm Cancellation'}
         open={modalCancel}
         onOk={() => {
-          requestPreviousTable()
           router.push(`${PATH.LOGISTIC}/po-sto`)
         }}
         onCancel={() => {
