@@ -8,22 +8,22 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { productBranch, fieldUom, itemReceiver } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
 import { addColumn } from 'src/utils/createColumns'
-import { Form } from 'antd'
 
 interface propsUseTable {
   idSupplyingBranch: string
   idReceivingBranch: string
 }
 
-export const useTableAddItem = (props: propsUseTable) => {
+export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => void) => {
   const initialValue = {
     product_id: '',
     product_receiver_id: '',
     description: '',
     qty: 1,
-    uom_id: '',
+    order_qty: 1,
+    uom_id: 'CTN',
     base_qty: 1,
-    base_uom_id: '',
+    base_uom_id: 'CTN',
     sloc_id: '',
     remarks: '',
     batch: '',
@@ -83,16 +83,20 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: '',
       dataIndex: 'action',
       render: (_, __, index) => (
-        <Form.Item name={`action.${index}`}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <MinusCircleFilled
-              style={{ color: 'red', margin: 'auto' }}
-              onClick={() => {
-                handleDeleteRows(index)
-              }}
-            />
-          </div>
-        </Form.Item>
+        <>
+          {data.length > 1 ? (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <MinusCircleFilled
+                style={{ color: 'red', margin: 'auto' }}
+                onClick={() => {
+                  deleteRows(index)
+                }}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+        </>
       ),
       width: 55,
     }),
@@ -100,19 +104,17 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'Item',
       dataIndex: 'product_id',
       render: (product_id, __, index) => (
-        <Form.Item name={`product.${index}`} rules={[{ required: true }]}>
-          <DebounceSelect
-            type="select"
-            value={placeholder[index].product_id as any}
-            fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
-            onChange={(e) => {
-              handleChangeData('product_id', e.value, index)
-              handleChangeData('description', e.label.split(' - ')[1] || '', index)
-              handleChangePlaceHolder('product_id', e.label, index)
-              setFetching(true)
-            }}
-          />
-        </Form.Item>
+        <DebounceSelect
+          type="select"
+          value={placeholder[index].product_id as any}
+          fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
+          onChange={(e) => {
+            handleChangeData('product_id', e.value, index)
+            handleChangeData('description', e.label.split(' - ')[1] || '', index)
+            handleChangePlaceHolder('product_id', e.label, index)
+            setFetching(true)
+          }}
+        />
       ),
       width: 400,
     }),
@@ -120,18 +122,16 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'Qty',
       dataIndex: 'qty',
       render: (order_qty, record, index) => (
-        <Form.Item name={`qty.${index}`} rules={[{ required: true }]}>
-          <InputNumber
-            disabled={isNullProductId(index)}
-            min={isNullProductId(index) ? '0' : '1'}
-            value={order_qty?.toLocaleString()}
-            onChange={(newVal) => {
-              handleChangeData('qty', newVal, index)
-              handleChangeData('base_qty', newVal, index)
-            }}
-            style={styleInputNumber}
-          />
-        </Form.Item>
+        <InputNumber
+          disabled={isNullProductId(index)}
+          min={isNullProductId(index) ? '0' : '1'}
+          value={order_qty?.toLocaleString()}
+          onChange={(newVal) => {
+            handleChangeData('qty', newVal, index)
+            handleChangeData('base_qty', newVal, index)
+          }}
+          style={styleInputNumber}
+        />
       ),
       width: 130,
     }),
@@ -139,19 +139,16 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'UoM',
       dataIndex: 'uom_id',
       render: (uom_id, __, index) => (
-        <Form.Item name={`uom.${index}`} rules={[{ required: true }]}>
-          <DebounceSelect
-            type="select"
-            value={uom_id as any}
-            options={optionsUom[index] || []}
-            disabled={isNullProductId(index)}
-            onChange={(e) => {
-              handleChangeData('uom_id', e.value, index)
-              handleChangeData('base_uom_id', e.value, index)
-              setFetching(true)
-            }}
-          />
-        </Form.Item>
+        <DebounceSelect
+          type="select"
+          value={uom_id as any}
+          options={optionsUom[index] || []}
+          disabled={isNullProductId(index)}
+          onChange={(e) => {
+            handleChangeData('uom_id', e.value, index)
+            handleChangeData('base_uom_id', e.value, index)
+          }}
+        />
       ),
       width: 150,
     }),
@@ -159,17 +156,15 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'Batch',
       dataIndex: 'batch',
       render: (batch, __, index) => (
-        <Form.Item name={`batch.${index}`}>
-          <DebounceSelect
-            type="input"
-            placeholder="e.g Testing"
-            value={batch as any}
-            onChange={(e) => {
-              console.log(e)
-              handleChangeData('batch', e.target.value, index)
-            }}
-          />
-        </Form.Item>
+        <DebounceSelect
+          type="input"
+          placeholder="e.g Testing"
+          value={batch as any}
+          onChange={(e) => {
+            console.log(e)
+            handleChangeData('batch', e.target.value, index)
+          }}
+        />
       ),
     }),
   ]
@@ -179,16 +174,14 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: '',
       dataIndex: 'action',
       render: (_, __, index) => (
-        <Form.Item name={`action.${index}`}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <MinusCircleFilled
-              style={{ color: 'red', margin: 'auto' }}
-              onClick={() => {
-                handleDeleteRows(index)
-              }}
-            />
-          </div>
-        </Form.Item>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <MinusCircleFilled
+            style={{ color: 'red', margin: 'auto' }}
+            onClick={() => {
+              handleDeleteRows(index)
+            }}
+          />
+        </div>
       ),
       width: 55,
     }),
@@ -196,19 +189,17 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'Item Sender',
       dataIndex: 'product_id',
       render: (product_id, __, index) => (
-        <Form.Item name={`product.${index}`} rules={[{ required: true }]}>
-          <DebounceSelect
-            type="select"
-            value={placeholder[index].product_id as any}
-            fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
-            onChange={(e) => {
-              handleChangeData('product_id', e.value, index)
-              handleChangeData('description', e.label.split(' - ')[1] || '', index)
-              handleChangePlaceHolder('product_id', e.label, index)
-              setFetching(true)
-            }}
-          />
-        </Form.Item>
+        <DebounceSelect
+          type="select"
+          value={placeholder[index].product_id as any}
+          fetchOptions={(search) => productBranch(search, props.idSupplyingBranch)}
+          onChange={(e) => {
+            handleChangeData('product_id', e.value, index)
+            handleChangeData('description', e.label.split(' - ')[1] || '', index)
+            handleChangePlaceHolder('product_id', e.label, index)
+            setFetching(true)
+          }}
+        />
       ),
       width: 400,
     }),
@@ -224,18 +215,16 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'Qty',
       dataIndex: 'qty',
       render: (order_qty, record, index) => (
-        <Form.Item name={`qty.${index}`} rules={[{ required: true }]}>
-          <InputNumber
-            disabled={isNullProductId(index)}
-            min={isNullProductId(index) ? '0' : '1'}
-            value={order_qty?.toLocaleString()}
-            onChange={(newVal) => {
-              handleChangeData('qty', newVal, index)
-              handleChangeData('base_qty', newVal, index)
-            }}
-            style={styleInputNumber}
-          />
-        </Form.Item>
+        <InputNumber
+          disabled={isNullProductId(index)}
+          min={isNullProductId(index) ? '0' : '1'}
+          value={order_qty?.toLocaleString()}
+          onChange={(newVal) => {
+            handleChangeData('qty', newVal, index)
+            handleChangeData('base_qty', newVal, index)
+          }}
+          style={styleInputNumber}
+        />
       ),
       width: 130,
     }),
@@ -243,19 +232,16 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'UoM',
       dataIndex: 'uom_id',
       render: (uom_id, __, index) => (
-        <Form.Item name={`uom.${index}`} rules={[{ required: true }]}>
-          <DebounceSelect
-            type="select"
-            value={uom_id as any}
-            options={optionsUom[index] || []}
-            disabled={isNullProductId(index)}
-            onChange={(e) => {
-              handleChangeData('uom_id', e.value, index)
-              handleChangeData('base_uom_id', e.value, index)
-              setFetching(true)
-            }}
-          />
-        </Form.Item>
+        <DebounceSelect
+          type="select"
+          value={uom_id as any}
+          options={optionsUom[index] || []}
+          disabled={isNullProductId(index)}
+          onChange={(e) => {
+            handleChangeData('uom_id', e.value, index)
+            handleChangeData('base_uom_id', e.value, index)
+          }}
+        />
       ),
       width: 150,
     }),
@@ -263,17 +249,15 @@ export const useTableAddItem = (props: propsUseTable) => {
       title: 'Batch',
       dataIndex: 'batch',
       render: (batch, __, index) => (
-        <Form.Item name={`batch.${index}`}>
-          <DebounceSelect
-            type="input"
-            placeholder="e.g Testing"
-            value={batch as any}
-            onChange={(e) => {
-              console.log(e)
-              handleChangeData('batch', e.target.value, index)
-            }}
-          />
-        </Form.Item>
+        <DebounceSelect
+          type="input"
+          placeholder="e.g Testing"
+          value={batch as any}
+          onChange={(e) => {
+            console.log(e)
+            handleChangeData('batch', e.target.value, index)
+          }}
+        />
       ),
     }),
   ]
@@ -283,12 +267,11 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log("value :" + value);
+            // console.log('value new:', value?.[0].value)
             const newOptionsUom = [...optionsUom]
-            if (value[2]?.value) {
-              let newUom = uom_id === '' ? value[2].value : uom_id
-              handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
+            if (value?.[0].value) {
+              handleChangeData('uom_id', value?.[0].value, index)
+              handleChangeData('base_uom_id', value?.[0].value, index)
             } else {
               let newUom = uom_id
               handleChangeData('uom_id', newUom, index)
@@ -317,5 +300,6 @@ export const useTableAddItem = (props: propsUseTable) => {
     columns,
     columnsSender,
     loading,
+    handleDeleteRows,
   }
 }

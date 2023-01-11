@@ -46,14 +46,28 @@ export default function CreateBilling() {
   const [receivingChannel, setReceivingChannel] = React.useState('')
   const [supplyingChannel, setSupplyingChannel] = React.useState('')
   const [disabledButton, setDisabledButton] = React.useState(true)
-
-  const tableAddItems = useTableAddItem({
-    idSupplyingBranch: supplyingBranch.split(' - ')[0] || '',
-    idReceivingBranch: receivingBranch.split(' - ')[0] || '',
-  })
+  const [selectedRow, setSelectedRow] = React.useState<number>()
   const [modalCancel, setModalCancel] = useState(false)
   const [modalSubmit, setModalSubmit] = useState(false)
+  const [modalDelete, setModalDelete] = useState(false)
   const [dataForm, setDataForm] = React.useState<dataForm>()
+
+  const HandleDeleteRow = (row: any) => {
+    setSelectedRow(row)
+    setModalDelete(true)
+  }
+  const tableAddItems = useTableAddItem(
+    {
+      idSupplyingBranch: supplyingBranch.split(' - ')[0] || '',
+      idReceivingBranch: receivingBranch.split(' - ')[0] || '',
+    },
+    HandleDeleteRow,
+  )
+
+  const handleDelete = async () => {
+    tableAddItems.handleDeleteRows(selectedRow)
+    setModalDelete(false)
+  }
 
   const initialValue = {
     sto_doc_type: 'ZPST',
@@ -272,6 +286,18 @@ export default function CreateBilling() {
             has been successfully created
           </>
         )}
+        successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={'Confirm Delete Item PO STO'}
+        open={modalDelete}
+        onOk={handleDelete}
+        onCancel={() => {
+          setModalDelete(false)
+        }}
+        content={`Are you sure want to Delete This Item PO STO ?`}
+        successTitle="Success"
         successOkText="OK"
         width={432}
       />
