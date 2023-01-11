@@ -24,12 +24,15 @@ type AppPropsWithLayout = AppProps & {
 
 export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const [queryClient] = React.useState(() => new QueryClient())
-  const { previous } = usePathHistory()
   const [loading, setLoading] = React.useState(false)
   const router = useRouter()
 
   const getLayout = Component.getLayout || DashboardLayout
   const title = useTitle()
+
+  function isPath(key: string) {
+    return router.asPath.includes(key)
+  }
 
   function randomChar(): string {
     const random = Math.random() + 1
@@ -72,10 +75,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   }, [router])
 
   React.useEffect(() => {
-    console.log('previous', previous)
-    console.log('isTrue', router.asPath.split('/').includes('detail'))
-
-    if (router.asPath.split('/').includes('detail')) {
+    if (isPath('detail') || isPath('create')) {
       requestPreviousTable()
     }
   }, [router.asPath])
