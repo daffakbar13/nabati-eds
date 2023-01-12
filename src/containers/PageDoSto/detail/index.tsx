@@ -4,7 +4,6 @@ import { Button, Spacer, Text, Table, Row as RowPinkLava } from 'pink-lava-ui'
 import { Card, Modal } from 'src/components'
 import { Row, Col, Divider, Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { requestPreviousTable } from 'src/hooks'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { Loader } from 'src/components'
@@ -125,7 +124,6 @@ export default function PageDoStoDetail() {
                 cursor: 'pointer',
               }}
               onClick={() => {
-                requestPreviousTable()
                 router.push('/logistic/do-sto')
               }}
             >

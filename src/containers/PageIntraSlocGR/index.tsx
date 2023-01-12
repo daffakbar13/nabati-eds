@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
 import { getListGRSloc } from 'src/api/logistic/gr-intra-sloc'
 import Popup from 'src/components/Popup'
@@ -23,7 +23,6 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageIntraSlocGoodIssue() {
-  const [filters, setFilters] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')
   const [allSloc, setAllScloc] = useState([])
@@ -54,9 +53,7 @@ export default function PageIntraSlocGoodIssue() {
 
   const movTypeOption = [{ label: 'Z53 - GR Phys. Inv', value: 'Z53' }]
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
@@ -78,7 +75,9 @@ export default function PageIntraSlocGoodIssue() {
               nameIcon="SearchOutlined"
               placeholder="Search by GR Number"
               colorIcon={colors.grey.regular}
+              value={filterId}
               onChange={(e) => {
+                setFilterId(e.target.value)
                 const idIndex = filters.findIndex((obj) => obj?.field == 'id')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
@@ -107,7 +106,7 @@ export default function PageIntraSlocGoodIssue() {
               }}
               allowClear
             />
-            <SmartFilter onOk={setFilters}>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"

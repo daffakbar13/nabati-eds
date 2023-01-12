@@ -4,7 +4,6 @@ import { Divider, Typography, Form, Alert } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput, Input } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
-import { requestPreviousTable } from 'src/hooks'
 import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
@@ -343,7 +342,6 @@ export default function CreateBilling() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    requestPreviousTable()
                     router.push(`${PATH.LOGISTIC}/do-sto`)
                   }}
                 >

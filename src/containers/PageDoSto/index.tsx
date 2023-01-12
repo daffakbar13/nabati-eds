@@ -39,13 +39,7 @@ export default function PageDoSto() {
     { label: 'Cancelled ', value: '02' },
     { label: 'Pending', value: '00' },
   ]
-
-  console.log('oldFilters : ', oldfilters)
-  console.log(
-    'oldFilterstest : ',
-    oldfilters.find((f) => f.field === 'id'),
-  )
-
+  
   return (
     <Col>
       <Text variant={'h4'}>DO STO Intra Branch</Text>

@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
 import { getListTransferGS } from 'src/api/logistic/transfer-to-gs'
 import Popup from 'src/components/Popup'
@@ -23,8 +23,6 @@ function showTotal(total: number, range: number[]) {
 }
 
 export default function PageIntraSlocRequest() {
-  const [filters, setFilters] = useState([])
-
   const table = useTable({
     funcApi: getListTransferGS,
     columns: column,
@@ -49,9 +47,7 @@ export default function PageIntraSlocRequest() {
     { label: 'Wait For Approval', value: '00' },
   ]
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   return (
     <Col>
@@ -66,7 +62,9 @@ export default function PageIntraSlocRequest() {
               nameIcon="SearchOutlined"
               placeholder="Search by Doc. Number"
               colorIcon={colors.grey.regular}
+              value={filterId}
               onChange={(e) => {
+                setFilterId(e.target.value)
                 const idIndex = filters.findIndex((obj) => obj?.field == 'document_number')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
@@ -97,7 +95,7 @@ export default function PageIntraSlocRequest() {
               }}
               allowClear
             />
-            <SmartFilter onOk={setFilters}>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"
