@@ -174,14 +174,20 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: '',
       dataIndex: 'action',
       render: (_, __, index) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MinusCircleFilled
-            style={{ color: 'red', margin: 'auto' }}
-            onClick={() => {
-              handleDeleteRows(index)
-            }}
-          />
-        </div>
+        <>
+          {data.length > 1 ? (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <MinusCircleFilled
+                style={{ color: 'red', margin: 'auto' }}
+                onClick={() => {
+                  deleteRows(index)
+                }}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+        </>
       ),
       width: 55,
     }),
