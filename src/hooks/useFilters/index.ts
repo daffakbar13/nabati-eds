@@ -56,7 +56,7 @@ export default function useFilters(
       setFilterId(body.filters.find((f) => f.field === id)?.from_value.replaceAll('%', '') || '')
     } else {
       table.handler.handleFilter(filters)
-      setFilterId(filters.find((f) => f.field === 'id')?.from_value.replaceAll('%', '') || '')
+      setFilterId(filters.find((f) => f.field === id)?.from_value.replaceAll('%', '') || '')
     }
   }, [isRequestPrevious, filters])
 

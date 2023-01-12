@@ -10,43 +10,22 @@ import { SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { colors } from 'src/configs/colors'
 import { fieldBranchAll, fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
-import { useTable } from 'src/hooks'
+import { useFilters, useTable } from 'src/hooks'
 
 interface SectionActionProps {
   table: ReturnType<typeof useTable>
 }
 
 export default function SectionAction(props: SectionActionProps) {
-  const {
-    table: {
-      state: {
-        body: { filters },
-      },
-      handler: { handleFilter },
-    },
-  } = props
-  const [filterById, setFilterById] = React.useState<string>()
-  const [smartFilters, setSmartFilters] = React.useState([])
+  const { table } = props
   const router = useRouter()
   const componentRef = React.useRef()
+  const { filterId, filters, oldfilters, onChangeSearch, setFilters } = useFilters(table)
   const statusOption = [
     { label: 'New', value: '1' },
     { label: 'Draft', value: '10' },
     { label: 'Cancel', value: '7' },
   ]
-
-  React.useEffect(() => {
-    const getFilterId = filters.find(({ field }) => field === 'eds_order.id')
-    if (getFilterId) {
-      setFilterById(getFilterId.from_value.split('%').join(''))
-    } else {
-      setFilterById(undefined)
-    }
-  }, [filters])
-
-  React.useEffect(() => {
-    handleFilter(smartFilters)
-  }, [smartFilters])
 
   const moreContent = (
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
@@ -91,28 +70,17 @@ export default function SectionAction(props: SectionActionProps) {
       <Row gutter={10}>
         <Col>
           <Search
+            placeholder="Search Delivery Order ID"
             width="380px"
             nameIcon="SearchOutlined"
-            placeholder="Search DeliveryOrder ID"
             colorIcon={colors.grey.regular}
-            onChange={(e) => {
-              const { value } = e.target
-              if (value === '') {
-                handleFilter([])
-              } else {
-                handleFilter([
-                  {
-                    field: 'id',
-                    option: 'CP',
-                    from_value: `%${e.target.value}%`,
-                  },
-                ])
-              }
-            }}
+            value={filterId}
+            onChange={(e) => onChangeSearch(e)}
+            allowClear
           />
         </Col>
         <Col>
-          <SmartFilter onOk={setSmartFilters}>
+          <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
             <SmartFilter.Field
               field="sales_org_id"
               dataType="S"
