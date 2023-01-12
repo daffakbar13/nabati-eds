@@ -8,23 +8,25 @@ import { useTableAddItem } from './columns'
 import SlocForm from './slocForm'
 
 interface slocList {
-  branch_id: string
-  sales_org: string
   sloc_id: string
-  sloc_name: string
+  sloc_function: string
   sloc_type: string
+  sales_org_id: string
+  company_id: string
+  branch_id: string
+  branch_name: string
 }
 
 interface FormData {
   company_id: string
   branch_id: string
+  branch_name: string
   sloc_list: Array<slocList>
 }
 
 export default function CreateSlocModal({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
-  const [disableBranch, setdisableBranch] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const isOnEditMode = !!payload
@@ -33,16 +35,15 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
   const initialValue = {
     company_id: 'PP01',
     branch_id: 'P104',
-    sloc_list: tableAddItems.data,
+    branch_name: 'PMA Bandung Selatan',
+    GroupByBranch: tableAddItems.data,
   }
 
   const handleSubmit = async () => {
-    setDataForm(undefined)
     const reqBody = { ...initialValue, ...dataForm }
-
     if (!isOnEditMode) {
       try {
-        return await createConfigSloc({ sloc_list: reqBody?.sloc_list })
+        return await createConfigSloc({ sloc_list: reqBody })
       } catch (error) {
         console.error(error)
       }
@@ -51,7 +52,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     if (isOnEditMode) {
       try {
         return await updateConfigSloc(
-          reqBody.sloc_list,
+          reqBody,
           reqBody.company_id as string,
           reqBody.branch_id as string,
         )
@@ -75,22 +76,31 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
 
   const handleAdd = async (reqBody: any) => {
     if (isOnEditMode) {
+      onChangeForm('branch_id', payload.branch_id)
+      onChangeForm('branch_name', payload.branch_name)
       tableAddItems.handleAddItem({
-        branch_id: payload?.action,
-        sales_org: payload?.sales_org,
         sloc_id: reqBody.sloc_id,
-        sloc_name: reqBody.sloc_name,
+        sloc_function: reqBody.sloc_name,
         sloc_type: reqBody.sloc_type,
+        sales_org_id: payload?.sales_org,
+        company_id: payload?.company_id,
+        branch_id: payload?.branch_id,
+        branch_name: payload?.branch_name,
       })
     } else {
+      onChangeForm('branch_id', reqBody.branch_id)
+      onChangeForm('branch_name', reqBody.branch_name)
       tableAddItems.handleAddItem(reqBody)
     }
   }
 
   useEffect(() => {
-    console.log('payload', payload)
-    onChangeForm('branch_id', payload?.action)
+    onChangeForm('branch_id', payload?.branch_id)
   }, [isOnEditMode, payload])
+
+  useEffect(() => {
+    console.log('data test', dataForm)
+  }, [dataForm])
 
   const content = (
     <>
