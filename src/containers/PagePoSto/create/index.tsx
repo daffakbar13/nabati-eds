@@ -142,15 +142,15 @@ export default function CreateBilling() {
         </Row>
       </Card>
       <Spacer size={10} />
-      <Form
-        form={form}
-        labelCol={{ span: 24 }}
-        wrapperCol={{ span: 24 }}
-        autoComplete="off"
-        requiredMark={false}
-        scrollToFirstError
-      >
-        <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
+      <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
+        <Form
+          form={form}
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          autoComplete="off"
+          requiredMark={false}
+          scrollToFirstError
+        >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
             <Form.Item name="receive_plant_id" rules={[{ required: true }]}>
               <DebounceSelect
@@ -248,8 +248,9 @@ export default function CreateBilling() {
           ) : (
             ''
           )}
-        </Card>
-      </Form>
+        </Form>
+      </Card>
+
       <Modal
         title={'Confirm Cancellation'}
         open={modalCancel}
