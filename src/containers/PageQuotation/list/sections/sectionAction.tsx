@@ -17,7 +17,7 @@ export default function SectionAction() {
   const {
     state: { table },
   } = useSalesQuotationListContext()
-  const { oldfilters, setFilters } = useFilters(table)
+  const { oldfilters, filterId, setFilters, onChangeSearch } = useFilters(table, 'eds_order.id')
   const router = useRouter()
   const componentRef = React.useRef()
   const statusOption = [
@@ -70,19 +70,13 @@ export default function SectionAction() {
       <Row gutter={10}>
         <Col>
           <Search
+            placeholder="Search Quotation ID"
             width="380px"
             nameIcon="SearchOutlined"
-            placeholder="Search Quotation ID"
             colorIcon={colors.grey.regular}
-            onChange={(e) => {
-              table.handler.handleFilter([
-                {
-                  field: 'eds_order.id',
-                  option: 'CP',
-                  from_value: `%${e.target.value}%`,
-                },
-              ])
-            }}
+            value={filterId}
+            onChange={(e) => onChangeSearch(e)}
+            allowClear
           />
         </Col>
         <Col>

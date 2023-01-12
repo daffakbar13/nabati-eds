@@ -11,8 +11,8 @@ import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { colors } from 'src/configs/colors'
-import { columns } from './columns'
 import { useFilters } from 'src/hooks'
+import { columns } from './columns'
 
 export default function PageDoSto() {
   const table = useTable({
@@ -20,7 +20,7 @@ export default function PageDoSto() {
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+  const { oldfilters, setFilters, filterId, onChangeSearch } = useFilters(table)
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0
   const router = useRouter()
@@ -54,33 +54,7 @@ export default function PageDoSto() {
               placeholder="Search by DO Number"
               colorIcon={colors.grey.regular}
               value={filterId}
-              onChange={(e) => {
-                setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field === 'id')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field !== 'id'))
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      }
-                      return { ...data }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'id',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
+              onChange={(e) => onChangeSearch(e)}
               allowClear
             />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
