@@ -15,10 +15,10 @@ import dateFormat from 'src/utils/dateFormat'
 import { getTagColor } from 'src/utils/getTagColor'
 import { columns } from './columns'
 import { Loader } from 'src/components'
+import useDetail from 'src/hooks/useDetail'
 
 export default function DetailStockAdjustment() {
-  const [loading, setLoading] = useState(false)
-  const [details, setDetails] = useState(null)
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
   const id = String(router.query.id) || ''
 
@@ -45,20 +45,16 @@ export default function DetailStockAdjustment() {
     }
   }
 
+  const details: any = useDetail(getDetailStockAdjustment, { id: router.query.id as string }, false)
+
   useEffect(() => {
-    if (!id) return
-    const fetchData = async () => {
-      try {
-        setLoading(true)
-        const res = await getDetailStockAdjustment(id)
-        setDetails(res.data || [])
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-      }
+    if (details.company_id) {
+      setLoading(false)
+    } else {
+      setLoading(true)
     }
-    fetchData()
-  }, [id])
+  }, [details])
+
 
   return (
     <>
@@ -103,7 +99,14 @@ export default function DetailStockAdjustment() {
                   >
                     Reject
                   </Button>
-                  <Button size="big" variant="secondary" onClick={() => {}} loading={loading}>
+                  <Button
+                    size="big"
+                    variant="secondary"
+                    onClick={() => {
+                      router.push(`${PATH.LOGISTIC}/stock-adjustment/edit/${router.query.id}`)
+                    }}
+                    loading={loading}
+                  >
                     Edit
                   </Button>
                   <Button
@@ -155,7 +158,9 @@ export default function DetailStockAdjustment() {
             open={rejectModal}
             onOk={handleReject}
             onCancel={() => setRejectModal(false)}
-            onOkSuccess={() => router.reload()}
+            onOkSuccess={() =>
+              router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${router.query.id}`)
+            }
             content="Are you sure want to reject?"
             successContent={() => 'Reject Success'}
             successOkText="OK"
@@ -166,7 +171,9 @@ export default function DetailStockAdjustment() {
             open={approveModal}
             onOk={handleApprove}
             onCancel={() => setApproveModal(false)}
-            onOkSuccess={() => router.reload()}
+            onOkSuccess={() =>
+              router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${router.query.id}`)
+            }
             content="Are you sure want to approve?"
             successContent={() => 'Approve Success'}
             successOkText="OK"

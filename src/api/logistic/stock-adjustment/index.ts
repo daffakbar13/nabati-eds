@@ -26,12 +26,11 @@ export const getListStockAdjustment = async (
 }
 
 export const getDetailStockAdjustment = async (
-  id: string,
-  params: CommonListParams = {},
+  params: CommonDetailParams = {},
 ): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${url}/${id}/detail`,
+    subUrl: `${url}/${params.id}/detail`,
     overrideBaseUrl,
     data: { ...params, doc_type: 'WA' },
   })
@@ -84,6 +83,20 @@ export const freezeSlocIdByBranchId = async (
     subUrl: `v1/sloc/edit/${branchId}`,
     overrideBaseUrl,
     data: { ...params },
+  })
+  return response.data
+}
+
+export const updateStockAdjustment = async (
+  id: string,
+  docNumber: string,
+  params: any = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/${id}/${docNumber}/update`,
+    overrideBaseUrl,
+    data: params,
   })
   return response.data
 }
