@@ -57,10 +57,9 @@ export default function PageAvailabilityOverview() {
           material: `${item?.GroupByProduct?.[0].product_id} - ${item?.GroupByProduct?.[0].product_name}`,
           sloc: item?.GroupByProduct?.[0].sloc_id,
           status: item?.GroupByProduct?.[0].status_data_name,
-          status_data:
-            item?.GroupByProduct?.[0].status_data != ''
-              ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
-              : '',
+          status_data: item?.GroupByProduct?.[0].status_data
+            ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
+            : '',
           stock_large: item?.GroupByProduct?.[0].stock.large || '',
           stock_middle: item?.GroupByProduct?.[0].stock.middle || '',
           stock_small: item?.GroupByProduct?.[0].stock.small || '',
@@ -111,10 +110,9 @@ export default function PageAvailabilityOverview() {
           material: `${item?.GroupByProduct?.[0].product_id} - ${item?.GroupByProduct?.[0].product_name}`,
           sloc: item?.GroupByProduct?.[0].sloc_id,
           status: item?.GroupByProduct?.[0].status_data_name,
-          status_data:
-            item?.GroupByProduct?.[0].status_data != ''
-              ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
-              : '',
+          status_data: item?.GroupByProduct?.[0].status_data
+            ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
+            : '',
           stock_large: item?.GroupByProduct?.[0].stock.large || '',
           stock_middle: item?.GroupByProduct?.[0].stock.middle || '',
           stock_small: item?.GroupByProduct?.[0].stock.small || '',
