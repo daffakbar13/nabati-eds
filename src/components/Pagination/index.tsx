@@ -3,7 +3,6 @@
 import { Col, InputNumber, Row, Select } from 'antd'
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import React from 'react'
-import { useRouter } from 'next/router'
 
 interface PaginationProps {
   page: number
@@ -12,14 +11,12 @@ interface PaginationProps {
   pageSizeOptions: number[]
   total: number
   totalPage: number
-  onChange: (page, limit) => void
+  // eslint-disable-next-line no-unused-vars
+  onChange: (page: number, limit: number) => void
 }
 
 export default function Pagination(props: PaginationProps) {
-  const { defaultPageSize, onChange, pageSizeOptions, page, limit, total, totalPage } = props
-  // const [limit, setLimit] = React.useState<number>(defaultPageSize)
-  // const [page, setPage] = React.useState<number>(1)
-  const [optionsPage, setOptionsPage] = React.useState<{ label: string; value: number }[]>()
+  const { onChange, pageSizeOptions, page, limit, total, totalPage } = props
   const isFirstPage = page === 1
   const isLastPage = page === totalPage
   const range = `${limit * page - limit + 1}-${isLastPage ? total : limit * page}`
@@ -35,19 +32,17 @@ export default function Pagination(props: PaginationProps) {
 
   function handleBackPage() {
     if (!isFirstPage) {
-      // setPage((curr) => --curr)
       onChange(page - 1, limit)
     }
   }
 
   function handleNextPage() {
     if (!isLastPage) {
-      // setPage((curr) => ++curr)
       onChange(page + 1, limit)
     }
   }
 
-  function handleChangeLimit(value: number, passFromParams: boolean = false) {
+  function handleChangeLimit(value: number) {
     if (pageSizeOptions.includes(value)) {
       onChange(1, value)
     }

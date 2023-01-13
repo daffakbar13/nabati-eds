@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useRouter } from 'next/router'
 import React from 'react'
+import { useAppContext } from 'src/contexts'
 import { addColumn } from 'src/utils/createColumns'
 import { baseHandler, baseReducer } from './states'
 import { StateType } from './states/state'
@@ -11,6 +11,7 @@ interface HaveCheckBoxType {
 }
 
 interface useTableProps {
+  // eslint-disable-next-line no-unused-vars
   funcApi?: (body: any) => Promise<any>
   haveCheckBox?: HaveCheckBoxType[] | 'All'
   columns: any[]
@@ -20,12 +21,15 @@ interface useTableProps {
 
 export default function useTable(props: useTableProps) {
   const { haveCheckBox, columns, data, funcApi, removeHideShowColums } = props
+  const app = useAppContext()
+  const isValueFromPrev = app.state.isRequestPrevious && app.state.readyFor === funcApi?.name
+  const defaultBody = {
+    filters: [],
+    limit: 20,
+    page: 1,
+  }
   const initialValue: StateType = {
-    body: {
-      filters: [],
-      limit: 20,
-      page: 1,
-    },
+    body: isValueFromPrev ? app.state.table_log : defaultBody,
     columns,
     columnsAreSetted: columns,
     data: data || [],
@@ -35,20 +39,13 @@ export default function useTable(props: useTableProps) {
     selected: [],
     total: 0,
     totalPage: 0,
-    isRequestPrevious: true,
   }
   const [state, dispatch] = React.useReducer(baseReducer, initialValue)
   const handler = baseHandler(state, dispatch)
 
   React.useEffect(() => {
-    const isRequest = localStorage.getItem('REQ_PREV_TABLE') === 'true'
-
     handler.getApi(funcApi)
-    handler.handleLocalStorage(funcApi).then(() => {
-      if (!state.loading && isRequest) {
-        localStorage.setItem('REQ_PREV_TABLE', 'false')
-      }
-    })
+    handler.handleSaveTableLog(funcApi, app)
   }, [state.body])
 
   React.useEffect(() => {
@@ -67,8 +64,6 @@ export default function useTable(props: useTableProps) {
   React.useEffect(() => {
     handler.handleTightColumns(columns)
   }, [state.columns])
-
-  React.useEffect(() => {}, [state.loading])
 
   return { state, handler }
 }

@@ -17,5 +17,4 @@ export interface StateType {
   description?: { text: string; content: React.ReactNode }
   tableProps?: any
   paginationProps?: any
-  isRequestPrevious: boolean
 }

@@ -4,7 +4,7 @@ import React from 'react'
 import type { ReactElement, ReactNode } from 'react'
 import Head from 'next/head'
 import type { AppProps } from 'next/app'
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import DashboardLayout from 'src/containers/Layouts/DashboardLayout'
 import 'pink-lava-ui/index.css'
@@ -12,6 +12,7 @@ import 'src/styles/globals.css'
 import { requestPreviousTable, usePathHistory, useTitle } from 'src/hooks'
 import Loader from 'src/components/Loader'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { AppProvider, useAppContext } from 'src/contexts'
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   // eslint-disable-next-line no-unused-vars
@@ -26,13 +27,9 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const [queryClient] = React.useState(() => new QueryClient())
   const [loading, setLoading] = React.useState(false)
   const router = useRouter()
-
-  const getLayout = Component.getLayout || DashboardLayout
   const title = useTitle()
 
-  function isPath(key: string) {
-    return router.asPath.includes(key)
-  }
+  const getLayout = Component.getLayout || DashboardLayout
 
   function randomChar(): string {
     const random = Math.random() + 1
@@ -74,21 +71,17 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     }
   }, [router])
 
-  React.useEffect(() => {
-    if (isPath('detail') || isPath('create')) {
-      requestPreviousTable()
-    }
-  }, [router.asPath])
-
   return (
     <QueryClientProvider client={queryClient}>
-      <Head>
-        <title>EDS - {title}</title>
-      </Head>
-      <>
-        {loading && getLayout(<Loader />)}
-        {!loading && getLayout(<Component {...pageProps} />)}
-      </>
+      <AppProvider>
+        <Head>
+          <title>EDS - {title}</title>
+        </Head>
+        <>
+          {loading && getLayout(<Loader />)}
+          {!loading && getLayout(<Component {...pageProps} />)}
+        </>
+      </AppProvider>
     </QueryClientProvider>
   )
 }
