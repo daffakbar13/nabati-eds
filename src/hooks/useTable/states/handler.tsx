@@ -2,6 +2,7 @@
 /* eslint-disable no-restricted-globals */
 import { CheckboxChangeEvent } from 'antd/lib/checkbox'
 import { CommonListParams } from 'src/api/types'
+import { useAppContext } from 'src/contexts'
 import useTable from '..'
 import HideShowColumns from '../HideShowColumns'
 import { DispatchType } from './reducer'
@@ -249,28 +250,13 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
         .catch(() => updateData([]))
     }
   }
-  function clearReqPrevTable() {
-    setTimeout(() => {
-      localStorage.setItem('REQ_PREV_TABLE', 'false')
-    }, 100)
-  }
-  async function handleLocalStorage(funcApi?: Parameters<typeof useTable>['0']['funcApi']) {
+  function handleSaveTableLog(
+    funcApi?: Parameters<typeof useTable>['0']['funcApi'],
+    app?: ReturnType<typeof useAppContext>,
+  ) {
     if (funcApi) {
-      const isRequest = localStorage.getItem('REQ_PREV_TABLE') === 'true'
-      const prevBody = JSON.parse(localStorage.getItem('TABLE_LOG'))
-
-      if (isRequest) {
-        dispatch({
-          type: 'body',
-          payload: prevBody,
-        })
-      } else {
-        dispatch({
-          type: 'isRequestPrevious',
-          payload: false,
-        })
-        localStorage.setItem('TABLE_LOG', JSON.stringify(state.body))
-      }
+      app.handler.handleTableLog(state.body)
+      app.handler.handleReadyFor(funcApi.name)
     }
   }
   return {
@@ -290,6 +276,6 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     handleDefineTableProps,
     handleDefinePaginationProps,
     getApi,
-    handleLocalStorage,
+    handleSaveTableLog,
   }
 }

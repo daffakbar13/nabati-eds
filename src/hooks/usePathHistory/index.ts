@@ -2,17 +2,19 @@ import { useRouter } from 'next/router'
 import React from 'react'
 
 export default function usePathHistory() {
-  const [history, setHistory] = React.useState<string[]>([])
-  const [previous, setPrevious] = React.useState<string>('')
+  const [pathHistory, setPathHistory] = React.useState<string[]>([])
+  const [currentPath, setCurrentPath] = React.useState<string>('')
+  const [previousPath, setPreviousPath] = React.useState<string>('')
   const { asPath } = useRouter()
 
   React.useEffect(() => {
-    setHistory((prev) => [...prev, asPath])
+    setPathHistory((prev) => [...prev, asPath])
   }, [asPath])
 
   React.useEffect(() => {
-    setPrevious(history[history.length - 2])
-  }, [history])
+    setCurrentPath(pathHistory[pathHistory.length - 1])
+    setPreviousPath(pathHistory[pathHistory.length - 2])
+  }, [pathHistory])
 
-  return { history, previous }
+  return { pathHistory, previousPath, currentPath }
 }

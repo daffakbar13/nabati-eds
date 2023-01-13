@@ -1,4 +1,5 @@
 import React from 'react'
+import { useAppContext } from 'src/contexts'
 import useTable from '../useTable'
 
 export default function useFilters(
@@ -12,8 +13,9 @@ export default function useFilters(
   id: string = 'id',
 ) {
   const {
-    state: { isRequestPrevious, body },
+    state: { body },
   } = table
+  const app = useAppContext()
   const [filters, setFilters] = React.useState([])
   const [oldfilters, setOldFilters] = React.useState([])
   const [filterId, setFilterId] = React.useState('')
@@ -50,7 +52,7 @@ export default function useFilters(
   }
 
   React.useEffect(() => {
-    if (isRequestPrevious) {
+    if (app.state.isRequestPrevious) {
       setFilters(body.filters)
       setOldFilters(body.filters)
       setFilterId(body.filters.find((f) => f.field === id)?.from_value.replaceAll('%', '') || '')
@@ -58,7 +60,7 @@ export default function useFilters(
       table.handler.handleFilter(filters)
       setFilterId(filters.find((f) => f.field === id)?.from_value.replaceAll('%', '') || '')
     }
-  }, [isRequestPrevious, filters])
+  }, [app.state.isRequestPrevious, filters])
 
   return {
     filters,

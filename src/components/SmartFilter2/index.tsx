@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { Button, Row, Modal } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
 import { generateFilterBody } from 'src/utils/misc'
-import Field from './Field'
 import moment from 'moment'
+import Field from './Field'
 
 export interface FilterValueObj {
   field: string
@@ -52,50 +52,41 @@ function SmartFilter(props: { onOk; children; oldFilter? }) {
 
   useEffect(() => {
     if (oldFilter) {
-      const FilterOld = oldFilter.map((item: any, index) => {
-        return {
-          field: item.field,
-          dataType: item.dataType,
-          fromValue: item.field.includes('date')
-            ? moment(item.from_value)
-            : {
-                label: item.from_value_label,
-                value: item.from_value,
-                key: item.from_value,
-              },
-          toValue: item.field.includes('date')
-            ? moment(item.to_value)
-            : {
-                label: item.to_value_label,
-                value: item.to_value,
-                key: item.to_value,
-              },
-          option: item.option,
-        }
-      })
-      console.log('filter old', FilterOld)
+      const FilterOld = oldFilter.map((item: any, index) => ({
+        field: item.field,
+        dataType: item.dataType,
+        fromValue: item.field.includes('date')
+          ? moment(item.from_value)
+          : {
+              label: item.from_value_label,
+              value: item.from_value,
+              key: item.from_value,
+            },
+        toValue: item.field.includes('date')
+          ? moment(item.to_value)
+          : {
+              label: item.to_value_label,
+              value: item.to_value,
+              key: item.to_value,
+            },
+        option: item.option,
+      }))
       setFilterValues(FilterOld)
     }
   }, [oldFilter])
 
   const content = (
     <div style={{ paddingBottom: 20 }}>
-      {React.Children.map(
-        children,
-        (child) => (
-          console.log('filter content', filterValues),
-          (
-            <>
-              {React.cloneElement(child, {
-                ...child.props,
-                key: child.field,
-                value: filterValues.find((f) => f.field === child.props.field),
-                handleChange,
-              })}
-            </>
-          )
-        ),
-      )}
+      {React.Children.map(children, (child) => (
+        <>
+          {React.cloneElement(child, {
+            ...child.props,
+            key: child.field,
+            value: filterValues.find((f) => f.field === child.props.field),
+            handleChange,
+          })}
+        </>
+      ))}
       <Row gap="16px" reverse>
         <Button onClick={handleApply}>Apply</Button>
         <Button variant="tertiary" onClick={clearAllValue}>
