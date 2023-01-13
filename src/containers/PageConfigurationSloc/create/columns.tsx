@@ -9,11 +9,13 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
 
 interface slocList {
-  branch_id: string
-  sales_org: string
   sloc_id: string
-  sloc_name: string
+  sloc_function: string
   sloc_type: string
+  sales_org_id: string
+  company_id: string
+  branch_id: string
+  branch_name: string
 }
 
 export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
@@ -78,7 +80,7 @@ export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
     }),
     addColumn({
       title: 'Sloc Name',
-      dataIndex: 'sloc_name',
+      dataIndex: 'sloc_function',
     }),
     addColumn({
       title: 'Sloc Type',

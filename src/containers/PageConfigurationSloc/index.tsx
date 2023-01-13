@@ -36,6 +36,8 @@ export default function PageConfigurationSloc() {
         return {
           key: index,
           branch: `${item.list?.[0].Sloc.branch_id} - ${item.list?.[0].Sloc.branch_name}`,
+          branch_id: item.list?.[0].Sloc.branch_id,
+          branch_name: item.list?.[0].Sloc.branch_name,
           sloc_id: item.list?.[0].group_by_sloc?.[0].sloc_id,
           sloc_function: item.list?.[0].group_by_sloc?.[0].sloc_function,
           sloc_type: item.list?.[0].group_by_sloc?.[0].sloc_type,
@@ -43,8 +45,9 @@ export default function PageConfigurationSloc() {
           sales_org: item.list?.[0].Sloc.sales_org_id,
           children: item.list?.[0].group_by_sloc?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
-            // branch: `${item.list?.[0].Sloc.branch_id} - ${item.list?.[0].Sloc.branch_name}`,
             branch: '',
+            branch_id: itemChild?.Sloc?.branch_id,
+            branch_name: itemChild?.Sloc?.branch_name,
             sloc_id: itemChild?.sloc_id,
             sloc_function: itemChild?.sloc_function,
             sloc_type: itemChild?.sloc_type,
@@ -55,6 +58,8 @@ export default function PageConfigurationSloc() {
       return {
         key: index,
         branch: `${item.list?.[0].Sloc.branch_id} - ${item.list?.[0].Sloc.branch_name}`,
+        branch_id: item.list?.[0].Sloc.branch_id,
+        branch_name: item.list?.[0].Sloc.branch_name,
         sloc_id: item.list?.[0].group_by_sloc?.[0].sloc_id,
         sloc_function: item.list?.[0].group_by_sloc?.[0].sloc_function,
         sloc_type: item.list?.[0].group_by_sloc?.[0].sloc_type,
