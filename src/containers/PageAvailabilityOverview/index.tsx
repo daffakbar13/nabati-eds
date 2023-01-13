@@ -82,10 +82,9 @@ export default function PageAvailabilityOverview() {
             material: '',
             sloc: itemChild?.sloc_id,
             status: itemChild?.status_data_name,
-            status_data:
-              itemChild?.status_data != ''
-                ? `${itemChild?.status_data} - ${itemChild?.booking_id}`
-                : '',
+            status_data: itemChild?.status_data
+              ? `${itemChild?.status_data} - ${itemChild?.booking_id}`
+              : '',
             stock_large: itemChild?.stock.large || '',
             stock_middle: itemChild?.stock.middle || '',
             stock_small: itemChild?.stock.small || '',

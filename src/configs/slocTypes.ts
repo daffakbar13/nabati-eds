@@ -1,4 +1,4 @@
 export const SLOC_TYPES_OPTIONS = [
-  { label: 'Canvas', value: 'C' },
-  { label: 'Intra Sloc', value: 'I' },
+  { label: 'Canvas', value: 'Canvas' },
+  { label: 'Intra Sloc', value: 'Intra Sloc' },
 ]

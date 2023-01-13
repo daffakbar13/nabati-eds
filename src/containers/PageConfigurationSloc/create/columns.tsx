@@ -9,13 +9,12 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
 
 interface slocList {
-  sloc_id: string
-  sloc_function: string
-  sloc_type: string
-  sales_org_id: string
-  company_id: string
+  company_id?: string
   branch_id: string
-  branch_name: string
+  sales_org: string
+  sloc_id: string
+  sloc_name: string
+  sloc_type: string
 }
 
 export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
@@ -40,21 +39,24 @@ export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
 
   React.useEffect(() => {
     if (payload) {
+      console.log("data payload", payload);
       const newData = {
-        branch_id: payload?.action,
+        company_id: payload?.company_id,
+        branch_id: payload?.branch_id,
         sales_org: payload?.sales_org,
         sloc_id: payload?.sloc_id,
         sloc_name: payload?.sloc_function,
-        sloc_type: payload?.sloc_type,
+        sloc_type: payload?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
       }
       if (payload.children) {
         const newDataChild = payload.children?.map((item: any, index) => {
           return {
-            branch_id: payload?.action,
-            sales_org: payload?.sales_org,
+            company_id: item?.company_id,
+            branch_id: item?.branch_id,
+            sales_org: item?.sales_org,
             sloc_id: item?.sloc_id,
             sloc_name: item?.sloc_function,
-            sloc_type: item?.sloc_type,
+            sloc_type: item?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
           }
         })
         setData([newData, ...newDataChild])
@@ -80,7 +82,7 @@ export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
     }),
     addColumn({
       title: 'Sloc Name',
-      dataIndex: 'sloc_function',
+      dataIndex: 'sloc_name',
     }),
     addColumn({
       title: 'Sloc Type',
