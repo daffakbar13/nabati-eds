@@ -166,9 +166,9 @@ export default function PageBilling() {
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <ReactToPrint
                 onBeforeGetContent={() =>
-                  printBilling({ invoice_ids: shipmentSelected }).then((res) =>
-                    setInvoice(res.data.invoice),
-                  )
+                  printBilling({ invoice_ids: shipmentSelected }).then((res) => {
+                    setInvoice(res.data.invoice)
+                  })
                 }
                 onAfterPrint={() => setInvoice(undefined)}
                 content={() => printRef.current}
@@ -180,9 +180,9 @@ export default function PageBilling() {
               />
               <ReactToPrint
                 onBeforeGetContent={() =>
-                  printBilling({ surat_jalan_ids: shipmentSelected }).then((res) =>
-                    setSuratJalan(res.data.surat_jalan),
-                  )
+                  printBilling({ surat_jalan_ids: shipmentSelected }).then((res) => {
+                    setSuratJalan(res.data.surat_jalan)
+                  })
                 }
                 onAfterPrint={() => setSuratJalan(undefined)}
                 content={() => printRef.current}
