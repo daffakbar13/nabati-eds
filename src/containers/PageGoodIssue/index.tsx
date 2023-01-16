@@ -36,6 +36,7 @@ export default function PageGoodsIssue(props: Props) {
   }
 
   const statusOption = [
+    { label: 'PGI Done', value: '07' },
     { label: 'Done', value: '01' },
     { label: 'Canceled', value: '02' },
     { label: 'Pending', value: '00' },

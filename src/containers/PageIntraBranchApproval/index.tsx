@@ -135,7 +135,7 @@ export default function PageApproval(props: Props) {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="status"
+                field="status_id"
                 dataType="S"
                 label="Status"
                 options={['EQ', 'NE', 'BT', 'NB']}

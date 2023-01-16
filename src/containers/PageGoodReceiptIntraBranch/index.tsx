@@ -36,8 +36,7 @@ export default function PageGoodsIssue(props: Props) {
 
   const statusOption = [
     { label: 'Done', value: '01' },
-    { label: 'Canceled', value: '02' },
-    { label: 'Pending', value: '00' },
+    { label: 'Delivery', value: '14' },
   ]
 
   const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
