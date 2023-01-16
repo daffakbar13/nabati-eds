@@ -32,39 +32,46 @@ export default function PageConfigurationSloc() {
 
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => {
-      if (item.list?.[0].group_by_sloc?.length > 1) {
+      if (item?.GroupByBranch?.length > 1) {
         return {
           key: index,
-          branch: `${item.list?.[0].Sloc.branch_id} - ${item.list?.[0].Sloc.branch_name}`,
-          branch_id: item.list?.[0].Sloc.branch_id,
-          branch_name: item.list?.[0].Sloc.branch_name,
-          sloc_id: item.list?.[0].group_by_sloc?.[0].sloc_id,
-          sloc_function: item.list?.[0].group_by_sloc?.[0].sloc_function,
-          sloc_type: item.list?.[0].group_by_sloc?.[0].sloc_type,
-          action: item.list?.[0].Sloc.branch_id,
-          sales_org: item.list?.[0].Sloc.sales_org_id,
-          children: item.list?.[0].group_by_sloc?.slice(1).map((itemChild: any, indexChild) => ({
+          branch: `${item?.branch_id} - ${item.branch_name}`,
+          company_id: item?.GroupByBranch?.[0].company_id,
+          branch_id: item?.branch_id,
+          branch_name: item?.branch_name,
+          sloc_id: item?.GroupByBranch?.[0].sloc_id,
+          sloc_function: item?.GroupByBranch?.[0].sloc_function,
+          sloc_type: item?.GroupByBranch?.[0].sloc_type,
+          sales_org: item?.GroupByBranch?.[0].sales_org_id,
+          action: item?.branch_id,
+          children: item?.GroupByBranch?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
+            // branch: `${item?.branch_id} - ${item.branch_name}`,
             branch: '',
-            branch_id: itemChild?.Sloc?.branch_id,
-            branch_name: itemChild?.Sloc?.branch_name,
+            company_id: item?.company_id,
+            branch_id: item?.branch_id,
+            branch_name: item?.branch_name,
             sloc_id: itemChild?.sloc_id,
             sloc_function: itemChild?.sloc_function,
             sloc_type: itemChild?.sloc_type,
+            sales_org: itemChild?.sales_org_id,
+            // action: item?.branch_id,
             action: '',
           })),
         }
-      }
-      return {
-        key: index,
-        branch: `${item.list?.[0].Sloc.branch_id} - ${item.list?.[0].Sloc.branch_name}`,
-        branch_id: item.list?.[0].Sloc.branch_id,
-        branch_name: item.list?.[0].Sloc.branch_name,
-        sloc_id: item.list?.[0].group_by_sloc?.[0].sloc_id,
-        sloc_function: item.list?.[0].group_by_sloc?.[0].sloc_function,
-        sloc_type: item.list?.[0].group_by_sloc?.[0].sloc_type,
-        action: item.list?.[0].Sloc.branch_id,
-        sales_org: item.list?.[0].Sloc.sales_org_id,
+      } else {
+        return {
+          key: index,
+          branch: `${item?.branch_id} - ${item.branch_name}`,
+          company_id: item?.GroupByBranch?.[0].company_id,
+          branch_id: item?.branch_id,
+          branch_name: item?.branch_name,
+          sloc_id: item?.GroupByBranch?.[0].sloc_id,
+          sloc_function: item?.GroupByBranch?.[0].sloc_function,
+          sloc_type: item?.GroupByBranch?.[0].sloc_type,
+          sales_org: item?.GroupByBranch?.[0].sales_org_id,
+          action: item?.branch_id,
+        }
       }
     })
     setdataTable(dataApi)

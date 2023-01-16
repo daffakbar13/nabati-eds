@@ -8,13 +8,12 @@ import { useTableAddItem } from './columns'
 import SlocForm from './slocForm'
 
 interface slocList {
-  sloc_id: string
-  sloc_function: string
-  sloc_type: string
-  sales_org_id: string
-  company_id: string
+  company_id?: string
   branch_id: string
-  branch_name: string
+  sales_org: string
+  sloc_id: string
+  sloc_name: string
+  sloc_type: string
 }
 
 interface FormData {
@@ -36,14 +35,18 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     company_id: 'PP01',
     branch_id: 'P104',
     branch_name: 'PMA Bandung Selatan',
-    GroupByBranch: tableAddItems.data,
+    GroupByBranch: {
+      sloc_list : tableAddItems.data
+    },
   }
 
   const handleSubmit = async () => {
     const reqBody = { ...initialValue, ...dataForm }
+
+    console.log('post Data', reqBody.GroupByBranch)
     if (!isOnEditMode) {
       try {
-        return await createConfigSloc({ sloc_list: reqBody })
+        return await createConfigSloc(reqBody.GroupByBranch)
       } catch (error) {
         console.error(error)
       }
@@ -52,7 +55,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     if (isOnEditMode) {
       try {
         return await updateConfigSloc(
-          reqBody,
+          reqBody.GroupByBranch,
           reqBody.company_id as string,
           reqBody.branch_id as string,
         )
@@ -79,13 +82,12 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
       onChangeForm('branch_id', payload.branch_id)
       onChangeForm('branch_name', payload.branch_name)
       tableAddItems.handleAddItem({
-        sloc_id: reqBody.sloc_id,
-        sloc_function: reqBody.sloc_name,
-        sloc_type: reqBody.sloc_type,
-        sales_org_id: payload?.sales_org,
-        company_id: payload?.company_id,
+        company_id: payload?.company_id || 'PP01',
         branch_id: payload?.branch_id,
-        branch_name: payload?.branch_name,
+        sales_org: payload?.sales_org,
+        sloc_id: reqBody.sloc_id,
+        sloc_name: reqBody.sloc_name,
+        sloc_type: reqBody.sloc_type,
       })
     } else {
       onChangeForm('branch_id', reqBody.branch_id)
@@ -96,6 +98,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
 
   useEffect(() => {
     onChangeForm('branch_id', payload?.branch_id)
+    onChangeForm('payload data:', payload)
   }, [isOnEditMode, payload])
 
   useEffect(() => {
@@ -162,7 +165,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         loading={loading}
         onOkSuccess={() => {
           handleClose()
-          router.reload()
+          router.push('/logistic/configuration-sloc')
         }}
         successContent={(res: any) => (
           <>Sloc has been successfully {isOnEditMode ? 'Updated' : 'created'}</>

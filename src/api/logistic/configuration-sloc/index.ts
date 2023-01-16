@@ -42,7 +42,7 @@ export const updateConfigSloc = async (
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.PUT,
-    subUrl: `${url}/update_config_sloc/${companyId}/${branchId}`,
+    subUrl: `${url}/update_config_sloc`,
     overrideBaseUrl,
     data: params,
   })

@@ -12,24 +12,23 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
     const values = await form.validateFields()
 
     if (!values.sloc_id) return
-    if (!values.sloc_type) return
+    if (!values.sloc_name) return
     if (!values.sloc_type.value) return
 
     const newRow = {
-      sloc_id: values.sloc_id,
-      sloc_function: values.sloc_function,
-      sloc_type: values.sloc_type.value,
-      company_id: 'PP01',
-      sales_org_id: values.sales_org.value,
+      branch_name: values.branch_id?.label?.split(' - ')[1] || '',
       branch_id: values.branch_id.value,
-      branch_name: values.branch_id.label.split(' - ')[1] || '',
+      sales_org: values.sales_org.value,
+      sloc_id: values.sloc_id,
+      sloc_name: values.sloc_name,
+      sloc_type: values.sloc_type.value,
     }
 
     handleAdd(newRow)
 
     form.setFieldsValue({
       sloc_id: '',
-      sloc_function: '',
+      sloc_name: '',
       sloc_type: undefined,
     })
   }
@@ -85,7 +84,7 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
           </Form.Item>
         </Col>
         <Col span={4}>
-          <Form.Item name="sloc_function" rules={[{ required: true }]}>
+          <Form.Item name="sloc_name" rules={[{ required: true }]}>
             <DebounceSelect label="Sloc Name" required type="input" placeholder="e.g Good Stock" />
           </Form.Item>
         </Col>
