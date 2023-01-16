@@ -16,7 +16,6 @@ import { TableBilling } from './columns'
 export default function PageCollection() {
   const table = useTable({
     funcApi: getCollectionList,
-    haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')

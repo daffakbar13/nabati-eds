@@ -1,6 +1,6 @@
 import React from 'react'
 import { Search, Spacer, Text, Table, DatePickerInput, Button } from 'pink-lava-ui'
-import { Card, SmartFilter } from 'src/components'
+import { Card, FloatAction, SmartFilter } from 'src/components'
 import { colors } from 'src/configs/colors'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -15,7 +15,7 @@ import { TableBilling } from './columns'
 export default function PageUndelivered() {
   const table = useTable({
     funcApi: getUndeliveredList,
-    haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
+    haveCheckBox: 'All',
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
@@ -129,6 +129,27 @@ export default function PageUndelivered() {
         </div>
         {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
+      {table.state.selected.length > 0 && (
+        <FloatAction>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <b>{table.state.selected.length} Document Shipment are Selected</b>
+          </div>
+          <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+            <Button size="small" variant="secondary">
+              Cancel Proccess
+            </Button>
+            <Button size="small" variant="primary">
+              Confirm
+            </Button>
+          </div>
+        </FloatAction>
+      )}
     </Col>
   )
 }
