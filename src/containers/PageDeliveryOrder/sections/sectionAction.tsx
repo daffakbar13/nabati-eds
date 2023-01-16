@@ -8,7 +8,6 @@ import ReactToPrint from 'react-to-print'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { colors } from 'src/configs/colors'
 import { fieldBranchAll, fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
 import { useFilters, useTable } from 'src/hooks'
 
@@ -20,7 +19,7 @@ export default function SectionAction(props: SectionActionProps) {
   const { table } = props
   const router = useRouter()
   const componentRef = React.useRef()
-  const { filterId, filters, oldfilters, onChangeSearch, setFilters } = useFilters(table)
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Delivery Order ID')
   const statusOption = [
     { label: 'New', value: '1' },
     { label: 'Draft', value: '10' },
@@ -69,15 +68,7 @@ export default function SectionAction(props: SectionActionProps) {
     <Row justify="space-between">
       <Row gutter={10}>
         <Col>
-          <Search
-            placeholder="Search Delivery Order ID"
-            width="380px"
-            nameIcon="SearchOutlined"
-            colorIcon={colors.grey.regular}
-            value={filterId}
-            onChange={(e) => onChangeSearch(e)}
-            allowClear
-          />
+          <Search {...searchProps} />
         </Col>
         <Col>
           <SmartFilter onOk={setFilters} oldFilter={oldfilters}>

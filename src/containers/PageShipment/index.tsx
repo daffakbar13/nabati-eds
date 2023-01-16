@@ -19,6 +19,7 @@ import moment from 'moment'
 import Loader from 'src/components/Loader'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
+import { useFilters } from 'src/hooks'
 import { TableBilling } from './columns'
 
 export default function PageShipment() {
@@ -27,23 +28,19 @@ export default function PageShipment() {
     haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
     columns: TableBilling,
   })
+  const { oldfilters, searchProps, setFilters } = useFilters(table, 'Search Shipment ID')
   const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
-  const [processing, setProcessing] = React.useState('')
   const [pending, setPending] = React.useState(0)
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
   const hasData = table.state.total > 0
   const router = useRouter()
   const oneSelected = table.state.selected.length === 1
-  const [smartFilters, setSmartFilters] = React.useState([])
   const statusOption = [
     { label: 'New', value: '1' },
     { label: 'Draft', value: '10' },
     { label: 'Cancel', value: '7' },
   ]
-  React.useEffect(() => {
-    table.handler.handleFilter(smartFilters)
-  }, [smartFilters])
 
   const ConfirmPGI = () => (
     <Popup
@@ -161,27 +158,8 @@ export default function PageShipment() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search Menu Design Name"
-              colorIcon={colors.grey.regular}
-              onChange={(e) => {
-                const { value } = e.target
-                if (value === '') {
-                  table.handler.handleFilter([])
-                } else {
-                  table.handler.handleFilter([
-                    {
-                      field: 'id',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                    },
-                  ])
-                }
-              }}
-            />
-            <SmartFilter onOk={setSmartFilters}>
+            <Search {...searchProps} />
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="sales_org_id"
                 dataType="S"

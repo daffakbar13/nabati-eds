@@ -12,7 +12,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import FloatAction from 'src/components/FloatAction'
 import Popup from 'src/components/Popup'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll, fieldCustomer, fieldReason, fieldSalesOrg } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldReason, fieldSalesOrg } from 'src/configs/fieldFetches'
 import { PATH } from 'src/configs/menus'
 import Loader from 'src/components/Loader'
 import { getApprovalList, multipleSubmitApproval } from 'src/api/approval'
@@ -26,7 +26,11 @@ export default function PageApproval() {
     haveCheckBox: [{ rowKey: 'status_approved_name', member: ['Wait For Approval'] }],
     columns: useColumnApproval,
   })
-  const { oldfilters, setFilters, filterId, onChangeSearch } = useFilters(table, 'eds_order.id')
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search Sales Order ID',
+    'eds_order.id',
+  )
   const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
@@ -301,15 +305,7 @@ export default function PageApproval() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              placeholder="Search Sales Order ID"
-              width="380px"
-              nameIcon="SearchOutlined"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => onChangeSearch(e)}
-              allowClear
-            />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="sales_org_id"

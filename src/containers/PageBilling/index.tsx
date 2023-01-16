@@ -15,7 +15,6 @@ import {
   fieldBranchAll,
 } from 'src/configs/fieldFetches'
 import { useFilters } from 'src/hooks'
-import { colors } from 'src/configs/colors'
 import ReactToPrint from 'react-to-print'
 import { Col, Row } from 'antd'
 import { TableBilling } from './columns'
@@ -27,6 +26,7 @@ export default function PageBilling() {
     haveCheckBox: 'All',
     columns: TableBilling,
   })
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Billing ID')
   const hasData = table.state.total > 0
   const [optionsOrderType, setOptionsOrderType] = useState([])
   const [invoice, setInvoice] = React.useState<any[]>()
@@ -36,7 +36,6 @@ export default function PageBilling() {
     fieldOrderType('M').then((result) => setOptionsOrderType(result))
   }, [])
   const titlePage = useTitlePage('list')
-  const { filterId, oldfilters, setFilters, onChangeSearch } = useFilters(table)
 
   const statusOption = [
     { label: 'All', value: null },
@@ -60,15 +59,7 @@ export default function PageBilling() {
         <Row style={{ justifyContent: 'space-between' }}>
           <Row gutter={16}>
             <Col>
-              <Search
-                placeholder="Search Billing ID"
-                width="380px"
-                nameIcon="SearchOutlined"
-                colorIcon={colors.grey.regular}
-                value={filterId}
-                onChange={(e) => onChangeSearch(e)}
-                allowClear
-              />
+              <Search {...searchProps} />
             </Col>
             <Col>
               <SmartFilter onOk={setFilters} oldFilter={oldfilters}>

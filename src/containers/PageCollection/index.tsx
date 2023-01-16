@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, SmartFilter } from 'src/components'
-import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
@@ -19,7 +18,7 @@ export default function PageCollection() {
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
-  const { filterId, oldfilters, onChangeSearch, setFilters } = useFilters(table)
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
   const statusOption = [
     { label: 'All', value: null },
     { label: 'New', value: 'New' },
@@ -36,15 +35,7 @@ export default function PageCollection() {
         <Row justify="space-between">
           <Row gutter={16}>
             <Col>
-              <Search
-                width="380px"
-                nameIcon="SearchOutlined"
-                placeholder="Search Shipment ID"
-                colorIcon={colors.grey.regular}
-                value={filterId}
-                onChange={(e) => onChangeSearch(e)}
-                allowClear
-              />
+              <Search {...searchProps} />
             </Col>
             <Col>
               <SmartFilter onOk={setFilters} oldFilter={oldfilters}>

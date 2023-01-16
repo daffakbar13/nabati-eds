@@ -19,7 +19,7 @@ export default function PageUndelivered() {
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
-  const { filterId, oldfilters, onChangeSearch, setFilters } = useFilters(table)
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
   const statusOption = [
     { label: 'All', value: null },
     { label: 'New', value: 'New' },
@@ -36,15 +36,7 @@ export default function PageUndelivered() {
         <Row justify="space-between">
           <Row gutter={16}>
             <Col>
-              <Search
-                width="380px"
-                nameIcon="SearchOutlined"
-                placeholder="Search Shipment ID"
-                colorIcon={colors.grey.regular}
-                value={filterId}
-                onChange={(e) => onChangeSearch(e)}
-                allowClear
-              />
+              <Search {...searchProps} />
             </Col>
             <Col>
               <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
