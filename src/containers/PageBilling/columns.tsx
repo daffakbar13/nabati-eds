@@ -49,6 +49,7 @@ export const TableBilling = [
     title: 'Billing Number',
     dataIndex: 'billing_number',
     render: (link, record) => <Linked link={link} status={record.status} type="id" />,
+    sorter: true,
     fixed: true,
   }),
   addColumn({

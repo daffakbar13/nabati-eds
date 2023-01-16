@@ -1,26 +1,97 @@
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
+import React from 'react'
+import { Button } from 'pink-lava-ui'
+import dateFormat from 'src/utils/dateFormat'
+import TaggedStatus from 'src/components/TaggedStatus'
+import { PATH } from 'src/configs/menus'
 
-function Action({ link }: { link: string }) {
+interface LinkedProps {
+  link: string
+  status: string
+  type: 'id' | 'action'
+}
+
+function Linked(props: LinkedProps) {
+  const { link, status, type } = props
   const router = useRouter()
-  const navigate = () => {
-    router.push(`/sales/undelivered/detail/${link}`)
+  const redirectTo = (page: 'edit' | 'detail') => {
+    router.push(`${PATH.SALES}/undelivered/${page}/${link}`)
   }
+  const navigate = () => {
+    if (status === 'Draft') {
+      redirectTo('edit')
+    } else {
+      redirectTo('detail')
+    }
+  }
+  const [hover, setHover] = React.useState(false)
+
   return (
-    <h4 onClick={navigate} style={{ cursor: 'pointer' }}>
-      View Detail
-    </h4>
+    <>
+      {type === 'id' ? (
+        <div
+          onClick={navigate}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
+          style={{
+            cursor: 'pointer',
+            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
+          }}
+        >
+          {link}
+        </div>
+      ) : (
+        <Button size="big" variant="tertiary" onClick={navigate}>
+          View Detail
+        </Button>
+      )}
+    </>
   )
 }
 
 export const TableBilling = [
-  CreateColumns('Shipment', 'shipment_id', true),
-  CreateColumns('Vehicle Number', 'vechile_number'),
-  CreateColumns('Driver', 'driver'),
-  CreateColumns('Created Date', 'create_date'),
-  CreateColumns('Total Undelivered', 'total_undelivered'),
-  CreateColumns('Sales Org.', 'sales_org'),
-  CreateColumns('Branch', 'branch'),
-  CreateColumns('Status', 'status'),
-  CreateColumns('Action', 'shipment_id', false, (link: string) => <Action link={link} />),
+  addColumn({
+    title: 'Shipment',
+    render: (_, { shipment_id, status }) => <Linked link={shipment_id} status={status} type="id" />,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Vehicle Number',
+    dataIndex: 'vechile_number',
+  }),
+  addColumn({
+    title: 'Driver',
+    dataIndex: 'driver',
+  }),
+  addColumn({
+    title: 'Created Date',
+    render: (_, { create_date }) => dateFormat(create_date),
+  }),
+  addColumn({
+    title: 'Total Undelivered',
+    dataIndex: 'total_undelivered',
+  }),
+  addColumn({
+    title: 'Sales Org.',
+    dataIndex: 'sales_org',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch',
+  }),
+  addColumn({
+    title: 'Status',
+    render: (_, { status }) => <TaggedStatus status={status} />,
+  }),
+  addColumn({
+    title: 'Action',
+    render: (_, { shipment_id, status }) => (
+      <Linked link={shipment_id} status={status} type="action" />
+    ),
+  }),
 ]

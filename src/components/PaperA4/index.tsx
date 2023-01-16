@@ -2,10 +2,11 @@ import React from 'react'
 
 interface PaperA4Props {
   children?: React.ReactNode
+  style?: React.CSSProperties
 }
 
 export default function PaperA4(props: PaperA4Props) {
-  const { children } = props
+  const { children, style } = props
 
   return (
     <div
@@ -17,6 +18,8 @@ export default function PaperA4(props: PaperA4Props) {
         width: 1122.5,
         zoom: 793.7 / 1122.5,
         backgroundColor: 'white',
+        lineHeight: 1,
+        ...style,
       }}
     >
       {children}

@@ -2,20 +2,11 @@ import React from 'react'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-// import { TableBilling } from 'src/data/tables'
-import { Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getUndeliveredList } from 'src/api/undelivered'
 import Pagination from 'src/components/Pagination'
 import { TableBilling } from './columns'
-
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
 
 export default function PageUndelivered() {
   const table = useTable({

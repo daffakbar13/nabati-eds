@@ -34,6 +34,16 @@ export const getDetailBilling = async (
   return response.data
 }
 
+export const printBilling = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/print`,
+    data: payload,
+  })
+  return response.data
+}
+
 export const createBilling = async (payload: any) => {
   const response = await call({
     method: METHODS.POST,
