@@ -58,6 +58,7 @@ export const TableBilling = [
   addColumn({
     title: 'Shipment',
     render: (_, { shipment_id, status }) => <Linked link={shipment_id} status={status} type="id" />,
+    fixed: true,
     sorter: true,
   }),
   addColumn({
@@ -70,11 +71,12 @@ export const TableBilling = [
   }),
   addColumn({
     title: 'Created Date',
-    render: (_, { create_date }) => dateFormat(create_date),
+    dataIndex: 'create_date',
   }),
   addColumn({
     title: 'Total Undelivered',
     dataIndex: 'total_undelivered',
+    align: 'center',
   }),
   addColumn({
     title: 'Sales Org.',
