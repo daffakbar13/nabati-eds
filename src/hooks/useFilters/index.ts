@@ -1,12 +1,29 @@
+/* eslint-disable operator-linebreak */
 import React from 'react'
+import { colors } from 'src/configs/colors'
 import { useAppContext } from 'src/contexts'
 import useTable from '../useTable'
+
+interface SearchProps {
+  placeholder?: string
+  width?: string
+  nameIcon?: string
+  colorIcon?: string
+  value?: string
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+  allowClear?: boolean
+}
 
 export default function useFilters(
   /**
    * Return of Hooks Table
    */
   table: ReturnType<typeof useTable>,
+  /**
+   * Placeholder of Search Input
+   */
+  placeholder: string = 'Search ID',
   /**
    * Column Name of ID
    */
@@ -51,6 +68,16 @@ export default function useFilters(
     }
   }
 
+  const searchProps: SearchProps = {
+    allowClear: true,
+    colorIcon: colors.grey.regular,
+    nameIcon: 'SearchOutlined',
+    onChange: (e) => onChangeSearch(e),
+    placeholder,
+    value: filterId,
+    width: '380px',
+  }
+
   React.useEffect(() => {
     if (app.state.isRequestPrevious) {
       setFilters(body.filters)
@@ -69,5 +96,6 @@ export default function useFilters(
     filterId,
     setFilterId,
     onChangeSearch,
+    searchProps,
   }
 }

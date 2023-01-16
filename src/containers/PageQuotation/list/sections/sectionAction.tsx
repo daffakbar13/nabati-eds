@@ -8,7 +8,6 @@ import { downloadTemplateQuotation } from 'src/api/quotation'
 import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 import { SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { colors } from 'src/configs/colors'
 import { fieldBranchAll, fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
 import { useFilters } from 'src/hooks'
 import { useSalesQuotationListContext } from '../states'
@@ -17,7 +16,11 @@ export default function SectionAction() {
   const {
     state: { table },
   } = useSalesQuotationListContext()
-  const { oldfilters, filterId, setFilters, onChangeSearch } = useFilters(table, 'eds_order.id')
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search Quotation ID',
+    'eds_order.id',
+  )
   const router = useRouter()
   const componentRef = React.useRef()
   const statusOption = [
@@ -69,15 +72,7 @@ export default function SectionAction() {
     <Row justify="space-between">
       <Row gutter={10}>
         <Col>
-          <Search
-            placeholder="Search Quotation ID"
-            width="380px"
-            nameIcon="SearchOutlined"
-            colorIcon={colors.grey.regular}
-            value={filterId}
-            onChange={(e) => onChangeSearch(e)}
-            allowClear
-          />
+          <Search {...searchProps} />
         </Col>
         <Col>
           <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
