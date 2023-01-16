@@ -64,7 +64,15 @@ export default function CreateBilling() {
   )
 
   const handleDelete = async () => {
+    const fieldRow = selectedRow + 1
     tableAddItems.handleDeleteRows(selectedRow)
+    form.setFieldsValue({
+      ['Item.' + fieldRow]: '',
+      // ['Qty.' + fieldRow]: '',
+      // ['UoM.' + fieldRow]: '',
+      ['Batch.' + fieldRow]: '',
+      ['ItemSender.' + fieldRow]: '',
+    })
     setModalDelete(false)
   }
 
