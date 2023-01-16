@@ -45,6 +45,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
 
   React.useEffect(() => {
     console.log('data submit :', data)
+    console.log('data submit placeholder :', placeholder)
   }, [data])
 
   function handleChangeData(key: string, value: string | number, index: number) {
@@ -302,7 +303,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
           fieldUom(product_id).then((value) => {
             // console.log('value new:', value?.[0].value)
             const newOptionsUom = [...optionsUom]
-            if (value?.[0].value) {
+            if (value?.[0]?.value) {
               handleChangeData('uom_id', value?.[0].value, index)
               handleChangeData('base_uom_id', value?.[0].value, index)
             } else {
