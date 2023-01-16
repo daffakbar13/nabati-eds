@@ -80,8 +80,14 @@ export const useColumnApproval = [
     title: 'Order Date',
     dataIndex: 'order_date',
   }),
-  addColumn({ title: 'Sales Org.', dataIndex: 'sales_org_id' }),
-  addColumn({ title: 'Branch', dataIndex: 'branch_id' }),
+  addColumn({
+    title: 'Sales Org.',
+    dataIndex: 'sales_org_id',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+  }),
   addColumn({
     title: 'Sold To Customer',
     dataIndex: 'sold_to_customer_id',
@@ -92,22 +98,24 @@ export const useColumnApproval = [
     dataIndex: 'ship_to_customer_id',
     render: (id, { customer_name }) => [id, customer_name].join(' - '),
   }),
-  addColumn({ title: 'Salesman', dataIndex: 'salesman_id' }),
   addColumn({
-    title: 'Currency',
-    dataIndex: 'currency_id',
+    title: 'Salesman',
+    dataIndex: 'salesman_id',
   }),
   addColumn({
     title: 'Total Amount',
     dataIndex: 'total_amount',
   }),
-  addColumn({ title: 'Create From', dataIndex: 'created_from' }),
+  // addColumn({ title: 'Create From', dataIndex: 'created_from' }),
   addColumn({
     title: 'Status',
     dataIndex: 'status_name',
     render: (status) => <TaggedStatus status={status} />,
   }),
-  addColumn({ title: 'Block Status', dataIndex: 'status_block_name' }),
+  addColumn({
+    title: 'Block Status',
+    dataIndex: 'status_block_name',
+  }),
   addColumn({
     title: 'Status Approval',
     dataIndex: 'status_approved_name',
