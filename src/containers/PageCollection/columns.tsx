@@ -1,8 +1,9 @@
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { Button } from 'pink-lava-ui'
 import React from 'react'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -39,22 +40,47 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 }
 
 export const TableBilling = [
-  CreateColumns(
-    'Shipment',
-    'shipment_id',
-    true,
-    (link, record) => <Linked link={link} status={record.status} type="id" />,
-    170,
-    true,
-  ),
-  CreateColumns('Vehicle Number', 'vechile_number'),
-  CreateColumns('Driver', 'driver'),
-  CreateColumns('Created Date', 'create_date'),
-  CreateColumns('Total DO', 'total_do'),
-  CreateColumns('Sales Org.', 'sales_org'),
-  CreateColumns('Branch', 'branch'),
-  CreateColumns('Status', 'status'),
-  CreateColumns('Action', 'shipment_id', false, (link, record) => (
-    <Linked link={link} status={record.status} type="action" />
-  )),
+  addColumn({
+    title: 'Shipment',
+    render: (_, { shipment_id, status }) => <Linked link={shipment_id} status={status} type="id" />,
+    fixed: true,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Vehicle Number',
+    dataIndex: 'vechile_number',
+  }),
+  addColumn({
+    title: 'Driver',
+    dataIndex: 'driver',
+  }),
+  addColumn({
+    title: 'Created Date',
+    dataIndex: 'created_date',
+  }),
+  addColumn({
+    title: 'Total DO',
+    dataIndex: 'total_do',
+    align: 'center',
+  }),
+  addColumn({
+    title: 'Sales Org.',
+    dataIndex: 'sales_org',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch',
+  }),
+  addColumn({
+    title: 'Status',
+    render: (_, { status }) => (
+      <TaggedStatus status={status === 'PGI Complete' ? 'Billing Created' : status} />
+    ),
+  }),
+  addColumn({
+    title: 'Action',
+    render: (_, { shipment_id, status }) => (
+      <Linked link={shipment_id} status={status} type="action" />
+    ),
+  }),
 ]
