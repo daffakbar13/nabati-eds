@@ -3,22 +3,13 @@ import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
 // import { TableBilling } from 'src/data/tables'
-import { Checkbox, Popover, Divider } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getCollectionList } from 'src/api/collection'
 import Pagination from 'src/components/Pagination'
-import { PageCollectionProps } from './types'
 import { TableBilling } from './columns'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
-export default function PageCollection(props: PageCollectionProps) {
+export default function PageCollection() {
   const table = useTable({
     funcApi: getCollectionList,
     haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
@@ -35,7 +26,7 @@ export default function PageCollection(props: PageCollectionProps) {
           <Search
             width="380px"
             nameIcon="SearchOutlined"
-            placeholder="Search Menu Design Name"
+            placeholder="Search Shipment ID"
             colorIcon={colors.grey.regular}
             onChange={() => {}}
           />

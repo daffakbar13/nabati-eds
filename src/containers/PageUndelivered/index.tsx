@@ -1,11 +1,15 @@
 import React from 'react'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card } from 'src/components'
+import { Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Card, SmartFilter } from 'src/components'
 import { colors } from 'src/configs/colors'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getUndeliveredList } from 'src/api/undelivered'
 import Pagination from 'src/components/Pagination'
+import { fieldSalesOrganization, fieldBranchAll, fieldCustomer } from 'src/configs/fieldFetches'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { useFilters } from 'src/hooks'
+import { Col, Row } from 'antd'
 import { TableBilling } from './columns'
 
 export default function PageUndelivered() {
@@ -15,25 +19,100 @@ export default function PageUndelivered() {
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
+  const { filterId, oldfilters, onChangeSearch, setFilters } = useFilters(table)
+  const statusOption = [
+    { label: 'All', value: null },
+    { label: 'New', value: 'New' },
+    { label: 'Draft', value: 'Draft' },
+    { label: 'Complete', value: 'Complete' },
+    { label: 'Cancel', value: 'Cancel' },
+  ]
 
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card>
-        <Row justifyContent="space-between">
-          <Search
-            width="380px"
-            nameIcon="SearchOutlined"
-            placeholder="Search Menu Design Name"
-            colorIcon={colors.grey.regular}
-            onChange={() => {}}
-          />
-          <Row gap="16px">
-            <Button size="big" variant="secondary" onClick={() => {}}>
-              Download
-            </Button>
-          </Row>
+        <Row gutter={10}>
+          <Col>
+            <Search
+              width="380px"
+              nameIcon="SearchOutlined"
+              placeholder="Search Shipment ID"
+              value={filterId}
+              colorIcon={colors.grey.regular}
+              onChange={(e) => onChangeSearch(e)}
+              allowClear
+            />
+          </Col>
+          <Col>
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
+              <SmartFilter.Field
+                field="sales_org"
+                dataType="S"
+                label="Sales Organization"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
+                <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="branch"
+                dataType="S"
+                label="Branch"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="ship_to_customer"
+                dataType="S"
+                label="Sold to Customer"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+                <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+              </SmartFilter.Field>
+              {/* <SmartFilter.Field
+              field="order_type"
+              dataType="S"
+              label="Order Type"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" options={optionsOrderType} />
+              <DebounceSelect type="select" options={optionsOrderType} />
+            </SmartFilter.Field> */}
+              <SmartFilter.Field
+                field="order_date"
+                dataType="S"
+                label="Posting Date"
+                options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DatePickerInput
+                  label={''}
+                  fullWidth
+                  format={'DD-MMM-YYYY'}
+                  placeholder="Posting Date"
+                />
+                <DatePickerInput
+                  fullWidth
+                  label={''}
+                  format={'DD-MMM-YYYY'}
+                  placeholder="Posting Date"
+                />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="status"
+                dataType="S"
+                label="Status"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+              </SmartFilter.Field>
+            </SmartFilter>
+          </Col>
         </Row>
       </Card>
       <Spacer size={10} />

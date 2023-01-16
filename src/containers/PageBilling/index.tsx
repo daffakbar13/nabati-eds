@@ -16,15 +16,12 @@ import {
 } from 'src/configs/fieldFetches'
 import { useFilters } from 'src/hooks'
 import { colors } from 'src/configs/colors'
-import PaperA4 from 'src/components/PaperA4'
 import ReactToPrint from 'react-to-print'
 import { Col, Row } from 'antd'
-import { PageBillingProps } from './types'
 import { TableBilling } from './columns'
 import PrintBilling from './print'
 
-export default function PageBilling(props: PageBillingProps) {
-  const router = useRouter()
+export default function PageBilling() {
   const table = useTable({
     funcApi: getBilling,
     haveCheckBox: 'All',
@@ -53,7 +50,6 @@ export default function PageBilling(props: PageBillingProps) {
     .filter((d) => table.state.selected.includes(d.billing_number))
     .map((s) => s.shipment_number)
 
-  console.log(router.query.id)
   const printRef = React.useRef<HTMLDivElement>()
 
   return (
@@ -65,7 +61,7 @@ export default function PageBilling(props: PageBillingProps) {
           <Row gutter={16}>
             <Col>
               <Search
-                placeholder="Search Quotation ID"
+                placeholder="Search Billing ID"
                 width="380px"
                 nameIcon="SearchOutlined"
                 colorIcon={colors.grey.regular}
@@ -170,8 +166,9 @@ export default function PageBilling(props: PageBillingProps) {
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <ReactToPrint
                 onBeforeGetContent={() =>
-                  printBilling({ invoice_ids: shipmentSelected })
-                    .then((res) => setInvoice(res.data.invoice))
+                  printBilling({ invoice_ids: shipmentSelected }).then((res) =>
+                    setInvoice(res.data.invoice),
+                  )
                 }
                 onAfterPrint={() => setInvoice(undefined)}
                 content={() => printRef.current}
@@ -183,8 +180,9 @@ export default function PageBilling(props: PageBillingProps) {
               />
               <ReactToPrint
                 onBeforeGetContent={() =>
-                  printBilling({ surat_jalan_ids: shipmentSelected })
-                    .then((res) => setSuratJalan(res.data.surat_jalan))
+                  printBilling({ surat_jalan_ids: shipmentSelected }).then((res) =>
+                    setSuratJalan(res.data.surat_jalan),
+                  )
                 }
                 onAfterPrint={() => setSuratJalan(undefined)}
                 content={() => printRef.current}
@@ -198,9 +196,7 @@ export default function PageBilling(props: PageBillingProps) {
           </FloatAction>
         )}
       </Card>
-      {(invoice || suratJalan) && (
-      <Spacer size={20} />
-      )}
+      {(invoice || suratJalan) && <Spacer size={20} />}
       <div ref={printRef} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <PrintBilling invoice={invoice} surat_jalan={suratJalan} />
       </div>
