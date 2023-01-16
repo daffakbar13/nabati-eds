@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Col, Row, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import { Button, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Card, SmartFilter, SearchQueryParams } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { getBilling } from 'src/api/billing'
+import { getBilling, printBilling } from 'src/api/billing'
 import Pagination from 'src/components/Pagination'
 import FloatAction from 'src/components/FloatAction'
 import {
@@ -14,38 +14,29 @@ import {
   fieldSalesOrganization,
   fieldBranchAll,
 } from 'src/configs/fieldFetches'
-import { PageBillingProps } from './types'
+import { useFilters } from 'src/hooks'
+import { colors } from 'src/configs/colors'
+import ReactToPrint from 'react-to-print'
+import { Col, Row } from 'antd'
 import { TableBilling } from './columns'
+import PrintBilling from './print'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
-export default function PageBilling(props: PageBillingProps) {
-  const router = useRouter()
-  const [filters, setFilters] = useState([])
+export default function PageBilling() {
   const table = useTable({
     funcApi: getBilling,
-    haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
+    haveCheckBox: 'All',
     columns: TableBilling,
   })
   const hasData = table.state.total > 0
-  const oneSelected = table.state.selected.length === 1
-  const firstSelected = table.state.selected[0]
   const [optionsOrderType, setOptionsOrderType] = useState([])
+  const [invoice, setInvoice] = React.useState<any[]>()
+  const [suratJalan, setSuratJalan] = React.useState<any[]>()
+
   useEffect(() => {
     fieldOrderType('M').then((result) => setOptionsOrderType(result))
   }, [])
-
-  const selectedQuotation = {
-    text: oneSelected
-      ? firstSelected
-      : `${firstSelected}, More +${table.state.selected.length - 1}`,
-    content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
-  }
   const titlePage = useTitlePage('list')
+  const { filterId, oldfilters, setFilters, onChangeSearch } = useFilters(table)
 
   const statusOption = [
     { label: 'All', value: null },
@@ -55,107 +46,110 @@ export default function PageBilling(props: PageBillingProps) {
     { label: 'Cancel', value: 'Cancel' },
   ]
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const shipmentSelected = table.state.data
+    .filter((d) => table.state.selected.includes(d.billing_number))
+    .map((s) => s.shipment_number)
 
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'billing_number',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
+  const printRef = React.useRef<HTMLDivElement>()
 
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
-        <Row justifyContent="space-between">
-          <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Billing Number" />
-            <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field
-                field="sales_org"
-                dataType="S"
-                label="Sales Organization"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
-                <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="branch"
-                dataType="S"
-                label="Branch"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="ship_to_customer"
-                dataType="S"
-                label="Sold to Customer"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect type="select" fetchOptions={fieldCustomer} />
-                <DebounceSelect type="select" fetchOptions={fieldCustomer} />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="order_type"
-                dataType="S"
-                label="Order Type"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect type="select" options={optionsOrderType} />
-                <DebounceSelect type="select" options={optionsOrderType} />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="order_date"
-                dataType="S"
-                label="Posting Date"
-                options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
-              >
-                <DatePickerInput
-                  label={''}
-                  fullWidth
-                  format={'DD-MMM-YYYY'}
-                  placeholder="Posting Date"
-                />
-                <DatePickerInput
-                  fullWidth
-                  label={''}
-                  format={'DD-MMM-YYYY'}
-                  placeholder="Posting Date"
-                />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="status"
-                dataType="S"
-                label="Status"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
-                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
-              </SmartFilter.Field>
-            </SmartFilter>
+        <Row style={{ justifyContent: 'space-between' }}>
+          <Row gutter={16}>
+            <Col>
+              <Search
+                placeholder="Search Billing ID"
+                width="380px"
+                nameIcon="SearchOutlined"
+                colorIcon={colors.grey.regular}
+                value={filterId}
+                onChange={(e) => onChangeSearch(e)}
+                allowClear
+              />
+            </Col>
+            <Col>
+              <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
+                <SmartFilter.Field
+                  field="sales_org"
+                  dataType="S"
+                  label="Sales Organization"
+                  options={['EQ', 'NE', 'BT', 'NB']}
+                >
+                  <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
+                  <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
+                </SmartFilter.Field>
+                <SmartFilter.Field
+                  field="branch"
+                  dataType="S"
+                  label="Branch"
+                  options={['EQ', 'NE', 'BT', 'NB']}
+                >
+                  <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                  <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                </SmartFilter.Field>
+                <SmartFilter.Field
+                  field="ship_to_customer"
+                  dataType="S"
+                  label="Sold to Customer"
+                  options={['EQ', 'NE', 'BT', 'NB']}
+                >
+                  <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+                  <DebounceSelect type="select" fetchOptions={fieldCustomer} />
+                </SmartFilter.Field>
+                <SmartFilter.Field
+                  field="order_type"
+                  dataType="S"
+                  label="Order Type"
+                  options={['EQ', 'NE', 'BT', 'NB']}
+                >
+                  <DebounceSelect type="select" options={optionsOrderType} />
+                  <DebounceSelect type="select" options={optionsOrderType} />
+                </SmartFilter.Field>
+                <SmartFilter.Field
+                  field="order_date"
+                  dataType="S"
+                  label="Posting Date"
+                  options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
+                >
+                  <DatePickerInput
+                    label={''}
+                    fullWidth
+                    format={'DD-MMM-YYYY'}
+                    placeholder="Posting Date"
+                  />
+                  <DatePickerInput
+                    fullWidth
+                    label={''}
+                    format={'DD-MMM-YYYY'}
+                    placeholder="Posting Date"
+                  />
+                </SmartFilter.Field>
+                <SmartFilter.Field
+                  field="status"
+                  dataType="S"
+                  label="Status"
+                  options={['EQ', 'NE', 'BT', 'NB']}
+                >
+                  <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+                  <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+                </SmartFilter.Field>
+              </SmartFilter>
+            </Col>
           </Row>
-          <Row gap="16px">
+          <Col>
             <Button size="big" variant="secondary" onClick={() => {}}>
               Download
             </Button>
-          </Row>
+          </Col>
         </Row>
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} rowKey={'shipment_id'} />
+          <Table {...table.state.tableProps} rowKey={'billing_number'} />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -170,19 +164,42 @@ export default function PageBilling(props: PageBillingProps) {
               <b>{table.state.selected.length} Document Biling Number are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="small" variant="tertiary" onClick={() => {}}>
-                Cancel Process
-              </Button>
-              <Button size="small" variant="secondary" onClick={() => {}}>
-                Print Invoice
-              </Button>
-              <Button size="small" variant="primary" onClick={() => {}}>
-                Print Surat Jalan
-              </Button>
+              <ReactToPrint
+                onBeforeGetContent={() =>
+                  printBilling({ invoice_ids: shipmentSelected }).then((res) => {
+                    setInvoice(res.data.invoice)
+                  })
+                }
+                onAfterPrint={() => setInvoice(undefined)}
+                content={() => printRef.current}
+                trigger={() => (
+                  <Button size="small" variant="secondary">
+                    Print Invoice
+                  </Button>
+                )}
+              />
+              <ReactToPrint
+                onBeforeGetContent={() =>
+                  printBilling({ surat_jalan_ids: shipmentSelected }).then((res) => {
+                    setSuratJalan(res.data.surat_jalan)
+                  })
+                }
+                onAfterPrint={() => setSuratJalan(undefined)}
+                content={() => printRef.current}
+                trigger={() => (
+                  <Button size="small" variant="primary">
+                    Print Surat Jalan
+                  </Button>
+                )}
+              />
             </div>
           </FloatAction>
         )}
       </Card>
+      {(invoice || suratJalan) && <Spacer size={20} />}
+      <div ref={printRef} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <PrintBilling invoice={invoice} surat_jalan={suratJalan} />
+      </div>
     </Col>
   )
 }

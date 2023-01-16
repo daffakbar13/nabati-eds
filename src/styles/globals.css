@@ -228,3 +228,14 @@ table.eds_promotion_log thead tr th {
 .antd-table-tbody tr td {
   padding: 10px !important;
 }
+
+table.eds_print_invoice {
+  table-layout: auto;
+  width: 100%
+}
+
+table.eds_print_invoice tr th,
+table.eds_print_invoice tr td {
+  text-align: left;
+  padding: 5px;
+}

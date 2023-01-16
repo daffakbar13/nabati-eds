@@ -261,13 +261,7 @@ export default function PageApprovalDetail() {
             cursor: 'pointer',
           }}
           onClick={() => {
-            router.push({
-              pathname: `${PATH.SALES}/approval`,
-              query: {
-                page: router.query.page,
-                limit: router.query.limit,
-              },
-            })
+            router.push(`${PATH.SALES}/undelivered`)
           }}
         >
           <ArrowLeftOutlined style={{ fontSize: 25 }} />

@@ -11,7 +11,7 @@ export default function SalesSalesOrderListProvider(
   const table = useTable({
     funcApi: getSalesOrder,
     haveCheckBox: [
-      { rowKey: 'status_name', member: ['New'] },
+      { rowKey: 'status_name', member: ['New', 'Open'] },
       { rowKey: 'status_availability_name', member: ['Available', 'Partial'] },
     ],
     columns: useColumnSalesOrder,

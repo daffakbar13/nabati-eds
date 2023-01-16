@@ -328,22 +328,6 @@ export default function PageApproval() {
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="customer"
-                dataType="S"
-                label="Sold To Customer"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect type="select" fetchOptions={fieldCustomer} />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="customer"
-                dataType="S"
-                label="Ship To Customer"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect type="select" fetchOptions={fieldCustomer} />
-              </SmartFilter.Field>
-              <SmartFilter.Field
                 field="order_type"
                 dataType="S"
                 label="Order Type"
@@ -370,6 +354,34 @@ export default function PageApproval() {
                   format={'DD-MMM-YYYY'}
                   placeholder="Posting Date"
                 />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="order_date"
+                dataType="S"
+                label="Delivery Date"
+                options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
+              >
+                <DatePickerInput
+                  label={''}
+                  fullWidth
+                  format={'DD-MMM-YYYY'}
+                  placeholder="Posting Date"
+                />
+                <DatePickerInput
+                  fullWidth
+                  label={''}
+                  format={'DD-MMM-YYYY'}
+                  placeholder="Posting Date"
+                />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="status_id"
+                dataType="S"
+                label="Block Status"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="status_id"
