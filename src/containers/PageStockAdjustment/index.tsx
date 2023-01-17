@@ -11,6 +11,7 @@ import { columns } from './columns'
 import { colors } from 'src/configs/colors'
 
 import FreezeSlocModal from './modals/freezeSloc'
+import Pagination from 'src/components/Pagination'
 
 export default function PageStockAdjustment() {
   const [freezeModal, setFreezeModal] = useState(false)
@@ -25,6 +26,8 @@ export default function PageStockAdjustment() {
     funcApi: getListStockAdjustment,
     columns: columns(goToDetailPage),
   })
+
+  const hasData = table.state.total > 0
 
   const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
@@ -43,6 +46,8 @@ export default function PageStockAdjustment() {
     }
     fetch()
   }, [])
+
+  console.log('hasdata', hasData)
 
   return (
     <>
@@ -188,6 +193,7 @@ export default function PageStockAdjustment() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <FreezeSlocModal
