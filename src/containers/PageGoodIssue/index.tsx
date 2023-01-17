@@ -35,14 +35,17 @@ export default function PageGoodsIssue(props: Props) {
     content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
 
+  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+
   const statusOption = [
-    { label: 'PGI Done', value: '07' },
-    { label: 'Done', value: '01' },
-    { label: 'Canceled', value: '02' },
-    { label: 'Pending', value: '00' },
+    { label: 'Done', value: '00' },
+    { label: 'Cancelled', value: '02' },
   ]
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+  const statusMovType = [
+    { label: '641 - TF to stck in trans', value: '641' },
+    { label: '642 - TR to stck in trans', value: '642' },
+  ]
 
   return (
     <Col>
@@ -115,6 +118,15 @@ export default function PageGoodsIssue(props: Props) {
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="movement_type"
+                dataType="S"
+                label="Move Type"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={statusMovType} />
+                <DebounceSelect type="select" placeholder={'Select'} options={statusMovType} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"

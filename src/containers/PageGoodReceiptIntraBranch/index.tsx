@@ -39,6 +39,11 @@ export default function PageGoodsIssue(props: Props) {
     { label: 'Delivery', value: '14' },
   ]
 
+  const statusMovType = [
+    { label: '101 - GR stock in transit', value: '101' },
+    { label: '102 - GR st. in transit rev', value: '102' },
+  ]
+
   const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
   return (
@@ -112,6 +117,15 @@ export default function PageGoodsIssue(props: Props) {
               >
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="movement_type"
+                dataType="S"
+                label="Move Type"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" placeholder={'Select'} options={statusMovType} />
+                <DebounceSelect type="select" placeholder={'Select'} options={statusMovType} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
