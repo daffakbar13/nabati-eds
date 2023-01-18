@@ -111,7 +111,7 @@ export default function PageIntraChannelGoodIssueDetail() {
               </Col>
             </Row>
             <Divider />
-            <div style={{ overflow: 'scroll' }}>
+            <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
               <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
             </div>
           </Card>

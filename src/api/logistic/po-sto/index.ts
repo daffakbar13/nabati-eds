@@ -60,3 +60,15 @@ export const updateStatusPoSto = async (
   })
   return response.data
 }
+
+export const ApproveMultiplePoSto = async (
+  params: any = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/multiple_approve`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

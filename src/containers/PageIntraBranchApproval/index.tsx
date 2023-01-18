@@ -3,26 +3,29 @@ import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Checkbox, Popover, Spin, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
 import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
-import { getListPoSto } from 'src/api/logistic/po-sto'
+import { getListPoSto, ApproveMultiplePoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { Props } from './types'
 import { columns } from './columns'
 import { colors } from 'src/configs/colors'
+import { CheckCircleFilled } from '@ant-design/icons'
 
 export default function PageApproval(props: Props) {
   const table = useTable({
     funcApi: getListPoSto,
-    haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
+    haveCheckBox: [{ rowKey: 'status', member: ['Wait For Approval'] }],
     columns,
   })
   const [showConfirm, setShowConfirm] = React.useState('')
+  const [loading, setLoading] = useState(false)
+
   const hasData = table.state.total > 0
   const router = useRouter()
   const oneSelected = table.state.selected.length === 1
@@ -150,7 +153,7 @@ export default function PageApproval(props: Props) {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -162,11 +165,17 @@ export default function PageApproval(props: Props) {
                 justifyContent: 'center',
               }}
             >
-              <b>{table.state.selected.length} Document Quotation are Selected</b>
+              <b>{table.state.selected.length} PO STO intra branch are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => {}}>
-                Cancel Process
+              <Button
+                size="big"
+                variant="tertiary"
+                onClick={() => {
+                  setShowConfirm('Rejected')
+                }}
+              >
+                Reject
               </Button>
               <Button
                 size="big"
@@ -175,7 +184,7 @@ export default function PageApproval(props: Props) {
                   setShowConfirm('submit')
                 }}
               >
-                Submit
+                Approve
               </Button>
             </div>
           </FloatAction>
@@ -187,10 +196,10 @@ export default function PageApproval(props: Props) {
             }}
           >
             <Typography.Title level={3} style={{ margin: 0 }}>
-              Confirm Submit
+              Confirm Approve
             </Typography.Title>
             <Typography.Title level={5} style={{ margin: 0 }}>
-              Are you sure to submit quotation
+              Are you sure to approve this PO STO intra branch
               {oneSelected ? (
                 ` ${selectedQuotation.text} ?`
               ) : (
@@ -205,20 +214,157 @@ export default function PageApproval(props: Props) {
                 style={{ flexGrow: 1 }}
                 variant="secondary"
                 onClick={() => {
-                  router.reload()
+                  setShowConfirm('')
                 }}
               >
-                Cancel Proccess
+                Cancel
               </Button>
+              <Button
+                size="big"
+                style={{ flexGrow: 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+                variant="primary"
+                onClick={() => {
+                  setLoading(true)
+                  ApproveMultiplePoSto({
+                    status_id: '01',
+                    ids: table.state.selected,
+                  })
+                    .then((response) => {
+                      setShowConfirm('UpdateStatus')
+                      setLoading(false)
+                    })
+                    .catch((e) => console.log(e))
+                }}
+              >
+                {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
+                Approve
+              </Button>
+            </div>
+          </Popup>
+        )}
+        {showConfirm === 'Rejected' && (
+          <Popup
+            onOutsideClick={() => {
+              setShowConfirm('')
+            }}
+          >
+            <Typography.Title level={3} style={{ margin: 0 }}>
+              Confirm Reject
+            </Typography.Title>
+            <Typography.Title level={5} style={{ margin: 0 }}>
+              Are you sure to reject this PO STO intra branch
+              {oneSelected ? (
+                ` ${selectedQuotation.text} ?`
+              ) : (
+                <Popover content={selectedQuotation.content}>
+                  {` ${selectedQuotation.text} ?`}
+                </Popover>
+              )}
+            </Typography.Title>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <Button
+                size="big"
+                style={{ flexGrow: 1 }}
+                variant="secondary"
+                onClick={() => {
+                  setShowConfirm('')
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                size="big"
+                style={{ flexGrow: 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+                variant="primary"
+                onClick={() => {
+                  setLoading(true)
+                  ApproveMultiplePoSto({
+                    status_id: '02',
+                    ids: table.state.selected,
+                  })
+                    .then((response) => {
+                      setShowConfirm('UpdateStatusReject')
+                      setLoading(true)
+                    })
+                    .catch((e) => console.log(e))
+                }}
+              >
+                {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
+                Reject
+              </Button>
+            </div>
+          </Popup>
+        )}
+
+        {showConfirm === 'UpdateStatus' && (
+          <Popup>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Text
+                textAlign="center"
+                style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+              >
+                <>
+                  <CheckCircleFilled /> Approve PO STO Success
+                </>
+              </Text>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: 4,
+                flexDirection: 'column',
+                textAlign: 'center',
+              }}
+            >
+              <div>successfully approve PO STO success</div>
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
               <Button
                 size="big"
                 style={{ flexGrow: 1 }}
                 variant="primary"
                 onClick={() => {
-                  router.reload()
+                  router.push('/logistic/approval')
                 }}
               >
-                Submit
+                OK
+              </Button>
+            </div>
+          </Popup>
+        )}
+
+        {showConfirm === 'UpdateStatusReject' && (
+          <Popup>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Text
+                textAlign="center"
+                style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+              >
+                <>
+                  <CheckCircleFilled /> Reject PO STO Success
+                </>
+              </Text>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                gap: 4,
+                flexDirection: 'column',
+                textAlign: 'center',
+              }}
+            >
+              <div>successfully reject PO STO success</div>
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <Button
+                size="big"
+                style={{ flexGrow: 1 }}
+                variant="primary"
+                onClick={() => {
+                  router.push('/logistic/approval')
+                }}
+              >
+                OK
               </Button>
             </div>
           </Popup>

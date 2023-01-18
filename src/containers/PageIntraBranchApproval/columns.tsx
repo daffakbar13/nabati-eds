@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
@@ -44,43 +44,44 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
     </>
   )
 }
-// import { useRouter } from 'next/router'
-// import React from 'react'
-// import { Button } from 'pink-lava-ui'
-// import { PATH } from 'src/configs/menus'
 
 export const columns = [
-  CreateColumns(
-    'PO Number',
-    'id',
-    true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
-  CreateColumns(
-    'Company ',
-    'company_id',
-    false,
-    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-  ),
-  CreateColumns(
-    'Supplying Branch',
-    'suppl_branch_id',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.suppl_branch_name}`}</>,
-    250,
-  ),
-  CreateColumns(
-    'Receiving Branch',
-    'receive_plant_id',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.receive_plant_name}`}</>,
-    250,
-  ),
-  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link, record) => (
-    <Linked link={link} type="action" status={record.status_name} />
-  )),
+  addColumn({
+    title: 'PO Number',
+    dataIndex: 'id',
+    render: (text: string, record: any) => <Linked link={text} type="id" status={record.status} />,
+    width: 180,
+    fixed: 'left',
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text: string, record: any) => `${text || ''} - ${record.company_name || ''}`,
+  }),
+  addColumn({
+    title: 'Supplying Branch',
+    dataIndex: 'suppl_branch_id',
+    render: (text: string, record: any) => `${text} - ${record.suppl_branch_name}`,
+  }),
+  addColumn({
+    title: 'Receiving Branch',
+    dataIndex: 'receive_plant_id',
+    render: (text: string, record: any) => `${text} - ${record.receive_plant_name}`,
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status',
+    render: (text: string, record: any) => <TaggedStatus status={text} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'id',
+    render: (text: string, record: any) => (
+      <Linked link={text} type="action" status={record.status} />
+    ),
+  }),
 ]
