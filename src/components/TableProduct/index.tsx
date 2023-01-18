@@ -10,6 +10,7 @@ interface TableProductProps {
   TableProps: ReturnType<typeof useTableProduct>
   hideData?: boolean
   withDiscount?: boolean
+  withItemCategory?: boolean
 }
 
 export default function TableProduct(props: TableProductProps) {
@@ -20,15 +21,29 @@ export default function TableProduct(props: TableProductProps) {
     },
     hideData,
     withDiscount,
+    withItemCategory,
   } = props
   const subTotal = data.map((d) => d.sub_total).reduce((prev, curr) => prev + curr)
+
+  function configColumns() {
+    if (!withDiscount && !withItemCategory) {
+      return columns.filter((c) => c.dataIndex !== 'discount' && c.dataIndex !== 'item_category')
+    }
+    if (!withDiscount) {
+      return columns.filter((c) => c.dataIndex !== 'discount')
+    }
+    if (!withItemCategory) {
+      return columns.filter((c) => c.dataIndex !== 'item_category')
+    }
+    return columns
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div style={{ overflow: 'scroll' }}>
         <Table
           data={hideData ? [] : data}
-          columns={!withDiscount ? columns.filter((c) => c.dataIndex !== 'discount') : columns}
+          columns={configColumns()}
           loading={isLoading}
           scroll={{ x: 'max-content' }}
         />

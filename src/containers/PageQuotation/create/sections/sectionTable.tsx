@@ -13,6 +13,7 @@ export default function SectionTable() {
       TableProps={tableProduct}
       hideData={dataForm.customer_id === undefined}
       withDiscount={['ZQR1', 'ZQW1'].includes(orderTypeId)}
+      withItemCategory={['ZQR1', 'ZQW1'].includes(orderTypeId)}
     />
   )
 }
