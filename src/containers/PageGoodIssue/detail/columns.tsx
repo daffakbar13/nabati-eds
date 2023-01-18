@@ -35,14 +35,25 @@ export const column = [
     title: 'Outstanding',
     dataIndex: 'outstanding',
     children: [
-      addColumn({
+      {
         title: 'Qty',
-        dataIndex: 'qty',
-      }),
-      addColumn({
+        dataIndex: 'received_base_qty',
+        render: (text, record, index) => (
+          <>
+            {record.uom_id == 'CTN'
+              ? Math.round((parseFloat(record.qty) - parseFloat(record.received_qty)) * 100) / 100
+              : Math.round(
+                  (parseFloat(record.base_qty) - parseFloat(record.received_base_qty)) * 100,
+                ) / 100}
+          </>
+        ),
+        width: 75,
+      },
+      {
         title: 'UoM',
         dataIndex: 'uom_id',
-      }),
+        width: 75,
+      },
     ],
   }),
   addColumn({
@@ -51,11 +62,11 @@ export const column = [
     children: [
       addColumn({
         title: 'Qty',
-        dataIndex: 'qty',
+        dataIndex: 'received_qty',
       }),
       addColumn({
         title: 'UoM',
-        dataIndex: 'uom_id',
+        dataIndex: 'received_uom_id',
       }),
     ],
   }),
