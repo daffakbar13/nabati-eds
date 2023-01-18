@@ -26,13 +26,11 @@ export const column = [
       {
         title: 'Qty',
         dataIndex: 'qty',
-        key: 'qty_po',
         width: 75,
       },
       {
         title: 'UoM',
         dataIndex: 'uom_id',
-        key: 'uom_po',
         width: 75,
       },
     ],
@@ -45,13 +43,20 @@ export const column = [
       {
         title: 'Qty',
         dataIndex: 'received_base_qty',
-        key: 'qty_outstanding',
+        render: (text, record, index) => (
+          <>
+            {record.uom_id == 'CTN'
+              ? Math.round((parseFloat(record.qty) - parseFloat(record.received_qty)) * 100) / 100
+              : Math.round(
+                  (parseFloat(record.base_qty) - parseFloat(record.received_base_qty)) * 100,
+                ) / 100}
+          </>
+        ),
         width: 75,
       },
       {
         title: 'UoM',
-        dataIndex: 'received_base_uom_id',
-        key: 'uom_outstanding',
+        dataIndex: 'uom_id',
         width: 75,
       },
     ],
@@ -64,13 +69,11 @@ export const column = [
       {
         title: 'Qty',
         dataIndex: 'received_qty',
-        key: 'qty_received',
         width: 75,
       },
       {
         title: 'UoM',
         dataIndex: 'received_uom_id',
-        key: 'uom_received',
         width: 75,
       },
     ],
