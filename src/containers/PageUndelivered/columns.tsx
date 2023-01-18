@@ -54,9 +54,10 @@ function Linked(props: LinkedProps) {
   )
 }
 
-export const TableBilling = [
+export const TableUndelivered = [
   addColumn({
     title: 'Shipment',
+    dataIndex: 'shipment_id',
     render: (_, { shipment_id, status }) => <Linked link={shipment_id} status={status} type="id" />,
     fixed: true,
     sorter: true,

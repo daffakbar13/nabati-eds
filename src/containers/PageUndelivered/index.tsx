@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Search, Spacer, Text, Table, DatePickerInput, Button } from 'pink-lava-ui'
 import { Card, FloatAction, SmartFilter } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -10,14 +10,18 @@ import { fieldSalesOrganization, fieldBranchAll, fieldCustomer } from 'src/confi
 import DebounceSelect from 'src/components/DebounceSelect'
 import { useFilters } from 'src/hooks'
 import { Col, Row } from 'antd'
-import { TableBilling } from './columns'
+import { TableUndelivered } from './columns'
+import ConfirmReject from './alerts/ConfirmReject'
 
 export default function PageUndelivered() {
   const table = useTable({
     funcApi: getUndeliveredList,
     haveCheckBox: 'All',
-    columns: TableBilling,
+    columns: TableUndelivered,
   })
+
+  const [showConfirm, setShowConfirm] = useState('')
+
   const titlePage = useTitlePage('list')
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
   const statusOption = [
@@ -79,20 +83,20 @@ export default function PageUndelivered() {
                 <SmartFilter.Field
                   field="order_date"
                   dataType="S"
-                  label="Posting Date"
+                  label="Creating Date"
                   options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
                 >
                   <DatePickerInput
                     label={''}
                     fullWidth
                     format={'DD-MMM-YYYY'}
-                    placeholder="Posting Date"
+                    placeholder="Creating Date"
                   />
                   <DatePickerInput
                     fullWidth
                     label={''}
                     format={'DD-MMM-YYYY'}
-                    placeholder="Posting Date"
+                    placeholder="Creating Date"
                   />
                 </SmartFilter.Field>
                 <SmartFilter.Field
@@ -117,7 +121,7 @@ export default function PageUndelivered() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey={'shipment_id'} />
         </div>
         {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
@@ -133,14 +137,18 @@ export default function PageUndelivered() {
             <b>{table.state.selected.length} Document Shipment are Selected</b>
           </div>
           <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-            <Button size="small" variant="secondary">
+            <Button size="small" variant="secondary" onClick={() => setShowConfirm('reject')}>
               Cancel Proccess
             </Button>
-            <Button size="small" variant="primary">
+            <Button size="small" variant="primary" onClick={() => setShowConfirm('submit')}>
               Confirm
             </Button>
           </div>
         </FloatAction>
+      )}
+
+      {showConfirm === 'reject' && (
+        <ConfirmReject selectedItems={table.state.selected} onCancel={() => setShowConfirm('')} />
       )}
     </Col>
   )
