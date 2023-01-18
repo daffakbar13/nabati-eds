@@ -89,12 +89,11 @@ export const freezeSlocIdByBranchId = async (
 
 export const updateStockAdjustment = async (
   id: string,
-  docNumber: string,
   params: any = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/${id}/${docNumber}/update`,
+    subUrl: `${url}/${id}/update`,
     overrideBaseUrl,
     data: params,
   })
