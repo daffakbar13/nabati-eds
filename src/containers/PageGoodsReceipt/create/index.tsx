@@ -24,6 +24,7 @@ export default function CreateGoodsReceipt() {
   const [headerData, setHeaderData] = useState(null)
   const [tableData, setTableData] = useState([])
   const [selectedTableData, setSelectedTableData] = useState([])
+  const [itemPayload, setItemPayload] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
   const [numberPO, setnumberPO] = useState('')
@@ -49,14 +50,14 @@ export default function CreateGoodsReceipt() {
       delivery_number: headerData?.delivery_number,
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      remarks: headerData.remark,
       vendor: headerData.vendor.value,
       branch: headerData.branch.value,
       delivery_note: headerData.delivery_note,
       bill_of_lading: headerData.bill_of_lading,
-      items: selectedTableData,
+      remarks: headerData.remark,
+      items: itemPayload,
     }
-    console.log('payload', payload)
+    // console.log('payload', payload)
     const res = await createGoodReceipt(payload)
 
     // console.log('res', res)
@@ -122,6 +123,24 @@ export default function CreateGoodsReceipt() {
       }),
     )
   }
+
+  useEffect(() => {
+    const selected = selectedTableData.map((item: any, index) => {
+      return {
+        item: item?.item_number,
+        product_id: item?.product_id,
+        description: item?.product_name,
+        qty_po: item?.qty_po,
+        uom_id: item?.uom_id,
+        received_qty: item?.qty_gr,
+        received_qty_uom_id: item?.uom_id,
+        sloc_id: item?.sloc_id || 'GS00',
+        batch: item?.batch,
+        remarks: item?.remarks,
+      }
+    })
+    setItemPayload(selected)
+  }, [selectedTableData])
 
   return (
     <Col>
