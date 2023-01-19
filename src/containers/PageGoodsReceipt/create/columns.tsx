@@ -1,67 +1,62 @@
 import { Input, Select, SelectMasterData } from 'src/components'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 export const columns = (slocOptions: [], onTableValuesChange: (opt: any) => void) => [
-  CreateColumns(
-    'Item',
-    'item_number',
-    true,
-    (text, rec) => <Input value={text} disabled type="text" label="" />,
-    100,
-  ),
-  CreateColumns(
-    'Item PO',
-    'product_id',
-    true,
-    (text, rec) => <Input value={`${text}-${rec.product_name}`} disabled type="text" label="" />,
-    350,
-  ),
-  {
+  addColumn({
+    title: 'Item',
+    dataIndex: 'item_number',
+    render: (text, record, index) => <Input value={text} disabled type="text" label="" />,
+    width: 100,
+  }),
+  addColumn({
+    title: 'Item PO',
+    dataIndex: 'product_id',
+    render: (text, record, index) => (
+      <Input value={`${text} - ${record.product_name}`} disabled type="text" label="" />
+    ),
+    width: 350,
+  }),
+  addColumn({
     title: 'PO',
     children: [
-      CreateColumns(
-        'Qty',
-        'qty_po',
-        true,
-        (text, rec) => <Input value={text} disabled type="text" label="" />,
-        100,
-      ),
-      CreateColumns(
-        'UoM',
-        'uom_id',
-        true,
-        (text, rec) => <Input value={text} disabled type="text" label="" />,
-        100,
-      ),
+      addColumn({
+        title: 'Qty',
+        dataIndex: 'qty_po',
+        render: (text, record, index) => <Input value={text} disabled type="text" label="" />,
+        width: 100,
+      }),
+      addColumn({
+        title: 'UoM',
+        dataIndex: 'uom_id',
+        render: (text, record, index) => <Input value={text} disabled type="text" label="" />,
+        width: 100,
+      }),
     ],
-  },
-  {
+  }),
+  addColumn({
     title: 'Outstanding',
     children: [
-      CreateColumns(
-        'Qty',
-        'qty_po',
-        true,
-        (text, rec) => <Input value={text} disabled type="text" label="" />,
-        100,
-      ),
-      CreateColumns(
-        'UoM',
-        'uom_id',
-        true,
-        (text, rec) => <Input value={text} disabled type="text" label="" />,
-        100,
-      ),
+      addColumn({
+        title: 'Qty',
+        dataIndex: 'qty_po',
+        render: (text, record, index) => <Input value={text} disabled type="text" label="" />,
+        width: 100,
+      }),
+      addColumn({
+        title: 'UoM',
+        dataIndex: 'uom_id',
+        render: (text, record, index) => <Input value={text} disabled type="text" label="" />,
+        width: 100,
+      }),
     ],
-  },
-  {
+  }),
+  addColumn({
     title: 'Received',
     children: [
-      CreateColumns(
-        'Qty',
-        'qty_gr',
-        true,
-        (text, rec, index) => (
+      addColumn({
+        title: 'Qty',
+        dataIndex: 'qty_gr',
+        render: (text, record, index) => (
           <Input
             defaultValue={text}
             type="number"
@@ -71,13 +66,12 @@ export const columns = (slocOptions: [], onTableValuesChange: (opt: any) => void
             }}
           />
         ),
-        100,
-      ),
-      CreateColumns(
-        'UoM',
-        'uom_id',
-        true,
-        (text, rec, index) => (
+        width: 100,
+      }),
+      addColumn({
+        title: 'UoM',
+        dataIndex: 'uom_id',
+        render: (text, record, index) => (
           <SelectMasterData
             onChange={(val: any) => {
               onTableValuesChange({ field: 'uom_id', value: val.value, index })
@@ -87,39 +81,33 @@ export const columns = (slocOptions: [], onTableValuesChange: (opt: any) => void
             style={{ marginTop: -8 }}
           />
         ),
-        120,
-      ),
+        width: 100,
+      }),
     ],
-  },
-  CreateColumns(
-    'Storage Location',
-    'sloc_id',
-    true,
-    // (text, rec) => <Input value={text} disabled type="text" label="" />,
-    (text, rec, index) => (
+  }),
+  addColumn({
+    title: 'Storage Location',
+    dataIndex: 'sloc_id',
+    render: (text, record, index) => (
       <Select
         options={slocOptions}
         placeholder="Select Sloc"
-        value={rec?.sloc_id ? { value: text, label: text } : { value: 'GS00', label: 'GS00' }}
+        value={text ? { value: text, label: text } : { value: 'GS00', label: 'GS00' }}
         onChange={(val: any) => {
           onTableValuesChange({ field: 'sloc_id', value: val.value, index })
         }}
       />
     ),
-    300,
-  ),
-  CreateColumns(
-    'Batch',
-    'batch',
-    true,
-    (text, rec) => <Input value={text} disabled type="text" label="" />,
-    // 300,
-  ),
-  CreateColumns(
-    'Remark',
-    'remark',
-    true,
-    (text, rec) => <Input value={text} disabled type="text" label="" />,
-    // 300,
-  ),
+    width: 300,
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'batch',
+    render: (text, record, index) => <Input value={text} disabled type="text" label="" />,
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+    render: (text, record, index) => <Input value={text} disabled type="text" label="" />,
+  }),
 ]

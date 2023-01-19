@@ -107,7 +107,11 @@ export const useTableAddItem = (props: propsUseTable) => {
           value={text?.toLocaleString()}
           onChange={(newVal) => {
             handleChangeData('stock_qty', newVal, index)
-            handleChangeData('qty_reverence', parseInt(newVal) - data?.[index].qty, index)
+            handleChangeData(
+              'qty_reverence',
+              Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
+              index,
+            )
           }}
           style={styleInputNumber}
         />
@@ -142,7 +146,11 @@ export const useTableAddItem = (props: propsUseTable) => {
           value={text?.toLocaleString()}
           onChange={(newVal) => {
             handleChangeData('qty', newVal, index)
-            handleChangeData('qty_reverence', data?.[index].stock_qty - parseInt(newVal), index)
+            handleChangeData(
+              'qty_reverence',
+              Math.round((parseFloat(data?.[index].stock_qty) - parseFloat(newVal)) * 100) / 100,
+              index,
+            )
           }}
           style={styleInputNumber}
         />

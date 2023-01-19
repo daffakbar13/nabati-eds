@@ -1,24 +1,53 @@
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 export const columns = [
-  CreateColumns('No', 'branch', true, (text, _, ind) => <>{ind + 1}</>, 75),
-  CreateColumns(
-    'Item',
-    'product_id',
-    true,
-    (text, rec) => <>{`${text}-${rec.product_name}`}</>,
-    350,
-  ),
-
-  CreateColumns('Qty Stock', 'stock_qty', true, (text) => <>{text}</>, 150),
-  CreateColumns('UoM', 'stock_uom_id', true, (text) => <>{text}</>, 100),
-
-  CreateColumns('Qty Physical', 'qty', true, (text) => <>{text}</>, 150),
-  CreateColumns('UoM', 'uom_id', true, (text) => <>{text}</>, 100),
-
-  CreateColumns('Qty Reference', 'base_qty', true, (text) => <>{text}</>, 150),
-  CreateColumns('UoM', 'base_uom_id', true, (text) => <>{text}</>, 100),
-
-  CreateColumns('Batch', 'batch', true, (text) => <>{text}</>, 100),
-  CreateColumns('Remark', 'remarks', true, (text) => <>{text}</>),
+  addColumn({
+    title: 'No',
+    dataIndex: 'id',
+    render: (text: string, record: any, index) => index + 1,
+  }),
+  addColumn({
+    title: 'Item',
+    dataIndex: 'product_id',
+    render: (text: string, record: any, index) => `${text} - ${record.product_name}`,
+  }),
+  addColumn({
+    title: 'Qty Stock',
+    dataIndex: 'stock_qty',
+    render: (text: string, record: any, index) => text,
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'stock_uom_id',
+    render: (text: string, record: any, index) => text,
+  }),
+  addColumn({
+    title: 'Qty Physical',
+    dataIndex: 'qty',
+    render: (text: string, record: any, index) => text,
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'uom_id',
+    render: (text: string, record: any, index) => text,
+  }),
+  addColumn({
+    title: 'Qty Refence',
+    dataIndex: 'stock_qty',
+    render: (text: string, record: any, index) =>
+      Math.round((parseFloat(text) - parseFloat(record.qty)) * 100) / 100,
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'uom_id',
+    render: (text: string, record: any, index) => text,
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'batch',
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]

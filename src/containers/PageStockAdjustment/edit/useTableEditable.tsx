@@ -12,15 +12,22 @@ import { addColumn } from 'src/utils/createColumns'
 interface propsUseTable {
   idbranch: string
   itemsData: any
+  MovementType: string
 }
 
 export const useTableAddItem = (props: propsUseTable) => {
   const initialValue = {
     product_id: '',
+    product_id_label: '',
     qty: 1,
-    uom_id: '',
-    batch: '',
+    uom_id: 'CTN',
+    stock_qty: 1,
+    uom_stock_id: 'CTN',
     remarks: '',
+    batch: '',
+    qty_reverence: 0,
+    uom_reverence: 'CTN',
+    movement_type_id: props.MovementType,
   }
   const [data, setData] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
@@ -56,14 +63,13 @@ export const useTableAddItem = (props: propsUseTable) => {
         product_id_label: `${item.product_id} - ${item.product_name}`,
         qty: item.qty,
         uom_id: item.uom_id,
-        base_uom_id: item.base_uom_id,
         stock_qty: item.stock_qty,
-        qty_physical: item.qty,
-        uom_id_physical: item.uom_id,
-        qty_reference: item.qty,
-        uom_id_reference: item.uom_id,
-        batch: item.batch,
+        uom_stock_id: item.stock_uom_id,
         remarks: item.remarks,
+        batch: item.batch,
+        qty_reverence: Math.round((parseFloat(item.stock_qty) - parseFloat(item.qty)) * 100) / 100,
+        uom_reverence: item.uom_id,
+        movement_type_id: props.MovementType,
       }
     })
 
@@ -125,6 +131,50 @@ export const useTableAddItem = (props: propsUseTable) => {
           value={text?.toLocaleString()}
           onChange={(newVal) => {
             handleChangeData('stock_qty', newVal, index)
+            handleChangeData(
+              'qty_reverence',
+              Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
+              index,
+            )
+          }}
+          style={styleInputNumber}
+        />
+      ),
+      width: 130,
+    }),
+    addColumn({
+      title: 'UoM',
+      dataIndex: 'uom_stock_id',
+      render: (text: string, record: any, index: number) => (
+        <DebounceSelect
+          type="select"
+          value={text as any}
+          options={optionsUom[index] || []}
+          disabled={isNullProductId(index)}
+          onChange={(e) => {
+            handleChangeData('uom_stock_id', e.value, index)
+            handleChangeData('uom_reverence', e.value, index)
+            setFetching(true)
+          }}
+        />
+      ),
+      width: 150,
+    }),
+    addColumn({
+      title: 'Qty Physical',
+      dataIndex: 'qty',
+      render: (text: string, record: any, index: number) => (
+        <InputNumber
+          disabled={isNullProductId(index)}
+          min={isNullProductId(index) ? '0' : '1'}
+          value={text?.toLocaleString()}
+          onChange={(newVal) => {
+            handleChangeData('qty', newVal, index)
+            handleChangeData(
+              'qty_reverence',
+              Math.round((parseFloat(data?.[index].stock_qty) - parseFloat(newVal)) * 100) / 100,
+              index,
+            )
           }}
           style={styleInputNumber}
         />
@@ -149,44 +199,11 @@ export const useTableAddItem = (props: propsUseTable) => {
       width: 150,
     }),
     addColumn({
-      title: 'Qty Physical',
-      dataIndex: 'qty_physical',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty_physical', newVal, index)
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
-    }),
-    addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_id_physical',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_id_physical', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
-    }),
-    addColumn({
       title: 'Qty Reference',
-      dataIndex: 'qty_reference',
+      dataIndex: 'qty_reverence',
       render: (text: string, record: any, index: number) => (
         <InputNumber
-          disabled={isNullProductId(index)}
+          disabled={true}
           min={isNullProductId(index) ? '0' : '1'}
           value={text?.toLocaleString()}
           onChange={(newVal) => {
@@ -199,15 +216,15 @@ export const useTableAddItem = (props: propsUseTable) => {
     }),
     addColumn({
       title: 'UoM',
-      dataIndex: 'uom_id_reference',
+      dataIndex: 'uom_reverence',
       render: (text: string, record: any, index: number) => (
         <DebounceSelect
           type="select"
           value={text as any}
           options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
+          disabled={true}
           onChange={(e) => {
-            handleChangeData('uom_id_reference', e.value, index)
+            handleChangeData('uom_reverence', e.value, index)
             setFetching(true)
           }}
         />
@@ -256,11 +273,9 @@ export const useTableAddItem = (props: propsUseTable) => {
             if (value[2]?.value) {
               const newUom = uom_id === '' ? value[2]?.value : uom_id
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             } else {
               const newUom = uom_id
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             }
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)

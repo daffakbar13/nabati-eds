@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
 import React from 'react'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
@@ -60,58 +60,69 @@ function Linked({
 }
 
 export const columns = [
-  CreateColumns(
-    'PO Number',
-    'purchase_id',
-    true,
-    (link: string, { status_name }: any) => (
-      <Linked link={link} type="id" status={status_name} linkType="po-sto" />
+  addColumn({
+    title: 'PO Number',
+    dataIndex: 'purchase_id',
+    render: (text, record, index) => (
+      <Linked link={text} type="id" status={record.status} linkType="po-sto" />
     ),
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'DO Number',
-    'id',
-    true,
-    (link: string, { status_name }: any) => (
-      <Linked link={link} type="id" status={status_name} linkType="do-sto" />
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'DO Number',
+    dataIndex: 'id',
+    render: (text, record, index) => (
+      <Linked link={text} type="id" status={record.status} linkType="do-sto" />
     ),
-    180,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'created_at', false, (date) => dateFormat(date), 180),
-  CreateColumns('Company', 'company_id', false, (company_id, rec) => (
-    <>{`${company_id || ''} - ${rec.company_name || ''}`}</>
-  )),
-  CreateColumns(
-    'Supplying Branch',
-    'supply_branch_id',
-    false,
-    (branch, rec) => <>{`${branch} - ${rec.supply_branch_name}`}</>,
-    250,
-  ),
-  CreateColumns(
-    'Receiving Branch',
-    'receive_branch_id',
-    false,
-    (branch, rec) => <>{`${branch} - ${rec.receive_branch_name}`}</>,
-    250,
-  ),
-  CreateColumns('Status', 'status', false, (status_process) => (
-    <>
-      {(() => {
-        if (status_process === 'Wait For Approval') {
-          return <TaggedStatus status={'Pending'} />
-        } else if (status_process === 'Rejected') {
-          return <TaggedStatus status={'Cancelled'} />
-        } else {
-          return <TaggedStatus status={status_process} />
-        }
-      })()}
-    </>
-  )),
-  CreateColumns('Action', 'id', false, (link, record) => (
-    <Linked link={link} type="action" status={record.status_name} linkType="do-sto" />
-  )),
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text, record, index) => <>{`${text || ''} - ${record.company_name || ''}`}</>,
+  }),
+  addColumn({
+    title: 'Supplying Branch',
+    dataIndex: 'supply_branch_id',
+    render: (text, record, index) => <>{`${text || ''} - ${record.supply_branch_name || ''}`}</>,
+    width: 250,
+  }),
+  addColumn({
+    title: 'Receiving Branch',
+    dataIndex: 'receive_branch_id',
+    render: (text, record, index) => <>{`${text || ''} - ${record.receive_branch_name || ''}`}</>,
+    width: 250,
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status',
+    render: (text, record, index) => (
+      <>
+        {(() => {
+          if (text === 'Wait For Approval') {
+            return <TaggedStatus status={'Pending'} />
+          } else if (text === 'Rejected') {
+            return <TaggedStatus status={'Cancelled'} />
+          } else {
+            return <TaggedStatus status={text} />
+          }
+        })()}
+      </>
+    ),
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'id',
+    render: (text, record, index) => (
+      <Linked link={text} type="action" status={record.status} linkType="do-sto" />
+    ),
+  }),
 ]

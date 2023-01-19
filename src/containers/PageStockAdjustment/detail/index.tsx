@@ -1,4 +1,4 @@
-import { Tag } from 'antd'
+import { Tag, Divider } from 'antd'
 import { Col, Spacer, Table, Text, Button } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
 import { Card, GoBackArrow, Modal } from 'src/components'
@@ -12,7 +12,7 @@ import {
 import { PATH } from 'src/configs/menus'
 import { STOCK_ADJUSTMENT_STATUS as S } from 'src/configs/stockAdjustment'
 import dateFormat from 'src/utils/dateFormat'
-import { getTagColor } from 'src/utils/getTagColor'
+import TaggedStatus from 'src/components/TaggedStatus'
 import { columns } from './columns'
 import { Loader } from 'src/components'
 import useDetail from 'src/hooks/useDetail'
@@ -55,7 +55,6 @@ export default function DetailStockAdjustment() {
     }
   }, [details])
 
-
   return (
     <>
       {loading && <Loader type="process" text="Wait for get data" />}
@@ -68,19 +67,7 @@ export default function DetailStockAdjustment() {
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
             <div style={{ display: 'flex' }}>
-              <Tag
-                style={{
-                  width: 200,
-                  padding: '8px 20px',
-                  border: '1px solid #AAAAAA',
-                  borderRadius: 8,
-                }}
-                color={getTagColor(details?.status)}
-              >
-                {<p style={{ marginTop: 4 }}>{details?.status}</p> || (
-                  <p style={{ color: 'black' }}>Status...</p>
-                )}
-              </Tag>
+              <TaggedStatus status={details.status} size="h5" />
 
               {details?.status && details?.status === 'Pending' && (
                 <div
@@ -147,8 +134,8 @@ export default function DetailStockAdjustment() {
               <List.Item label="Modified On" value={dateFormat(details?.modified_at)} />
               <List.Item label="Modified By" value={details?.modified_by} />
             </List>
-            <div style={{ borderTop: '1px solid #AAAAAA', margin: '32px auto 0' }} />
-            <div style={{ overflow: 'scroll', marginTop: 16 }}>
+            <Divider />
+            <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
               <Table columns={columns} dataSource={details?.items || []} />
             </div>
           </Card>

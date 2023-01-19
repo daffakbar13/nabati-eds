@@ -97,6 +97,7 @@ export const columns = [
         )}
       </>
     ),
+    sorter: true,
     width: 180,
     fixed: true,
   }),
