@@ -8,6 +8,8 @@ import { useTable } from 'src/hooks'
 import { useFilters } from 'src/hooks'
 import { columns } from './columns'
 import { colors } from 'src/configs/colors'
+import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
+import DebounceSelect from 'src/components/DebounceSelect'
 
 export default function PageGoodsReceipt() {
   const router = useRouter()
@@ -20,6 +22,16 @@ export default function PageGoodsReceipt() {
   })
 
   const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+
+  const optionStatus = [
+    { label: 'Done', value: '02' },
+    { label: 'Rejected', value: '01' },
+  ]
+
+  const optionMovType = [
+    { label: '101 - GR goods receipt', value: '101' },
+    { label: '122 - RE return to vendor', value: '122' },
+  ]
 
   return (
     <>
@@ -71,8 +83,8 @@ export default function PageGoodsReceipt() {
                 label="Company ID"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="COMPANY" />
-                <SelectMasterData type="COMPANY" />
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="branch_id"
@@ -80,26 +92,17 @@ export default function PageGoodsReceipt() {
                 label="Branch ID"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="PLANT" />
-                <SelectMasterData type="PLANT" />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="product_id"
+                field="movement_type"
                 dataType="S"
-                label="Material"
+                label="Move Type"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="MATERIAL" />
-                <SelectMasterData type="MATERIAL" />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="sloc_id"
-                dataType="S"
-                label="Sloc"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <SelectMasterData type="SLOC" />
-                <SelectMasterData type="SLOC" />
+                <DebounceSelect type="select" placeholder={'Select'} options={optionMovType} />
+                <DebounceSelect type="select" placeholder={'Select'} options={optionMovType} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
@@ -121,13 +124,13 @@ export default function PageGoodsReceipt() {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="status_data"
+                field="status_id"
                 dataType="S"
                 label="Status"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
+                <DebounceSelect type="select" placeholder={'Select'} options={optionStatus} />
+                <DebounceSelect type="select" placeholder={'Select'} options={optionStatus} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>

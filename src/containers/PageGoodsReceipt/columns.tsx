@@ -16,11 +16,13 @@ export const columns = (goToDetail: (id: string) => void) => [
   addColumn({
     title: 'PO Number',
     dataIndex: 'po_number',
+    sorter: true,
     fixed: true,
   }),
   addColumn({
     title: 'GI Number',
     dataIndex: 'gi_number',
+    sorter: true,
     fixed: true,
   }),
   addColumn({
