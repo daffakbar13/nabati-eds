@@ -24,7 +24,7 @@ export default function SectionAction() {
 
   const submitedShipment = (status_id: number) => ({
     branch_id: 'P104',
-    total_volume: totalSize,
+    total_volume: Number(totalSize),
     status_id: status_id.toString(),
     ...dataForm,
     vehicle_id: dataForm.vehicle_id.split(' - ')[0],

@@ -11,7 +11,7 @@ import { useSalesShipmentCreateContext } from '../states'
 
 export default function SectionTableListDo() {
   const {
-    state: { table, showModalListDO },
+    state: { table, showModalListDO, filter },
     handler: { handleModalListDO },
   } = useSalesShipmentCreateContext()
 
@@ -19,6 +19,7 @@ export default function SectionTableListDo() {
     style: { backgroundColor: '#f4f4f4f4', padding: 2, fontSize: 18 },
     onClick: () => handleModalListDO(!showModalListDO),
   }
+  console.log(table.state.tableProps)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -39,7 +40,11 @@ export default function SectionTableListDo() {
           )}
         </div>
       </Row>
-      <Table {...table.state.tableProps} rowKey={'delivery_order_id'} />
+      <Table
+        {...table.state.tableProps}
+        rowKey={'delivery_order_id'}
+        {...(filter.branch === '' && { dataSource: [] })}
+      />
       {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
     </div>
   )

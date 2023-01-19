@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 /* eslint-disable camelcase */
 import React from 'react'
 import { getCustomerByFilter } from 'src/api/master-data'
@@ -125,8 +126,10 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
   function handleTotalSize() {
     const getTotalSize = () => {
       if (state.dataSelected.length > 0) {
-        const allVolume: number[] = state.dataSelected.map(({ volume }) => volume)
-        return Math.round(allVolume.reduce((old, now) => old + now) / 10)
+        const allVolume = state.dataSelected
+          .map(({ volume }) => volume)
+          .reduce((old, now) => old + now)
+        return (Math.round((allVolume / 10) * 100) / 100).toFixed(2)
       }
       return 0
     }

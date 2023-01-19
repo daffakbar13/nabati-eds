@@ -86,7 +86,8 @@ export default function SectionSelectedInformation() {
               <tr key={index}>
                 <td>{++index}</td>
                 <td>{delivery_order_id}</td>
-                <td>{`${Math.round(volume / 10)} M³`}</td>
+                {/* <td>{`${Math.round(volume / 10)} M³`}</td> */}
+                <td>{`${(Math.round((volume / 10) * 100) / 100).toFixed(2)} M³`}</td>
                 <td>
                   <div
                     style={{
