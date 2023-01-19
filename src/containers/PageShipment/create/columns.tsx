@@ -24,7 +24,7 @@ export const useColumnsDeliveryOrder = [
   addColumn({
     title: 'Size M³',
     dataIndex: 'volume',
-    render: (v) => `${Math.round(v / 10)} M³`,
+    render: (v) => `${(Math.round((v / 10) * 100) / 100).toFixed(2)} M³`,
     align: 'right',
   }),
   addColumn({
