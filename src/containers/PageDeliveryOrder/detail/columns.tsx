@@ -21,10 +21,9 @@ export const ColumnsDeliveryOrder = [
     (price) => parseInt(price).toLocaleString(),
     120,
   ),
-  // FIXME Sub Total
   CreateColumns(
     'Gross',
-    'gross_value',
+    'gross_amount',
     false,
     (gross_value) => parseInt(gross_value).toLocaleString(),
     80,

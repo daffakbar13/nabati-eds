@@ -47,6 +47,19 @@ export default function SectionSelectedInformation() {
     table.handler.handleSelected(table.state.selected.filter((e) => e !== removedItem))
   }
 
+  function getTagText() {
+    switch (true) {
+      case !vehicleSize:
+        return 'Vehicle Not Selected'
+      case isOverLoad:
+        return 'Overload'
+      case !isOverLoad:
+        return 'Available'
+      default:
+        return ''
+    }
+  }
+
   return (
     <>
       <TitleDataList title="Select Vehicle" />
@@ -67,7 +80,7 @@ export default function SectionSelectedInformation() {
           <DescVehicle label="Total Delivery Order" value={dataSelected.length.toString()} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <Tag color={isOverLoad ? 'red' : 'green'}>{isOverLoad ? 'Overload' : 'Available'}</Tag>
+          <Tag color={isOverLoad ? 'red' : 'green'}>{getTagText()}</Tag>
         </div>
       </Row>
       <Spacer size={10} />

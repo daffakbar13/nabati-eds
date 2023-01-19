@@ -70,6 +70,11 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
             />
             <Total label="Total Net" value={parseInt(data.net_total_amount).toLocaleString()} />
             <Total label="Total Tax" value={parseInt(data.tax_total_amount).toLocaleString()} />
+            <Total
+              label="Total Amount"
+              value={parseInt(data.total_amount).toLocaleString()}
+              largeSize
+            />
           </div>
         </Col>
       </Row>
