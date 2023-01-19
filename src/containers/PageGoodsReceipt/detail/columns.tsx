@@ -1,44 +1,89 @@
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 // import { useRouter } from 'next/router'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'
 // import { PATH } from 'src/configs/menus'
 
 export const columns = [
-  CreateColumns('No', 'branch', true, (text, _, ind) => <>{ind + 1}</>, 75),
-  CreateColumns(
-    'Item PO',
-    'product_id',
-    true,
-    (text, rec) => <>{`${text}-${rec.product_name}`}</>,
-    350,
-  ),
-  {
+  addColumn({
+    title: 'No',
+    dataIndex: 'branch',
+    render: (text, record, index) => index + 1,
+    width: 75,
+  }),
+  addColumn({
+    title: 'Item PO',
+    dataIndex: 'product_id',
+    render: (text, record, index) => `${text} - ${record.product_name}`,
+    width: 350,
+  }),
+  addColumn({
     title: 'PO',
     children: [
-      CreateColumns('Qty', 'qty_po', true, (text) => <>{text}</>, 100),
-      CreateColumns('UoM', 'uom_id', true, (text) => <>{text}</>, 100),
+      addColumn({
+        title: 'Qty',
+        dataIndex: 'qty_po',
+        width: 100,
+      }),
+      addColumn({
+        title: 'UoM',
+        dataIndex: 'uom_id',
+        width: 100,
+      }),
     ],
-  },
-  {
+  }),
+  addColumn({
     title: 'Outstanding',
     children: [
-      CreateColumns('Qty', '-', true, (text) => <>{text}</>, 100),
-      CreateColumns('UoM', '-', true, (text) => <>{text}</>, 100),
+      addColumn({
+        title: 'Qty',
+        dataIndex: 'qty_po',
+        render: (text, record, index) => '-',
+        width: 100,
+      }),
+      addColumn({
+        title: 'UoM',
+        dataIndex: 'uom_id',
+        render: (text, record, index) => '-',
+        width: 100,
+      }),
     ],
-  },
-  {
+  }),
+  addColumn({
     title: 'Received',
     children: [
-      CreateColumns('Qty', 'qty_gr', true, (text) => <>{text}</>, 100),
-      CreateColumns('UoM', 'uom_id', true, (text) => <>{text}</>, 100),
+      addColumn({
+        title: 'Qty',
+        dataIndex: 'qty_gr',
+        width: 100,
+      }),
+      addColumn({
+        title: 'UoM',
+        dataIndex: 'uom_id',
+        width: 100,
+      }),
     ],
-  },
-  CreateColumns(
-    'Storage Location',
-    'sloc_id',
-    true,
-    (text, rec) => <>{`${text}-${rec.sloc_name}`}</>,
-    300,
-  ),
+  }),
+  addColumn({
+    title: 'Item PO',
+    dataIndex: 'product_id',
+    render: (text, record, index) => `${text} - ${record.product_name}`,
+    width: 350,
+  }),
+  addColumn({
+    title: 'Storage Location',
+    dataIndex: 'sloc_id',
+    render: (text, record, index) => `${text} - ${record.sloc_name}`,
+    width: 300,
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'sloc_id',
+    width: 300,
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+    width: 300,
+  }),
 ]
