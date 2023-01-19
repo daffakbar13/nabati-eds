@@ -56,7 +56,11 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={ColumnsDeliveryOrder} dataSource={data.delivery_items} />
+        <Table
+          columns={ColumnsDeliveryOrder}
+          dataSource={data.delivery_items}
+          scroll={{ x: 'max-content' }}
+        />
       </div>
       <Spacer size={30} />
       <Row>
