@@ -5,12 +5,15 @@ import { DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldCustomer } from 'src/configs/fieldFetches'
 import { useSalesSalesOrderCreateContext } from 'src/hooks/contexts'
+import { useRouter } from 'next/router'
 
 export default function SectionField() {
   const {
     state: { dataForm, optionsOrderType, optionsSalesOrg, optionsBranch, optionsSalesman },
     handler: { onChangeForm, setFetching },
   } = useSalesSalesOrderCreateContext()
+  const router = useRouter()
+  const isEditPage = router.asPath.includes('edit')
 
   return (
     <Row gutter={[10, 10]}>
@@ -19,6 +22,7 @@ export default function SectionField() {
           type="select"
           required
           label="Order Type"
+          disabled={isEditPage}
           placeholder={'Select'}
           value={dataForm.order_type_id}
           options={optionsOrderType}
@@ -32,6 +36,7 @@ export default function SectionField() {
           type="select"
           label="Sold To Customer"
           required
+          disabled={isEditPage}
           value={dataForm?.customer_id}
           fetchOptions={fieldCustomer}
           onChange={(e: any) => {
@@ -45,6 +50,7 @@ export default function SectionField() {
           type="select"
           label="Ship To Customer"
           placeholder={'Select'}
+          disabled={isEditPage}
           value={dataForm?.ship_to_id}
           options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
           onChange={(e: any) => {
@@ -72,6 +78,7 @@ export default function SectionField() {
           type="select"
           label="Sales Organization"
           placeholder={'Select'}
+          disabled={isEditPage}
           value={dataForm?.sales_org_id}
           options={optionsSalesOrg}
           onChange={(e: any) => {
@@ -83,6 +90,7 @@ export default function SectionField() {
         <DebounceSelect
           type="select"
           label="Branch"
+          disabled={isEditPage}
           placeholder={'Select'}
           value={dataForm?.branch_id}
           options={optionsBranch}
@@ -142,6 +150,7 @@ export default function SectionField() {
           type="select"
           label="Salesman"
           placeholder="Select"
+          disabled={isEditPage}
           value={dataForm?.salesman_id}
           options={optionsSalesman}
           onChange={(e: any) => {
