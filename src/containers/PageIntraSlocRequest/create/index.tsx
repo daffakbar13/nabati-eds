@@ -1,10 +1,9 @@
-/* eslint-disable camelcase */
 import React from 'react'
 import moment from 'moment'
 import { Divider, Typography } from 'antd'
-import { Button, Col, Row, Spacer, Text, DatePickerInput, Table, Input } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Card, Popup } from 'src/components'
+import { Card, Loader, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { createRequestIntraSloc } from 'src/api/logistic/request-intra-sloc'
 import { useRouter } from 'next/router'
@@ -22,7 +21,7 @@ interface ItemsState {
   remarks: string
   batch: string
 }
-interface dataForm {
+interface DataFormTypes {
   document_type: string
   document_date: string
   posting_date: string
@@ -35,11 +34,11 @@ interface dataForm {
   items: Array<ItemsState>
 }
 
-export default function PageCreateQuotation() {
+export default function PageCreateRequestIntraSloc() {
   const now = new Date().toISOString()
-  const [dataForm, setDataForm] = React.useState<dataForm>()
-  const [newQuotation, setNewQuotation] = React.useState()
-  const [draftQuotation, setDraftQuotation] = React.useState()
+  const [processing, setProcessing] = React.useState<string>()
+  const [dataForm, setDataForm] = React.useState<DataFormTypes>()
+  const [newRequestIntraSloc, setNewRequestIntraSloc] = React.useState()
   const [cancel, setCancel] = React.useState(false)
   const router = useRouter()
   const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
@@ -75,12 +74,9 @@ export default function PageCreateQuotation() {
     })
   }
 
-  React.useEffect(() => {
-    console.log(dataForm)
-  }, [dataForm])
-
   return (
     <Col>
+      {processing && <Loader type="process" text={processing} />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
@@ -91,7 +87,6 @@ export default function PageCreateQuotation() {
               variant="tertiary"
               onClick={() => {
                 setCancel(true)
-                console.log('cancel', cancel)
               }}
             >
               Cancel
@@ -100,9 +95,13 @@ export default function PageCreateQuotation() {
               size="big"
               variant="primary"
               onClick={() => {
+                setProcessing('Wait for submitting Request Intra Sloc')
                 createRequestIntraSloc({ ...initialValue, ...dataForm })
-                  .then((response) => setNewQuotation(response.data.id))
-                  .catch((e) => console.log(e))
+                  .then((response) => {
+                    setProcessing(undefined)
+                    setNewRequestIntraSloc(response.data.id)
+                  })
+                  .catch(() => setProcessing(undefined))
               }}
             >
               Submit
@@ -195,22 +194,18 @@ export default function PageCreateQuotation() {
             editable
             data={tableAddItems.data}
             columns={tableAddItems.columns}
-            loading={tableAddItems.loading}
           />
         </div>
-        {/* <TableEditable data={data} setData={setData} columns={useColumns()} /> */}
       </Card>
-      {(newQuotation || draftQuotation || cancel) && (
+      {(newRequestIntraSloc || cancel) && (
         <Popup>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Text
-              variant="headingSmall"
               textAlign="center"
               style={{
                 ...(!cancel && { color: 'green' }),
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight: 'bold',
-                marginBottom: 8,
               }}
             >
               {cancel ? 'Confirm Cancellation' : 'Success'}
@@ -221,12 +216,11 @@ export default function PageCreateQuotation() {
               'Are you sure want to cancel? Change you made so far will not saved'
             ) : (
               <>
-                Request Number
-                <Typography.Text copyable={{ text: newQuotation || (draftQuotation as string) }}>
-                  {' '}
-                  {newQuotation || draftQuotation}
+                {'Request Number '}
+                <Typography.Text copyable={{ text: newRequestIntraSloc }}>
+                  {newRequestIntraSloc}
                 </Typography.Text>
-                has been
+                {' has been'}
               </>
             )}
           </div>
@@ -258,7 +252,7 @@ export default function PageCreateQuotation() {
                 </Button>
               </>
             )}
-            {newQuotation && (
+            {newRequestIntraSloc && (
               <>
                 <Button
                   style={{ flexGrow: 1 }}

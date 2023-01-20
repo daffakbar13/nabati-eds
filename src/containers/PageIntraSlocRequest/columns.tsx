@@ -1,86 +1,58 @@
-/* eslint-disable radix */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import dateFormat from 'src/utils/dateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
+import Link from 'src/components/Link'
+import { concatString } from 'src/utils/concatString'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+export function useColumnRequestIntraSloc() {
   const router = useRouter()
-  const navigate = () => {
-    status === 'Draft'
-      ? router.push(`${PATH.LOGISTIC}/request-intra-sloc/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/request-intra-sloc/detail/${link}`)
+  function navigateToDetail(id: string) {
+    router.push(`${PATH.LOGISTIC}/request-intra-sloc/detail/${id}`)
   }
-  const [hover, setHover] = React.useState(false)
-
-  return (
-    <>
-      {type === 'id' ? (
-        <div
-          onClick={navigate}
-          onMouseEnter={() => {
-            setHover(true)
-          }}
-          onMouseLeave={() => {
-            setHover(false)
-          }}
-          style={{
-            cursor: 'pointer',
-            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
-          }}
-        >
-          {link}
-        </div>
-      ) : (
-        <Button size="big" variant="tertiary" onClick={navigate}>
+  return [
+    addColumn({
+      title: 'Request Number',
+      render: (_, { id }) => <Link onClick={() => navigateToDetail(id)}>{id}</Link>,
+      fixed: true,
+      sorter: true,
+    }),
+    addColumn({
+      title: 'Posting Date',
+      dataIndex: 'posting_date',
+    }),
+    addColumn({
+      title: 'Company',
+      render: (_, { company_id, company_name }) => concatString(company_id, company_name),
+    }),
+    addColumn({
+      title: 'Branch',
+      render: (_, { suppl_branch_id, supply_branch_name }) =>
+        concatString(suppl_branch_id, supply_branch_name),
+    }),
+    addColumn({
+      title: 'From Sloc',
+      render: (_, { suppl_sloc_id, suppl_sloc_name }) =>
+        concatString(suppl_sloc_id, suppl_sloc_name),
+    }),
+    addColumn({
+      title: 'To Sloc',
+      render: (_, { receive_sloc_id, receive_sloc_name }) =>
+        concatString(receive_sloc_id, receive_sloc_name),
+    }),
+    addColumn({
+      title: 'Status',
+      render: (_, { status }) => <TaggedStatus status={status} />,
+    }),
+    addColumn({
+      title: 'Action',
+      render: (_, { id }) => (
+        <Button variant="tertiary" onClick={() => navigateToDetail(id)}>
           View Detail
         </Button>
-      )}
-    </>
-  )
+      ),
+    }),
+  ]
 }
-
-export const column = [
-  CreateColumns(
-    'Request Number',
-    'id',
-    true,
-    (link: string, record: any) => <Linked link={link} type="id" status={record.status} />,
-    175,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (_, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-  ),
-  CreateColumns(
-    'Branch',
-    'suppl_branch_id',
-    false,
-    (_, record: any) => `${record.suppl_branch_id || ''} - ${record.supply_branch_name || ''}`,
-  ),
-  CreateColumns(
-    'From Sloc',
-    'suppl_sloc_id',
-    false,
-    (_, record: any) => `${record.suppl_sloc_id || ''} - ${record.suppl_sloc_name || ''}`,
-  ),
-  CreateColumns(
-    'To Sloc',
-    'receive_sloc_id',
-    false,
-    (_, record: any) => `${record.receive_sloc_id || ''} - ${record.receive_sloc_name || ''}`,
-  ),
-  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link, record) => (
-    <Linked link={link} type="action" status={record.status} />
-  )),
-]

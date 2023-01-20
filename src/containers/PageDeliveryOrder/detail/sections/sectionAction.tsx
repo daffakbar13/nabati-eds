@@ -17,6 +17,7 @@ export default function SectionAction(props: SectionActionProps) {
   const router = useRouter()
 
   const isStatus = (...value: string[]) => value.includes(data.status)
+  const isOrderType = (...value: string[]) => value.includes(data.order_type)
 
   return (
     <Row justify="space-between">
@@ -47,22 +48,24 @@ export default function SectionAction(props: SectionActionProps) {
                 Cancel Process
               </Button>
             </Col>
-            <Col>
-              <Button
-                size="big"
-                variant="secondary"
-                onClick={() => {
-                  router.push(
-                    `${PATH.SALES}/delivery-order/edit/${router.query.id}?status=${router.query.status}`,
-                  )
-                }}
-              >
-                Edit
-              </Button>
-            </Col>
+            {isOrderType('ZDCC') && (
+              <Col>
+                <Button
+                  size="big"
+                  variant="secondary"
+                  onClick={() => {
+                    router.push(
+                      `${PATH.SALES}/delivery-order/edit/${router.query.id}?status=${router.query.status}`,
+                    )
+                  }}
+                >
+                  Edit
+                </Button>
+              </Col>
+            )}
           </>
         )}
-        {isStatus('Complete', 'New') && (
+        {isStatus('Complete', 'New') && isOrderType('ZDCC') && (
           <Col>
             <Button
               size="big"

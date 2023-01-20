@@ -1,13 +1,10 @@
-/* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable camelcase */
 import React from 'react'
 import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { productBranch, fieldUom, itemReceiver } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 interface propsUseTable {
   idbranch: string
@@ -29,7 +26,6 @@ export const useTableAddItem = (props: propsUseTable) => {
   const [optionsUom, setOptionsUom] = React.useState([])
   const [valueItemSender, setValueItemSender] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
-  const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
     if (props.idbranch) {
@@ -69,28 +65,23 @@ export const useTableAddItem = (props: propsUseTable) => {
   }
 
   const columns = [
-    CreateColumns(
-      '',
-      'action',
-      false,
-      (_, __, index) => (
+    addColumn({
+      render: (_, __, index) => (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <MinusCircleFilled
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
       ),
-      55,
-    ),
-    CreateColumns(
-      'Item Sender',
-      'product_sender_id',
-      false,
-      (product_sender_id, __, index) => (
+      width: 55,
+      fixed: true,
+    }),
+    addColumn({
+      title: 'Item Sender',
+      render: (_, __, index) => (
         <DebounceSelect
           type="select"
           value={placeholder[index]?.product_sender_id as any}
@@ -103,17 +94,16 @@ export const useTableAddItem = (props: propsUseTable) => {
           }}
         />
       ),
-      400,
-    ),
-    CreateColumns(
-      'Qty',
-      'qty',
-      false,
-      (order_qty, record, index) => (
+      width: 400,
+      fixed: true,
+    }),
+    addColumn({
+      title: 'Qty',
+      render: (_, { qty }, index) => (
         <InputNumber
           disabled={isNullProductId(index)}
           min={isNullProductId(index) ? '0' : '1'}
-          value={order_qty?.toLocaleString()}
+          value={qty?.toLocaleString()}
           onChange={(newVal) => {
             handleChangeData('qty', newVal, index)
             handleChangeData('base_qty', newVal, index)
@@ -121,13 +111,11 @@ export const useTableAddItem = (props: propsUseTable) => {
           style={styleInputNumber}
         />
       ),
-      130,
-    ),
-    CreateColumns(
-      'UoM',
-      'uom_id',
-      false,
-      (uom_id, __, index) => (
+      width: 130,
+    }),
+    addColumn({
+      title: 'UoM',
+      render: (_, { uom_id }, index) => (
         <DebounceSelect
           type="select"
           value={uom_id as any}
@@ -140,43 +128,46 @@ export const useTableAddItem = (props: propsUseTable) => {
           }}
         />
       ),
-      150,
-    ),
-    CreateColumns('Batch', 'batch', false, (_, __, index) => (
-      <DebounceSelect
-        type="input"
-        placeholder="e.g Testing"
-        onChange={(e) => {
-          console.log(e)
-          handleChangeData('batch', e.target.value, index)
-        }}
-      />
-    )),
-    CreateColumns('Remarks', 'remarks', false, (_, __, index) => (
-      <DebounceSelect
-        type="input"
-        placeholder="e.g Testing"
-        onChange={(e) => {
-          console.log(e)
-          handleChangeData('remarks', e.target.value, index)
-        }}
-      />
-    )),
+      width: 150,
+    }),
+    addColumn({
+      title: 'Batch',
+      render: (_, __, index) => (
+        <DebounceSelect
+          type="input"
+          placeholder="e.g Testing"
+          onChange={(e) => {
+            handleChangeData('batch', e.target.value, index)
+          }}
+        />
+      ),
+    }),
+    addColumn({
+      title: 'Remarks',
+      render: (_, __, index) => (
+        <DebounceSelect
+          type="input"
+          placeholder="e.g Testing"
+          onChange={(e) => {
+            handleChangeData('remarks', e.target.value, index)
+          }}
+        />
+      ),
+    }),
   ]
 
   React.useEffect(() => {
     if (fetching) {
-      data.forEach(({ product_sender_id, uom_id, qty }, index) => {
+      data.forEach(({ product_sender_id, uom_id }, index) => {
         if (product_sender_id !== '') {
           fieldUom(product_sender_id).then((value) => {
-            // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
-              let newUom = uom_id === '' ? value[2].value : uom_id
+              const newUom = uom_id === '' ? value[2].value : uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
             } else {
-              let newUom = uom_id
+              const newUom = uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
             }
@@ -199,6 +190,5 @@ export const useTableAddItem = (props: propsUseTable) => {
     data,
     handleAddItem,
     columns,
-    loading,
   }
 }

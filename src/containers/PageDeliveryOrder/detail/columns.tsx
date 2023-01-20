@@ -5,45 +5,55 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable radix */
 import { ColumnsType } from 'antd/lib/table'
-import CreateColumns from 'src/utils/createColumns'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 
 export const ColumnsDeliveryOrder = [
-  CreateColumns('No', 'no', false, (_, __, index) => ++index, 60, true),
-  CreateColumns('Item', 'item', false, undefined, 300),
-  CreateColumns('Item Category', 'item_category', false, undefined, 137),
-  CreateColumns('Uom', 'uom', false, undefined, 70),
-  CreateColumns('Quantity Order', 'qty', false, undefined, 170),
-  CreateColumns('Quantity DO', 'confrim_qty', false, undefined, 170),
-  CreateColumns(
-    'Based Price',
-    'base_price',
-    false,
-    (price) => parseInt(price).toLocaleString(),
-    120,
-  ),
-  // FIXME Sub Total
-  CreateColumns(
-    'Gross',
-    'gross_value',
-    false,
-    (gross_value) => parseInt(gross_value).toLocaleString(),
-    80,
-  ),
-  CreateColumns(
-    'Discount',
-    'discount',
-    false,
-    (discount) => parseInt(discount).toLocaleString(),
-    100,
-  ),
-  CreateColumns(
-    'Sub Total',
-    'sub_total',
-    false,
-    (sub_total) => parseInt(sub_total).toLocaleString(),
-    110,
-  ),
-  CreateColumns('Remarks', 'remarks', false, (r) => r || '-', 120),
+  addColumn({
+    title: 'No',
+    render: (_, __, i) => i + 1,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Item',
+    dataIndex: 'item',
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Item Category',
+    dataIndex: 'item_category',
+  }),
+  addColumn({
+    title: 'Uom',
+    dataIndex: 'uom',
+  }),
+  addColumn({
+    title: 'Quantity Order',
+    dataIndex: 'qty',
+  }),
+  addColumn({
+    title: 'Quantity DO',
+    dataIndex: 'confrim_qty',
+  }),
+  addColumn({
+    title: 'Based Price',
+    dataIndex: 'base_price',
+  }),
+  addColumn({
+    title: 'Gross',
+    dataIndex: 'gross_amount',
+  }),
+  addColumn({
+    title: 'Discount',
+    dataIndex: 'discount',
+  }),
+  addColumn({
+    title: 'Sub Total',
+    dataIndex: 'sub_total',
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]
 
 export const ColumnsDocumentFlow = [

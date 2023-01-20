@@ -1,42 +1,27 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
-import FloatAction from 'src/components/FloatAction'
 import { getListSloc } from 'src/api/logistic/request-intra-sloc'
-import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { PageSlocRequest } from './types'
-import { column } from './columns'
-import { colors } from 'src/configs/colors'
+import { useColumnRequestIntraSloc } from './columns'
 
-export default function PageIntraSlocRequest(props: PageSlocRequest) {
-  const [branchfrom, setBranchFrom] = useState('')
-  const [branchTo, setBranchTo] = useState('')
-  const [allSloc, setAllScloc] = React.useState([])
-
+export default function PageIntraSlocRequest() {
+  const router = useRouter()
   const table = useTable({
     funcApi: getListSloc,
-    columns: column,
+    columns: useColumnRequestIntraSloc(),
   })
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search By GR Number')
+  const [branchfrom, setBranchFrom] = React.useState('')
+  const [branchTo, setBranchTo] = React.useState('')
+  const [allSloc, setAllScloc] = React.useState([])
 
-  const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0
-  const router = useRouter()
-  const oneSelected = table.state.selected.length === 1
-  const firstSelected = table.state.selected[0]
-
-  const selectedQuotation = {
-    text: oneSelected
-      ? firstSelected
-      : `${firstSelected}, More +${table.state.selected.length - 1}`,
-    content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
-  }
 
   const statusOption = [
     { label: 'Done', value: '01' },
@@ -44,12 +29,9 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
     { label: 'Pending', value: '00' },
   ]
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
-
-  useEffect(() => {
-    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
-      console.log('response Branch', response)
-      setAllScloc(response)
+  React.useEffect(() => {
+    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((res) => {
+      setAllScloc(res)
     })
   }, [branchfrom, branchTo])
 
@@ -60,43 +42,7 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by GR Number"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => {
-                setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
-                      }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'id',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
@@ -117,7 +63,6 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchFrom(val.label.split(' - ')[0])
                   }}
                 />
@@ -125,7 +70,6 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />
@@ -186,76 +130,6 @@ export default function PageIntraSlocRequest(props: PageSlocRequest) {
           <Table {...table.state.tableProps} />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
-        {table.state.selected.length > 0 && (
-          <FloatAction>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-              }}
-            >
-              <b>{table.state.selected.length} Document Quotation are Selected</b>
-            </div>
-            <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => {}}>
-                Cancel Process
-              </Button>
-              <Button
-                size="big"
-                variant="primary"
-                onClick={() => {
-                  setShowConfirm('submit')
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </FloatAction>
-        )}
-        {showConfirm === 'submit' && (
-          <Popup
-            onOutsideClick={() => {
-              setShowConfirm('')
-            }}
-          >
-            <Typography.Title level={3} style={{ margin: 0 }}>
-              Confirm Submit
-            </Typography.Title>
-            <Typography.Title level={5} style={{ margin: 0 }}>
-              Are you sure to submit quotation
-              {oneSelected ? (
-                ` ${selectedQuotation.text} ?`
-              ) : (
-                <Popover content={selectedQuotation.content}>
-                  {` ${selectedQuotation.text} ?`}
-                </Popover>
-              )}
-            </Typography.Title>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="secondary"
-                onClick={() => {
-                  router.reload()
-                }}
-              >
-                Cancel Proccess
-              </Button>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="primary"
-                onClick={() => {
-                  router.reload()
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </Popup>
-        )}
       </Card>
     </Col>
   )
