@@ -77,10 +77,12 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
         <Head>
           <title>EDS - {title}</title>
         </Head>
-        <>
-          {loading && getLayout(<Loader />)}
-          {!loading && getLayout(<Component {...pageProps} />)}
-        </>
+        <DashboardLayout>
+          {/* {loading && getLayout(<Loader />)}
+          {!loading && getLayout(<Component {...pageProps} />)} */}
+          {loading && <Loader />}
+          {!loading && <Component {...pageProps} />}
+        </DashboardLayout>
       </AppProvider>
     </QueryClientProvider>
   )

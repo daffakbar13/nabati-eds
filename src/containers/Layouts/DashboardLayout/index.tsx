@@ -27,7 +27,8 @@ const flexStyles = {
   cursor: 'pointer',
 }
 
-export default function DashboardLayout(page: PropsWithChildren<{}>) {
+export default function DashboardLayout(props: React.PropsWithChildren<React.ReactNode>) {
+  const { children } = props
   const [current, setCurrent] = useState('0')
   const router = useRouter()
   const currentModulePath = `/${router.asPath.split('/')[1]}`
@@ -117,7 +118,7 @@ export default function DashboardLayout(page: PropsWithChildren<{}>) {
         <main>
           <div style={{ padding: '20px' }}>
             <Spacer size={12} />
-            {page}
+            {children}
           </div>
         </main>
       </Layout>
