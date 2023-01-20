@@ -1,7 +1,7 @@
-import { ArrowsAltOutlined, DragOutlined, ShrinkOutlined } from '@ant-design/icons'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { DragOutlined, ShrinkOutlined } from '@ant-design/icons'
 import { Modal, Row } from 'antd'
 import React from 'react'
-import { Pagination } from 'src/components'
 import TitleDataList from 'src/components/TitleDataList'
 import { Table } from 'pink-lava-ui'
 import { useDrag, useDrop } from 'react-dnd'
@@ -10,6 +10,7 @@ import { useColumnsDeliveryOrder } from '../columns'
 
 interface DraggableBodyRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   index: number
+  // eslint-disable-next-line no-unused-vars
   moveRow: (dragIndex: number, hoverIndex: number) => void
 }
 
@@ -125,7 +126,7 @@ export default function SectionModalDND() {
         </Row>
         {delete useColumnsDeliveryOrder[0].className}
         <Table
-          scroll={{ x: 'max-content', y: 600 }}
+          scroll={{ x: 'max-content', y: 400 }}
           loading={table.state.loading}
           columns={ColumnsDragable()}
           dataSource={dataSelected}

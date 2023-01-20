@@ -84,7 +84,7 @@ export default function SectionSelectedInformation() {
         </div>
       </Row>
       <Spacer size={10} />
-      <div style={{ height: 300, overflow: 'auto' }}>
+      <div style={{ maxHeight: 503, overflow: 'auto' }}>
         <table className="eds_create_shipment">
           <thead>
             <tr>
