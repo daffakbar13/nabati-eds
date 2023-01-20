@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
@@ -54,38 +54,41 @@ function Linked({
 }
 
 export const column = [
-  CreateColumns(
-    'Doc. Number',
-    'doc_number',
-    true,
-    (link: string) => <Linked link={link} type="id" linkType="id" />,
-    175,
-    'left',
-  ),
-  CreateColumns('Requirement Date', 'requirement_date', false, (date) => dateFormat(date)),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-  ),
-  CreateColumns(
-    'Branch',
-    'branch_id',
-    false,
-    (text: string, record: any) => `${record.branch_id || ''} - ${record.branch_name || ''}`,
-  ),
-  CreateColumns(
-    'Mov. Type',
-    'branch_id',
-    false,
-    (text: string, record: any) =>
-      `${record.movement_type_id || ''}- ${record.movement_type_name || ''}`,
-  ),
-  CreateColumns('Status', 'status_name', false, (status_name) => (
-    <TaggedStatus status={status_name} />
-  )),
-  CreateColumns('Action', 'doc_number', false, (link) => (
-    <Linked link={link} type="action" linkType="id" />
-  )),
+  addColumn({
+    title: 'Doc. Number',
+    dataIndex: 'doc_number',
+    render: (text, record, index) => <Linked link={text} type="id" linkType="id" />,
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'Requirement Date',
+    dataIndex: 'requirement_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text, record, index) => `${text || ''} - ${record.company_name || ''}`,
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+    render: (text, record, index) => `${text || ''} - ${record.branch_name || ''}`,
+  }),
+  addColumn({
+    title: 'Mov. Type',
+    dataIndex: 'movement_type_id',
+    render: (text, record, index) => `${text || ''} - ${record.movement_type_name || ''}`,
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status_name',
+    render: (text, record, index) => <TaggedStatus status={text} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'doc_number',
+    render: (text, record, index) => <Linked link={text} type="action" linkType="id" />,
+  }),
 ]

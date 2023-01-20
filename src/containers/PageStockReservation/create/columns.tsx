@@ -3,28 +3,27 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
-import { InputNumber } from 'antd'
+import { InputNumber, Form } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { productBranch, fieldUom } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 interface propsUseTable {
   idbranch: string
 }
 
-export const useTableAddItem = (props: propsUseTable) => {
+export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => void) => {
   const initialValue = {
     product_id: '',
     qty: 1,
-    uom_id: '',
+    uom_id: 'CTN',
     batch: '',
     remarks: '',
   }
   const [data, setData] = React.useState([])
   const [placeholder, setPlaceholder] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
-  const [valueItemSender, setValueItemSender] = React.useState([])
   const [fetching, setFetching] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
@@ -44,7 +43,7 @@ export const useTableAddItem = (props: propsUseTable) => {
   }
 
   function isNullProductId(index: number) {
-    return data.find((___, i) => i === index).product_sender_id === ''
+    return data.find((___, i) => i === index).product_id === ''
   }
 
   function handleDeleteRows(index: number) {
@@ -66,96 +65,121 @@ export const useTableAddItem = (props: propsUseTable) => {
   }
 
   const columns = [
-    CreateColumns(
-      '',
-      'action',
-      false,
-      (_, __, index) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MinusCircleFilled
-            style={{ color: 'red', margin: 'auto' }}
-            onClick={() => {
-              handleDeleteRows(index)
-              console.log('delete', index)
+    addColumn({
+      title: '',
+      dataIndex: 'action',
+      render: (text, record, index) => (
+        <>
+          {data.length > 1 ? (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <MinusCircleFilled
+                style={{ color: 'red', margin: 'auto' }}
+                onClick={() => {
+                  deleteRows(index)
+                }}
+              />
+            </div>
+          ) : (
+            ''
+          )}
+        </>
+      ),
+      width: 55,
+    }),
+    addColumn({
+      title: 'Item Sender',
+      dataIndex: 'product_id',
+      render: (text, record, index) => (
+        <Form.Item
+          name={`ItemSender.${index + 1}`}
+          rules={[{ required: true }]}
+          initialValue={placeholder[index]?.product_id}
+        >
+          <DebounceSelect
+            type="select"
+            value={placeholder[index]?.product_id as any}
+            fetchOptions={(search) => productBranch(search, props.idbranch)}
+            onChange={(e) => {
+              handleChangeData('product_id', e.value, index)
+              handleChangePlaceholder('product_id', e.label, index)
+              setFetching(true)
             }}
           />
-        </div>
+        </Form.Item>
       ),
-      55,
-    ),
-    CreateColumns(
-      'Item Sender',
-      'product_id',
-      false,
-      (product_id, __, index) => (
-        <DebounceSelect
-          type="select"
-          value={placeholder[index]?.product_id as any}
-          fetchOptions={(search) => productBranch(search, props.idbranch)}
-          onChange={(e) => {
-            handleChangeData('product_id', e.value, index)
-            handleChangePlaceholder('product_id', e.label, index)
-            setFetching(true)
-          }}
-        />
+      width: 400,
+    }),
+    addColumn({
+      title: 'Qty',
+      dataIndex: 'qty',
+      render: (text, record, index) => (
+        <Form.Item name={`Qty.${index + 1}`} rules={[{ required: true }]} initialValue={text}>
+          <InputNumber
+            disabled={isNullProductId(index)}
+            min={isNullProductId(index) ? '0' : '1'}
+            value={text?.toLocaleString()}
+            onChange={(newVal) => {
+              handleChangeData('qty', newVal, index)
+            }}
+            style={styleInputNumber}
+          />
+        </Form.Item>
       ),
-      400,
-    ),
-    CreateColumns(
-      'Qty',
-      'qty',
-      false,
-      (order_qty, record, index) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={order_qty?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty', newVal, index)
-          }}
-          style={styleInputNumber}
-        />
+      width: 130,
+    }),
+    addColumn({
+      title: 'UoM',
+      dataIndex: 'uom_id',
+      render: (text, record, index) => (
+        <Form.Item name={`UoM.${index + 1}`} rules={[{ required: true }]} initialValue={text}>
+          <DebounceSelect
+            type="select"
+            value={text as any}
+            options={optionsUom[index] || []}
+            disabled={isNullProductId(index)}
+            onChange={(e) => {
+              handleChangeData('uom_id', e.value, index)
+              setFetching(true)
+            }}
+          />
+        </Form.Item>
       ),
-      130,
-    ),
-    CreateColumns(
-      'UoM',
-      'uom_id',
-      false,
-      (uom_id, __, index) => (
-        <DebounceSelect
-          type="select"
-          value={uom_id as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_id', e.value, index)
-            setFetching(true)
-          }}
-        />
+      width: 150,
+    }),
+    addColumn({
+      title: 'Batch',
+      dataIndex: 'batch',
+      render: (text, record, index) => (
+        <Form.Item name={`Batch.${index + 1}`} initialValue={text}>
+          <DebounceSelect
+            type="input"
+            placeholder="e.g Testing"
+            disabled={isNullProductId(index)}
+            onChange={(e) => {
+              console.log(e)
+              handleChangeData('batch', e.target.value, index)
+            }}
+          />
+        </Form.Item>
       ),
-      150,
-    ),
-    CreateColumns('Batch', 'batch', false, (_, __, index) => (
-      <DebounceSelect
-        type="input"
-        placeholder="e.g Testing"
-        onChange={(e) => {
-          console.log(e)
-          handleChangeData('batch', e.target.value, index)
-        }}
-      />
-    )),
-    CreateColumns('Remarks', 'remarks', false, (_, __, index) => (
-      <DebounceSelect
-        type="input"
-        placeholder="e.g Testing"
-        onChange={(e) => {
-          console.log(e)
-          handleChangeData('remarks', e.target.value, index)
-        }}
-      />
-    )),
+    }),
+    addColumn({
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      render: (text, record, index) => (
+        <Form.Item name={`Remarks.${index + 1}`} initialValue={text}>
+          <DebounceSelect
+            type="input"
+            placeholder="e.g Testing"
+            disabled={isNullProductId(index)}
+            onChange={(e) => {
+              console.log(e)
+              handleChangeData('remarks', e.target.value, index)
+            }}
+          />
+        </Form.Item>
+      ),
+    }),
   ]
 
   React.useEffect(() => {
@@ -188,5 +212,6 @@ export const useTableAddItem = (props: propsUseTable) => {
     handleAddItem,
     columns,
     loading,
+    handleDeleteRows,
   }
 }
