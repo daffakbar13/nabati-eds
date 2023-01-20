@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Spacer, Text, Table, Row } from 'pink-lava-ui'
-import { Card, Popup } from 'src/components'
+import { Card, Popup, Loader } from 'src/components'
 import { Col, Divider, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
@@ -11,7 +11,6 @@ import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
-import { Loader } from 'src/components'
 import { column } from './columns'
 
 export default function PageIntraSlocRequestDetail() {
@@ -31,18 +30,13 @@ export default function PageIntraSlocRequestDetail() {
   }
 
   const dataList = [
-    // row 1
     createDataList('Request Number', data.id),
     createDataList('Branch', `${data.suppl_branch_id} - ${data.supply_branch_name}`),
     createDataList('From Sloc', `${data.suppl_sloc_id} - ${data.suppl_sloc_name}`),
     createDataList('To Sloc', `${data.receive_sloc_id} - ${data.receive_sloc_name}`),
-
-    // row 2
     createDataList('Doc Date', dateFormat(data.document_date)),
     createDataList('Posting Date', dateFormat(data.posting_date)),
     createDataList('Remarks', data.remarks !== '' && data.remarks !== null ? data.remarks : '-'),
-
-    // row 3
     createDataList(
       'Created On',
       data.created_at !== '' && data.created_at !== null ? dateFormat(data.created_at) : '-',
@@ -148,7 +142,7 @@ export default function PageIntraSlocRequestDetail() {
             </Row>
             <Divider />
             <div style={{ overflow: 'scroll' }}>
-              <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
+              <Table scroll={{ x: 'max-content' }} columns={column} data={data.items} />
             </div>
           </Card>
 
