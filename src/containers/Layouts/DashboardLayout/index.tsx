@@ -115,11 +115,11 @@ export default function DashboardLayout(props: React.PropsWithChildren<React.Rea
             </MenuLogout>
           </div>
         </Header>
-        <main>
-          <div style={{ padding: '20px' }}>
-            <Spacer size={12} />
-            {children}
-          </div>
+        <main style={{ position: 'relative', padding: '30px 20px' }}>
+          {/* <div style={{ padding: '20px' }}> */}
+          {/* <Spacer size={12} /> */}
+          {children}
+          {/* </div> */}
         </main>
       </Layout>
     </Layout>
