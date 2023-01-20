@@ -68,6 +68,8 @@ export const column = [
     title: 'Doc. Number',
     dataIndex: 'doc_number',
     render: (link: string, record: any) => <Linked link={link} type="id" linkType="docNumber" />,
+    fixed: true,
+    sorter: true,
   }),
   addColumn({
     title: 'Posting Date',

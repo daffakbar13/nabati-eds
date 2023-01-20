@@ -42,7 +42,7 @@ export default function PageStockReservation() {
 
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
-    'Search Quotation ID',
+    'Search by Doc. Number',
     'doc_number',
   )
 

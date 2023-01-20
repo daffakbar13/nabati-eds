@@ -1,18 +1,34 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 export const column = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
-  CreateColumns(
-    'Item',
-    'product_id',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
-  ),
-  CreateColumns('Qty', 'qty', false),
-  CreateColumns('UoM', 'uom_id', false),
-  CreateColumns('Batch', 'batch', false),
-  CreateColumns('Remarks', 'remarks', false),
+  addColumn({
+    title: 'No',
+    dataIndex: 'id',
+    render: (text: string, record: any, index) => index + 1,
+    width: 50
+  }),
+  addColumn({
+    title: 'Item',
+    dataIndex: 'product_id',
+    render: (text: string, record: any, index) => `${text || ''} - ${record.product_name || ''}`,
+  }),
+  addColumn({
+    title: 'Qty',
+    dataIndex: 'qty',
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'uom_id',
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'batch',
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]

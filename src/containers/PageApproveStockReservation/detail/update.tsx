@@ -138,7 +138,7 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
           </div>
         </div>
         <Divider />
-        <div style={{ overflow: 'scroll' }}>
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table columns={column} data={props.data.item} />
         </div>
       </Card>
