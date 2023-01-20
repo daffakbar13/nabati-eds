@@ -1,6 +1,5 @@
 import React from 'react'
 import { Spin } from 'antd'
-import style from './Loader.module.css'
 
 interface LoaderProps {
   type?: 'process'
