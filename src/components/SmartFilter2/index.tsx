@@ -50,25 +50,19 @@ function SmartFilter(props: { onOk; children; oldFilter? }) {
     setFilterValues(prevValues.current)
   }
 
+  const getBaseValue = (item: any, type: 'to' | 'from') => ({
+    label: item[`${type}_value_label`],
+    value: item[`${type}_value`],
+    key: item[`${type}_value`],
+  })
+
   useEffect(() => {
     if (oldFilter) {
-      const FilterOld = oldFilter.map((item: any, index) => ({
+      const FilterOld = oldFilter.map((item: any) => ({
         field: item.field,
         dataType: item.dataType,
-        fromValue: item.field.includes('date')
-          ? moment(item.from_value)
-          : {
-              label: item.from_value_label,
-              value: item.from_value,
-              key: item.from_value,
-            },
-        toValue: item.field.includes('date')
-          ? moment(item.to_value)
-          : {
-              label: item.to_value_label,
-              value: item.to_value,
-              key: item.to_value,
-            },
+        fromValue: item.field.includes('date') ? moment(item.from_value) : getBaseValue(item, 'to'),
+        toValue: item.field.includes('date') ? moment(item.to_value) : getBaseValue(item, 'from'),
         option: item.option,
       }))
       setFilterValues(FilterOld)

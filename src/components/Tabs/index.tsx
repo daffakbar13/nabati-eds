@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Card } from 'antd'
 import { useRouter } from 'next/router'
 
-import Link from 'next/link'
-
 interface Tab {
   key: string
   tab: string

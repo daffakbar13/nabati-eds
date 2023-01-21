@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 import { ServerStyleSheet } from 'styled-components'
 import Document from 'next/document'
 

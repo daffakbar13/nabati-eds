@@ -7,22 +7,23 @@ import {
   ICFilterNotEqual,
   ICFilterSelect,
 } from 'src/assets'
+import { CommonSelectValue } from './commonTypes'
 
 export type OptionType = 'EQ' | 'BT' | 'CP' | 'LE' | 'GE' | 'NE' | 'NB' | 'NP' | 'GT' | 'LT'
 // ['EQ', 'BT', 'CP', 'LE', 'GE', 'NE', 'NB', 'NP', 'GT', 'LT']
 
 export type DataTypes = 'S' | 'N' | 'D' | 'T'
 
-// export interface FilterOption {
-//   field: string
-//   label: string
-//   option: OptionType
-//   dataType: DataTypes
-//   fromValue?: CommonSelectValue
-//   toValue?: CommonSelectValue,
-//   searchApi?: (search: string) => Promise<any>,
-//   isDate?: boolean
-// }
+export interface FilterOption {
+  field: string
+  label: string
+  option: OptionType
+  dataType: DataTypes
+  fromValue?: CommonSelectValue
+  toValue?: CommonSelectValue
+  searchApi?: (search: string) => Promise<any>
+  isDate?: boolean
+}
 
 export interface FilterTypesInterface {
   code: OptionType

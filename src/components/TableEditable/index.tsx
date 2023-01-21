@@ -54,6 +54,7 @@ const TableEditable: React.FC<TableEditableProps> = ({ columns, data, setData })
     setEditingKey('')
   }
 
+  // eslint-disable-next-line consistent-return
   const save = async (key: React.Key) => {
     try {
       const row = await form.validateFields()
@@ -73,8 +74,8 @@ const TableEditable: React.FC<TableEditableProps> = ({ columns, data, setData })
         setData(newData)
         setEditingKey('')
       }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo)
+    } catch (err) {
+      return err
     }
   }
 
@@ -160,8 +161,6 @@ const TableEditable: React.FC<TableEditableProps> = ({ columns, data, setData })
       }),
     }
   })
-
-  console.log('data', data)
 
   return (
     <>

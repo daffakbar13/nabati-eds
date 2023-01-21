@@ -13,7 +13,7 @@ const PrintConfirmationModal = ({
 }) => {
   const [loading, setLoading] = useState(false)
 
-  const handlePrint = async (e) => {
+  const handlePrint = async () => {
     setLoading(true)
     const content = document.getElementById('printContent')
     const pri = document.getElementById('iFrameContent').contentWindow

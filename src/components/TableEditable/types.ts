@@ -14,6 +14,7 @@ export interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 export interface TableEditableProps {
   columns: antdColumns[]
   data: object[]
+  // eslint-disable-next-line no-unused-vars
   setData: (a) => void
 }
 

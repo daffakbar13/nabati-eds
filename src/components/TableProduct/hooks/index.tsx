@@ -163,8 +163,6 @@ export function useTableProduct() {
                 value={discOption}
                 bordered={false}
                 onChange={(e) => {
-                  console.log(e)
-
                   handleChangeDiscOption(e, index)
                 }}
               >

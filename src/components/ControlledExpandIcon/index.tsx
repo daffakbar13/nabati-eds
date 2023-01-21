@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { ExpandMinusIc, ExpandPlusIc } from 'src/assets'
 
 export default function ControlledExpandIcon({
   style = {},
   expanded = true,
+  // eslint-disable-next-line no-unused-vars
   onChange = (e: boolean) => {},
 }) {
   return (

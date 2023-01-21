@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import { Modal, Typography } from 'antd'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
+import React from 'react'
+import { Modal } from 'antd'
+import { Button, Text } from 'pink-lava-ui'
+import { CheckCircleFilled } from '@ant-design/icons'
 
 interface Props {
   title?: React.ReactNode
