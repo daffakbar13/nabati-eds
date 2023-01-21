@@ -73,7 +73,6 @@ export const useTableAddItem = (props: propsUseTable) => {
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
@@ -244,7 +243,6 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
               const newUom = uom_id === '' ? value[2]?.value : uom_id

@@ -156,7 +156,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             placeholder="e.g Testing"
             disabled={isNullProductId(index)}
             onChange={(e) => {
-              console.log(e)
               handleChangeData('batch', e.target.value, index)
             }}
           />
@@ -173,7 +172,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             placeholder="e.g Testing"
             disabled={isNullProductId(index)}
             onChange={(e) => {
-              console.log(e)
               handleChangeData('remarks', e.target.value, index)
             }}
           />
@@ -187,7 +185,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
               const newUom = uom_id === '' ? value[2]?.value : uom_id

@@ -4,11 +4,11 @@ import { Divider, Typography, Form } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Modal } from 'src/components'
-import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { createPoSto } from 'src/api/logistic/po-sto'
 import { fieldBranchSupply, fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import { useTableAddItem } from './columns'
 
 interface ItemsState {
   product_id: string
@@ -67,11 +67,11 @@ export default function CreateBilling() {
     const fieldRow = selectedRow + 1
     tableAddItems.handleDeleteRows(selectedRow)
     form.setFieldsValue({
-      ['Item.' + fieldRow]: '',
+      [`Item.${fieldRow}`]: '',
       // ['Qty.' + fieldRow]: '',
       // ['UoM.' + fieldRow]: '',
-      ['Batch.' + fieldRow]: '',
-      ['ItemSender.' + fieldRow]: '',
+      [`Batch.${fieldRow}`]: '',
+      [`ItemSender.${fieldRow}`]: '',
     })
     setModalDelete(false)
   }
@@ -102,9 +102,8 @@ export default function CreateBilling() {
     try {
       return await createPoSto({ ...initialValue, ...dataForm })
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const onClickSubmit = async () => {
@@ -268,7 +267,7 @@ export default function CreateBilling() {
         onCancel={() => {
           setModalCancel(false)
         }}
-        content={`Are you sure want to cancel? Change you made so far will not saved`}
+        content={'Are you sure want to cancel? Change you made so far will not saved'}
         width={432}
       />
       <Modal
@@ -278,7 +277,7 @@ export default function CreateBilling() {
         onCancel={() => {
           setModalSubmit(false)
         }}
-        content={`Are you sure want to Submit This PO STO ?`}
+        content={'Are you sure want to Submit This PO STO ?'}
         successTitle="Success"
         onOkSuccess={() => {
           router.push(`${PATH.LOGISTIC}/po-sto`)
@@ -303,7 +302,7 @@ export default function CreateBilling() {
         onCancel={() => {
           setModalDelete(false)
         }}
-        content={`Are you sure want to Delete This Item PO STO ?`}
+        content={'Are you sure want to Delete This Item PO STO ?'}
         successTitle="Success"
         successOkText="OK"
         width={432}

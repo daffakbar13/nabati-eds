@@ -64,9 +64,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const doCreate = async (reqBody: any) => {
@@ -76,9 +75,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const handleSubmit = async () => {
@@ -120,10 +118,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       note: payload.execute_do,
     })
   }, [isOnEditMode, payload])
-
-  useEffect(() => {
-    console.log('data form : ', dataForm)
-  }, [dataForm])
 
   const content = (
     <>

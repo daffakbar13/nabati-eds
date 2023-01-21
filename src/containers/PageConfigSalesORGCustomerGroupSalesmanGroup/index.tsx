@@ -45,9 +45,8 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
         reqBody,
       )
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const table = useTable({

@@ -53,33 +53,27 @@ export const useTableAddItem = (props: any) => {
     onChange: (selectedRows, data) => {
       setDataSubmit([...data])
     },
-    getCheckboxProps: (data) => ({
-      name: data.product_id,
-    }),
+    getCheckboxProps: (data) => ({ name: data.product_id }),
   }
 
-  useEffect(() => {
-    console.log('selection', rowSelection)
-  }, [rowSelection])
+  useEffect(() => {}, [rowSelection])
 
   useEffect(() => {
-    const ItemsData = props.items?.map((item: any, index) => {
-      return {
-        key: index,
-        product_id: item.product_id,
-        description: item.description,
-        description_show: `${item.product_id} - ${item.description}`,
-        qty: item.qty,
-        base_qty: item.qty,
-        po_qty: item.qty,
-        uom_id: item.uom_id,
-        base_uom_id: item.uom_id,
-        po_uom_id: item.uom_id,
-        sloc_id: item.sloc_id,
-        remarks: '',
-        batch: item.batch,
-      }
-    })
+    const ItemsData = props.items?.map((item: any, index) => ({
+      key: index,
+      product_id: item.product_id,
+      description: item.description,
+      description_show: `${item.product_id} - ${item.description}`,
+      qty: item.qty,
+      base_qty: item.qty,
+      po_qty: item.qty,
+      uom_id: item.uom_id,
+      base_uom_id: item.uom_id,
+      po_uom_id: item.uom_id,
+      sloc_id: item.sloc_id,
+      remarks: '',
+      batch: item.batch,
+    }))
 
     setData(ItemsData)
     if (props.items?.length > 0) {
@@ -261,8 +255,6 @@ export const useTableAddItem = (props: any) => {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log('value :', value)
-            // console.log(value)
             const newOptionsUom = [...optionsUom]
 
             if (value[2]?.value) {

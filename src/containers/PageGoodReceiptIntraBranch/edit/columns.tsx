@@ -40,34 +40,30 @@ export const useTableAddItem = (props: any) => {
     onChange: (selectedRows, data) => {
       setDataSubmit([...data])
     },
-    getCheckboxProps: (data) => ({
-      name: data.product_id,
-    }),
+    getCheckboxProps: (data) => ({ name: data.product_id }),
   }
 
   useEffect(() => {
-    const ItemsData = props.items?.map((item: any, index) => {
-      return {
-        key: index,
-        company_id: item.company_id,
-        id: parseInt(item.id),
-        material_doc_id: item.material_doc_id,
-        product_id: item.product_id,
-        product_name: item.product_name,
-        qty: parseInt(item.qty),
-        uom_id: item.uom_id,
-        base_qty: parseInt(item.base_qty),
-        base_uom_id: item.base_uom_id,
-        sloc_id: item.sloc_id,
-        sloc_name: item.sloc_name,
-        received_qty: item.received_qty,
-        received_uom_id: item.received_uom_id,
-        remarks: '',
-        batch: item.batch,
-        slocval: `${item.sloc_id} - ${item.sloc_name}`,
-        producval: `${item.product_id} - ${item.product_name}`,
-      }
-    })
+    const ItemsData = props.items?.map((item: any, index) => ({
+      key: index,
+      company_id: item.company_id,
+      id: parseInt(item.id),
+      material_doc_id: item.material_doc_id,
+      product_id: item.product_id,
+      product_name: item.product_name,
+      qty: parseInt(item.qty),
+      uom_id: item.uom_id,
+      base_qty: parseInt(item.base_qty),
+      base_uom_id: item.base_uom_id,
+      sloc_id: item.sloc_id,
+      sloc_name: item.sloc_name,
+      received_qty: item.received_qty,
+      received_uom_id: item.received_uom_id,
+      remarks: '',
+      batch: item.batch,
+      slocval: `${item.sloc_id} - ${item.sloc_name}`,
+      producval: `${item.product_id} - ${item.product_name}`,
+    }))
 
     setData(ItemsData)
     if (props.items?.length > 0) {
@@ -243,8 +239,6 @@ export const useTableAddItem = (props: any) => {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log('value :', value)
-            // console.log(value)
             const newOptionsUom = [...optionsUom]
 
             if (value[2]?.value) {

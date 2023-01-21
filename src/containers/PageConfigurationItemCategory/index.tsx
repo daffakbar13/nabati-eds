@@ -36,9 +36,8 @@ export default function PageConfigurationTaxRegulator() {
     try {
       return await updateStatus(reqBody, changeStatusPayload)
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const table = useTable({
@@ -46,8 +45,6 @@ export default function PageConfigurationTaxRegulator() {
     columns: columns(goToDetailPage, onClickSwitch),
     // filters,
   })
-
-  console.log('selectedRow', selectedRow)
 
   return (
     <>

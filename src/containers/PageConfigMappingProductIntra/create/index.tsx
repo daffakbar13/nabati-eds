@@ -42,9 +42,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     },
   ]
 
-  const initialValue = {
-    company_id: 'PP01',
-  }
+  const initialValue = { company_id: 'PP01' }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -69,9 +67,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const doCreate = async (reqBody: any) => {
@@ -81,9 +78,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const handleSubmit = async () => {

@@ -44,8 +44,6 @@ export default function AppProvider(props: React.PropsWithChildren<React.ReactNo
     }
   }, [pathHistory.currentPath])
 
-  console.log('app state', state)
-
   return <Provider value={{ state, handler }}>{children}</Provider>
 }
 

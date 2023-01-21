@@ -62,11 +62,8 @@ export default function CreateGoodsReceipt() {
       remarks: headerData.remark || '',
       items: itemPayload,
     }
-    // console.log('payload', payload)
     const res = await createGoodReceipt(payload)
 
-    // console.log('res', res)
-    // console.log('headerData', headerData)
     return res
   }
 
@@ -110,7 +107,6 @@ export default function CreateGoodsReceipt() {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      console.error(error)
     }
     setDisableSomeFields(true)
   }
@@ -130,20 +126,18 @@ export default function CreateGoodsReceipt() {
   }
 
   useEffect(() => {
-    const selected = selectedTableData.map((item: any, index) => {
-      return {
-        item: item?.item_number?.toString(),
-        product_id: item?.product_id,
-        description: item?.product_name,
-        qty_po: item?.qty_po,
-        uom_id: item?.uom_id,
-        received_qty: item?.qty_gr,
-        received_qty_uom_id: item?.uom_id,
-        sloc_id: item?.sloc_id || 'GS00',
-        batch: item?.batch,
-        remarks: item?.remarks,
-      }
-    })
+    const selected = selectedTableData.map((item: any, index) => ({
+      item: item?.item_number?.toString(),
+      product_id: item?.product_id,
+      description: item?.product_name,
+      qty_po: item?.qty_po,
+      uom_id: item?.uom_id,
+      received_qty: item?.qty_gr,
+      received_qty_uom_id: item?.uom_id,
+      sloc_id: item?.sloc_id || 'GS00',
+      batch: item?.batch,
+      remarks: item?.remarks,
+    }))
     setItemPayload(selected)
   }, [selectedTableData])
 

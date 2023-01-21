@@ -8,8 +8,8 @@ import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 
 import { getGrReturnByRefDocNo, getSlocListByBranch } from 'src/api/logistic/good-receipt'
 import { createGrReturn } from 'src/api/logistic/good-return'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
-import { columns } from './columns'
 import { fieldPoGRPrincipal } from 'src/configs/fieldFetches'
+import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
 
@@ -51,11 +51,7 @@ export default function CreateGrReturn() {
       delivery_note: headerData.delivery_note,
       items: selectedTableData,
     }
-    console.log('payload', payload)
     const res = await createGrReturn(payload)
-
-    // console.log('res', res)
-    // console.log('headerData', headerData)
     return res
   }
 
@@ -99,7 +95,6 @@ export default function CreateGrReturn() {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      console.error(error)
     }
     setDisableSomeFields(true)
   }

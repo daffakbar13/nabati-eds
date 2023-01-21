@@ -224,7 +224,7 @@ export default function PageApproval() {
                 setShowConfirm('success-reject')
                 setProcessing('')
               })
-              .catch((err) => console.log(err))
+              .catch(() => setProcessing(''))
           }}
         >
           Yes
@@ -294,7 +294,7 @@ export default function PageApproval() {
         setOptionsReason(data)
         setReason(data[0].value)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => err)
   }, [])
 
   return (

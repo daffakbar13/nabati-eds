@@ -34,19 +34,17 @@ export const useTableEditItem = (props: propsUseTable) => {
 
   React.useEffect(() => {
     if (props.items) {
-      const itemSData = props.items?.map((item: any) => {
-        return {
-          item: item.product_id,
-          item_description: `${item.product_id} - ${item.description}`,
-          uom: item.uom_id,
-          quantity: item.base_qty,
-          based_price: item.price,
-          gross: item.gross_value,
-          discount: item.discount_value,
-          sub_total: item.price * item.base_qty - item.discount_value,
-          remarks: item.remarks,
-        }
-      })
+      const itemSData = props.items?.map((item: any) => ({
+        item: item.product_id,
+        item_description: `${item.product_id} - ${item.description}`,
+        uom: item.uom_id,
+        quantity: item.base_qty,
+        based_price: item.price,
+        gross: item.gross_value,
+        discount: item.discount_value,
+        sub_total: item.price * item.base_qty - item.discount_value,
+        remarks: item.remarks,
+      }))
 
       setData(itemSData)
       setFetching(true)
@@ -222,7 +220,6 @@ export const useTableEditItem = (props: propsUseTable) => {
           type="input"
           placeholder="e.g Testing"
           onChange={(e) => {
-            console.log(e)
             handleChangeData('remarks', e.target.value, index)
           }}
         />
@@ -236,7 +233,6 @@ export const useTableEditItem = (props: propsUseTable) => {
       data.forEach(({ item, uom, based_price, quantity }, index) => {
         if (item !== '') {
           fieldUom(item).then((value) => {
-            // console.log('value :', value)
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
               const newUom = uom === '' ? value[2]?.value : uom
@@ -247,11 +243,11 @@ export const useTableEditItem = (props: propsUseTable) => {
             }
 
             if (value[2]?.key) {
-              let newPrice = based_price === 0 ? value[2].key : based_price
+              const newPrice = based_price === 0 ? value[2].key : based_price
               handleChangeData('based_price', newPrice, index)
               handleChangeData('sub_total', quantity * newPrice, index)
             } else {
-              let newPrice = based_price
+              const newPrice = based_price
               handleChangeData('based_price', newPrice, index)
               handleChangeData('sub_total', quantity * newPrice, index)
             }

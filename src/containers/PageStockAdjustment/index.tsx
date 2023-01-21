@@ -7,13 +7,13 @@ import { ExclamationBrownIc } from 'src/assets'
 
 import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
 import { useTable, useFilters } from 'src/hooks'
-import { columns } from './columns'
 import { colors } from 'src/configs/colors'
 
-import FreezeSlocModal from './modals/freezeSloc'
 import Pagination from 'src/components/Pagination'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
+import FreezeSlocModal from './modals/freezeSloc'
+import { columns } from './columns'
 
 export default function PageStockAdjustment() {
   const [freezeModal, setFreezeModal] = useState(false)
@@ -43,7 +43,6 @@ export default function PageStockAdjustment() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
       }
     }
     fetch()
@@ -64,8 +63,6 @@ export default function PageStockAdjustment() {
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
-
-  console.log('freze data', freezeList)
 
   return (
     <>
@@ -130,7 +127,6 @@ export default function PageStockAdjustment() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchFrom(val.label.split(' - ')[0])
                   }}
                 />
@@ -138,7 +134,6 @@ export default function PageStockAdjustment() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />

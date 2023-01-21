@@ -10,8 +10,8 @@ import FloatAction from 'src/components/FloatAction'
 import { getListBadStock } from 'src/api/logistic/bad-stock'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
-import { column } from './columns'
 import { colors } from 'src/configs/colors'
+import { column } from './columns'
 
 export default function PageIntraSlocRequest() {
   const [branchfrom, setBranchFrom] = useState('')
@@ -59,7 +59,6 @@ export default function PageIntraSlocRequest() {
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
-      console.log('response Branch', response)
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
@@ -127,7 +126,6 @@ export default function PageIntraSlocRequest() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchFrom(val.label.split(' - ')[0])
                   }}
                 />
@@ -135,7 +133,6 @@ export default function PageIntraSlocRequest() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />

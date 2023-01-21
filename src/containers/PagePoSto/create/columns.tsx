@@ -3,12 +3,11 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React from 'react'
-import { InputNumber, Input } from 'antd'
+import { InputNumber, Input, Form } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { productBranch, fieldUom, itemReceiver } from 'src/configs/fieldFetches'
 import { MinusCircleFilled } from '@ant-design/icons'
 import { addColumn } from 'src/utils/createColumns'
-import { Form } from 'antd'
 
 interface propsUseTable {
   idSupplyingBranch: string
@@ -42,11 +41,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       setPlaceholder([initialValue])
     }
   }, [props.idSupplyingBranch, props.idReceivingBranch])
-
-  React.useEffect(() => {
-    console.log('data submit :', data)
-    console.log('data submit placeholder :', placeholder)
-  }, [data])
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
@@ -174,7 +168,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             placeholder="e.g Testing"
             value={batch as any}
             onChange={(e) => {
-              console.log(e)
               handleChangeData('batch', e.target.value, index)
             }}
           />
@@ -287,7 +280,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             placeholder="e.g Testing"
             value={batch as any}
             onChange={(e) => {
-              console.log(e)
               handleChangeData('batch', e.target.value, index)
             }}
           />
@@ -301,13 +293,12 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log('value new:', value?.[0].value)
             const newOptionsUom = [...optionsUom]
             if (value?.[0]?.value) {
               handleChangeData('uom_id', value?.[0].value, index)
               handleChangeData('base_uom_id', value?.[0].value, index)
             } else {
-              let newUom = uom_id
+              const newUom = uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
             }
@@ -325,8 +316,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       setFetching(false)
     }
   }, [fetching])
-
-  console.log(data)
 
   return {
     data,

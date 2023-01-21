@@ -35,20 +35,17 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     company_id: 'PP01',
     branch_id: 'P104',
     branch_name: 'PMA Bandung Selatan',
-    GroupByBranch: {
-      sloc_list : tableAddItems.data
-    },
+    GroupByBranch: { sloc_list: tableAddItems.data },
   }
 
   const handleSubmit = async () => {
     const reqBody = { ...initialValue, ...dataForm }
 
-    console.log('post Data', reqBody.GroupByBranch)
     if (!isOnEditMode) {
       try {
         return await createConfigSloc(reqBody.GroupByBranch)
       } catch (error) {
-        console.error(error)
+        return error
       }
     }
 
@@ -60,7 +57,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
           reqBody.branch_id as string,
         )
       } catch (error) {
-        console.error(error)
+        return error
       }
     }
 
@@ -100,10 +97,6 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     onChangeForm('branch_id', payload?.branch_id)
     onChangeForm('payload data:', payload)
   }, [isOnEditMode, payload])
-
-  useEffect(() => {
-    console.log('data test', dataForm)
-  }, [dataForm])
 
   const content = (
     <>

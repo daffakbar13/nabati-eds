@@ -31,8 +31,6 @@ export default function Billing(props: BillingProps) {
     DataList.createDataList('Modified By', data.modified_at?.Valid || '-'),
   ]
 
-  console.log('billing item :', data.billing_item)
-
   return (
     <>
       <Row gutter={8}>

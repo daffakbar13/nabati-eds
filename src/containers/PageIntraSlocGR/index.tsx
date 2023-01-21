@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
@@ -11,16 +11,8 @@ import { getListGRSloc } from 'src/api/logistic/gr-intra-sloc'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { column } from './columns'
 import { colors } from 'src/configs/colors'
-
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
+import { column } from './columns'
 
 export default function PageIntraSlocGoodIssue() {
   const [branchfrom, setBranchFrom] = useState('')
@@ -57,7 +49,6 @@ export default function PageIntraSlocGoodIssue() {
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
-      console.log('response Branch', response)
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
@@ -86,9 +77,8 @@ export default function PageIntraSlocGoodIssue() {
                     const updateId = filters.map((data, i) => {
                       if (i === idIndex) {
                         return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
                       }
+                      return { ...data }
                     })
                     setFilters(updateId)
                   }
@@ -126,7 +116,6 @@ export default function PageIntraSlocGoodIssue() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchFrom(val.label.split(' - ')[0])
                   }}
                 />
@@ -134,7 +123,6 @@ export default function PageIntraSlocGoodIssue() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />

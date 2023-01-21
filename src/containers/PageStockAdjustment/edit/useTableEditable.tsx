@@ -57,21 +57,19 @@ export const useTableAddItem = (props: propsUseTable) => {
   }
 
   React.useEffect(() => {
-    const ItemsData = props.itemsData?.map((item: any, index) => {
-      return {
-        product_id: item.product_id,
-        product_id_label: `${item.product_id} - ${item.product_name}`,
-        qty: item.qty,
-        uom_id: item.uom_id,
-        stock_qty: item.stock_qty,
-        uom_stock_id: item.stock_uom_id,
-        remarks: item.remarks,
-        batch: item.batch,
-        qty_reverence: Math.round((parseFloat(item.stock_qty) - parseFloat(item.qty)) * 100) / 100,
-        uom_reverence: item.uom_id,
-        movement_type_id: props.MovementType,
-      }
-    })
+    const ItemsData = props.itemsData?.map((item: any, index) => ({
+      product_id: item.product_id,
+      product_id_label: `${item.product_id} - ${item.product_name}`,
+      qty: item.qty,
+      uom_id: item.uom_id,
+      stock_qty: item.stock_qty,
+      uom_stock_id: item.stock_uom_id,
+      remarks: item.remarks,
+      batch: item.batch,
+      qty_reverence: Math.round((parseFloat(item.stock_qty) - parseFloat(item.qty)) * 100) / 100,
+      uom_reverence: item.uom_id,
+      movement_type_id: props.MovementType,
+    }))
 
     setData(ItemsData)
     if (props.itemsData?.length > 0) {
@@ -97,7 +95,6 @@ export const useTableAddItem = (props: propsUseTable) => {
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
@@ -268,7 +265,6 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
               const newUom = uom_id === '' ? value[2]?.value : uom_id

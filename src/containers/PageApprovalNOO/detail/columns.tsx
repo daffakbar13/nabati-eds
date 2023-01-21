@@ -77,9 +77,6 @@ function Linked({
       </Typography.Title>
       <DatePickerInput
         fullWidth
-        onChange={(val: any) => {
-          // console.log(moment(val).format('DD-MMM-YYYY'))
-        }}
         label="Confirm Reschedule"
         disabledDate={(current) => current < moment().startOf('day')}
         defaultValue={moment()}

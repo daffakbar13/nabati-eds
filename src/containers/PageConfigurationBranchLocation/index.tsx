@@ -32,18 +32,7 @@ export default function PageConfigurationBranchLocation() {
     setShowDeleteModal(true)
   }
 
-  const handleDelete = async () => {
-    const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
-    // TO DO DELETE HERE...
-
-    // try {
-    //   return await updateStatus(reqBody, changeStatusPayload)
-    // } catch (error) {
-    //   console.error(error)
-    // }
-
-    return false
-  }
+  const handleDelete = async () => {}
 
   const table = useTable({
     funcApi: getConfigBranchLocationList,
@@ -51,8 +40,6 @@ export default function PageConfigurationBranchLocation() {
     haveCheckBox: [{ rowKey: 'branch_from_id', member: ['New'] }],
     // filters,
   })
-
-  console.log('selectedRow', selectedRow)
 
   return (
     <>

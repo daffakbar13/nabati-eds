@@ -33,9 +33,8 @@ export default function PageConfigurationSloc() {
     try {
       return await updateStatus(reqBody, changeStatusPayload)
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const table = useTable({

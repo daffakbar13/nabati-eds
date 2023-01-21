@@ -33,9 +33,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const doCreate = async (reqBody: any) => {
@@ -45,9 +44,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const handleSubmit = async () => {
@@ -79,12 +77,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   useEffect(() => {
     // form.resetFields()
     if (!isOnEditMode) return
-    console.log('payload', payload)
     const fetchData = async () => {
       try {
         setLoading(true)
         const res = await getConfigItemCategoryDetail(payload.sales_org_id, payload.order_type_id)
-        console.log('res', res)
         form.setFieldsValue({
           company_id: {
             value: res?.data?.company_id,
@@ -97,7 +93,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
+        return error
       }
     }
 

@@ -54,10 +54,6 @@ export default function PageCreateQuotation() {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
-  React.useEffect(() => {
-    console.log(dataForm)
-  }, [dataForm])
-
   return (
     <Col>
       <Text variant={'h4'}>Create BS Reservation</Text>
@@ -70,7 +66,6 @@ export default function PageCreateQuotation() {
               variant="tertiary"
               onClick={() => {
                 setCancel(true)
-                console.log('cancel', cancel)
               }}
             >
               Cancel
@@ -81,7 +76,7 @@ export default function PageCreateQuotation() {
               onClick={() => {
                 createBadStock({ ...initialValue, ...dataForm })
                   .then((response) => setNewQuotation(response.data))
-                  .catch((e) => console.log(e))
+                  .catch((err) => err)
               }}
             >
               Submit
@@ -176,7 +171,10 @@ export default function PageCreateQuotation() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable={{ text: newQuotation as string }}> {newQuotation}</Typography.Text>
+                <Typography.Text copyable={{ text: newQuotation as string }}>
+                  {' '}
+                  {newQuotation}
+                </Typography.Text>
                 has been
               </>
             )}

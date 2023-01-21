@@ -19,7 +19,6 @@ export default function SectionTableListDo() {
     style: { backgroundColor: '#f4f4f4f4', padding: 2, fontSize: 18 },
     onClick: () => handleModalListDO(!showModalListDO),
   }
-  console.log(table.state.tableProps)
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

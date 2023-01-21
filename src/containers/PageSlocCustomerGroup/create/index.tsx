@@ -70,9 +70,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const doCreate = async (reqBody: any) => {
@@ -82,9 +81,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const handleSubmit = async () => {
@@ -156,7 +154,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         type="select"
         fetchOptions={(search) => fieldSalesOrgCompanyDynamic(search, dataForm?.company_id || '')}
         value={placeHolder?.sales_org || ''}
-        disabled={dataForm?.company_id ? false : true}
+        disabled={!dataForm?.company_id}
         onChange={(val: any) => {
           onChangeForm('sales_org_id', val.value)
           changePlaceHolder('sales_org', val.label)
@@ -171,7 +169,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           fieldCustomerGroupCompanyDynamic(search, dataForm?.company_id || '')
         }
         value={placeHolder?.customerGroup || ''}
-        disabled={dataForm?.company_id ? false : true}
+        disabled={!dataForm?.company_id}
         onChange={(val: any) => {
           onChangeForm('customer_group_id', val.value)
           changePlaceHolder('customerGroup', val.label)
@@ -184,7 +182,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         type="select"
         options={allSloc}
         value={placeHolder?.sloc || ''}
-        disabled={dataForm?.company_id ? false : true}
+        disabled={!dataForm?.company_id}
         onChange={(val: any) => {
           onChangeForm('sloc_id', val.value)
           changePlaceHolder('sloc', val.label)

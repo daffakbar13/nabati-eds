@@ -43,7 +43,6 @@ export default function PageAvailabilityOverview() {
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
-      console.log('response Branch', response)
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
@@ -102,32 +101,31 @@ export default function PageAvailabilityOverview() {
             available_in_large: itemChild?.available.total_in_large || '',
           })),
         }
-      } else {
-        return {
-          key: index,
-          branch: `${item?.branch_id} - ${item?.branch_name}`,
-          material: `${item?.GroupByProduct?.[0].product_id} - ${item?.GroupByProduct?.[0].product_name}`,
-          sloc: item?.GroupByProduct?.[0].sloc_id,
-          status: item?.GroupByProduct?.[0].status_data_name,
-          status_data: item?.GroupByProduct?.[0].status_data
-            ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
-            : '',
-          stock_large: item?.GroupByProduct?.[0].stock.large || '',
-          stock_middle: item?.GroupByProduct?.[0].stock.middle || '',
-          stock_small: item?.GroupByProduct?.[0].stock.small || '',
-          stock_in_small: item?.GroupByProduct?.[0].stock.total_in_small || '',
-          stock_in_large: item?.GroupByProduct?.[0].stock.total_in_large || '',
-          bo_large: item?.GroupByProduct?.[0].booking_order.large || '',
-          bo_middle: item?.GroupByProduct?.[0].booking_order.middle || '',
-          bo_small: item?.GroupByProduct?.[0].booking_order.small || '',
-          bo_in_small: item?.GroupByProduct?.[0].booking_order.total_in_small || '',
-          bo_in_large: item?.GroupByProduct?.[0].booking_order.total_in_large || '',
-          available_large: item?.GroupByProduct?.[0].available.large || '',
-          available_middle: item?.GroupByProduct?.[0].available.middle || '',
-          available_small: item?.GroupByProduct?.[0].available.small || '',
-          available_in_small: item?.GroupByProduct?.[0].available.total_in_small || '',
-          available_in_large: item?.GroupByProduct?.[0].available.total_in_large || '',
-        }
+      }
+      return {
+        key: index,
+        branch: `${item?.branch_id} - ${item?.branch_name}`,
+        material: `${item?.GroupByProduct?.[0].product_id} - ${item?.GroupByProduct?.[0].product_name}`,
+        sloc: item?.GroupByProduct?.[0].sloc_id,
+        status: item?.GroupByProduct?.[0].status_data_name,
+        status_data: item?.GroupByProduct?.[0].status_data
+          ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
+          : '',
+        stock_large: item?.GroupByProduct?.[0].stock.large || '',
+        stock_middle: item?.GroupByProduct?.[0].stock.middle || '',
+        stock_small: item?.GroupByProduct?.[0].stock.small || '',
+        stock_in_small: item?.GroupByProduct?.[0].stock.total_in_small || '',
+        stock_in_large: item?.GroupByProduct?.[0].stock.total_in_large || '',
+        bo_large: item?.GroupByProduct?.[0].booking_order.large || '',
+        bo_middle: item?.GroupByProduct?.[0].booking_order.middle || '',
+        bo_small: item?.GroupByProduct?.[0].booking_order.small || '',
+        bo_in_small: item?.GroupByProduct?.[0].booking_order.total_in_small || '',
+        bo_in_large: item?.GroupByProduct?.[0].booking_order.total_in_large || '',
+        available_large: item?.GroupByProduct?.[0].available.large || '',
+        available_middle: item?.GroupByProduct?.[0].available.middle || '',
+        available_small: item?.GroupByProduct?.[0].available.small || '',
+        available_in_small: item?.GroupByProduct?.[0].available.total_in_small || '',
+        available_in_large: item?.GroupByProduct?.[0].available.total_in_large || '',
       }
     })
     setdataTable(dataApi)
@@ -159,7 +157,6 @@ export default function PageAvailabilityOverview() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />

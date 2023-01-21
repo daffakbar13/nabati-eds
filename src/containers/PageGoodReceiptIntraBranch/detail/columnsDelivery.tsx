@@ -3,11 +3,10 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react'
-import { InputNumber, Radio } from 'antd'
+import { InputNumber, Radio, Form } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldSloc, fieldUom } from 'src/configs/fieldFetches'
 import { addColumn } from 'src/utils/createColumns'
-import { Form } from 'antd'
 
 interface DataType {
   key: number
@@ -58,31 +57,27 @@ export const useTableAddItem = (props: any) => {
     onChange: (selectedRows, data) => {
       setDataSubmit([...data])
     },
-    getCheckboxProps: (data) => ({
-      name: data.product_id,
-    }),
+    getCheckboxProps: (data) => ({ name: data.product_id }),
   }
 
   useEffect(() => {
-    const ItemsData = props.items?.map((item: any, index) => {
-      return {
-        key: index,
-        product_id: item.product_id,
-        description: item.description,
-        description_show: `${item.product_id} - ${item.product_name}`,
-        remarks: '-',
-        batch: item.batch,
-        qty: item.qty,
-        base_qty: item.base_qty,
-        received_qty: item.qty,
-        do_qty: item.base_qty,
-        uom_id: item.uom_id,
-        base_uom_id: item.base_uom_id,
-        received_uom_id: item.uom_id,
-        do_uom_id: item.base_uom_id,
-        sloc_id: 'GS00',
-      }
-    })
+    const ItemsData = props.items?.map((item: any, index) => ({
+      key: index,
+      product_id: item.product_id,
+      description: item.description,
+      description_show: `${item.product_id} - ${item.product_name}`,
+      remarks: '-',
+      batch: item.batch,
+      qty: item.qty,
+      base_qty: item.base_qty,
+      received_qty: item.qty,
+      do_qty: item.base_qty,
+      uom_id: item.uom_id,
+      base_uom_id: item.base_uom_id,
+      received_uom_id: item.uom_id,
+      do_uom_id: item.base_uom_id,
+      sloc_id: 'GS00',
+    }))
 
     setData(ItemsData)
     if (props.items?.length > 0) {
@@ -217,7 +212,6 @@ export const useTableAddItem = (props: any) => {
           type="input"
           value={row.remarks}
           onChange={(e: any) => {
-            console.log('remarks', e.target.value as string)
             handleChangeData('remarks', e.target.value as string, index)
           }}
         />
@@ -231,8 +225,6 @@ export const useTableAddItem = (props: any) => {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log('value :', value)
-            // console.log(value)
             const newOptionsUom = [...optionsUom]
 
             if (value[2]?.value) {

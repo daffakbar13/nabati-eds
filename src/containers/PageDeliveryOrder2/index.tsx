@@ -325,7 +325,7 @@ export default function PageDeliveryOrder(props: PageDeliveryOrderProps) {
         setOptionsReason(data)
         setReason(data[0].value)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => err)
   }, [])
 
   return (

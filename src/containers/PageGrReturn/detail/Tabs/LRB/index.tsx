@@ -1,8 +1,7 @@
 import React from 'react'
 import { Container, BoldText, GrayContainer, WhitePaper, Title } from './styled'
 
-export default function LRB({ details }) {
-  console.log('details', details)
+export default function LRB() {
   return (
     <Container>
       <BoldText>Print Preview - Lembar Penerimaan Barang (LPB)</BoldText>

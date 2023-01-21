@@ -56,7 +56,6 @@ export default function FreezeSlocModal({
       return res
     } catch (error) {
       setLoading(false)
-      console.error(error)
     }
     return false
   }

@@ -5,12 +5,11 @@ import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lav
 import { Card, Popup } from 'src/components'
 import { useRouter } from 'next/router'
 import { useDetail } from 'src/hooks'
-import { getDetailBilling } from 'src/api/billing'
+import { getDetailBilling, UpdateBilling } from 'src/api/billing'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { useTableEditItem } from './columns'
 import Total from 'src/components/Total'
-import { UpdateBilling } from 'src/api/billing'
+import { useTableEditItem } from './columns'
 
 export default function PageBillingDetail() {
   const now = new Date().toISOString()
@@ -80,7 +79,7 @@ export default function PageBillingDetail() {
               onClick={() => {
                 UpdateBilling({ ...initialValue, ...dataForm })
                   .then((response) => setNewData(response.data.id))
-                  .catch((e) => console.log(e))
+                  .catch((err) => err)
               }}
             >
               Submit

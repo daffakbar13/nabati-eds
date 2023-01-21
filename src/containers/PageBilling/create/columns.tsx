@@ -79,140 +79,138 @@ export const useTableAddItem = (props: propsUseTable) => {
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
       ),
       55,
     ),
-    CreateColumns(
-      'Item',
-      'item',
-      false,
-      (item, __, index) => (
-        <DebounceSelect
-          type="select"
-          value={item as any}
-          fetchOptions={(search) => productBranch(search, props.id)}
-          onChange={(e) => {
-            handleChangeData('item', e.value, index)
-            setFetching(true)
-          }}
-        />
+      CreateColumns(
+        'Item',
+        'item',
+        false,
+        (item, __, index) => (
+          <DebounceSelect
+            type="select"
+            value={item as any}
+            fetchOptions={(search) => productBranch(search, props.id)}
+            onChange={(e) => {
+              handleChangeData('item', e.value, index)
+              setFetching(true)
+            }}
+          />
+        ),
+        400,
       ),
-      400,
-    ),
-    CreateColumns(
-      'UoM',
-      'uom',
-      false,
-      (uom, __, index) => (
-        <DebounceSelect
-          type="select"
-          value={uom as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom', e.value, index)
-            handleChangeData('based_price', e.key, index)
-            setFetching(true)
-          }}
-        />
+      CreateColumns(
+        'UoM',
+        'uom',
+        false,
+        (uom, __, index) => (
+          <DebounceSelect
+            type="select"
+            value={uom as any}
+            options={optionsUom[index] || []}
+            disabled={isNullProductId(index)}
+            onChange={(e) => {
+              handleChangeData('uom', e.value, index)
+              handleChangeData('based_price', e.key, index)
+              setFetching(true)
+            }}
+          />
+        ),
+        150,
       ),
-      150,
-    ),
-    CreateColumns(
-      'Quantity',
-      'quantity',
-      false,
-      (quantity, record, index) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={quantity?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('quantity', newVal, index)
-            handleChangeData('sub_total', parseInt(newVal) * data[index].based_price, index)
-          }}
-          style={styleInputNumber}
-        />
+      CreateColumns(
+        'Quantity',
+        'quantity',
+        false,
+        (quantity, record, index) => (
+          <InputNumber
+            disabled={isNullProductId(index)}
+            min={isNullProductId(index) ? '0' : '1'}
+            value={quantity?.toLocaleString()}
+            onChange={(newVal) => {
+              handleChangeData('quantity', newVal, index)
+              handleChangeData('sub_total', parseInt(newVal) * data[index].based_price, index)
+            }}
+            style={styleInputNumber}
+          />
+        ),
+        130,
       ),
-      130,
-    ),
-    CreateColumns(
-      'Based Price',
-      'based_price',
-      false,
-      (based_price, __, index) => (
-        <DebounceSelect type="input" placeholder={based_price?.toLocaleString()} disabled />
+      CreateColumns(
+        'Based Price',
+        'based_price',
+        false,
+        (based_price, __, index) => (
+          <DebounceSelect type="input" placeholder={based_price?.toLocaleString()} disabled />
+        ),
+        130,
       ),
-      130,
-    ),
-    CreateColumns(
-      'Gross',
-      'gross',
-      false,
-      (gross, record, index) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={gross?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('gross', newVal, index)
-          }}
-          style={styleInputNumber}
-        />
+      CreateColumns(
+        'Gross',
+        'gross',
+        false,
+        (gross, record, index) => (
+          <InputNumber
+            disabled={isNullProductId(index)}
+            min={isNullProductId(index) ? '0' : '1'}
+            value={gross?.toLocaleString()}
+            onChange={(newVal) => {
+              handleChangeData('gross', newVal, index)
+            }}
+            style={styleInputNumber}
+          />
+        ),
+        130,
       ),
-      130,
-    ),
-    CreateColumns(
-      'Discount',
-      'discount',
-      false,
-      (discount, record, index) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={'0'}
-          value={discount?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('discount', newVal, index)
-            handleChangeData(
-              'sub_total',
-              parseInt(data[index].quantity) * data[index].based_price - parseInt(newVal),
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
+      CreateColumns(
+        'Discount',
+        'discount',
+        false,
+        (discount, record, index) => (
+          <InputNumber
+            disabled={isNullProductId(index)}
+            min={'0'}
+            value={discount?.toLocaleString()}
+            onChange={(newVal) => {
+              handleChangeData('discount', newVal, index)
+              handleChangeData(
+                'sub_total',
+                parseInt(data[index].quantity) * data[index].based_price - parseInt(newVal),
+                index,
+              )
+            }}
+            style={styleInputNumber}
+          />
+        ),
+        130,
       ),
-      130,
-    ),
-    CreateColumns(
-      'Sub Total',
-      'sub_total',
-      false,
-      (sub_total, record, index) => (
-        <DebounceSelect type="input" placeholder={sub_total?.toLocaleString()} disabled />
+      CreateColumns(
+        'Sub Total',
+        'sub_total',
+        false,
+        (sub_total, record, index) => (
+          <DebounceSelect type="input" placeholder={sub_total?.toLocaleString()} disabled />
+        ),
+        130,
       ),
-      130,
-    ),
-    CreateColumns(
-      'Remarks',
-      'remarks',
-      false,
-      (_, __, index) => (
-        <DebounceSelect
-          type="input"
-          placeholder="e.g Testing"
-          onChange={(e) => {
-            console.log(e)
-            handleChangeData('remarks', e.target.value, index)
-          }}
-        />
+      CreateColumns(
+        'Remarks',
+        'remarks',
+        false,
+        (_, __, index) => (
+          <DebounceSelect
+            type="input"
+            placeholder="e.g Testing"
+            onChange={(e) => {
+              handleChangeData('remarks', e.target.value, index)
+            }}
+          />
+        ),
+        300,
       ),
-      300,
-    ),
   ]
 
   React.useEffect(() => {
@@ -220,7 +218,6 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ item, uom, based_price }, index) => {
         if (item !== '') {
           fieldUom(item).then((value) => {
-            // console.log('value :', value)
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
               const newUom = uom === '' ? value[2]?.value : uom
@@ -231,10 +228,10 @@ export const useTableAddItem = (props: propsUseTable) => {
             }
 
             if (value[2]?.key) {
-              let newPrice = based_price === 0 ? value[2].key : based_price
+              const newPrice = based_price === 0 ? value[2].key : based_price
               handleChangeData('based_price', newPrice, index)
             } else {
-              let newPrice = based_price
+              const newPrice = based_price
               handleChangeData('based_price', newPrice, index)
             }
 

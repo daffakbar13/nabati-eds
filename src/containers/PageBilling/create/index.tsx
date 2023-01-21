@@ -5,7 +5,6 @@ import { Button, Col, Row, Table, Spacer, Text, DatePickerInput } from 'pink-lav
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { useTableAddItem } from './columns'
 import Total from 'src/components/Total'
 import { useRouter } from 'next/router'
 import {
@@ -15,6 +14,7 @@ import {
   fieldBranchAll,
 } from 'src/configs/fieldFetches'
 import { createBilling } from 'src/api/billing'
+import { useTableAddItem } from './columns'
 
 export default function CreateBilling() {
   const now = new Date().toISOString()
@@ -76,7 +76,7 @@ export default function CreateBilling() {
               onClick={() => {
                 createBilling({ ...initialValue, ...dataForm })
                   .then((response) => setNewData(response.data.id))
-                  .catch((e) => console.log(e))
+                  .catch((err) => err)
               }}
             >
               Submit
@@ -231,7 +231,7 @@ export default function CreateBilling() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing`)
+                    router.push('/sales/billing')
                   }}
                 >
                   Yes
@@ -245,7 +245,7 @@ export default function CreateBilling() {
                   size="big"
                   variant="primary"
                   onClick={() => {
-                    router.push(`/sales/billing`)
+                    router.push('/sales/billing')
                   }}
                 >
                   OK

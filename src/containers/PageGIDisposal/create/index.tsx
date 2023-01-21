@@ -43,8 +43,6 @@ export default function CreateBsReservation() {
       sloc_id: headerData?.sloc_id?.value,
       items: tableAddItems.data.map((i) => i),
     }
-
-    console.log('payload', payload)
     try {
       setLoading(true)
       const res = await createBadStock(payload)
@@ -56,8 +54,6 @@ export default function CreateBsReservation() {
       return newLocal
     }
   }
-
-  console.log('tableAddItems', tableAddItems)
 
   return (
     <Col>

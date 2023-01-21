@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
@@ -12,15 +12,6 @@ import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
-import { colors } from 'src/configs/colors'
-
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
 
 export default function PageIntraSlocRequest() {
   const table = useTable({

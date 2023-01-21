@@ -73,7 +73,7 @@ export default function PageDeliveryOrderDetail(props: PageDeliveryOrderDetailPr
                 setShowConfirm('success-cancel')
                 setProccessing('')
               })
-              .catch((err) => console.log(err))
+              .catch((err) => err)
           }}
         >
           Yes

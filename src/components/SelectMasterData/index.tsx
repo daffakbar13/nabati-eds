@@ -30,7 +30,6 @@ export default function SelectMasterData({ type, style = {}, onChange, ...props 
       fetchData()
     } catch (error) {
       setLoading(false)
-      console.error(error)
     }
   }, [type])
 

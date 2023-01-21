@@ -14,9 +14,9 @@ import {
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSloc, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { column } from './columns'
 import { colors } from 'src/configs/colors'
 import { CheckCircleFilled } from '@ant-design/icons'
+import { column } from './columns'
 
 export default function PageStockReservation() {
   const table = useTable({
@@ -190,8 +190,8 @@ export default function PageStockReservation() {
                     status_id: '01',
                     id_reservations: table.state.selected,
                   })
-                    .then((response) => setShowConfirm('UpdateStatus'))
-                    .catch((e) => console.log(e))
+                    .then(() => setShowConfirm('UpdateStatus'))
+                    .catch((err) => err)
                 }}
               >
                 Submit

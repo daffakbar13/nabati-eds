@@ -8,12 +8,12 @@ import {
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, DownloadButton, SearchQueryParams, SmartFilter } from 'src/components'
 import { useTable } from 'src/hooks'
-import { columns } from './columns'
 import {
   fieldBranchAll,
   fieldProductByCompany,
   fieldSlocFromBranch,
 } from 'src/configs/fieldFetches'
+import { columns } from './columns'
 
 export default function PageRealTime() {
   const [filters, setFilters] = useState([])
@@ -63,7 +63,6 @@ export default function PageRealTime() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />

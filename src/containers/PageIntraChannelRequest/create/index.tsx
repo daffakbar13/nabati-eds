@@ -6,12 +6,15 @@ import { Button, Col, Row, Spacer, Text, DatePickerInput, Table, Input } from 'p
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { createRequestIntraChannel } from 'src/api/request-intra-channel'
+import {
+  createRequestIntraChannel,
+  getSloc,
+  getBranchLocation,
+} from 'src/api/request-intra-channel'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { fieldBranchSupply } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
-import { getSloc, getBranchLocation } from 'src/api/request-intra-channel'
 
 interface ItemsState {
   product_sender_id: string
@@ -119,10 +122,6 @@ export default function PageCreateQuotation() {
   }, [])
 
   React.useEffect(() => {
-    console.log(dataForm)
-  }, [dataForm])
-
-  React.useEffect(() => {
     if (fromCH !== '') {
       onChangeForm('from_channel', fromCH)
     }
@@ -155,7 +154,6 @@ export default function PageCreateQuotation() {
               variant="tertiary"
               onClick={() => {
                 setCancel(true)
-                console.log('cancel', cancel)
               }}
             >
               Cancel
@@ -166,7 +164,7 @@ export default function PageCreateQuotation() {
               onClick={() => {
                 createRequestIntraChannel({ ...initialValue, ...dataForm })
                   .then((response) => setNewQuotation(response.data.id))
-                  .catch((e) => console.log(e))
+                  .catch((err) => err)
               }}
             >
               Submit

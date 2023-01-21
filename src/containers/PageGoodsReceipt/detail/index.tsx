@@ -1,7 +1,6 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Modal, Tabs } from 'src/components'
-import { Loader } from 'src/components'
+import { Card, GoBackArrow, Modal, Tabs, Loader } from 'src/components'
 
 import { useRouter } from 'next/router'
 import { cancelProcess, getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
@@ -37,7 +36,6 @@ export default function DetailGR() {
       })
       return res
     } catch (error) {
-      console.error(error)
       return false
     }
   }
@@ -52,15 +50,10 @@ export default function DetailGR() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
       }
     }
     fetchData()
   }, [id])
-
-  useEffect(() => {
-    console.log('details', details)
-  }, [details])
 
   return (
     <>

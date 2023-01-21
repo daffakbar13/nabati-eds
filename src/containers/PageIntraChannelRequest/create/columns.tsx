@@ -79,93 +79,90 @@ export const useTableAddItem = (props: propsUseTable) => {
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
       ),
       55,
     ),
-    CreateColumns(
-      'Item Sender',
-      'product_sender_id',
-      false,
-      (product_sender_id, __, index) => (
+      CreateColumns(
+        'Item Sender',
+        'product_sender_id',
+        false,
+        (product_sender_id, __, index) => (
+          <DebounceSelect
+            type="select"
+            value={placeholder[index]?.product_sender_id as any}
+            fetchOptions={(search) => productBranch(search, props.idbranch)}
+            onChange={(e) => {
+              handleChangeData('product_sender_id', e.value, index)
+              handleChangePlaceholder('product_sender_id', e.label, index)
+              setFetching(true)
+            }}
+          />
+        ),
+        400,
+      ),
+      CreateColumns(
+        'Item Receiver',
+        'product_id',
+        false,
+        (product_id, __, index) => (
+          <DebounceSelect type="input" disabled value={valueItemSender[index] || ''} />
+        ),
+        400,
+      ),
+      CreateColumns(
+        'Qty',
+        'qty',
+        false,
+        (order_qty, record, index) => (
+          <InputNumber
+            disabled={isNullProductId(index)}
+            min={isNullProductId(index) ? '0' : '1'}
+            value={order_qty?.toLocaleString()}
+            onChange={(newVal) => {
+              handleChangeData('qty', newVal, index)
+              handleChangeData('base_qty', newVal, index)
+            }}
+            style={styleInputNumber}
+          />
+        ),
+        130,
+      ),
+      CreateColumns(
+        'UoM',
+        'uom_id',
+        false,
+        (uom_id, __, index) => (
+          <DebounceSelect
+            type="select"
+            value={uom_id as any}
+            options={optionsUom[index] || []}
+            disabled={isNullProductId(index)}
+            onChange={(e) => {
+              handleChangeData('uom_id', e.value, index)
+              handleChangeData('base_uom_id', e.value, index)
+              setFetching(true)
+            }}
+          />
+        ),
+        150,
+      ),
+      CreateColumns('Batch', 'batch', false, (_, __, index) => (
         <DebounceSelect
-          type="select"
-          value={placeholder[index]?.product_sender_id as any}
-          fetchOptions={(search) => productBranch(search, props.idbranch)}
+          type="input"
+          placeholder="e.g Testing"
           onChange={(e) => {
-            handleChangeData('product_sender_id', e.value, index)
-            handleChangePlaceholder('product_sender_id', e.label, index)
-            setFetching(true)
+            handleChangeData('batch', e.target.value, index)
           }}
         />
-      ),
-      400,
-    ),
-    CreateColumns(
-      'Item Receiver',
-      'product_id',
-      false,
-      (product_id, __, index) => (
-        <DebounceSelect type="input" disabled value={valueItemSender[index] || ''} />
-      ),
-      400,
-    ),
-    CreateColumns(
-      'Qty',
-      'qty',
-      false,
-      (order_qty, record, index) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={order_qty?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty', newVal, index)
-            handleChangeData('base_qty', newVal, index)
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      130,
-    ),
-    CreateColumns(
-      'UoM',
-      'uom_id',
-      false,
-      (uom_id, __, index) => (
-        <DebounceSelect
-          type="select"
-          value={uom_id as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_id', e.value, index)
-            handleChangeData('base_uom_id', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      150,
-    ),
-    CreateColumns('Batch', 'batch', false, (_, __, index) => (
-      <DebounceSelect
-        type="input"
-        placeholder="e.g Testing"
-        onChange={(e) => {
-          console.log(e)
-          handleChangeData('batch', e.target.value, index)
-        }}
-      />
-    )),
+      )),
     CreateColumns('Remarks', 'remarks', false, (_, __, index) => (
       <DebounceSelect
         type="input"
         placeholder="e.g Testing"
         onChange={(e) => {
-          console.log(e)
           handleChangeData('remarks', e.target.value, index)
         }}
       />
@@ -177,14 +174,13 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ product_sender_id, uom_id, qty }, index) => {
         if (product_sender_id !== '') {
           fieldUom(product_sender_id).then((value) => {
-            // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
-              let newUom = uom_id === '' ? value[2].value : uom_id
+              const newUom = uom_id === '' ? value[2].value : uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
             } else {
-              let newUom = uom_id
+              const newUom = uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
             }

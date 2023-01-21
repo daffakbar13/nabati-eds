@@ -47,7 +47,6 @@ export default function CreateGoodsReceipt() {
       created_by: 'SYSTEM', // ?????
       items: tableData,
     }
-    console.log('payload', payload)
 
     try {
       setLoading(true)
@@ -93,7 +92,6 @@ export default function CreateGoodsReceipt() {
     //   setLoading(false)
     // } catch (error) {
     //   setLoading(false)
-    //   console.error(error)
     // }
     setDisableSomeFields(true)
   }

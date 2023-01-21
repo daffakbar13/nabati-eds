@@ -55,6 +55,5 @@ export function call({
     config.data = payload
   }
 
-  // console.log('config', config)
   return instance.request(config)
 }

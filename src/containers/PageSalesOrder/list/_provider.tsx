@@ -17,7 +17,6 @@ export default function SalesSalesOrderListProvider(
     columns: useColumnSalesOrder,
   })
   const SalesQuotationList = useSalesSalesOrderListProvider()
-  console.log(table)
 
   return (
     <SalesQuotationList.Provider

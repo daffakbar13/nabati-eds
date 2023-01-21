@@ -76,8 +76,6 @@ export default function PageStockReservationCreate() {
   }
 
   const handleSubmit = async () => {
-    const values = await form.validateFields()
-    console.log('values', values)
     setModalSubmit(true)
   }
 
@@ -85,14 +83,9 @@ export default function PageStockReservationCreate() {
     try {
       return await createRequestStockReservation({ ...initialValue, ...dataForm })
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
-
-  React.useEffect(() => {
-    console.log(dataForm)
-  }, [dataForm])
 
   React.useEffect(() => {
     if (tableAddItems?.data?.length > 0 && tableAddItems?.data?.[0].product_id != '') {
@@ -106,11 +99,11 @@ export default function PageStockReservationCreate() {
     const fieldRow = selectedRow + 1
     tableAddItems.handleDeleteRows(selectedRow)
     form.setFieldsValue({
-      ['ItemSender.' + fieldRow]: '',
+      [`ItemSender.${fieldRow}`]: '',
       // ['Qty.' + fieldRow]: '',
       // ['UoM.' + fieldRow]: '',
-      ['Batch.' + fieldRow]: '',
-      ['Remarks.' + fieldRow]: '',
+      [`Batch.${fieldRow}`]: '',
+      [`Remarks.${fieldRow}`]: '',
     })
     setModalDelete(false)
   }
@@ -127,7 +120,6 @@ export default function PageStockReservationCreate() {
               variant="tertiary"
               onClick={() => {
                 setCancel(true)
-                console.log('cancel', cancel)
               }}
             >
               Cancel
@@ -303,7 +295,7 @@ export default function PageStockReservationCreate() {
         onCancel={() => {
           setModalDelete(false)
         }}
-        content={`Are you sure want to Delete This Item Stock Reservation ?`}
+        content={'Are you sure want to Delete This Item Stock Reservation ?'}
         successTitle="Success"
         successOkText="OK"
         width={432}
@@ -315,7 +307,7 @@ export default function PageStockReservationCreate() {
         onCancel={() => {
           setModalSubmit(false)
         }}
-        content={`Are you sure want to Submit This Stock Reservation ?`}
+        content={'Are you sure want to Submit This Stock Reservation ?'}
         successTitle="Success"
         onOkSuccess={() => {
           router.push(`${PATH.LOGISTIC}/stock-reservation`)
