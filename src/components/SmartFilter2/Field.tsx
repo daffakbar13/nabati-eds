@@ -75,29 +75,31 @@ export default function SingleField({
     handleChange({ field, dataType, option: val })
   }
 
-  const noArrayReturn = React.cloneElement(children, {
-    ...children.props,
-    style: { ...children.props.style, gridColumnStart: 'span 3' },
-    onChange: (arg: any) => {
-      onFromValueChange(arg)
-      if (children.props.onChange) {
-        children.props.onChange(arg)
-      }
-    },
-    value: value?.fromValue || undefined,
-  })
+  const noArrayReturn = () =>
+    React.cloneElement(children, {
+      ...children.props,
+      style: { ...children.props.style, gridColumnStart: 'span 3' },
+      onChange: (arg: any) => {
+        onFromValueChange(arg)
+        if (children.props.onChange) {
+          children.props.onChange(arg)
+        }
+      },
+      value: value?.fromValue || undefined,
+    })
 
-  const arrayReturn = React.cloneElement(children[0], {
-    ...children[0].props,
-    style: { ...children[0].props.style, gridColumnStart: 'span 3' },
-    onChange: (arg: any) => {
-      onFromValueChange(arg)
-      if (children[0].props.onChange) {
-        children[0].props.onChange(arg)
-      }
-    },
-    value: value?.fromValue || undefined,
-  })
+  const arrayReturn = () =>
+    React.cloneElement(children[0], {
+      ...children[0].props,
+      style: { ...children[0].props.style, gridColumnStart: 'span 3' },
+      onChange: (arg: any) => {
+        onFromValueChange(arg)
+        if (children[0].props.onChange) {
+          children[0].props.onChange(arg)
+        }
+      },
+      value: value?.fromValue || undefined,
+    })
 
   return (
     <Container>
@@ -106,9 +108,9 @@ export default function SingleField({
       </Text>
       <SelectOptionIcon options={options} onChange={onOptionChange} value={value?.option} />
 
-      {hasOneChildren && !Array.isArray(children) && noArrayReturn}
+      {hasOneChildren && !Array.isArray(children) && noArrayReturn()}
 
-      {hasOneChildren && Array.isArray(children) && arrayReturn}
+      {hasOneChildren && Array.isArray(children) && arrayReturn()}
 
       <>
         {hasMultipleChildren && (
