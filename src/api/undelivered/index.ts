@@ -37,10 +37,11 @@ export const multipleSubmitUndelivered = async (payload: any) => {
   return response.data
 }
 
-export const downloadUndelivered = async () => {
+export const downloadUndelivered = async (params: CommonListParams) => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${subUrl}/generate`,
+    data: params,
   })
   return response.data
 }

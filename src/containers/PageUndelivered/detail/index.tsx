@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card, DataList, Popup } from 'src/components'
 import { Divider, Row, Typography, Col } from 'antd'
@@ -14,10 +14,16 @@ import Loader from 'src/components/Loader'
 import dateFormat from 'src/utils/dateFormat'
 import TitleDataList from 'src/components/TitleDataList'
 import { tableUndelivered } from './columns'
+import ConfirmApprove from '../alerts/ConfirmApprove'
+import ConfirmSuccessApprove from '../alerts/ConfirmSuccessApprove'
+import ConfirmSuccessReject from '../alerts/ConfirmSuccessReject'
+import ConfirmSuccessReschedule from '../alerts/ConfirmSuccessReschedule'
 
 export default function PageApprovalDetail() {
   const titlePage = useTitlePage('detail')
-  const [showConfirm, setShowConfirm] = React.useState('')
+  const [showConfirm, setShowConfirm] = useState<
+    'approve' | 'success-approve' | 'success-reject' | 'success-reschedule' | ''
+  >('')
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
   const [proccessing, setProccessing] = React.useState('')
@@ -40,199 +46,83 @@ export default function PageApprovalDetail() {
     DataList.createDataList('Modified By', data.modified_by),
   ]
 
-  const ConfirmApprove = () => (
-    <Popup
-      onOutsideClick={() => {
-        setShowConfirm('')
-      }}
-    >
-      <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Approve
-      </Typography.Title>
-      Are you sure to approve Sales Order {router.query.id} ?
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="secondary"
-          onClick={() => {
-            setShowConfirm('')
-          }}
-        >
-          No
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            setProccessing('Wait for approving')
-            multipleSubmitUndelivered({
-              order_list: [{ id: router.query.id }],
-              status_approved_id: '01',
-            })
-              .then(() => {
-                setShowConfirm('success-approve')
-                setProccessing('')
-              })
-              .catch(() => setProccessing(''))
-          }}
-        >
-          Yes
-        </Button>
-      </div>
-    </Popup>
-  )
+  const handleApprove = () => {
+    setProccessing('Wait for approving')
+    // multipleSubmitUndelivered({
+    //   order_list: router.query.id,
+    //   status_approved_id: '01',
+    // })
+    //   .then(() => {
+    //     setShowConfirm('success-approve')
+    //     setProccessing('')
+    //   })
+    //   .catch(() => setProccessing(''))
+    setTimeout(() => {
+      setShowConfirm('success-approve')
+    }, 2000)
+    setTimeout(() => {
+      setProccessing('')
+    }, 3000)
+  }
 
-  const ConfirmSuccessApprove = () => (
-    <Popup>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Text
-          textAlign="center"
-          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-        >
-          <>
-            <CheckCircleFilled /> Approve Success
-          </>
-        </Text>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          gap: 4,
-          fontWeight: 'bold',
-          flexDirection: 'column',
-          textAlign: 'center',
-        }}
-      >
-        <div>
-          Sales Order
-          <Typography.Text copyable={{ text: router.query.id as string }}>
-            {` ${router.query.id}`}
-          </Typography.Text>{' '}
-          has been
-        </div>
-        <div>successfully approved</div>
-      </div>
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            router.push(`${PATH.SALES}/approval`)
-          }}
-        >
-          OK
-        </Button>
-      </div>
-    </Popup>
-  )
+  const handleReject = (reason: string, index: number) => {
+    setProccessing('Wait for rejecting')
 
-  const ConfirmReject = () => (
-    <Popup
-      onOutsideClick={() => {
-        setShowConfirm('')
-      }}
-    >
-      <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Rejectation
-      </Typography.Title>
-      <DebounceSelect
-        type="select"
-        value={optionsReason.find((e) => reason === e.value)?.label}
-        label={'Reason Reject Sales Order'}
-        required
-        options={optionsReason}
-        onChange={(e) => setReason(e.value)}
-      />
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="secondary"
-          onClick={() => {
-            setShowConfirm('')
-          }}
-        >
-          No
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            setProccessing('Wait for rejecting')
-            multipleSubmitUndelivered({
-              order_list: [{ id: router.query.id }],
-              status_approved_id: '02',
-              reject_reason_id: reason,
-            })
-              .then(() => {
-                setShowConfirm('success-reject')
-                setProccessing('')
-              })
-              .catch(() => setProccessing(''))
-          }}
-        >
-          Yes
-        </Button>
-      </div>
-    </Popup>
-  )
-
-  const ConfirmSuccessReject = () => (
-    <Popup>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Text
-          textAlign="center"
-          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-        >
-          <>
-            <CheckCircleFilled /> Reject Success
-          </>
-        </Text>
-      </div>
-      <div
-        style={{
-          display: 'flex',
-          gap: 4,
-          fontWeight: 'bold',
-          flexDirection: 'column',
-          textAlign: 'center',
-        }}
-      >
-        <div>
-          Sales Order
-          <Typography.Text copyable={{ text: router.query.id as string }}>
-            {` ${router.query.id} `}
-          </Typography.Text>
-          has been
-        </div>
-        <div>successfully rejected</div>
-      </div>
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            router.push(`${PATH.SALES}/approval`)
-          }}
-        >
-          OK
-        </Button>
-      </div>
-    </Popup>
-  )
-
-  const RejectRerason = (value: string, index: number) => {
-    const newData = [...dataTable]
-    newData[index] = {
-      ...dataTable[index],
-      rejectReason: value,
+    const payload = {
+      shipment_id: router.query.id,
+      items: [
+        {
+          delivery_order_id: dataTable[index]['delivery_oder_id'],
+          new_delivery_date: dataTable[index]['order_date'],
+          cancel_reason: reason,
+        },
+      ],
     }
-    setDataTable(newData)
+
+    multipleSubmitUndelivered(payload)
+      .then(() => {
+        setShowConfirm('success-reject')
+
+        const newData = [...dataTable]
+        newData[index] = {
+          ...dataTable[index],
+          cancel_reason: reason,
+        }
+        setDataTable(newData)
+
+        setProccessing('')
+      })
+      .catch(() => setProccessing(''))
+  }
+
+  const handleReschedule = (date: any, index: number) => {
+    setProccessing('Wait for reschedule..')
+
+    const payload = {
+      shipment_id: router.query.id,
+      items: [
+        {
+          delivery_order_id: dataTable[index]['delivery_oder_id'],
+          new_delivery_date: date,
+          cancel_reason: dataTable[index]['cancel_reason'],
+        },
+      ],
+    }
+
+    multipleSubmitUndelivered(payload)
+      .then(() => {
+        setShowConfirm('success-reschedule')
+
+        const newData = [...dataTable]
+        newData[index] = {
+          ...dataTable[index],
+          order_date: date,
+        }
+        setDataTable(newData)
+
+        setProccessing('')
+      })
+      .catch(() => setProccessing(''))
   }
 
   React.useEffect(() => {
@@ -301,16 +191,33 @@ export default function PageApprovalDetail() {
           <div style={{ overflow: 'scroll' }}>
             <Table
               scroll={{ x: 'max-content', y: 600 }}
-              columns={tableUndelivered(RejectRerason)}
+              columns={tableUndelivered(handleReject, handleReschedule)}
               data={dataTable}
             />
           </div>
         </Card>
       )}
-      {showConfirm === 'approve' && <ConfirmApprove />}
-      {showConfirm === 'success-approve' && <ConfirmSuccessApprove />}
-      {showConfirm === 'reject' && <ConfirmReject />}
-      {showConfirm === 'success-reject' && <ConfirmSuccessReject />}
+      {showConfirm === 'approve' && (
+        <ConfirmApprove
+          selectedItems={[router.query.id]}
+          onSubmit={handleApprove}
+          onCancel={() => setShowConfirm('')}
+        />
+      )}
+      {showConfirm === 'success-approve' && (
+        <ConfirmSuccessApprove selectedItems={[router.query.id]} onOk={() => setShowConfirm('')} />
+      )}
+      {showConfirm === 'success-reject' && (
+        <ConfirmSuccessReject selectedItems={[router.query.id]} onOk={() => setShowConfirm('')} />
+      )}
+      {showConfirm === 'success-reschedule' && (
+        <ConfirmSuccessReschedule
+          selectedItems={[router.query.id]}
+          onOk={() => setShowConfirm('')}
+        />
+      )}
+
+      {proccessing && <Loader type="process" text={proccessing} />}
     </Col>
   )
 }

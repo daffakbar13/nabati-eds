@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import { Search, Spacer, Text, Table, DatePickerInput, Button } from 'pink-lava-ui'
-import { Card, FloatAction, SmartFilter } from 'src/components'
+import { Card, FloatAction, Loader, SmartFilter } from 'src/components'
 import { colors } from 'src/configs/colors'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { getUndeliveredList } from 'src/api/undelivered'
+import {
+  downloadUndelivered,
+  getUndeliveredList,
+  multipleSubmitUndelivered,
+} from 'src/api/undelivered'
 import Pagination from 'src/components/Pagination'
 import { fieldSalesOrganization, fieldBranchAll, fieldCustomer } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -12,6 +16,9 @@ import { useFilters } from 'src/hooks'
 import { Col, Row } from 'antd'
 import { TableUndelivered } from './columns'
 import ConfirmReject from './alerts/ConfirmReject'
+import ConfirmApprove from './alerts/ConfirmApprove'
+import ConfirmSuccessApprove from './alerts/ConfirmSuccessApprove'
+import ConfirmSuccessReject from './alerts/ConfirmSuccessReject'
 
 export default function PageUndelivered() {
   const table = useTable({
@@ -20,7 +27,10 @@ export default function PageUndelivered() {
     columns: TableUndelivered,
   })
 
-  const [showConfirm, setShowConfirm] = useState('')
+  const [showConfirm, setShowConfirm] = useState<
+    'reject' | 'approve' | 'success-approve' | 'success-reject' | ''
+  >('')
+  const [proccessing, setProccessing] = React.useState('')
 
   const titlePage = useTitlePage('list')
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
@@ -31,6 +41,55 @@ export default function PageUndelivered() {
     { label: 'Complete', value: 'Complete' },
     { label: 'Cancel', value: 'Cancel' },
   ]
+
+  const handleCancelSelectedAction = () => {
+    table.handler.handleSelected([])
+    setShowConfirm('')
+  }
+
+  const handleApprove = () => {
+    setProccessing('Wait for approving')
+    // multipleSubmitUndelivered({
+    //   order_list: table.state.selected,
+    //   status_approved_id: '01',
+    // })
+    //   .then(() => {
+    //     setShowConfirm('success-approve')
+    //     setProccessing('')
+    //   })
+    //   .catch(() => setProccessing(''))
+    setTimeout(() => {
+      setShowConfirm('success-approve')
+    }, 2000)
+    setTimeout(() => {
+      setProccessing('')
+    }, 3000)
+  }
+
+  const handleReject = (reason: string) => {
+    setProccessing('Wait for rejecting')
+    // multipleSubmitUndelivered({
+    //   shipment_id: table.state.selected,
+    //   status_approved_id: '02',
+    //   reject_reason_id: reason,
+    // })
+    //   .then(() => {
+    //     setShowConfirm('success-reject')
+    //     setProccessing('')
+    //   })
+    //   .catch(() => setProccessing(''))
+    setTimeout(() => {
+      setShowConfirm('success-reject')
+    }, 2000)
+    setTimeout(() => {
+      setProccessing('')
+    }, 3000)
+  }
+
+  const handleSycnData = () => {
+    setShowConfirm('')
+    table.handler.handleSelected([])
+  }
 
   return (
     <Col>
@@ -112,7 +171,26 @@ export default function PageUndelivered() {
             </Col>
           </Row>
           <Col>
-            <Button size="big" variant="secondary" onClick={() => {}}>
+            <Button
+              size="big"
+              variant="secondary"
+              onClick={() => {
+                setProccessing('Please wait')
+                downloadUndelivered({
+                  filters: oldfilters,
+                  limit: table.state.limit,
+                  page: table.state.page,
+                })
+                  .then((res) => {
+                    console.log(res)
+                    setProccessing('')
+                  })
+                  .catch((err) => {
+                    console.log(err)
+                    setProccessing('')
+                  })
+              }}
+            >
               Download
             </Button>
           </Col>
@@ -140,7 +218,7 @@ export default function PageUndelivered() {
             <Button size="small" variant="secondary" onClick={() => setShowConfirm('reject')}>
               Cancel Proccess
             </Button>
-            <Button size="small" variant="primary" onClick={() => setShowConfirm('submit')}>
+            <Button size="small" variant="primary" onClick={() => setShowConfirm('approve')}>
               Confirm
             </Button>
           </div>
@@ -148,8 +226,22 @@ export default function PageUndelivered() {
       )}
 
       {showConfirm === 'reject' && (
-        <ConfirmReject selectedItems={table.state.selected} onCancel={() => setShowConfirm('')} />
+        <ConfirmReject onCancel={handleCancelSelectedAction} onSubmit={handleReject} />
       )}
+      {showConfirm === 'approve' && (
+        <ConfirmApprove
+          selectedItems={table.state.selected}
+          onCancel={handleCancelSelectedAction}
+          onSubmit={handleApprove}
+        />
+      )}
+      {showConfirm === 'success-approve' && (
+        <ConfirmSuccessApprove selectedItems={table.state.selected} onOk={handleSycnData} />
+      )}
+      {showConfirm === 'success-reject' && (
+        <ConfirmSuccessReject selectedItems={table.state.selected} onOk={handleSycnData} />
+      )}
+      {proccessing && <Loader type="process" text={proccessing} />}
     </Col>
   )
 }
