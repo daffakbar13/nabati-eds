@@ -1,6 +1,8 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
+import { Tabs } from 'antd'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Modal, Tabs, Loader } from 'src/components'
+import { Card, GoBackArrow, Modal } from 'src/components'
+import { Loader } from 'src/components'
 
 import { useRouter } from 'next/router'
 import { cancelProcess, getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
@@ -12,6 +14,7 @@ import Lpb from './Tabs/LPB'
 export default function DetailGR() {
   const [loading, setLoading] = useState(false)
   const [details, setDetails] = useState<any>()
+  const [currentTab, setCurrentTab] = useState('1')
   const router = useRouter()
   const id = String(router.query.id) || ''
 
@@ -36,6 +39,7 @@ export default function DetailGR() {
       })
       return res
     } catch (error) {
+      console.error(error)
       return false
     }
   }
@@ -50,10 +54,20 @@ export default function DetailGR() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
+        console.error(error)
       }
     }
     fetchData()
   }, [id])
+
+  useEffect(() => {
+    console.log('details', details)
+  }, [details])
+
+  const AllTabs = [
+    { label: 'Document Header', key: '1' },
+    { label: 'LPB', key: '2' },
+  ]
 
   return (
     <>
@@ -84,20 +98,17 @@ export default function DetailGR() {
           <Spacer size={20} />
           <Card style={{ padding: 0 }}>
             <Tabs
-              initialActiveTab={hashTab}
-              items={[
-                {
-                  key: '1',
-                  tab: 'Document Header',
-                  children: <DocumentHeader loading={loading} details={details} />,
-                },
-                {
-                  key: '2',
-                  tab: 'LPB',
-                  children: <Lpb details={details} />,
-                },
-              ]}
+              defaultActiveKey="1"
+              onChange={(asd) => {
+                setCurrentTab(asd)
+              }}
+              items={AllTabs}
             />
+            {currentTab === '1' ? (
+              <DocumentHeader loading={loading} details={details} />
+            ) : (
+              <Lpb details={details} />
+            )}
           </Card>
 
           <Modal

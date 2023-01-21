@@ -143,34 +143,11 @@ export default function CreateGrReturn() {
             <Form.Item
               name="ref_doc_number"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Ref. Doc Number</LabelRequired>}
               rules={[{ required: true }]}
             >
-              {/* CHANGE THIS TO SELECT WHEN NEW API READY */}
-              <Input
-                loading={loading}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-                onChange={(e: any) => onChangeRefDocNumber(e.target.value)}
-              />
-
-              {/* <SelectMasterData type="PLANT" style={{ marginTop: -8 }} /> */}
-            </Form.Item>
-            <Form.Item
-              name="po_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>PO Number</Label>}
-            >
-              {/* <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="PO_NUMBER"
-                style={{ marginTop: -8 }}
-              /> */}
               <DebounceSelect
                 type="select"
-                // label="PO Number"
+                label="Ref. Doc Number"
                 required
                 fetchOptions={(search) => fieldPoGRPrincipal(search)}
                 onChange={(val: any) => {
@@ -178,96 +155,48 @@ export default function CreateGrReturn() {
                 }}
               />
             </Form.Item>
-            <Form.Item
-              name="document_date"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Doc. Date</Label>}
-            >
+            <Form.Item name="po_number" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="PO Number" disabled />
+            </Form.Item>
+            <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
-                style={{ marginTop: -12 }}
                 placeholder="Select Date"
                 size="large"
-                label=""
+                label="Doc. Date"
                 fullWidth
                 format={'DD/MM/YYYY'}
               />
             </Form.Item>
-            <Form.Item
-              name="vendor"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Vendor</Label>}
-            >
-              <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="PLANT"
-                style={{ marginTop: -8 }}
-              />
+            <Form.Item name="vendor" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Vendor" disabled />
             </Form.Item>
-            <Form.Item
-              name="posting_date"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Posting Date</Label>}
-            >
+            <Form.Item name="posting_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
-                style={{ marginTop: -12 }}
                 placeholder="Select Date"
                 size="large"
-                label=""
+                label="Posting Date"
                 fullWidth
                 format={'DD/MM/YYYY'}
               />
             </Form.Item>
-            <Form.Item
-              name="branch"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Branch</Label>}
-            >
-              <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="PLANT"
-                style={{ marginTop: -8 }}
-              />
+            <Form.Item name="branch" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Branch" disabled />
             </Form.Item>
-            <Form.Item
-              name="bill_of_lading"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Bill of Lading</Label>}
-            >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            <Form.Item name="bill_of_lading" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Bill of Lading" placeholder="Type..." />
             </Form.Item>
 
-            <Form.Item
-              name="delivery_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Number</Label>}
-            >
-              <Input
-                disabled={disableSomeFields}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-              />
+            <Form.Item name="delivery_number" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Delivery Number" disabled />
             </Form.Item>
-            <Form.Item
-              name="remarks"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Remarks</Label>}
-            >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            <Form.Item name="remarks" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Remarks" placeholder="Type..." />
             </Form.Item>
             <Form.Item
               name="delivery_note"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Note</Label>}
             >
-              <Input
-                disabled={disableSomeFields}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-              />
+              <DebounceSelect type="input" label="Delivery Note" disabled />
             </Form.Item>
           </div>
         </Form>
