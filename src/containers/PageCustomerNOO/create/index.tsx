@@ -36,13 +36,7 @@ export default function PageCreateCustomerNOO() {
             <SectionAction />
           </Card>
         </Col>
-        <Col span={24}>
-          <Card>
-            <SectionField />
-            <Divider style={{ borderColor: '#AAAAAA' }} />
-            <SectionTable />
-          </Card>
-        </Col>
+        <SectionField />
         <SectionConfirm />
         <SectionLoader />
       </Row>
