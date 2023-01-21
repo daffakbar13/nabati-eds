@@ -315,8 +315,8 @@ export default function PageStockReservationCreate() {
         successContent={(response: any) => (
           <>
             Doc Number
-            <Typography.Text copyable={{ text: response?.data as string }}>
-              {response?.data}
+            <Typography.Text copyable={{ text: response?.data?.material_doc_id as string }}>
+              {response?.data?.material_doc_id}
             </Typography.Text>
             has been
           </>
