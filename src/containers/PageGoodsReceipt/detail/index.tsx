@@ -4,7 +4,7 @@ import { Card, GoBackArrow, Modal, Tabs } from 'src/components'
 import { Loader } from 'src/components'
 
 import { useRouter } from 'next/router'
-import { doCancelProcess, getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
+import { cancelProcess, getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
 import { PATH } from 'src/configs/menus'
 
 import DocumentHeader from './Tabs/DocumentHeader'
@@ -12,7 +12,7 @@ import Lpb from './Tabs/LPB'
 
 export default function DetailGR() {
   const [loading, setLoading] = useState(false)
-  const [details, setDetails] = useState<{ items: [] }>({ items: [] })
+  const [details, setDetails] = useState<any>()
   const router = useRouter()
   const id = String(router.query.id) || ''
 
@@ -23,7 +23,18 @@ export default function DetailGR() {
 
   const handleCancelProcess = async () => {
     try {
-      const res = await doCancelProcess(id)
+      const res = await cancelProcess(id || '', details?.movement_type_id || '', {
+        cancel_items: {
+          company_id: details?.company_id || '',
+          branch_id: details?.branch_id || '',
+          items: details?.items?.map((item: any, index: number) => ({
+            sloc_id: item?.sloc_id,
+            product_id: item?.product_id,
+            unrestricted_use: item?.qty_gr,
+            uom_id: item?.uom_id,
+          })),
+        },
+      })
       return res
     } catch (error) {
       console.error(error)
@@ -46,6 +57,10 @@ export default function DetailGR() {
     }
     fetchData()
   }, [id])
+
+  useEffect(() => {
+    console.log('details', details)
+  }, [details])
 
   return (
     <>

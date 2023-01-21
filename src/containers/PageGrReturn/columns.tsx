@@ -87,7 +87,7 @@ export const columns = (goToDetail) => [
   addColumn({
     title: 'Company',
     dataIndex: 'company_id',
-    render: (text, record, index) => `${text}`,
+    render: (text, record, index) => `${text} - ${record.company_name}`,
     width: 250,
   }),
   addColumn({

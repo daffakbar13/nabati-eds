@@ -124,3 +124,17 @@ export const doCancelProcess = async (
   })
   return response.data
 }
+
+export const cancelProcess = async (
+  id: string,
+  movement_type: string,
+  params: {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/cancel_process/${id}/${movement_type}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

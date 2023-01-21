@@ -1,27 +1,57 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 export const column = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
-  CreateColumns(
-    'Item',
-    'product_id',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.product_name || ''}`,
-  ),
-  CreateColumns('Qty Reservation', 'qty_reservation', false),
-  CreateColumns('UoM', 'reservation_uom', false),
-  CreateColumns(
-    'Qty Residual',
-    'qty_reservation',
-    false,
-    (text: string, record: any) => `${record.qty_reservation - record.qty_sold}`,
-  ),
-  CreateColumns('UoM', 'reservation_uom', false),
-  CreateColumns('Qty Sold', 'qty_sold', false),
-  CreateColumns('UoM', 'qty_sold_uom', false),
-  CreateColumns('Batch', 'batch', false),
-  CreateColumns('Remarks', 'remarks', false),
+  addColumn({
+    title: 'No',
+    dataIndex: 'id',
+    render: (text, record, index) => index + 1,
+    width: 50,
+  }),
+  addColumn({
+    title: 'Item',
+    dataIndex: 'product_id',
+    render: (text, record, index) => `${text || ''} - ${record.product_name || ''}`,
+    width: 180,
+  }),
+  addColumn({
+    title: 'Qty Reservation',
+    dataIndex: 'qty_reservation',
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'reservation_uom',
+  }),
+  addColumn({
+    title: 'Qty Residual',
+    dataIndex: 'qty_reservation',
+    render: (text, record, index) => `${text - record.qty_sold}`,
+    width: 180,
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'reservation_uom',
+  }),
+  addColumn({
+    title: 'Qty Sold',
+    dataIndex: 'qty_sold',
+  }),
+  addColumn({
+    title: 'Qty Sold',
+    dataIndex: 'qty_sold',
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'qty_sold_uom',
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'batch',
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]

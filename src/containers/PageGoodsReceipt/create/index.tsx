@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Divider, Form, Alert } from 'antd'
+import { Divider, Form, Alert, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
@@ -267,7 +267,16 @@ export default function CreateGoodsReceipt() {
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Goods Receipt?"
-        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
+        successContent={(res: any) => (
+          <>
+            GR Number
+            <Typography.Text copyable={{ text: res?.data as string }}>
+              {' '}
+              {res?.data}
+            </Typography.Text>{' '}
+            has been successfully created
+          </>
+        )}
         successOkText="Print"
         successCancelText="Close"
       />
