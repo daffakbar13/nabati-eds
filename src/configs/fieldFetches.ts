@@ -641,7 +641,7 @@ export function fieldPoGRPrincipal(search: string) {
     limit: 20,
     page: 1,
   }).then((result) =>
-    result.data.result.splice(0, 10).map(({ po_id }) => ({
+    result?.data?.result?.splice(0, 10).map(({ po_id }) => ({
       label: po_id,
       value: po_id,
     })))
