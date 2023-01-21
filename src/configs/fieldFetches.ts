@@ -670,7 +670,7 @@ export function fieldPoGRPrincipal(search: string) {
       {
         field: 'po_number',
         option: 'CP',
-        from_value: `${search}`,
+        from_value: `%${search}%`,
         data_type: 'S',
       },
     ],
@@ -732,7 +732,7 @@ export function fieldPoStoByBranch(search: string, supplybranch: string, recevin
 }
 
 export function fieldRefNumberGRfromPrincipal(search: string) {
-  return getPoNumberList({
+  return getGoodReceiptList({
     filters: [
       {
         field: 'id',

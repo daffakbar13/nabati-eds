@@ -8,7 +8,7 @@ import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 
 import { getGrReturnByRefDocNo, getSlocListByBranch } from 'src/api/logistic/good-receipt'
 import { createGrReturn } from 'src/api/logistic/good-return'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
-import { fieldPoGRPrincipal } from 'src/configs/fieldFetches'
+import { fieldRefNumberGRfromPrincipal } from 'src/configs/fieldFetches'
 import { columns } from './columns'
 
 const { Label, LabelRequired } = Text
@@ -39,16 +39,16 @@ export default function CreateGrReturn() {
 
   const handleCreate = async () => {
     const payload: any = {
-      ref_doc_number: headerData.ref_doc_number,
+      ref_doc_number: headerData.ref_doc_number || '',
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      bill_of_lading: headerData.bill_of_lading,
-      remarks: headerData.remark,
-      po_number: headerData?.po_number?.value,
-      vendor: headerData.vendor.value,
-      branch: headerData.branch.value,
-      delivery_number: headerData?.delivery_number,
-      delivery_note: headerData.delivery_note,
+      bill_of_lading: headerData.bill_of_lading || '',
+      remarks: headerData.remark || '',
+      po_number: headerData?.po_number || '',
+      vendor: headerData.vendor?.split(' - ')[0] || '',
+      branch: headerData.branch?.split(' - ')[0] || '',
+      delivery_number: headerData?.delivery_number || '',
+      delivery_note: headerData.delivery_note || '',
       items: selectedTableData,
     }
     const res = await createGrReturn(payload)
@@ -66,7 +66,7 @@ export default function CreateGrReturn() {
       const { data } = await getGrReturnByRefDocNo(refDocNumber)
 
       setTableData(
-        (data.items || []).map((i: any, ind: number) => ({
+        (data?.items || []).map((i: any, ind: number) => ({
           ...i,
           rowKey: ind + 1,
           qty_gr: i.qty_po,
@@ -74,10 +74,10 @@ export default function CreateGrReturn() {
       )
 
       form.setFieldsValue({
-        po_number: { value: data.po_number },
+        po_number: data?.po_number,
         delivery_number: data.delivery_number,
-        vendor: { value: data.vendor },
-        branch: { value: data.branch },
+        vendor: `${data?.vendor} - ${data?.vendor_name}`,
+        branch: `${data?.branch} - ${data?.branch_name}`,
         delivery_note: data.delivery_note,
         bill_of_lading: data.bill_of_lading,
         remarks: data.remarks,
@@ -149,9 +149,10 @@ export default function CreateGrReturn() {
                 type="select"
                 label="Ref. Doc Number"
                 required
-                fetchOptions={(search) => fieldPoGRPrincipal(search)}
+                fetchOptions={(search) => fieldRefNumberGRfromPrincipal(search)}
                 onChange={(val: any) => {
                   setnumberPO(val.value)
+                  onChangeRefDocNumber(val.value)
                 }}
               />
             </Form.Item>
@@ -192,10 +193,7 @@ export default function CreateGrReturn() {
             <Form.Item name="remarks" style={{ marginTop: -12, marginBottom: 0 }}>
               <DebounceSelect type="input" label="Remarks" placeholder="Type..." />
             </Form.Item>
-            <Form.Item
-              name="delivery_note"
-              style={{ marginTop: -12, marginBottom: 0 }}
-            >
+            <Form.Item name="delivery_note" style={{ marginTop: -12, marginBottom: 0 }}>
               <DebounceSelect type="input" label="Delivery Note" disabled />
             </Form.Item>
           </div>
