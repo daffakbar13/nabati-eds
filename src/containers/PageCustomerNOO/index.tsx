@@ -9,6 +9,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { getCustomerList } from 'src/api/customer-noo'
 import Pagination from 'src/components/Pagination'
 import { TableBilling } from './columns'
+import { useRouter } from 'next/router'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -24,6 +25,8 @@ export default function PageCustomer() {
   })
   const titlePage = useTitlePage('list')
 
+  const router = useRouter()
+
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
@@ -38,7 +41,11 @@ export default function PageCustomer() {
             onChange={() => {}}
           />
           <Row gap="16px">
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => router.push(`${router.pathname}/create`)}
+            >
               Create
             </Button>
           </Row>
