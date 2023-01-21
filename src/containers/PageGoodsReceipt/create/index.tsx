@@ -14,8 +14,7 @@ import {
 } from 'src/api/logistic/good-receipt'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import { fieldPoGRPrincipal } from 'src/configs/fieldFetches'
-
-import { columns } from './columns'
+import { useTableAddItem } from './columns'
 
 const { Label, LabelRequired } = Text
 
@@ -32,6 +31,9 @@ export default function CreateGoodsReceipt() {
 
   // Sloc options for table
   const [slocOptions, setSlocOptions] = useState<[]>([])
+  const tableAddItems = useTableAddItem(
+    { items: tableData, slocOptions: slocOptions } || { items: [], slocOptions: [] },
+  )
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -111,22 +113,8 @@ export default function CreateGoodsReceipt() {
     setDisableSomeFields(true)
   }
 
-  const onTableValuesChange = ({ field, value, index }) => {
-    setTableData(
-      [...tableData].map((row, ind) => {
-        if (ind === index) {
-          return {
-            ...row,
-            [field]: value,
-          }
-        }
-        return { ...row }
-      }),
-    )
-  }
-
   useEffect(() => {
-    const selected = selectedTableData.map((item: any, index) => ({
+    const selected = tableAddItems.dataSubmit.map((item: any, index) => ({
       item: item?.item_number?.toString(),
       product_id: item?.product_id,
       description: item?.product_name,
@@ -139,7 +127,7 @@ export default function CreateGoodsReceipt() {
       remarks: item?.remarks,
     }))
     setItemPayload(selected)
-  }, [selectedTableData])
+  }, [tableAddItems.dataSubmit])
 
   return (
     <Col>
@@ -232,15 +220,12 @@ export default function CreateGoodsReceipt() {
         )}
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
-            loading={loading}
-            rowSelection={{
-              onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-                setSelectedTableData(selectedRows)
-              },
-            }}
-            rowKey="rowKey"
-            data={tableData}
-            columns={columns(slocOptions, onTableValuesChange)}
+            scroll={{ x: 'max-content', y: 600 }}
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+            rowSelection={tableAddItems.rowSelection}
           />
         </div>
       </Card>
