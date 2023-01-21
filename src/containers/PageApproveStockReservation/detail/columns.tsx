@@ -8,7 +8,7 @@ export const column = [
     title: 'No',
     dataIndex: 'id',
     render: (text: string, record: any, index) => index + 1,
-    width: 50
+    width: 50,
   }),
   addColumn({
     title: 'Item',

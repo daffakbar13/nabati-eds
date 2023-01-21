@@ -36,7 +36,9 @@ export default function ConfirmSuccessSubmit() {
       >
         <div>
           {'New Sales Order '}
-          <Typography.Text copyable={{ text: salesOrderId as string }}>{salesOrderId}</Typography.Text>
+          <Typography.Text copyable={{ text: salesOrderId as string }}>
+            {salesOrderId}
+          </Typography.Text>
           {' has been'}
         </div>
         <div>successfully {isCreate ? 'created' : 'saved'}</div>

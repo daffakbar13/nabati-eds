@@ -34,14 +34,13 @@ export default function PageDoSto() {
     content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   }
 
-  
   const statusOption = [
     { label: 'PGI Done', value: '07' },
     { label: 'Done', value: '01' },
     { label: 'Canceled', value: '02' },
     { label: 'Pending', value: '00' },
   ]
-  
+
   return (
     <Col>
       <Text variant={'h4'}>DO STO Intra Branch</Text>

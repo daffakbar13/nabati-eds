@@ -14,7 +14,7 @@ export default function Detail(props: any) {
   const router = useRouter()
   const titlePage = useTitlePage('detail')
   const createDataList = (label: string, value: string) => ({ label, value })
-  const data = props?.data;
+  const data = props?.data
 
   const dataList = [
     createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
