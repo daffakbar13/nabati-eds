@@ -41,7 +41,7 @@ export default function ConfirmCancel() {
         label={'Reason Cancel Process Quotation'}
         required
         options={optionsReason}
-        onChange={({ value }) => setReason(value)}
+        onChange={(e) => setReason(e.value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
