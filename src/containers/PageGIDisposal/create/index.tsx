@@ -240,7 +240,7 @@ export default function PageCreateQuotation() {
         onCancel={() => {
           setModalCreate(false)
         }}
-        content={'Are you sure want to Submit This PO STO ?'}
+        content={'Are you sure want to Submit This BS Reservation?'}
         successTitle="Success"
         onOkSuccess={() => {
           router.push(`${PATH.LOGISTIC}/gi-disposal`)
