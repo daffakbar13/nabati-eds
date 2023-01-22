@@ -1,63 +1,52 @@
-import CreateColumns from 'src/utils/createColumns'
+import { concatString } from 'src/utils/concatString'
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
+import currency from 'src/utils/currencyFormat'
 
 export const TableBilling = [
-  CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1, 60),
-  CreateColumns(
-    'Item',
-    'product_id',
-    false,
-    (text: string, record: any) => `${record.product_id || ''} - ${record.description || ''}`,
-    250,
-  ),
-  CreateColumns(
-    'Item Category',
-    'item_category_id',
-    false,
-    (text: string, record: any) => `${record.item_category_id || ''}`,
-  ),
-  CreateColumns(
-    'Uom',
-    'uom_name',
-    false,
-    (text: string, record: any) => `${record.uom_name || ''}`,
-  ),
-  CreateColumns(
-    'Quantity',
-    'base_qty',
-    false,
-    (text: string, record: any) => `${record.base_qty?.toLocaleString() || ''}`,
-  ),
-  CreateColumns(
-    'Based Price',
-    'price',
-    false,
-    (text: string, record: any) => `${record.price?.toLocaleString() || ''}`,
-  ),
-  CreateColumns(
-    'Gross',
-    'gross_value',
-    false,
-    (text: string, record: any) => `${record.gross_value?.toLocaleString() || ''}`,
-  ),
-  CreateColumns(
-    'Discount',
-    'discount_value',
-    false,
-    (text: string, record: any) => `${record.discount_value?.toLocaleString() || ''}`,
-  ),
-  CreateColumns(
-    'Sub Total',
-    'sub_total',
-    false,
-    (text: string, record: any) =>
-      `${(record.price * record.base_qty - record.discount_value)?.toLocaleString() || ''}`,
-  ),
-  CreateColumns(
-    'Remarks',
-    'remarks',
-    false,
-    (text: string, record: any) => `${record.remarks || ''}`,
-  ),
+  addColumn({
+    title: 'No',
+    render: (_, __, i) => i + 1,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Item',
+    render: (_, { product_id, description }) => concatString(product_id, description),
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Item Category',
+    dataIndex: 'item_category_id',
+  }),
+  addColumn({
+    title: 'Uom',
+    dataIndex: 'uom_id',
+  }),
+  addColumn({
+    title: 'Quantity',
+    dataIndex: 'billing_qty',
+  }),
+  addColumn({
+    title: 'Based Price',
+    render: (_, { price }) => currency(price),
+  }),
+  addColumn({
+    title: 'Gross',
+    render: (_, { gross_value }) => currency(gross_value),
+  }),
+  addColumn({
+    title: 'Discount',
+    render: (_, { discount_value }) => currency(discount_value),
+  }),
+  addColumn({
+    title: 'Sub Total',
+    dataIndex: 'sub_total',
+    render: (_, { price, billing_qty, discount_value }) =>
+      currency(price * billing_qty - discount_value),
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]
 
 export const TablePricingCondition = [

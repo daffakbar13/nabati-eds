@@ -52,11 +52,7 @@ export default function Billing(props: BillingProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table
-          scroll={{ x: 'max-content', y: 600 }}
-          columns={TableBilling}
-          data={data.billing_item}
-        />
+        <Table scroll={{ x: 'max-content' }} columns={TableBilling} data={data.billing_item} />
       </div>
       <Spacer size={30} />
       <Row>
