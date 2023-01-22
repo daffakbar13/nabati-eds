@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import { Card, SearchQueryParams, SmartFilter } from 'src/components'
@@ -10,6 +10,7 @@ import FloatAction from 'src/components/FloatAction'
 import {
   getListApprovalReservation,
   UpdateApprovalReservationMultiple,
+  UpdateRejectReservationMultiple,
 } from 'src/api/logistic/approve-stock-reservation'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSloc, fieldCompanyList } from 'src/configs/fieldFetches'
@@ -17,6 +18,7 @@ import Pagination from 'src/components/Pagination'
 import { colors } from 'src/configs/colors'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { column } from './columns'
+import { Modal } from 'src/components'
 
 export default function PageStockReservation() {
   const table = useTable({
@@ -25,7 +27,9 @@ export default function PageStockReservation() {
     haveCheckBox: [{ rowKey: 'status_name', member: ['Wait For Approval'] }],
   })
 
-  const [showConfirm, setShowConfirm] = React.useState('')
+  const [showConfirm, setShowConfirm] = useState('')
+  const [modalApprove, setModalApprove] = useState(false)
+  const [modalReject, setModalReject] = useState(false)
   const hasData = table.state.total > 0
   const router = useRouter()
   const oneSelected = table.state.selected.length === 1
@@ -49,6 +53,27 @@ export default function PageStockReservation() {
     'Search by Reservation Number',
     'reservation_number',
   )
+
+  const handleApprove = async () => {
+    try {
+      return await UpdateApprovalReservationMultiple({
+        status_id: '01',
+        id_reservations: table.state.selected,
+      })
+    } catch (error) {
+      return error
+    }
+  }
+  const handleReject = async () => {
+    try {
+      return await UpdateRejectReservationMultiple({
+        status_id: '02',
+        id_reservations: table.state.selected,
+      })
+    } catch (error) {
+      return error
+    }
+  }
 
   return (
     <Col>
@@ -136,106 +161,85 @@ export default function PageStockReservation() {
               <b>{table.state.selected.length} Document Stock Reservation are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => {}}>
-                Cancel Process
+              <Button
+                size="big"
+                variant="tertiary"
+                onClick={() => {
+                  setModalReject(true)
+                }}
+              >
+                Reject
               </Button>
               <Button
                 size="big"
                 variant="primary"
                 onClick={() => {
-                  setShowConfirm('submit')
+                  setModalApprove(true)
                 }}
               >
-                Submit
+                Approve
               </Button>
             </div>
           </FloatAction>
         )}
-        {showConfirm === 'submit' && (
-          <Popup
-            onOutsideClick={() => {
-              setShowConfirm('')
-            }}
-          >
-            <Typography.Title level={3} style={{ margin: 0 }}>
-              Confirm Submit
-            </Typography.Title>
-            <Typography.Title level={5} style={{ margin: 0 }}>
-              Are you sure to submit Stock Reservation
-              {oneSelected ? (
-                ` ${selectedQuotation.text} ?`
-              ) : (
-                <Popover content={selectedQuotation.content}>
-                  {` ${selectedQuotation.text} ?`}
-                </Popover>
-              )}
-            </Typography.Title>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="secondary"
-                onClick={() => {
-                  setShowConfirm('')
-                }}
-              >
-                Cancel Proccess
-              </Button>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="primary"
-                onClick={() => {
-                  UpdateApprovalReservationMultiple({
-                    status_id: '01',
-                    id_reservations: table.state.selected,
-                  })
-                    .then(() => setShowConfirm('UpdateStatus'))
-                    .catch((err) => err)
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </Popup>
-        )}
-
-        {showConfirm === 'UpdateStatus' && (
-          <Popup>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Text
-                textAlign="center"
-                style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-              >
-                <>
-                  <CheckCircleFilled /> Update Status Stock Reservation Success
-                </>
-              </Text>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                gap: 4,
-                flexDirection: 'column',
-                textAlign: 'center',
-              }}
-            >
-              <div> successfully update status stock reservation success</div>
-            </div>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="primary"
-                onClick={() => {
-                  router.push('/logistic/approval-stock-reservation')
-                }}
-              >
-                OK
-              </Button>
-            </div>
-          </Popup>
-        )}
+        <Modal
+          title={'Confirm Reject'}
+          open={modalReject}
+          onOk={handleReject}
+          onCancel={() => {
+            setModalReject(false)
+          }}
+          content={
+            <>
+              <Typography.Title level={5} style={{ margin: 0 }}>
+                Are you sure to Reject Stock Reservation
+                {oneSelected ? (
+                  ` ${selectedQuotation.text} ?`
+                ) : (
+                  <Popover content={selectedQuotation.content}>
+                    {` ${selectedQuotation.text} ?`}
+                  </Popover>
+                )}
+              </Typography.Title>
+            </>
+          }
+          successTitle="Success"
+          onOkSuccess={() => {
+            router.push(`/logistic/approval-stock-reservation`)
+          }}
+          successContent={(res: any) => <>Stock Reservation has been successfully Rejected</>}
+          successOkText="OK"
+          width={550}
+        />
+        <Modal
+          title={'Confirm Approve'}
+          open={modalApprove}
+          onOk={handleApprove}
+          onCancel={() => {
+            setModalApprove(false)
+          }}
+          content={
+            <>
+              <Typography.Title level={5} style={{ margin: 0 }}>
+                Are you sure to Approve quotation
+                {oneSelected ? (
+                  ` ${selectedQuotation.text} ?`
+                ) : (
+                  <Popover content={selectedQuotation.content}>
+                    {` ${selectedQuotation.text} ?`}
+                  </Popover>
+                )}
+              </Typography.Title>
+            </>
+          }
+          successTitle="Success"
+          onOkSuccess={() => {
+            router.push(`/logistic/approval-stock-reservation`)
+          }}
+          successContent={(res: any) => <>Stock Reservation has been successfully Rejected</>}
+          successOkText="OK"
+          width={550}
+        />
       </Card>
     </Col>
   )

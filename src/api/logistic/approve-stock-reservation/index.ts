@@ -10,6 +10,7 @@ import { API_BASE_URL_2 } from 'src/configs/env'
 import { listApproval, listApprovalDetail } from './types'
 
 const url = 'v1/canvas/approval'
+const urlReject = 'v1/canvas/reject'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
@@ -51,6 +52,16 @@ export const UpdateApprovalReservationMultiple = async (payload: any) => {
     method: METHODS.PUT,
     overrideBaseUrl,
     subUrl: `${url}/multiple_edit`,
+    data: payload,
+  })
+  return response.data
+}
+
+export const UpdateRejectReservationMultiple = async (payload: any) => {
+  const response = await call({
+    method: METHODS.PUT,
+    overrideBaseUrl,
+    subUrl: `${urlReject}/multiple_edit`,
     data: payload,
   })
   return response.data
