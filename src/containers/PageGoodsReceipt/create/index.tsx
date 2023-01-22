@@ -22,7 +22,6 @@ export default function CreateGoodsReceipt() {
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
   const [tableData, setTableData] = useState([])
-  const [selectedTableData, setSelectedTableData] = useState([])
   const [itemPayload, setItemPayload] = useState([])
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)

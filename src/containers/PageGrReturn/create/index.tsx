@@ -1,15 +1,15 @@
 import { Divider, Form } from 'antd'
 import moment from 'moment'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PATH } from 'src/configs/menus'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { getGrReturnByRefDocNo, getSlocListByBranch } from 'src/api/logistic/good-receipt'
+import { getGoodReceiptDetail, getSlocListByBranch } from 'src/api/logistic/good-receipt'
 import { createGrReturn } from 'src/api/logistic/good-return'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
 import { fieldRefNumberGRfromPrincipal } from 'src/configs/fieldFetches'
-import { columns } from './columns'
+import { useTableAddItem } from './columns'
 
 const { Label, LabelRequired } = Text
 
@@ -21,9 +21,13 @@ export default function CreateGrReturn() {
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
   const [numberPO, setnumberPO] = useState('')
+  const [itemPayload, setItemPayload] = useState([])
 
   // Sloc options for table
   const [slocOptions, setSlocOptions] = useState<[]>([])
+  const tableAddItems = useTableAddItem(
+    { items: tableData, slocOptions: slocOptions } || { items: [], slocOptions: [] },
+  )
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -39,7 +43,7 @@ export default function CreateGrReturn() {
 
   const handleCreate = async () => {
     const payload: any = {
-      ref_doc_number: headerData.ref_doc_number || '',
+      ref_doc_number: headerData.ref_doc_number.value || '',
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
       bill_of_lading: headerData.bill_of_lading || '',
@@ -49,7 +53,7 @@ export default function CreateGrReturn() {
       branch: headerData.branch?.split(' - ')[0] || '',
       delivery_number: headerData?.delivery_number || '',
       delivery_note: headerData.delivery_note || '',
-      items: selectedTableData,
+      items: itemPayload,
     }
     const res = await createGrReturn(payload)
     return res
@@ -63,7 +67,7 @@ export default function CreateGrReturn() {
 
     try {
       setLoading(true)
-      const { data } = await getGrReturnByRefDocNo(refDocNumber)
+      const { data } = await getGoodReceiptDetail(refDocNumber)
 
       setTableData(
         (data?.items || []).map((i: any, ind: number) => ({
@@ -76,8 +80,8 @@ export default function CreateGrReturn() {
       form.setFieldsValue({
         po_number: data?.po_number,
         delivery_number: data.delivery_number,
-        vendor: `${data?.vendor} - ${data?.vendor_name}`,
-        branch: `${data?.branch} - ${data?.branch_name}`,
+        vendor: `${data?.vendor_id} - ${data?.vendor_name}`,
+        branch: `${data?.branch_id} - ${data?.branch_name}`,
         delivery_note: data.delivery_note,
         bill_of_lading: data.bill_of_lading,
         remarks: data.remarks,
@@ -85,8 +89,8 @@ export default function CreateGrReturn() {
         posting_date: moment(),
       })
 
-      if (data.branch) {
-        const slocList = await getSlocListByBranch(data.branch)
+      if (data.branch_id) {
+        const slocList = await getSlocListByBranch(data.branch_id)
         setSlocOptions(
           slocList.data?.map((i: any) => ({ label: `${i.id}-${i.name}`, value: i.id })),
         )
@@ -99,19 +103,21 @@ export default function CreateGrReturn() {
     setDisableSomeFields(true)
   }
 
-  const onTableValuesChange = ({ field, value, index }) => {
-    setTableData(
-      [...tableData].map((row, ind) => {
-        if (ind === index) {
-          return {
-            ...row,
-            [field]: value,
-          }
-        }
-        return { ...row }
-      }),
-    )
-  }
+  useEffect(() => {
+    const selected = tableAddItems.dataSubmit.map((item: any, index) => ({
+      item: item?.item_number?.toString(),
+      product_id: item?.product_id,
+      description: item?.product_name,
+      qty_po: item?.qty_po,
+      uom_id: item?.uom_id,
+      received_qty: item?.qty_gr,
+      received_qty_uom_id: item?.uom_id,
+      sloc_id: item?.sloc_id || 'GS00',
+      batch: item?.batch,
+      remarks: item?.remarks,
+    }))
+    setItemPayload(selected)
+  }, [tableAddItems.dataSubmit])
 
   return (
     <Col>
@@ -201,15 +207,12 @@ export default function CreateGrReturn() {
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
-            loading={loading}
-            rowSelection={{
-              onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-                setSelectedTableData(selectedRows)
-              },
-            }}
-            rowKey="rowKey"
-            data={tableData}
-            columns={columns(slocOptions, onTableValuesChange)}
+            scroll={{ x: 'max-content', y: 600 }}
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+            rowSelection={tableAddItems.rowSelection}
           />
         </div>
       </Card>
@@ -229,7 +232,7 @@ export default function CreateGrReturn() {
         onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gr-return/detail/${res.data}#2`)}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
-        content="Are you sure want Submit Dr Return?"
+        content="Are you sure want Submit GR Return?"
         successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
         successCancelText="Close"
