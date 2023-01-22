@@ -23,6 +23,9 @@ function Linked(props: { process: string; id: string; status: string }) {
     case 'Shipment':
       document = 'shipment'
       break
+    case 'Invoice':
+      document = 'billing'
+      break
     default:
       break
   }
