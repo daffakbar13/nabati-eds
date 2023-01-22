@@ -1,8 +1,7 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { Tabs } from 'antd'
 import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Modal } from 'src/components'
-import { Loader } from 'src/components'
+import { Card, GoBackArrow, Modal, Loader } from 'src/components'
 
 import { useRouter } from 'next/router'
 import { cancelProcess, getGoodReceiptDetail } from 'src/api/logistic/good-receipt'
@@ -39,8 +38,7 @@ export default function DetailGR() {
       })
       return res
     } catch (error) {
-      console.error(error)
-      return false
+      return error
     }
   }
 
@@ -54,15 +52,10 @@ export default function DetailGR() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
       }
     }
     fetchData()
   }, [id])
-
-  useEffect(() => {
-    console.log('details', details)
-  }, [details])
 
   const AllTabs = [
     { label: 'Document Header', key: '1' },

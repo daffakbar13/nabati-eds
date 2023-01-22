@@ -2,12 +2,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable camelcase */
-import React, { useState, useEffect } from 'react'
-import { InputNumber, Radio, Form } from 'antd'
+import React, { useEffect } from 'react'
+import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldSloc, fieldUom } from 'src/configs/fieldFetches'
+import { fieldUom } from 'src/configs/fieldFetches'
 import { addColumn } from 'src/utils/createColumns'
-import { Input, Select, SelectMasterData } from 'src/components'
+import { Input, Select } from 'src/components'
 
 export const useTableAddItem = (props: any) => {
   const initialValue = {
@@ -59,10 +59,6 @@ export const useTableAddItem = (props: any) => {
       setRowSelection(defineRowSelection)
     }
   }, [props.items])
-
-  useEffect(() => {
-    console.log('option UOM', optionsUom)
-  }, [optionsUom])
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
