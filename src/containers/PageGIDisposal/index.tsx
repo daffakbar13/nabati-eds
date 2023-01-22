@@ -37,8 +37,9 @@ export default function PageIntraSlocRequest() {
   }
 
   const statusOption = [
-    { label: 'Approved', value: '01' },
     { label: 'Wait For Approval', value: '00' },
+    { label: 'Approved', value: '01' },
+    { label: 'Rejected', value: '02' },
   ]
   const movTypeOption = [
     { label: '555 - Withdrawal for scrapping from blocked stock', value: '555' },
@@ -117,7 +118,7 @@ export default function PageIntraSlocRequest() {
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
                 label="Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
@@ -138,7 +139,7 @@ export default function PageIntraSlocRequest() {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="sloc_id"
                 dataType="S"
                 label="SLoc"
                 options={['EQ', 'NE', 'BT', 'NB']}

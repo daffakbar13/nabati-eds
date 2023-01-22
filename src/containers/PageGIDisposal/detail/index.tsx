@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Col, Tag } from 'antd'
+import { Col } from 'antd'
 import { Button, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, GoBackArrow, Modal, Loader } from 'src/components'
 import dateFormat from 'src/utils/dateFormat'
 import List from 'src/components/List'
 import { getDetailBadStock, updateStatusBadStock } from 'src/api/logistic/bad-stock'
 import { PATH } from 'src/configs/menus'
-import { getTagColor } from 'src/utils/getTagColor'
 import { toTitleCase } from 'src/utils/caseConverter'
 import { columns } from './columns'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 export default function PageQuotationDetail() {
   const [loading, setLoading] = useState(false)
@@ -58,21 +58,9 @@ export default function PageQuotationDetail() {
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
             <div style={{ display: 'flex' }}>
-              <Tag
-                style={{
-                  width: 200,
-                  padding: '8px 20px',
-                  border: '1px solid #AAAAAA',
-                  borderRadius: 8,
-                }}
-                color={getTagColor(details?.status_name)}
-              >
-                {<p style={{ marginTop: 4 }}>{details?.status_name}</p> || (
-                  <p style={{ color: 'black' }}>Status...</p>
-                )}
-              </Tag>
+              <TaggedStatus status={details?.status_name} size="h5" />
 
-              {details?.status && details?.status === '00' && (
+              {details?.status_id && details?.status_id === '00' && (
                 <div
                   style={{
                     display: 'grid',
@@ -141,7 +129,9 @@ export default function PageQuotationDetail() {
             open={rejectModal}
             onOk={() => updateStatus('02')}
             onCancel={() => setRejectModal(false)}
-            onOkSuccess={(res) => router.reload()}
+            onOkSuccess={(res) =>
+              router.push(`${PATH.LOGISTIC}/gi-disposal/detail/${router.query.id}`)
+            }
             content="Are you sure want to reject?"
             successContent={(res: any) => 'Reject Success'}
             successOkText="OK"
@@ -152,7 +142,9 @@ export default function PageQuotationDetail() {
             open={approveModal}
             onOk={() => updateStatus('01')}
             onCancel={() => setApproveModal(false)}
-            onOkSuccess={(res) => router.reload()}
+            onOkSuccess={(res) =>
+              router.push(`${PATH.LOGISTIC}/gi-disposal/detail/${router.query.id}`)
+            }
             content="Are you sure want to approve?"
             successContent={(res: any) => 'Approve Success'}
             successOkText="OK"

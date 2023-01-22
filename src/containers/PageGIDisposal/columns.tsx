@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
@@ -44,50 +44,50 @@ function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
 }
 
 export const column = [
-  CreateColumns(
-    'Reservation Number',
-    'reservation_number',
-    true,
-    (link: string, record: any) => <Linked link={link} type="id" />,
-    175,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-  ),
-  CreateColumns(
-    'Branch',
-    'suppl_branch_id',
-    false,
-    (text: string, record: any) => `${record.branch_id || ''} - ${record.branch_name || ''}`,
-  ),
-  CreateColumns(
-    'Sloc',
-    'supplying_sloc_id',
-    false,
-    (text: string, record: any) => `${record.sloc_id || ''} - ${record.sloc_name || ''}`,
-  ),
-  CreateColumns(
-    'Mov. Type',
-    'movement_type_id',
-    false,
-    (text: string, record: any) => `${record.movement_type_id || ''}`,
-  ),
-  CreateColumns(
-    'Header Text',
-    'header_text',
-    false,
-    (text: string, record: any) =>
-      `${record.header_text !== '' && record.header_text != null ? record.header_text : '-'}`,
-  ),
-  CreateColumns('Status', 'status_name', false, (status_name) => (
-    <TaggedStatus status={status_name} />
-  )),
-  CreateColumns('Action', 'reservation_number', false, (link) => (
-    <Linked link={link} type="action" />
-  )),
+  addColumn({
+    title: 'Reservation Number',
+    dataIndex: 'reservation_number',
+    render: (text, record, index) => <Linked link={text} type="id" />,
+    width: 175,
+    fixed: true,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text, record, index) => `${text || ''} - ${record.company_name || ''}`,
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+    render: (text, record, index) => `${text || ''} - ${record.branch_name || ''}`,
+  }),
+  addColumn({
+    title: 'Sloc',
+    dataIndex: 'sloc_id',
+    render: (text, record, index) => `${text || ''} - ${record.sloc_name || ''}`,
+  }),
+  addColumn({
+    title: 'Mov. Type',
+    dataIndex: 'movement_type_id',
+  }),
+  addColumn({
+    title: 'Header Text',
+    dataIndex: 'header_text',
+    render: (text, record, index) => `${text !== '' && text != null ? text : '-'}`,
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status_name',
+    render: (text, record, index) => <TaggedStatus status={text} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'reservation_number',
+    render: (text, record, index) => <Linked link={text} type="action" />,
+  }),
 ]
