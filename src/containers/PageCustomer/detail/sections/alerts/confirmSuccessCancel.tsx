@@ -1,20 +1,13 @@
+import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
-import { Text, Button } from 'pink-lava-ui'
-import { CheckCircleFilled } from '@ant-design/icons'
-import { Typography } from 'antd'
-import { PATH } from 'src/configs/menus'
+import { Button, Text } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
-import { useSalesQuotationCreateContext } from '../../states'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { PATH } from 'src/configs/menus'
 
-export default function ConfirmSuccessSubmit() {
-  const {
-    state: { customerId, confirm },
-  } = useSalesQuotationCreateContext()
+export default function ConfirmCancel() {
   const router = useRouter()
-  const isEditPage = router.asPath.includes('edit')
-  const isFromDetail = Object.keys(router.query).includes('id')
-  const isCreate = confirm === 'newQuo'
 
   return (
     <Popup>
@@ -24,7 +17,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> {isCreate ? 'Submit' : 'Saved'} Success
+            <CheckCircleFilled /> Cancel Success
           </>
         </Text>
       </div>
@@ -32,16 +25,19 @@ export default function ConfirmSuccessSubmit() {
         style={{
           display: 'flex',
           gap: 4,
+          fontWeight: 'bold',
           flexDirection: 'column',
           textAlign: 'center',
         }}
       >
         <div>
-          {!isEditPage ? 'New' : ''} {' Customer NOO '}
-          <Typography.Text copyable={{ text: customerId as string }}>{customerId}</Typography.Text>
+          {'Sales Order '}
+          <Typography.Text copyable={{ text: router.query.id as string }}>
+            {router.query.id}
+          </Typography.Text>
           {' has been'}
         </div>
-        <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
+        <div>successfully canceled</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -49,8 +45,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            const additional = isFromDetail ? `/detail/${router.query.id}` : ''
-            router.push(`${PATH.SALES}/customer-noo${additional}`)
+            router.push(`${PATH.SALES}/sales-order`)
           }}
         >
           OK

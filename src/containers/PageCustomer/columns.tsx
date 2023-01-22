@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 function Action({ link }: { link: string }) {
   const router = useRouter()
   const navigate = () => {
-    router.push(`/sales/undelivered/detail/${link}`)
+    router.push(`/sales/customer/detail/${link}`)
   }
   return (
     <h4 onClick={navigate} style={{ cursor: 'pointer' }}>
@@ -22,5 +22,5 @@ export const TableBilling = [
   CreateColumns('Channel', 'sales_org'),
   CreateColumns('Customer Group', 'branch'),
   CreateColumns('Active/Inactive', 'status'),
-  CreateColumns('Action', 'shipment_id', false, (link: string) => <Action link={link} />),
+  CreateColumns('Action', 'id', false, (link: string) => <Action link={link} />),
 ]

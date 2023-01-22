@@ -89,6 +89,7 @@ export default function PageUndelivered() {
   const handleSycnData = () => {
     setShowConfirm('')
     table.handler.handleSelected([])
+    table.handler.getApi(getUndeliveredList)
   }
 
   return (

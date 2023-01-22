@@ -38,7 +38,7 @@ export default function ConfirmCancel() {
           variant="primary"
           onClick={() => {
             const additional = backToDetailRules ? `/detail/${router.query.id}` : ''
-            router.push(`${PATH.SALES}/quotation${additional}`)
+            router.push(`${PATH.SALES}/customer-noo${additional}`)
           }}
         >
           Yes

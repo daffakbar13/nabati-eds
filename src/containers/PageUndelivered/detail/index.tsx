@@ -46,6 +46,19 @@ export default function PageApprovalDetail() {
     DataList.createDataList('Modified By', data.modified_by),
   ]
 
+  React.useEffect(() => {
+    setDataTable(data.item)
+  }, [data])
+
+  React.useEffect(() => {
+    fieldReason('C')
+      .then((res) => {
+        setOptionsReason(res)
+        setReason(res[0].value)
+      })
+      .catch(() => setOptionsReason([]))
+  }, [])
+
   const handleApprove = () => {
     setProccessing('Wait for approving')
     // multipleSubmitUndelivered({
@@ -96,7 +109,7 @@ export default function PageApprovalDetail() {
   }
 
   const handleReschedule = (date: any, index: number) => {
-    setProccessing('Wait for reschedule..')
+    setProccessing('Wait for reschedule')
 
     const payload = {
       shipment_id: router.query.id,
@@ -124,19 +137,6 @@ export default function PageApprovalDetail() {
       })
       .catch(() => setProccessing(''))
   }
-
-  React.useEffect(() => {
-    setDataTable(data.item)
-  }, [data])
-
-  React.useEffect(() => {
-    fieldReason('C')
-      .then((res) => {
-        setOptionsReason(res)
-        setReason(res[0].value)
-      })
-      .catch(() => setOptionsReason([]))
-  }, [])
 
   return (
     <Col>

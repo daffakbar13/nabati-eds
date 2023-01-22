@@ -87,3 +87,20 @@ export const multipleSubmitQuotation = async (payload: { order_list: { id: strin
   })
   return response.data
 }
+
+export const createCustomerNOO = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `v1/master/create/customer-noo`,
+    data: payload,
+  })
+  return response.data
+}
+
+export const getDetailCustomerNOO = async (companyId: string = 'PP01', customerId: string) => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `v1/master/get-customer/${companyId}/${customerId}/detailo`,
+  })
+  return response.data
+}

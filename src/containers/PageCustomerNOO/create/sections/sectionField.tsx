@@ -3,9 +3,26 @@ import moment from 'moment'
 import { Col, Row } from 'antd'
 import { DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldCustomer } from 'src/configs/fieldFetches'
+import {
+  fieldBranchAll,
+  fieldChannelCompany,
+  fieldCompanyList,
+  fieldCustomer,
+  fieldCustomerGroupCompany,
+  fieldDivisionByCompany,
+  fieldPaymentMethod,
+  fieldPriceGroupByCompanyId,
+  fieldSalesmanAll,
+  fieldSalesmanGroup,
+  fieldSalesOfficeByCompany,
+  fieldSalesOrganization,
+  fieldSloc,
+  fieldStatusBlock,
+  fieldTermByCompanyId,
+} from 'src/configs/fieldFetches'
 import { useSalesQuotationCreateContext } from '../states'
 import { Card } from 'src/components'
+import { getTermByCompanyId } from 'src/api/master-data'
 
 export default function SectionField() {
   const {
@@ -13,8 +30,11 @@ export default function SectionField() {
     handler: { onChangeForm, setFetching },
   } = useSalesQuotationCreateContext()
 
+  // console.log(dataForm)
+
   return (
     <>
+      {/* CUSTOMER NAME */}
       <Col span={24}>
         <Card>
           <Row gutter={[10, 10]}>
@@ -24,10 +44,11 @@ export default function SectionField() {
                 required
                 label="Name"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
-                options={optionsOrderType}
+                value={dataForm?.customer_name}
+                // fetchOptions={fieldCustomer}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('customer_name', e.target?.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -37,11 +58,9 @@ export default function SectionField() {
                 label="Phone Number"
                 required
                 placeholder={'Type here...'}
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.customer_phone}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('customer_phone', e.target?.value)
                 }}
               />
             </Col>
@@ -50,10 +69,9 @@ export default function SectionField() {
                 type="input"
                 label="Short Name"
                 placeholder={'Type here...'}
-                value={dataForm?.ship_to_id}
-                options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+                value={dataForm?.customer_short_name}
                 onChange={(e: any) => {
-                  onChangeForm('ship_to_id', e.value)
+                  onChangeForm('customer_short_name', e.target?.value)
                 }}
               />
             </Col>
@@ -62,10 +80,9 @@ export default function SectionField() {
                 type="input"
                 label="Email"
                 placeholder={'Type here...'}
-                value={dataForm?.ship_to_id}
-                options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+                value={dataForm?.customer_email}
                 onChange={(e: any) => {
-                  onChangeForm('ship_to_id', e.value)
+                  onChangeForm('customer_email', e.target?.value)
                 }}
               />
             </Col>
@@ -74,22 +91,20 @@ export default function SectionField() {
                 type="input"
                 label="KTP"
                 placeholder={'Type here...'}
-                value={dataForm?.ship_to_id}
-                options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+                value={dataForm?.customer_ktp}
                 onChange={(e: any) => {
-                  onChangeForm('ship_to_id', e.value)
+                  onChangeForm('customer_ktp', e.target?.value)
                 }}
               />
             </Col>
             <Col span={12}>
               <DebounceSelect
-                type="select"
+                type="input"
                 label="Tax Subject"
-                placeholder={'No Tax'}
-                value={dataForm?.ship_to_id}
-                options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+                placeholder={'Input Tax Reg. Number (NPWP)'}
+                value={dataForm?.tax_npwp}
                 onChange={(e: any) => {
-                  onChangeForm('ship_to_id', e.value)
+                  onChangeForm('tax_npwp', e.target?.value)
                 }}
               />
             </Col>
@@ -97,6 +112,7 @@ export default function SectionField() {
         </Card>
       </Col>
 
+      {/* CUSTOMER GROUP */}
       <Col span={24}>
         <Card>
           <Row gutter={[10, 10]}>
@@ -105,11 +121,11 @@ export default function SectionField() {
                 type="select"
                 label="Customer Group"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.customer_group_id}
+                fetchOptions={fieldCustomerGroupCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('customer_group_id', e.value)
+                  // setFetching('load-options')
                 }}
               />
             </Col>
@@ -118,11 +134,10 @@ export default function SectionField() {
                 type="select"
                 label="Customer Group 3"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.customer_group_3_id}
+                fetchOptions={fieldCustomerGroupCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('customer_group_3_id', e.value)
                 }}
               />
             </Col>
@@ -130,11 +145,10 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Customer Group 1"
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.customer_group_1_id}
+                fetchOptions={fieldCustomerGroupCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('customer_group_1_id', e.value)
                 }}
               />
             </Col>
@@ -142,11 +156,10 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Customer Group 4"
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.customer_group_4_id}
+                fetchOptions={fieldCustomerGroupCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('customer_group_4_id', e.value)
                 }}
               />
             </Col>
@@ -154,11 +167,10 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Customer Group 2"
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.customer_group_2_id}
+                fetchOptions={fieldCustomerGroupCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('customer_group_2_id', e.value)
                 }}
               />
             </Col>
@@ -166,11 +178,10 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Customer Group 5"
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.customer_group_5_id}
+                fetchOptions={fieldCustomerGroupCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('customer_group_5_id', e.value)
                 }}
               />
             </Col>
@@ -178,6 +189,7 @@ export default function SectionField() {
         </Card>
       </Col>
 
+      {/* CUSTOMER COMPANY */}
       <Col span={24}>
         <Card>
           <Row gutter={[10, 10]}>
@@ -186,11 +198,11 @@ export default function SectionField() {
                 type="select"
                 label="Company"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.company_id}
+                fetchOptions={fieldCompanyList}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('company_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -199,11 +211,11 @@ export default function SectionField() {
                 type="select"
                 label="Sales Office"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.sales_office_id}
+                fetchOptions={fieldSalesOfficeByCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('sales_office_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -212,11 +224,11 @@ export default function SectionField() {
                 type="select"
                 label="Sales Organization"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.sales_org_id}
+                fetchOptions={fieldSalesOrganization}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('sales_org_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -225,11 +237,11 @@ export default function SectionField() {
                 type="select"
                 label="Sales Division"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.sales_divission_id}
+                fetchOptions={fieldDivisionByCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('sales_divission_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -238,11 +250,11 @@ export default function SectionField() {
                 type="select"
                 label="Branch"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.branch_id}
+                fetchOptions={fieldBranchAll}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('branch_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -251,23 +263,22 @@ export default function SectionField() {
                 type="select"
                 label="Sales Channel"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.sales_channel_id}
+                fetchOptions={fieldChannelCompany}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('sales_channel_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
             <Col span={12}>
               <DebounceSelect
                 type="select"
-                label="SLoc"
+                label="Sloc"
                 placeholder={'Select'}
-                value={dataForm?.ship_to_id}
-                options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+                value={dataForm?.sloc_id}
                 onChange={(e: any) => {
-                  onChangeForm('ship_to_id', e.value)
+                  onChangeForm('sloc_id', e.value)
                 }}
               />
             </Col>
@@ -276,11 +287,10 @@ export default function SectionField() {
                 type="select"
                 label="Sales Group"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.sales_group_id}
+                fetchOptions={fieldSalesmanGroup}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('sales_group_id', e.value)
                 }}
               />
             </Col>
@@ -289,11 +299,11 @@ export default function SectionField() {
                 type="select"
                 label="Salesman"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.salesman_id}
+                fetchOptions={fieldSalesmanAll}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('salesman_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -301,6 +311,7 @@ export default function SectionField() {
         </Card>
       </Col>
 
+      {/* PAYMENT */}
       <Col span={24}>
         <Card>
           <Row gutter={[10, 10]}>
@@ -309,11 +320,11 @@ export default function SectionField() {
                 type="select"
                 label="Term of Payment"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.term_id}
+                fetchOptions={fieldTermByCompanyId}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('term_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -322,10 +333,9 @@ export default function SectionField() {
                 type="select"
                 label="Tax Subject"
                 placeholder={'Select'}
-                value={dataForm?.ship_to_id}
-                options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+                value={dataForm?.tax_number_sppkp}
                 onChange={(e: any) => {
-                  onChangeForm('ship_to_id', e.value)
+                  onChangeForm('tax_number_sppkp', e.value)
                 }}
               />
             </Col>
@@ -333,11 +343,11 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Method of Payment"
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.method_payment_id}
+                fetchOptions={fieldPaymentMethod}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('method_payment_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -346,10 +356,10 @@ export default function SectionField() {
                 type="input"
                 label="Tax Reg Num. (NPWP)"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.tax_npwp}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('tax_npwp', e.target?.value)
                 }}
               />
             </Col>
@@ -358,10 +368,13 @@ export default function SectionField() {
                 type="select"
                 label="Block"
                 placeholder={'Select'}
-                value={dataForm?.ship_to_id}
-                options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
+                value={dataForm?.is_blocked}
+                options={[
+                  { label: 'Yes', value: 1 },
+                  { label: 'No', value: 0 },
+                ]}
                 onChange={(e: any) => {
-                  onChangeForm('ship_to_id', e.value)
+                  onChangeForm('is_blocked', e.value)
                 }}
               />
             </Col>
@@ -369,11 +382,11 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Risk Class"
-                value={dataForm?.customer_id}
+                value={dataForm?.risk_class}
                 fetchOptions={fieldCustomer}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('risk_class', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -382,10 +395,10 @@ export default function SectionField() {
                 type="input"
                 label="Credit Limit"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.credit_limit_id}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('credit_limit_id', e.target?.value)
                 }}
               />
             </Col>
@@ -394,11 +407,11 @@ export default function SectionField() {
                 type="select"
                 label="Rules"
                 required
-                value={dataForm?.customer_id}
+                value={dataForm?.rules}
                 fetchOptions={fieldCustomer}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('rules', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -407,12 +420,16 @@ export default function SectionField() {
                 fullWidth
                 onChange={(val: any) => {
                   if (val !== null) {
-                    onChangeForm('order_date', new Date(moment(val).format()).toISOString())
+                    onChangeForm(
+                      'credit_limit_valid_to',
+                      new Date(moment(val).format()).toISOString(),
+                    )
                   }
                 }}
                 label="Credit Limit Valid To"
                 disabledDate={(current) => current < moment().startOf('day')}
-                value={moment(dataForm?.order_date)}
+                defaultValue={moment()}
+                value={moment(dataForm?.credit_limit_valid_to)}
                 format={'DD-MMM-YYYY'}
                 required
               />
@@ -421,11 +438,11 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Check Rule"
-                value={dataForm?.customer_id}
+                value={dataForm?.check_rule}
                 fetchOptions={fieldCustomer}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('check_rule', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -434,11 +451,11 @@ export default function SectionField() {
                 type="select"
                 label="Price Group"
                 required
-                value={dataForm?.customer_id}
-                fetchOptions={fieldCustomer}
+                value={dataForm?.price_group_id}
+                fetchOptions={fieldPriceGroupByCompanyId}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('price_group_id', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -447,11 +464,11 @@ export default function SectionField() {
                 type="select"
                 label="Inco 1"
                 required
-                value={dataForm?.customer_id}
+                value={dataForm?.inco_1}
                 fetchOptions={fieldCustomer}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('inco_1', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -460,10 +477,10 @@ export default function SectionField() {
                 type="input"
                 label="Taxable Enter Num. (SPPKP)"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.tax_number_sppkp}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('tax_number_sppkp', e.target?.value)
                 }}
               />
             </Col>
@@ -473,10 +490,10 @@ export default function SectionField() {
                 label="Inco 2"
                 required
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.inco_2}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('inco_2', e.target?.value)
                 }}
               />
             </Col>
@@ -484,11 +501,11 @@ export default function SectionField() {
               <DebounceSelect
                 type="select"
                 label="Price List"
-                value={dataForm?.customer_id}
+                value={dataForm?.price_list}
                 fetchOptions={fieldCustomer}
                 onChange={(e: any) => {
-                  onChangeForm('customer_id', e.value)
-                  setFetching('customer')
+                  onChangeForm('price_list', e.value)
+                  // setFetching('customer')
                 }}
               />
             </Col>
@@ -497,10 +514,10 @@ export default function SectionField() {
                 type="input"
                 label="PKP City"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.pkp_address_city}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('pkp_address_city', e.target?.value)
                 }}
               />
             </Col>
@@ -509,10 +526,10 @@ export default function SectionField() {
                 type="input"
                 label="PKP Name"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.pkp_name}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('pkp_name', e.target?.value)
                 }}
               />
             </Col>
@@ -521,10 +538,10 @@ export default function SectionField() {
                 type="input"
                 label="PKP Address 2"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.pkp_address_2}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('pkp_address_2', e.target?.value)
                 }}
               />
             </Col>
@@ -533,10 +550,10 @@ export default function SectionField() {
                 type="input"
                 label="PKP Address 1"
                 placeholder={'Type here...'}
-                value={dataForm.order_type_id}
+                value={dataForm.pkp_address_1}
                 options={optionsOrderType}
                 onChange={(e: any) => {
-                  onChangeForm('order_type_id', e.value)
+                  onChangeForm('pkp_address_1', e.target?.value)
                 }}
               />
             </Col>

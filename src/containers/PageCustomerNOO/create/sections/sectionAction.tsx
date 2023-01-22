@@ -1,14 +1,14 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
-import { createQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { useSalesQuotationCreateContext } from '../states'
+import { createCustomerNOO } from 'src/api/customer-noo'
 
 export default function SectionAction() {
   const {
-    state: { canSave, canSaveAsDraft },
-    handler: { stopProcess, runProcess, dataSubmitted, showConfirm, setQuotationId },
+    state: { canSave, canSaveAsDraft, dataForm },
+    handler: { stopProcess, runProcess, dataSubmitted, showConfirm, setCustomerId },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
   const isCreatePage = router.asPath.split('/').includes('create')
@@ -39,21 +39,22 @@ export default function SectionAction() {
               if (canSave) {
                 runProcess('Wait for save Quotation')
                 if (isCreateOrOrderAgain) {
-                  createQuotation(dataSubmitted(6))
+                  createCustomerNOO(dataSubmitted(6))
                     .then((response) => {
-                      setQuotationId(response.data.id)
+                      setCustomerId(response.data.customer_id)
                       showConfirm('draftQuo')
                       stopProcess()
                     })
                     .catch(() => stopProcess())
                 } else {
-                  updateQuotation(dataSubmitted(6), router.query.id as string)
-                    .then((response) => {
-                      setQuotationId(response.data.id)
-                      showConfirm('draftQuo')
-                      stopProcess()
-                    })
-                    .catch(() => stopProcess())
+                  stopProcess()
+                  // updateQuotation(dataSubmitted(6), router.query.id as string)
+                  //   .then((response) => {
+                  //     setQuotationId(response.data.id)
+                  //     showConfirm('draftQuo')
+                  //     stopProcess()
+                  //   })
+                  //   .catch(() => stopProcess())
                 }
               }
             }}
@@ -71,21 +72,22 @@ export default function SectionAction() {
             if (canSave) {
               runProcess('Wait for save Quotation')
               if (isCreateOrOrderAgain) {
-                createQuotation(dataSubmitted(1))
+                createCustomerNOO(dataSubmitted(1))
                   .then((response) => {
-                    setQuotationId(response.data.id)
+                    setCustomerId(response.data.customer_id)
                     showConfirm('newQuo')
                     stopProcess()
                   })
                   .catch(() => stopProcess())
               } else {
-                updateQuotation(dataSubmitted(1), router.query.id as string)
-                  .then((response) => {
-                    setQuotationId(response.data.id)
-                    showConfirm('draftQuo')
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
+                stopProcess()
+                // updateQuotation(dataSubmitted(1), router.query.id as string)
+                //   .then((response) => {
+                //     setQuotationId(response.data.id)
+                //     showConfirm('draftQuo')
+                //     stopProcess()
+                //   })
+                //   .catch(() => stopProcess())
               }
             }
           }}
