@@ -36,7 +36,7 @@ import { getListDoSto } from 'src/api/logistic/do-sto'
 import { getDetailProductIntraChannel } from 'src/api/logistic/config-mapping-product-intra'
 import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
-import { getPoNumberList } from 'src/api/logistic/good-receipt'
+import { getPoNumberList, getGoodReceiptList } from 'src/api/logistic/good-receipt'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -670,7 +670,7 @@ export function fieldPoGRPrincipal(search: string) {
       {
         field: 'po_number',
         option: 'CP',
-        from_value: `${search}`,
+        from_value: `%${search}%`,
         data_type: 'S',
       },
     ],
@@ -686,7 +686,7 @@ export function fieldPoGRPrincipal(search: string) {
 
 export function fieldSlocByConfigLogistic(branch_id: string) {
   return getSlocbyConfigLogistic(branch_id).then((result) =>
-    result.data?.splice(0, 10).map(({ sloc_id, sloc_name }) => ({
+    result.data?.map(({ sloc_id, sloc_name }) => ({
       label: [sloc_id, sloc_name].join(' - '),
       value: sloc_id,
     })),
@@ -727,6 +727,26 @@ export function fieldPoStoByBranch(search: string, supplybranch: string, recevin
     result.data.result.splice(0, 10).map(({ id }) => ({
       label: id,
       value: id,
+    })),
+  )
+}
+
+export function fieldRefNumberGRfromPrincipal(search: string) {
+  return getGoodReceiptList({
+    filters: [
+      {
+        field: 'id',
+        option: 'CP',
+        from_value: `%${search}%`,
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.result?.splice(0, 10).map(({ gr_number }) => ({
+      label: gr_number,
+      value: gr_number,
     })),
   )
 }
