@@ -686,7 +686,7 @@ export function fieldPoGRPrincipal(search: string) {
 
 export function fieldSlocByConfigLogistic(branch_id: string) {
   return getSlocbyConfigLogistic(branch_id).then((result) =>
-    result.data?.splice(0, 10).map(({ sloc_id, sloc_name }) => ({
+    result.data?.map(({ sloc_id, sloc_name }) => ({
       label: [sloc_id, sloc_name].join(' - '),
       value: sloc_id,
     })),

@@ -90,7 +90,7 @@ export default function DeliveryNote({ details, loading = false }) {
               </tr>
             </thead>
             <tbody>
-              {details.items.map((item, index) => (
+              {details?.items?.map((item, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{item.product_id}</td>
