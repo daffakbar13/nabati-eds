@@ -151,6 +151,7 @@ export const useTableAddItem = (props: any) => {
             <InputNumber
               disabled={isNullProductId(index)}
               min={isNullProductId(index) ? '0' : '1'}
+              max={record.qty_po}
               value={text?.toLocaleString()}
               onChange={(newVal) => {
                 handleChangeData('qty_gr', newVal, index)
