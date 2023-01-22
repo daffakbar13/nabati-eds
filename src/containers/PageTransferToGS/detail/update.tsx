@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 import { Spacer, Text, Button, Row, DatePickerInput, Table } from 'pink-lava-ui'
 import { Divider, Typography } from 'antd'
-import { Card, Popup } from 'src/components'
+import { Card, Modal } from 'src/components'
 import { useRouter } from 'next/router'
 import TaggedStatus from 'src/components/TaggedStatus'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -40,11 +40,31 @@ export default function TransferToGSUpdate(props: propsDetail) {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
+  const handleSubmit = async () => {
+    try {
+      return await UpdateTransfertoGS({
+        ...initialValue,
+        ...dataForm,
+      })
+    } catch (error) {
+      return error
+    }
+  }
+
   return (
     <>
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
+            {/* <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => {
+                setReject(true)
+              }}
+            >
+              Reject
+            </Button> */}
             <Button
               size="big"
               variant="primary"
@@ -136,101 +156,54 @@ export default function TransferToGSUpdate(props: propsDetail) {
           />
         </div>
       </Card>
-      {(approve || approveSuccess || reject) && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              variant="headingSmall"
-              textAlign="center"
-              style={{
-                ...(approveSuccess && { color: 'green' }),
-                fontSize: 16,
-                fontWeight: 'bold',
-                marginBottom: 8,
-              }}
-            >
-              {reject ? 'Confirm Cancellation' : ''}
-              {approve ? 'Confirm Submit' : ''}
-              {approveSuccess ? 'Success' : ''}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {reject ? 'Are you sure want to Cancel? Change you made so far will not saved' : ''}
-            {approve
-              ? `Are you sure want Submit Document Number - ${props.data.ref_doc_number}?`
-              : ''}
-            {approveSuccess ? (
-              <>
-                Request Number
-                <Typography.Text copyable={{ text: props.data.ref_doc_number as string }}>
-                  {' '}
-                  {props.data.ref_doc_number}
-                </Typography.Text>
-                has been
-              </>
-            ) : (
-              ''
-            )}
-          </div>
-          {approveSuccess && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully created</div>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {(approve || reject) && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setReject(false)
-                    setApprove(false)
-                  }}
-                >
-                  No
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    UpdateTransfertoGS({
-                      ...initialValue,
-                      ...dataForm,
-                    }).then(() => {
-                      if (approve) {
-                        setApprove(false)
-                        setApproveSuccess(true)
-                      }
-                      if (reject) {
-                        setReject(false)
-                        router.push(`${PATH.LOGISTIC}/transfer-to-gs`)
-                      }
-                    })
-                  }}
-                >
-                  Yes
-                </Button>
-              </>
-            )}
-
-            {approveSuccess && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.LOGISTIC}/transfer-to-gs`)
-                  }}
-                >
-                  OK
-                </Button>
-              </>
-            )}
-          </div>
-        </Popup>
-      )}
+      <Modal
+        title={'Confirm Submit'}
+        open={approve}
+        onOk={handleSubmit}
+        onCancel={() => {
+          setApprove(false)
+        }}
+        content={`Are you sure want Submit Document Number - ${props.data.ref_doc_number}?`}
+        successTitle="Success"
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/transfer-to-gs`)
+        }}
+        successContent={(res: any) => (
+          <>
+            Transfer To Gs
+            <Typography.Text copyable={{ text: props.data.ref_doc_number as string }}>
+              {props.data.ref_doc_number}
+            </Typography.Text>
+            has been successfully Submit
+          </>
+        )}
+        successOkText="OK"
+        width={432}
+      />
+      {/* <Modal
+        title={'Confirm Reject'}
+        open={reject}
+        onOk={handleSubmit}
+        onCancel={() => {
+          setApprove(false)
+        }}
+        content={`Are you sure want Reject Document Number - ${props.data.ref_doc_number}?`}
+        successTitle="Success"
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/transfer-to-gs`)
+        }}
+        successContent={(res: any) => (
+          <>
+            Transfer To Gs
+            <Typography.Text copyable={{ text: props.data.ref_doc_number as string }}>
+              {props.data.ref_doc_number}
+            </Typography.Text>
+            has been successfully Rejected
+          </>
+        )}
+        successOkText="OK"
+        width={432}
+      /> */}
     </>
   )
 }
