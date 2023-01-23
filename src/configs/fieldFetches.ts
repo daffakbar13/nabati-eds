@@ -35,6 +35,7 @@ import {
   getStatusBlock,
   getPriceGroupByCompanyId,
   getDivisionByCompanyId,
+  getDistrictByCompanyId,
 } from 'src/api/master-data'
 import { getCustomerByFilterProps } from 'src/api/master-data/types'
 import { getListPoSto } from 'src/api/logistic/po-sto'
@@ -414,11 +415,12 @@ export function fieldPoSto(search: string) {
     )
 }
 
-export function fieldSloc(doc_type: string) {
+export function fieldSloc(search: string, doc_type_id?: string) {
   return getConfigSloc().then((result) =>
     result.data
-      .filter(({ doc_type_id }) => doc_type_id === doc_type)
-      .splice(0, 10)
+      // .filter(({ doc_type_id }) => doc_type_id === doc_type)
+      .filter(({ sloc_id }) => sloc_id.toLowerCase().includes(search.toLowerCase()))
+      // .splice(0, 10)
       .map(({ sloc_id }) => ({
         label: sloc_id,
         value: sloc_id,
@@ -817,6 +819,21 @@ export function fieldPriceGroupByCompanyId(search: string, companyId?: string) {
 
 export function fieldDivisionByCompany(search: string, companyId?: string) {
   return getDivisionByCompanyId(companyId).then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldDistrictByCompany(search: string, companyId?: string) {
+  return getDistrictByCompanyId(companyId).then((result) =>
     result.data
       .filter(
         ({ id, name }) =>

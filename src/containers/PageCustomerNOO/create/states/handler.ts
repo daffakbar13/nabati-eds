@@ -276,7 +276,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
     const now = new Date().toISOString()
     if (router.query.id && optionsOrderType?.length > 0 && !table.state.isLoading) {
       runProcess('Wait for get data')
-      getDetailCustomerNOO('', router.query.id as string)
+      getDetailCustomerNOO({ company_id: '', id: router.query.id as string })
         .then((response) => {
           const { data } = response
           const { customer_sales_data, customer, salesman, status, country, customer_group } = data
@@ -323,6 +323,9 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
             check_rule: customer_sales_data.check_rule_id,
             inco_1: customer_sales_data.incoterm1,
             inco_2: customer_sales_data.incoterm2,
+            customer_address: customer.address,
+            customer_sales_region_id: customer.region_id,
+            transportation_zone_id: customer.transportation_zone_id,
           })
           // const dataItems: typeof table.state.data = data.items.map((p) => ({
           //   name: p.description,
@@ -415,6 +418,9 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
       dataForm?.price_group_id,
       dataForm?.inco_1,
       dataForm?.inco_2,
+      dataForm?.customer_address,
+      dataForm?.customer_sales_region_id,
+      dataForm?.transportation_zone_id,
     ]
 
     // console.log(requiredFields)

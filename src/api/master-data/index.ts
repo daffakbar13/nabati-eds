@@ -46,6 +46,7 @@ const subUrl = {
   getStatusBlock: 'v1/master/get-status-block',
   getPriceGroupByCompanyId: 'v1/master/get-pricing-group',
   getDivisionByCompanyId: 'v1/master/get-division',
+  getDistrictByCompanyId: 'v1/master/get-district',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -494,6 +495,18 @@ export const getDivisionByCompanyId = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getDivisionByCompanyId}/${companyId}`,
+  })
+
+  return response.data
+}
+
+export const getDistrictByCompanyId = async (
+  companyId: string = 'PP01',
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getDistrictByCompanyId}/${companyId}`,
   })
 
   return response.data

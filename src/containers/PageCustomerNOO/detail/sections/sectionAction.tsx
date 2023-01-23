@@ -4,17 +4,16 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { PATH } from 'src/configs/menus'
 import { Text, Button } from 'pink-lava-ui'
-import {  useTitlePage } from 'src/hooks'
-import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
+import { useTitlePage } from 'src/hooks'
+import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
 
 export default function SectionAction() {
   const {
     state: { data },
     handler: { showConfirm },
-  } = useSalesSalesOrderDetailContext()
+  } = useSalesQuotationDetailContext()
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-
   const isStatus = (...value: string[]) => value.includes(data.status_id)
 
   return (
@@ -23,7 +22,7 @@ export default function SectionAction() {
         <Col>
           <ArrowLeftOutlined
             onClick={() => {
-              router.push(`${PATH.SALES}/sales-order`)
+              router.push({ pathname: `${PATH.SALES}/quotation` })
             }}
             style={{ fontSize: 25, lineHeight: '48px' }}
           />
@@ -51,7 +50,7 @@ export default function SectionAction() {
                 size="big"
                 variant="secondary"
                 onClick={() => {
-                  router.push(`${PATH.SALES}/sales-order/edit/${router.query.id}`)
+                  router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`)
                 }}
               >
                 Edit
@@ -59,13 +58,15 @@ export default function SectionAction() {
             </Col>
           </>
         )}
-        {isStatus('5', '1') && (
+        {isStatus('3', '1') && (
           <Col>
             <Button
               size="big"
               variant="primary"
               onClick={() => {
-                router.push(`${PATH.SALES}/sales-order/create?id=${router.query.id}`)
+                router.push(
+                  `${PATH.SALES}/quotation/create?id=${router.query.id}&status=${router.query.status}`,
+                )
               }}
             >
               Order Again

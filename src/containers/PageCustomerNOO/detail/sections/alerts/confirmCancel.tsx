@@ -4,21 +4,20 @@ import { Popup } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Button } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
-import { cancelSalesOrder } from 'src/api/sales-order'
+import { cancelBatchOrder } from 'src/api/quotation'
 import { fieldReason } from 'src/configs/fieldFetches'
-import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
+import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
 
 export default function ConfirmCancel() {
   const {
-    handler: { showConfirm, unShowConfirm, runProcess, stopProcess },
-  } = useSalesSalesOrderDetailContext()
+    handler: { showConfirm, runProcess, stopProcess, unShowConfirm },
+  } = useSalesQuotationDetailContext()
   const [reason, setReason] = React.useState<string>()
   const [optionsReason, setOptionsReason] = React.useState([])
   const router = useRouter()
-
   React.useEffect(() => {
     runProcess('Wait for get Reasons')
-    fieldReason('C')
+    fieldReason('B')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)
@@ -26,7 +25,6 @@ export default function ConfirmCancel() {
       })
       .catch(() => stopProcess())
   }, [])
-
   return (
     <Popup>
       <Typography.Title level={3} style={{ margin: 0 }}>
@@ -35,10 +33,10 @@ export default function ConfirmCancel() {
       <DebounceSelect
         type="select"
         value={optionsReason.find(({ value }) => reason === value)?.label}
-        label={'Reason Cancel Process Sales Order'}
+        label={'Reason Cancel Process Quotation'}
         required
         options={optionsReason}
-        onChange={(e) => setReason(e.value)}
+        onChange={({ value }) => setReason(value)}
       />
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -56,8 +54,8 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            runProcess('Wait for cancelling Sales Order')
-            cancelSalesOrder({
+            runProcess('Wait for cancelling Quotation')
+            cancelBatchOrder({
               order_list: [{ id: router.query.id }],
               cancel_reason_id: reason,
             })
@@ -65,7 +63,7 @@ export default function ConfirmCancel() {
                 showConfirm('success-cancel')
                 stopProcess()
               })
-              .catch(() => stopProcess())
+              .catch((err) => console.log(err))
           }}
         >
           Yes

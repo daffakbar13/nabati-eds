@@ -1,11 +1,11 @@
 import React from 'react'
 import { Loader } from 'src/components'
-import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
+import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
 
 export default function SectionLoader() {
   const {
-    state: { processing, data },
-  } = useSalesSalesOrderDetailContext()
+    state: { data, processing },
+  } = useSalesQuotationDetailContext()
   const hasData = Object.keys(data).length > 0
 
   return (

@@ -19,8 +19,9 @@ export default function useDetail(
     if (!Object.values(params).includes(undefined)) {
       funcApi(params)
         .then((results) => setData(results.data))
-        .catch(() => {
-          router.push('/not-found-404')
+        .catch((err) => {
+          console.log(err)
+          // router.push('/not-found-404')
         })
     }
   }, [router.query])
