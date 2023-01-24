@@ -37,6 +37,7 @@ import { getDetailProductIntraChannel } from 'src/api/logistic/config-mapping-pr
 import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
 import { getPoNumberList, getGoodReceiptList } from 'src/api/logistic/good-receipt'
+import { getDeliveryOrderList } from 'src/api/delivery-order'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -747,6 +748,32 @@ export function fieldRefNumberGRfromPrincipal(search: string) {
     result?.data?.result?.splice(0, 10).map(({ gr_number }) => ({
       label: gr_number,
       value: gr_number,
+    })),
+  )
+}
+
+export function fieldRefNumberSwapHandling(search: string, branch_id = '') {
+  return getDeliveryOrderList({
+    filters: [
+      {
+        field: 'branch_id',
+        option: 'EQ',
+        from_value: branch_id,
+        data_type: 'S',
+      },
+      {
+        field: 'id',
+        option: 'CP',
+        from_value: `%${search}%`,
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.results?.splice(0, 10).map((item: any, index) => ({
+      label: item.delivery_order_id,
+      value: item.delivery_order_id,
     })),
   )
 }
