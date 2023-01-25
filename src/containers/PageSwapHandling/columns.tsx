@@ -1,69 +1,67 @@
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { Button, Tooltip } from 'pink-lava-ui'
 import dateFormat from 'src/utils/dateFormat'
 import Link from 'src/components/Link'
 import TaggedStatus from 'src/components/TaggedStatus'
 
 export const columns = (goToDetail: (id: string) => {}) => [
-  CreateColumns(
-    'Doc. Number',
-    'doc_number',
-    true,
-    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
-    180,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'posting_date', true, (date) => <>{dateFormat(date)}</>, 180),
-  CreateColumns(
-    'Company',
-    'company_id',
-    true,
-    (text, rec) => <>{`${text} - ${rec.company_name}`}</>,
-    250,
-  ),
-  CreateColumns(
-    'Branch',
-    'branch_id',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.branch_name}`}</>,
-    250,
-  ),
-  CreateColumns(
-    'Supplying Sloc',
-    'from_sloc',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.from_sloc_name}`}</>,
-    200,
-  ),
-  CreateColumns(
-    'Receiving Sloc',
-    'to_sloc',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.to_sloc_name}`}</>,
-    200,
-  ),
-
-  CreateColumns(
-    'Move Type',
-    'movement_type_id',
-    true,
-    (text, rec) => (
-      <Tooltip
-        overlayInnerStyle={{ width: 'fit-content' }}
-        color="#F4FBFC"
-        title={rec.movement_type_name}
-      >
-        {text}
-      </Tooltip>
+  addColumn({
+    title: 'Doc. Number',
+    dataIndex: 'doc_number',
+    render: (text, record, index) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text, record, index) => `${text} - ${record.company_name}`,
+    width: 250,
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+    render: (text, record, index) => `${text} - ${record.branch_name}`,
+    width: 250,
+  }),
+  addColumn({
+    title: 'Supplying Sloc',
+    dataIndex: 'from_sloc',
+    render: (text, record, index) => `${text} - ${record.from_sloc_name}`,
+    width: 200,
+  }),
+  addColumn({
+    title: 'Receiving Sloc',
+    dataIndex: 'to_sloc',
+    render: (text, record, index) => `${text} - ${record.to_sloc_name}`,
+    width: 200,
+  }),
+  addColumn({
+    title: 'Move Type',
+    dataIndex: 'movement_type_id',
+  }),
+  addColumn({
+    title: 'Header Text',
+    dataIndex: 'header_text',
+    render: (text, record, index) => `${text !== '' && text != null ? text : '-'}`,
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status',
+    render: (text, record, index) => <TaggedStatus status={text} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'gr_number',
+    render: (text, record, index) => (
+      <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
+        View Detail
+      </Button>
     ),
-    // 200,
-  ),
-  CreateColumns('Header Text', 'header_text', true),
-  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-
-  CreateColumns('Action', 'gr_number', false, (text) => (
-    <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
-      View Detail
-    </Button>
-  )),
+  }),
 ]
