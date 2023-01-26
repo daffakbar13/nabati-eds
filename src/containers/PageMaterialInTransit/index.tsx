@@ -13,7 +13,7 @@ import { columns } from './columns'
 import Pagination from 'src/components/Pagination'
 import {
   fieldBranchAll,
-  fieldSlocFromBranch,
+  fieldRequestDocumentMaterialInTransit,
   fieldProductByCompany,
 } from 'src/configs/fieldFetches'
 
@@ -45,6 +45,15 @@ export default function PageMaterialInTransit() {
           <Row gap="16px">
             <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
+              <SmartFilter.Field
+                field="request_number"
+                dataType="S"
+                label="Request Document"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
+                <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
+              </SmartFilter.Field>
               <SmartFilter.Field
                 field="transaction_type"
                 dataType="S"
