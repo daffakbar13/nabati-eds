@@ -27,8 +27,8 @@ export default function PageMaterialInTransit() {
 
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
-    'Search by Doc. Number',
-    'document_number',
+    'Search by Request Document',
+    'request_number',
   )
 
   const statusTransaction = [
