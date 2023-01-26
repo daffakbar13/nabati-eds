@@ -4,8 +4,7 @@ import { Card, GoBackArrow, Modal } from 'src/components'
 import { Tabs } from 'antd'
 import { useRouter } from 'next/router'
 import { getGrReturnDetail } from 'src/api/logistic/good-return'
-import { doCancelProcess } from 'src/api/logistic/good-receipt'
-
+import { cancelProcess } from 'src/api/logistic/good-receipt'
 import { PATH } from 'src/configs/menus'
 
 import DocumentHeader from './Tabs/DocumentHeader'
@@ -13,7 +12,7 @@ import LRB from './Tabs/LRB'
 
 export default function DetailGrReturn() {
   const [loading, setLoading] = useState(false)
-  const [details, setDetails] = useState<{ items: [] }>({ items: [] })
+  const [details, setDetails] = useState<any>()
   const router = useRouter()
   const [currentTab, setCurrentTab] = useState('1')
   const id = String(router.query.id) || ''
@@ -25,7 +24,18 @@ export default function DetailGrReturn() {
 
   const handleCancelProcess = async () => {
     try {
-      const res = await doCancelProcess(id)
+      const res = await cancelProcess(id || '', details?.movement_type_id || '', {
+        cancel_items: {
+          company_id: details?.company_id || '',
+          branch_id: details?.branch_id || '',
+          items: details?.items?.map((item: any, index: number) => ({
+            sloc_id: item?.sloc_id,
+            product_id: item?.product_id,
+            unrestricted_use: item?.qty_gr,
+            uom_id: item?.uom_id,
+          })),
+        },
+      })
       return res
     } catch (error) {
       return error
@@ -59,17 +69,21 @@ export default function DetailGrReturn() {
         <GoBackArrow to={`${PATH.LOGISTIC}/gr-return`} />
         <Text variant={'h4'}>View GR Return From Principal {`${router.query.id}`}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {hashTab === '1' && (
-            <Button
-              size="big"
-              variant="tertiary"
-              onClick={() => setCancelProcessModal(true)}
-              loading={loading}
-            >
-              Cancel Process
-            </Button>
+          {currentTab === '1' && (
+            <>
+              {details?.status_name === 'Done' && (
+                <Button
+                  size="big"
+                  variant="tertiary"
+                  onClick={() => setCancelProcessModal(true)}
+                  loading={loading}
+                >
+                  Cancel Process
+                </Button>
+              )}
+            </>
           )}
-          {hashTab === '2' && (
+          {currentTab === '2' && (
             <Button size="big" variant="primary" onClick={() => {}} loading={loading}>
               Print LRB
             </Button>
