@@ -54,7 +54,7 @@ export default function PageMaterialInTransit() {
                 <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
                 <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
               </SmartFilter.Field>
-              <SmartFilter.Field
+              {/* <SmartFilter.Field
                 field="transaction_type"
                 dataType="S"
                 label="Transaction Type"
@@ -62,7 +62,7 @@ export default function PageMaterialInTransit() {
               >
                 <DebounceSelect type="select" options={statusTransaction} />
                 <DebounceSelect type="select" options={statusTransaction} />
-              </SmartFilter.Field>
+              </SmartFilter.Field> */}
               <SmartFilter.Field
                 field="product_id"
                 dataType="S"
