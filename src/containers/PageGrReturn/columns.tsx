@@ -14,8 +14,8 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
-      ? router.push(`${PATH.LOGISTIC}/goods-receipt/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${link}?status=${status}`)
+      ? router.push(`${PATH.LOGISTIC}/gr-return/edit/${link}`)
+      : router.push(`${PATH.LOGISTIC}/gr-return/detail/${link}?status=${status}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -49,7 +49,9 @@ export const columns = (goToDetail) => [
   addColumn({
     title: 'Doc. Number',
     dataIndex: 'doc_number',
-    render: (text, record, index) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
+    render: (text, record, index) => (
+      <Link onClick={() => goToDetail(record.gr_number)}>{text}</Link>
+    ),
     fixed: true,
     sorter: true,
     width: 180,
@@ -58,7 +60,7 @@ export const columns = (goToDetail) => [
     title: 'GR Number',
     dataIndex: 'gr_number',
     render: (text, record, index) => (
-      <Link onClick={() => goToDetail(record.doc_number)}>{text}</Link>
+      <Link onClick={() => goToDetail(record.gr_number)}>{text}</Link>
     ),
     fixed: true,
     sorter: true,
@@ -121,7 +123,7 @@ export const columns = (goToDetail) => [
   }),
   addColumn({
     title: 'Action',
-    dataIndex: 'id',
-    render: (text, record, index) => <Linked link={text} type="action" status={record.status_id} />,
+    dataIndex: 'gr_number',
+    render: (text, record, index) => <Linked link={text} type="action" status={record.status_name} />,
   }),
 ]
