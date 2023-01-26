@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Col, Row, DatePickerInput, Spacer, Table, Text } from 'pink-lava-ui'
+import { Col, Row, DatePickerInput, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import {
   exportExcelMaterialDocument,
@@ -7,24 +7,20 @@ import {
 } from 'src/api/logistic/material-document'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, DownloadButton, SearchQueryParams, SmartFilter } from 'src/components'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import {
   fieldBranchAll,
   fieldProductByCompany,
   fieldSlocFromBranch,
 } from 'src/configs/fieldFetches'
 import { columns } from './columns'
+import Pagination from 'src/components/Pagination'
 
 export default function PageRealTime() {
-  const [filters, setFilters] = useState([])
   const [allSloc, setAllScloc] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')
   const router = useRouter()
-
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
 
   const table = useTable({
     funcApi: getMaterialDocumentList,
@@ -37,6 +33,17 @@ export default function PageRealTime() {
     })
   }, [branchfrom, branchTo])
 
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Material Document',
+    'id',
+  )
+
+  const statusTransaction = [
+    { label: 'Intra Branch', value: 'Intra Branch' },
+    { label: 'Intra Sloc', value: 'Intra Sloc' },
+  ]
+
   return (
     <Col>
       <Text variant={'h4'}>Material Document</Text>
@@ -44,29 +51,8 @@ export default function PageRealTime() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
-            <SmartFilter onOk={setFilters}>
-              <SmartFilter.Field
-                field="branch_id"
-                dataType="S"
-                label="Branch"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <DebounceSelect
-                  type="select"
-                  fetchOptions={fieldBranchAll}
-                  onChange={(val: any) => {
-                    setBranchFrom(val.label.split(' - ')[0])
-                  }}
-                />
-                <DebounceSelect
-                  type="select"
-                  fetchOptions={fieldBranchAll}
-                  onChange={(val: any) => {
-                    setBranchTo(val.label.split(' - ')[0])
-                  }}
-                />
-              </SmartFilter.Field>
+            <Search {...searchProps} />
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="product_id"
                 dataType="S"
@@ -77,13 +63,13 @@ export default function PageRealTime() {
                 <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="sloc_id"
+                field="branch_id"
                 dataType="S"
-                label="SLoc"
+                label="Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <DebounceSelect type="select" options={allSloc} />
-                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
@@ -116,6 +102,7 @@ export default function PageRealTime() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )

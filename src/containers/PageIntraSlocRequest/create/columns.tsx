@@ -15,9 +15,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
     product_sender_id: '',
     product_receiver_id: '',
     qty: 1,
-    base_qty: 1,
     uom_id: 'CTN',
-    base_uom_id: '',
     batch: '',
     remarks: '',
   }
@@ -120,7 +118,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             value={text?.toLocaleString()}
             onBlur={(newVal) => {
               handleChangeData('qty', newVal, index)
-              handleChangeData('base_qty', newVal, index)
             }}
             style={styleInputNumber}
           />
@@ -140,7 +137,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             disabled={isNullProductId(index)}
             onBlur={(e) => {
               handleChangeData('uom_id', e.value, index)
-              handleChangeData('base_uom_id', e.value, index)
               setFetching(true)
             }}
           />
@@ -252,7 +248,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             value={text?.toLocaleString()}
             onBlur={(newVal) => {
               handleChangeData('qty', newVal, index)
-              handleChangeData('base_qty', newVal, index)
             }}
             style={styleInputNumber}
           />
@@ -272,7 +267,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             disabled={isNullProductId(index)}
             onBlur={(e) => {
               handleChangeData('uom_id', e.value, index)
-              handleChangeData('base_uom_id', e.value, index)
               setFetching(true)
             }}
           />
@@ -323,11 +317,9 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             if (value[2]?.value) {
               const newUom = uom_id === '' ? value[2].value : uom_id
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             } else {
               const newUom = uom_id
               handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
             }
             newOptionsUom[index] = value
             setOptionsUom(newOptionsUom)

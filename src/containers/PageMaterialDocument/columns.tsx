@@ -1,53 +1,100 @@
 import moment from 'moment'
 import React from 'react'
-import CreateColumns, { dataIndexWithSorter } from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 // import { useRouter } from 'next/router'
 // import React from 'react'
 // import { Button } from 'pink-lava-ui'
 // import { PATH } from 'src/configs/menus'
 
 export const columns = [
-  CreateColumns('No', 'sloc_id', true, (text, record, index) => <>{index + 1}</>, 100),
-  CreateColumns('Material Document', 'material_document', true),
-  CreateColumns(
-    'Material',
-    'product_id',
-    true,
-    (productId, record) => <>{`${productId} - ${record.product_description}`}</>,
-    400,
-  ),
-  CreateColumns('Doc. Header Text', 'doc_header_text', true),
-  CreateColumns('Posting Date', 'posting_date', true, (text) => (
-    <>{moment(text).format('DD-MMM-YYYY')}</>
-  )),
-  CreateColumns('Movement Type', 'movement_type_id', true),
-  CreateColumns('Reservation', 'reservation', true),
-  CreateColumns('Purchase Order', 'purchase_order', true),
-  CreateColumns('Time of Entry', 'time_of_entry', true),
-  CreateColumns('SLoc', 'sloc', true),
-  CreateColumns(
-    'Customer',
-    'customer_id',
-    true,
-    (text, record) => <>{`${text} - ${record.customer_name}`}</>,
-    400,
-  ),
-  CreateColumns('Debt/Credit', 'debet_credit', true),
-  CreateColumns('Qty in Unit of Entry', 'qty_unit_of_entry', true),
-  CreateColumns('Qty in Unit of Entry', 'qty_unit_of_entry', true),
-  CreateColumns('Unit of Entry', 'unit_of_entry', true),
-  CreateColumns('Quantity', 'quantity', true),
-  CreateColumns('Base UoM', 'base_uom', true),
-  CreateColumns(
-    'Branch',
-    'branch_id',
-    true,
-    (branchId, record) => <>{`${branchId} - ${record.branch_name}`}</>,
-    300,
-  ),
-  CreateColumns('Document Date', 'document_date', true, (text) => (
-    <>{moment(text).format('DD-MMM-YYYY')}</>
-  )),
-  CreateColumns('User Name', 'user_name', true),
-  CreateColumns('Item Autometically Created', 'item_automatically_created', true),
+  addColumn({
+    title: 'No',
+    dataIndex: 'sloc_id',
+    render: (text, record, index) => index + 1,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'Material Document',
+    dataIndex: 'material_document',
+    fixed: true,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Material',
+    dataIndex: 'product_id',
+    render: (text, record, index) => `${text || ''} - ${record.product_description || ''}`,
+    width: 400,
+  }),
+  addColumn({
+    title: 'Doc. Header Text',
+    dataIndex: 'doc_header_text',
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Movement Type',
+    dataIndex: 'movement_type_id',
+  }),
+  addColumn({
+    title: 'Reservation',
+    dataIndex: 'reservation',
+  }),
+  addColumn({
+    title: 'Reservation',
+    dataIndex: 'reservation',
+  }),
+  addColumn({
+    title: 'Purchase Order',
+    dataIndex: 'purchase_order',
+  }),
+  addColumn({
+    title: 'Time of Entry',
+    dataIndex: 'time_of_entry',
+  }),
+  addColumn({
+    title: 'Customer',
+    dataIndex: 'customer_id',
+    render: (text, record, index) => `${text || ''} - ${record.customer_name || ''}`,
+    width: 400,
+  }),
+  addColumn({
+    title: 'Debt/Credit',
+    dataIndex: 'debet_credit',
+  }),
+  addColumn({
+    title: 'Qty in Unit of Entry',
+    dataIndex: 'qty_unit_of_entry',
+  }),
+  addColumn({
+    title: 'Unit of Entry',
+    dataIndex: 'unit_of_entry',
+  }),
+  addColumn({
+    title: 'Quantity',
+    dataIndex: 'quantity',
+  }),
+  addColumn({
+    title: 'Base UoM',
+    dataIndex: 'base_uom',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+    render: (text, record, index) => `${text || ''} - ${record.branch_name || ''}`,
+    width: 400,
+  }),
+  addColumn({
+    title: 'Document Date',
+    dataIndex: 'document_date',
+  }),
+  addColumn({
+    title: 'User Name',
+    dataIndex: 'user_name',
+  }),
+  addColumn({
+    title: 'Item Autometically Created',
+    dataIndex: 'item_automatically_created',
+  }),
 ]
