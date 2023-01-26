@@ -39,11 +39,6 @@ export default function PageRealTime() {
     'id',
   )
 
-  const statusTransaction = [
-    { label: 'Intra Branch', value: 'Intra Branch' },
-    { label: 'Intra Sloc', value: 'Intra Sloc' },
-  ]
-
   return (
     <Col>
       <Text variant={'h4'}>Material Document</Text>

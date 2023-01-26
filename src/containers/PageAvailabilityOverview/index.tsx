@@ -1,29 +1,22 @@
 import { useRouter } from 'next/router'
-import { Col, Row, Spacer, Table, Text, Button } from 'pink-lava-ui'
+import { Col, Row, Spacer, Table, Text, Button, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import {
-  Card,
-  Select,
-  SearchQueryParams,
-  SmartFilter,
-  DownloadButton,
-  SelectMasterData,
-} from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import {
   exportExcelAvailabilityOverview,
   getAvailabilityOverview,
 } from 'src/api/logistic/availability-overview'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import {
   fieldBranchAll,
   fieldSlocFromBranch,
   fieldProductByCompany,
 } from 'src/configs/fieldFetches'
 import { columns } from './columns'
+import Pagination from 'src/components/Pagination'
 
 export default function PageAvailabilityOverview() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
   const [allSloc, setAllScloc] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
@@ -37,9 +30,7 @@ export default function PageAvailabilityOverview() {
     data,
   })
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, setFilters, searchProps } = useFilters(table, 'Search by Material', 'product_id')
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
@@ -138,7 +129,7 @@ export default function PageAvailabilityOverview() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
                 field="branch_id"
@@ -203,6 +194,7 @@ export default function PageAvailabilityOverview() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} dataSource={dataTable} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )
