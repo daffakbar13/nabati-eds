@@ -81,8 +81,14 @@ const useTablePayment = () => {
 }
 
 export const useTableDetailCollection = (
-  // eslint-disable-next-line no-unused-vars
-  handleUndelive: (billing_id: string, cancelation_reason_id: string) => void,
+  handleUndelive: (
+    // eslint-disable-next-line no-unused-vars
+    billing_id: string,
+    // eslint-disable-next-line no-unused-vars
+    cancelation_reason_id: string,
+    // eslint-disable-next-line no-unused-vars
+    cancelation_reason_name: string,
+  ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
 ) => {
@@ -90,7 +96,8 @@ export const useTableDetailCollection = (
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
   const [showPopupUndelivered, setShowPopupUndelivered] = React.useState<string>()
   const [optionsReason, setOptionsReason] = React.useState([])
-  const [reasonUndelivered, setReasonUndelivered] = React.useState<any>()
+  const [reasonUndeliveredID, setReasonUndeliveredID] = React.useState()
+  const [reasonUndeliveredName, setReasonUndeliveredName] = React.useState()
   const payment = useTablePayment()
 
   function closeModal() {
@@ -128,6 +135,8 @@ export const useTableDetailCollection = (
     </Modal>
   )
 
+  console.log(reasonUndeliveredID, reasonUndeliveredName)
+
   function PopupUndelivered(props: { id: string }) {
     const { id } = props
     return (
@@ -137,10 +146,11 @@ export const useTableDetailCollection = (
           type="select"
           label="Reason"
           required
-          value={reasonUndelivered}
+          value={reasonUndeliveredID}
           options={optionsReason}
           onChange={(e) => {
-            setReasonUndelivered(e.value)
+            setReasonUndeliveredID(e.value)
+            setReasonUndeliveredName(e.label)
           }}
         />
         <div style={{ display: 'flex', gap: 10 }}>
@@ -150,7 +160,7 @@ export const useTableDetailCollection = (
           <Button
             variant="primary"
             onClick={() => {
-              handleUndelive(id, reasonUndelivered)
+              handleUndelive(id, reasonUndeliveredID, reasonUndeliveredName)
               setShowPopupUndelivered(undefined)
             }}
           >
@@ -165,7 +175,8 @@ export const useTableDetailCollection = (
     fieldReason('J')
       .then((r) => {
         setOptionsReason(r)
-        setReasonUndelivered(r[0].value)
+        setReasonUndeliveredID(r[0].value)
+        setReasonUndeliveredName(r[0].label)
       })
       .catch((err) => err)
   }, [])
@@ -212,7 +223,7 @@ export const useTableDetailCollection = (
       }),
       addColumn({
         title: 'Undelivered Reason',
-        render: (_, r) => concatString(r.undelivered_reason_id, r.undelivered_reason_name),
+        dataIndex: 'undelivered_reason_name',
       }),
       addColumn({
         title: 'Action',
