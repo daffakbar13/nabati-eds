@@ -83,7 +83,7 @@ export default function useFilters(
 
       setOldFilters(body.filters)
       setFilterId(
-        body.filters.find((f) => f.field === getCurrentId())?.from_value.replaceAll('%', '') || '',
+        body.filters.find((f) => ids.includes(f.field))?.from_value.replaceAll('%', '') || '',
       )
     } else {
       table.handler.handleFilter(filters)
