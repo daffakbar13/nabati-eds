@@ -62,6 +62,10 @@ export default function DetailGR() {
     { label: 'LPB', key: '2' },
   ]
 
+  useEffect(() => {
+    console.log('tab', hashTab)
+  }, [hashTab])
+
   return (
     <>
       {loading && <Loader type="process" text="Wait for get data" />}
@@ -71,15 +75,19 @@ export default function DetailGR() {
             <GoBackArrow to={`${PATH.LOGISTIC}/goods-receipt`} />
             <Text variant={'h4'}>View GR From Principal {`${router.query.id}`}</Text>
             <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-              {hashTab === '1' && (
-                <Button
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => setCancelProcessModal(true)}
-                  loading={loading}
-                >
-                  Cancel Process
-                </Button>
+              {currentTab === '1' && (
+                <>
+                  {details?.status_name === 'Done' && (
+                    <Button
+                      size="big"
+                      variant="tertiary"
+                      onClick={() => setCancelProcessModal(true)}
+                      loading={loading}
+                    >
+                      Cancel Process
+                    </Button>
+                  )}
+                </>
               )}
               {hashTab === '2' && (
                 <Button size="big" variant="primary" onClick={() => {}} loading={loading}>

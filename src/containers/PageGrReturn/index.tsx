@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router'
-import { Button, Col, DatePickerInput, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Col, DatePickerInput, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
-
 import { getListGrReturn } from 'src/api/logistic/good-return'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 
 export default function PageGrReturn() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const goToDetailPage = (id: string) => router.push(`${PATH.LOGISTIC}/gr-return/detail/${id}`)
@@ -19,6 +19,19 @@ export default function PageGrReturn() {
     columns: columns(goToDetailPage),
   })
 
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Doc. Number',
+    'doc_number',
+  )
+
+  const statusOption = [
+    { label: 'Done', value: '01' },
+    { label: 'Canceled', value: '03' },
+  ]
+
+  const moveTypeOption = [{ label: '122 - RE return to vendor', value: '122' }]
+
   return (
     <Col>
       <Text variant={'h4'}>Goods Return</Text>
@@ -26,49 +39,40 @@ export default function PageGrReturn() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
-            <SmartFilter onOk={setFilters}>
+            <Search {...searchProps} />
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"
-                label="Company ID"
+                label="Company"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="COMPANY" />
-                <SelectMasterData type="COMPANY" />
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"
-                label="Branch ID"
+                label="Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="PLANT" />
-                <SelectMasterData type="PLANT" />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="product_id"
+                field="movement_type_id"
                 dataType="S"
-                label="Material"
+                label="Move Type"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="MATERIAL" />
-                <SelectMasterData type="MATERIAL" />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="sloc_id"
-                dataType="S"
-                label="Sloc"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <SelectMasterData type="SLOC" />
-                <SelectMasterData type="SLOC" />
+                <DebounceSelect type="select" placeholder={'Select'} options={moveTypeOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={moveTypeOption} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
                 dataType="S"
                 label="Posting Date"
-                options={['GT', 'LT', 'EQ', 'CP']}
+                options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DatePickerInput
                   label={''}
@@ -77,20 +81,20 @@ export default function PageGrReturn() {
                   placeholder="Posting Date"
                 />
                 <DatePickerInput
-                  label={''}
                   fullWidth
+                  label={''}
                   format={'DD-MMM-YYYY'}
                   placeholder="Posting Date"
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="status_data"
+                field="status_id"
                 dataType="S"
                 label="Status"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={statusOption} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>

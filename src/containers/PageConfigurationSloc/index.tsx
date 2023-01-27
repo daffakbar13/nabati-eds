@@ -9,6 +9,7 @@ import { useTable } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
+import Pagination from 'src/components/Pagination'
 
 export default function PageConfigurationSloc() {
   const [filters, setFilters] = useState([])
@@ -98,11 +99,15 @@ export default function PageConfigurationSloc() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} dataSource={dataTable} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <CreateModal
         visible={showCreateModal}
-        close={() => setShowCreateModal(false)}
+        close={() => {
+          setShowCreateModal(false)
+          setSelectedRow(null)
+        }}
         payload={selectedRow}
       />
     </>

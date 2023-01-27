@@ -82,7 +82,7 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
               variant="primary"
               onClick={() => {
                 setModalApprove(true)
-                setStatusId('01')
+                setStatusId('03')
               }}
             >
               Approve

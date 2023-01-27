@@ -38,6 +38,7 @@ import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
 import { getPoNumberList, getGoodReceiptList } from 'src/api/logistic/good-receipt'
 import { getDeliveryOrderList } from 'src/api/delivery-order'
+import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -774,6 +775,26 @@ export function fieldRefNumberSwapHandling(search: string, branch_id = '') {
     result?.data?.results?.splice(0, 10).map((item: any, index) => ({
       label: item.delivery_order_id,
       value: item.delivery_order_id,
+    })),
+  )
+}
+
+export function fieldRequestDocumentMaterialInTransit(search: string) {
+  return getListGISloc({
+    filters: [
+      {
+        field: 'id',
+        option: 'CP',
+        from_value: `%${search}%`,
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.result?.splice(0, 10).map((item: any, index) => ({
+      label: item.id,
+      value: item.id,
     })),
   )
 }

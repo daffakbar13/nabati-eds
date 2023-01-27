@@ -56,7 +56,7 @@ export default function PageStockReservation() {
   const handleApprove = async () => {
     try {
       return await UpdateApprovalReservationMultiple({
-        status_id: '01',
+        status_id: '03',
         id_reservations: table.state.selected,
       })
     } catch (error) {

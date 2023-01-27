@@ -78,7 +78,7 @@ export const columns = [
   }),
   addColumn({
     title: 'Batch',
-    dataIndex: 'sloc_id',
+    dataIndex: 'batch',
     width: 300,
   }),
   addColumn({

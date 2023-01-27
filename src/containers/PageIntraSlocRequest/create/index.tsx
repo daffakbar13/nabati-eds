@@ -78,16 +78,12 @@ export default function PageCreateRequestIntraSloc() {
 
   const initialValue = {
     document_type: 'ZINS',
-    planned_gi_date: moment(now).format('YYYY-MM-DD'),
-    suppl_branch_id: 'P100',
-    receive_plant_id: 'P104',
-    from_channel: 'MT',
-    to_channel: 'GT',
-    suppl_sloc_id: 'GS00',
-    receive_sloc_id: 'GS00',
-    status_id: '00',
     document_date: moment(now).format('YYYY-MM-DD'),
     posting_date: moment(now).format('YYYY-MM-DD'),
+    suppl_branch_id: 'P100',
+    suppl_sloc_id: 'GS00',
+    receive_sloc_id: 'GS00',
+    status_id: '01',
     remarks: '',
     items: tableAddItems.data,
   }

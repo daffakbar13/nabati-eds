@@ -10,7 +10,7 @@ import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
 
 interface slocList {
   company_id?: string
-  branch_id: string
+  branch_id?: string
   sales_org: string
   sloc_id: string
   sloc_name: string
