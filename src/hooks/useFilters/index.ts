@@ -30,10 +30,6 @@ export default function useFilters(
   /**
    * Column Name of ID
    */
-  id: string = 'id',
-  /**
-   * Column Name of ID
-   */
   ids: string[] = ['id'],
 ) {
   const {
@@ -47,19 +43,6 @@ export default function useFilters(
   const [fetchFilters, setFetchFilters] = React.useState(false)
 
   function getCurrentId() {
-    return ids[currentIdsIndex]
-  }
-
-  function getPrevId() {
-    if (currentIdsIndex < 0) {
-      return ids[0]
-    }
-    if (currentIdsIndex > 0) {
-      return ids[currentIdsIndex - 1]
-    }
-    // if (currentIdsIndex === 0) {
-    //   return ids[ids.length - 1]
-    // }
     return ids[currentIdsIndex]
   }
 

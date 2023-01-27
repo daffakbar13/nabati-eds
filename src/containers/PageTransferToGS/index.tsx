@@ -38,11 +38,9 @@ export default function PageIntraSlocRequest() {
     { label: 'Wait For Approval', value: '00' },
   ]
 
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search by Doc. Number',
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Doc. Number', [
     'document_number',
-  )
+  ])
 
   return (
     <Col>

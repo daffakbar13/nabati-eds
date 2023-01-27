@@ -48,7 +48,7 @@ export default function PageIntraSlocRequest() {
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
     'Search by Reservation Number',
-    'reservation_number',
+    ['reservation_number'],
   )
 
   useEffect(() => {

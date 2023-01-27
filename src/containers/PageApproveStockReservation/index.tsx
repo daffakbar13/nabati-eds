@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SearchQueryParams, SmartFilter, Modal } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
@@ -18,7 +18,6 @@ import Pagination from 'src/components/Pagination'
 import { colors } from 'src/configs/colors'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { column } from './columns'
-import { Modal } from 'src/components'
 
 export default function PageStockReservation() {
   const table = useTable({
@@ -51,7 +50,7 @@ export default function PageStockReservation() {
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
     'Search by Reservation Number',
-    'reservation_number',
+    ['reservation_number'],
   )
 
   const handleApprove = async () => {
@@ -205,7 +204,7 @@ export default function PageStockReservation() {
           }
           successTitle="Success"
           onOkSuccess={() => {
-            router.push(`/logistic/approval-stock-reservation`)
+            router.push('/logistic/approval-stock-reservation')
           }}
           successContent={(res: any) => <>Stock Reservation has been successfully Rejected</>}
           successOkText="OK"
@@ -234,7 +233,7 @@ export default function PageStockReservation() {
           }
           successTitle="Success"
           onOkSuccess={() => {
-            router.push(`/logistic/approval-stock-reservation`)
+            router.push('/logistic/approval-stock-reservation')
           }}
           successContent={(res: any) => <>Stock Reservation has been successfully Rejected</>}
           successOkText="OK"

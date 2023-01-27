@@ -11,8 +11,8 @@ import { getListStockReservation } from 'src/api/logistic/stock-reservation'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSloc, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { column } from './columns'
 import { colors } from 'src/configs/colors'
+import { column } from './columns'
 
 export default function PageStockReservation() {
   const table = useTable({
@@ -40,11 +40,9 @@ export default function PageStockReservation() {
   ]
   const movTypeOption = [{ label: '313 - Transfer Posting Sloc to Sloc', value: '313' }]
 
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search by Doc. Number',
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Doc. Number', [
     'doc_number',
-  )
+  ])
 
   return (
     <Col>
