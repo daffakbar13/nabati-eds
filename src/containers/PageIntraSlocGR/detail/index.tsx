@@ -16,20 +16,24 @@ import { column } from './columns'
 export default function PageIntraSlocGoodIssueDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const data: any = useDetail(getDetailGRIntraSloc, { id: router.query.id as string }, false)
+  const data: any = useDetail(
+    getDetailGRIntraSloc,
+    { id: router.query.id as string, requestNumber: router.query?.request_number as string },
+    false,
+  )
   const createDataList = (label: string, value: string) => ({ label, value })
   const [loading, setLoading] = React.useState(true)
 
   const dataList = [
     // row 1
-    createDataList('Request Number', data.delivery_number),
-    createDataList('Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name}`),
+    createDataList('Request Number', data.request_number || ''),
+    createDataList('Branch', `${data.branch_id || ''} - ${data.branch_name || ''}`),
     createDataList('From SLoc', `${data.from_sloc || ''} - ${data.from_sloc_name || ''}`),
     createDataList('To SLoc', `${data.to_sloc || ''} - ${data.to_sloc_name || ''}`),
 
     // row 2
-    createDataList('GI Number', data.gi_number),
-    createDataList('GR Number', data.id),
+    createDataList('GI Number', data.gi_number || ''),
+    createDataList('GR Number', data.gr_number || ''),
     createDataList('Doc Date', dateFormat(data.document_date)),
     createDataList('Posting Date', dateFormat(data.posting_date)),
     createDataList('Remarks', data.remarks !== '' && data.remarks !== null ? data.remarks : '-'),
@@ -54,7 +58,7 @@ export default function PageIntraSlocGoodIssueDetail() {
   ]
 
   React.useEffect(() => {
-    if (data.delivery_number) {
+    if (data.request_number) {
       setLoading(false)
     } else {
       setLoading(true)
@@ -107,7 +111,7 @@ export default function PageIntraSlocGoodIssueDetail() {
               </Col>
             </Row>
             <Divider />
-            <div style={{ overflow: 'scroll' }}>
+            <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
               <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
             </div>
           </Card>

@@ -20,7 +20,7 @@ export default function PageIntraSlocGoodIssueDetail() {
     getDetailGIIntraSloc,
     {
       id: router.query.id as string,
-      doc_type: 'WA',
+      requestNumber: router.query?.request_number as string,
     },
     false,
   )
@@ -29,8 +29,8 @@ export default function PageIntraSlocGoodIssueDetail() {
 
   const dataList = [
     // row 1
-    createDataList('Request Number', data.delivery_number),
-    createDataList('Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name}`),
+    createDataList('Request Number', data.request_number),
+    createDataList('Branch', `${data.branch_id || ''} - ${data.branch_name || ''}`),
     createDataList('From SLoc', `${data.from_sloc || ''} - ${data.from_sloc_name || ''}`),
     createDataList('To SLoc', `${data.to_sloc || ''} - ${data.to_sloc_name || ''}`),
 
@@ -60,7 +60,7 @@ export default function PageIntraSlocGoodIssueDetail() {
   ]
 
   React.useEffect(() => {
-    if (data.delivery_number) {
+    if (data.request_number) {
       setLoading(false)
     } else {
       setLoading(true)

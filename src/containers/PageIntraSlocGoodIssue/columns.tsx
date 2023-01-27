@@ -13,13 +13,13 @@ export function useColumnsIntraSlocGoodIssue() {
   return [
     addColumn({
       title: 'Request Number',
-      render: (_, { delivery_number }) => (
+      render: (_, { request_number }) => (
         <Link
           onClick={() =>
-            router.push(`${PATH.LOGISTIC}/request-intra-sloc/detail/${delivery_number}`)
+            router.push(`${PATH.LOGISTIC}/request-intra-sloc/detail/${request_number}`)
           }
         >
-          {delivery_number}
+          {request_number}
         </Link>
       ),
       fixed: true,
@@ -27,8 +27,14 @@ export function useColumnsIntraSlocGoodIssue() {
     }),
     addColumn({
       title: 'GI Number',
-      render: (_, { id }) => (
-        <Link onClick={() => router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${id}`)}>
+      render: (_, { id, request_number }) => (
+        <Link
+          onClick={() =>
+            router.push(
+              `${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${id}?request_number=${request_number}`,
+            )
+          }
+        >
           {id}
         </Link>
       ),
@@ -45,8 +51,7 @@ export function useColumnsIntraSlocGoodIssue() {
     }),
     addColumn({
       title: 'Branch',
-      render: (_, { suppl_branch_id, suppl_branch_name }) =>
-        concatString(suppl_branch_id, suppl_branch_name),
+      render: (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
     }),
     addColumn({
       title: 'From Sloc',
@@ -66,11 +71,11 @@ export function useColumnsIntraSlocGoodIssue() {
     }),
     addColumn({
       title: 'Action',
-      render: (_, { id }) => (
+      render: (_, { id, request_number }) => (
         <Button
           size="big"
           variant="tertiary"
-          onClick={() => router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${id}`)}
+          onClick={() => router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${id}?request_number=${request_number}`)}
         >
           View Detail
         </Button>

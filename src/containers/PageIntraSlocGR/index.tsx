@@ -12,7 +12,7 @@ import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { colors } from 'src/configs/colors'
-import { column } from './columns'
+import { useColumnsIntraSlocGoodReceipt } from './columns'
 
 export default function PageIntraSlocGoodIssue() {
   const [branchfrom, setBranchFrom] = useState('')
@@ -21,7 +21,7 @@ export default function PageIntraSlocGoodIssue() {
 
   const table = useTable({
     funcApi: getListGRSloc,
-    columns: column,
+    columns: useColumnsIntraSlocGoodReceipt(),
   })
 
   const [showConfirm, setShowConfirm] = React.useState('')
