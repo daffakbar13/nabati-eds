@@ -37,8 +37,6 @@ export const createConfigSloc = async (params = {}): Promise<CommonListResponse<
 
 export const updateConfigSloc = async (
   params: any,
-  companyId: string,
-  branchId: string,
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.PUT,
