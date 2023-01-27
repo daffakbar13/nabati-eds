@@ -43,6 +43,6 @@ export const editCollection = async (payload: Collection) => {
 }
 
 export const finishCollection = async (payload: any) => {
-  const response = await call({ method: METHODS.POST, subUrl, data: payload })
+  const response = await call({ method: METHODS.POST, subUrl: `${subUrl}/finish`, data: payload })
   return response.data
 }

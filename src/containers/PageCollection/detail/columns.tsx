@@ -81,7 +81,10 @@ const useTablePayment = () => {
 }
 
 export const useTableDetailCollection = (
+  // eslint-disable-next-line no-unused-vars
   handleUndelive: (billing_id: string, cancelation_reason_id: string) => void,
+  // eslint-disable-next-line no-unused-vars
+  handleDelive: (data_billing: string) => void,
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
@@ -111,7 +114,15 @@ export const useTableDetailCollection = (
           <Button variant="tertiary" onClick={closeModal}>
             Cancel
           </Button>
-          <Button variant="primary">Save</Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleDelive(data)
+              setShowModalDelivered(false)
+            }}
+          >
+            Save
+          </Button>
         </div>
       </div>
     </Modal>
@@ -130,12 +141,21 @@ export const useTableDetailCollection = (
           options={optionsReason}
           onChange={(e) => {
             setReasonUndelivered(e.value)
-            handleUndelive(id, e.value)
           }}
         />
         <div style={{ display: 'flex', gap: 10 }}>
-          <Button variant="tertiary" onClick={() => setShowPopupUndelivered(undefined)} >Back</Button>
-          <Button variant="primary">Confirm</Button>
+          <Button variant="tertiary" onClick={() => setShowPopupUndelivered(undefined)}>
+            Back
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              handleUndelive(id, reasonUndelivered)
+              setShowPopupUndelivered(undefined)
+            }}
+          >
+            Confirm
+          </Button>
         </div>
       </Popup>
     )
