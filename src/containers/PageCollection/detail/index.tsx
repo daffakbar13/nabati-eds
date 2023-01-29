@@ -16,14 +16,32 @@ export default function PageCollectionDetail() {
   const data = useDetail(getCollectionDetail, { id: router.query.id as string })
   const [finishPayload, setFinishPayload] = React.useState<any>({})
   const [processing, setProcessing] = React.useState<string>()
+  const [dataTable, setDataTable] = React.useState([])
   const hasData = Object.keys(data).length > 0
 
-  function undeliveBilling(billing_id: string, cancelation_reason_id: string) {
+  function getTotalAmount() {
+    if (hasData) {
+      return [...data.details].map((d) => d.billing_amount).reduce((prev, curr) => prev + curr)
+    }
+    return 0
+  }
+
+  function undeliveBilling(
+    billing_id: string,
+    cancelation_reason_id: string,
+    cancelation_reason_name: string,
+  ) {
     setFinishPayload((prev) => ({
       shipment_id: prev.shipment_id,
       billings: prev.billings?.map((b) => {
         if (b.billing_id === billing_id) {
-          return { ...b, is_delivered: 0, cancelation_reason_id, payments: [] }
+          return {
+            ...b,
+            is_delivered: 0,
+            cancelation_reason_id,
+            cancelation_reason_name,
+            payments: [],
+          }
         }
         return b
       }),
@@ -34,11 +52,12 @@ export default function PageCollectionDetail() {
     setFinishPayload((prev) => ({
       shipment_id: prev.shipment_id,
       billings: prev.billings?.map((b) => {
-        if (b.billing_id === data_billing.billing_id) {
+        if (b.billing_id === data_billing.billing_number) {
           return {
             ...b,
             is_delivered: 1,
             cancelation_reason_id: '',
+            cancelation_reason_name: '',
             payments: [
               {
                 amount: data_billing.billing_amount,
@@ -65,6 +84,7 @@ export default function PageCollectionDetail() {
         billings: data.details.map((d) => ({
           billing_id: d.billing_number,
           is_delivered: 1,
+          cancelation_reason_name: '',
           cancelation_reason_id: '',
           payments: [
             {
@@ -78,8 +98,20 @@ export default function PageCollectionDetail() {
           ],
         })),
       }))
+      setDataTable(data.details)
     }
   }, [data])
+
+  console.log(dataTable)
+
+  React.useEffect(() => {
+    const newDataTable = dataTable.map((d, i) => ({
+      ...d,
+      undelivered_reason_id: finishPayload.billings[i]?.cancelation_reason_id,
+      undelivered_reason_name: finishPayload.billings[i]?.cancelation_reason_name,
+    }))
+    setDataTable(newDataTable)
+  }, [finishPayload])
 
   return (
     <Col>
@@ -111,12 +143,12 @@ export default function PageCollectionDetail() {
           <Spacer size={20} />
           <Card style={{ padding: '16px 20px' }}>
             <div style={{ overflow: 'scroll' }}>
-              <Table dataSource={data.details} columns={columns} scroll={{ x: 'max-content' }} />
+              <Table dataSource={dataTable} columns={columns} scroll={{ x: 'max-content' }} />
             </div>
             <Spacer size={30} />
             <Row>
               <Col span={12} offset={12}>
-                <Total label="Total Amount" value={123} />
+                <Total label="Total Amount" value={getTotalAmount()} />
               </Col>
             </Row>
           </Card>
