@@ -45,7 +45,11 @@ export default function PageIntraSlocGoodIssue() {
 
   const movTypeOption = [{ label: 'Z53 - GR Phys. Inv', value: 'Z53' }]
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Request, GI, GR Number',
+    ['request_number', 'gi_number', 'gr_number'],
+  )
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
@@ -60,42 +64,7 @@ export default function PageIntraSlocGoodIssue() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by GR Number"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => {
-                setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      }
-                      return { ...data }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'id',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"

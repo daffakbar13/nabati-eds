@@ -20,7 +20,13 @@ export default function PageDoSto() {
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
-  const { oldfilters, setFilters, filterId, onChangeSearch } = useFilters(table)
+
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by PO, DO Number',
+    ['po_number', 'id'],
+  )
+
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0
   const router = useRouter()
@@ -48,16 +54,7 @@ export default function PageDoSto() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by DO Number"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => onChangeSearch(e)}
-              allowClear
-            />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
