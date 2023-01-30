@@ -87,3 +87,15 @@ export const multipleSubmitQuotation = async (payload: { order_list: { id: strin
   })
   return response.data
 }
+
+export const getDetailCustomer = async (
+  params: CommonDetailParams,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    // subUrl: `v1/quotations/${params.id}/detail`,
+    subUrl: `v1/master/get-customer/${params.company_id || 'PP01'}/${params.id}`,
+  })
+  return response.data
+}

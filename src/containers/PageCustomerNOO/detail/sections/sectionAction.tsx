@@ -22,7 +22,7 @@ export default function SectionAction() {
         <Col>
           <ArrowLeftOutlined
             onClick={() => {
-              router.push({ pathname: `${PATH.SALES}/quotation` })
+              router.push({ pathname: `${PATH.SALES}/customer-noo` })
             }}
             style={{ fontSize: 25, lineHeight: '48px' }}
           />
@@ -50,7 +50,7 @@ export default function SectionAction() {
                 size="big"
                 variant="secondary"
                 onClick={() => {
-                  router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`)
+                  router.push(`${PATH.SALES}/customer-noo/edit/${router.query.id}`)
                 }}
               >
                 Edit
@@ -65,7 +65,7 @@ export default function SectionAction() {
               variant="primary"
               onClick={() => {
                 router.push(
-                  `${PATH.SALES}/quotation/create?id=${router.query.id}&status=${router.query.status}`,
+                  `${PATH.SALES}/customer-noo/create?id=${router.query.id}&status=${router.query.status}`,
                 )
               }}
             >

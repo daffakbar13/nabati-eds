@@ -22,6 +22,7 @@ export default function PageCustomer() {
     haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
     columns: TableBilling,
   })
+
   const titlePage = useTitlePage('list')
 
   return (

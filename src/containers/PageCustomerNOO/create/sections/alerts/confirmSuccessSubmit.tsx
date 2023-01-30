@@ -49,8 +49,9 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            const additional = isFromDetail ? `/detail/${router.query.id}` : ''
-            router.push(`${PATH.SALES}/customer-noo${additional}`)
+            // const additional = isFromDetail ? `/detail/${router.query.id}` : ''
+            // router.push(`${PATH.SALES}/customer-noo${additional}`)
+            router.push(`${PATH.SALES}/quotation/create`)
           }}
         >
           OK
