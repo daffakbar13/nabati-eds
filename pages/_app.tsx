@@ -9,7 +9,7 @@ import type { NextPage } from 'next'
 import DashboardLayout from 'src/containers/Layouts/DashboardLayout'
 import 'pink-lava-ui/index.css'
 import 'src/styles/globals.css'
-import { useTitle } from 'src/hooks'
+import { usePathHistory, useTitle } from 'src/hooks'
 import Loader from 'src/components/Loader'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { AppProvider } from 'src/contexts'
@@ -29,6 +29,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const [loading, setLoading] = React.useState(false)
   const router = useRouter()
   const title = useTitle()
+  const { previousPath } = usePathHistory()
 
   // const getLayout = Component.getLayout || DashboardLayout
 
@@ -71,6 +72,12 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       localStorage.setItem('secret_information', getSecretInfromation())
     }
   }, [router])
+
+  React.useEffect(() => {
+    if (!previousPath) {
+      router.push('/')
+    }
+  }, [previousPath])
 
   return (
     <QueryClientProvider client={queryClient}>
