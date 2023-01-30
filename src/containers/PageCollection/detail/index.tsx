@@ -102,8 +102,6 @@ export default function PageCollectionDetail() {
     }
   }, [data])
 
-  console.log(dataTable)
-
   React.useEffect(() => {
     const newDataTable = dataTable.map((d, i) => ({
       ...d,
