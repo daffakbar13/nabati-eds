@@ -28,7 +28,7 @@ export default function TransferToGSUpdate(props: propsDetail) {
     reference_doc_number: props.data.ref_doc_number,
     movement_type_id: props.data.movement_type_id,
     branch_id: props.data.branch_id,
-    supplying_sloc_id: props.data.supplaying_sloc_id,
+    supplying_sloc_id: props.data.receiving_sloc_id,
     receiving_sloc_id: "GS00",
     document_date: moment(props.data.document_date).format('YYYY-MM-DD'),
     posting_date: moment(props.data.posting_date).format('YYYY-MM-DD'),
@@ -106,7 +106,7 @@ export default function TransferToGSUpdate(props: propsDetail) {
               type="input"
               label="Supplaying SLoc"
               disabled
-              placeholder={`${props.data.supplaying_sloc_id} - ${props.data.supplaying_sloc_name}`}
+              placeholder={`${props.data.receiving_sloc_id} - ${props.data.receiving_sloc_name}`}
             />
           </div>
           <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
