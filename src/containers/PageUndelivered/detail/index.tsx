@@ -6,7 +6,11 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getUndeliveredDetail, multipleSubmitUndelivered } from 'src/api/undelivered'
+import {
+  confirmUndelivered,
+  getUndeliveredDetail,
+  multipleSubmitUndelivered,
+} from 'src/api/undelivered'
 import { PATH } from 'src/configs/menus'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
@@ -27,6 +31,7 @@ export default function PageApprovalDetail() {
   const [reason, setReason] = React.useState('')
   const [optionsReason, setOptionsReason] = React.useState([])
   const [proccessing, setProccessing] = React.useState('')
+  const [isSuccessConfirm, setIsSuccessConfirm] = useState(false)
   const onProcess = proccessing !== ''
   const router = useRouter()
   const data = useDetail(getUndeliveredDetail, { id: router.query.id as string }, false)
@@ -59,40 +64,59 @@ export default function PageApprovalDetail() {
       .catch(() => setOptionsReason([]))
   }, [])
 
-  const handleApprove = () => {
+  const handleApprove = (date: any) => {
     setProccessing('Wait for approving')
-    // multipleSubmitUndelivered({
-    //   order_list: router.query.id,
-    //   status_approved_id: '01',
-    // })
-    //   .then(() => {
-    //     setShowConfirm('success-approve')
-    //     setProccessing('')
-    //   })
-    //   .catch(() => setProccessing(''))
-    setTimeout(() => {
-      setShowConfirm('success-approve')
-    }, 2000)
-    setTimeout(() => {
-      setProccessing('')
-    }, 3000)
+
+    const payload = {
+      shipment_id: router.query.id,
+      delivery_data:
+        dataTable?.length > 0
+          ? dataTable.map((item) => {
+              return {
+                delivery_id: item?.delivery_oder_id,
+                delivery_date: date,
+                is_delivery: 1,
+                cancelation_reason_id: '',
+              }
+            })
+          : [],
+    }
+
+    confirmUndelivered(payload)
+      .then(() => {
+        setIsSuccessConfirm(true)
+        setShowConfirm('success-approve')
+        setProccessing('')
+      })
+      .catch(() => setProccessing(''))
   }
 
   const handleReject = (reason: string, index: number) => {
     setProccessing('Wait for rejecting')
 
+    // const payload = {
+    //   shipment_id: router.query.id,
+    //   items: [
+    //     {
+    //       delivery_order_id: dataTable[index]['delivery_oder_id'],
+    //       new_delivery_date: dataTable[index]['order_date'],
+    //       cancel_reason: reason,
+    //     },
+    //   ],
+    // }
     const payload = {
       shipment_id: router.query.id,
-      items: [
+      delivery_data: [
         {
-          delivery_order_id: dataTable[index]['delivery_oder_id'],
-          new_delivery_date: dataTable[index]['order_date'],
-          cancel_reason: reason,
+          delivery_id: dataTable[index]['delivery_oder_id'],
+          delivery_date: dataTable[index]['order_date'],
+          is_delivery: 0,
+          cancelation_reason_id: reason,
         },
       ],
     }
 
-    multipleSubmitUndelivered(payload)
+    confirmUndelivered(payload)
       .then(() => {
         setShowConfirm('success-reject')
 
@@ -110,26 +134,38 @@ export default function PageApprovalDetail() {
 
   const handleReschedule = (date: any, index: number) => {
     setProccessing('Wait for reschedule')
+    // const payload = {
+    //   shipment_id: router.query.id,
+    //   items: [
+    //     {
+    //       delivery_order_id: dataTable[index]['delivery_oder_id'],
+    //       new_delivery_date: date,
+    //       cancel_reason: dataTable[index]['cancel_reason'],
+    //     },
+    //   ],
+    // }
 
     const payload = {
       shipment_id: router.query.id,
-      items: [
+      delivery_data: [
         {
-          delivery_order_id: dataTable[index]['delivery_oder_id'],
-          new_delivery_date: date,
-          cancel_reason: dataTable[index]['cancel_reason'],
+          delivery_id: dataTable[index]['delivery_oder_id'],
+          delivery_date: date,
+          is_delivery: 1,
+          cancelation_reason_id: dataTable[index]['cancel_reason'],
         },
       ],
     }
 
-    multipleSubmitUndelivered(payload)
+    console.log(date)
+    confirmUndelivered(payload)
       .then(() => {
         setShowConfirm('success-reschedule')
 
         const newData = [...dataTable]
         newData[index] = {
           ...dataTable[index],
-          order_date: date,
+          new_delivery_date: date,
         }
         setDataTable(newData)
 
@@ -158,15 +194,17 @@ export default function PageApprovalDetail() {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          <Button
-            size="big"
-            variant="primary"
-            onClick={() => {
-              setShowConfirm('approve')
-            }}
-          >
-            Confirm
-          </Button>
+          {!isSuccessConfirm && (
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                setShowConfirm('approve')
+              }}
+            >
+              Confirm
+            </Button>
+          )}
         </div>
       </div>
       <Spacer size={20} />

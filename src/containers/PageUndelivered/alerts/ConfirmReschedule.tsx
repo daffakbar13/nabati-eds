@@ -22,9 +22,9 @@ const ConfirmReschedule: React.FC<Props> = ({ onSubmit, onCancel }) => {
           fullWidth
           onChange={(val: any) => {
             // console.log(moment(val).format('DD-MMM-YYYY'))
-            setDate(moment(val).format('DD-MMM-YYYY'))
+            setDate(moment(val).format('YYYY-MM-DD'))
           }}
-          label="Confirm Reschedule"
+          label="New Undelivered Date"
           disabledDate={(current) => current < moment().startOf('day')}
           defaultValue={moment()}
           format={'DD-MMM-YYYY'}
@@ -37,7 +37,7 @@ const ConfirmReschedule: React.FC<Props> = ({ onSubmit, onCancel }) => {
             size="big"
             style={{ flexGrow: 1 }}
             variant="primary"
-            onClick={() => onSubmit(date)}
+            onClick={() => onSubmit(date || moment().format('YYYY-MM-DD'))}
           >
             Yes
           </Button>

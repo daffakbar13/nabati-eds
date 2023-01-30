@@ -5,7 +5,9 @@ import { colors } from 'src/configs/colors'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
 import {
+  confirmUndelivered,
   downloadUndelivered,
+  getUndeliveredDetail,
   getUndeliveredList,
   multipleSubmitUndelivered,
 } from 'src/api/undelivered'
@@ -47,43 +49,96 @@ export default function PageUndelivered() {
     setShowConfirm('')
   }
 
-  const handleApprove = () => {
+  const handleApprove = (date: any) => {
     setProccessing('Wait for approving')
-    // multipleSubmitUndelivered({
-    //   order_list: table.state.selected,
-    //   status_approved_id: '01',
-    // })
-    //   .then(() => {
-    //     setShowConfirm('success-approve')
-    //     setProccessing('')
-    //   })
-    //   .catch(() => setProccessing(''))
-    setTimeout(() => {
-      setShowConfirm('success-approve')
-    }, 2000)
-    setTimeout(() => {
-      setProccessing('')
-    }, 3000)
+
+    Promise.all(
+      table.state.selected.map((item) => {
+        getUndeliveredDetail({ id: item })
+          .then((res: any) => {
+            return {
+              shipment_id: item,
+              delivery_data:
+                res.data?.item?.length > 0
+                  ? res.data.item.map((detail) => {
+                      return {
+                        delivery_id: detail?.delivery_oder_id,
+                        delivery_date: date,
+                        is_delivery: 1,
+                        cancelation_reason_id: '',
+                      }
+                    })
+                  : [],
+            }
+          })
+          .catch(() => {
+            return {
+              shipment_id: item,
+              delivery_data: [],
+            }
+          })
+      }),
+    )
+      .then(() => {
+        setShowConfirm('success-approve')
+        setProccessing('')
+      })
+      .catch(() => {
+        setProccessing('')
+      })
+
+    // setTimeout(() => {
+    //   setShowConfirm('success-approve')
+    // }, 2000)
+    // setTimeout(() => {
+    //   setProccessing('')
+    // }, 3000)
   }
 
   const handleReject = (reason: string) => {
     setProccessing('Wait for rejecting')
-    // multipleSubmitUndelivered({
-    //   shipment_id: table.state.selected,
-    //   status_approved_id: '02',
-    //   reject_reason_id: reason,
-    // })
-    //   .then(() => {
-    //     setShowConfirm('success-reject')
-    //     setProccessing('')
-    //   })
-    //   .catch(() => setProccessing(''))
-    setTimeout(() => {
-      setShowConfirm('success-reject')
-    }, 2000)
-    setTimeout(() => {
-      setProccessing('')
-    }, 3000)
+
+    Promise.all(
+      table.state.selected.map((item) => {
+        getUndeliveredDetail({ id: item })
+          .then((res: any) => {
+            return {
+              shipment_id: item,
+              delivery_data:
+                res.data.item?.length > 0
+                  ? res.data.item.map((detail) => {
+                      return {
+                        delivery_id: detail?.delivery_oder_id,
+                        delivery_date: detail?.order_date,
+                        is_delivery: 0,
+                        cancelation_reason_id: reason,
+                      }
+                    })
+                  : [],
+            }
+          })
+          .catch(() => {
+            return {
+              shipment_id: item,
+              delivery_data: [],
+            }
+          })
+      }),
+    )
+      .then(() => {
+        setShowConfirm('success-reject')
+        setProccessing('')
+      })
+      .catch(() => {
+        setProccessing('')
+      })
+
+    // setTimeout(() => {
+    //   setShowConfirm('success-reject')
+    // }, 2000)
+    // setTimeout(() => {
+    //   setProccessing('')
+    // }, 3000)
   }
 
   const handleSycnData = () => {

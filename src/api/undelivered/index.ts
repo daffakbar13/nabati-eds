@@ -37,6 +37,15 @@ export const multipleSubmitUndelivered = async (payload: any) => {
   return response.data
 }
 
+export const confirmUndelivered = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${subUrl}/confirm`,
+    data: payload,
+  })
+  return response.data
+}
+
 export const downloadUndelivered = async (params: CommonListParams) => {
   const response = await call({
     method: METHODS.POST,
