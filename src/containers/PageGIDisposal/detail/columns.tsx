@@ -14,6 +14,7 @@ export const columns = [
     title: 'Item',
     dataIndex: 'product_id',
     render: (text, record, index) => `${record.product_id || ''} - ${record.product_name || ''}`,
+    width: 400
   }),
   addColumn({
     title: 'Qty',
