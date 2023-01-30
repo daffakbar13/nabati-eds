@@ -79,7 +79,6 @@ export const useTableAddItem = (props: propsUseTable) => {
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
@@ -155,7 +154,6 @@ export const useTableAddItem = (props: propsUseTable) => {
         type="input"
         placeholder="e.g Testing"
         onChange={(e) => {
-          console.log(e)
           handleChangeData('batch', e.target.value, index)
         }}
       />
@@ -165,7 +163,6 @@ export const useTableAddItem = (props: propsUseTable) => {
         type="input"
         placeholder="e.g Testing"
         onChange={(e) => {
-          console.log(e)
           handleChangeData('remarks', e.target.value, index)
         }}
       />
@@ -177,14 +174,13 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ product_sender_id, uom_id, qty }, index) => {
         if (product_sender_id !== '') {
           fieldUom(product_sender_id).then((value) => {
-            // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
-              let newUom = uom_id === '' ? value[2].value : uom_id
+              const newUom = uom_id === '' ? value[2].value : uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
             } else {
-              let newUom = uom_id
+              const newUom = uom_id
               handleChangeData('uom_id', newUom, index)
               handleChangeData('base_uom_id', newUom, index)
             }

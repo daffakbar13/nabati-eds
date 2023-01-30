@@ -11,5 +11,5 @@ export default function DateFormat(props: DateFormatProps) {
   const isValid = moment(date).isValid() === true
   const dateFormated = moment(date).format(format)
 
-  return <>{moment(date).format(format)}</>
+  return <>{isValid ? dateFormated : '-'}</>
 }

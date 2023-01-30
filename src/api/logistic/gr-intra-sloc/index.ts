@@ -6,10 +6,9 @@ import {
   CommonListParams,
   CommonDetailParams,
 } from 'src/api/types'
-import { API_BASE_URL_2 } from 'src/configs/env'
 import { SlocGRList, SlocGRDetail } from './types'
 
-const url = 'v1/material-doc/intra-sloc/receipt'
+const url = 'v1/intra-sloc/good-receipt'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
@@ -26,12 +25,12 @@ export const getListGRSloc = async (
 }
 
 export const getDetailGRIntraSloc = async (
-  params: CommonDetailParams,
+  params: any = {},
 ): Promise<CommonDetailResponse<SlocGRDetail>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${url}/${params.id}/detail`,
+    subUrl: `${url}/${params?.id}/detail?request_number=${params?.requestNumber}`,
   })
   return response.data
 }

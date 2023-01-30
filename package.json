@@ -36,6 +36,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "12.1.0",
+    "next-transpile-modules": "^10.0.0",
     "pink-lava-ui": "file:./vendor/pink-lava-design/dist",
     "postcss": "^8.4.8",
     "qs": "^6.10.3",

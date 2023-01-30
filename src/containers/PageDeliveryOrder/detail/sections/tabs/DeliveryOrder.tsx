@@ -56,7 +56,11 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table columns={ColumnsDeliveryOrder} dataSource={data.delivery_items} />
+        <Table
+          columns={ColumnsDeliveryOrder}
+          dataSource={data.delivery_items}
+          scroll={{ x: 'max-content' }}
+        />
       </div>
       <Spacer size={30} />
       <Row>
@@ -70,6 +74,11 @@ export default function DeliveryOrder(props: DeliveryOrderProps) {
             />
             <Total label="Total Net" value={parseInt(data.net_total_amount).toLocaleString()} />
             <Total label="Total Tax" value={parseInt(data.tax_total_amount).toLocaleString()} />
+            <Total
+              label="Total Amount"
+              value={parseInt(data.total_amount).toLocaleString()}
+              largeSize
+            />
           </div>
         </Col>
       </Row>

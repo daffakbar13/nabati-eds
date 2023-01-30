@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Divider, Form, Typography } from 'antd'
 import { useRouter } from 'next/router'
@@ -10,6 +10,8 @@ import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/componen
 import { createStockAdjustment } from 'src/api/logistic/stock-adjustment'
 
 import { useTableAddItem } from './useTableEditable'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
 
 const { Label, LabelRequired } = Text
 
@@ -17,15 +19,16 @@ export default function CreateStockAdjustment() {
   const now = new Date().toISOString()
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
-  const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
-
   const [branchSelected, setBranchSelected] = useState('')
-  const tableAddItems = useTableAddItem({ idbranch: branchSelected.split(' - ')[0] || '' })
-
-  // Modal
+  const [movementSelected, setMovementSelected] = useState('')
+  const tableAddItems = useTableAddItem({
+    idbranch: branchSelected.split(' - ')[0] || '',
+    MovementType: movementSelected,
+  })
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
+  const [allSloc, setAllScloc] = useState([])
 
   const router = useRouter()
 
@@ -59,6 +62,14 @@ export default function CreateStockAdjustment() {
     }
   }
 
+  useEffect(() => {
+    if (branchSelected != '') {
+      fieldSlocByConfigLogistic(branchSelected).then((result) => {
+        setAllScloc(result)
+      })
+    }
+  }, [branchSelected])
+
   return (
     <Col>
       <Title variant={'h4'}>Create Stock Adjustment</Title>
@@ -86,86 +97,55 @@ export default function CreateStockAdjustment() {
           scrollToFirstError
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <Form.Item
-              name="movement_type"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Movement Type</Label>}
-            >
-              <Select
-                loading={loading}
-                disabled={disableSomeFields}
-                style={{ marginTop: -8 }}
-                size="large"
-                placeholder="Movement Type"
-                labelInValue
+            <Form.Item name="movement_type" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect
+                type="select"
+                label="Movement Type"
+                required
                 options={[
                   { label: 'Z71 - GR Phys. Inv', value: 'Z71' },
                   { label: 'Z72 - RE GR Phys. Inv', value: 'Z72' },
                 ]}
+                onChange={(e) => setMovementSelected(e.value)}
               />
             </Form.Item>
-            <Form.Item
-              name="document_date"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Doc. Date</Label>}
-            >
+            <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
-                style={{ marginTop: -12 }}
-                placeholder="Select Date"
-                size="large"
-                label=""
                 fullWidth
+                label="Doc. Date"
                 defaultValue={moment()}
                 format={'DD/MM/YYYY'}
+                required
               />
             </Form.Item>
             <Form.Item
               name="branch_id"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Branch</LabelRequired>}
               rules={[{ required: true }]}
             >
-              <SelectMasterData
+              <DebounceSelect
+                type="select"
+                label="Branch"
+                required
+                fetchOptions={(search) => fieldBranchSupply(search)}
                 onChange={(e) => setBranchSelected(e.value)}
-                loading={loading}
-                type="PLANT"
-                style={{ marginTop: -8 }}
               />
             </Form.Item>
-            <Form.Item
-              name="posting_date"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Posting Date</Label>}
-            >
+            <Form.Item name="posting_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
-                style={{ marginTop: -12 }}
-                placeholder="Select Date"
-                size="large"
-                label=""
                 fullWidth
-                format={'DD/MM/YYYY'}
+                label="Posting Date"
                 defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
               />
             </Form.Item>
-            <Form.Item
-              name="sloc_id"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Sloc</Label>}
-            >
-              <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="SLOC"
-                style={{ marginTop: -8 }}
-              />
+            <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="select" label="Sloc" required options={allSloc} />
             </Form.Item>
 
-            <Form.Item
-              name="header_text"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Header Text</Label>}
-            >
-              <Input loading={loading} style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            <Form.Item name="header_text" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect label="Header Text" type="input" />
             </Form.Item>
           </div>
         </Form>
@@ -207,9 +187,9 @@ export default function CreateStockAdjustment() {
         successContent={(res: any) => (
           <>
             Stock Adjusment ID :
-            <Typography.Text copyable={{ text: res?.data.stock_adjustment_id as string }}>
+            <Typography.Text copyable={{ text: res?.data.material_doc_id as string }}>
               {' '}
-              {res?.data.stock_adjustment_id}
+              {res?.data.material_doc_id}
             </Typography.Text>
             has been successfully created
           </>

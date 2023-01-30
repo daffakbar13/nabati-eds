@@ -34,6 +34,7 @@ export { default as ICSyncData } from './sync-data.svg'
 export { default as ExpandMinusIc } from './expand-icon-minus.svg'
 export { default as ExpandPlusIc } from './expand-icon-plus.svg'
 export { default as ExclamationBrownIc } from './exclamation-brown.svg'
+export { default as ICLogo } from './favicon-eshop.ico'
 
 // Filter Icon
 export { default as ICFilterAddFolder } from './Filter-addFolder.svg'

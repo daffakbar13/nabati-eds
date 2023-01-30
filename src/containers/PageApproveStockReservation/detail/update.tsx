@@ -1,12 +1,15 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Spacer, Text, Button, Row, DatePickerInput, Table } from 'pink-lava-ui'
 import { Divider, Typography } from 'antd'
-import { Card, Popup } from 'src/components'
+import { Card, Modal } from 'src/components'
 import { useRouter } from 'next/router'
 import TaggedStatus from 'src/components/TaggedStatus'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { UpdateApprovalReservation } from 'src/api/logistic/approve-stock-reservation'
+import {
+  UpdateApprovalReservationMultiple,
+  UpdateRejectReservationMultiple,
+} from 'src/api/logistic/approve-stock-reservation'
 import { column } from './columns'
 import { PATH } from 'src/configs/menus'
 
@@ -17,30 +20,43 @@ interface propsDetail {
 export default function PageApproveStockReservationUpdate(props: propsDetail) {
   const now = new Date().toISOString()
   const router = useRouter()
-  const [dataForm, setDataForm] = React.useState({})
-  const [reject, setReject] = React.useState(false)
-  const [approve, setApprove] = React.useState(false)
-  const [approveSuccess, setApproveSuccess] = React.useState(false)
+  const [dataForm, setDataForm] = useState({})
+  const [modalApprove, setModalApprove] = useState(false)
+  const [modalReject, setModalReject] = useState(false)
+  const [statusId, setStatusId] = useState('01')
+
   const initialValue = {
-    status_id: '01',
     document_date: moment(now).format('YYYY-MM-DD'),
     posting_date: moment(now).format('YYYY-MM-DD'),
     header_text: '',
+    status_id: statusId,
+    id_reservations: [props.data.reservation_number],
   }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
-  React.useEffect(() => {
-    if (approve) {
-      onChangeForm('status_id', '01')
+  const handleApprove = async () => {
+    try {
+      return await UpdateApprovalReservationMultiple({
+        ...initialValue,
+        ...dataForm,
+      })
+    } catch (error) {
+      return error
     }
-
-    if (reject) {
-      onChangeForm('status_id', '02')
+  }
+  const handleReject = async () => {
+    try {
+      return await UpdateRejectReservationMultiple({
+        ...initialValue,
+        ...dataForm,
+      })
+    } catch (error) {
+      return error
     }
-  }, [approve, reject])
+  }
 
   return (
     <>
@@ -51,19 +67,25 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
               size="big"
               variant="tertiary"
               onClick={() => {
-                setReject(true)
+                setModalReject(true)
+                setStatusId('02')
+                console.log('rejected', {
+                  ...initialValue,
+                  ...dataForm,
+                })
               }}
             >
-              Cancel
+              Reject
             </Button>
             <Button
               size="big"
               variant="primary"
               onClick={() => {
-                setApprove(true)
+                setModalApprove(true)
+                setStatusId('03')
               }}
             >
-              Submit
+              Approve
             </Button>
           </Row>
           <Text variant={'h5'}>
@@ -116,7 +138,7 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
               onChange={(val: any) => {
                 onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
               }}
-              label="Document Date"
+              label="Posting Date"
               defaultValue={moment()}
               format={'DD-MMM-YYYY'}
               required
@@ -138,105 +160,58 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
           </div>
         </div>
         <Divider />
-        <div style={{ overflow: 'scroll' }}>
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table columns={column} data={props.data.item} />
         </div>
       </Card>
-      {(approve || approveSuccess || reject) && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              variant="headingSmall"
-              textAlign="center"
-              style={{
-                ...(approveSuccess && { color: 'green' }),
-                fontSize: 16,
-                fontWeight: 'bold',
-                marginBottom: 8,
-              }}
-            >
-              {reject ? 'Confirm Cancellation' : ''}
-              {approve ? 'Confirm Submit' : ''}
-              {approveSuccess ? 'Success' : ''}
-            </Text>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-            {reject ? 'Are you sure want to Cancel? Change you made so far will not saved' : ''}
-            {approve
-              ? `Are you sure want Submit Reservation Number - ${props.data.reservation_number}?`
-              : ''}
-            {approveSuccess ? (
-              <>
-                Request Number
-                <Typography.Text copyable={{ text: props.data.reservation_number as string }}>
-                  {' '}
-                  {props.data.reservation_number}
-                </Typography.Text>
-                has been
-              </>
-            ) : (
-              ''
-            )}
-          </div>
-          {approveSuccess && (
-            <div style={{ display: 'flex', justifyContent: 'center' }}>successfully created</div>
-          )}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-            {(approve || reject) && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => {
-                    setReject(false)
-                    setApprove(false)
-                  }}
-                >
-                  No
-                </Button>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    UpdateApprovalReservation(props.data.reservation_number, {
-                      ...initialValue,
-                      ...dataForm,
-                    }).then(() => {
-                      if (approve) {
-                        setApprove(false)
-                        setApproveSuccess(true)
-                      }
-                      if (reject) {
-                        setReject(false)
-                        router.push(`${PATH.LOGISTIC}/approval-stock-reservation`)
-                      }
-                    })
-                  }}
-                >
-                  Yes
-                </Button>
-              </>
-            )}
-
-            {approveSuccess && (
-              <>
-                <Button
-                  style={{ flexGrow: 1 }}
-                  size="big"
-                  variant="primary"
-                  onClick={() => {
-                    router.push(`${PATH.LOGISTIC}/approval-stock-reservation`)
-                  }}
-                >
-                  OK
-                </Button>
-              </>
-            )}
-          </div>
-        </Popup>
-      )}
+      <Modal
+        title={'Confirm Approve'}
+        open={modalApprove}
+        onOk={handleApprove}
+        onCancel={() => {
+          setModalApprove(false)
+        }}
+        content={`Are you sure want Approve Stock Reservation - ${props.data.reservation_number}?`}
+        successTitle="Success"
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/approval-stock-reservation`)
+        }}
+        successContent={(res: any) => (
+          <>
+            Stock Reservation
+            <Typography.Text copyable={{ text: props.data.reservation_number as string }}>
+              {props.data.reservation_number}
+            </Typography.Text>
+            has been successfully Approved
+          </>
+        )}
+        successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={'Confirm Reject'}
+        open={modalReject}
+        onOk={handleReject}
+        onCancel={() => {
+          setModalReject(false)
+        }}
+        content={`Are you sure want Reject Stock Reservation - ${props.data.reservation_number}?`}
+        successTitle="Success"
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/approval-stock-reservation`)
+        }}
+        successContent={(res: any) => (
+          <>
+            Stock Reservation
+            <Typography.Text copyable={{ text: props.data.reservation_number as string }}>
+              {props.data.reservation_number}
+            </Typography.Text>
+            has been successfully Rejected
+          </>
+        )}
+        successOkText="OK"
+        width={432}
+      />
     </>
   )
 }

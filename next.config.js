@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const withTM = require('next-transpile-modules')(['react-dnd'])
+
 const nextConfig = {
   //   images: {
   //     domains: ['mdm-portal.nabatisnack.co.id'],
@@ -16,4 +18,4 @@ const nextConfig = {
   devIndicators: { buildActivity: false },
 }
 
-module.exports = nextConfig
+module.exports = withTM(nextConfig)

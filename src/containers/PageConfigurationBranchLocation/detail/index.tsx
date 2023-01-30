@@ -24,9 +24,8 @@ export default function DetailGR() {
     try {
       const res = await doCancelProcess(id)
       return res
-    } catch (error) {
-      console.error(error)
-      return false
+    } catch (err) {
+      return err
     }
   }
 
@@ -40,7 +39,7 @@ export default function DetailGR() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
+        return error
       }
     }
     fetchData()

@@ -4,8 +4,6 @@ interface UserValue {
 }
 
 export const fakeApi = async (username: string): Promise<UserValue[]> => {
-  console.log('fetching user', username)
-
   const res = await fetch('https://randomuser.me/api/?results=5')
     .then((response) => response.json())
     .then(

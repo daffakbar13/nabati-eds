@@ -7,11 +7,13 @@ import { ExclamationBrownIc } from 'src/assets'
 
 import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
 import { useTable, useFilters } from 'src/hooks'
-import { columns } from './columns'
 import { colors } from 'src/configs/colors'
 
-import FreezeSlocModal from './modals/freezeSloc'
 import Pagination from 'src/components/Pagination'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
+import FreezeSlocModal from './modals/freezeSloc'
+import { columns } from './columns'
 
 export default function PageStockAdjustment() {
   const [freezeModal, setFreezeModal] = useState(false)
@@ -41,13 +43,26 @@ export default function PageStockAdjustment() {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
       }
     }
     fetch()
   }, [])
 
-  console.log('hasdata', hasData)
+  const optionsStatus = [
+    { label: 'Pending', value: '00' },
+    { label: 'Done', value: '01' },
+    { label: 'Canceled', value: '02' },
+  ]
+
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
+  const [allSloc, setAllScloc] = useState([])
+
+  useEffect(() => {
+    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+      setAllScloc(response)
+    })
+  }, [branchfrom, branchTo])
 
   return (
     <>
@@ -99,8 +114,8 @@ export default function PageStockAdjustment() {
                 label="Company ID"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="COMPANY" />
-                <SelectMasterData type="COMPANY" />
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
+                <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="branch_id"
@@ -108,8 +123,20 @@ export default function PageStockAdjustment() {
                 label="Branch ID"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="PLANT" />
-                <SelectMasterData type="PLANT" />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="sloc_id"
@@ -117,8 +144,8 @@ export default function PageStockAdjustment() {
                 label="Sloc"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="SLOC" />
-                <SelectMasterData type="SLOC" />
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
@@ -140,13 +167,13 @@ export default function PageStockAdjustment() {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="status_data"
+                field="status_id"
                 dataType="S"
                 label="Status"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
+                <Select options={optionsStatus} />
+                <Select options={optionsStatus} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>
@@ -197,6 +224,7 @@ export default function PageStockAdjustment() {
       </Card>
 
       <FreezeSlocModal
+        ListFreezed={freezeList}
         isListFreezed={freezeList.length > 0}
         visible={freezeModal}
         close={() => setFreezeModal(false)}

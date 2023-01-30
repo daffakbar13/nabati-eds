@@ -5,15 +5,8 @@ import { addColumn } from 'src/utils/createColumns'
 
 export const columns = (goToDetail: (id: string) => {}) => [
   addColumn({
-    title: 'ID',
-    dataIndex: 'id',
-    fixed: true,
-    render: (text: string, record: any) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
-    width: 180,
-  }),
-  addColumn({
     title: 'Doc. Number',
-    dataIndex: 'doc_number',
+    dataIndex: 'id',
     fixed: true,
     render: (text: string, record: any) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
     width: 180,

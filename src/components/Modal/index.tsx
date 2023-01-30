@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Modal, Typography, Spin } from 'antd'
 import { Button } from 'pink-lava-ui'
-import { isReactComponent } from 'src/utils/checkChildType'
 import SuccessModal from './success'
 
 interface Props {
@@ -11,7 +10,8 @@ interface Props {
   successContent?: React.ReactNode
   open: boolean
   onOk: () => any
-  onOkSuccess?: (a) => any
+  // eslint-disable-next-line no-unused-vars
+  onOkSuccess?: (e) => any
   onCancel: () => void
   okText?: string
   successOkText?: string
@@ -60,7 +60,6 @@ const ModalCustomize = ({
       close()
     } catch (error) {
       setLoading(false)
-      console.log(error)
     }
   }
 

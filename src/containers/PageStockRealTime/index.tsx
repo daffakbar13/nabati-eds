@@ -9,8 +9,9 @@ import {
   fieldSlocFromBranch,
   fieldProductByCompany,
 } from 'src/configs/fieldFetches'
-import { columns } from './columns'
 import ConfigurationSlocSalesman from 'pages/logistic/sloc-salesman'
+import Pagination from 'src/components/Pagination'
+import { columns } from './columns'
 
 export default function PageRealTime() {
   const [filters, setFilters] = useState([])
@@ -78,7 +79,6 @@ export default function PageRealTime() {
       }
     })
     setdataTable(dataApi)
-    console.log('dataApi ', dataApi)
   }, [table?.state?.data])
 
   return (
@@ -107,7 +107,6 @@ export default function PageRealTime() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />
@@ -154,6 +153,7 @@ export default function PageRealTime() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} dataSource={dataTable} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )

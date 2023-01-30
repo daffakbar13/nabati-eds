@@ -26,6 +26,7 @@ export interface CommonDetailParams {
   shipment_id?: string
   doc_type?: string
   company_id?: string
+  requestNumber?: string
 }
 
 export interface CommonFiltersPayload {

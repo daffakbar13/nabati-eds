@@ -1,5 +1,3 @@
-import React from 'react'
-
 type TitleType = 'list' | 'create' | 'detail' | 'edit'
 
 export interface TitleProps {

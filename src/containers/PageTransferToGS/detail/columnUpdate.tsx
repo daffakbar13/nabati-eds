@@ -6,7 +6,7 @@ import React from 'react'
 import { InputNumber } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldUom } from 'src/configs/fieldFetches'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 interface propsUseTable {
   items: any
@@ -71,20 +71,36 @@ export const useTableAddItem = (props: propsUseTable) => {
   }
 
   const columns = [
-    CreateColumns('No', 'id', false, (text: string, record: any, index: number) => index + 1),
-    CreateColumns('Item Sender', 'product', false, (product, __, index) => `${product}`, 400),
-    CreateColumns('Qty Reservation', 'qty', false, (qty, __, index) => `${qty}`, 130),
-    CreateColumns('UoM', 'uom_id', false, (uom_id, __, index) => `${uom_id}`, 130),
-    CreateColumns(
-      'Qty Residual',
-      'qty_residual',
-      false,
-      (qty_residual, record, index) => (
+    addColumn({
+      title: 'No',
+      dataIndex: 'id',
+      render: (text, record, index) => index + 1,
+      width: 50,
+    }),
+    addColumn({
+      title: 'Item Sender',
+      dataIndex: 'product',
+      width: 400,
+    }),
+    addColumn({
+      title: 'Qty Reservation',
+      dataIndex: 'qty',
+      width: 130,
+    }),
+    addColumn({
+      title: 'UoM',
+      dataIndex: 'uom_id',
+      width: 130,
+    }),
+    addColumn({
+      title: 'Qty Residual',
+      dataIndex: 'qty_residual',
+      render: (text, record, index) => (
         <InputNumber
           disabled={isNullProductId(index)}
-          min={'0'}
+          min={'1'}
           max={data[index].qty}
-          value={qty_residual?.toLocaleString()}
+          value={text?.toLocaleString()}
           onChange={(newVal) => {
             handleChangeData('qty_residual', newVal, index)
             handleChangeData('qty_sold', data[index].qty - newVal, index)
@@ -92,16 +108,15 @@ export const useTableAddItem = (props: propsUseTable) => {
           style={styleInputNumber}
         />
       ),
-      130,
-    ),
-    CreateColumns(
-      'UoM',
-      'uom_id',
-      false,
-      (uom_id, __, index) => (
+      width: 130,
+    }),
+    addColumn({
+      title: 'UoM',
+      dataIndex: 'uom_id',
+      render: (text, record, index) => (
         <DebounceSelect
           type="select"
-          value={uom_id as any}
+          value={text as any}
           options={optionsUom[index] || []}
           disabled={isNullProductId(index)}
           onChange={(e) => {
@@ -109,18 +124,26 @@ export const useTableAddItem = (props: propsUseTable) => {
           }}
         />
       ),
-      150,
-    ),
-    CreateColumns('Qty Sold', 'qty_sold', false, (qty_sold, __, index) => `${qty_sold}`, 130),
-    CreateColumns(
-      'UoM',
-      'qty_sold_uom',
-      false,
-      (qty_sold_uom, __, index) => `${qty_sold_uom}`,
-      130,
-    ),
-    CreateColumns('Batch', 'batch', false),
-    CreateColumns('Remarks', 'remarks', false),
+      width: 150,
+    }),
+    addColumn({
+      title: 'Qty Sold',
+      dataIndex: 'qty_sold',
+      width: 130,
+    }),
+    addColumn({
+      title: 'UoM',
+      dataIndex: 'qty_sold_uom',
+      width: 130,
+    }),
+    addColumn({
+      title: 'Batch',
+      dataIndex: 'batch',
+    }),
+    addColumn({
+      title: 'Remarks',
+      dataIndex: 'remarks',
+    }),
   ]
 
   React.useEffect(() => {
@@ -128,7 +151,6 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
           fieldUom(product_id).then((value) => {
-            // console.log("value :" + value);
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
               const newUom = uom_id === '' ? value[2]?.value : uom_id

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Row, Col } from 'antd'
+import { Form } from 'antd'
 import { Spacer, Button, Table } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Modal } from 'src/components'
@@ -24,6 +24,7 @@ interface FormData {
 }
 
 export default function CreateSlocModal({ visible = false, close = () => {}, payload }) {
+  const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const router = useRouter()
@@ -35,32 +36,25 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     company_id: 'PP01',
     branch_id: 'P104',
     branch_name: 'PMA Bandung Selatan',
-    GroupByBranch: {
-      sloc_list : tableAddItems.data
-    },
+    GroupByBranch: { sloc_list: tableAddItems.data },
   }
 
   const handleSubmit = async () => {
     const reqBody = { ...initialValue, ...dataForm }
 
-    console.log('post Data', reqBody.GroupByBranch)
     if (!isOnEditMode) {
       try {
-        return await createConfigSloc(reqBody.GroupByBranch)
+        return await createConfigSloc({ branch_id: dataForm?.branch_id, ...reqBody.GroupByBranch })
       } catch (error) {
-        console.error(error)
+        return error
       }
     }
 
     if (isOnEditMode) {
       try {
-        return await updateConfigSloc(
-          reqBody.GroupByBranch,
-          reqBody.company_id as string,
-          reqBody.branch_id as string,
-        )
+        return await updateConfigSloc({ branch_id: dataForm?.branch_id, ...reqBody.GroupByBranch })
       } catch (error) {
-        console.error(error)
+        return error
       }
     }
 
@@ -70,6 +64,13 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
   const handleClose = () => {
     setDataForm(undefined)
     tableAddItems.resetItem()
+    form.setFieldsValue({
+      branch_id: '',
+      sales_org: '',
+      sloc_id: '',
+      sloc_name: '',
+      sloc_type: undefined,
+    })
     close()
   }
 
@@ -92,7 +93,14 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     } else {
       onChangeForm('branch_id', reqBody.branch_id)
       onChangeForm('branch_name', reqBody.branch_name)
-      tableAddItems.handleAddItem(reqBody)
+      tableAddItems.handleAddItem({
+        // company_id: payload?.company_id || 'PP01',
+        // branch_id: payload?.branch_id,
+        sales_org: reqBody?.sales_org,
+        sloc_id: reqBody.sloc_id,
+        sloc_name: reqBody.sloc_name,
+        sloc_type: reqBody.sloc_type,
+      })
     }
   }
 
@@ -100,10 +108,6 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     onChangeForm('branch_id', payload?.branch_id)
     onChangeForm('payload data:', payload)
   }, [isOnEditMode, payload])
-
-  useEffect(() => {
-    console.log('data test', dataForm)
-  }, [dataForm])
 
   const content = (
     <>

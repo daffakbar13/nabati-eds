@@ -4,13 +4,13 @@ import { Divider, Typography } from 'antd'
 import { Button, Col, Row, Table, Spacer, Text, DatePickerInput, Input } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
-import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { fieldPoSto } from 'src/configs/fieldFetches'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { createDoSto } from 'src/api/logistic/do-sto'
 import { getGoodReceiptDetail, updateReceipt } from 'src/api/logistic/good-receipt-intra-branch'
+import { useTableAddItem } from './columns'
 
 interface ItemsState {
   company_id: string
@@ -122,7 +122,7 @@ export default function PageGoodReceiptIntraBranchEdit() {
               onClick={() => {
                 updateReceipt(router.query.id, { ...initialValue, ...dataForm })
                   .then((response) => setNewDoSTO(response.data.id))
-                  .catch((e) => console.log(e))
+                  .catch((err) => err)
               }}
             >
               Submit
@@ -207,7 +207,10 @@ export default function PageGoodReceiptIntraBranchEdit() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable={{ text: newDoSTO as string }}> {newDoSTO}</Typography.Text>
+                <Typography.Text copyable={{ text: newDoSTO as string }}>
+                  {' '}
+                  {newDoSTO}
+                </Typography.Text>
                 has been
               </>
             )}

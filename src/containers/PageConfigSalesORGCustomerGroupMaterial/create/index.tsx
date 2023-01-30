@@ -78,9 +78,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const doCreate = async (reqBody: any) => {
@@ -90,9 +89,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const handleSubmit = async () => {
@@ -193,7 +191,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       </Text>
       <InputNumber
         required
-        disabled={placeHolder?.product_id ? false : true}
+        disabled={!placeHolder?.product_id}
         min={'0'}
         value={placeHolder?.min_qty ? placeHolder.min_qty?.toLocaleString() : '0'}
         onChange={(val) => {
@@ -209,7 +207,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         type="select"
         options={optionUom}
         value={placeHolder?.uom_id ? placeHolder.uom_id : ''}
-        disabled={placeHolder?.product_id ? false : true}
+        disabled={!placeHolder?.product_id}
         onChange={(val: any) => {
           onChangeForm('uom_id', val.value)
           changePlaceHolder('uom_id', val.label)

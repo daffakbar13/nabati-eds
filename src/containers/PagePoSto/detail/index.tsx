@@ -110,7 +110,11 @@ export default function PagePoSToDetail() {
             <Divider />
             <div style={{ overflow: 'scroll' }}>
               {data.channel_type === 'MT' ? (
-                <Table scroll={{ x: 'max-content', y: 600 }} columns={columnsMT} data={data.items} />
+                <Table
+                  scroll={{ x: 'max-content', y: 600 }}
+                  columns={columnsMT}
+                  data={data.items}
+                />
               ) : (
                 <Table scroll={{ x: 'max-content', y: 600 }} columns={columns} data={data.items} />
               )}

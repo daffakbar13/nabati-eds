@@ -312,8 +312,6 @@ export const useTableProduct = () => {
     }
   }, [router])
 
-  // console.log(data);
-
   React.useEffect(() => {
     const now = new Date().toISOString()
     setPending((current) => ++current)

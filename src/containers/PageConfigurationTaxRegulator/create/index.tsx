@@ -33,9 +33,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const doCreate = async (reqBody: any) => {
@@ -45,14 +44,12 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const handleSubmit = async () => {
     const values = form.getFieldsValue(true)
-    console.log('values', values)
     const reqBody = {
       company_id: values.company_id.value,
       tax_subject: values.tax_subject,
@@ -83,12 +80,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   useEffect(() => {
     // form.resetFields()
     if (!isOnEditMode) return
-    console.log('payload', payload)
     const fetchData = async () => {
       try {
         setLoading(true)
         const res = await getConfigTaxRegulatorDetail(payload.company_id, payload.tax_subject)
-        console.log('res', res)
         form.setFieldsValue({
           company_id: {
             value: res?.data?.company_id,
@@ -104,7 +99,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
+        return error
       }
     }
 

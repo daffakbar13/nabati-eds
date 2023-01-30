@@ -79,7 +79,6 @@ export const useTableAddItem = (props: propsUseTable) => {
             style={{ color: 'red', margin: 'auto' }}
             onClick={() => {
               handleDeleteRows(index)
-              console.log('delete', index)
             }}
           />
         </div>
@@ -206,7 +205,6 @@ export const useTableAddItem = (props: propsUseTable) => {
           type="input"
           placeholder="e.g Testing"
           onChange={(e) => {
-            console.log(e)
             handleChangeData('remarks', e.target.value, index)
           }}
         />
@@ -220,7 +218,6 @@ export const useTableAddItem = (props: propsUseTable) => {
       data.forEach(({ item, uom, based_price }, index) => {
         if (item !== '') {
           fieldUom(item).then((value) => {
-            // console.log('value :', value)
             const newOptionsUom = [...optionsUom]
             if (value[2]?.value) {
               const newUom = uom === '' ? value[2]?.value : uom
@@ -231,10 +228,10 @@ export const useTableAddItem = (props: propsUseTable) => {
             }
 
             if (value[2]?.key) {
-              let newPrice = based_price === 0 ? value[2].key : based_price
+              const newPrice = based_price === 0 ? value[2].key : based_price
               handleChangeData('based_price', newPrice, index)
             } else {
-              let newPrice = based_price
+              const newPrice = based_price
               handleChangeData('based_price', newPrice, index)
             }
 

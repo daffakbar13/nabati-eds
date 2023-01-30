@@ -6,16 +6,15 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Spin, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
-import { MoreOutlined } from '@ant-design/icons'
+import { MoreOutlined, CheckCircleFilled } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getListPoSto, ApproveMultiplePoSto } from 'src/api/logistic/po-sto'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
+import { colors } from 'src/configs/colors'
 import { Props } from './types'
 import { columns } from './columns'
-import { colors } from 'src/configs/colors'
-import { CheckCircleFilled } from '@ant-design/icons'
 
 export default function PageApproval(props: Props) {
   const table = useTable({
@@ -70,9 +69,8 @@ export default function PageApproval(props: Props) {
                     const updateId = filters.map((data, i) => {
                       if (i === idIndex) {
                         return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
                       }
+                      return { ...data }
                     })
                     setFilters(updateId)
                   }
@@ -233,7 +231,7 @@ export default function PageApproval(props: Props) {
                       setShowConfirm('UpdateStatus')
                       setLoading(false)
                     })
-                    .catch((e) => console.log(e))
+                    .catch((err) => err)
                 }}
               >
                 {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
@@ -286,7 +284,7 @@ export default function PageApproval(props: Props) {
                       setShowConfirm('UpdateStatusReject')
                       setLoading(true)
                     })
-                    .catch((e) => console.log(e))
+                    .catch((err) => err)
                 }}
               >
                 {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}

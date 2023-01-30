@@ -17,6 +17,8 @@ import {
 import { useTableAddItem } from './useTableEditable'
 import { getDetailStockAdjustment, updateStockAdjustment } from 'src/api/logistic/stock-adjustment'
 import useDetail from 'src/hooks/useDetail'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
 
 const { Label, LabelRequired } = Text
 
@@ -26,14 +28,16 @@ export default function CreateStockAdjustment() {
   const data: any = useDetail(getDetailStockAdjustment, { id: router.query.id as string }, false)
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
-  const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(true)
 
   const [branchSelected, setBranchSelected] = useState('')
+  const [movementSelected, setMovementSelected] = useState('')
   const tableAddItems = useTableAddItem({
-    idbranch: branchSelected.split(' - ')[0] || '',
+    idbranch: data?.branch_id,
     itemsData: data.items,
+    MovementType: movementSelected,
   })
+  const [allSloc, setAllScloc] = useState([])
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -58,12 +62,9 @@ export default function CreateStockAdjustment() {
       items: tableAddItems.data.map((i) => i),
     }
     try {
-      setLoading(true)
-      const res = await updateStockAdjustment(data.id, data.doc_number, payload)
-      setLoading(false)
+      const res = await updateStockAdjustment(data.id, payload)
       return res
     } catch (error) {
-      setLoading(false)
       const newLocal = false
       return newLocal
     }
@@ -74,6 +75,16 @@ export default function CreateStockAdjustment() {
       setLoading(false)
     } else {
       setLoading(true)
+    }
+
+    if (data.branch_id) {
+      fieldSlocByConfigLogistic(data.branch_id).then((result) => {
+        setAllScloc(result)
+      })
+    }
+
+    if (data.movement_type_id) {
+      setMovementSelected(data.movement_type_id)
     }
   }, [data])
 
@@ -113,94 +124,74 @@ export default function CreateStockAdjustment() {
                 <Form.Item
                   name="movement_type"
                   style={{ marginTop: -12, marginBottom: 0 }}
-                  label={<Label>Movement Type</Label>}
                   initialValue={data?.movement_type_id}
                 >
-                  <Select
-                    loading={loading}
-                    disabled={disableSomeFields}
-                    style={{ marginTop: -8 }}
-                    size="large"
-                    placeholder="Movement Type"
-                    labelInValue
+                  <DebounceSelect
+                    type="select"
+                    label="Movement Type"
+                    required
                     options={[
                       { label: 'Z71 - GR Phys. Inv', value: 'Z71' },
                       { label: 'Z72 - RE GR Phys. Inv', value: 'Z72' },
                     ]}
+                    onChange={(e) => setMovementSelected(e.value)}
                   />
                 </Form.Item>
                 <Form.Item
                   name="document_date"
                   style={{ marginTop: -12, marginBottom: 0 }}
-                  label={<Label>Doc. Date</Label>}
                   initialValue={moment(data?.document_date || now)}
                 >
                   <DatePickerInput
-                    style={{ marginTop: -12 }}
-                    placeholder="Select Date"
-                    size="large"
-                    label=""
                     fullWidth
+                    label="Doc. Date"
                     defaultValue={moment()}
                     format={'DD/MM/YYYY'}
+                    required
                   />
                 </Form.Item>
                 <Form.Item
                   name="branch_id"
                   style={{ marginTop: -12, marginBottom: 0 }}
-                  label={<LabelRequired>Branch</LabelRequired>}
+                  rules={[{ required: true }]}
                   initialValue={`${data?.branch_id} - ${data?.branch_name}`}
                 >
-                  <SelectMasterData
+                  <DebounceSelect
+                    type="select"
+                    label="Branch"
+                    required
+                    fetchOptions={(search) => fieldBranchSupply(search)}
                     onChange={(e) => setBranchSelected(e.value)}
-                    loading={loading}
-                    type="PLANT"
                     disabled
-                    style={{ marginTop: -8 }}
                   />
                 </Form.Item>
                 <Form.Item
                   name="posting_date"
                   style={{ marginTop: -12, marginBottom: 0 }}
-                  label={<Label>Posting Date</Label>}
                   initialValue={moment(data?.posting_date || now)}
                 >
                   <DatePickerInput
-                    style={{ marginTop: -12 }}
-                    placeholder="Select Date"
-                    size="large"
-                    label=""
                     fullWidth
+                    label="Posting Date"
                     defaultValue={moment()}
                     format={'DD/MM/YYYY'}
+                    required
                   />
                 </Form.Item>
                 <Form.Item
                   name="sloc_id"
                   style={{ marginTop: -12, marginBottom: 0 }}
-                  label={<Label>Sloc</Label>}
                   initialValue={data.from_sloc}
                 >
-                  <SelectMasterData
-                    loading={loading}
-                    disabled={disableSomeFields}
-                    type="SLOC"
-                    style={{ marginTop: -8 }}
-                  />
+                  <DebounceSelect type="select" label="Sloc" required options={allSloc} />
                 </Form.Item>
 
                 <Form.Item
                   name="header_text"
                   style={{ marginTop: -12, marginBottom: 0 }}
-                  label={<Label>Header Text</Label>}
                   initialValue={data.header_text}
                 >
-                  <Input
-                    loading={loading}
-                    style={{ marginTop: -12 }}
-                    placeholder="Type"
-                    size="large"
-                  />
+                  <DebounceSelect label="Header Text" type="input" />
                 </Form.Item>
               </div>
             </Form>
@@ -240,9 +231,9 @@ export default function CreateStockAdjustment() {
             successContent={(res: any) => (
               <>
                 Stock Adjusment ID :
-                <Typography.Text copyable={{ text: res?.data.stock_adjustment_id as string }}>
+                <Typography.Text copyable={{ text: res?.data.material_doc_id as string }}>
                   {' '}
-                  {res?.data.stock_adjustment_id}
+                  {res?.data.material_doc_id}
                 </Typography.Text>
                 has been successfully Updated
               </>

@@ -13,7 +13,7 @@ export const columns = [
     title: 'Material',
     dataIndex: 'material',
     fixed: true,
-    // width: 900,
+    sorter: true,
   }),
   addColumn({
     title: 'Branch',

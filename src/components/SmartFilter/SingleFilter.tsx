@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Text, DatePickerInput } from 'pink-lava-ui'
 import { ICFilterAddFolder } from 'src/assets'
-import { FilterOption, OptionType } from 'src/configs/filterType'
+import { OptionType } from 'src/configs/filterType'
 import { CommonSelectValue } from 'src/configs/commonTypes'
 import moment from 'moment'
 import DebounceSelect from '../DebounceSelect'
@@ -52,7 +52,7 @@ export default function SingleFilter({ option: opt, onChange, funcApi, isDate })
           value={opt.fromValue}
           placeholder="Type To Search"
           {...(funcApi && { fetchOptions: funcApi })}
-          onChange={onChangeFromValue}
+          onChange={onChangeFromValue as any}
         />
       )}
       <Text width="fluid" variant="headingSmall" textAlign="center" style={{ fontSize: 16 }}>
@@ -74,7 +74,7 @@ export default function SingleFilter({ option: opt, onChange, funcApi, isDate })
           value={opt.toValue}
           placeholder="Type To Search"
           {...(funcApi && { fetchOptions: funcApi })}
-          onChange={onChangeToValue}
+          onChange={onChangeToValue as any}
         />
       )}
       <ICFilterAddFolder />

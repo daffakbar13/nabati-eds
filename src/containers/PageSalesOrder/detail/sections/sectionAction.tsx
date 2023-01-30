@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { PATH } from 'src/configs/menus'
 import { Text, Button } from 'pink-lava-ui'
-import {  useTitlePage } from 'src/hooks'
+import { useTitlePage } from 'src/hooks'
 import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 
 export default function SectionAction() {

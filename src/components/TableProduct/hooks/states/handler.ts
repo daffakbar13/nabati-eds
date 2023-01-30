@@ -1,6 +1,5 @@
 /* eslint-disable function-paren-newline */
-/* eslint-disable camelcase */
-import { getListProduct, getListProductBySalesman, getPricingByCompany } from 'src/api/master-data'
+import { getListProduct, getPricingByCompany } from 'src/api/master-data'
 import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
 import { DataProduct, States } from './states'
@@ -8,6 +7,7 @@ import { baseReducer } from './reducer'
 
 export function baseHandler(
   state: States,
+  // eslint-disable-next-line no-unused-vars
   dispatch: (args: Parameters<typeof baseReducer>['1']) => void,
 ) {
   function setLoading(payload: boolean) {

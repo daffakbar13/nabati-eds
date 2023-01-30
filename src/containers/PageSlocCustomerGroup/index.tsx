@@ -36,9 +36,8 @@ export default function PageConfigurationSloc() {
         reqBody,
       )
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const table = useTable({

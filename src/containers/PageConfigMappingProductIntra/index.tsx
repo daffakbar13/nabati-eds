@@ -9,10 +9,10 @@ import {
   deleteProductIntraChannel,
 } from 'src/api/logistic/config-mapping-product-intra'
 import { useTable } from 'src/hooks'
-import { columns } from './columns'
 import { colors } from 'src/configs/colors'
 import Popup from 'src/components/Popup'
 import { PATH } from 'src/configs/menus'
+import { columns } from './columns'
 
 import CreateModal from './create'
 
@@ -53,19 +53,15 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }, [filters])
 
   useEffect(() => {
-    const ArrayFiltered = table.state.data.filter((dataAll) => {
-      return table.state.selected.some((selected) => {
-        return dataAll.product_gt === selected
-      })
-    })
+    const ArrayFiltered = table.state.data.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.product_gt === selected),
+    )
 
-    const DeletedData = ArrayFiltered.map((item: any) => {
-      return {
-        company_id: item.company_id,
-        trans_type: item.trans_type,
-        product_gt: item.product_gt,
-      }
-    })
+    const DeletedData = ArrayFiltered.map((item: any) => ({
+      company_id: item.company_id,
+      trans_type: item.trans_type,
+      product_gt: item.product_gt,
+    }))
 
     setSelectedData(DeletedData)
   }, [table.state.selected])
@@ -94,9 +90,8 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
                     const updateId = filters.map((data, i) => {
                       if (i === idIndex) {
                         return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
                       }
+                      return { ...data }
                     })
                     setFilters(updateId)
                   }
@@ -187,8 +182,8 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
               variant="primary"
               onClick={() => {
                 deleteProductIntraChannel(selectedData)
-                  .then((response) => setShowConfirm('Delete'))
-                  .catch((e) => console.log(e))
+                  .then(() => setShowConfirm('Delete'))
+                  .catch((err) => err)
               }}
             >
               Delete

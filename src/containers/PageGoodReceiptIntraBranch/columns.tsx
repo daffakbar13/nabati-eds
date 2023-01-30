@@ -63,7 +63,7 @@ function Linked({
 
 export const columns = [
   addColumn({
-    title: 'Item PO',
+    title: 'PO Number',
     dataIndex: 'po_number',
     render: (po_number, rows, index) => <Linked link={po_number} type="id" linkType="PO" />,
     width: 180,
@@ -97,6 +97,7 @@ export const columns = [
         )}
       </>
     ),
+    sorter: true,
     width: 180,
     fixed: true,
   }),

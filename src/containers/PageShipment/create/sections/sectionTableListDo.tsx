@@ -11,7 +11,7 @@ import { useSalesShipmentCreateContext } from '../states'
 
 export default function SectionTableListDo() {
   const {
-    state: { table, showModalListDO },
+    state: { table, showModalListDO, filter },
     handler: { handleModalListDO },
   } = useSalesShipmentCreateContext()
 
@@ -39,7 +39,11 @@ export default function SectionTableListDo() {
           )}
         </div>
       </Row>
-      <Table {...table.state.tableProps} rowKey={'delivery_order_id'} />
+      <Table
+        {...table.state.tableProps}
+        rowKey={'delivery_order_id'}
+        {...(filter.branch === '' && { dataSource: [] })}
+      />
       {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
     </div>
   )

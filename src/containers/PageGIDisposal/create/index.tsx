@@ -1,75 +1,128 @@
-import { Divider, Form } from 'antd'
+/* eslint-disable camelcase */
+import { useEffect, useState } from 'react'
 import moment from 'moment'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
-
-import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { Card, Input, Modal, Select, SelectMasterData, Text } from 'src/components'
-
+import { Divider, Typography, Form } from 'antd'
+import { Button, Col, Row, Spacer, Text, DatePickerInput, Table, Input } from 'pink-lava-ui'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { Card, Modal } from 'src/components'
+import useTitlePage from 'src/hooks/useTitlePage'
 import { createBadStock } from 'src/api/logistic/bad-stock'
+import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
+import { fieldBranchSupply } from 'src/configs/fieldFetches'
+import { useTableAddItem } from './columns'
 
-import { useTableAddItem } from './useTableEditable'
+interface ItemsState {
+  product_id: string
+  qty: string
+  uom_qty: string
+  batch: string
+  remarks: string
+}
+interface dataForm {
+  branch_id: string
+  requirement_date: string
+  header_text: string
+  movement_type_id: string
+  sloc_id: string
+  items: Array<ItemsState>
+}
 
-const { Label, LabelRequired } = Text
-
-export default function CreateBsReservation() {
+export default function PageCreateQuotation() {
   const [form] = Form.useForm()
-  const [headerData, setHeaderData] = useState(null)
-  const [disableSomeFields, setDisableSomeFields] = useState(false)
-  const [loading, setLoading] = useState(false)
-
-  const [branchSelected, setBranchSelected] = useState('')
-  const tableAddItems = useTableAddItem({ idbranch: branchSelected.split(' - ')[0] || '' })
-
-  // Modal
-  const [showCancelModal, setShowCancelModal] = useState(false)
-  const [showSubmitModal, setShowSubmitModal] = useState(false)
-
+  const now = new Date().toISOString()
+  const [dataForm, setDataForm] = useState<dataForm>()
+  const [cancel, setCancel] = useState(false)
+  const [modalCreate, setModalCreate] = useState(false)
+  const [disabledButton, setDisabledButton] = useState(false)
   const router = useRouter()
+  const [supplyingBranch, setSupplyingBranch] = useState('')
+  const [movementTypeLabel, setMovementTypeLabel] = useState('')
+  const [sLocLabel, setSLocLabel] = useState('')
+  const [selectedRow, setSelectedRow] = useState<number>()
+  const [modalDelete, setModalDelete] = useState(false)
 
-  const onClickSubmit = async () => {
+  const HandleDeleteRow = (row: any) => {
+    setSelectedRow(row)
+    setModalDelete(true)
+  }
+
+  const tableAddItems = useTableAddItem(
+    { idbranch: supplyingBranch.split(' - ')[0] || '' },
+    HandleDeleteRow,
+  )
+
+  const initialValue = {
+    branch_id: 'P104',
+    requirement_date: moment(now).format('YYYY-MM-DD'),
+    header_text: '',
+    movement_type_id: '555',
+    sloc_id: 'BS00',
+    items: tableAddItems.data,
+  }
+
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
+  const handleButtonSubmit = async () => {
     const values = await form.validateFields()
-    setHeaderData(values)
-    setShowSubmitModal(true)
+    setModalCreate(true)
   }
 
   const handleCreate = async () => {
-    const payload: any = {
-      branch_id: headerData?.branch_id?.value,
-      requirement_date: moment(headerData?.requirement_date).format('YYYY-MM-DD'),
-      header_text: headerData?.header_text,
-      movement_type_id: '555',
-      sloc_id: headerData?.sloc_id?.value,
-      items: tableAddItems.data.map((i) => i),
-    }
-
-    console.log('payload', payload)
     try {
-      setLoading(true)
-      const res = await createBadStock(payload)
-      setLoading(false)
-      return res
+      return await createBadStock({ ...initialValue, ...dataForm })
     } catch (error) {
-      setLoading(false)
-      const newLocal = false
-      return newLocal
+      return error
     }
   }
 
-  console.log('tableAddItems', tableAddItems)
+  useEffect(() => {
+    if (tableAddItems?.data?.length > 0 && tableAddItems?.data?.[0].product_id != '') {
+      setDisabledButton(false)
+    } else {
+      setDisabledButton(true)
+    }
+  }, [tableAddItems?.data])
+
+  const handleDelete = async () => {
+    const fieldRow = selectedRow + 1
+    tableAddItems.handleDeleteRows(selectedRow)
+    form.setFieldsValue({
+      [`Item.${fieldRow}`]: '',
+      // ['Qty.' + fieldRow]: '',
+      // ['UoM.' + fieldRow]: '',
+      [`Batch.${fieldRow}`]: '',
+      [`Remarks.${fieldRow}`]: '',
+    })
+    setModalDelete(false)
+  }
 
   return (
     <Col>
-      <Title variant={'h4'}>Create BS Reservation</Title>
+      <Text variant={'h4'}>Create BS Reservation</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
-            <Button size="big" variant="tertiary" onClick={() => setShowCancelModal(true)}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => {
+                setCancel(true)
+              }}
+            >
               Cancel
             </Button>
-            <Button size="big" variant="primary" onClick={onClickSubmit}>
+            <Button
+              size="big"
+              variant="primary"
+              disabled={disabledButton}
+              onClick={() => {
+                handleButtonSubmit()
+              }}
+            >
               Submit
             </Button>
           </Row>
@@ -85,115 +138,134 @@ export default function CreateBsReservation() {
           requiredMark={false}
           scrollToFirstError
         >
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <Form.Item
-              name="branch_id"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Branch</LabelRequired>}
-              rules={[{ required: true }]}
-            >
-              <SelectMasterData
-                onChange={(e) => setBranchSelected(e.value)}
-                loading={loading}
-                type="PLANT"
-                style={{ marginTop: -8 }}
-              />
-            </Form.Item>
-            <Form.Item
-              name="movement_type_id"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Movement Type</Label>}
-            >
-              <Select
-                loading={loading}
-                disabled={disableSomeFields}
-                style={{ marginTop: -8 }}
-                size="large"
-                placeholder="Movement Type"
-                labelInValue
-                options={[
-                  { label: '555 - Withdrawal for scrapping from blocked stock', value: '555' },
-                  { label: 'Z71 - GR Phys. Inv', value: 'Z71' },
-                  { label: 'Z72 - RE GR Phys. Inv', value: 'Z72' },
-                ]}
-              />
-            </Form.Item>
-            <Form.Item
-              name="requirement_date"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Requirement Date</Label>}
-            >
-              <DatePickerInput
-                style={{ marginTop: -12 }}
-                placeholder="Select Date"
-                size="large"
-                label=""
-                fullWidth
-                format={'DD/MM/YYYY'}
-              />
-            </Form.Item>
-            <Form.Item
-              name="sloc_id"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Sloc</Label>}
-            >
-              <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="SLOC"
-                style={{ marginTop: -8 }}
-              />
-            </Form.Item>
-            <Form.Item
-              name="header_text"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Header Text</Label>}
-            >
-              <Input loading={loading} style={{ marginTop: -12 }} placeholder="Type" size="large" />
-            </Form.Item>
+          <div style={{ display: 'flex', gap: 20 }}>
+            <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
+              <Form.Item
+                name="branch_id"
+                style={{ marginTop: -12, marginBottom: 0 }}
+                rules={[{ required: true }]}
+              >
+                <DebounceSelect
+                  type="select"
+                  label="Branch"
+                  required
+                  fetchOptions={(search) => fieldBranchSupply(search, '')}
+                  onChange={(val: any) => {
+                    onChangeForm('branch_id', val.label.split(' - ')[0])
+                    setSupplyingBranch(val.label.split(' - ')[0])
+                    setMovementTypeLabel('555 - Withdrawal for scrapping from blocked stock')
+                    setSLocLabel('BS00 - Bad Stock')
+                  }}
+                  value={supplyingBranch}
+                />
+              </Form.Item>
+              <Form.Item name="requirement_date" style={{ marginTop: -12, marginBottom: 0 }}>
+                <DatePickerInput
+                  fullWidth
+                  onChange={(val: any) => {
+                    onChangeForm('requirement_date', moment(val).format('YYYY-MM-DD'))
+                  }}
+                  label="Requirement Date"
+                  defaultValue={moment()}
+                  format={'DD-MMM-YYYY'}
+                  required
+                />
+              </Form.Item>
+              <Form.Item name="header_text" style={{ marginTop: -12, marginBottom: 0 }}>
+                <DebounceSelect
+                  type="input"
+                  label="Header Text"
+                  placeholder="Type Here..."
+                  onChange={(e: any) => {
+                    onChangeForm('header_text', e.target.value)
+                  }}
+                />
+              </Form.Item>
+            </div>
+            <div style={{ display: 'flex', gap: 15, flexDirection: 'column', flexGrow: 1 }}>
+              <Form.Item name="movement_type" style={{ marginTop: -12, marginBottom: 0 }}>
+                <DebounceSelect
+                  type="input"
+                  label="Movement Type"
+                  placeholder={movementTypeLabel}
+                  disabled
+                />
+              </Form.Item>
+              <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
+                <DebounceSelect type="input" label="SLoc" placeholder={sLocLabel} disabled />
+              </Form.Item>
+            </div>
           </div>
+          <Divider style={{ borderColor: '#AAAAAA' }} />
+          <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+            <Table
+              scroll={{ x: 'max-content', y: 600 }}
+              editable
+              data={tableAddItems.data}
+              columns={tableAddItems.columns}
+              loading={tableAddItems.loading}
+            />
+          </div>
+          <Spacer size={20} />
+          {dataForm?.branch_id ? (
+            <Button
+              size="big"
+              type="button"
+              variant="tertiary"
+              onClick={tableAddItems.handleAddItem}
+            >
+              + Add Item
+            </Button>
+          ) : (
+            ''
+          )}
         </Form>
-        <Divider style={{ borderColor: '#AAAAAA' }} />
-
-        {branchSelected && (
-          <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-            + Add Item
-          </Button>
-        )}
-
-        <Spacer size={20} />
-        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            scroll={{ x: 'max-content', y: 600 }}
-            editable
-            data={tableAddItems.data}
-            columns={tableAddItems.columns}
-            loading={tableAddItems.loading}
-          />
-        </div>
       </Card>
-
       <Modal
-        open={showCancelModal}
-        onOk={() => router.back()}
-        onCancel={() => setShowCancelModal(false)}
-        title="Confirm Cancellation"
-        content="Are you sure want to cancel ? Change you made so far
-        will not be saved"
+        title={'Confirm Cancellation'}
+        open={cancel}
+        onOk={() => {
+          router.push(`${PATH.LOGISTIC}/gi-disposal`)
+        }}
+        onCancel={() => {
+          setCancel(false)
+        }}
+        content={'Are you sure want to cancel? Change you made so far will not saved'}
+        width={432}
       />
-
       <Modal
-        open={showSubmitModal}
+        title={'Confirm Submit'}
+        open={modalCreate}
         onOk={handleCreate}
-        onCancel={() => setShowSubmitModal(false)}
-        title="Confirm Submit"
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gi-disposal`)}
-        content="Are you sure want Submit BS Reservation?"
-        successContent={(res: any) =>
-          // eslint-disable-next-line implicit-arrow-linebreak
-          `BS Reservation Number ${res?.data} has been successfully created`
-        }
+        onCancel={() => {
+          setModalCreate(false)
+        }}
+        content={'Are you sure want to Submit This BS Reservation?'}
+        successTitle="Success"
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/gi-disposal`)
+        }}
+        successContent={(res: any) => (
+          <>
+            BS Reservation
+            <Typography.Text copyable={{ text: res?.data as string }}> {res?.data}</Typography.Text>
+            has been successfully created
+          </>
+        )}
         successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={'Confirm Delete Item BS Reservation'}
+        open={modalDelete}
+        onOk={handleDelete}
+        onCancel={() => {
+          setModalDelete(false)
+        }}
+        content={'Are you sure want to Delete This BS Reservation ?'}
+        successTitle="Success"
+        successOkText="OK"
+        width={432}
       />
     </Col>
   )

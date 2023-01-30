@@ -10,8 +10,8 @@ import FloatAction from 'src/components/FloatAction'
 import { getListBadStock } from 'src/api/logistic/bad-stock'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
-import { column } from './columns'
 import { colors } from 'src/configs/colors'
+import { column } from './columns'
 
 export default function PageIntraSlocRequest() {
   const [branchfrom, setBranchFrom] = useState('')
@@ -37,29 +37,22 @@ export default function PageIntraSlocRequest() {
   }
 
   const statusOption = [
-    { label: 'Approved', value: '01' },
     { label: 'Wait For Approval', value: '00' },
+    { label: 'Approved', value: '01' },
+    { label: 'Rejected', value: '02' },
   ]
   const movTypeOption = [
     { label: '555 - Withdrawal for scrapping from blocked stock', value: '555' },
   ]
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
-
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'reservation_number',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Reservation Number',
+    ['reservation_number'],
+  )
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
-      console.log('response Branch', response)
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
@@ -71,42 +64,7 @@ export default function PageIntraSlocRequest() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by Reservation Number"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => {
-                setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field === 'id')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field !== 'id'))
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      }
-                      return { ...data }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'id',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+          <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
@@ -118,7 +76,7 @@ export default function PageIntraSlocRequest() {
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_branch_id"
+                field="branch_id"
                 dataType="S"
                 label="Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
@@ -127,7 +85,6 @@ export default function PageIntraSlocRequest() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchFrom(val.label.split(' - ')[0])
                   }}
                 />
@@ -135,13 +92,12 @@ export default function PageIntraSlocRequest() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="suppl_sloc_id"
+                field="sloc_id"
                 dataType="S"
                 label="SLoc"
                 options={['EQ', 'NE', 'BT', 'NB']}

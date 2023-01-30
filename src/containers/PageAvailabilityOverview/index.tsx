@@ -1,29 +1,22 @@
 import { useRouter } from 'next/router'
-import { Col, Row, Spacer, Table, Text, Button } from 'pink-lava-ui'
+import { Col, Row, Spacer, Table, Text, Button, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import {
-  Card,
-  Select,
-  SearchQueryParams,
-  SmartFilter,
-  DownloadButton,
-  SelectMasterData,
-} from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import {
   exportExcelAvailabilityOverview,
   getAvailabilityOverview,
 } from 'src/api/logistic/availability-overview'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import {
   fieldBranchAll,
   fieldSlocFromBranch,
   fieldProductByCompany,
 } from 'src/configs/fieldFetches'
 import { columns } from './columns'
+import Pagination from 'src/components/Pagination'
 
 export default function PageAvailabilityOverview() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
   const [allSloc, setAllScloc] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
@@ -37,13 +30,14 @@ export default function PageAvailabilityOverview() {
     data,
   })
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Branch, Material, Sloc',
+    ['branch_id', 'product_id', 'sloc_id'],
+  )
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
-      console.log('response Branch', response)
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
@@ -102,32 +96,31 @@ export default function PageAvailabilityOverview() {
             available_in_large: itemChild?.available.total_in_large || '',
           })),
         }
-      } else {
-        return {
-          key: index,
-          branch: `${item?.branch_id} - ${item?.branch_name}`,
-          material: `${item?.GroupByProduct?.[0].product_id} - ${item?.GroupByProduct?.[0].product_name}`,
-          sloc: item?.GroupByProduct?.[0].sloc_id,
-          status: item?.GroupByProduct?.[0].status_data_name,
-          status_data: item?.GroupByProduct?.[0].status_data
-            ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
-            : '',
-          stock_large: item?.GroupByProduct?.[0].stock.large || '',
-          stock_middle: item?.GroupByProduct?.[0].stock.middle || '',
-          stock_small: item?.GroupByProduct?.[0].stock.small || '',
-          stock_in_small: item?.GroupByProduct?.[0].stock.total_in_small || '',
-          stock_in_large: item?.GroupByProduct?.[0].stock.total_in_large || '',
-          bo_large: item?.GroupByProduct?.[0].booking_order.large || '',
-          bo_middle: item?.GroupByProduct?.[0].booking_order.middle || '',
-          bo_small: item?.GroupByProduct?.[0].booking_order.small || '',
-          bo_in_small: item?.GroupByProduct?.[0].booking_order.total_in_small || '',
-          bo_in_large: item?.GroupByProduct?.[0].booking_order.total_in_large || '',
-          available_large: item?.GroupByProduct?.[0].available.large || '',
-          available_middle: item?.GroupByProduct?.[0].available.middle || '',
-          available_small: item?.GroupByProduct?.[0].available.small || '',
-          available_in_small: item?.GroupByProduct?.[0].available.total_in_small || '',
-          available_in_large: item?.GroupByProduct?.[0].available.total_in_large || '',
-        }
+      }
+      return {
+        key: index,
+        branch: `${item?.branch_id} - ${item?.branch_name}`,
+        material: `${item?.GroupByProduct?.[0].product_id} - ${item?.GroupByProduct?.[0].product_name}`,
+        sloc: item?.GroupByProduct?.[0].sloc_id,
+        status: item?.GroupByProduct?.[0].status_data_name,
+        status_data: item?.GroupByProduct?.[0].status_data
+          ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
+          : '',
+        stock_large: item?.GroupByProduct?.[0].stock.large || '',
+        stock_middle: item?.GroupByProduct?.[0].stock.middle || '',
+        stock_small: item?.GroupByProduct?.[0].stock.small || '',
+        stock_in_small: item?.GroupByProduct?.[0].stock.total_in_small || '',
+        stock_in_large: item?.GroupByProduct?.[0].stock.total_in_large || '',
+        bo_large: item?.GroupByProduct?.[0].booking_order.large || '',
+        bo_middle: item?.GroupByProduct?.[0].booking_order.middle || '',
+        bo_small: item?.GroupByProduct?.[0].booking_order.small || '',
+        bo_in_small: item?.GroupByProduct?.[0].booking_order.total_in_small || '',
+        bo_in_large: item?.GroupByProduct?.[0].booking_order.total_in_large || '',
+        available_large: item?.GroupByProduct?.[0].available.large || '',
+        available_middle: item?.GroupByProduct?.[0].available.middle || '',
+        available_small: item?.GroupByProduct?.[0].available.small || '',
+        available_in_small: item?.GroupByProduct?.[0].available.total_in_small || '',
+        available_in_large: item?.GroupByProduct?.[0].available.total_in_large || '',
       }
     })
     setdataTable(dataApi)
@@ -140,7 +133,7 @@ export default function PageAvailabilityOverview() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
                 field="branch_id"
@@ -159,7 +152,6 @@ export default function PageAvailabilityOverview() {
                   type="select"
                   fetchOptions={fieldBranchAll}
                   onChange={(val: any) => {
-                    console.log('branch changed')
                     setBranchTo(val.label.split(' - ')[0])
                   }}
                 />
@@ -206,6 +198,7 @@ export default function PageAvailabilityOverview() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} dataSource={dataTable} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )

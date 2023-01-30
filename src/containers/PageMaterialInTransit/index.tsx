@@ -1,30 +1,40 @@
 import { useRouter } from 'next/router'
-import { Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Col, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState } from 'react'
-import {
-  Card,
-  DownloadButton,
-  SearchQueryParams,
-  Select,
-  SelectMasterData,
-  SmartFilter,
-} from 'src/components'
+import { Card, DownloadButton, SmartFilter } from 'src/components'
+import DebounceSelect from 'src/components/DebounceSelect'
 
 import {
   exportExcelMaterialInTransit,
   getMaterialInTransitList,
 } from 'src/api/logistic/material-in-transit'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
+import Pagination from 'src/components/Pagination'
+import {
+  fieldBranchAll,
+  fieldRequestDocumentMaterialInTransit,
+  fieldProductByCompany,
+} from 'src/configs/fieldFetches'
 
 export default function PageMaterialInTransit() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const table = useTable({
     funcApi: getMaterialInTransitList,
     columns,
   })
+
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search By Request Document, Delivery Order Document',
+    ['request_number', 'delivery_order_document'],
+  )
+
+  const statusTransaction = [
+    { label: 'Intra Branch', value: 'Intra Branch' },
+    { label: 'Intra Sloc', value: 'Intra Sloc' },
+  ]
 
   return (
     <Col>
@@ -33,52 +43,52 @@ export default function PageMaterialInTransit() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
-            <SmartFilter onOk={setFilters}>
+            <Search {...searchProps} />
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
-                field="branch_id"
+                field="request_number"
                 dataType="S"
-                label="Branch ID"
+                label="Request Document"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="PLANT" />
-                <SelectMasterData type="PLANT" />
+                <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
+                <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
               </SmartFilter.Field>
+              {/* <SmartFilter.Field
+                field="transaction_type"
+                dataType="S"
+                label="Transaction Type"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" options={statusTransaction} />
+                <DebounceSelect type="select" options={statusTransaction} />
+              </SmartFilter.Field> */}
               <SmartFilter.Field
                 field="product_id"
                 dataType="S"
                 label="Material"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="MATERIAL" />
-                <SelectMasterData type="MATERIAL" />
+                <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
+                <DebounceSelect type="select" fetchOptions={fieldProductByCompany} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="sloc_id"
+                field="receiving_branch_id"
                 dataType="S"
-                label="Sloc"
+                label="Receiving Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <SelectMasterData type="SLOC" />
-                <SelectMasterData type="SLOC" />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="status_data"
+                field="supplying_branch_id"
                 dataType="S"
-                label="Status Data"
+                label="Supplying Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
-              </SmartFilter.Field>
-              <SmartFilter.Field
-                field="status_data"
-                dataType="S"
-                label="Status"
-                options={['EQ', 'NE', 'BT', 'NB']}
-              >
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
-                <Select options={[{ label: 'YES', value: 'yes' }]} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>
@@ -92,6 +102,7 @@ export default function PageMaterialInTransit() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )

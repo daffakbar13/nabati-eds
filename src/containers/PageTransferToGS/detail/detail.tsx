@@ -36,7 +36,9 @@ export default function TransferToGSDetail(props: propsDetail) {
     createDataList('Posting Date', dateFormat(props.data.posting_date)),
     createDataList(
       'Header Text',
-      props.data.header_text !== '' && props.data.header_text !== null ? props.data.header_text : '-',
+      props.data.header_text !== '' && props.data.header_text !== null
+        ? props.data.header_text
+        : '-',
     ),
 
     // row 3

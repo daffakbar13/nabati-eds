@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SearchQueryParams, SmartFilter, Modal } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
@@ -10,13 +10,14 @@ import FloatAction from 'src/components/FloatAction'
 import {
   getListApprovalReservation,
   UpdateApprovalReservationMultiple,
+  UpdateRejectReservationMultiple,
 } from 'src/api/logistic/approve-stock-reservation'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldSloc, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { column } from './columns'
 import { colors } from 'src/configs/colors'
 import { CheckCircleFilled } from '@ant-design/icons'
+import { column } from './columns'
 
 export default function PageStockReservation() {
   const table = useTable({
@@ -25,7 +26,9 @@ export default function PageStockReservation() {
     haveCheckBox: [{ rowKey: 'status_name', member: ['Wait For Approval'] }],
   })
 
-  const [showConfirm, setShowConfirm] = React.useState('')
+  const [showConfirm, setShowConfirm] = useState('')
+  const [modalApprove, setModalApprove] = useState(false)
+  const [modalReject, setModalReject] = useState(false)
   const hasData = table.state.total > 0
   const router = useRouter()
   const oneSelected = table.state.selected.length === 1
@@ -44,7 +47,32 @@ export default function PageStockReservation() {
     { label: 'Wait For Approval', value: '00' },
   ]
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Reservation Number',
+    ['reservation_number'],
+  )
+
+  const handleApprove = async () => {
+    try {
+      return await UpdateApprovalReservationMultiple({
+        status_id: '03',
+        id_reservations: table.state.selected,
+      })
+    } catch (error) {
+      return error
+    }
+  }
+  const handleReject = async () => {
+    try {
+      return await UpdateRejectReservationMultiple({
+        status_id: '02',
+        id_reservations: table.state.selected,
+      })
+    } catch (error) {
+      return error
+    }
+  }
 
   return (
     <Col>
@@ -53,45 +81,7 @@ export default function PageStockReservation() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by Reservation Number"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => {
-                setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field == 'reservation_number')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) =>
-                      oldFilter.filter((data) => data?.field != 'reservation_number'),
-                    )
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
-                      }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'reservation_number',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
@@ -170,106 +160,85 @@ export default function PageStockReservation() {
               <b>{table.state.selected.length} Document Stock Reservation are Selected</b>
             </div>
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
-              <Button size="big" variant="tertiary" onClick={() => {}}>
-                Cancel Process
+              <Button
+                size="big"
+                variant="tertiary"
+                onClick={() => {
+                  setModalReject(true)
+                }}
+              >
+                Reject
               </Button>
               <Button
                 size="big"
                 variant="primary"
                 onClick={() => {
-                  setShowConfirm('submit')
+                  setModalApprove(true)
                 }}
               >
-                Submit
+                Approve
               </Button>
             </div>
           </FloatAction>
         )}
-        {showConfirm === 'submit' && (
-          <Popup
-            onOutsideClick={() => {
-              setShowConfirm('')
-            }}
-          >
-            <Typography.Title level={3} style={{ margin: 0 }}>
-              Confirm Submit
-            </Typography.Title>
-            <Typography.Title level={5} style={{ margin: 0 }}>
-              Are you sure to submit Stock Reservation
-              {oneSelected ? (
-                ` ${selectedQuotation.text} ?`
-              ) : (
-                <Popover content={selectedQuotation.content}>
-                  {` ${selectedQuotation.text} ?`}
-                </Popover>
-              )}
-            </Typography.Title>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="secondary"
-                onClick={() => {
-                  setShowConfirm('')
-                }}
-              >
-                Cancel Proccess
-              </Button>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="primary"
-                onClick={() => {
-                  UpdateApprovalReservationMultiple({
-                    status_id: '01',
-                    id_reservations: table.state.selected,
-                  })
-                    .then((response) => setShowConfirm('UpdateStatus'))
-                    .catch((e) => console.log(e))
-                }}
-              >
-                Submit
-              </Button>
-            </div>
-          </Popup>
-        )}
-
-        {showConfirm === 'UpdateStatus' && (
-          <Popup>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-              <Text
-                textAlign="center"
-                style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-              >
-                <>
-                  <CheckCircleFilled /> Update Status Stock Reservation Success
-                </>
-              </Text>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                gap: 4,
-                flexDirection: 'column',
-                textAlign: 'center',
-              }}
-            >
-              <div> successfully update status stock reservation success</div>
-            </div>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Button
-                size="big"
-                style={{ flexGrow: 1 }}
-                variant="primary"
-                onClick={() => {
-                  router.push('/logistic/approval-stock-reservation')
-                }}
-              >
-                OK
-              </Button>
-            </div>
-          </Popup>
-        )}
+        <Modal
+          title={'Confirm Reject'}
+          open={modalReject}
+          onOk={handleReject}
+          onCancel={() => {
+            setModalReject(false)
+          }}
+          content={
+            <>
+              <Typography.Title level={5} style={{ margin: 0 }}>
+                Are you sure to Reject Stock Reservation
+                {oneSelected ? (
+                  ` ${selectedQuotation.text} ?`
+                ) : (
+                  <Popover content={selectedQuotation.content}>
+                    {` ${selectedQuotation.text} ?`}
+                  </Popover>
+                )}
+              </Typography.Title>
+            </>
+          }
+          successTitle="Success"
+          onOkSuccess={() => {
+            router.push('/logistic/approval-stock-reservation')
+          }}
+          successContent={(res: any) => <>Stock Reservation has been successfully Rejected</>}
+          successOkText="OK"
+          width={550}
+        />
+        <Modal
+          title={'Confirm Approve'}
+          open={modalApprove}
+          onOk={handleApprove}
+          onCancel={() => {
+            setModalApprove(false)
+          }}
+          content={
+            <>
+              <Typography.Title level={5} style={{ margin: 0 }}>
+                Are you sure to Approve quotation
+                {oneSelected ? (
+                  ` ${selectedQuotation.text} ?`
+                ) : (
+                  <Popover content={selectedQuotation.content}>
+                    {` ${selectedQuotation.text} ?`}
+                  </Popover>
+                )}
+              </Typography.Title>
+            </>
+          }
+          successTitle="Success"
+          onOkSuccess={() => {
+            router.push('/logistic/approval-stock-reservation')
+          }}
+          successContent={(res: any) => <>Stock Reservation has been successfully Rejected</>}
+          successOkText="OK"
+          width={550}
+        />
       </Card>
     </Col>
   )

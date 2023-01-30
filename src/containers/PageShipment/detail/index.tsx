@@ -17,14 +17,13 @@ import Loader from 'src/components/Loader'
 import moment from 'moment'
 import { ArrowLeftOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { PATH } from 'src/configs/menus'
-import { PageShipmentDetailProps } from './types'
 import AllTabs from './tabs'
 import DocumentHeader from './tabs/DocumentHeader'
 import BPB from './tabs/BPB'
 import HPH from './tabs/HPH'
 import BSTF from './tabs/BSTF'
 
-export default function PageShipmentDetail(props: PageShipmentDetailProps) {
+export default function PageShipmentDetail() {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
   const [showConfirm, setShowConfirm] = React.useState('')
@@ -77,10 +76,14 @@ export default function PageShipmentDetail(props: PageShipmentDetailProps) {
           variant="primary"
           onClick={() => {
             setProcessing('Wait For PGI')
-            PGIShipment(router.query.id as string, { posting_date: postingDate }).then(() => {
-              setProcessing('')
-              setShowConfirm('success-pgi')
-            })
+            PGIShipment(router.query.id as string, { posting_date: postingDate })
+              .then(() => {
+                setProcessing('')
+                setShowConfirm('success-pgi')
+              })
+              .catch(() => {
+                setProcessing('')
+              })
           }}
         >
           Yes

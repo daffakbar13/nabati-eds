@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { Button, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, SmartFilter } from 'src/components'

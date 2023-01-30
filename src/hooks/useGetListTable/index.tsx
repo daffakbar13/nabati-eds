@@ -67,7 +67,6 @@ export default function useSimpleTable({ columns, funcApi, filters = [] }) {
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error(error)
       }
     }
 

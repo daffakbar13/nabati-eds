@@ -16,11 +16,9 @@ export default function SectionAction() {
   const {
     state: { table },
   } = useSalesQuotationListContext()
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search Quotation ID',
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Quotation ID', [
     'eds_order.id',
-  )
+  ])
   const router = useRouter()
   const componentRef = React.useRef()
   const statusOption = [

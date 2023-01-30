@@ -63,7 +63,7 @@ export default function ConfirmCancel() {
                 showConfirm('success-cancel')
                 stopProcess()
               })
-              .catch((err) => console.log(err))
+              .catch((err) => err)
           }}
         >
           Yes

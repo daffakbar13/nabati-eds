@@ -91,6 +91,23 @@ export function useTableProduct() {
           fixed: true,
         }),
         addColumn({
+          title: 'Item Category',
+          dataIndex: 'item_category',
+          render: (item_category, _, index) => (
+            <DebounceSelect
+              type="select"
+              value={item_category as any}
+              options={[{ label: 'Test 1' }, { label: 'Test 2' }]}
+              disabled={isNullProduct(index)}
+              onChange={(e) => {
+                handleChangeUom(e.value, index)
+              }}
+            />
+          ),
+          width: 150,
+          // fixed: true,
+        }),
+        addColumn({
           title: 'Uom',
           dataIndex: 'uom_id',
           render: (uom_id, _, index) => (
@@ -105,7 +122,7 @@ export function useTableProduct() {
             />
           ),
           width: 150,
-          fixed: true,
+          // fixed: true,
         }),
         addColumn({
           title: 'Quantity',
@@ -146,8 +163,6 @@ export function useTableProduct() {
                 value={discOption}
                 bordered={false}
                 onChange={(e) => {
-                  console.log(e)
-
                   handleChangeDiscOption(e, index)
                 }}
               >

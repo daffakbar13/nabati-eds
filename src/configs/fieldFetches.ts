@@ -43,7 +43,9 @@ import { getListDoSto } from 'src/api/logistic/do-sto'
 import { getDetailProductIntraChannel } from 'src/api/logistic/config-mapping-product-intra'
 import { CommonListParams } from 'src/api/types'
 import { concatString } from 'src/utils/concatString'
-import { getPoNumberList } from 'src/api/logistic/good-receipt'
+import { getPoNumberList, getGoodReceiptList } from 'src/api/logistic/good-receipt'
+import { getDeliveryOrderList } from 'src/api/delivery-order'
+import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -137,21 +139,6 @@ export function fieldSalesOrg(search: string) {
           name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 1)
-      .map(({ id, name }) => ({
-        label: [id, name].join(' - '),
-        value: id,
-      })),
-  )
-}
-
-export function fieldSalesOfficeByCompany(search: string, companyId?: string) {
-  return getSalesOfficeByCompany(companyId).then((result) =>
-    result.data
-      .filter(
-        ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
-      )
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,
@@ -298,7 +285,7 @@ export function fieldBranchAll(search: string) {
       .map(({ id, name, branch_type }) => ({
         label: [id, name].join(' - '),
         value: id,
-        // key: branch_type,
+        key: branch_type,
       })),
   )
 }
@@ -693,23 +680,23 @@ export function fieldPoGRPrincipal(search: string) {
       {
         field: 'po_number',
         option: 'CP',
-        from_value: `${search}`,
+        from_value: `%${search}%`,
         data_type: 'S',
       },
     ],
     limit: 20,
     page: 1,
   }).then((result) =>
-    result.data.result.splice(0, 10).map(({ po_id }) => ({
+    result?.data?.result?.splice(0, 10).map(({ po_id }) => ({
       label: po_id,
       value: po_id,
     })),
   )
 }
 
-export function fieldSlocByConfigLogistic(search: string) {
-  return getSlocbyConfigLogistic(search).then((result) =>
-    result.data.splice(0, 10).map(({ sloc_id, sloc_name }) => ({
+export function fieldSlocByConfigLogistic(branch_id: string) {
+  return getSlocbyConfigLogistic(branch_id).then((result) =>
+    result.data?.map(({ sloc_id, sloc_name }) => ({
       label: [sloc_id, sloc_name].join(' - '),
       value: sloc_id,
     })),
@@ -754,95 +741,68 @@ export function fieldPoStoByBranch(search: string, supplybranch: string, recevin
   )
 }
 
-export function fieldTermByCompanyId(search: string, companyId?: string) {
-  return getTermByCompanyId(companyId).then((result) =>
-    result.data
-      .filter(
-        ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
-      )
-      .map(({ id, name }) => ({
-        label: [id, name].join(' - '),
-        value: id,
-      })),
+export function fieldRefNumberGRfromPrincipal(search: string) {
+  return getGoodReceiptList({
+    filters: [
+      {
+        field: 'id',
+        option: 'CP',
+        from_value: `%${search}%`,
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.result?.splice(0, 10).map(({ gr_number }) => ({
+      label: gr_number,
+      value: gr_number,
+    })),
   )
 }
 
-export function fieldPaymentMethod(search: string) {
-  return getPaymentMethod().then((result) =>
-    result.data
-      .filter(
-        ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
-      )
-      .map(({ id, name }) => ({
-        label: [id, name].join(' - '),
-        value: id,
-      })),
+export function fieldRefNumberSwapHandling(search: string, branch_id = '') {
+  return getDeliveryOrderList({
+    filters: [
+      {
+        field: 'branch_id',
+        option: 'EQ',
+        from_value: branch_id,
+        data_type: 'S',
+      },
+      {
+        field: 'id',
+        option: 'CP',
+        from_value: `%${search}%`,
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.results?.splice(0, 10).map((item: any, index) => ({
+      label: item.delivery_order_id,
+      value: item.delivery_order_id,
+    })),
   )
 }
 
-export function fieldStatusBlock(search: string) {
-  return getStatusBlock().then((result) =>
-    result.data
-      .filter(
-        ({ id, doc_category_id, description }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          doc_category_id.toLowerCase().includes(search.toLowerCase()) ||
-          description.toLowerCase().includes(search.toLowerCase()),
-      )
-      .map(({ id, doc_category_id, description }) => ({
-        label: [id, doc_category_id, description].join(' - '),
-        value: id,
-      })),
-  )
-}
-
-export function fieldPriceGroupByCompanyId(search: string, companyId?: string) {
-  return getPriceGroupByCompanyId(companyId).then((result) =>
-    result.data
-      .filter(
-        ({ price_group_id, currency_id, price }) =>
-          price_group_id.toLowerCase().includes(search.toLowerCase()) ||
-          currency_id.toLowerCase().includes(search.toLowerCase()) ||
-          price.toLowerCase().includes(search.toLowerCase()),
-      )
-      .map(({ price_group_id, currency_id, price }, index: number) => ({
-        label: [price_group_id, `${currency_id} ${price}`].join(' - '),
-        value: price_group_id,
-        key: index,
-      })),
-  )
-}
-
-export function fieldDivisionByCompany(search: string, companyId?: string) {
-  return getDivisionByCompanyId(companyId).then((result) =>
-    result.data
-      .filter(
-        ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
-      )
-      .map(({ id, name }) => ({
-        label: [id, name].join(' - '),
-        value: id,
-      })),
-  )
-}
-
-export function fieldDistrictByCompany(search: string, companyId?: string) {
-  return getDistrictByCompanyId(companyId).then((result) =>
-    result.data
-      .filter(
-        ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
-      )
-      .map(({ id, name }) => ({
-        label: [id, name].join(' - '),
-        value: id,
-      })),
+export function fieldRequestDocumentMaterialInTransit(search: string) {
+  return getListGISloc({
+    filters: [
+      {
+        field: 'id',
+        option: 'CP',
+        from_value: `%${search}%`,
+        data_type: 'S',
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.result?.splice(0, 10).map((item: any, index) => ({
+      label: item.id,
+      value: item.id,
+    })),
   )
 }

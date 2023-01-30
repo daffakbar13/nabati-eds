@@ -3,16 +3,6 @@ import {
   getConfigSloc,
   getProductByCompany,
   getCompanies,
-  getCustomerByCompany,
-  getSalesOrgByCompany,
-  getSalesmanByCompany,
-  getPricingByIdAndUom,
-  getProductById,
-  getOrderTypeByCompany,
-  getPricingByCompany,
-  getPricingByProductId,
-  getReason,
-  getCustomerByFilter,
   getUomList,
 } from 'src/api/master-data'
 
@@ -75,14 +65,3 @@ export const MASTER_DATA_TYPES = {
       })),
   },
 }
-
-// "ref_doc_number": "1043000000108",
-// "document_date": "2022-10-27",
-// "posting_date": "2022-10-17",
-// "bill_of_lading": "test-cancel-GR",
-// "remarks": "2424",
-// "po_number": "1041400000003",
-// "vendor": "V100100100",
-// "branch": "P104",
-// "delivery_number": "1041500000014",
-// "delivery_note": "test-cancel-GR",

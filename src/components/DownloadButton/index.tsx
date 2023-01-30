@@ -13,7 +13,6 @@ export default function DownloadButton({ downloadApi }) {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      console.error(error)
     }
   }
 

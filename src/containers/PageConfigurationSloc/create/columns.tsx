@@ -10,7 +10,7 @@ import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
 
 interface slocList {
   company_id?: string
-  branch_id: string
+  branch_id?: string
   sales_org: string
   sloc_id: string
   sloc_name: string
@@ -39,7 +39,6 @@ export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
 
   React.useEffect(() => {
     if (payload) {
-      console.log("data payload", payload);
       const newData = {
         company_id: payload?.company_id,
         branch_id: payload?.branch_id,
@@ -49,16 +48,14 @@ export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
         sloc_type: payload?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
       }
       if (payload.children) {
-        const newDataChild = payload.children?.map((item: any, index) => {
-          return {
-            company_id: item?.company_id,
-            branch_id: item?.branch_id,
-            sales_org: item?.sales_org,
-            sloc_id: item?.sloc_id,
-            sloc_name: item?.sloc_function,
-            sloc_type: item?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
-          }
-        })
+        const newDataChild = payload.children?.map((item: any, index) => ({
+          company_id: item?.company_id,
+          branch_id: item?.branch_id,
+          sales_org: item?.sales_org,
+          sloc_id: item?.sloc_id,
+          sloc_name: item?.sloc_function,
+          sloc_type: item?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
+        }))
         setData([newData, ...newDataChild])
       } else {
         setData([newData])

@@ -1,17 +1,27 @@
 import { Form, Spin } from 'antd'
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { Modal, SelectMasterData, Text } from 'src/components'
 
 import { freezeSlocIdByBranchId } from 'src/api/logistic/stock-adjustment'
 
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
+
 const { Label, LabelRequired } = Text
 
-export default function FreezeSlocModal({ isListFreezed, visible = false, close = () => {} }) {
+export default function FreezeSlocModal({
+  ListFreezed,
+  isListFreezed,
+  visible = false,
+  close = () => {},
+}) {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
+  const [allSloc, setAllScloc] = useState([])
+  const [branchSelected, setBranchSelected] = useState()
 
   // Modal
   const [showSubmitModal, setShowSubmitModal] = useState(false)
@@ -19,29 +29,50 @@ export default function FreezeSlocModal({ isListFreezed, visible = false, close 
   const router = useRouter()
 
   const onClickSubmit = async () => {
-    console.log('here')
     await form.validateFields()
     setShowSubmitModal(true)
   }
 
   const handleFreeze = async () => {
     const values = await form.getFieldsValue(true)
-    const reqBody: any = {
+    let reqBody: any = {
       id: values.sloc.value,
       is_freeze: isListFreezed ? 0 : 1,
     }
-
+    if (isListFreezed) {
+      reqBody = {
+        id: ListFreezed?.[0]?.id || '',
+        is_freeze: isListFreezed ? 0 : 1,
+        branch: isListFreezed ? 0 : 1,
+      }
+    }
     try {
       setLoading(true)
-      const res = await freezeSlocIdByBranchId(reqBody, values.branch.value)
+      const res = await freezeSlocIdByBranchId(
+        reqBody,
+        ListFreezed?.[0]?.branch_id || values.branch.value,
+      )
       setLoading(false)
       return res
     } catch (error) {
       setLoading(false)
-      console.error(error)
     }
     return false
   }
+
+  useEffect(() => {
+    if (branchSelected != '') {
+      fieldSlocByConfigLogistic(branchSelected).then((result) => {
+        setAllScloc(result)
+      })
+    }
+  }, [branchSelected])
+
+  useEffect(() => {
+    if (branchSelected != '') {
+      setBranchSelected(ListFreezed?.[0]?.branch_id || '')
+    }
+  }, [ListFreezed])
 
   const content = (
     <Form
@@ -57,18 +88,35 @@ export default function FreezeSlocModal({ isListFreezed, visible = false, close 
         <Form.Item
           name="branch"
           style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Branch</LabelRequired>}
           rules={[{ required: true }]}
+          initialValue={
+            ListFreezed?.[0]?.branch_id
+              ? `${ListFreezed?.[0]?.branch_id} - ${ListFreezed?.[0]?.branch_name}`
+              : ''
+          }
         >
-          <SelectMasterData type="PLANT" style={{ marginTop: -8 }} />
+          <DebounceSelect
+            type="select"
+            label="Branch"
+            required
+            disabled={isListFreezed}
+            fetchOptions={(search) => fieldBranchSupply(search)}
+            onChange={(e) => setBranchSelected(e.value)}
+          />
         </Form.Item>
         <Form.Item
           name="sloc"
           style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Sloc</LabelRequired>}
           rules={[{ required: true }]}
+          initialValue={ListFreezed?.[0]?.id || ''}
         >
-          <SelectMasterData type="SLOC" style={{ marginTop: -8 }} />
+          <DebounceSelect
+            type="select"
+            label="Sloc"
+            disabled={isListFreezed}
+            required
+            options={allSloc}
+          />
         </Form.Item>
       </div>
 
@@ -108,7 +156,7 @@ export default function FreezeSlocModal({ isListFreezed, visible = false, close 
         onOkSuccess={() => {
           setShowSubmitModal(false)
           close()
-          router.reload()
+          router.push('/logistic/stock-adjustment')
         }}
         successContent={(res: any) => `Sloc has been successfully 
           ${isListFreezed ? 'unfreeze' : 'freeze'}`}

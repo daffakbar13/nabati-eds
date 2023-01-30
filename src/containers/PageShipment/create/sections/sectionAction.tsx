@@ -10,7 +10,7 @@ import { useSalesShipmentCreateContext } from '../states'
 
 export default function SectionAction() {
   const {
-    state: { dataSelected, canSave, showFilter, showMore, totalSize, isOverLoad, dataForm },
+    state: { dataSelected, canSave, showFilter, showMore, totalSize, dataForm, filter },
     handler: {
       runProcess,
       stopProcess,
@@ -24,11 +24,13 @@ export default function SectionAction() {
 
   const submitedShipment = (status_id: number) => ({
     branch_id: 'P104',
-    total_volume: totalSize,
+    total_volume: Number(totalSize),
     status_id: status_id.toString(),
     ...dataForm,
     vehicle_id: dataForm.vehicle_id.split(' - ')[0],
   })
+
+  const filterSelected = Object.values(filter).filter((f) => f !== '').length
 
   const moreContent = (
     <div
@@ -92,12 +94,32 @@ export default function SectionAction() {
         <Button
           size="big"
           variant="tertiary"
-          style={{ borderColor: '#88888888', color: 'black', fontWeight: 'normal' }}
+          style={{
+            ...(filterSelected === 0 && { borderColor: '#88888888' }),
+            color: 'black',
+            fontWeight: 'normal',
+          }}
           onClick={() => handleShowFilter(!showFilter)}
         >
           Filter
+          {filterSelected > 0 && (
+            <span
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundColor: '#EB008B',
+                color: 'white',
+                borderRadius: '50%',
+                marginLeft: 5,
+                width: 25,
+                height: 25,
+              }}
+            >
+              {filterSelected}
+            </span>
+          )}
         </Button>
-        {/* <SmartFilter onOk={setFilters} filters={filters} /> */}
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button size="big" variant="tertiary" onClick={() => showConfirm('cancel')}>

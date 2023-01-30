@@ -5,13 +5,13 @@ import { Button, Col, Row, Table, Spacer, Text, DatePickerInput, Input } from 'p
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Popup } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
 import { fieldPoSto } from 'src/configs/fieldFetches'
-import { updateDoSto } from 'src/api/logistic/do-sto'
-import { getPoStoDetail } from 'src/api/logistic/do-sto'
+import { updateDoSto, getPoStoDetail } from 'src/api/logistic/do-sto'
+
 import useDetail from 'src/hooks/useDetail'
+import { useTableAddItem } from './columns'
 
 interface ItemsState {
   product_id: string
@@ -96,7 +96,7 @@ export default function CreateBilling() {
               onClick={() => {
                 updateDoSto(router.query.id as string, { ...initialValue, ...dataForm })
                   .then((response) => setNewDoSTO(response.data.id))
-                  .catch((e) => console.log(e))
+                  .catch((err) => err)
               }}
             >
               Submit
@@ -183,7 +183,10 @@ export default function CreateBilling() {
             ) : (
               <>
                 Request Number
-                <Typography.Text copyable={{ text: newDoSTO as string }}> {newDoSTO}</Typography.Text>
+                <Typography.Text copyable={{ text: newDoSTO as string }}>
+                  {' '}
+                  {newDoSTO}
+                </Typography.Text>
                 has been
               </>
             )}

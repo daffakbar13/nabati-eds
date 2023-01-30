@@ -26,11 +26,9 @@ export default function PageApproval() {
     haveCheckBox: [{ rowKey: 'status_approved_name', member: ['Wait For Approval'] }],
     columns: useColumnApproval,
   })
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search Sales Order ID',
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Sales Order ID', [
     'eds_order.id',
-  )
+  ])
   const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
@@ -224,7 +222,7 @@ export default function PageApproval() {
                 setShowConfirm('success-reject')
                 setProcessing('')
               })
-              .catch((err) => console.log(err))
+              .catch(() => setProcessing(''))
           }}
         >
           Yes
@@ -294,7 +292,7 @@ export default function PageApproval() {
         setOptionsReason(data)
         setReason(data[0].value)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => err)
   }, [])
 
   return (

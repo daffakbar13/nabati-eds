@@ -2,6 +2,7 @@ import { Col, Row } from 'antd'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import TitleDataList from 'src/components/TitleDataList'
+import { concatString } from 'src/utils/concatString'
 
 interface SalesmanInfoProps {
   data: any
@@ -10,16 +11,28 @@ interface SalesmanInfoProps {
 // const DataList.createDataList = (label: string, value: string) => ({ label, value })
 
 export default function SalesmanInfo(props: SalesmanInfoProps) {
-  const { data } = props
+  const {
+    data: {
+      salesman_info: {
+        salesman_name,
+        division_name,
+        branch_id,
+        branch_name,
+        employee_id_card,
+        mobile_number,
+        email,
+      },
+    },
+  } = props
 
   const generalInformation = [
-    DataList.createDataList('Employee Name', data?.salesman_info?.employee_name || ''),
-    DataList.createDataList('Division Name', data?.salesman_info?.division_name || ''),
-    DataList.createDataList('Branch', data?.salesman_info?.branch || ''),
-    DataList.createDataList('ID Card Number', data?.salesman_info?.id_card_number || ''),
-    DataList.createDataList('Mobile Number', data?.salesman_info?.mobile_number || ''),
-    DataList.createDataList('Email', data?.salesman_info?.email || ''),
-    DataList.createDataList('External Code', data?.salesman_info?.external_code || ''),
+    DataList.createDataList('Employee Name', salesman_name),
+    DataList.createDataList('Division Name', division_name),
+    DataList.createDataList('Branch', concatString(branch_id, branch_name)),
+    DataList.createDataList('ID Card Number', employee_id_card),
+    DataList.createDataList('Mobile Number', mobile_number),
+    DataList.createDataList('Email', email),
+    DataList.createDataList('External Code', ''),
   ]
 
   return (

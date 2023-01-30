@@ -33,17 +33,14 @@ export default function PageConfigurationSlocCompany() {
     try {
       return await updateStatus(reqBody, changeStatusPayload)
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const table = useTable({
     funcApi: getConfigSlocCompanyList,
     columns: columns(goToDetailPage, onClickSwitch),
   })
-
-  console.log('selectedRow', selectedRow)
 
   return (
     <>

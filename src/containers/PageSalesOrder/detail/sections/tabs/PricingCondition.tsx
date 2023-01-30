@@ -36,6 +36,7 @@ export default function PricingCondition() {
             <Total label="Total Disc" value={data.discount_total_amount} />
             <Total label="Total Net" value={data.net_total_amount} />
             <Total label="Total Tax" value={data.tax_total_amount} />
+            <Total label="Total Amount" value={data.total_amount} largeSize />
           </div>
         </Col>
       </Row>

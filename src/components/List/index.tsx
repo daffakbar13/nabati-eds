@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 import React from 'react'
 import { ListContainer, Title, Label, ItemContainer, Blur } from './styled'
 
@@ -10,13 +11,12 @@ interface Props {
 export default function List({ children, loading }) {
   return (
     <ListContainer>
-      {React.Children.map(children, (child) => {
-        const rest = ''
-        return React.cloneElement(child, {
+      {React.Children.map(children, (child) =>
+        React.cloneElement(child, {
           loading,
           ...child.props,
-        })
-      })}
+        }),
+      )}
     </ListContainer>
   )
 }

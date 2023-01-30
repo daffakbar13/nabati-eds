@@ -16,11 +16,9 @@ export function SectionAction() {
   const {
     state: { table },
   } = useSalesSalesOrderListContext()
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search Sales Order ID',
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Sales Order ID', [
     'eds_order.id',
-  )
+  ])
   const router = useRouter()
   const componentRef = React.useRef()
   const statusOption = [

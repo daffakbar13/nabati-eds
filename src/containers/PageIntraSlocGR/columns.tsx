@@ -1,120 +1,114 @@
-/* eslint-disable radix */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import dateFormat from 'src/utils/dateFormat'
 import TaggedStatus from 'src/components/TaggedStatus'
+import Link from 'src/components/Link'
+import { concatString } from 'src/utils/concatString'
 
-function Linked({
-  link,
-  linkType,
-  type,
-}: {
-  link: string
-  linkType: string
-  type: 'id' | 'action'
-}) {
+export function useColumnsIntraSlocGoodReceipt() {
   const router = useRouter()
-  const navigate = () => {
-    if (linkType === 'id') {
-      router.push(`${PATH.LOGISTIC}/goods-receipt-intra-sloc/detail/${link}`)
-    } else if (linkType === 'deliveryNumber') {
-      router.push(`${PATH.LOGISTIC}/request-intra-sloc/detail/${link}`)
-    } else if (linkType === 'GI') {
-      router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${link}`)
-    }
-  }
-  const [hover, setHover] = React.useState(false)
 
-  return (
-    <>
-      {type === 'id' ? (
-        <div
-          onClick={navigate}
-          onMouseEnter={() => {
-            setHover(true)
-          }}
-          onMouseLeave={() => {
-            setHover(false)
-          }}
-          style={{
-            cursor: 'pointer',
-            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
-          }}
+  return [
+    addColumn({
+      title: 'Request Number',
+      dataIndex: 'request_number',
+      render: (text, record, index) => (
+        <Link onClick={() => router.push(`${PATH.LOGISTIC}/request-intra-sloc/detail/${text}`)}>
+          {text}
+        </Link>
+      ),
+      fixed: true,
+      sorter: true,
+      width: 175,
+    }),
+    addColumn({
+      title: 'GI Number',
+      dataIndex: 'gi_number',
+      render: (text, record, index) => (
+        <Link
+          onClick={() =>
+            router.push(
+              `${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${text}?request_number=${record.request_number}`,
+            )
+          }
         >
-          {link}
-        </div>
-      ) : (
-        <Button size="big" variant="tertiary" onClick={navigate}>
+          {text}
+        </Link>
+      ),
+      fixed: true,
+      sorter: true,
+      width: 175,
+    }),
+    addColumn({
+      title: 'GR Number',
+      dataIndex: 'gr_number',
+      render: (text, record, index) => (
+        <Link
+          onClick={() =>
+            router.push(
+              `${PATH.LOGISTIC}/goods-receipt-intra-sloc/detail/${text}?request_number=${record.request_number}`,
+            )
+          }
+        >
+          {text}
+        </Link>
+      ),
+      fixed: true,
+      sorter: true,
+      width: 175,
+    }),
+    addColumn({
+      title: 'Posting Date',
+      dataIndex: 'posting_date',
+    }),
+    addColumn({
+      title: 'Company',
+      dataIndex: 'company_id',
+      render: (text, record, index) => `${text || ''} - ${record.company_name || ''}`,
+    }),
+    addColumn({
+      title: 'Branch',
+      dataIndex: 'branch_id',
+      render: (text, record, index) => `${text || ''} - ${record.branch_name || ''}`,
+    }),
+    addColumn({
+      title: 'From Sloc',
+      dataIndex: 'from_sloc',
+      render: (text, record, index) => `${text || ''} - ${record.from_sloc_name || ''}`,
+    }),
+    addColumn({
+      title: 'To Sloc',
+      dataIndex: 'to_sloc',
+      render: (text, record, index) => `${text || ''} - ${record.to_sloc_name || ''}`,
+    }),
+    addColumn({
+      title: 'Mov. Type',
+      dataIndex: 'movement_type_id',
+      render: (text, record, index) => `${text || ''}`,
+    }),
+    addColumn({
+      title: 'Status',
+      dataIndex: 'status',
+      render: (text, record, index) => <TaggedStatus status={text} />,
+    }),
+    addColumn({
+      title: 'Action',
+      dataIndex: 'gr_number',
+      render: (text, record, index) => (
+        <Button
+          size="big"
+          variant="tertiary"
+          onClick={() =>
+            router.push(
+              `${PATH.LOGISTIC}/goods-receipt-intra-sloc/detail/${text}?request_number=${record.request_number}`,
+            )
+          }
+        >
           View Detail
         </Button>
-      )}
-    </>
-  )
+      ),
+    }),
+  ]
 }
-
-export const column = [
-  CreateColumns(
-    'Request Number',
-    'delivery_number',
-    true,
-    (link: string) => <Linked link={link} type="id" linkType="deliveryNumber" />,
-    175,
-    'left',
-  ),
-  CreateColumns(
-    'GI Number',
-    'gi_number',
-    true,
-    (link: string) => <Linked link={link} type="id" linkType="GI" />,
-    175,
-    'left',
-  ),
-  CreateColumns(
-    'GR Number',
-    'id',
-    true,
-    (link: string) => <Linked link={link} type="id" linkType="id" />,
-    175,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (_, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-  ),
-  CreateColumns(
-    'Branch',
-    'branch_id',
-    false,
-    (_, record: any) => `${record.suppl_branch_id || ''} - ${record.suppl_branch_name || ''}`,
-  ),
-  CreateColumns(
-    'From Sloc',
-    'from_sloc',
-    false,
-    (_, record: any) => `${record.from_sloc || ''} - ${record.from_sloc_name || ''}`,
-  ),
-  CreateColumns(
-    'To Sloc',
-    'to_sloc',
-    false,
-    (_, record: any) => `${record.to_sloc || ''} - ${record.to_sloc_name || ''}`,
-  ),
-  CreateColumns(
-    'Mov. Type',
-    'branch_id',
-    false,
-    (_, record: any) => `${record.movement_type_id || ''}`,
-  ),
-  CreateColumns('Status', 'status', false, (status) => <TaggedStatus status={status} />),
-  CreateColumns('Action', 'id', false, (link) => (
-    <Linked link={link} type="action" linkType="id" />
-  )),
-]

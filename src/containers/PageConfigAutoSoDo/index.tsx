@@ -32,9 +32,8 @@ export default function PageConfigurationSloc() {
     try {
       return await UpdateStatusSOtoDO(changeStatusPayload.sales_org_id as string, reqBody)
     } catch (error) {
-      console.error(error)
+      return error
     }
-    return false
   }
 
   const table = useTable({

@@ -1,29 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
 import { getRequestIntraChannel } from 'src/api/request-intra-channel'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
-import { PageQuotationProps } from './types'
-import { TableIntraChannelRequest } from './columns'
 import { colors } from 'src/configs/colors'
+import { TableIntraChannelRequest } from './columns'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
-
-export default function PageIntraChannelRequest(props: PageQuotationProps) {
+export default function PageIntraChannelRequest() {
   const [filters, setFilters] = useState([])
 
   const table = useTable({
@@ -76,9 +66,8 @@ export default function PageIntraChannelRequest(props: PageQuotationProps) {
                     const updateId = filters.map((data, i) => {
                       if (i === idIndex) {
                         return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
                       }
+                      return { ...data }
                     })
                     setFilters(updateId)
                   }

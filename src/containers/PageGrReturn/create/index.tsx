@@ -1,15 +1,15 @@
 import { Divider, Form } from 'antd'
 import moment from 'moment'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PATH } from 'src/configs/menus'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
-import { getGrReturnByRefDocNo, getSlocListByBranch } from 'src/api/logistic/good-receipt'
+import { getGoodReceiptDetail, getSlocListByBranch } from 'src/api/logistic/good-receipt'
 import { createGrReturn } from 'src/api/logistic/good-return'
 import { Card, Input, Modal, SelectMasterData, Text } from 'src/components'
-import { columns } from './columns'
-import { fieldPoGRPrincipal } from 'src/configs/fieldFetches'
+import { fieldRefNumberGRfromPrincipal } from 'src/configs/fieldFetches'
+import { useTableAddItem } from './columns'
 
 const { Label, LabelRequired } = Text
 
@@ -21,9 +21,13 @@ export default function CreateGrReturn() {
   const [disableSomeFields, setDisableSomeFields] = useState(false)
   const [loading, setLoading] = useState(false)
   const [numberPO, setnumberPO] = useState('')
+  const [itemPayload, setItemPayload] = useState([])
 
   // Sloc options for table
   const [slocOptions, setSlocOptions] = useState<[]>([])
+  const tableAddItems = useTableAddItem(
+    { items: tableData, slocOptions: slocOptions } || { items: [], slocOptions: [] },
+  )
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -39,23 +43,19 @@ export default function CreateGrReturn() {
 
   const handleCreate = async () => {
     const payload: any = {
-      ref_doc_number: headerData.ref_doc_number,
+      ref_doc_number: headerData.ref_doc_number.value || '',
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      bill_of_lading: headerData.bill_of_lading,
-      remarks: headerData.remark,
-      po_number: headerData?.po_number?.value,
-      vendor: headerData.vendor.value,
-      branch: headerData.branch.value,
-      delivery_number: headerData?.delivery_number,
-      delivery_note: headerData.delivery_note,
-      items: selectedTableData,
+      bill_of_lading: headerData.bill_of_lading || '',
+      remarks: headerData.remark || '',
+      po_number: headerData?.po_number || '',
+      vendor: headerData.vendor?.split(' - ')[0] || '',
+      branch: headerData.branch?.split(' - ')[0] || '',
+      delivery_number: headerData?.delivery_number || '',
+      delivery_note: headerData.delivery_note || '',
+      items: itemPayload,
     }
-    console.log('payload', payload)
     const res = await createGrReturn(payload)
-
-    // console.log('res', res)
-    // console.log('headerData', headerData)
     return res
   }
 
@@ -67,10 +67,10 @@ export default function CreateGrReturn() {
 
     try {
       setLoading(true)
-      const { data } = await getGrReturnByRefDocNo(refDocNumber)
+      const { data } = await getGoodReceiptDetail(refDocNumber)
 
       setTableData(
-        (data.items || []).map((i: any, ind: number) => ({
+        (data?.items || []).map((i: any, ind: number) => ({
           ...i,
           rowKey: ind + 1,
           qty_gr: i.qty_po,
@@ -78,10 +78,10 @@ export default function CreateGrReturn() {
       )
 
       form.setFieldsValue({
-        po_number: { value: data.po_number },
+        po_number: data?.po_number,
         delivery_number: data.delivery_number,
-        vendor: { value: data.vendor },
-        branch: { value: data.branch },
+        vendor: `${data?.vendor_id} - ${data?.vendor_name}`,
+        branch: `${data?.branch_id} - ${data?.branch_name}`,
         delivery_note: data.delivery_note,
         bill_of_lading: data.bill_of_lading,
         remarks: data.remarks,
@@ -89,8 +89,8 @@ export default function CreateGrReturn() {
         posting_date: moment(),
       })
 
-      if (data.branch) {
-        const slocList = await getSlocListByBranch(data.branch)
+      if (data.branch_id) {
+        const slocList = await getSlocListByBranch(data.branch_id)
         setSlocOptions(
           slocList.data?.map((i: any) => ({ label: `${i.id}-${i.name}`, value: i.id })),
         )
@@ -99,24 +99,25 @@ export default function CreateGrReturn() {
       setLoading(false)
     } catch (error) {
       setLoading(false)
-      console.error(error)
     }
     setDisableSomeFields(true)
   }
 
-  const onTableValuesChange = ({ field, value, index }) => {
-    setTableData(
-      [...tableData].map((row, ind) => {
-        if (ind === index) {
-          return {
-            ...row,
-            [field]: value,
-          }
-        }
-        return { ...row }
-      }),
-    )
-  }
+  useEffect(() => {
+    const selected = tableAddItems.dataSubmit.map((item: any, index) => ({
+      item: item?.item_number?.toString(),
+      product_id: item?.product_id,
+      description: item?.product_name,
+      qty_po: item?.qty_po,
+      uom_id: item?.uom_id,
+      received_qty: item?.qty_gr,
+      received_qty_uom_id: item?.uom_id,
+      sloc_id: item?.sloc_id || 'GS00',
+      batch: item?.batch,
+      remarks: item?.remarks,
+    }))
+    setItemPayload(selected)
+  }, [tableAddItems.dataSubmit])
 
   return (
     <Col>
@@ -148,146 +149,70 @@ export default function CreateGrReturn() {
             <Form.Item
               name="ref_doc_number"
               style={{ marginTop: -12, marginBottom: 0 }}
-              label={<LabelRequired>Ref. Doc Number</LabelRequired>}
               rules={[{ required: true }]}
             >
-              {/* CHANGE THIS TO SELECT WHEN NEW API READY */}
-              <Input
-                loading={loading}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-                onChange={(e: any) => onChangeRefDocNumber(e.target.value)}
-              />
-
-              {/* <SelectMasterData type="PLANT" style={{ marginTop: -8 }} /> */}
-            </Form.Item>
-            <Form.Item
-              name="po_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>PO Number</Label>}
-            >
-              {/* <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="PO_NUMBER"
-                style={{ marginTop: -8 }}
-              /> */}
               <DebounceSelect
                 type="select"
-                // label="PO Number"
+                label="Ref. Doc Number"
                 required
-                fetchOptions={(search) => fieldPoGRPrincipal(search)}
+                fetchOptions={(search) => fieldRefNumberGRfromPrincipal(search)}
                 onChange={(val: any) => {
                   setnumberPO(val.value)
+                  onChangeRefDocNumber(val.value)
                 }}
               />
             </Form.Item>
-            <Form.Item
-              name="document_date"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Doc. Date</Label>}
-            >
+            <Form.Item name="po_number" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="PO Number" disabled />
+            </Form.Item>
+            <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
-                style={{ marginTop: -12 }}
                 placeholder="Select Date"
                 size="large"
-                label=""
+                label="Doc. Date"
                 fullWidth
                 format={'DD/MM/YYYY'}
               />
             </Form.Item>
-            <Form.Item
-              name="vendor"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Vendor</Label>}
-            >
-              <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="PLANT"
-                style={{ marginTop: -8 }}
-              />
+            <Form.Item name="vendor" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Vendor" disabled />
             </Form.Item>
-            <Form.Item
-              name="posting_date"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Posting Date</Label>}
-            >
+            <Form.Item name="posting_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
-                style={{ marginTop: -12 }}
                 placeholder="Select Date"
                 size="large"
-                label=""
+                label="Posting Date"
                 fullWidth
                 format={'DD/MM/YYYY'}
               />
             </Form.Item>
-            <Form.Item
-              name="branch"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Branch</Label>}
-            >
-              <SelectMasterData
-                loading={loading}
-                disabled={disableSomeFields}
-                type="PLANT"
-                style={{ marginTop: -8 }}
-              />
+            <Form.Item name="branch" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Branch" disabled />
             </Form.Item>
-            <Form.Item
-              name="bill_of_lading"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Bill of Lading</Label>}
-            >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            <Form.Item name="bill_of_lading" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Bill of Lading" placeholder="Type..." />
             </Form.Item>
 
-            <Form.Item
-              name="delivery_number"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Number</Label>}
-            >
-              <Input
-                disabled={disableSomeFields}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-              />
+            <Form.Item name="delivery_number" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Delivery Number" disabled />
             </Form.Item>
-            <Form.Item
-              name="remarks"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Remarks</Label>}
-            >
-              <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+            <Form.Item name="remarks" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Remarks" placeholder="Type..." />
             </Form.Item>
-            <Form.Item
-              name="delivery_note"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              label={<Label>Delivery Note</Label>}
-            >
-              <Input
-                disabled={disableSomeFields}
-                style={{ marginTop: -12 }}
-                placeholder="Type"
-                size="large"
-              />
+            <Form.Item name="delivery_note" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="input" label="Delivery Note" disabled />
             </Form.Item>
           </div>
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
-            loading={loading}
-            rowSelection={{
-              onChange: (selectedRowKeys: React.Key[], selectedRows: any[]) => {
-                setSelectedTableData(selectedRows)
-              },
-            }}
-            rowKey="rowKey"
-            data={tableData}
-            columns={columns(slocOptions, onTableValuesChange)}
+            scroll={{ x: 'max-content', y: 600 }}
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+            rowSelection={tableAddItems.rowSelection}
           />
         </div>
       </Card>
@@ -307,7 +232,7 @@ export default function CreateGrReturn() {
         onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gr-return/detail/${res.data}#2`)}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
-        content="Are you sure want Submit Dr Return?"
+        content="Are you sure want Submit GR Return?"
         successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
         successOkText="Print"
         successCancelText="Close"

@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useCallback, useMemo } from 'react'
 import { FilterOption } from 'src/configs/filterType'
 import { Button, Row, Modal } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
@@ -95,7 +96,7 @@ export const useSmartFilters = (configs: string[]) => {
 function SmartFilter({ filters, onOk }) {
   const previousValue = useMemo(() => [...filters], [filters])
   const [currentValue, setCurrentFilter] = useState<FilterOption[]>(filters)
-  const [filtered, setFiltered] = React.useState({})
+  const [filtered] = React.useState({})
 
   const [showFilter, setShowFilter] = useState(false)
 

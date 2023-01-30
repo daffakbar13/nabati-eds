@@ -1,23 +1,21 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import moment from 'moment'
 import React from 'react'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import Link from 'src/components/Link'
 
 import { useRouter } from 'next/router'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-
-import { Tag } from 'antd'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'
-      ? router.push(`${PATH.LOGISTIC}/goods-receipt/edit/${link}`)
-      : router.push(`${PATH.LOGISTIC}/goods-receipt/detail/${link}?status=${status}`)
+      ? router.push(`${PATH.LOGISTIC}/gr-return/edit/${link}`)
+      : router.push(`${PATH.LOGISTIC}/gr-return/detail/${link}?status=${status}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -48,67 +46,84 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
   )
 }
 export const columns = (goToDetail) => [
-  CreateColumns(
-    'Doc. Number',
-    'doc_number',
-    true,
-    (text: string) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'GR Number',
-    'gr_number',
-    true,
-    (text: string, rec: any) => <Link onClick={() => goToDetail(rec.doc_number)}>{text}</Link>,
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'PO Number',
-    'po_number',
-    true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'GI Number',
-    'gi_number',
-    true,
-    (link: string, { status_name }: any) => <Linked link={link} type="id" status={status_name} />,
-    180,
-    'left',
-  ),
-  CreateColumns(
-    'Posting Date',
-    'posting_date',
-    true,
-    (date) => <>{moment(date).isValid ?? moment(date).format('YYYY-MM-DD HH:mm')}</>,
-    180,
-  ),
-  CreateColumns('Company', 'company_id', true),
-  CreateColumns(
-    'Branch',
-    'branch_id',
-    true,
-    (branch, rec) => <>{`${branch} - ${rec.branch_name}`}</>,
-    250,
-  ),
-  CreateColumns(
-    'Vendor',
-    'vendor_id',
-    true,
-    (vendor, rec) => <>{`${vendor} - ${rec.vendor_name}`}</>,
-    250,
-  ),
-  CreateColumns('Move Type', 'movement_type_id', true),
-  CreateColumns('Header Text', 'header_text', true),
-  CreateColumns('Delivery Note', 'delivery_note', true),
-  CreateColumns('Status ID', 'status_id', false, (statusId) => (
-    <>{statusId !== '' && <Tag>{statusId}</Tag>}</>
-  )),
-  CreateColumns('Action', 'id', false, (link, record) => (
-    <Linked link={link} type="action" status={record.status_id} />
-  )),
+  addColumn({
+    title: 'Doc. Number',
+    dataIndex: 'doc_number',
+    render: (text, record, index) => (
+      <Link onClick={() => goToDetail(record.gr_number)}>{text}</Link>
+    ),
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'GR Number',
+    dataIndex: 'gr_number',
+    render: (text, record, index) => (
+      <Link onClick={() => goToDetail(record.gr_number)}>{text}</Link>
+    ),
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'PO Number',
+    dataIndex: 'po_number',
+    render: (text, record, index) => <Linked link={text} type="id" status={record.status_name} />,
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'GI Number',
+    dataIndex: 'gi_number',
+    render: (text, record, index) => <Linked link={text} type="id" status={record.status_name} />,
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text, record, index) => `${text} - ${record.company_name}`,
+    width: 250,
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+    render: (text, record, index) => `${text} - ${record.branch_name}`,
+    width: 250,
+  }),
+  addColumn({
+    title: 'Vendor',
+    dataIndex: 'vendor_id',
+    render: (text, record, index) => `${text} - ${record.vendor_name}`,
+    width: 250,
+  }),
+  addColumn({
+    title: 'Move Type',
+    dataIndex: 'movement_type_id',
+  }),
+  addColumn({
+    title: 'Header Text',
+    dataIndex: 'header_text',
+  }),
+  addColumn({
+    title: 'Delivery Note',
+    dataIndex: 'delivery_note',
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status_name',
+    render: (text, record, index) => <TaggedStatus status={text} />,
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'gr_number',
+    render: (text, record, index) => <Linked link={text} type="action" status={record.status_name} />,
+  }),
 ]

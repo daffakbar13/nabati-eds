@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Checkbox, Popover, Divider, Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
@@ -12,15 +12,6 @@ import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
-import { colors } from 'src/configs/colors'
-
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  console.log(total, range)
-
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
 
 export default function PageIntraSlocRequest() {
   const table = useTable({
@@ -47,7 +38,9 @@ export default function PageIntraSlocRequest() {
     { label: 'Wait For Approval', value: '00' },
   ]
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Doc. Number', [
+    'document_number',
+  ])
 
   return (
     <Col>
@@ -56,45 +49,7 @@ export default function PageIntraSlocRequest() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by Doc. Number"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => {
-                setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field == 'document_number')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) =>
-                      oldFilter.filter((data) => data?.field != 'document_number'),
-                    )
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      } else {
-                        return { ...data }
-                      }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'document_number',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"

@@ -5,11 +5,13 @@ export const columns = [
     title: 'SLoc',
     dataIndex: 'sloc',
     fixed: 'left',
+    sorter: true,
   },
   // addColumn({
   //   title: 'SLoc',
   //   dataIndex: 'sloc',
   //   fixed: true,
+  //   sorter: true,
   // }),
   addColumn({
     title: 'Branch',

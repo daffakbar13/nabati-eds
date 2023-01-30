@@ -47,6 +47,19 @@ export default function SectionSelectedInformation() {
     table.handler.handleSelected(table.state.selected.filter((e) => e !== removedItem))
   }
 
+  function getTagText() {
+    switch (true) {
+      case !vehicleSize:
+        return 'Vehicle Not Selected'
+      case isOverLoad:
+        return 'Overload'
+      case !isOverLoad:
+        return 'Available'
+      default:
+        return ''
+    }
+  }
+
   return (
     <>
       <TitleDataList title="Select Vehicle" />
@@ -67,11 +80,11 @@ export default function SectionSelectedInformation() {
           <DescVehicle label="Total Delivery Order" value={dataSelected.length.toString()} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <Tag color={isOverLoad ? 'red' : 'green'}>{isOverLoad ? 'Overload' : 'Available'}</Tag>
+          <Tag color={isOverLoad ? 'red' : 'green'}>{getTagText()}</Tag>
         </div>
       </Row>
       <Spacer size={10} />
-      <div style={{ height: 300, overflow: 'auto' }}>
+      <div style={{ maxHeight: 503, overflow: 'auto' }}>
         <table className="eds_create_shipment">
           <thead>
             <tr>
@@ -86,7 +99,8 @@ export default function SectionSelectedInformation() {
               <tr key={index}>
                 <td>{++index}</td>
                 <td>{delivery_order_id}</td>
-                <td>{`${Math.round(volume / 10)} M³`}</td>
+                {/* <td>{`${Math.round(volume / 10)} M³`}</td> */}
+                <td>{`${(Math.round((volume / 10) * 100) / 100).toFixed(2)} M³`}</td>
                 <td>
                   <div
                     style={{

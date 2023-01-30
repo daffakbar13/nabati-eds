@@ -231,7 +231,7 @@ table.eds_promotion_log thead tr th {
 
 table.eds_print_invoice {
   table-layout: auto;
-  width: 100%
+  width: 100%;
 }
 
 table.eds_print_invoice tr th,

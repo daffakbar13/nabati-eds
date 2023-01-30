@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, forwardRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { debounce } from 'lodash'
 import { Select } from 'antd'
 import { Spin } from 'pink-lava-ui'

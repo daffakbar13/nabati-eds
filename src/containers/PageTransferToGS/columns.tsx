@@ -1,7 +1,7 @@
 /* eslint-disable radix */
 /* eslint-disable camelcase */
 /* eslint-disable no-unused-expressions */
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
@@ -44,43 +44,48 @@ function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
 }
 
 export const column = [
-  CreateColumns(
-    'Doc. Number',
-    'document_number',
-    true,
-    (link: string) => <Linked link={link} type="id" />,
-    175,
-    'left',
-  ),
-  CreateColumns('Posting Date', 'posting_date', false, (date) => dateFormat(date)),
-  CreateColumns(
-    'Company',
-    'company_id',
-    false,
-    (text: string, record: any) => `${record.company_id || ''} - ${record.company_name || ''}`,
-  ),
-  CreateColumns(
-    'Branch',
-    'suppl_branch_id',
-    false,
-    (text: string, record: any) => `${record.branch_id || ''} - ${record.branch_name || ''}`,
-  ),
-  CreateColumns(
-    'Supplying Sloc',
-    'supplying_sloc_id',
-    false,
-    (text: string, record: any) =>
-      `${record.supplying_sloc_id || ''} - ${record.supplying_sloc_name || ''}`,
-  ),
-  CreateColumns(
-    'Receiving Sloc',
-    'receiving_sloc_id',
-    false,
-    (text: string, record: any) =>
-      `${record.receiving_sloc_id || ''} - ${record.receiving_sloc_name || ''}`,
-  ),
-  CreateColumns('Status', 'status_name', false, (status_name) => (
-    <TaggedStatus status={status_name === 'Wait For Approval' ? 'Pending' : status_name} />
-  )),
-  CreateColumns('Action', 'document_number', false, (link) => <Linked link={link} type="action" />),
+  addColumn({
+    title: 'Doc. Number',
+    dataIndex: 'document_number',
+    render: (text, record, index) => <Linked link={text} type="id" />,
+    fixed: true,
+    sorter: true,
+    width: 180,
+  }),
+  addColumn({
+    title: 'Posting Date',
+    dataIndex: 'posting_date',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text, record, index) => `${text || ''} - ${record.company_name || ''}`,
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_id',
+    render: (text, record, index) => `${text || ''} - ${record.branch_name || ''}`,
+  }),
+  addColumn({
+    title: 'Supplying Sloc',
+    dataIndex: 'supplying_sloc_id',
+    render: (text, record, index) => `${text || ''} - ${record.supplying_sloc_name || ''}`,
+  }),
+  addColumn({
+    title: 'Receiving Sloc',
+    dataIndex: 'receiving_sloc_id',
+    render: (text, record, index) => `${text || ''} - ${record.receiving_sloc_name || ''}`,
+  }),
+  addColumn({
+    title: 'Status',
+    dataIndex: 'status_name',
+    render: (text, record, index) => (
+      <TaggedStatus status={text === 'Wait For Approval' ? 'Pending' : text} />
+    ),
+  }),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'document_number',
+    render: (text, record, index) => <Linked link={text} type="action" />,
+  }),
 ]

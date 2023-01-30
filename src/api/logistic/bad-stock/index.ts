@@ -50,7 +50,7 @@ export const updateStatusBadStock = async (id: string, payload: any) => {
   const response = await call({
     method: METHODS.PUT,
     overrideBaseUrl,
-    subUrl: `${url}/edit/${id}`,
+    subUrl: `${url}/confirm/${id}`,
     data: payload,
   })
   return response.data
