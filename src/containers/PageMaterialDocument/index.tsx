@@ -33,12 +33,9 @@ export default function PageRealTime() {
     })
   }, [branchfrom, branchTo])
 
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search by Material Document',
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Material Document', [
     'id',
-  )
-
+  ])
   return (
     <Col>
       <Text variant={'h4'}>Material Document</Text>

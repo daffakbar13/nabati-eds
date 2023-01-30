@@ -22,7 +22,11 @@ export default function PageIntraSlocGoodIssue() {
     funcApi: getListGISloc,
     columns: useColumnsIntraSlocGoodIssue(),
   })
-  const { setFilters, oldfilters, searchProps } = useFilters(table, 'Search By GI Number')
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Request, GI Number',
+    ['request_number', 'id'],
+  )
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0
   const router = useRouter()

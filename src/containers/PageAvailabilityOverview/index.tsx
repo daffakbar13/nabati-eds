@@ -30,7 +30,11 @@ export default function PageAvailabilityOverview() {
     data,
   })
 
-  const { filters, setFilters, searchProps } = useFilters(table, 'Search by Material', 'product_id')
+  const { filters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Branch, Material, Sloc',
+    ['branch_id', 'product_id', 'sloc_id'],
+  )
 
   useEffect(() => {
     fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {

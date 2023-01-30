@@ -16,7 +16,12 @@ export default function PageIntraSlocRequest() {
     funcApi: getListSloc,
     columns: useColumnRequestIntraSloc(),
   })
-  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search By GR Number')
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Request Number',
+    ['id'],
+  )
+
   const [branchfrom, setBranchFrom] = React.useState('')
   const [branchTo, setBranchTo] = React.useState('')
   const [allSloc, setAllScloc] = React.useState([])
