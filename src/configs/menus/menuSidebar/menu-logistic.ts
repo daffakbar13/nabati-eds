@@ -245,6 +245,24 @@ export const menuLogistic = [
         onClick: () => Router.push(`${PATH.LOGISTIC}/auto-so-to-do`),
       },
       {
+        key: 'configuration-credit-limit',
+        title: 'Credit Limit',
+        content: () => 'Credit Limit',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-credit-limit`),
+      },
+      {
+        key: 'configuration-credit-limit-approval',
+        title: 'Credit Limit Approval',
+        content: () => 'Credit Limit Approval',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-credit-limit-approval`),
+      },
+      {
+        key: 'configuration-order-type-to-sloc',
+        title: 'Order Type to Sloc',
+        content: () => 'Order Type to Sloc',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-order-type-to-sloc`),
+      },
+      {
         key: 'tax-regulator',
         title: 'Tax Regulator',
         content: () => 'Tax Regulator',
