@@ -87,3 +87,32 @@ export const multipleSubmitQuotation = async (payload: { order_list: { id: strin
   })
   return response.data
 }
+
+export const createCustomerNOO = async (payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `v1/master/create/customer-noo`,
+    data: payload,
+  })
+  return response.data
+}
+
+// export const getDetailCustomerNOO = async (companyId: string = 'PP01', customerId: string) => {
+//   const response = await call({
+//     method: METHODS.GET,
+//     subUrl: `v1/master/get-customer/${companyId}/${customerId}/detail`,
+//   })
+//   return response.data
+// }
+
+export const getDetailCustomerNOO = async (
+  params: CommonDetailParams,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    // subUrl: `v1/quotations/${params.id}/detail`,
+    subUrl: `v1/master/get-customer/${params.company_id || 'PP01'}/${params.id}/detail`,
+  })
+  return response.data
+}

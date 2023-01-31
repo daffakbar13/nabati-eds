@@ -1,0 +1,35 @@
+/* eslint-disable camelcase */
+import React from 'react'
+import { TableInformation } from 'src/components/TabCustomerInfo/types'
+import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
+import { concatString } from 'src/utils/concatString'
+import { Table } from 'pink-lava-ui'
+
+export default function SalesmanVisit() {
+  const {
+    state: { data },
+  } = useSalesQuotationDetailContext()
+  const { customer, customer_group, customer_sales_data, salesman } = data!
+
+  const dataTable: TableInformation[] = salesman?.map(
+    ({ salesman_id, salesman_name, salesman_group_id, salesman_group_name }) => {
+      return {
+        Salesman: concatString(salesman_id, salesman_name),
+        'Salesman Group': concatString(salesman_group_id, salesman_group_name),
+      }
+    },
+  )
+
+  return (
+    <>
+      <Table
+        dataSource={dataTable}
+        columns={[
+          { title: 'Salesman', dataIndex: 'Salesman' },
+          { title: 'Salesman Group', dataIndex: 'Salesman Group' },
+        ]}
+        scroll={{ x: 'max-content' }}
+      />
+    </>
+  )
+}
