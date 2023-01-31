@@ -29,6 +29,13 @@ import {
   getProductMasterData,
   getListProduct,
   getSlocbyConfigLogistic,
+  getSalesOfficeByCompany,
+  getTermByCompanyId,
+  getPaymentMethod,
+  getStatusBlock,
+  getPriceGroupByCompanyId,
+  getDivisionByCompanyId,
+  getDistrictByCompanyId,
 } from 'src/api/master-data'
 import { getCustomerByFilterProps } from 'src/api/master-data/types'
 import { getListPoSto } from 'src/api/logistic/po-sto'
@@ -274,7 +281,7 @@ export function fieldBranchAll(search: string) {
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
-      .splice(0, 10)
+      // .splice(0, 10)
       .map(({ id, name, branch_type }) => ({
         label: [id, name].join(' - '),
         value: id,
@@ -395,11 +402,12 @@ export function fieldPoSto(search: string) {
     )
 }
 
-export function fieldSloc(doc_type: string) {
+export function fieldSloc(search: string, doc_type_id?: string) {
   return getConfigSloc().then((result) =>
     result.data
-      .filter(({ doc_type_id }) => doc_type_id === doc_type)
-      .splice(0, 10)
+      // .filter(({ doc_type_id }) => doc_type_id === doc_type)
+      .filter(({ sloc_id }) => sloc_id.toLowerCase().includes(search.toLowerCase()))
+      // .splice(0, 10)
       .map(({ sloc_id }) => ({
         label: sloc_id,
         value: sloc_id,
@@ -470,7 +478,7 @@ export function fieldSalesOrganization(search = '') {
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
-      .splice(0, 10)
+      // .splice(0, 10)
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,
@@ -486,7 +494,7 @@ export function fieldSalesmanAll(search: string) {
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
-      .splice(0, 10)
+      // .splice(0, 10)
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,
@@ -502,7 +510,7 @@ export function fieldCompanyList(search: string) {
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
-      .splice(0, 10)
+      // .splice(0, 10)
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,
@@ -518,7 +526,7 @@ export function fieldCustomerGroupCompany(search = '') {
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
-      .splice(0, 10)
+      // .splice(0, 10)
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,
@@ -526,15 +534,15 @@ export function fieldCustomerGroupCompany(search = '') {
   )
 }
 
-export function fieldChannelCompany(search = '') {
-  return getChannelByCompany().then((result) =>
+export function fieldChannelCompany(search = '', companyId?: string) {
+  return getChannelByCompany(companyId).then((result) =>
     result.data
       .filter(
         ({ id, name }) =>
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
-      .splice(0, 10)
+      // .splice(0, 10)
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,
@@ -550,7 +558,7 @@ export function fieldSalesmanGroup(search = '') {
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
-      .splice(0, 10)
+      // .splice(0, 10)
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,

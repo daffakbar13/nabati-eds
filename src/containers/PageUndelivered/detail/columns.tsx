@@ -6,107 +6,28 @@ import CreateColumns from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { Button, DatePickerInput } from 'pink-lava-ui'
-import React from 'react'
+import React, { useState } from 'react'
 import { Popup } from 'src/components'
-import { Col, Input, Typography } from 'antd'
+import { Typography } from 'antd'
 import moment from 'moment'
+import ConfirmReject from '../alerts/ConfirmReject'
+import ConfirmReschedule from '../alerts/ConfirmReschedule'
 
-function Linked({
-  link,
-  status,
-  type,
-  funcReject,
-  index,
-}: {
+interface PropsLinked {
   link: string
   status: string
   type: 'id' | 'action'
-  funcReject: any
+  onReject: any
+  onReschedule: any
   index: number
-}) {
+}
+
+function Linked({ link, status, type, index, onReject, onReschedule }: PropsLinked) {
   const router = useRouter()
   const navigate = () => {
     router.push(`${PATH.SALES}/collection/detail/${link}`)
   }
   const [showConfirm, setShowConfirm] = React.useState('')
-
-  const ConfirmReject = () => (
-    <Popup
-      onOutsideClick={() => {
-        setShowConfirm('')
-      }}
-    >
-      <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Rejectation
-      </Typography.Title>
-      <Input.TextArea id="inputReason" required />
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="secondary"
-          onClick={() => {
-            setShowConfirm('')
-          }}
-        >
-          No
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            const a = document.getElementById('inputReason')
-            funcReject(a.innerHTML, index)
-          }}
-        >
-          Yes
-        </Button>
-      </div>
-    </Popup>
-  )
-
-  const ConfirmReschedule = () => (
-    <Popup
-      onOutsideClick={() => {
-        setShowConfirm('')
-      }}
-    >
-      <Typography.Title level={3} style={{ margin: 0 }}>
-        Confirm Reschedule
-      </Typography.Title>
-      <DatePickerInput
-        fullWidth
-        label="Confirm Reschedule"
-        disabledDate={(current) => current < moment().startOf('day')}
-        defaultValue={moment()}
-        format={'DD-MMM-YYYY'}
-      />
-      <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="secondary"
-          onClick={() => {
-            setShowConfirm('')
-          }}
-        >
-          No
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            const a = document.getElementById('inputReason')
-            funcReject(a.innerHTML, index)
-          }}
-        >
-          Yes
-        </Button>
-      </div>
-    </Popup>
-  )
 
   return (
     <>
@@ -130,13 +51,23 @@ function Linked({
           Cancel Progres
         </Button>
       </div>
-      {showConfirm === 'reject' && <ConfirmReject />}
-      {showConfirm === 'reschedule' && <ConfirmReschedule />}
+      {showConfirm === 'reject' && (
+        <ConfirmReject
+          onSubmit={(reason) => onReject(reason, index)}
+          onCancel={() => setShowConfirm('')}
+        />
+      )}
+      {showConfirm === 'reschedule' && (
+        <ConfirmReschedule
+          onCancel={() => setShowConfirm('')}
+          onSubmit={(date) => onReschedule(date, index)}
+        />
+      )}
     </>
   )
 }
 
-export const tableUndelivered = (funcReject) => [
+export const tableUndelivered = (onReject, onReschedule) => [
   CreateColumns('No', 'no', false, (_, __, index) => ++index, 60),
   CreateColumns('Delivery Order', 'delivery_oder_id', false, undefined, 100),
   CreateColumns('Doc Type', 'doc_type', false, undefined, 150),
@@ -144,13 +75,14 @@ export const tableUndelivered = (funcReject) => [
   CreateColumns('Ship To Customer', 'ship_to_customer', false, undefined, 200),
   CreateColumns('Salesman', 'salesman', false, undefined, 300),
   CreateColumns('New Delivery Date', 'new_delivery_date', false, undefined, 200),
-  CreateColumns('Cancelation Reason', 'rejectReason', false, undefined, 200),
+  CreateColumns('Cancelation Reason', 'cancel_reason', false, undefined, 200),
   CreateColumns('Action', 'remarks', false, (link, record, index) => (
     <Linked
       link={link}
       status={record.status}
       type="action"
-      funcReject={funcReject}
+      onReject={onReject}
+      onReschedule={onReschedule}
       index={index}
     />
   )),

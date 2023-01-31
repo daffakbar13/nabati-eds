@@ -52,6 +52,7 @@ function DebounceSelect<
         <>
           {!options ? (
             <Select
+              onFocus={() => debounceFetcher('')}
               showSearch
               aria-required={'true'}
               labelInValue

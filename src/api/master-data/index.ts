@@ -15,8 +15,11 @@ const subUrl = {
   getCustomerByCompany: 'v1/master/get-customer/PP01',
   getCustomerList: 'v1/master/list/customer',
   getSalesOrgByCompany: 'v1/master/get-sales-org/PP01',
-  getBranch: 'v1/master/get-branch/PP01',
+  getSalesOfficeCompany: 'v1/master/get-sales-office',
+  getSalesmanGroupByCompany: '/v1/master/get-salesman-group/PP01',
   getSalesmanByCompany: 'v1/master/get-salesman/PP01',
+  getSalesOrgByCompanyDynamic: 'v1/master/get-sales-org',
+  getBranch: 'v1/master/get-branch/PP01',
   getProductByCompany: 'v1/master/get-product/PP01',
   getUom: 'v1/master/get-uom',
   getListProduct: '/v1/master/list/product',
@@ -33,13 +36,17 @@ const subUrl = {
   getVehicleByCompany: 'v1/master/get-vehicle/PP01',
   getDocFlow: 'v1/master/get-doc-flow/PP01',
   getCustomerGroupCompany: 'v1/master/get-customer-group/PP01',
-  getChannelByCompany: '/v1/master/get-channel/PP01',
-  getSalesmanGroupByCompany: '/v1/master/get-salesman-group/PP01',
+  getChannelByCompany: '/v1/master/get-channel',
   getProductMasterData: '/v1/master/list/product',
-  getSalesOrgByCompanyDynamic: 'v1/master/get-sales-org',
   getCustomerGroupCompanyDynamic: 'v1/master/get-customer-group',
   getConfigSlocCompanyDynamic: 'v1/master/get-config-sloc',
   getSlocbyConfigLogistic: 'v1/configuration/get_config_sloc',
+  getTermByCompanyId: 'v1/master/get-term',
+  getPaymentMethod: 'v1/master/get-payment-method',
+  getStatusBlock: 'v1/master/get-status-block',
+  getPriceGroupByCompanyId: 'v1/master/get-pricing-group',
+  getDivisionByCompanyId: 'v1/master/get-division',
+  getDistrictByCompanyId: 'v1/master/get-district',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -112,6 +119,18 @@ export const getSalesmanByCompany = async (): Promise<CommonDetailResponse<any>>
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getSalesmanByCompany,
+  })
+
+  return response.data
+}
+
+export const getSalesOfficeByCompany = async (
+  companyId: string = 'PP01',
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getSalesOfficeCompany}/${companyId}`,
   })
 
   return response.data
@@ -343,11 +362,13 @@ export const getCustomerGroupCompany = async (): Promise<CommonDetailResponse<an
   return response.data
 }
 
-export const getChannelByCompany = async (): Promise<CommonDetailResponse<any>> => {
+export const getChannelByCompany = async (
+  companyId: string = 'PP01',
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl.getChannelByCompany}`,
+    subUrl: `${subUrl.getChannelByCompany}/${companyId}`,
   })
 
   return response.data
@@ -418,6 +439,74 @@ export const getSlocbyConfigLogistic = async (
   const response = await call({
     method: METHODS.GET,
     subUrl: `${BaseUrl2}${subUrl.getSlocbyConfigLogistic}/${idbranch}`,
+  })
+
+  return response.data
+}
+
+export const getTermByCompanyId = async (
+  companyId: string = 'PP01',
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getTermByCompanyId}/${companyId}`,
+  })
+
+  return response.data
+}
+
+export const getPaymentMethod = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getPaymentMethod}`,
+  })
+
+  return response.data
+}
+
+export const getStatusBlock = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getStatusBlock}`,
+  })
+
+  return response.data
+}
+
+export const getPriceGroupByCompanyId = async (
+  companyId: string = 'PP01',
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getPriceGroupByCompanyId}/${companyId}`,
+  })
+
+  return response.data
+}
+
+export const getDivisionByCompanyId = async (
+  companyId: string = 'PP01',
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getDivisionByCompanyId}/${companyId}`,
+  })
+
+  return response.data
+}
+
+export const getDistrictByCompanyId = async (
+  companyId: string = 'PP01',
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl.getDistrictByCompanyId}/${companyId}`,
   })
 
   return response.data
