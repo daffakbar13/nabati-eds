@@ -12,6 +12,7 @@ export const columns = [
     dataIndex: 'sloc_id',
     render: (text, record, index) => index + 1,
     fixed: true,
+    width: 55,
   }),
   addColumn({
     title: 'Material Document',
@@ -23,6 +24,7 @@ export const columns = [
     title: 'Material',
     dataIndex: 'product_id',
     render: (text, record, index) => `${text || ''} - ${record.product_description || ''}`,
+    // fixed: true,
     width: 400,
   }),
   addColumn({
@@ -34,24 +36,21 @@ export const columns = [
     dataIndex: 'posting_date',
   }),
   addColumn({
-    title: 'Movement Type',
-    dataIndex: 'movement_type_id',
-  }),
-  addColumn({
-    title: 'Reservation',
-    dataIndex: 'reservation',
-  }),
-  addColumn({
-    title: 'Reservation',
-    dataIndex: 'reservation',
-  }),
-  addColumn({
     title: 'Purchase Order',
     dataIndex: 'purchase_order',
   }),
   addColumn({
+    title: 'Reservation',
+    dataIndex: 'reservation',
+  }),
+  addColumn({
     title: 'Time of Entry',
     dataIndex: 'time_of_entry',
+  }),
+  addColumn({
+    title: 'Sloc',
+    dataIndex: 'sloc_id',
+    render: (text, record, index) => `${text || ''} - ${record.sloc_name || ''}`,
   }),
   addColumn({
     title: 'Customer',
