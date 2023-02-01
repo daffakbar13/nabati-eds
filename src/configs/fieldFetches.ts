@@ -806,3 +806,19 @@ export function fieldRequestDocumentMaterialInTransit(search: string) {
     })),
   )
 }
+
+export function FieldOrderType(search: string) {
+  return getOrderTypeByCompany().then((result) =>
+    result.data
+      .filter(
+        ({ order_type_id, doc_type_name }) =>
+          order_type_id.toLowerCase().includes(search.toLowerCase()) ||
+          doc_type_name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .splice(0, 10)
+      .map(({ order_type_id, doc_type_name }) => ({
+        label: [order_type_id, ' - ', doc_type_name.split('-').join(' - ')].join(''),
+        value: order_type_id,
+      })),
+  )
+}

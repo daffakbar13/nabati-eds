@@ -3,21 +3,19 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Col, Search } from 'pink-lava-ui'
 import { Col as ColAntd, Row as RowAntd, Typography, Popover } from 'antd'
 import { CheckCircleFilled } from '@ant-design/icons'
-import { Card, SearchQueryParams, Modal, Pagination, FloatAction } from 'src/components'
-import {
-  getListProductIntraChannel,
-  deleteProductIntraChannel,
-} from 'src/api/logistic/config-mapping-product-intra'
-import { useTable } from 'src/hooks'
-import { colors } from 'src/configs/colors'
+import { Card, Modal, Pagination, FloatAction } from 'src/components'
+import { useTable, useFilters } from 'src/hooks'
 import Popup from 'src/components/Popup'
 import { PATH } from 'src/configs/menus'
 import { columns } from './columns'
+import {
+  getListOrderTypetoSloc,
+  DeleteOrderTypetoSloc,
+} from 'src/api/logistic/configuration-order-type-to-sloc'
 
 import CreateModal from './create'
 
 export default function PageConfigSalesORGCustomerGroupMaterial() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -38,7 +36,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }
 
   const table = useTable({
-    funcApi: getListProductIntraChannel,
+    funcApi: getListOrderTypetoSloc,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
   })
@@ -56,10 +54,6 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }
 
   useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
-
-  useEffect(() => {
     const ArrayFiltered = table.state.data.filter((dataAll) =>
       table.state.selected.some((selected) => dataAll.product_gt === selected),
     )
@@ -73,6 +67,13 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
     setSelectedData(DeletedData)
   }, [table.state.selected])
 
+  const { searchProps } = useFilters(table, 'Search by Branch, Order Type, Sloc', [
+    'branch_id',
+    'branch_name',
+    'order_type',
+    'sloc_id',
+  ])
+
   const handleChangeStatus = async () => {}
 
   return (
@@ -82,42 +83,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by Trans Type"
-              colorIcon={colors.grey.regular}
-              onChange={(e) => {
-                const idIndex = filters.findIndex((obj) => obj?.field == 'trans_type')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) =>
-                      oldFilter.filter((data) => data?.field != 'trans_type'),
-                    )
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      }
-                      return { ...data }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'trans_type',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
@@ -190,7 +156,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
               style={{ flexGrow: 1 }}
               variant="primary"
               onClick={() => {
-                deleteProductIntraChannel(selectedData)
+                DeleteOrderTypetoSloc(selectedData)
                   .then(() => setShowConfirm('Delete'))
                   .catch((err) => err)
               }}

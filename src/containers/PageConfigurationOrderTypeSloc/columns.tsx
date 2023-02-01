@@ -14,24 +14,25 @@ export const columns = (
   }),
   addColumn({
     title: 'Branch',
-    dataIndex: 'product_gt',
-    render: (text, record, index) => `${text || ''} - ${record.product_gt_name || ''}`,
+    dataIndex: 'branch_id',
+    render: (text, record, index) => `${text || ''} - ${record.branch_name || ''}`,
   }),
   addColumn({
     title: 'Order Type',
-    dataIndex: 'product_gt',
-    render: (text, record, index) => `ZWE1`,
+    dataIndex: 'order_type',
   }),
   addColumn({
     title: 'Sloc',
-    dataIndex: 'product_gt',
-    render: (text, record, index) => `GS00`,
+    dataIndex: 'sloc_id',
   }),
   addColumn({
     title: 'Active / Inactive',
-    dataIndex: 'product_gt',
+    dataIndex: 'status',
     render: (text, record, index) => (
-      <Switch checked={false} onChange={(bool: boolean) => onClickSwitch(bool, record)} />
+      <Switch
+        checked={text === 1 ? true : false}
+        onChange={(bool: boolean) => onClickSwitch(bool, record)}
+      />
     ),
   }),
   addColumn({
