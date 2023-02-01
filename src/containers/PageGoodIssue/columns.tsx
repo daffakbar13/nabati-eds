@@ -13,15 +13,17 @@ function Linked({
   link,
   linkType,
   type,
+  requestNumber,
 }: {
   link: string
   linkType: string
+  requestNumber?: string
   type: 'id' | 'action'
 }) {
   const router = useRouter()
   const navigate = () => {
     if (linkType === 'id') {
-      router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}`)
+      router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}?request_number=${requestNumber}`)
     } else if (linkType === 'PO') {
       router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
     } else if (linkType === 'DO') {
@@ -75,7 +77,9 @@ export const columns = [
   addColumn({
     title: 'GI Number',
     dataIndex: 'gi_number',
-    render: (text, record, index) => <Linked link={text} type="id" linkType="id" />,
+    render: (text, record, index) => (
+      <Linked link={text} type="id" linkType="id" requestNumber={record.do_number} />
+    ),
     fixed: true,
     sorter: true,
     width: 180,
@@ -111,6 +115,8 @@ export const columns = [
   addColumn({
     title: 'Action',
     dataIndex: 'gi_number',
-    render: (text, record, index) => <Linked link={text} type="action" linkType="id" />,
+    render: (text, record, index) => (
+      <Linked link={text} type="action" linkType="id" requestNumber={record.do_number} />
+    ),
   }),
 ]
