@@ -11,6 +11,7 @@ import { GoodIssueList, GoodIssueDetail } from './type'
 
 const url = 'v1/material-doc/sto-delivery/issue'
 const urlDetail = 'v1/material-doc/goodIssue'
+const urlDelivery = 'v1/sto-delivery/good-issue'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
@@ -20,6 +21,19 @@ export const getGoodIssueList = async (
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}/list`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+
+export const getGoodIssueListStoDelivery = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<GoodIssueList>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${urlDelivery}/list`,
     overrideBaseUrl,
     data: params,
   })

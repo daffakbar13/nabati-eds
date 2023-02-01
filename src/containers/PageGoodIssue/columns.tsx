@@ -67,14 +67,14 @@ export const columns = [
   }),
   addColumn({
     title: 'DO Number',
-    dataIndex: 'delivery_number',
+    dataIndex: 'do_number',
     render: (text, record, index) => <Linked link={text} type="id" linkType="DO" />,
     fixed: true,
     width: 180,
   }),
   addColumn({
     title: 'GI Number',
-    dataIndex: 'id',
+    dataIndex: 'gi_number',
     render: (text, record, index) => <Linked link={text} type="id" linkType="id" />,
     fixed: true,
     sorter: true,
@@ -91,13 +91,13 @@ export const columns = [
   }),
   addColumn({
     title: 'Supplying Branch',
-    dataIndex: 'suppl_branch_id',
-    render: (text, record, index) => <>{`${text} - ${record.suppl_branch_name}`}</>,
+    dataIndex: 'supply_branch_id',
+    render: (text, record, index) => <>{`${text} - ${record.supply_branch_name}`}</>,
   }),
   addColumn({
     title: 'Receiving Branch',
-    dataIndex: 'receive_plant_id',
-    render: (text, record, index) => <>{`${text} - ${record.receive_plant_name}`}</>,
+    dataIndex: 'receive_branch_id',
+    render: (text, record, index) => <>{`${text} - ${record.receive_branch_name}`}</>,
   }),
   addColumn({
     title: 'Mov. Type',
@@ -110,7 +110,7 @@ export const columns = [
   }),
   addColumn({
     title: 'Action',
-    dataIndex: 'id',
+    dataIndex: 'gi_number',
     render: (text, record, index) => <Linked link={text} type="action" linkType="id" />,
   }),
 ]
