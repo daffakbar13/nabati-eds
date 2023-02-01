@@ -7,7 +7,7 @@ import { Checkbox, Popover, Divider, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
-import { getGoodReceiptList } from 'src/api/logistic/good-receipt-intra-branch'
+import { getGoodReceiptListStoDelivery } from 'src/api/logistic/good-receipt-intra-branch'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
@@ -17,7 +17,7 @@ import { colors } from 'src/configs/colors'
 
 export default function PageGoodsIssue(props: Props) {
   const table = useTable({
-    funcApi: getGoodReceiptList,
+    funcApi: getGoodReceiptListStoDelivery,
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
@@ -47,7 +47,7 @@ export default function PageGoodsIssue(props: Props) {
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
     'Search by PO, DO, GI, GR Number',
-    ['po_number', 'do_number', 'gi_number', 'id'],
+    ['po_number', 'do_number', 'gi_number', 'gr_number'],
   )
 
   return (

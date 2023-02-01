@@ -38,7 +38,7 @@ export default function PageGoodsIssue(props: Props) {
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by PO, DO, GI Number', [
     'po_number',
     'do_number',
-    'id',
+    'gi_number',
   ])
 
   const statusOption = [

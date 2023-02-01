@@ -71,9 +71,9 @@ export const columns = [
   }),
   addColumn({
     title: 'DO Number',
-    dataIndex: 'delivery_number',
-    render: (delivery_number, rows, index) => (
-      <Linked link={delivery_number} type="id" linkType="DO" />
+    dataIndex: 'do_number',
+    render: (do_number, rows, index) => (
+      <Linked link={do_number} type="id" linkType="DO" />
     ),
     width: 180,
     fixed: true,
@@ -87,7 +87,7 @@ export const columns = [
   }),
   addColumn({
     title: 'GR Number',
-    dataIndex: 'id',
+    dataIndex: 'gr_number',
     render: (id, rows, index) => (
       <>
         {rows.status == 'Delivery' ? (
@@ -112,17 +112,17 @@ export const columns = [
   }),
   addColumn({
     title: 'Supplying Branch',
-    dataIndex: 'suppl_branch_id',
-    render: (suppl_branch_id, rows, index) => (
-      <>{`${suppl_branch_id} - ${rows.suppl_branch_name}`}</>
+    dataIndex: 'supply_branch_id',
+    render: (supply_branch_id, rows, index) => (
+      <>{`${supply_branch_id} - ${rows.supply_branch_name}`}</>
     ),
     width: 250,
   }),
   addColumn({
     title: 'Receiving Branch',
-    dataIndex: 'receive_plant_id',
-    render: (receive_plant_id, rows, index) => (
-      <>{`${receive_plant_id} - ${rows.receive_plant_name}`}</>
+    dataIndex: 'receive_branch_id',
+    render: (receive_branch_id, rows, index) => (
+      <>{`${receive_branch_id} - ${rows.receive_branch_name}`}</>
     ),
     width: 250,
   }),
@@ -139,7 +139,7 @@ export const columns = [
     title: 'Action',
     dataIndex: 'status',
     render: (status, rows, index) => (
-      <Linked link={rows.id} type="action" linkType="id" status={status} />
+      <Linked link={rows.gr_number} type="action" linkType="id" status={status} />
     ),
     width: 250,
   }),
