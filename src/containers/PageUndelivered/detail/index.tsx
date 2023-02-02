@@ -1,18 +1,13 @@
 import React, { useState } from 'react'
 import { Button, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card, DataList, Popup } from 'src/components'
-import { Divider, Row, Typography, Col } from 'antd'
+import { Card, DataList } from 'src/components'
+import { Divider, Row, Col } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { ArrowLeftOutlined, CheckCircleFilled } from '@ant-design/icons'
+import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import {
-  confirmUndelivered,
-  getUndeliveredDetail,
-  multipleSubmitUndelivered,
-} from 'src/api/undelivered'
+import { confirmUndelivered, getUndeliveredDetail } from 'src/api/undelivered'
 import { PATH } from 'src/configs/menus'
-import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldReason } from 'src/configs/fieldFetches'
 import Loader from 'src/components/Loader'
 import dateFormat from 'src/utils/dateFormat'
@@ -22,21 +17,23 @@ import ConfirmApprove from '../alerts/ConfirmApprove'
 import ConfirmSuccessApprove from '../alerts/ConfirmSuccessApprove'
 import ConfirmSuccessReject from '../alerts/ConfirmSuccessReject'
 import ConfirmSuccessReschedule from '../alerts/ConfirmSuccessReschedule'
+import ConfirmConfirm from '../alerts/ConfirmConfirm'
 
 export default function PageApprovalDetail() {
   const titlePage = useTitlePage('detail')
+  const router = useRouter()
   const [showConfirm, setShowConfirm] = useState<
-    'approve' | 'success-approve' | 'success-reject' | 'success-reschedule' | ''
+    'approve' | 'success-approve' | 'success-reject' | 'success-reschedule' | 'confirm' | ''
   >('')
   const [reason, setReason] = React.useState('')
+  const [dataTable, setDataTable] = React.useState([])
   const [optionsReason, setOptionsReason] = React.useState([])
+  const [payloads, setPayloads] = React.useState({})
   const [proccessing, setProccessing] = React.useState('')
   const [isSuccessConfirm, setIsSuccessConfirm] = useState(false)
   const onProcess = proccessing !== ''
-  const router = useRouter()
   const data = useDetail(getUndeliveredDetail, { id: router.query.id as string }, false)
   const hasData = Object.keys(data).length > 0
-  const [dataTable, setDataTable] = React.useState([])
 
   const dataList = [
     DataList.createDataList('Sales Org.', data.sales_org),
@@ -52,11 +49,13 @@ export default function PageApprovalDetail() {
   ]
 
   React.useEffect(() => {
-    setDataTable(data.item)
+    if (hasData) {
+      setDataTable(data.item)
+    }
   }, [data])
 
   React.useEffect(() => {
-    fieldReason('C')
+    fieldReason('J')
       .then((res) => {
         setOptionsReason(res)
         setReason(res[0].value)
@@ -64,35 +63,46 @@ export default function PageApprovalDetail() {
       .catch(() => setOptionsReason([]))
   }, [])
 
+  React.useEffect(() => {
+    setPayloads(() => ({
+      shipment_id: router.query.id,
+      delivery_data: dataTable.map((d, i) => ({
+        delivery_id: d.delivery_oder_id,
+        delivery_date: d.order_date,
+        is_delivery: 0,
+        cancelation_reason_id: reason,
+      })),
+    }))
+  }, [dataTable])
+
   const handleApprove = (date: any) => {
     setProccessing('Wait for approving')
 
-    const payload = {
+    const newPayload = {
       shipment_id: router.query.id,
       delivery_data:
         dataTable?.length > 0
-          ? dataTable.map((item) => {
-              return {
-                delivery_id: item?.delivery_oder_id,
-                delivery_date: date,
-                is_delivery: 1,
-                cancelation_reason_id: '',
-              }
-            })
+          ? dataTable.map((item) => ({
+            delivery_id: item?.delivery_oder_id,
+            delivery_date: date,
+            is_delivery: 1,
+            cancelation_reason_id: '',
+          }))
           : [],
     }
+    setPayloads(newPayload)
 
-    confirmUndelivered(payload)
-      .then(() => {
-        setIsSuccessConfirm(true)
-        setShowConfirm('success-approve')
-        setProccessing('')
-      })
-      .catch(() => setProccessing(''))
+    // confirmUndelivered(payload)
+    //   .then(() => {
+    //     setIsSuccessConfirm(true)
+    //     setShowConfirm('success-approve')
+    //     setProccessing('')
+    //   })
+    //   .catch(() => setProccessing(''))
   }
 
   const handleReject = (reason: string, index: number) => {
-    setProccessing('Wait for rejecting')
+    // setProccessing('Wait for rejecting')
 
     // const payload = {
     //   shipment_id: router.query.id,
@@ -104,36 +114,43 @@ export default function PageApprovalDetail() {
     //     },
     //   ],
     // }
-    const payload = {
+    const newPayload = {
       shipment_id: router.query.id,
       delivery_data: [
         {
-          delivery_id: dataTable[index]['delivery_oder_id'],
-          delivery_date: dataTable[index]['order_date'],
+          delivery_id: dataTable[index].delivery_oder_id,
+          delivery_date: dataTable[index].order_date,
           is_delivery: 0,
           cancelation_reason_id: reason,
         },
       ],
     }
+    setPayloads(newPayload)
+    const newData = [...dataTable]
+    newData[index] = {
+      ...dataTable[index],
+      cancel_reason: reason,
+    }
+    setDataTable(newData)
 
-    confirmUndelivered(payload)
-      .then(() => {
-        setShowConfirm('success-reject')
+    // confirmUndelivered(payload)
+    //   .then(() => {
+    //     setShowConfirm('success-reject')
 
-        const newData = [...dataTable]
-        newData[index] = {
-          ...dataTable[index],
-          cancel_reason: reason,
-        }
-        setDataTable(newData)
+    //     const newData = [...dataTable]
+    //     newData[index] = {
+    //       ...dataTable[index],
+    //       cancel_reason: reason,
+    //     }
+    //     setDataTable(newData)
 
-        setProccessing('')
-      })
-      .catch(() => setProccessing(''))
+    //     setProccessing('')
+    //   })
+    //   .catch(() => setProccessing(''))
   }
 
   const handleReschedule = (date: any, index: number) => {
-    setProccessing('Wait for reschedule')
+    // setProccessing('Wait for reschedule')
     // const payload = {
     //   shipment_id: router.query.id,
     //   items: [
@@ -149,29 +166,38 @@ export default function PageApprovalDetail() {
       shipment_id: router.query.id,
       delivery_data: [
         {
-          delivery_id: dataTable[index]['delivery_oder_id'],
+          delivery_id: dataTable[index].delivery_oder_id,
           delivery_date: date,
           is_delivery: 1,
-          cancelation_reason_id: dataTable[index]['cancel_reason'],
+          cancelation_reason_id: '',
         },
       ],
     }
 
-    console.log(date)
-    confirmUndelivered(payload)
-      .then(() => {
-        setShowConfirm('success-reschedule')
+    setPayloads(payload)
 
-        const newData = [...dataTable]
-        newData[index] = {
-          ...dataTable[index],
-          new_delivery_date: date,
-        }
-        setDataTable(newData)
+    const newData = [...dataTable]
+    newData[index] = {
+      ...dataTable[index],
+      new_delivery_date: date,
+    }
+    setDataTable(newData)
 
-        setProccessing('')
-      })
-      .catch(() => setProccessing(''))
+    // console.log(date)
+    // confirmUndelivered(payload)
+    //   .then(() => {
+    //     setShowConfirm('success-reschedule')
+
+    //     const newData = [...dataTable]
+    //     newData[index] = {
+    //       ...dataTable[index],
+    //       new_delivery_date: date,
+    //     }
+    //     setDataTable(newData)
+
+    //     setProccessing('')
+    //   })
+    //   .catch(() => setProccessing(''))
   }
 
   return (
@@ -199,7 +225,7 @@ export default function PageApprovalDetail() {
               size="big"
               variant="primary"
               onClick={() => {
-                setShowConfirm('approve')
+                setShowConfirm('confirm')
               }}
             >
               Confirm
@@ -234,6 +260,9 @@ export default function PageApprovalDetail() {
             />
           </div>
         </Card>
+      )}
+      {showConfirm === 'confirm' && (
+        <ConfirmConfirm payload={payloads} onCancel={() => setShowConfirm('')} setProccessing={setProccessing} setShowConfirm={setShowConfirm} />
       )}
       {showConfirm === 'approve' && (
         <ConfirmApprove

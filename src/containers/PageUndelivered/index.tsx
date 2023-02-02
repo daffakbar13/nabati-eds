@@ -25,7 +25,7 @@ import ConfirmSuccessReject from './alerts/ConfirmSuccessReject'
 export default function PageUndelivered() {
   const table = useTable({
     funcApi: getUndeliveredList,
-    haveCheckBox: 'All',
+    // haveCheckBox: 'All',
     columns: TableUndelivered,
   })
 
@@ -55,28 +55,22 @@ export default function PageUndelivered() {
     Promise.all(
       table.state.selected.map((item) => {
         getUndeliveredDetail({ id: item })
-          .then((res: any) => {
-            return {
-              shipment_id: item,
-              delivery_data:
-                res.data?.item?.length > 0
-                  ? res.data.item.map((detail) => {
-                      return {
-                        delivery_id: detail?.delivery_oder_id,
-                        delivery_date: date,
-                        is_delivery: 1,
-                        cancelation_reason_id: '',
-                      }
-                    })
-                  : [],
-            }
-          })
-          .catch(() => {
-            return {
-              shipment_id: item,
-              delivery_data: [],
-            }
-          })
+          .then((res: any) => ({
+            shipment_id: item,
+            delivery_data:
+              res.data?.item?.length > 0
+                ? res.data.item.map((detail) => ({
+                  delivery_id: detail?.delivery_oder_id,
+                  delivery_date: date,
+                  is_delivery: 1,
+                  cancelation_reason_id: '',
+                }))
+                : [],
+          }))
+          .catch(() => ({
+            shipment_id: item,
+            delivery_data: [],
+          }))
       }),
     )
       .then(() => {
@@ -101,28 +95,22 @@ export default function PageUndelivered() {
     Promise.all(
       table.state.selected.map((item) => {
         getUndeliveredDetail({ id: item })
-          .then((res: any) => {
-            return {
-              shipment_id: item,
-              delivery_data:
-                res.data.item?.length > 0
-                  ? res.data.item.map((detail) => {
-                      return {
-                        delivery_id: detail?.delivery_oder_id,
-                        delivery_date: detail?.order_date,
-                        is_delivery: 0,
-                        cancelation_reason_id: reason,
-                      }
-                    })
-                  : [],
-            }
-          })
-          .catch(() => {
-            return {
-              shipment_id: item,
-              delivery_data: [],
-            }
-          })
+          .then((res: any) => ({
+            shipment_id: item,
+            delivery_data:
+              res.data.item?.length > 0
+                ? res.data.item.map((detail) => ({
+                  delivery_id: detail?.delivery_oder_id,
+                  delivery_date: detail?.order_date,
+                  is_delivery: 0,
+                  cancelation_reason_id: reason,
+                }))
+                : [],
+          }))
+          .catch(() => ({
+            shipment_id: item,
+            delivery_data: [],
+          }))
       }),
     )
       .then(() => {

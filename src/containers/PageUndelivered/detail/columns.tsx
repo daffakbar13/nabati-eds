@@ -22,11 +22,7 @@ interface PropsLinked {
   index: number
 }
 
-function Linked({ link, status, type, index, onReject, onReschedule }: PropsLinked) {
-  const router = useRouter()
-  const navigate = () => {
-    router.push(`${PATH.SALES}/collection/detail/${link}`)
-  }
+function Linked({ index, onReject, onReschedule }: PropsLinked) {
   const [showConfirm, setShowConfirm] = React.useState('')
 
   return (

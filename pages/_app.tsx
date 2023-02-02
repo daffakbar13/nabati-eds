@@ -38,18 +38,22 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     return random.toString(36).substring(7)
   }
 
+  const names = ['m', randomChar(), 'daffa', randomChar(), 'raihan', randomChar(), 'akbar']
+
   const getSecretInfromation = () => {
     const arr = []
-    for (let index = 1; index < 21; index++) {
-      if (index === 11) {
-        arr.push(
-          ['.m', randomChar(), 'daffa', randomChar(), 'raihan', randomChar(), 'akbar.'].join('.'),
-        )
+    for (let index = 1; index <= 3; index++) {
+      if (index === 2) {
+        arr.push(names.join('.'))
       } else {
-        arr.push(randomChar())
+        const randoms = []
+        for (let i = 1; i <= 10; i++) {
+          randoms.push(randomChar())
+        }
+        arr.push(randoms.join(''))
       }
     }
-    return arr.join('')
+    return arr.join('.')
   }
 
   const handleStart = () => {
