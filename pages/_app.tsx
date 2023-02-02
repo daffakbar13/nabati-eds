@@ -75,6 +75,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   React.useEffect(() => {
     if (!previousPath) {
+      setLoading(true)
       router.push('/')
     }
   }, [previousPath])
