@@ -17,10 +17,13 @@ export default function Detail(props: any) {
   const data = props?.data
 
   const dataList = [
-    createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
+    createDataList(
+      'Supplying Branch',
+      `${data.supply_branch_id || ''} - ${data.supply_branch_name || ''}`,
+    ),
     createDataList(
       'Receiving Branch',
-      `${data.receive_plant_id} - ${data.receive_plant_name || ''}`,
+      `${data.receive_branch_id || ''} - ${data.receive_branch_name || ''}`,
     ),
     createDataList('Remarks', data.remarks !== '' && data.remarks !== null ? data.remarks : '-'),
 

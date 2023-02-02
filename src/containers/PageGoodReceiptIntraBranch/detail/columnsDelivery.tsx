@@ -68,14 +68,14 @@ export const useTableAddItem = (props: any) => {
       description_show: `${item.product_id} - ${item.product_name}`,
       remarks: '-',
       batch: item.batch,
-      qty: item.qty,
-      base_qty: item.base_qty,
-      received_qty: item.qty,
-      do_qty: item.base_qty,
-      uom_id: item.uom_id,
-      base_uom_id: item.base_uom_id,
-      received_uom_id: item.uom_id,
-      do_uom_id: item.base_uom_id,
+      qty: item.po_qty,
+      base_qty: item.po_base_qty,
+      received_qty: item.received_qty,
+      do_qty: item.outstanding_qty,
+      uom_id: item.po_uom_id,
+      base_uom_id: item.po_base_uom_id,
+      received_uom_id: item.received_uom_id,
+      do_uom_id: item.outstanding_uom_id,
       sloc_id: 'GS00',
     }))
 
@@ -211,7 +211,7 @@ export const useTableAddItem = (props: any) => {
         <DebounceSelect
           type="input"
           value={row.remarks}
-          onChange={(e: any) => {
+          onBlur={(e: any) => {
             handleChangeData('remarks', e.target.value as string, index)
           }}
         />

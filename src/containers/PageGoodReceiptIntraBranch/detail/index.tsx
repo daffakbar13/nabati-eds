@@ -1,14 +1,23 @@
 import React from 'react'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getGoodReceiptDetail } from 'src/api/logistic/good-receipt-intra-branch'
+import { getGoodReceiptDetailStoDelivery } from 'src/api/logistic/good-receipt-intra-branch'
 import ContainerDetail from './detail'
 import ContainerDetailDelivery from './detailDelivery'
 import { Loader } from 'src/components'
 
 export default function PageIntraChannelGoodIssueDetail() {
   const router = useRouter()
-  const data: any = useDetail(getGoodReceiptDetail, { id: router.query.id as string }, false)
+  const data: any = useDetail(
+    getGoodReceiptDetailStoDelivery,
+    {
+      id: router.query.id as string,
+      requestNumber: router.query.request_number as string,
+      doc_type: 'WE' as string,
+    },
+    false,
+  )
+  console.log('data', data)
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {

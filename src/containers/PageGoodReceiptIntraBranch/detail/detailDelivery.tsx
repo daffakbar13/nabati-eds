@@ -103,7 +103,7 @@ export default function Detail(props: any) {
       <Spacer size={20} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect type="input" label="DO Number" value={data.delivery_number} disabled />
+          <DebounceSelect type="input" label="DO Number" value={data.do_number} disabled />
           <DebounceSelect type="input" label="PO Number" value={data.po_number} disabled />
           <DebounceSelect
             type="input"
@@ -125,7 +125,7 @@ export default function Detail(props: any) {
           <DebounceSelect
             type="input"
             label="Supplying Branch"
-            value={`${data.suppl_branch_id} - ${data.suppl_branch_name}` as any}
+            value={`${data.supply_branch_id || ''} - ${data.supply_branch_name || ''}` as any}
             disabled
           />
           <DebounceSelect
@@ -138,7 +138,7 @@ export default function Detail(props: any) {
           <DebounceSelect
             type="input"
             label="Receiving Branch"
-            value={`${data.receive_plant_id} - ${data.receive_plant_name}` as any}
+            value={`${data.receive_branch_id || ''} - ${data.receive_branch_name || ''}` as any}
             disabled
           />
         </div>

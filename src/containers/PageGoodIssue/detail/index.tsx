@@ -30,15 +30,16 @@ export default function PageIntraChannelGoodIssueDetail() {
 
   const dataList = [
     // row 1
-    createDataList('Request Number', data.id || '-'),
-    createDataList('Supplying Branch', `${data.suppl_branch_id} - ${data.suppl_branch_name || ''}`),
+    createDataList('Request Number', data.do_number || '-'),
+    createDataList('Supplying Branch', `${data.supply_branch_id} - ${data.supply_branch_name || ''}`),
     createDataList(
       'Receiving Branch',
-      `${data.receive_plant_id} - ${data.receive_plant_name || ''}`,
+      `${data.receive_branch_id} - ${data.receive_branch_name || ''}`,
     ),
     createDataList('Remarks', data.remarks !== '' && data.remarks !== null ? data.remarks : '-'),
 
     // row 2
+    createDataList('GI Number', data.gi_number || '-'),
     createDataList('Doc Date', dateFormat(data.document_date)),
     createDataList('Posting Date', dateFormat(data.posting_date)),
 
@@ -62,7 +63,7 @@ export default function PageIntraChannelGoodIssueDetail() {
   ]
 
   React.useEffect(() => {
-    if (data.suppl_branch_id) {
+    if (data.po_number) {
       setLoading(false)
     } else {
       setLoading(true)
@@ -104,12 +105,12 @@ export default function PageIntraChannelGoodIssueDetail() {
                 ))}
               </Col>
               <Col span={8}>
-                {dataList.slice(4, 6).map(({ label, value }, i) => (
+                {dataList.slice(4, 7).map(({ label, value }, i) => (
                   <DataList key={i} label={label} value={value} />
                 ))}
               </Col>
               <Col span={8}>
-                {dataList.slice(6).map(({ label, value }, i) => (
+                {dataList.slice(7).map(({ label, value }, i) => (
                   <DataList key={i} label={label} value={value} />
                 ))}
               </Col>

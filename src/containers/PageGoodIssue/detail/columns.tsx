@@ -23,11 +23,13 @@ export const column = [
     children: [
       addColumn({
         title: 'Qty',
-        dataIndex: 'qty',
+        dataIndex: 'po_qty',
+        width: 75,
       }),
       addColumn({
         title: 'UoM',
-        dataIndex: 'uom_id',
+        dataIndex: 'po_uom_id',
+        width: 75,
       }),
     ],
   }),
@@ -37,21 +39,12 @@ export const column = [
     children: [
       {
         title: 'Qty',
-        dataIndex: 'received_base_qty',
-        render: (text, record, index) => (
-          <>
-            {record.uom_id == 'CTN'
-              ? Math.round((parseFloat(record.qty) - parseFloat(record.received_qty)) * 100) / 100
-              : Math.round(
-                  (parseFloat(record.base_qty) - parseFloat(record.received_base_qty)) * 100,
-                ) / 100}
-          </>
-        ),
+        dataIndex: 'outstanding_qty',
         width: 75,
       },
       {
         title: 'UoM',
-        dataIndex: 'uom_id',
+        dataIndex: 'outstanding_uom_id',
         width: 75,
       },
     ],
@@ -62,18 +55,21 @@ export const column = [
     children: [
       addColumn({
         title: 'Qty',
-        dataIndex: 'received_qty',
+        dataIndex: 'received_base_qty',
+        width: 75,
       }),
       addColumn({
         title: 'UoM',
-        dataIndex: 'received_uom_id',
+        dataIndex: 'received_base_uom_id',
+        width: 75,
       }),
     ],
   }),
   addColumn({
     title: 'Storage Location',
     dataIndex: 'sloc_id',
-    render: (text, record, index) => `${text || ''} - ${record.sloc_name || ''}`,
+    render: (text, record, index) => `${text || ''}`,
+    width: 150,
   }),
   addColumn({
     title: 'Batch',

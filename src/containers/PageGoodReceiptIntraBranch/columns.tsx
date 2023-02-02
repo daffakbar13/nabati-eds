@@ -14,22 +14,26 @@ function Linked({
   linkType,
   type,
   status,
+  requestNumber,
 }: {
   link: string
   linkType: string
   type: 'id' | 'action'
   status?: string
+  requestNumber?: string
 }) {
   const router = useRouter()
   const navigate = () => {
     if (linkType === 'id') {
-      router.push(`${PATH.LOGISTIC}/good-receipt-intra-branch/detail/${link}`)
+      router.push(
+        `${PATH.LOGISTIC}/good-receipt-intra-branch/detail/${link}?request_number=${requestNumber}`,
+      )
     } else if (linkType === 'PO') {
       router.push(`${PATH.LOGISTIC}/po-sto/detail/${link}`)
     } else if (linkType === 'DO') {
       router.push(`${PATH.LOGISTIC}/do-sto/detail/${link}`)
     } else if (linkType === 'GI') {
-      router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}`)
+      router.push(`${PATH.LOGISTIC}/good-issue/detail/${link}?request_number=${requestNumber}`)
     }
   }
   const [hover, setHover] = React.useState(false)
@@ -72,16 +76,16 @@ export const columns = [
   addColumn({
     title: 'DO Number',
     dataIndex: 'do_number',
-    render: (do_number, rows, index) => (
-      <Linked link={do_number} type="id" linkType="DO" />
-    ),
+    render: (do_number, rows, index) => <Linked link={do_number} type="id" linkType="DO" />,
     width: 180,
     fixed: true,
   }),
   addColumn({
     title: 'GI Number',
     dataIndex: 'gi_number',
-    render: (gi_number, rows, index) => <Linked link={gi_number} type="id" linkType="GI" />,
+    render: (gi_number, rows, index) => (
+      <Linked link={gi_number} type="id" linkType="GI" requestNumber={rows.do_number} />
+    ),
     width: 180,
     fixed: true,
   }),
@@ -93,7 +97,13 @@ export const columns = [
         {rows.status == 'Delivery' ? (
           ''
         ) : (
-          <Linked link={id} type="id" linkType="id" status={rows.status} />
+          <Linked
+            link={id}
+            type="id"
+            linkType="id"
+            status={rows.status}
+            requestNumber={rows.do_number}
+          />
         )}
       </>
     ),
@@ -139,7 +149,13 @@ export const columns = [
     title: 'Action',
     dataIndex: 'status',
     render: (status, rows, index) => (
-      <Linked link={rows.gr_number} type="action" linkType="id" status={status} />
+      <Linked
+        link={rows.gr_number}
+        type="action"
+        linkType="id"
+        status={status}
+        requestNumber={rows.do_number}
+      />
     ),
     width: 250,
   }),
