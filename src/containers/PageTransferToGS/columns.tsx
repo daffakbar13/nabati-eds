@@ -62,11 +62,6 @@ export const column = [
     render: (text, record, index) => `${text || ''} - ${record.company_name || ''}`,
   }),
   addColumn({
-    title: 'Company',
-    dataIndex: 'company_id',
-    render: (text, record, index) => `${text || ''} - ${record.company_name || ''}`,
-  }),
-  addColumn({
     title: 'Branch',
     dataIndex: 'branch_id',
     render: (text, record, index) => `${text || ''} - ${record.branch_name || ''}`,

@@ -120,7 +120,7 @@ export default function PageQuotationDetail() {
             </List>
             <div style={{ borderTop: '1px solid #AAAAAA', margin: '32px auto 0' }} />
             <div style={{ overflow: 'scroll', marginTop: 16 }}>
-              <Table columns={columns} dataSource={details?.items || []} />
+              <Table columns={columns} dataSource={details?.item || []} />
             </div>
           </Card>
 

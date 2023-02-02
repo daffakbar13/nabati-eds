@@ -83,7 +83,7 @@ export const column = [
   addColumn({
     title: 'Status',
     dataIndex: 'status_name',
-    render: (text, record, index) => <TaggedStatus status={text} />,
+    render: (text, record, index) => <TaggedStatus status={text === 'Approved' ? 'Done' : text} />,
   }),
   addColumn({
     title: 'Action',

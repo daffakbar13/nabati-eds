@@ -5,7 +5,7 @@ import TaggedStatus from 'src/components/TaggedStatus'
 function Action({ link }: { link: string }) {
   const router = useRouter()
   const navigate = () => {
-    router.push(`/sales/undelivered/detail/${link}`)
+    router.push(`/sales/customer-noo/detail/${link}`)
   }
   return (
     <h4 onClick={navigate} style={{ cursor: 'pointer' }}>

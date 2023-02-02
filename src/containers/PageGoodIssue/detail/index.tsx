@@ -6,7 +6,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getGoodIssueDetail } from 'src/api/logistic/good-issue-intra-branch'
+import { getGoodIssueDetailStoDelivery } from 'src/api/logistic/good-issue-intra-branch'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import TaggedStatus from 'src/components/TaggedStatus'
@@ -17,8 +17,12 @@ export default function PageIntraChannelGoodIssueDetail() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
   const data: any = useDetail(
-    getGoodIssueDetail,
-    { id: router.query.id as string, doc_type: 'WL' as string },
+    getGoodIssueDetailStoDelivery,
+    {
+      id: router.query.id as string,
+      requestNumber: router.query.request_number as string,
+      doc_type: 'WL' as string,
+    },
     false,
   )
   const createDataList = (label: string, value: string) => ({ label, value })

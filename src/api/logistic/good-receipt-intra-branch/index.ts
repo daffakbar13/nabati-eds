@@ -10,6 +10,7 @@ import { API_BASE_URL_2 } from 'src/configs/env'
 import { GoodRecepitList, GoodRecepitListDetail } from './type'
 
 const url = 'v1/material-doc'
+const urlDelivery = 'v1/sto-delivery/good-receipt'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_2
 
@@ -19,6 +20,18 @@ export const getGoodReceiptList = async (
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}/receipt/list`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getGoodReceiptListStoDelivery = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<GoodRecepitList>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${urlDelivery}/list`,
     overrideBaseUrl,
     data: params,
   })

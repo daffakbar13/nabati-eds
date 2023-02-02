@@ -8,7 +8,7 @@ import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
 import { MoreOutlined } from '@ant-design/icons'
 import FloatAction from 'src/components/FloatAction'
-import { getGoodIssueList } from 'src/api/logistic/good-issue-intra-branch'
+import { getGoodIssueListStoDelivery } from 'src/api/logistic/good-issue-intra-branch'
 import Popup from 'src/components/Popup'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
@@ -18,7 +18,7 @@ import { colors } from 'src/configs/colors'
 
 export default function PageGoodsIssue(props: Props) {
   const table = useTable({
-    funcApi: getGoodIssueList,
+    funcApi: getGoodIssueListStoDelivery,
     haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
     columns,
   })
@@ -38,7 +38,7 @@ export default function PageGoodsIssue(props: Props) {
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by PO, DO, GI Number', [
     'po_number',
     'do_number',
-    'id',
+    'gi_number',
   ])
 
   const statusOption = [
