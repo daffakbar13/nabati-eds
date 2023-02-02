@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Form, Tabs } from 'antd'
 import {
-  // updateProductIntraChannel,
+  UpdateOrderTypetoSloc,
   CreateOrderTypetoSloc,
 } from 'src/api/logistic/configuration-order-type-to-sloc'
 import { PATH } from 'src/configs/menus'
@@ -28,14 +28,20 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [showConfirmModal, setConfirmModal] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
+  const [dataFormUpdate, setDataFormUpdate] = useState<FormData>()
   const [OrderTypeSloc, setOrderTypeSloc] = useState([])
   const [currentTab, setCurrentTab] = useState('1')
   const isOnEditMode = !!payload
 
   const initialValue = { branch_from: 'P122', order_type_sloc: OrderTypeSloc }
+  const initialValueEdit = { sloc_id:  payload?.sloc_id || 'GS00'}
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
+  const onChangeFormUpdate = (form: string, value: any) => {
+    setDataFormUpdate((old) => ({ ...old, ...{ [form]: value } }))
   }
 
   const onClickSubmit = async () => {
@@ -43,18 +49,21 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const doUpdate = async (reqBody: any) => {
-    // try {
-    //   setLoading(true)
-    //   const res = updateProductIntraChannel(
-    //     reqBody.trans_id as string,
-    //     reqBody.gt_id as string,
-    //     reqBody,
-    //   )
-    //   setLoading(false)
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
+    try {
+      setLoading(true)
+      const res = UpdateOrderTypetoSloc(
+        {
+          company_id: payload?.company_id,
+          branch_id: payload?.branch_id,
+          order_type: payload?.order_type,
+        },
+        reqBody,
+      )
+      setLoading(false)
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   const doCreate = async (reqBody: any) => {
@@ -70,13 +79,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
 
     if (!isOnEditMode) {
+      const reqBody = { ...initialValue, ...dataForm }
       return doCreate(reqBody)
     }
 
     if (isOnEditMode) {
+      const reqBody = { ...initialValueEdit, ...dataFormUpdate }
       return doUpdate(reqBody)
     }
 
@@ -118,15 +128,23 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
-        <Tabs
-          defaultActiveKey="1"
-          onChange={(asd) => {
-            setCurrentTab(asd)
-          }}
-          items={AllTabs}
-        />
+        {!isOnEditMode && (
+          <Tabs
+            defaultActiveKey="1"
+            onChange={(asd) => {
+              setCurrentTab(asd)
+            }}
+            items={AllTabs}
+          />
+        )}
+
         {currentTab === '1' ? (
-          <CreateNewOrderTypeSLoc onChangeForm={onChangeForm} setOrderTypeSloc={setOrderTypeSloc} />
+          <CreateNewOrderTypeSLoc
+            onChangeForm={onChangeForm}
+            setOrderTypeSloc={setOrderTypeSloc}
+            onChangeFormUpdate={onChangeFormUpdate}
+            payload={payload || null}
+          />
         ) : (
           <CreateCopyFormBranch onChangeForm={onChangeForm} />
         )}

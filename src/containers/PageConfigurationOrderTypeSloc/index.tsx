@@ -11,6 +11,7 @@ import { columns } from './columns'
 import {
   getListOrderTypetoSloc,
   DeleteOrderTypetoSloc,
+  UpdateStatusOrderTypetoSloc,
 } from 'src/api/logistic/configuration-order-type-to-sloc'
 
 import CreateModal from './create'
@@ -74,7 +75,24 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
     'sloc_id',
   ])
 
-  const handleChangeStatus = async () => {}
+  const handleChangeStatus = async () => {
+    try {
+      const res = UpdateStatusOrderTypetoSloc(
+        {
+          company_id: changeStatusPayload?.company_id,
+          branch_id: changeStatusPayload?.branch_id,
+          order_type: changeStatusPayload?.order_type,
+          sloc_id: changeStatusPayload?.sloc_id,
+        },
+        {
+          status: changeStatusPayload?.company_id === '0' ? 1 : 0,
+        },
+      )
+      return res
+    } catch (error) {
+      return error
+    }
+  }
 
   return (
     <>
@@ -95,7 +113,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} rowKey={'product_gt'} />
+          <Table {...table.state.tableProps} rowKey={'branch_id'} />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
