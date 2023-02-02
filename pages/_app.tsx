@@ -73,12 +73,12 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     }
   }, [router])
 
-  React.useEffect(() => {
-    if (!previousPath) {
-      setLoading(true)
-      router.push('/')
-    }
-  }, [previousPath])
+  // React.useEffect(() => {
+  //   if (!previousPath) {
+  //     setLoading(true)
+  //     router.push('/')
+  //   }
+  // }, [previousPath])
 
   return (
     <QueryClientProvider client={queryClient}>
