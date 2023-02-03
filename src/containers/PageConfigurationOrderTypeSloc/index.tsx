@@ -22,9 +22,10 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
   const [selectedData, setSelectedData] = useState([])
-  const [showConfirm, setShowConfirm] = useState('')
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
+  const [dataTable, setdataTable] = useState([])
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
@@ -55,14 +56,15 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }
 
   useEffect(() => {
-    const ArrayFiltered = table.state.data.filter((dataAll) =>
-      table.state.selected.some((selected) => dataAll.product_gt === selected),
+    const ArrayFiltered = dataTable.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.idx === selected),
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => ({
       company_id: item.company_id,
-      trans_type: item.trans_type,
-      product_gt: item.product_gt,
+      branch_id: item.branch_id,
+      order_type: item.order_type,
+      sloc_id: item.sloc_id,
     }))
 
     setSelectedData(DeletedData)
@@ -74,6 +76,14 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
     'order_type',
     'sloc_id',
   ])
+
+  useEffect(() => {
+    const dataApi = table.state.data.map((item: any, index) => ({
+      idx: index,
+      ...item,
+    }))
+    setdataTable(dataApi)
+  }, [table?.state?.data])
 
   const handleChangeStatus = async () => {
     try {
@@ -88,6 +98,17 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
           status: changeStatusPayload?.company_id === '0' ? 1 : 0,
         },
       )
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
+  const handleDeleteData = async () => {
+    try {
+      const res = DeleteOrderTypetoSloc({
+        delete_config: selectedData,
+      })
       return res
     } catch (error) {
       return error
@@ -113,7 +134,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} rowKey={'branch_id'} />
+          <Table {...table.state.tableProps} rowKey={'idx'} dataSource={dataTable} />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -128,7 +149,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
                     size="big"
                     variant="tertiary"
                     onClick={() => {
-                      setShowConfirm('submit')
+                      setShowDeleteModal(true)
                     }}
                   >
                     Delete
@@ -139,87 +160,51 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
           </FloatAction>
         )}
       </Card>
-      {showConfirm === 'submit' && (
-        <Popup
-          onOutsideClick={() => {
-            setShowConfirm('')
-          }}
-        >
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Confirm Delete
-          </Typography.Title>
-          <Typography.Title level={5} style={{ margin: 0 }}>
-            Are you sure to delete Order Type to SLoc
-            {oneSelected ? (
+      <Modal
+        title={'Confirm Delete'}
+        open={showDeleteModal}
+        onOk={handleDeleteData}
+        onCancel={() => {
+          setShowDeleteModal(false)
+        }}
+        content={
+          <>
+            Are you sure to delete this Order Type to SLoc
+            {/* {oneSelected ? (
               ` ${selectedQuotation.text} ?`
             ) : (
               <Popover content={selectedQuotation.content}>
                 {` ${selectedQuotation.text} ?`}
               </Popover>
-            )}
-          </Typography.Title>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="secondary"
-              onClick={() => {
-                setShowConfirm('')
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="primary"
-              onClick={() => {
-                DeleteOrderTypetoSloc(selectedData)
-                  .then(() => setShowConfirm('Delete'))
-                  .catch((err) => err)
-              }}
-            >
-              Delete
-            </Button>
-          </div>
-        </Popup>
-      )}
-      {showConfirm === 'Delete' && (
-        <Popup>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Text
-              textAlign="center"
-              style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
-            >
-              <>
-                <CheckCircleFilled /> Delete Order Type to SLoc Success
-              </>
-            </Text>
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              gap: 4,
-              flexDirection: 'column',
-              textAlign: 'center',
-            }}
-          >
-            <div>successfully deleted order type to sLoc success</div>
-          </div>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <Button
-              size="big"
-              style={{ flexGrow: 1 }}
-              variant="primary"
-              onClick={() => {
-                router.push(`${PATH.LOGISTIC}/configuration-order-type-to-sloc`)
-              }}
-            >
-              OK
-            </Button>
-          </div>
-        </Popup>
-      )}
+            )} */}
+          </>
+        }
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/configuration-order-type-to-sloc`)
+        }}
+        successContent={(res: any) => `Delete Order Type to SLoc has been success`}
+        successOkText="OK"
+        width={432}
+      />
+
+      <Modal
+        title={'Confirm Submit'}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.status ? 'inactivate' : 'activate'
+        } this Order Type to SLoc?`}
+        onOkSuccess={() => {
+          router.push(`${PATH.LOGISTIC}/configuration-order-type-to-sloc`)
+        }}
+        successContent={(res: any) => `Order Type to SLoc has been successfully 
+          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
+      />
       <Modal
         title={'Confirm Submit'}
         open={showChangeStatusModal}
