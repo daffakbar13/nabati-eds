@@ -57,8 +57,8 @@ export const UpdateOrderTypetoSloc = async (params: any, payload: any) => {
 
 export const DeleteOrderTypetoSloc = async (payload: any) => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/list/config_order_type_sloc`,
+    method: METHODS.PUT,
+    subUrl: `${url}/delete/config_order_type_sloc`,
     overrideBaseUrl,
     data: payload,
   })
