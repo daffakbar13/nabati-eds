@@ -100,6 +100,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       branch: undefined,
       order_type: undefined,
       sloc: undefined,
+      branch_from: undefined,
+      branch_to: undefined,
     })
   }
 
@@ -179,7 +181,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         }}
         successContent={(res: any) => 'order type to sLoc has been successfully Submited'}
         successOkText="OK"
-        width={432}
+        width={500}
       />
     </>
   )

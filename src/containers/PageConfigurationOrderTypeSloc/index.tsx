@@ -69,8 +69,8 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }, [table.state.selected])
 
   const { searchProps } = useFilters(table, 'Search by Branch, Order Type, Sloc', [
+    'company_id',
     'branch_id',
-    'branch_name',
     'order_type',
     'sloc_id',
   ])
@@ -231,7 +231,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Order Type to SLoc?`}
         onOkSuccess={() => {
-          router.reload()
+          router.push(`${PATH.LOGISTIC}/configuration-order-type-to-sloc`)
         }}
         successContent={(res: any) => `Order Type to SLoc has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
