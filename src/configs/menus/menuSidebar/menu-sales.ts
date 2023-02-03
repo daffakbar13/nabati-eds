@@ -65,6 +65,14 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/shipment`),
     ),
     CreateMenu(
+      'proforma-invoice',
+      'Proforma Invoice',
+      null,
+      null,
+      () => 'Proforma Invoice',
+      () => Router.push(`${PATH.SALES}/proforma-invoice`),
+    ),
+    CreateMenu(
       'billing',
       'Billing',
       null,
