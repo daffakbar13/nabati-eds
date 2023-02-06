@@ -1,15 +1,15 @@
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
 import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
-import { Collection } from './types'
+import { ProformaInvoice } from './types'
 
 // const subUrl = 'v1/collection'
 const subUrl = 'v1/proforma-invoices'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
-export const getCollectionList = async (
+export const getProformaInvoiceList = async (
   params: CommonListParams,
-): Promise<CommonListResponse<Collection>> => {
+): Promise<CommonListResponse<ProformaInvoice>> => {
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
@@ -21,7 +21,7 @@ export const getCollectionList = async (
 
 export const getCollectionDetail = async (
   params: CommonDetailParams,
-): Promise<CommonListResponse<Collection>> => {
+): Promise<CommonListResponse<ProformaInvoice>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${subUrl}/${params.id}`,
@@ -34,7 +34,7 @@ export const createCollection = async (payload: any) => {
   return response.data
 }
 
-export const editCollection = async (payload: Collection) => {
+export const editCollection = async (payload: ProformaInvoice) => {
   const response = await call({
     method: METHODS.PATCH,
     subUrl: `${subUrl}/${payload.id}`,
