@@ -60,7 +60,7 @@ export const column = [
       }),
       addColumn({
         title: 'UoM',
-        dataIndex: 'received_base_uom_id',
+        dataIndex: 'received_uom_id',
         width: 75,
       }),
     ],
