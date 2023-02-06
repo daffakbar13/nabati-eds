@@ -3,8 +3,8 @@ import { METHODS } from 'src/api/methods'
 import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
 import { Collection } from './types'
 
-const subUrl = 'v1/collection'
-// const subUrl = 'v1/proforma-invoices'
+// const subUrl = 'v1/collection'
+const subUrl = 'v1/proforma-invoices'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getCollectionList = async (
