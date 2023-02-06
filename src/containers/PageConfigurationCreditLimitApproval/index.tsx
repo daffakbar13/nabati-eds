@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text, Col, Search } from 'pink-lava-ui'
-import { Col as ColAntd, Row as RowAntd, Typography, Popover } from 'antd'
-import { CheckCircleFilled } from '@ant-design/icons'
-import { Card, SearchQueryParams, Modal, Pagination, FloatAction } from 'src/components'
-import {
-  getListProductIntraChannel,
-  deleteProductIntraChannel,
-} from 'src/api/logistic/config-mapping-product-intra'
-import { useTable } from 'src/hooks'
-import { colors } from 'src/configs/colors'
-import Popup from 'src/components/Popup'
-import { PATH } from 'src/configs/menus'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
+import { Card, Pagination, TaggedStatus } from 'src/components'
+import { getCreditLimitList } from 'src/api/logistic/config-credit-limit'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
+import CreateModal from './create'
 
 export default function PageConfigSalesORGCustomerGroupMaterial() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -29,15 +21,17 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }
 
   const table = useTable({
-    funcApi: getListProductIntraChannel,
+    funcApi: getCreditLimitList,
     columns: columns(goToDetailPage),
   })
 
   const hasData = table.state.total > 0
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { searchProps, setFilters } = useFilters(
+    table,
+    'Search by Customer, Credit Limit Before, Credit Limit After',
+    ['company_id', 'customer_id', 'customer_name_id', 'credit_limit_before', 'credit_limit_after'],
+  )
 
   return (
     <>
@@ -46,42 +40,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by Trans Type"
-              colorIcon={colors.grey.regular}
-              onChange={(e) => {
-                const idIndex = filters.findIndex((obj) => obj?.field == 'trans_type')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) =>
-                      oldFilter.filter((data) => data?.field != 'trans_type'),
-                    )
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      }
-                      return { ...data }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'trans_type',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px"></Row>
         </Row>
@@ -93,6 +52,14 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
+      <CreateModal
+        visible={showCreateModal}
+        payload={selectedRow || null}
+        close={() => {
+          setSelectedRow(null)
+          setShowCreateModal(false)
+        }}
+      />
     </>
   )
 }
