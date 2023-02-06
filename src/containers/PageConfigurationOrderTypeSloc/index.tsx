@@ -95,7 +95,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
           sloc_id: changeStatusPayload?.sloc_id,
         },
         {
-          status: changeStatusPayload?.company_id === '0' ? 1 : 0,
+          status: changeStatusPayload?.status ? 0 : 1,
         },
       )
       return res

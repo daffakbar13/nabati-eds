@@ -31,10 +31,10 @@ export default function CreateCopyFormBranch({ onChangeForm }) {
         limit: 100,
         page: 1,
       }).then((result) => {
-        setCopyFromBranch(result.data.result)
+        setCopyFromBranch(result?.data?.result)
         onChangeForm(
           'order_type_sloc',
-          result.data.result.map((item: any, index) => ({
+          result?.data?.result?.map((item: any, index) => ({
             order_type: item.order_type,
             sloc_id: item.sloc_id,
           })),
@@ -57,7 +57,7 @@ export default function CreateCopyFormBranch({ onChangeForm }) {
             Branch From <span style={{ color: 'red' }}> *</span>
           </Text>
         }
-        // rules={[{ required: true }]}
+        rules={[{ required: true }]}
       >
         <DebounceSelect
           required
@@ -69,7 +69,7 @@ export default function CreateCopyFormBranch({ onChangeForm }) {
           }}
         />
       </Form.Item>
-      {copyFromBranch?.length >= 1 && (
+      {selectedBranchFrom !== '' && (
         <>
           <Spacer size={20} />
           <Table columns={columns} dataSource={copyFromBranch} />
@@ -88,7 +88,7 @@ export default function CreateCopyFormBranch({ onChangeForm }) {
             Branch To <span style={{ color: 'red' }}> *</span>
           </Text>
         }
-        // rules={[{ required: true }]}
+        rules={[{ required: true }]}
       >
         <Select
           mode="multiple"

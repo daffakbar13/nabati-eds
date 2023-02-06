@@ -34,7 +34,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const isOnEditMode = !!payload
 
   const initialValue = { branch_from: 'P122', order_type_sloc: OrderTypeSloc }
-  const initialValueEdit = { sloc_id:  payload?.sloc_id || 'GS00'}
+  const initialValueEdit = { sloc_id: payload?.sloc_id || 'GS00' }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -45,6 +45,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const onClickSubmit = async () => {
+    if (currentTab === '1') {
+      const values = await form.validateFields(['branch', 'order_type', 'sloc'])
+    } else {
+      const values = await form.validateFields(['branch_from', 'branch_to'])
+    }
     setConfirmModal(true)
   }
 
@@ -130,6 +135,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
+
         {!isOnEditMode && (
           <Tabs
             defaultActiveKey="1"

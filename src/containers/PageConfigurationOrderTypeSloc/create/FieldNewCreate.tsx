@@ -46,7 +46,7 @@ export default function CreateNewOrderTypeSLoc({
           </Text>
         }
         initialValue={isOnEditMode ? `${payload?.branch_id} - ${payload?.branch_name}` : ''}
-        // rules={[{ required: true }]}
+        rules={[{ required: true }]}
       >
         <DebounceSelect
           required
@@ -72,7 +72,7 @@ export default function CreateNewOrderTypeSLoc({
           </Text>
         }
         initialValue={isOnEditMode ? payload?.order_type : ''}
-        // rules={[{ required: true }]}
+        rules={[{ required: true }]}
       >
         <DebounceSelect
           required
@@ -97,7 +97,7 @@ export default function CreateNewOrderTypeSLoc({
           </Text>
         } initialValue={isOnEditMode ? payload?.sloc_id : ''}
 
-        // rules={[{ required: true }]}
+        rules={[{ required: true }]}
       >
         <DebounceSelect
           required

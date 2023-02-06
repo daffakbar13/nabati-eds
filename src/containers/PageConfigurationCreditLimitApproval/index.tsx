@@ -1,27 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text, Col, Search } from 'pink-lava-ui'
-import { Col as ColAntd, Row as RowAntd, Typography, Popover } from 'antd'
-import { CheckCircleFilled } from '@ant-design/icons'
-import { Card, SearchQueryParams, Modal, Pagination, FloatAction } from 'src/components'
-import {
-  getListProductIntraChannel,
-  deleteProductIntraChannel,
-} from 'src/api/logistic/config-mapping-product-intra'
-import { useTable } from 'src/hooks'
-import { colors } from 'src/configs/colors'
-import Popup from 'src/components/Popup'
-import { PATH } from 'src/configs/menus'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
+import { Card, Pagination } from 'src/components'
+import { getCreditLimitList } from 'src/api/logistic/config-credit-limit'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
+import CreateModal from './create'
 
 export default function PageConfigSalesORGCustomerGroupMaterial() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
-  const [selectedData, setSelectedData] = useState([])
-  const [showConfirm, setShowConfirm] = useState('')
+  const [statusButton, setStatusButton] = useState('00')
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
@@ -29,59 +20,76 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }
 
   const table = useTable({
-    funcApi: getListProductIntraChannel,
+    funcApi: getCreditLimitList,
     columns: columns(goToDetailPage),
   })
 
   const hasData = table.state.total > 0
 
+  const { searchProps, filters, setFilters } = useFilters(
+    table,
+    'Search by Customer, Credit Limit Before, Credit Limit After',
+    ['company_id', 'customer_id', 'customer_name_id', 'credit_limit_before', 'credit_limit_after'],
+  )
+
   useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+    setFilters([
+      {
+        field: 'status',
+        option: 'EQ',
+        from_value: statusButton,
+        data_type: 'S',
+      },
+    ])
+  }, [statusButton])
+
+  const handleChangeButtonStatus = (statusId: string) => {
+    setStatusButton(statusId)
+  }
 
   return (
     <>
       <Text variant={'h4'}>Credit Limit Approval</Text>
       <Spacer size={20} />
+      <Row justifyContent="left">
+        <Row gap="16px">
+          <Button
+            size="small"
+            style={{ flexGrow: 1 }}
+            variant={statusButton === '00' ? 'primary' : 'tertiary'}
+            onClick={() => {
+              handleChangeButtonStatus('00')
+            }}
+          >
+            Wait For Approval
+          </Button>
+          <Button
+            size="small"
+            style={{ flexGrow: 1 }}
+            variant={statusButton === '01' ? 'primary' : 'tertiary'}
+            onClick={() => {
+              handleChangeButtonStatus('01')
+            }}
+          >
+            Approved
+          </Button>
+          <Button
+            size="small"
+            style={{ flexGrow: 1 }}
+            variant={statusButton === '02' ? 'primary' : 'tertiary'}
+            onClick={() => {
+              handleChangeButtonStatus('02')
+            }}
+          >
+            Rejected
+          </Button>
+        </Row>
+      </Row>
+      <Spacer size={10} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by Trans Type"
-              colorIcon={colors.grey.regular}
-              onChange={(e) => {
-                const idIndex = filters.findIndex((obj) => obj?.field == 'trans_type')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) =>
-                      oldFilter.filter((data) => data?.field != 'trans_type'),
-                    )
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      }
-                      return { ...data }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'trans_type',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px"></Row>
         </Row>
@@ -93,6 +101,14 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
+      <CreateModal
+        visible={showCreateModal}
+        payload={selectedRow || null}
+        close={() => {
+          setSelectedRow(null)
+          setShowCreateModal(false)
+        }}
+      />
     </>
   )
 }
