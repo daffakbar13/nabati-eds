@@ -106,7 +106,7 @@ export default function PageShipmentDetail() {
         }}
       >
         <div>
-          Shipment
+          Proforma Invoice
           <Typography.Text copyable={{ text: router.query.id as string }}>
             {router.query.id}
           </Typography.Text>

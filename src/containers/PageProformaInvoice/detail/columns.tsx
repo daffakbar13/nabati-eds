@@ -30,7 +30,7 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
           {link}
         </div>
       ) : (
-        <Button size="big" variant="primary" onClick={navigate}>
+        <Button size="small" variant="tertiary" onClick={navigate}>
           Delivered
         </Button>
       )}
