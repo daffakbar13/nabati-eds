@@ -4,7 +4,7 @@ import { Card, SmartFilter } from 'src/components'
 // import { TableBilling } from 'src/data/tables'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { getCollectionList } from 'src/api/proforma-invoice'
+import { getProformaInvoiceList } from 'src/api/proforma-invoice'
 import Pagination from 'src/components/Pagination'
 import { useFilters } from 'src/hooks'
 import { Col, Row } from 'antd'
@@ -14,7 +14,7 @@ import { TableBilling } from './columns'
 
 export default function PageProformaInvoice() {
   const table = useTable({
-    funcApi: getCollectionList,
+    funcApi: getProformaInvoiceList,
     columns: TableBilling,
     haveCheckBox: 'All',
   })
