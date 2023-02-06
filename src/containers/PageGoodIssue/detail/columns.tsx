@@ -55,7 +55,7 @@ export const column = [
     children: [
       addColumn({
         title: 'Qty',
-        dataIndex: 'received_base_qty',
+        dataIndex: 'received_qty',
         width: 75,
       }),
       addColumn({
