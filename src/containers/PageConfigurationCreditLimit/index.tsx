@@ -25,10 +25,10 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
   const [selectedData, setSelectedData] = useState([])
-  const [showConfirm, setShowConfirm] = useState('')
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
+  const [dataTable, setdataTable] = useState([])
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
@@ -57,8 +57,8 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   }
 
   useEffect(() => {
-    const ArrayFiltered = table.state.data.filter((dataAll) =>
-      table.state.selected.some((selected) => dataAll.customer_id === selected),
+    const ArrayFiltered = dataTable.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.idx === selected),
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => ({
@@ -69,6 +69,14 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
 
     setSelectedData(DeletedData)
   }, [table.state.selected])
+
+  useEffect(() => {
+    const dataApi = table.state.data.map((item: any, index) => ({
+      idx: index,
+      ...item,
+    }))
+    setdataTable(dataApi)
+  }, [table?.state?.data])
 
   const { searchProps } = useFilters(
     table,
@@ -127,7 +135,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} rowKey={'customer_id'} />
+          <Table {...table.state.tableProps} rowKey={'idx'} dataSource={dataTable} />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
