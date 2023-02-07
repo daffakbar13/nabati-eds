@@ -104,6 +104,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
           name={`Item.${index + 1}`}
           rules={[{ required: true }]}
           initialValue={placeholder[index].product_id}
+          style={{ marginBottom: 0, marginTop: 0 }}
         >
           <DebounceSelect
             type="select"
@@ -124,7 +125,12 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'Qty',
       dataIndex: 'qty',
       render: (order_qty, record, index) => (
-        <Form.Item name={`Qty.${index + 1}`} rules={[{ required: true }]} initialValue={order_qty}>
+        <Form.Item
+          name={`Qty.${index + 1}`}
+          rules={[{ required: true }]}
+          initialValue={order_qty}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
           <InputNumber
             disabled={isNullProductId(index)}
             min={isNullProductId(index) ? '0' : '1'}
@@ -143,7 +149,12 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'UoM',
       dataIndex: 'uom_id',
       render: (uom_id, __, index) => (
-        <Form.Item name={`UoM.${index + 1}`} rules={[{ required: true }]} initialValue={uom_id}>
+        <Form.Item
+          name={`UoM.${index + 1}`}
+          rules={[{ required: true }]}
+          initialValue={uom_id}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
           <DebounceSelect
             type="select"
             value={uom_id as any}
@@ -162,7 +173,11 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'Batch',
       dataIndex: 'batch',
       render: (batch, __, index) => (
-        <Form.Item name={`Batch.${index + 1}`} initialValue={batch}>
+        <Form.Item
+          name={`Batch.${index + 1}`}
+          initialValue={batch}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
           <DebounceSelect
             type="input"
             placeholder="e.g Testing"
@@ -206,6 +221,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
           name={`ItemSender.${index + 1}`}
           rules={[{ required: true }]}
           initialValue={placeholder[index].product_id}
+          style={{ marginBottom: 0, marginTop: 0 }}
         >
           <DebounceSelect
             type="select"
@@ -226,7 +242,11 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'Item Receiver',
       dataIndex: 'product_id',
       render: (product_id, __, index) => (
-        <Form.Item name={`ItemReceiver.${index + 1}`} initialValue={valueItemSender[index]}>
+        <Form.Item
+          name={`ItemReceiver.${index + 1}`}
+          initialValue={valueItemSender[index]}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
           <DebounceSelect type="input" disabled value={valueItemSender[index] || ''} />
         </Form.Item>
       ),
@@ -236,7 +256,11 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'Qty',
       dataIndex: 'qty',
       render: (order_qty, record, index) => (
-        <Form.Item name={`Qty.${index + 1}`} initialValue={order_qty}>
+        <Form.Item
+          name={`Qty.${index + 1}`}
+          initialValue={order_qty}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
           <InputNumber
             disabled={isNullProductId(index)}
             min={isNullProductId(index) ? '0' : '1'}
@@ -255,7 +279,11 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'UoM',
       dataIndex: 'uom_id',
       render: (uom_id, __, index) => (
-        <Form.Item name={`UoM.${index + 1}`} initialValue={uom_id}>
+        <Form.Item
+          name={`UoM.${index + 1}`}
+          initialValue={uom_id}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
           <DebounceSelect
             type="select"
             value={uom_id as any}
@@ -274,7 +302,11 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'Batch',
       dataIndex: 'batch',
       render: (batch, __, index) => (
-        <Form.Item name={`Batch.${index + 1}`} initialValue={batch}>
+        <Form.Item
+          name={`Batch.${index + 1}`}
+          initialValue={batch}
+          style={{ marginBottom: 0, marginTop: 0 }}
+        >
           <DebounceSelect
             type="input"
             placeholder="e.g Testing"
