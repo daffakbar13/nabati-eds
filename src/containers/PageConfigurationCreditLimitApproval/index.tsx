@@ -29,7 +29,15 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   const { searchProps, filters, setFilters } = useFilters(
     table,
     'Search by Customer, Credit Limit Before, Credit Limit After',
-    ['company_id', 'customer_id', 'customer_name_id', 'credit_limit_before', 'credit_limit_after'],
+    [
+      'company_id',
+      'customer_id',
+      'customer_name_id',
+      'credit_limit_before',
+      'credit_limit_after',
+      'valid_from',
+      'valid_to',
+    ],
   )
 
   useEffect(() => {
