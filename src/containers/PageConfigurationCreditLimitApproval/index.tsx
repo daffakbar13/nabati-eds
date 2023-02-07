@@ -104,6 +104,15 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
+        <Text strong>
+          Total{' '}
+          {(() => {
+            if (statusButton === '00') return <span>Wait For Approval</span>
+            else if (statusButton === '01') return <span>Approved</span>
+            else if (statusButton === '02') return <span>Rejected</span>
+          })()}{' '}
+          : {table.state.total}
+        </Text>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
