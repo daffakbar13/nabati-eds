@@ -21,6 +21,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
+  const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const isOnEditMode = !!payload
@@ -67,6 +68,23 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const handleCancel = () => {
+    if (dataForm) {
+      setShowConfirmModalCancel(true)
+    } else {
+      setDataForm(undefined)
+      form.setFieldsValue({
+        customer: undefined,
+        credit_limit_before: undefined,
+        credit_limit_after: undefined,
+        valid_before: undefined,
+        valid_after: undefined,
+      })
+      close()
+    }
+  }
+
+  const handleOkCancelConfirm = () => {
+    setDataForm(undefined)
     form.setFieldsValue({
       customer: undefined,
       credit_limit_before: undefined,
@@ -74,7 +92,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       valid_before: undefined,
       valid_after: undefined,
     })
-    setConfirmModal(false)
+    setShowConfirmModalCancel(false)
     close()
   }
 
@@ -233,6 +251,17 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         loading={loading}
         cancelText="Cancel"
         okText={isOnEditMode ? 'Update' : 'Create'}
+      />
+      <Modal
+        title={'Confirm Cancellation'}
+        open={showConfirmModalCancel}
+        onOk={handleOkCancelConfirm}
+        onCancel={() => {
+          setShowConfirmModalCancel(false)
+        }}
+        content={'Are you sure want to cancel? Change you made so far will not saved'}
+        loading={loading}
+        width={432}
       />
       <Modal
         title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
