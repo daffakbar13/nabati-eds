@@ -1,1 +1,1 @@
-export interface PageCollectionDetailProps {}
+export interface PageShipmentDetailProps {}

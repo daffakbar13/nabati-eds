@@ -30,8 +30,8 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
           {link}
         </div>
       ) : (
-        <Button size="small" variant="tertiary" onClick={navigate}>
-          Delivered
+        <Button size="big" variant="tertiary" onClick={navigate}>
+          Delivery
         </Button>
       )}
     </>
@@ -83,8 +83,8 @@ export const TableDocumentHeader = [
   }),
   addColumn({
     title: 'Action',
-    render: (_, { delivery_order_id, status }) => (
-      <Linked link={delivery_order_id} status={status} type="action" />
+    render: (_, { shipment_id, status }) => (
+      <Linked link={shipment_id} status={status} type="action" />
     ),
   }),
 ]

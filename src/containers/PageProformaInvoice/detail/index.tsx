@@ -1,157 +1,229 @@
 import React from 'react'
-import { Button as ButtonPinkLava, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card, Loader } from 'src/components'
-import { Button, Row, Col } from 'antd'
+import { Button, Col, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Card, Popup } from 'src/components'
+import { Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import Total from 'src/components/Total'
 import { useDetail } from 'src/hooks'
-import { finishCollection, getCollectionDetail } from 'src/api/collection'
+import { getDetailShipment, getShipmentBpb, getShipmentBstf, PGIShipment } from 'src/api/shipment'
 import { useRouter } from 'next/router'
+import ReactToPrint from 'react-to-print'
+import Loader from 'src/components/Loader'
+import moment from 'moment'
+import { ArrowLeftOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { PATH } from 'src/configs/menus'
-import { useTableDetailCollection } from './columns'
+import AllTabs from './tabs'
+import DocumentHeader from './tabs/DocumentHeader'
+import BPB from './tabs/BPB'
+import BSTF from './tabs/BSTF'
 
-export default function PageProformaInvoiceDetail() {
-  const titlePage = useTitlePage('edit')
+export default function PageShipmentDetail() {
+  const titlePage = useTitlePage('detail')
+  const [currentTab, setCurrentTab] = React.useState('1')
+  const [showConfirm, setShowConfirm] = React.useState('')
+  const [processing, setProcessing] = React.useState('')
+  const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
   const router = useRouter()
-  const data = useDetail(getCollectionDetail, { id: router.query.id as string })
-  const [finishPayload, setFinishPayload] = React.useState<any>({})
-  const [processing, setProcessing] = React.useState<string>()
-  const [dataTable, setDataTable] = React.useState([])
+  const data = useDetail(getDetailShipment, router.query)
+  const dataBpb = useDetail(getShipmentBpb, router.query)
+  const dataBstf = useDetail(getShipmentBstf, router.query)
   const hasData = Object.keys(data).length > 0
+  const componentRef = React.useRef()
 
-  function getTotalAmount() {
-    if (hasData) {
-      return [...data.details].map((d) => d.billing_amount).reduce((prev, curr) => prev + curr)
-    }
-    return 0
-  }
+  const isStatus = (...value: string[]) => value.includes(router.query.status as string)
 
-  function undeliveBilling(
-    billing_id: string,
-    cancelation_reason_id: string,
-    cancelation_reason_name: string,
-  ) {
-    setFinishPayload((prev) => ({
-      shipment_id: prev.shipment_id,
-      billings: prev.billings?.map((b) => {
-        if (b.billing_id === billing_id) {
-          return {
-            ...b,
-            is_delivered: 0,
-            cancelation_reason_id,
-            cancelation_reason_name,
-            payments: [],
-          }
-        }
-        return b
-      }),
-    }))
-  }
+  const ConfirmPGI = () => (
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm PGI
+      </Typography.Title>
+      <DatePickerInput
+        fullWidth
+        onChange={(val: any) => {
+          setPostingDate(moment(val).format('YYYY-MM-DD'))
+        }}
+        label="Posting Date"
+        disabledDate={(current) => current < moment().startOf('day')}
+        value={moment(postingDate)}
+        format={'YYYY-MM-DD'}
+        required
+      />
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            setProcessing('Wait For PGI')
+            PGIShipment(router.query.id as string, { posting_date: postingDate })
+              .then(() => {
+                setProcessing('')
+                setShowConfirm('success-pgi')
+              })
+              .catch(() => {
+                setProcessing('')
+              })
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
 
-  function deliveBilling(data_billing: any) {
-    setFinishPayload((prev) => ({
-      shipment_id: prev.shipment_id,
-      billings: prev.billings?.map((b) => {
-        if (b.billing_id === data_billing.billing_number) {
-          return {
-            ...b,
-            is_delivered: 1,
-            cancelation_reason_id: '',
-            cancelation_reason_name: '',
-            payments: [
-              {
-                amount: data_billing.billing_amount,
-                payment_method: 'C',
-                bank_name: '',
-                account_number: '',
-                valid_to: '',
-                remarks: '',
-              },
-            ],
-          }
-        }
-        return b
-      }),
-    }))
-  }
-
-  const { columns, modalDelivered } = useTableDetailCollection(undeliveBilling, deliveBilling)
-
-  React.useEffect(() => {
-    if (hasData) {
-      setFinishPayload(() => ({
-        shipment_id: router.query.id,
-        billings: data.details.map((d) => ({
-          billing_id: d.billing_number,
-          is_delivered: 1,
-          cancelation_reason_name: '',
-          cancelation_reason_id: '',
-          payments: [
-            {
-              amount: d.billing_amount,
-              payment_method: 'C',
-              bank_name: '',
-              account_number: '',
-              valid_to: '',
-              remarks: '',
-            },
-          ],
-        })),
-      }))
-      setDataTable(data.details)
-    }
-  }, [data])
-
-  React.useEffect(() => {
-    const newDataTable = dataTable.map((d, i) => ({
-      ...d,
-      undelivered_reason_id: finishPayload.billings[i]?.cancelation_reason_id,
-      undelivered_reason_name: finishPayload.billings[i]?.cancelation_reason_name,
-    }))
-    setDataTable(newDataTable)
-  }, [finishPayload])
+  const ConfirmSuccessPGI = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Submit Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          Proforma Invoice
+          <Typography.Text copyable={{ text: router.query.id as string }}>
+            {router.query.id}
+          </Typography.Text>
+          has been
+        </div>
+        <div>successfully submitted</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/proforma-invoice`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
 
   return (
     <Col>
-      {processing && <Loader type="process" text={processing} />}
-      {hasData && (
-        <>
-          {modalDelivered}
-          <div style={{ display: 'flex' }}>
-            <Text variant={'h4'}>Confirm {titlePage}</Text>
-            <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
-              <Button>asd</Button>
-              <ButtonPinkLava
-                size="big"
-                variant="primary"
-                onClick={() => {
-                  setProcessing('Wait for finish collection')
-                  finishCollection(finishPayload)
-                    .then(() => {
-                      setProcessing(undefined)
-                      router.push(`${PATH.SALES}/collection`)
-                    })
-                    .catch(() => setProcessing(undefined))
+      {processing !== '' && <Loader type="process" text={processing} />}
+      <div style={{ display: 'flex' }}>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => {
+            router.push({
+              pathname: `${PATH.SALES}/proforma-invoice`,
+              query: {
+                page: router.query.page,
+                limit: router.query.limit,
+              },
+            })
+          }}
+        >
+          <ArrowLeftOutlined style={{ fontSize: 25 }} />
+        </div>
+        <Text variant={'h4'}>{titlePage}</Text>
+        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
+          {/* {isStatus('New') && (
+            <>
+              <Button size="big" variant="tertiary" onClick={() => {}}>
+                Cancel Process
+              </Button>
+              {currentTab === '1' && (
+                <>
+                  <Button size="big" variant="secondary" onClick={() => {}}>
+                    Edit
+                  </Button>
+                  <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
+                    PGI
+                  </Button>
+                </>
+              )}
+            </>
+          )} */}
+          {currentTab === '1' && (
+            <Button size="big" variant="primary" onClick={() => {}}>
+              Confirm PGI
+            </Button>
+          )}
+          {currentTab !== '1' && (
+            <ReactToPrint
+              trigger={() => (
+                <Button size="big" variant="primary">
+                  {currentTab === '2' && 'Print BPB'}
+                  {currentTab === '3' && 'Print BSTF'}
+                </Button>
+              )}
+              content={() => componentRef.current}
+            />
+          )}
+        </div>
+      </div>
+      <Spacer size={20} />
+      <Card style={{ padding: '16px 20px' }}>
+        <Tabs
+          defaultActiveKey="1"
+          onChange={(current) => {
+            setCurrentTab(current)
+          }}
+          items={isStatus('New') ? AllTabs.slice(0, 2) : AllTabs}
+        />
+        {hasData && (
+          <>
+            {currentTab === '1' ? (
+              <DocumentHeader data={data} />
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  backgroundColor: 'grey',
+                  padding: '15px 0',
+                  maxHeight: 1122.5,
+                  overflow: 'scroll',
                 }}
               >
-                Finish
-              </ButtonPinkLava>
-            </div>
-          </div>
-          <Spacer size={20} />
-          <Card style={{ padding: '16px 20px' }}>
-            <div style={{ overflow: 'scroll' }}>
-              <Table dataSource={dataTable} columns={columns} scroll={{ x: 'max-content' }} />
-            </div>
-            <Spacer size={30} />
-            <Row>
-              <Col span={12} offset={12}>
-                <Total label="Total Amount" value={getTotalAmount()} />
-              </Col>
-            </Row>
-          </Card>
-        </>
-      )}
+                <div ref={componentRef}>
+                  {currentTab === '2' && <BPB data={dataBpb} />}
+                  {currentTab === '3' && <BSTF data={dataBstf} />}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </Card>
+      {showConfirm === 'pgi' && <ConfirmPGI />}
+      {showConfirm === 'success-pgi' && <ConfirmSuccessPGI />}
     </Col>
   )
 }
