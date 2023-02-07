@@ -34,7 +34,7 @@ export default function Detail(props: any) {
     company_id: data.company_id,
     posting_date: moment(now).format('YYYY-MM-DD'),
     header_text: '',
-    branch_id: data.receive_plant_id,
+    branch_id: data.receive_branch_id,
     items: tableAddItems.dataSubmit.map((item: any, index) => {
       return {
         product_id: item.product_id,
@@ -60,7 +60,7 @@ export default function Detail(props: any) {
     }
   }
   const onSubmitFunction = async () => {
-    return await confitmGoodReceipt(data.id, { ...initialValue, ...dataForm })
+    return await confitmGoodReceipt(data.gr_number, { ...initialValue, ...dataForm })
   }
 
   return (
@@ -178,7 +178,7 @@ export default function Detail(props: any) {
         successContent={(res: any) => (
           <>
             GR Number
-            <Typography.Text copyable={{ text: data?.id as string }}> {data?.id}</Typography.Text>
+            <Typography.Text copyable={{ text: data?.gr_number as string }}> {data?.gr_number}</Typography.Text>
             has been successfully Updated
           </>
         )}

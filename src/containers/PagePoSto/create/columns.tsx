@@ -135,7 +135,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             disabled={isNullProductId(index)}
             min={isNullProductId(index) ? '0' : '1'}
             value={order_qty?.toLocaleString()}
-            onChange={(newVal) => {
+            onBlur={(newVal) => {
               handleChangeData('qty', newVal, index)
               handleChangeData('base_qty', newVal, index)
             }}
@@ -160,7 +160,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             value={uom_id as any}
             options={optionsUom[index] || []}
             disabled={isNullProductId(index)}
-            onChange={(e) => {
+            onBlur={(e) => {
               handleChangeData('uom_id', e.value, index)
               handleChangeData('base_uom_id', e.value, index)
             }}
@@ -182,7 +182,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             type="input"
             placeholder="e.g Testing"
             value={batch as any}
-            onChange={(e) => {
+            onBlur={(e) => {
               handleChangeData('batch', e.target.value, index)
             }}
           />
@@ -265,7 +265,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             disabled={isNullProductId(index)}
             min={isNullProductId(index) ? '0' : '1'}
             value={order_qty?.toLocaleString()}
-            onChange={(newVal) => {
+            onBlur={(newVal) => {
               handleChangeData('qty', newVal, index)
               handleChangeData('base_qty', newVal, index)
             }}
@@ -289,7 +289,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             value={uom_id as any}
             options={optionsUom[index] || []}
             disabled={isNullProductId(index)}
-            onChange={(e) => {
+            onBlur={(e) => {
               handleChangeData('uom_id', e.value, index)
               handleChangeData('base_uom_id', e.value, index)
             }}
@@ -311,7 +311,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             type="input"
             placeholder="e.g Testing"
             value={batch as any}
-            onChange={(e) => {
+            onBlur={(e) => {
               handleChangeData('batch', e.target.value, index)
             }}
           />
