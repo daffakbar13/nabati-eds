@@ -84,7 +84,6 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
-        {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
         {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
 
