@@ -37,7 +37,7 @@ export const getDetailProformaInvoiceByShipment = async (
 
 export const getDetailProformaInvoiceByShipmentAndDevlivery = async (
   params: CommonDetailParams,
-): Promise<CommonDetailResponse<ProformaInvoice>> => {
+): Promise<CommonDetailResponse<ProformaInvoice | any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
@@ -49,7 +49,7 @@ export const getDetailProformaInvoiceByShipmentAndDevlivery = async (
 export const PGIProformaInvoice = async (shipment_id: string, payload: any) => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${subUrl}/${shipment_id}/pgi`,
+    subUrl: `${url}/${shipment_id}/pgi`,
     data: payload,
   })
   return response.data

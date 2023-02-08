@@ -28,15 +28,60 @@ export function PageEdit() {
     delivery_id: router.query.id as string,
   })
 
-  const { handler } = useProformaInvoiceCreateContext()
+  const {
+    state: { dataDeliveryOrder },
+    handler,
+  } = useProformaInvoiceCreateContext()
 
   useEffect(() => {
-    if (data && data.length > 0) {
-      handler.handleSetDataTableDeliveryOrder(data)
+    if (window) {
+      const revised = JSON.parse(window.localStorage.getItem('revised')) || []
+      const findData = revised.find((item) => item.delivery_order_id === router.query.id)
+      if (findData) {
+        handler.handleSetDataTableDeliveryOrder(findData.items)
+      } else {
+        if (data && data.length > 0) {
+          handler.handleSetDataTableDeliveryOrder(data)
+        }
+      }
     }
   }, [data])
 
-  const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+  const handleConfirmProduct = () => {
+    setProcessing('Please wait')
+    let currentListRevisedDelivery = JSON.parse(localStorage.getItem('revised')) || []
+    const { id } = router.query
+
+    const confirmData = {
+      delivery_order_id: id,
+      items: dataDeliveryOrder.map((item) => {
+        return {
+          product_id: item.product_id,
+          remarks: item.remarks,
+          qtys: [
+            {
+              qty: item.revised_qty > 0 ? item.revised_qty : item.qty,
+              uom_id: item.uom_id,
+            },
+          ],
+        }
+      }),
+    }
+
+    if (currentListRevisedDelivery.find((item) => item.delivery_order_id === id)) {
+      const newData = [...currentListRevisedDelivery]
+      const index = newData.findIndex((item) => item.delivery_order_id === id)
+      newData[index].items = confirmData.items
+
+      currentListRevisedDelivery = newData
+    } else {
+      currentListRevisedDelivery.push(confirmData)
+    }
+
+    localStorage.setItem('revised', JSON.stringify(currentListRevisedDelivery))
+    setProcessing('')
+    setShowConfirm('success-confirm')
+  }
 
   const ConfirmProduct = () => (
     <Popup onOutsideClick={() => setShowConfirm('')}>
@@ -53,7 +98,7 @@ export function PageEdit() {
         >
           No
         </Button>
-        <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={() => {}}>
+        <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={handleConfirmProduct}>
           Yes
         </Button>
       </div>
@@ -97,7 +142,7 @@ export function PageEdit() {
           variant="primary"
           onClick={() => {
             router.push({
-              pathname: `${PATH.SALES}/proforma-invoice/${router.query.shipment_id}/detail`,
+              pathname: `${PATH.SALES}/proforma-invoice/detail/${router.query.shipment_id}`,
             })
           }}
         >

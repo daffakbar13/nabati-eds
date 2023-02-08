@@ -1,7 +1,6 @@
 /* eslint-disable function-paren-newline */
 /* eslint-disable camelcase */
 import React from 'react'
-import { getCustomerByFilter } from 'src/api/master-data'
 import { DispatchType } from './reducer'
 import { DeliveryOrderItem, StateType } from './state'
 
@@ -51,7 +50,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
         uom_id: dataQtys?.uom_id || uom_id || '',
         qty: dataQtys?.qty || qty || 0,
         revised_qty: 0,
-        remarksed: '',
+        remarks: '',
       }
     })
 
@@ -62,7 +61,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
   }
 
   function handleChangeDataDeliveryOrder(field: string, value: string, index: number) {
-    const newData = { ...state.dataDeliveryOrder }
+    const newData = [...state.dataDeliveryOrder]
     newData[index][field] = value
 
     dispatch({

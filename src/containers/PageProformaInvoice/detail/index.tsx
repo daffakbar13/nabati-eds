@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
 import { Tabs, Typography } from 'antd'
@@ -17,8 +17,10 @@ import BPB from './tabs/BPB'
 import BSTF from './tabs/BSTF'
 import {
   getDetailProformaInvoiceByShipment,
+  getDetailProformaInvoiceByShipmentAndDevlivery,
   getProformaInvoiceBpb,
   getProformaInvoiceBstf,
+  PGIProformaInvoice,
 } from 'src/api/proforma-invoice'
 
 export default function PageShipmentDetail() {
@@ -26,6 +28,7 @@ export default function PageShipmentDetail() {
   const [currentTab, setCurrentTab] = React.useState('1')
   const [showConfirm, setShowConfirm] = React.useState<'pgi' | 'success-pgi' | ''>('')
   const [processing, setProcessing] = React.useState('')
+  const [revisedDelivery, setRevisedDelivery] = useState([])
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
   const router = useRouter()
   const data = useDetail(getDetailProformaInvoiceByShipment, { id: router.query.id as string })
@@ -35,6 +38,12 @@ export default function PageShipmentDetail() {
   const componentRef = React.useRef()
 
   const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+
+  useEffect(() => {
+    if (window) {
+      setRevisedDelivery(JSON.parse(window.localStorage.getItem('revised')) || [])
+    }
+  }, [])
 
   const ConfirmPGI = () => (
     <Popup
@@ -71,12 +80,77 @@ export default function PageShipmentDetail() {
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => {
+          onClick={async () => {
             setProcessing('Wait For PGI')
-            PGIShipment(router.query.id as string, { posting_date: postingDate })
+            const unrevisedData = data?.proforma_invoice_items_detail?.filter((item) => {
+              return (
+                revisedDelivery
+                  .map((revised) => revised.delivery_order_id)
+                  .indexOf(item.delivery_order_id) === -1
+              )
+            })
+
+            const revisedData = revisedDelivery?.filter((item) => {
+              // console.log(
+              //   data?.proforma_invoice_items_detail
+              //     .map((revised) => revised.delivery_order_id)
+              //     .indexOf(item.delivery_order_id),
+              // )
+              return (
+                data?.proforma_invoice_items_detail
+                  .map((revised) => revised.delivery_order_id)
+                  .indexOf(item.delivery_order_id) !== -1
+              )
+            })
+
+            if (unrevisedData.length > 0) {
+              await Promise.all(
+                unrevisedData.map((item) => {
+                  getDetailProformaInvoiceByShipmentAndDevlivery({
+                    delivery_id: item.delivery_order_id,
+                    shipment_id: router.query.id as string,
+                  }).then((res) => {
+                    const obj = {
+                      delivery_order_id: item.delivery_order_id,
+                      items: res.data.map((element) => {
+                        return {
+                          product_id: element.product_id,
+                          remarks: '',
+                          qtys: [
+                            {
+                              qty: element.qty,
+                              uom_id: element.uom_id,
+                            },
+                          ],
+                        }
+                      }),
+                    }
+                    revisedData.push(obj)
+                  })
+                }),
+              )
+            }
+
+            // console.log(revisedData)
+            const payload = {
+              posting_date: postingDate,
+              confirm_delivery_orders: revisedData,
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, 1000))
+
+            PGIProformaInvoice(router.query.id as string, payload)
               .then(() => {
                 setProcessing('')
                 setShowConfirm('success-pgi')
+
+                let removeRevised = [...revisedDelivery]
+                data?.proforma_invoice_items_detail.map((item) => {
+                  removeRevised.filter(
+                    (element) => element.delivery_order_id !== item.delivery_order_id,
+                  )
+                })
+                localStorage.setItem('revised', JSON.stringify(removeRevised))
               })
               .catch(() => {
                 setProcessing('')
@@ -159,23 +233,6 @@ export default function PageShipmentDetail() {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {/* {isStatus('New') && (
-            <>
-              <Button size="big" variant="tertiary" onClick={() => {}}>
-                Cancel Process
-              </Button>
-              {currentTab === '1' && (
-                <>
-                  <Button size="big" variant="secondary" onClick={() => {}}>
-                    Edit
-                  </Button>
-                  <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
-                    PGI
-                  </Button>
-                </>
-              )}
-            </>
-          )} */}
           {currentTab === '1' && (
             <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
               Confirm PGI
@@ -206,7 +263,7 @@ export default function PageShipmentDetail() {
         {hasData && (
           <>
             {currentTab === '1' ? (
-              <DocumentHeader data={data} />
+              <DocumentHeader data={data} revisedDelivery={revisedDelivery} />
             ) : (
               <div
                 style={{
