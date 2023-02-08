@@ -63,6 +63,23 @@ function LabelPGI(props: { text: string }) {
   )
 }
 
+function FooterText(props: { text: string }) {
+  const { text } = props
+  return (
+    <div
+      style={{
+        textTransform: 'uppercase',
+        marginTop: 10,
+        lineHeight: 1.25,
+      }}
+    >
+      <CustomText textAlign="left" fontSize={14}>
+        {text}
+      </CustomText>
+    </div>
+  )
+}
+
 function HeadTable(props: { label: string; value: string }) {
   const { label, value } = props
   return (
@@ -113,9 +130,14 @@ export default function BSTF(props: BSTFProps) {
         </Col>
       </Row>
       <Row justify="center">
-        <CustomText fontWeight="bold" fontSize={24}>
-          BUKTI SERAH TERIMA (BSTF)
-        </CustomText>
+        <Col span={6}>
+          <CustomText fontWeight="bold" fontSize={24}>
+            SURAT JALAN
+          </CustomText>
+          <CustomText fontWeight="bold" fontSize={16}>
+            PENCETAKAN ULANG
+          </CustomText>
+        </Col>
       </Row>
       <Row>
         <Col span={8}>
@@ -126,7 +148,7 @@ export default function BSTF(props: BSTFProps) {
         </Col>
       </Row>
       <div>
-        <table className="eds_paper" style={{ tableLayout: 'fixed' }}>
+        {/* <table className="eds_paper" style={{ tableLayout: 'fixed' }}>
           <tbody>
             <tr>
               <td>No. Kendaraan</td>
@@ -155,77 +177,53 @@ export default function BSTF(props: BSTFProps) {
               <td colSpan={10}>Jumlah Toko: {data.total_store}</td>
             </tr>
           </tbody>
-        </table>
+        </table> */}
         <table className="eds_paper">
           <thead>
             <tr>
-              <th rowSpan={3}>No.</th>
-              <th rowSpan={3}>Kode</th>
-              <th rowSpan={3}>Nama Pelanggan</th>
-              <th rowSpan={3}>Alamat</th>
-              <th rowSpan={3}>No. Transaksi</th>
-              <th rowSpan={3}>Type</th>
-              <th colSpan={3}>Kunjungan</th>
-              <th colSpan={3}>Qty</th>
-              <th colSpan={2}>Value</th>
-              <th rowSpan={2}>Kublikasi</th>
-            </tr>
-            <tr>
-              <th>Jam Tiba</th>
-              <th>Jam Keluar</th>
-              <th>Jam Efektif</th>
-              <th>Dibawa</th>
-              <th>Kirim</th>
-              <th>Kembali</th>
-              <th>Dibawa</th>
-              <th>Kirim</th>
+              <th rowSpan={3}>PCODE</th>
+              <th rowSpan={3}>Nama BARANG</th>
+              <th rowSpan={3}>KEMASAN</th>
+              <th rowSpan={3}>QTY</th>
+              <th rowSpan={3}>PRICE</th>
+              <th rowSpan={3}>JUMLAH(RP)</th>
+              <th rowSpan={3}>DISC</th>
             </tr>
           </thead>
           <tbody>
             {data.items.map((e, i) => (
               <tr key={i}>
-                <td>{e.item_number}</td>
                 <td>{e.customer_id}</td>
                 <td>{e.customer_name}</td>
-                <td>{e.customer_address}</td>
+                <td>{e.doc_type}</td>
                 <td>{e.billing_to}</td>
                 <td>{e.doc_type}</td>
-                <td></td>
-                <td></td>
-                <td></td>
                 <td>{e.total_qty_item}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>{`${Math.round(e.cubication / 10)} M³`}</td>
+                <td>{e.total_qty_item}</td>
               </tr>
             ))}
-            <tr>
-              {[...new Array(5)].map((_, i) => (
-                <td key={i} />
-              ))}
-              <th colSpan={4}>Total</th>
-              <td>{data.items.map((e) => e.total_qty_item).reduce((a, b) => a + b)}</td>
-              <td colSpan={2} className="right-align"></td>
-              <td></td>
-              <td></td>
-              <td>
-                {`${Math.round(
-                  data.items.map((e) => e.cubication).reduce((a, b) => a + b) / 10,
-                )} M³`}
-              </td>
-            </tr>
           </tbody>
         </table>
       </div>
-      <Row style={{ gap: 30, marginTop: 20 }}>
-        <TTD label="Dibuat Oleh," title="SA" />
-        <TTD label="Diperiksa Oleh," title="FA SPV/SBH" />
-        <TTD label="Diketahui Oleh," title="Branch Manager" />
-        <TTD label="Diterima Oleh," title="Driver Dropping" />
-        <TTD label="Diterima Kembali Oleh," title="SA" />
+      <Row>
+        <Col span={10}>
+          <Row style={{ gap: 30, marginTop: 20 }}>
+            <TTD label="Penerima" title="" />
+            <TTD label="Pengirim," title="" />
+            <TTD label="ADM Penjualan" title="" />
+          </Row>
+        </Col>
+        <Col offset={2} span={10}>
+          <Row style={{ flexDirection: 'column', flexWrap: 'nowrap', gap: 10, marginTop: 20 }}>
+            <Information label="Special Discount" value={dateFormat(new Date().toISOString())} />
+            <Information label="Total Discount" value="1" />
+            <Information label="Discount Inv." value="1/1" />
+            <Information label="Nilai Faktur" value="1/1" />
+          </Row>
+        </Col>
       </Row>
+      <FooterText text="pembayaran dengan giro atau cek di atas namakan pt pinus merah abadi dianggap lunas bila giro atau cek telah cair. bila giro atau cek ditolak olh bank maka seluruh biaya ditanggung oleh customer" />
+      <FooterText text="terbilang: enam puluh enam ribu lima ratus ribu rupiah " />
     </PaperA4>
   )
 }
