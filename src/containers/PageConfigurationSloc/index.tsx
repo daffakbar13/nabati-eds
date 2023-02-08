@@ -1,21 +1,18 @@
-import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import { Card, SearchQueryParams } from 'src/components'
+import { Card } from 'src/components'
 
 import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 
 import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
 
 export default function PageConfigurationSloc() {
-  const [filters, setFilters] = useState([])
   const [selectedRow, setSelectedRow] = useState(null)
   const [dataTable, setdataTable] = useState([])
-  const router = useRouter()
   const data = []
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -30,6 +27,8 @@ export default function PageConfigurationSloc() {
     columns: columns(goToDetailPage),
     data,
   })
+
+  const { searchProps } = useFilters(table, 'Search by branch id', ['branch_id'])
 
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => {
@@ -85,7 +84,7 @@ export default function PageConfigurationSloc() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
