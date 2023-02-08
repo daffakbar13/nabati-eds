@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
@@ -5,7 +6,7 @@ import { Button } from 'pink-lava-ui'
 import React from 'react'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+function Linked({ link, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
     router.push(`${PATH.SALES}/proforma-invoice/detail/${link}`)
@@ -42,45 +43,52 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 export const TableBilling = [
   addColumn({
     title: 'Shipment',
-    render: (_, { shipment_id, status }) => <Linked link={shipment_id} status={status} type="id" />,
+    dataIndex: 'shipment_id',
+    render: (link, record) => <Linked link={link} status={record.status} type="id" />,
     fixed: true,
     sorter: true,
   }),
   addColumn({
     title: 'Vehicle Number',
-    dataIndex: 'vechile_number',
+    dataIndex: 'vehicle_id',
   }),
   addColumn({
     title: 'Driver',
-    dataIndex: 'driver',
+    dataIndex: 'driver_name',
   }),
   addColumn({
     title: 'Created Date',
-    dataIndex: 'created_date',
+    dataIndex: 'created_at',
   }),
   addColumn({
     title: 'Total DO',
     dataIndex: 'total_do',
-    align: 'center',
   }),
   addColumn({
     title: 'Sales Org.',
-    dataIndex: 'sales_org',
+    dataIndex: 'sales_org_name',
   }),
   addColumn({
     title: 'Branch',
-    dataIndex: 'branch',
+    dataIndex: 'branch_name',
+  }),
+  addColumn({
+    title: 'Branch Type',
+    dataIndex: 'branch_type',
   }),
   addColumn({
     title: 'Status',
-    render: (_, { status }) => (
-      <TaggedStatus status={status === 'PGI Complete' ? 'Billing Created' : status} />
-    ),
+    dataIndex: 'status',
+    render: (status) => <TaggedStatus status={status} />,
+  }),
+  addColumn({
+    title: 'Status Process',
+    dataIndex: 'status_process',
+    render: (status) => <TaggedStatus status={status || 'Not Implemented'} />,
   }),
   addColumn({
     title: 'Action',
-    render: (_, { shipment_id, status }) => (
-      <Linked link={shipment_id} status={status} type="action" />
-    ),
+    dataIndex: 'shipment_id',
+    render: (link, record) => <Linked link={link} status={record.status} type="action" />,
   }),
 ]

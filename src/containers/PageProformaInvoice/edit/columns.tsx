@@ -1,42 +1,5 @@
+import { Input, InputNumber } from 'antd'
 import CreateColumns, { addColumn } from 'src/utils/createColumns'
-import React from 'react'
-import { Button } from 'pink-lava-ui'
-import { useRouter } from 'next/router'
-import { PATH } from 'src/configs/menus'
-
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
-  const router = useRouter()
-  const navigate = () => {
-    router.push(`${PATH.SALES}/proforma-invoice/edit/${link}`)
-  }
-  const [hover, setHover] = React.useState(false)
-
-  return (
-    <>
-      {type === 'id' ? (
-        <div
-          onClick={navigate}
-          onMouseEnter={() => {
-            setHover(true)
-          }}
-          onMouseLeave={() => {
-            setHover(false)
-          }}
-          style={{
-            cursor: 'pointer',
-            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
-          }}
-        >
-          {link}
-        </div>
-      ) : (
-        <Button size="big" variant="tertiary" onClick={navigate}>
-          Delivery
-        </Button>
-      )}
-    </>
-  )
-}
 
 export const TableDocumentHeader = [
   addColumn({
@@ -46,60 +9,26 @@ export const TableDocumentHeader = [
     fixed: true,
   }),
   addColumn({
-    title: 'Delivery Order',
-    dataIndex: 'delivery_order_id',
+    title: 'Item',
+    dataIndex: 'product_id',
+    render: (_, { product_id, product_name }) => `${product_id} - ${product_name}`,
   }),
   addColumn({
-    title: 'Order Type',
-    dataIndex: 'order_type',
+    title: 'Uom',
+    dataIndex: 'uom_id',
   }),
   addColumn({
-    title: 'Order Date',
-    dataIndex: 'order_date',
+    title: 'Quantity Order',
+    dataIndex: 'qty',
   }),
   addColumn({
-    title: 'Delivery Date',
-    dataIndex: 'delivery_date',
+    title: 'Quantity Revised',
+    dataIndex: 'qr',
+    render: (_, { product_id, product_name }) => <InputNumber />,
   }),
   addColumn({
-    title: 'Sales Org.',
-    dataIndex: 'sales_org_name',
+    title: 'Remarks',
+    dataIndex: 'remarks',
+    render: (_, { product_id, product_name }) => <Input />,
   }),
-  addColumn({
-    title: 'Plant',
-    dataIndex: 'plant_name',
-  }),
-  addColumn({
-    title: 'Ship To Customer',
-    dataIndex: 'ship_to_customer',
-  }),
-  addColumn({
-    title: 'Salesman',
-    dataIndex: 'salesman_name',
-  }),
-  addColumn({
-    title: 'Status',
-    dataIndex: 'status',
-  }),
-  addColumn({
-    title: 'Action',
-    render: (_, { shipment_id, status }) => (
-      <Linked link={shipment_id} status={status} type="action" />
-    ),
-  }),
-]
-
-export const TableDocumentFlow = [
-  CreateColumns('Process', 'Process'),
-  CreateColumns('Doc. Number', 'Doc. Number'),
-  CreateColumns('Created Date', 'Created Date'),
-  CreateColumns('Created By', 'Created By'),
-  CreateColumns('Modified Date', 'Modified Date'),
-  CreateColumns('Modified By', 'Modified By'),
-  CreateColumns('Status', 'Status'),
-]
-
-export const TableCustomerInfo = [
-  CreateColumns('Salesman', 'Process'),
-  CreateColumns('Salesman Group', 'Doc. Number'),
 ]

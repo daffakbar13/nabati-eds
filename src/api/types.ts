@@ -24,6 +24,7 @@ export interface CommonDetailResponse<T> {
 export interface CommonDetailParams {
   id?: string
   shipment_id?: string
+  delivery_id?: string
   doc_type?: string
   company_id?: string
   requestNumber?: string

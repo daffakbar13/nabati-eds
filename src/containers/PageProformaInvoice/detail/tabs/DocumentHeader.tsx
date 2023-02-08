@@ -14,26 +14,26 @@ interface DocumentHeaderProps {
 
 export default function DocumentHeader(props: DocumentHeaderProps) {
   const { data } = props
-  const { shipment_detail, shipment_items_detail } = data
+  const { proforma_invoice_detail, proforma_invoice_items_detail } = data
 
   const dataList = [
-    DataList.createDataList('Sales Org.', shipment_detail?.sales_org_name),
-    DataList.createDataList('Plant', shipment_detail?.plant_name),
-    DataList.createDataList('Vehicle', shipment_detail?.vehicle_id),
-    DataList.createDataList('Driver', shipment_detail?.driver_name),
-    DataList.createDataList('Loading Date', dateFormat(shipment_detail?.loading_date)),
-    DataList.createDataList('Posting Date', dateFormat(shipment_detail?.posting_date)),
+    DataList.createDataList('Sales Org.', proforma_invoice_detail?.sales_org_name),
+    DataList.createDataList('Plant', proforma_invoice_detail?.plant_name),
+    DataList.createDataList('Vehicle', proforma_invoice_detail?.vehicle_id),
+    DataList.createDataList('Driver', proforma_invoice_detail?.driver_name),
+    DataList.createDataList('Loading Date', dateFormat(proforma_invoice_detail?.loading_date)),
+    DataList.createDataList('Posting Date', dateFormat(proforma_invoice_detail?.posting_date)),
     DataList.createDataList(
       'Actual Delivery Date',
-      dateFormat(shipment_detail?.actual_delivery_date),
+      dateFormat(proforma_invoice_detail?.actual_delivery_date),
     ),
-    DataList.createDataList('Created On', dateFormat(shipment_detail?.created_date)),
-    DataList.createDataList('Created By', shipment_detail?.created_by),
-    DataList.createDataList('Modified On', dateFormat(shipment_detail?.modified_at)),
-    DataList.createDataList('Modified By', shipment_detail?.modified_by),
+    DataList.createDataList('Created On', dateFormat(proforma_invoice_detail?.created_date)),
+    DataList.createDataList('Created By', proforma_invoice_detail?.created_by),
+    DataList.createDataList('Modified On', dateFormat(proforma_invoice_detail?.modified_at)),
+    DataList.createDataList('Modified By', proforma_invoice_detail?.modified_by),
   ]
 
-  shipment_items_detail?.map((obj, index) => Object.assign(obj, { no: ++index }))
+  proforma_invoice_items_detail?.map((obj, index) => Object.assign(obj, { no: ++index }))
 
   return (
     <>
@@ -58,7 +58,7 @@ export default function DocumentHeader(props: DocumentHeaderProps) {
       <div style={{ overflow: 'scroll' }}>
         <Table
           columns={TableDocumentHeader}
-          dataSource={shipment_items_detail}
+          dataSource={proforma_invoice_items_detail}
           scroll={{ x: 'max-content' }}
         />
       </div>

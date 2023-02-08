@@ -15,17 +15,22 @@ import AllTabs from './tabs'
 import DocumentHeader from './tabs/DocumentHeader'
 import BPB from './tabs/BPB'
 import BSTF from './tabs/BSTF'
+import {
+  getDetailProformaInvoiceByShipment,
+  getProformaInvoiceBpb,
+  getProformaInvoiceBstf,
+} from 'src/api/proforma-invoice'
 
 export default function PageShipmentDetail() {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
-  const [showConfirm, setShowConfirm] = React.useState('')
+  const [showConfirm, setShowConfirm] = React.useState<'pgi' | 'success-pgi' | ''>('')
   const [processing, setProcessing] = React.useState('')
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
   const router = useRouter()
-  const data = useDetail(getDetailShipment, router.query)
-  const dataBpb = useDetail(getShipmentBpb, router.query)
-  const dataBstf = useDetail(getShipmentBstf, router.query)
+  const data = useDetail(getDetailProformaInvoiceByShipment, { id: router.query.id as string })
+  const dataBpb = useDetail(getProformaInvoiceBpb, { id: router.query.id as string })
+  const dataBstf = useDetail(getProformaInvoiceBstf, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
   const componentRef = React.useRef()
 
@@ -172,7 +177,7 @@ export default function PageShipmentDetail() {
             </>
           )} */}
           {currentTab === '1' && (
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
               Confirm PGI
             </Button>
           )}
