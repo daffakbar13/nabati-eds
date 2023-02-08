@@ -26,6 +26,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
+  const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const [dataFormUpdate, setDataFormUpdate] = useState<FormData>()
@@ -99,8 +100,23 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const handleCancel = () => {
-    setConfirmModal(false)
-    close()
+    if (dataForm) {
+      setShowConfirmModalCancel(true)
+    } else {
+      setDataForm(undefined)
+      form.setFieldsValue({
+        branch: undefined,
+        order_type: undefined,
+        sloc: undefined,
+        branch_from: undefined,
+        branch_to: undefined,
+      })
+      close()
+    }
+  }
+
+  const handleOkCancelConfirm = () => {
+    setDataForm(undefined)
     form.setFieldsValue({
       branch: undefined,
       order_type: undefined,
@@ -108,6 +124,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       branch_from: undefined,
       branch_to: undefined,
     })
+    setShowConfirmModalCancel(false)
+    close()
   }
 
   useEffect(() => {
@@ -170,7 +188,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         content={content}
         loading={loading}
         cancelText="Cancel"
-        okText={isOnEditMode ? 'Update' : 'Create'}
+        okText={isOnEditMode ? 'Update' : 'Submit'}
+      />
+      <Modal
+        title={'Confirm Cancellation'}
+        open={showConfirmModalCancel}
+        onOk={handleOkCancelConfirm}
+        onCancel={() => {
+          setShowConfirmModalCancel(false)
+        }}
+        content={'Are you sure want to cancel? Change you made so far will not saved'}
+        loading={loading}
+        width={432}
       />
       <Modal
         title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
