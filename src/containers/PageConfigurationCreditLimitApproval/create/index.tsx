@@ -8,6 +8,7 @@ import { ApproveCreditLimit } from 'src/api/logistic/config-credit-limit'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { PATH } from 'src/configs/menus'
 import { Modal } from 'src/components'
+import { ICExclamation } from 'src/assets'
 
 interface FormData {
   customer_id: string
@@ -15,6 +16,8 @@ interface FormData {
   credit_limit_after: string
   valid_from: string
   valid_to: string
+  status: string
+  reject_reason: string
 }
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
@@ -40,10 +43,15 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     customer_id: payload?.customer_id,
     valid_from: moment(payload?.valid_from).format('YYYY-MM-DD'),
     status: statusUpdate,
+    reject_reason: '',
   }
   const onClickSubmit = async () => {
     setApproveLimit(false)
     setConfirmModal(true)
+  }
+
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
   const doUpdate = async (reqBody: any) => {
@@ -75,6 +83,24 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const content = (
     <>
+      {payload?.status === '02' && (
+        <div
+          key={1}
+          style={{
+            marginTop: 10,
+            color: '#FFF',
+            background: '#b40e0e',
+            borderRadius: 8,
+            padding: '8px 16px',
+            display: 'grid',
+            gridTemplateColumns: '30px 1fr',
+          }}
+        >
+          <ICExclamation />
+          <p>{payload?.reject_reason || '-'}</p>
+        </div>
+      )}
+
       <Form
         labelCol={{ span: 24 }}
         wrapperCol={{ span: 24 }}
@@ -212,7 +238,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           }
           rules={[{ required: true }]}
         >
-          <DebounceSelect required type="input" placeholder="e.g Change Credit Limit After" />
+          <DebounceSelect
+            required
+            type="input"
+            placeholder="e.g Change Credit Limit After"
+            onChange={(e: any) => {
+              onChangeForm('reject_reason', e.target.value)
+            }}
+          />
         </Form.Item>
         <Spacer size={10} />
       </Form>
@@ -252,9 +285,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         style={{ marginTop: 0 }}
       >
         <Typography.Title level={3} style={{ margin: 0 }}>
-          View Credit Limit
+          View Credit Limit <TaggedStatus status={payload?.status_name || ''} />
         </Typography.Title>
-        <TaggedStatus status={payload?.status_name || ''} />
+
         {typeof content === 'string' ? (
           <Typography.Title level={5} style={{ margin: 0 }}>
             {content}
