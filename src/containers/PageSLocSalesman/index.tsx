@@ -5,8 +5,8 @@ import { Card, SearchQueryParams, Modal } from 'src/components'
 import { getListSlocman, UpdateStatusSlocman } from 'src/api/logistic/sloc-salesman'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
-
 import CreateModal from './create'
+import { PATH } from 'src/configs/menus'
 
 export default function PageConfigurationSloc() {
   const [filters, setFilters] = useState([])
@@ -95,7 +95,7 @@ export default function PageConfigurationSloc() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Sloc Salesman?`}
         onOkSuccess={() => {
-          router.reload()
+          router.push(`${PATH.LOGISTIC}/sloc-salesman`)
         }}
         successContent={(res: any) => `Sloc Salesman has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
