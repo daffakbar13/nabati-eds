@@ -7,7 +7,7 @@ import { PATH } from 'src/configs/menus'
 function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    router.push(`${PATH.SALES}/proforma-invoice/edit/${link}`)
+    router.push(`${PATH.SALES}/proforma-invoice/edit/${link}?shipment_id=${router.query.id}`)
   }
   const [hover, setHover] = React.useState(false)
 
