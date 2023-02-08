@@ -60,15 +60,15 @@ export default function PageDoStoDetail() {
     } else {
       try {
         await AutoCreateGR(data.id as string, data.purchase_id as string, {
-          branch_id: data.receive_branch_id,
+          branch_id: data.supply_branch_id,
           document_type: 'WE',
           document_date: moment(data.document_date).format('YYYY-MM-DD'),
           posting_date: moment(now).format('YYYY-MM-DD'),
           header_text: data.header_text,
           ref_document_type: '',
           reference_number: '',
-          from_sloc: 'GS00',
-          to_sloc: 'GS00',
+          from_sloc: data?.items?.[0].sloc_id || 'GS00',
+          to_sloc: data.receive_branch_id,
           items: data.items?.map((item: any, index) => ({
             product_id: item.product_id,
             description: item.description,
@@ -77,6 +77,7 @@ export default function PageDoStoDetail() {
             sloc_id: item.sloc_id,
             remarks: item.remarks,
             batch: item.batch,
+            branch_id: data.receive_branch_id,
           })),
         })
         await updatePGIinventoryBooking(router.query.id as string, {
