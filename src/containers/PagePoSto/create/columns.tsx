@@ -15,15 +15,16 @@ interface propsUseTable {
 }
 
 export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => void) => {
+  const [form] = Form.useForm()
   const initialValue = {
     product_id: '',
     product_receiver_id: '',
     description: '',
     qty: 1,
     order_qty: 1,
-    uom_id: 'CTN',
+    uom_id: '',
     base_qty: 1,
-    base_uom_id: 'CTN',
+    base_uom_id: '',
     sloc_id: '',
     remarks: '',
     batch: '',
@@ -60,6 +61,10 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
     setData(data.filter((_, i) => i !== index))
     setPlaceholder(placeholder.filter((_, i) => i !== index))
   }
+
+  React.useEffect(() => {
+    console.log('duplicate data', data)
+  }, [data])
 
   function handleAddItem() {
     setData([...data, initialValue])
@@ -180,7 +185,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
         >
           <DebounceSelect
             type="input"
-            placeholder="e.g Testing"
+            placeholder="e.g Batch"
             value={batch as any}
             onBlur={(e) => {
               handleChangeData('batch', e.target.value, index)
@@ -309,7 +314,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
         >
           <DebounceSelect
             type="input"
-            placeholder="e.g Testing"
+            placeholder="e.g Batch"
             value={batch as any}
             onBlur={(e) => {
               handleChangeData('batch', e.target.value, index)
@@ -324,17 +329,39 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
     if (fetching) {
       data.forEach(({ product_id, uom_id, qty }, index) => {
         if (product_id !== '') {
+          const duplicateProduct = data.filter(
+            (obj, idx) => product_id === obj.product_id && idx !== index,
+          )
+          console.log('duplicateProduct', duplicateProduct)
           fieldUom(product_id).then((value) => {
             const newOptionsUom = [...optionsUom]
-            if (value?.[0]?.value) {
-              handleChangeData('uom_id', value?.[0].value, index)
-              handleChangeData('base_uom_id', value?.[0].value, index)
+            const filteredArr = value.filter(
+              ({ label }) => !duplicateProduct.map((obj) => obj.uom_id).includes(label),
+            )
+            if (duplicateProduct.length === 0) {
+              const indexCTN = filteredArr.findIndex((x) => x.value === 'CTN')
+              handleChangeData('uom_id', filteredArr?.[indexCTN]?.value, index)
+              handleChangeData('base_uom_id', filteredArr?.[indexCTN]?.value, index)
+              form.setFieldsValue({
+                [`UoM.${index + 1}}`]: filteredArr?.[indexCTN]?.value,
+              })
             } else {
-              const newUom = uom_id
-              handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
+              if (filteredArr?.[0]?.value) {
+                handleChangeData('uom_id', filteredArr?.[0].value, index)
+                handleChangeData('base_uom_id', filteredArr?.[0].value, index)
+                form.setFieldsValue({
+                  [`UoM.${index + 1}}`]: filteredArr?.[0].value,
+                })
+              } else {
+                const newUom = uom_id
+                handleChangeData('uom_id', newUom, index)
+                handleChangeData('base_uom_id', newUom, index)
+                form.setFieldsValue({
+                  [`UoM.${index + 1}}`]: newUom,
+                })
+              }
             }
-            newOptionsUom[index] = value
+            newOptionsUom[index] = filteredArr
             setOptionsUom(newOptionsUom)
           })
           itemReceiver(product_id, 'Channel').then((response) => {
