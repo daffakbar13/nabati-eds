@@ -18,8 +18,19 @@ export const getProformaInvoiceList = async (
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
-    subUrl: `${subUrl}/lists`,
-    data: params,
+    subUrl: `${url}/list`,
+    data: {
+      filters: [
+        {
+          field: 'status_id',
+          option: 'EQ',
+          from_value: '10',
+        },
+        ...params.filters,
+      ],
+      limit: params.limit,
+      page: params.page,
+    },
   })
   return response.data
 }
@@ -61,7 +72,7 @@ export const getDetailProformaInvoice = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl}/${params.id}/detail`,
+    subUrl: `${url}/${params.id}/detail`,
   })
   return response.data
 }
