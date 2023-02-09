@@ -4,7 +4,6 @@ import {
   getSalesmanByCompany,
   getProductByCompany,
   getPricingByIdAndUom,
-  getProductById,
   getBranch,
   getOrderTypeByCompany,
   getPricingByCompany,
@@ -29,15 +28,7 @@ import {
   getProductMasterData,
   getListProduct,
   getSlocbyConfigLogistic,
-  getSalesOfficeByCompany,
-  getTermByCompanyId,
-  getPaymentMethod,
-  getStatusBlock,
-  getPriceGroupByCompanyId,
-  getDivisionByCompanyId,
-  getDistrictByCompanyId,
 } from 'src/api/master-data'
-import { getCustomerByFilterProps } from 'src/api/master-data/types'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
 import { getDetailProductIntraChannel } from 'src/api/logistic/config-mapping-product-intra'
@@ -46,6 +37,7 @@ import { concatString } from 'src/utils/concatString'
 import { getPoNumberList, getGoodReceiptList } from 'src/api/logistic/good-receipt'
 import { getDeliveryOrderList } from 'src/api/delivery-order'
 import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
+import { getSalesmanDivision } from 'src/api/salesman-division'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -821,4 +813,45 @@ export function FieldOrderType(search: string) {
         value: order_type_id,
       })),
   )
+}
+
+export function fieldSalesmanID(search: string) {
+  return getSalesmanDivision({
+    filters: [
+      {
+        field: 'salesman_id',
+        option: 'CP',
+        from_value: `%${search}%`,
+      },
+    ],
+    limit: 10,
+  })
+    .then((res) => res.data.results)
+    .then((res) =>
+      res.map((e) => ({
+        label: e.salesman_id,
+        value: e.salesman_id,
+      })),
+    )
+}
+
+export function fieldDivisionID(search: string) {
+  return getSalesmanDivision({
+    filters: [
+      {
+        field: 'division_id',
+        option: 'CP',
+        from_value: `%${search}%`,
+      },
+    ],
+    limit: 10,
+  })
+    .then((res) => res.data.results)
+    .then((res) => res.map((e) => e.division_id))
+    .then((res) =>
+      [...new Set(res)].map((e) => ({
+        label: e,
+        value: e,
+      })),
+    )
 }
