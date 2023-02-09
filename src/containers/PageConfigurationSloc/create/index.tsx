@@ -189,7 +189,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         width={432}
       />
       <Modal
-        title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
+        title={isOnEditMode ? 'Confirm Update' : 'Confirm Submit'}
         open={showConfirmModal}
         onOk={handleSubmit}
         onCancel={() => {
