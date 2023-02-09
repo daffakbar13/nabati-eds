@@ -18,8 +18,8 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'confirm', payload: 'undefined' })
   }
 
-  function changeSubmittedQuotation(payload: string[]) {
-    dispatch({ type: 'submittedQuotation', payload })
+  function changeSubmittedSalesmanDivision(payload: any) {
+    dispatch({ type: 'submittedSalesmanDivision', payload })
   }
   function handleShowModal(payload: StateType['showModal']) {
     dispatch({
@@ -33,7 +33,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
       payload: undefined,
     })
   }
-  function handleEditable(payload: string) {
+  function handleEditable(payload: any) {
     dispatch({
       type: 'editable',
       payload,
@@ -45,7 +45,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     stopProcess,
     showConfirm,
     unShowConfirm,
-    changeSubmittedQuotation,
+    changeSubmittedSalesmanDivision,
     handleShowModal,
     unShowModal,
     handleEditable,

@@ -23,9 +23,7 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     }),
     addColumn({
       title: 'Salesman ID',
-      render: (_, { salesman_id }) => (
-        <Link onClick={() => handleAction(salesman_id)}>{salesman_id}</Link>
-      ),
+      render: (_, record) => <Link onClick={() => handleAction(record)}>{record.salesman_id}</Link>,
       fixed: true,
       sorter: true,
     }),
@@ -37,6 +35,7 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     addColumn({
       title: 'Division ID',
       dataIndex: 'division_id',
+      sorter: true,
     }),
     addColumn({
       title: 'Division Name',
@@ -44,7 +43,7 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     }),
     addColumn({
       title: 'Company ID',
-      render: (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
+      render: (_, { company_id, company_name }) => concatString(company_id, company_name),
     }),
     addColumn({
       title: 'Branch ID',
@@ -52,8 +51,8 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     }),
     addColumn({
       title: 'Action',
-      render: (_, { salesman_id }) => (
-        <Button size="big" variant="tertiary" onClick={() => handleAction(salesman_id)}>
+      render: (_, record) => (
+        <Button size="big" variant="tertiary" onClick={() => handleAction(record)}>
           View Detail
         </Button>
       ),

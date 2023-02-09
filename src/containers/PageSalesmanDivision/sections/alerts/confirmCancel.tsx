@@ -6,7 +6,7 @@ import { useSalesSalesmanDivisionContext } from '../../states'
 
 export default function ConfirmCancel() {
   const {
-    handler: { unShowConfirm, unShowModal },
+    handler: { unShowConfirm, unShowModal, handleEditable },
   } = useSalesSalesmanDivisionContext()
 
   return (
@@ -24,6 +24,7 @@ export default function ConfirmCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
+            handleEditable({})
             unShowConfirm()
             unShowModal()
           }}

@@ -1,25 +1,19 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable operator-linebreak */
-import { Popover, Typography } from 'antd'
+import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
-import { PATH } from 'src/configs/menus'
+import { concatString } from 'src/utils/concatString'
 import { useSalesSalesmanDivisionContext } from '../../states'
 
 export default function ConfirmSuccessSubmit() {
   const {
-    state: {
-      table: {
-        state: { selected },
-      },
-      submittedQuotation,
-    },
+    state: { showModal, editable },
   } = useSalesSalesmanDivisionContext()
   const router = useRouter()
-  const oneSelected = selected.length === 1
+  const salesman = concatString(editable.salesman_id, editable.salesman_name)
+  const isCreate = showModal === 'create'
 
   return (
     <Popup>
@@ -29,7 +23,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> Submit Success
+            <CheckCircleFilled /> {isCreate ? 'Submit' : 'Update'} Success
           </>
         </Text>
       </div>
@@ -43,44 +37,23 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          New Sales Order
-          <Typography.Text
-            copyable={{
-              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
-            }}
-          >
-            {oneSelected ? (
-              ` ${submittedQuotation[0]}`
-            ) : (
-              <Popover content={submittedQuotation.join(', ')}>
-                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
-              </Popover>
-            )}
-          </Typography.Text>{' '}
-          has been
+          {showModal === 'create' ? 'New ' : ''}
+          {'Salesman Division '}
+          <Typography.Text>{salesman}</Typography.Text>
+          {' has been '}
         </div>
-        <div>successfully submitted</div>
+        <div>successfully {isCreate ? 'submitted' : 'updated'}</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
-          variant="secondary"
+          variant="primary"
           onClick={() => {
             router.push(router.pathname)
           }}
         >
-          Back To List
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            router.push(`${PATH.SALES}/sales-order`)
-          }}
-        >
-          Next Process
+          Oke
         </Button>
       </div>
     </Popup>

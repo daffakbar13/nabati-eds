@@ -1,15 +1,12 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable operator-linebreak */
 import { Popover, Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
-import { PATH } from 'src/configs/menus'
 import { useSalesSalesmanDivisionContext } from '../../states'
 
-export default function ConfirmSuccessCancel() {
+export default function ConfirmSuccessDelete() {
   const {
     state: {
       table: {
@@ -28,7 +25,7 @@ export default function ConfirmSuccessCancel() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> Cancel Success
+            <CheckCircleFilled /> Delete Success
           </>
         </Text>
       </div>
@@ -42,7 +39,7 @@ export default function ConfirmSuccessCancel() {
         }}
       >
         <div>
-          Quoatation
+          Salesman
           <Typography.Text
             copyable={{ text: oneSelected ? description.text : selected.join(', ') }}
           >
@@ -52,9 +49,9 @@ export default function ConfirmSuccessCancel() {
               <Popover content={description.content}>{` ${description.text}`}</Popover>
             )}
           </Typography.Text>{' '}
-          has been
+          {' has been'}
         </div>
-        <div>successfully canceled</div>
+        <div>successfully deleted</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -62,7 +59,7 @@ export default function ConfirmSuccessCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/quotation`)
+            router.push(router.asPath)
           }}
         >
           OK

@@ -3,13 +3,7 @@ import { Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Col, Row } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import {
-  SectionAction,
-  SectionConfirm,
-  SectionLoader,
-  SectionModalCreate,
-  SectionTable,
-} from './sections'
+import { SectionAction, SectionConfirm, SectionModalCreate, SectionTable } from './sections'
 import SalesQuotationListProvider from './_provider'
 
 export default function PageSalesmanDivision() {
@@ -34,7 +28,6 @@ export default function PageSalesmanDivision() {
       </Row>
       <SectionModalCreate />
       <SectionConfirm />
-      <SectionLoader />
     </SalesQuotationListProvider>
   )
 }
