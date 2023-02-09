@@ -1,6 +1,7 @@
 {
   "extends": ["next/core-web-vitals", "airbnb-base"],
   "rules": {
+    "react-hooks/exhaustive-deps": "off",
     "no-unused-vars": "warn",
     "import/no-cycle": "off",
     "import/named": "off",
