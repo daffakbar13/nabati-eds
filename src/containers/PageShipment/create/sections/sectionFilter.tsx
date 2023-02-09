@@ -46,11 +46,6 @@ export default function SectionAction() {
                               value: 'PID1 - PMA - GT',
                               key: 'P104 - PMA Bandung Selatan',
                             },
-                            {
-                              label: 'PID2 - PMA - MT',
-                              value: 'PID2 - PMA - MT',
-                              key: 'P104 - PMA Bandung Selatan',
-                            },
                           ]
                     }
                     onChange={(e: any) => {
