@@ -160,7 +160,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
           variant="primary"
           onClick={() => setConfirmModal(true)}
         >
-          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>Submit</span>
+          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>{isOnEditMode ? 'Update' : 'Submit'}</span>
         </Button>
       </div>
     </>
