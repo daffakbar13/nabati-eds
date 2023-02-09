@@ -5,12 +5,17 @@ import { Card } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import moment from 'moment'
 import { useSalesShipmentCreateContext } from '../states'
+import { useRouter } from 'next/router'
+import { fieldBranch, fieldBranchAll, fieldBranchBySalesOrgId } from 'src/configs/fieldFetches'
 
 export default function SectionAction() {
   const {
     state: { table, options, showFilter, filter },
     handler: { handleFilter, handleChangeFilter, handleClearFilter },
   } = useSalesShipmentCreateContext()
+
+  const router = useRouter()
+  const { type } = router.query
 
   return (
     <>
@@ -26,18 +31,28 @@ export default function SectionAction() {
                     placeholder={'Select'}
                     value={filter?.sales_org}
                     style={{ borderRadius: 64 }}
-                    options={[
-                      {
-                        label: 'PID1 - PMA - GT',
-                        value: 'PID1 - PMA - GT',
-                        key: 'P104 - PMA Bandung Selatan',
-                      },
-                      {
-                        label: 'PID2 - PMA - MT',
-                        value: 'PID2 - PMA - MT',
-                        key: 'P104 - PMA Bandung Selatan',
-                      },
-                    ]}
+                    options={
+                      type === 'MT'
+                        ? [
+                            {
+                              label: 'PID2 - PMA - MT',
+                              value: 'PID2 - PMA - MT',
+                              key: 'P104 - PMA Bandung Selatan',
+                            },
+                          ]
+                        : [
+                            {
+                              label: 'PID1 - PMA - GT',
+                              value: 'PID1 - PMA - GT',
+                              key: 'P104 - PMA Bandung Selatan',
+                            },
+                            {
+                              label: 'PID2 - PMA - MT',
+                              value: 'PID2 - PMA - MT',
+                              key: 'P104 - PMA Bandung Selatan',
+                            },
+                          ]
+                    }
                     onChange={(e: any) => {
                       handleFilter({ ...filter, branch: e.key, sales_org: e.value })
                     }}
@@ -50,13 +65,16 @@ export default function SectionAction() {
                     placeholder={'Select'}
                     value={filter?.branch}
                     style={{ borderRadius: 64 }}
-                    options={[
-                      {
-                        label: 'P104 - PMA Bandung Selatan',
-                        value: 'P104 - PMA Bandung Selatan',
-                        key: 'PID1 - PMA - GT',
-                      },
-                    ]}
+                    fetchOptions={type === 'MT' && fieldBranchBySalesOrgId}
+                    // options={
+                    //   type !== 'MT' && [
+                    //     {
+                    //       label: 'P104 - PMA Bandung Selatan',
+                    //       value: 'P104 - PMA Bandung Selatan',
+                    //       key: 'PID1 - PMA - GT',
+                    //     },
+                    //   ]
+                    // }
                     onChange={(e: any) => {
                       handleFilter({ ...filter, branch: e.value, sales_org: e.key })
                     }}
