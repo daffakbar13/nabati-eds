@@ -1,5 +1,6 @@
 /* eslint-disable function-paren-newline */
 /* eslint-disable no-plusplus */
+import { Empty } from 'antd'
 import Router from 'next/router'
 import React from 'react'
 import { useQuery } from 'react-query'
@@ -167,6 +168,7 @@ export default function PromotionList() {
   const { data, isSuccess } = useQuery('Promotion Lists', () =>
     getPromotionList({ id: Router.query.id as string }).then((res) => res.data),
   )
+  const isEmptyAll = (data?.promotion_data && data?.promotion_logs) === null
 
   return (
     <div
@@ -176,18 +178,15 @@ export default function PromotionList() {
         gap: 20,
       }}
     >
-      {isSuccess && (
+      {isSuccess && !isEmptyAll && (
         <>
-          {data.promotion_data !== null && (
-            <>
-              <TitleDataList title="Promotion Detail" />
-              <PromotionDetail data={data.promotion_data} />
-            </>
-          )}
+          <TitleDataList title="Promotion Detail" />
+          <PromotionDetail data={data.promotion_data || []} />
           <TitleDataList title="Promotion Log" />
-          <TablePromotionLog data={data.promotion_logs} />
+          <TablePromotionLog data={data.promotion_logs || []} />
         </>
       )}
+      {isEmptyAll && <Empty />}
     </div>
   )
 }
