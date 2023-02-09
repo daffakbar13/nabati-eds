@@ -7,7 +7,7 @@ export interface CommonPagination {
   total_page: number
 }
 
-export interface CommonListResponse<T> {
+export interface CommonListResponse<T = any> {
   status: string
   message: string
   data: {
