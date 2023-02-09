@@ -22,25 +22,6 @@ export default function SectionAction() {
                 <Col span={6}>
                   <DebounceSelect
                     type="select"
-                    label="Branch"
-                    placeholder={'Select'}
-                    value={filter?.branch}
-                    style={{ borderRadius: 64 }}
-                    options={[
-                      {
-                        label: 'P104 - PMA Bandung Selatan',
-                        value: 'P104 - PMA Bandung Selatan',
-                        key: 'PID1 - PMA - GT',
-                      },
-                    ]}
-                    onChange={(e: any) => {
-                      handleFilter({ ...filter, branch: e.value, sales_org: e.key })
-                    }}
-                  />
-                </Col>
-                <Col span={6}>
-                  <DebounceSelect
-                    type="select"
                     label="Sales Org."
                     placeholder={'Select'}
                     value={filter?.sales_org}
@@ -59,6 +40,25 @@ export default function SectionAction() {
                     ]}
                     onChange={(e: any) => {
                       handleFilter({ ...filter, branch: e.key, sales_org: e.value })
+                    }}
+                  />
+                </Col>
+                <Col span={6}>
+                  <DebounceSelect
+                    type="select"
+                    label="Branch"
+                    placeholder={'Select'}
+                    value={filter?.branch}
+                    style={{ borderRadius: 64 }}
+                    options={[
+                      {
+                        label: 'P104 - PMA Bandung Selatan',
+                        value: 'P104 - PMA Bandung Selatan',
+                        key: 'PID1 - PMA - GT',
+                      },
+                    ]}
+                    onChange={(e: any) => {
+                      handleFilter({ ...filter, branch: e.value, sales_org: e.key })
                     }}
                   />
                 </Col>
