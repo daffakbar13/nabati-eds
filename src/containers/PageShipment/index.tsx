@@ -12,7 +12,7 @@ import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { CheckCircleFilled } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { getShipment, PGIShipment } from 'src/api/shipment'
+import { getShipment, getShipmentMT, PGIShipment } from 'src/api/shipment'
 import Pagination from 'src/components/Pagination'
 import { PATH } from 'src/configs/menus'
 import moment from 'moment'
@@ -46,13 +46,12 @@ export default function PageShipment() {
   useEffect(() => {
     if (type === 'MT') {
       table.handler.updateData([])
+      table.handler.getApi(getShipmentMT)
     } else {
-      if (table.state.data.length > 0) {
-      } else {
-        table.handler.getApi(getShipment)
-      }
+      table.handler.updateData([])
+      table.handler.getApi(getShipment)
     }
-  }, [type, table.state.data])
+  }, [type])
 
   const ConfirmPGI = () => (
     <Popup
