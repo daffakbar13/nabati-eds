@@ -99,10 +99,14 @@ export default function CreateBilling() {
   }, [dataForm?.suppl_branch_id])
 
   const handleCreate = async () => {
+    const reqBody = { ...initialValue, ...dataForm }
     try {
-      return await createPoSto({ ...initialValue, ...dataForm })
+      return await createPoSto(initialValue)
     } catch (error) {
-      return error
+      console.log('kont', error)
+      console.log('kont data initial', initialValue)
+      console.log('kont data form', dataForm)
+      return false
     }
   }
 
@@ -112,6 +116,7 @@ export default function CreateBilling() {
   }
 
   useEffect(() => {
+    console.log('kont data', tableAddItems.data)
     if (tableAddItems?.data?.length > 0 && tableAddItems?.data?.[0].product_id != '') {
       setDisabledButton(false)
     } else {

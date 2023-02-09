@@ -108,7 +108,7 @@ export default function PagePoSToDetail() {
               </Col>
             </Row>
             <Divider />
-            <div style={{ overflow: 'scroll' }}>
+            <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
               {data.channel_type === 'MT' ? (
                 <Table
                   scroll={{ x: 'max-content', y: 600 }}

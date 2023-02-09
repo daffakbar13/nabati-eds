@@ -11,7 +11,7 @@ import DataList from 'src/components/DataList'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { Loader } from 'src/components'
 import { PATH } from 'src/configs/menus'
-import { columns } from './column'
+import { columns, columnsMT } from './column'
 
 export default function PageApprovalDetail() {
   const router = useRouter()
@@ -153,7 +153,15 @@ export default function PageApprovalDetail() {
             </Row>
             <Divider />
             <div style={{ overflow: 'scroll' }}>
-              <Table scroll={{ x: 'max-content', y: 600 }} columns={columns} data={data.items} />
+              {data.channel_type === 'MT' ? (
+                <Table
+                  scroll={{ x: 'max-content', y: 600 }}
+                  columns={columnsMT}
+                  data={data.items}
+                />
+              ) : (
+                <Table scroll={{ x: 'max-content', y: 600 }} columns={columns} data={data.items} />
+              )}
             </div>
           </Card>
           {(reject || approve) && (
