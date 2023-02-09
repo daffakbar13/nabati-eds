@@ -171,6 +171,25 @@ table.eds_paper,
   text-align: left;
 }
 
+table.eds_paper_bsts {
+  width: 100%;
+}
+
+table.eds_paper_bsts th {
+  text-align: left !important;
+}
+
+table.eds_paper_bsts td {
+  vertical-align: top;
+}
+
+table.eds_paper_bsts,
+.eds_paper_bsts th,
+.eds_paper_bsts td {
+  padding: 2px 5px;
+  text-align: left;
+}
+
 .right-align {
   text-align: right !important;
 }

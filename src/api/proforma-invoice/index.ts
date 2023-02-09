@@ -8,7 +8,6 @@ import {
 } from 'src/api/types'
 import { ProformaInvoice } from './types'
 
-const subUrl = 'v1/shipments'
 const url = 'v1/proforma-invoices'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
@@ -83,7 +82,6 @@ export const getProformaInvoiceBpb = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    // subUrl: `${subUrl}/${params.id}/bpb`,
     subUrl: `${url}/${params.id}/bpb`,
   })
   return response.data
@@ -95,8 +93,7 @@ export const getProformaInvoiceBstf = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl}/${params.id}/bstf`,
-    // subUrl: `${url}/${params.id}/bsts`,
+    subUrl: `${url}/${params.id}/bsts`,
   })
   return response.data
 }
