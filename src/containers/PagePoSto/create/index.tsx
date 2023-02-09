@@ -101,7 +101,7 @@ export default function CreateBilling() {
   const handleCreate = async () => {
     const reqBody = { ...initialValue, ...dataForm }
     try {
-      return await createPoSto(initialValue)
+      return await createPoSto(reqBody)
     } catch (error) {
       console.log('kont', error)
       console.log('kont data initial', initialValue)

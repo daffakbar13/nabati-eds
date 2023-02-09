@@ -283,22 +283,6 @@ export function fieldBranchAll(search: string) {
 }
 
 export function fieldBranchSupply(search: string, channel = '', supplybranch = '') {
-  // return getConfigSloc()
-  //     .then((result) => result.data
-  //         .map(({ branch_id }) => branch_id))
-  //     .then((allbranch) => getBranch()
-  //         .then((result) =>
-  //             result.data
-  //                 .filter(({ name, id, branch_type }) =>
-  //                     (name.toLowerCase().includes(search.toLowerCase())
-  //                         || id.toLowerCase().includes(search.toLowerCase()))
-  //                     && allbranch.includes(id) && branch_type !== channel)
-  //                 .splice(0, 10)
-  //                 .map(({ id, name, branch_type }) => ({
-  //                     label: [id, name].join(' - '),
-  //                     value: id,
-  //                     key: branch_type,
-  //                 }))))
   return getBranch().then((result) =>
     result.data
       .filter(
@@ -313,6 +297,24 @@ export function fieldBranchSupply(search: string, channel = '', supplybranch = '
         label: [id, name].join(' - '),
         value: id,
         key: branch_type,
+      })),
+  )
+}
+
+export function fieldBranchSupplyDOSTO(search: string, channel = '', supplybranch = '') {
+  return getBranch().then((result) =>
+    result.data
+      .filter(
+        ({ id, name, branch_type }) =>
+          (id.toLowerCase().includes(search.toLowerCase()) ||
+            name.toLowerCase().includes(search.toLowerCase())) &&
+          branch_type !== channel &&
+          id !== supplybranch,
+      )
+      .splice(0, 10)
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
       })),
   )
 }
