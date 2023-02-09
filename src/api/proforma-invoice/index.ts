@@ -83,7 +83,8 @@ export const getProformaInvoiceBpb = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `${subUrl}/${params.id}/bpb`,
+    // subUrl: `${subUrl}/${params.id}/bpb`,
+    subUrl: `${url}/${params.id}/bpb`,
   })
   return response.data
 }
@@ -95,6 +96,7 @@ export const getProformaInvoiceBstf = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl}/${params.id}/bstf`,
+    // subUrl: `${url}/${params.id}/bsts`,
   })
   return response.data
 }
