@@ -1,5 +1,5 @@
 export const tagColors = {
-  green: ['Done', 'Complete', 'Available', 'Routing Complete', 'Delivery', 'PGI Done'],
+  green: ['Done', 'Complete', 'Available', 'Routing Complete', 'Delivery', 'PGI Done', 'In Stock'],
   geekblue: ['SAP SO Complete'],
   red: ['Out of Stock', 'Canceled', 'Cancel', 'Rejected', 'Cancelled', 'Undelivered'],
   blue: ['Partial', 'Approved', 'SAP SO Complete'],
