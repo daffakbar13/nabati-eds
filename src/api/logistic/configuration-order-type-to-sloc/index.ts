@@ -35,11 +35,30 @@ export const CreateOrderTypetoSloc = async (payload: any) => {
   return response.data
 }
 
+export const UpdateStatusOrderTypetoSloc = async (params: any, payload: any) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/update_status/config_order_type_sloc/${params.company_id}/${params.branch_id}/${params.order_type}/${params.sloc_id}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}
+
+export const UpdateOrderTypetoSloc = async (params: any, payload: any) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/update/config_order_type_sloc/${params.company_id}/${params.branch_id}/${params.order_type}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}
 
 export const DeleteOrderTypetoSloc = async (payload: any) => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/list/config_order_type_sloc`,
+    method: METHODS.PUT,
+    subUrl: `${url}/delete/config_order_type_sloc`,
     overrideBaseUrl,
     data: payload,
   })

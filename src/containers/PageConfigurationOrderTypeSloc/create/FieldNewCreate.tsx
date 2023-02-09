@@ -7,10 +7,13 @@ import { fieldBranchAll, fieldSlocByConfigLogistic, FieldOrderType } from 'src/c
 export default function CreateNewOrderTypeSLoc({
   onChangeForm,
   setOrderTypeSloc,
+  onChangeFormUpdate,
+  payload,
 }) {
   const [allSloc, setAllScloc] = useState([])
   const [orderType, setOrderType] = useState('')
   const [sloc, setSloc] = useState('')
+  const isOnEditMode = !!payload
 
   const onChangeBranch = (value: any) => {
     fieldSlocByConfigLogistic(value).then((result) => {
@@ -21,6 +24,12 @@ export default function CreateNewOrderTypeSLoc({
   useEffect(() => {
     setOrderTypeSloc([{ order_type: orderType, sloc_id: sloc }])
   }, [orderType, sloc])
+
+  useEffect(() => {
+    if (payload?.branch_id) {
+      onChangeBranch(payload?.branch_id)
+    }
+  }, [payload])
 
   return (
     <>
@@ -36,11 +45,13 @@ export default function CreateNewOrderTypeSLoc({
             Branch <span style={{ color: 'red' }}> *</span>
           </Text>
         }
-        // rules={[{ required: true }]}
+        initialValue={isOnEditMode ? `${payload?.branch_id} - ${payload?.branch_name}` : ''}
+        rules={[{ required: true }]}
       >
         <DebounceSelect
           required
           type="select"
+          disabled={isOnEditMode}
           fetchOptions={(search) => fieldBranchAll(search)}
           onChange={(val: any) => {
             onChangeForm('branch_from', val.value)
@@ -60,12 +71,14 @@ export default function CreateNewOrderTypeSLoc({
             Order Type <span style={{ color: 'red' }}> *</span>
           </Text>
         }
-        // rules={[{ required: true }]}
+        initialValue={isOnEditMode ? payload?.order_type : ''}
+        rules={[{ required: true }]}
       >
         <DebounceSelect
           required
           type="select"
           fetchOptions={(search) => FieldOrderType(search)}
+          disabled={isOnEditMode}
           onChange={(val: any) => {
             setOrderType(val.value)
           }}
@@ -82,8 +95,9 @@ export default function CreateNewOrderTypeSLoc({
           >
             Sloc <span style={{ color: 'red' }}> *</span>
           </Text>
-        }
-        // rules={[{ required: true }]}
+        } initialValue={isOnEditMode ? payload?.sloc_id : ''}
+
+        rules={[{ required: true }]}
       >
         <DebounceSelect
           required
@@ -91,6 +105,7 @@ export default function CreateNewOrderTypeSLoc({
           options={allSloc}
           onChange={(val: any) => {
             setSloc(val.value)
+            onChangeFormUpdate('sloc_id', val.value)
           }}
         />
       </Form.Item>

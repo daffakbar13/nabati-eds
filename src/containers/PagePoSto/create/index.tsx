@@ -283,14 +283,14 @@ export default function CreateBilling() {
           router.push(`${PATH.LOGISTIC}/po-sto`)
         }}
         successContent={(res: any) => (
-          <>
+          <p>
             PO Number
             <Typography.Text copyable={{ text: res?.data?.id as string }}>
               {' '}
               {res?.data?.id}
-            </Typography.Text>
+            </Typography.Text>{' '}
             has been successfully created
-          </>
+          </p>
         )}
         successOkText="OK"
         width={432}

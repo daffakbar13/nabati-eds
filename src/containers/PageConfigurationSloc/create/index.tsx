@@ -27,6 +27,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
+  const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const isOnEditMode = !!payload
@@ -61,7 +62,25 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
     return false
   }
 
-  const handleClose = () => {
+  const handleCancel = () => {
+    console.log('dataForm', dataForm)
+    if (tableAddItems.data.length > 0) {
+      setShowConfirmModalCancel(true)
+    } else {
+      setDataForm(undefined)
+      tableAddItems.resetItem()
+      form.setFieldsValue({
+        branch_id: '',
+        sales_org: '',
+        sloc_id: '',
+        sloc_name: '',
+        sloc_type: undefined,
+      })
+      close()
+    }
+  }
+
+  const handleOkCancelConfirm = () => {
     setDataForm(undefined)
     tableAddItems.resetItem()
     form.setFieldsValue({
@@ -71,6 +90,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
       sloc_name: '',
       sloc_type: undefined,
     })
+    setShowConfirmModalCancel(false)
     close()
   }
 
@@ -130,7 +150,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
           size="big"
           style={{ marginLeft: 'auto', width: 144 }}
           variant="tertiary"
-          onClick={handleClose}
+          onClick={handleCancel}
         >
           Cancel
         </Button>
@@ -151,13 +171,23 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
       <Modal
         open={visible}
         onOk={() => {}}
-        onCancel={handleClose}
+        onCancel={handleCancel}
         title={isOnEditMode ? 'Update Sloc' : 'Create Sloc'}
         content={content}
         width={1132}
         footer={null}
       />
-
+      <Modal
+        title={'Confirm Cancellation'}
+        open={showConfirmModalCancel}
+        onOk={handleOkCancelConfirm}
+        onCancel={() => {
+          setShowConfirmModalCancel(false)
+        }}
+        content={'Are you sure want to cancel? Change you made so far will not saved'}
+        loading={loading}
+        width={432}
+      />
       <Modal
         title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
         open={showConfirmModal}
@@ -168,7 +198,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         content={`Are you sure want to ${isOnEditMode ? 'Update' : 'create'} sloc?`}
         loading={loading}
         onOkSuccess={() => {
-          handleClose()
+          handleOkCancelConfirm()
           router.push('/logistic/configuration-sloc')
         }}
         successContent={(res: any) => (

@@ -54,7 +54,7 @@ export const getGoodIssueDetailStoDelivery = async (
   params: any = {},
 ): Promise<CommonListResponse<GoodIssueDetail>> => {
   const response = await call({
-    method: METHODS.POST,
+    method: METHODS.GET,
     subUrl: `${urlDelivery}/${params.id}/detail?request_number=${params.requestNumber}&doc_type=${params.doc_type}`,
     overrideBaseUrl,
   })

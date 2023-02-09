@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Form, Tabs } from 'antd'
 import {
-  // updateProductIntraChannel,
+  UpdateOrderTypetoSloc,
   CreateOrderTypetoSloc,
 } from 'src/api/logistic/configuration-order-type-to-sloc'
 import { PATH } from 'src/configs/menus'
@@ -26,35 +26,50 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
+  const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
+  const [dataFormUpdate, setDataFormUpdate] = useState<FormData>()
   const [OrderTypeSloc, setOrderTypeSloc] = useState([])
   const [currentTab, setCurrentTab] = useState('1')
   const isOnEditMode = !!payload
 
   const initialValue = { branch_from: 'P122', order_type_sloc: OrderTypeSloc }
+  const initialValueEdit = { sloc_id: payload?.sloc_id || 'GS00' }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
+  const onChangeFormUpdate = (form: string, value: any) => {
+    setDataFormUpdate((old) => ({ ...old, ...{ [form]: value } }))
+  }
+
   const onClickSubmit = async () => {
+    if (currentTab === '1') {
+      const values = await form.validateFields(['branch', 'order_type', 'sloc'])
+    } else {
+      const values = await form.validateFields(['branch_from', 'branch_to'])
+    }
     setConfirmModal(true)
   }
 
   const doUpdate = async (reqBody: any) => {
-    // try {
-    //   setLoading(true)
-    //   const res = updateProductIntraChannel(
-    //     reqBody.trans_id as string,
-    //     reqBody.gt_id as string,
-    //     reqBody,
-    //   )
-    //   setLoading(false)
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
+    try {
+      setLoading(true)
+      const res = UpdateOrderTypetoSloc(
+        {
+          company_id: payload?.company_id,
+          branch_id: payload?.branch_id,
+          order_type: payload?.order_type,
+        },
+        reqBody,
+      )
+      setLoading(false)
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   const doCreate = async (reqBody: any) => {
@@ -70,13 +85,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
 
     if (!isOnEditMode) {
+      const reqBody = { ...initialValue, ...dataForm }
       return doCreate(reqBody)
     }
 
     if (isOnEditMode) {
+      const reqBody = { ...initialValueEdit, ...dataFormUpdate }
       return doUpdate(reqBody)
     }
 
@@ -84,13 +100,32 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const handleCancel = () => {
-    setConfirmModal(false)
-    close()
+    if (dataForm) {
+      setShowConfirmModalCancel(true)
+    } else {
+      setDataForm(undefined)
+      form.setFieldsValue({
+        branch: undefined,
+        order_type: undefined,
+        sloc: undefined,
+        branch_from: undefined,
+        branch_to: undefined,
+      })
+      close()
+    }
+  }
+
+  const handleOkCancelConfirm = () => {
+    setDataForm(undefined)
     form.setFieldsValue({
       branch: undefined,
       order_type: undefined,
       sloc: undefined,
+      branch_from: undefined,
+      branch_to: undefined,
     })
+    setShowConfirmModalCancel(false)
+    close()
   }
 
   useEffect(() => {
@@ -118,15 +153,24 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
-        <Tabs
-          defaultActiveKey="1"
-          onChange={(asd) => {
-            setCurrentTab(asd)
-          }}
-          items={AllTabs}
-        />
+
+        {!isOnEditMode && (
+          <Tabs
+            defaultActiveKey="1"
+            onChange={(asd) => {
+              setCurrentTab(asd)
+            }}
+            items={AllTabs}
+          />
+        )}
+
         {currentTab === '1' ? (
-          <CreateNewOrderTypeSLoc onChangeForm={onChangeForm} setOrderTypeSloc={setOrderTypeSloc} />
+          <CreateNewOrderTypeSLoc
+            onChangeForm={onChangeForm}
+            setOrderTypeSloc={setOrderTypeSloc}
+            onChangeFormUpdate={onChangeFormUpdate}
+            payload={payload || null}
+          />
         ) : (
           <CreateCopyFormBranch onChangeForm={onChangeForm} />
         )}
@@ -144,7 +188,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         content={content}
         loading={loading}
         cancelText="Cancel"
-        okText={isOnEditMode ? 'Update' : 'Create'}
+        okText={isOnEditMode ? 'Update' : 'Submit'}
+      />
+      <Modal
+        title={'Confirm Cancellation'}
+        open={showConfirmModalCancel}
+        onOk={handleOkCancelConfirm}
+        onCancel={() => {
+          setShowConfirmModalCancel(false)
+        }}
+        content={'Are you sure want to cancel? Change you made so far will not saved'}
+        loading={loading}
+        width={432}
       />
       <Modal
         title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
@@ -161,7 +216,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         }}
         successContent={(res: any) => 'order type to sLoc has been successfully Submited'}
         successOkText="OK"
-        width={432}
+        width={500}
       />
     </>
   )

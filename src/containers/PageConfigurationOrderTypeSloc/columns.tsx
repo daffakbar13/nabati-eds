@@ -37,8 +37,7 @@ export const columns = (
   }),
   addColumn({
     title: 'Modified Date',
-    dataIndex: 'product_gt',
-    render: (text, record, index) => '31-01-2023',
+    dataIndex: 'modified_at',
   }),
   addColumn({
     title: 'Action',

@@ -3,7 +3,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable arrow-spacing */
 /* eslint-disable no-plusplus */
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, FloatAction, Popup, SmartFilter } from 'src/components'
@@ -30,6 +30,7 @@ export default function PageShipment() {
   })
   const { oldfilters, searchProps, setFilters } = useFilters(table, 'Search Shipment ID')
   const titlePage = useTitlePage('list')
+  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [pending, setPending] = React.useState(0)
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
@@ -41,6 +42,17 @@ export default function PageShipment() {
     { label: 'Draft', value: '10' },
     { label: 'Cancel', value: '7' },
   ]
+
+  useEffect(() => {
+    if (type === 'MT') {
+      table.handler.updateData([])
+    } else {
+      if (table.state.data.length > 0) {
+      } else {
+        table.handler.getApi(getShipment)
+      }
+    }
+  }, [type, table.state.data])
 
   const ConfirmPGI = () => (
     <Popup
@@ -156,6 +168,25 @@ export default function PageShipment() {
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
+        <Row gap="16px">
+          <Button
+            size="big"
+            variant={type === 'GT' ? 'primary' : 'secondary'}
+            onClick={() => setType('GT')}
+          >
+            General Trade (GT)
+          </Button>
+          <Button
+            size="big"
+            variant={type === 'MT' ? 'primary' : 'secondary'}
+            onClick={() => setType('MT')}
+          >
+            Modern Trade (MT)
+          </Button>
+        </Row>
+      </Card>
+      <Spacer size={10} />
+      <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
             <Search {...searchProps} />
@@ -238,7 +269,11 @@ export default function PageShipment() {
             <Button
               size="big"
               variant="primary"
-              onClick={() => router.push(`${router.pathname}/create`)}
+              onClick={() => {
+                type === 'MT'
+                  ? router.push(`${router.pathname}/create?type=MT`)
+                  : router.push(`${router.pathname}/create`)
+              }}
             >
               Create
             </Button>

@@ -1,32 +1,29 @@
 import { useRouter } from 'next/router'
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { InputNumber, Form } from 'antd'
-import { fieldProductByCompany } from 'src/configs/fieldFetches'
-import {
-  updateProductIntraChannel,
-  createProductIntraChannel,
-} from 'src/api/logistic/config-mapping-product-intra'
+import { fieldCustomer } from 'src/configs/fieldFetches'
+import { createCreditLimit } from 'src/api/logistic/config-credit-limit'
 import { PATH } from 'src/configs/menus'
 
 interface FormData {
-  company_id: string
-  trans_type: string
-  product_gt: string
-  product_mt: string
-  trans_id: string
-  gt_id: string
+  customer_id: string
+  credit_limit_before: number
+  credit_limit_after: string
+  valid_from: string
+  valid_to: string
 }
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
+  const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
-  const [placeHolder, setPlaceHolder] = useState<FormData>()
   const isOnEditMode = !!payload
   const styleInputNumber = {
     border: '1px solid #AAAAAA',
@@ -36,20 +33,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     alignItems: 'center',
     width: '100%',
   }
-  const transtypeOptions = [
-    {
-      label: 'Channel',
-      value: 'Channel',
-    },
-    {
-      label: 'Channel_IDG',
-      value: 'Channel_IDG',
-    },
-    {
-      label: 'Sloc',
-      value: 'Sloc',
-    },
-  ]
 
   const initialValue = { company_id: 'PP01' }
 
@@ -57,33 +40,15 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
-  const changePlaceHolder = (form: string, value: any) => {
-    setPlaceHolder((old) => ({ ...old, ...{ [form]: value } }))
-  }
-
   const onClickSubmit = async () => {
+    const values = await form.validateFields()
     setConfirmModal(true)
-  }
-
-  const doUpdate = async (reqBody: any) => {
-    try {
-      setLoading(true)
-      const res = updateProductIntraChannel(
-        reqBody.trans_id as string,
-        reqBody.gt_id as string,
-        reqBody,
-      )
-      setLoading(false)
-      return res
-    } catch (error) {
-      return error
-    }
   }
 
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createProductIntraChannel(reqBody)
+      const res = createCreditLimit(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -92,7 +57,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const handleSubmit = async () => {
-    setPlaceHolder(undefined)
     setDataForm(undefined)
     const reqBody = { ...initialValue, ...dataForm }
 
@@ -100,37 +64,37 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       return doCreate(reqBody)
     }
 
-    if (isOnEditMode) {
-      return doUpdate(reqBody)
-    }
-
     return false
   }
 
   const handleCancel = () => {
-    setConfirmModal(false)
-    setPlaceHolder(undefined)
-    close()
+    if (dataForm) {
+      setShowConfirmModalCancel(true)
+    } else {
+      setDataForm(undefined)
+      form.setFieldsValue({
+        customer: undefined,
+        credit_limit_before: undefined,
+        credit_limit_after: undefined,
+        valid_before: undefined,
+        valid_after: undefined,
+      })
+      close()
+    }
   }
 
-  useEffect(() => {
-    if (!isOnEditMode) return
-    onChangeForm('trans_type', payload.trans_type)
-    onChangeForm('product_gt', payload.product_gt)
-    onChangeForm('product_mt', payload.product_mt)
-    onChangeForm('trans_id', payload.trans_type)
-    onChangeForm('gt_id', payload.product_gt)
-
-    changePlaceHolder('trans_type', payload.trans_type)
-    changePlaceHolder(
-      'product_gt',
-      `${payload.product_gt || ''} - ${payload.product_gt_name || ''}`,
-    )
-    changePlaceHolder(
-      'product_mt',
-      `${payload.product_mt || ''} - ${payload.product_mt_name || ''}`,
-    )
-  }, [isOnEditMode, payload])
+  const handleOkCancelConfirm = () => {
+    setDataForm(undefined)
+    form.setFieldsValue({
+      customer: undefined,
+      credit_limit_before: undefined,
+      credit_limit_after: undefined,
+      valid_before: undefined,
+      valid_after: undefined,
+    })
+    setShowConfirmModalCancel(false)
+    close()
+  }
 
   const content = (
     <>
@@ -160,11 +124,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <DebounceSelect
             required
             type="select"
-            options={transtypeOptions}
-            value={placeHolder?.trans_type || ''}
+            placeholder="e.g Indo Customer"
+            fetchOptions={fieldCustomer}
             onChange={(val: any) => {
-              onChangeForm('trans_type', val.value)
-              changePlaceHolder('trans_type', val.label)
+              onChangeForm('customer_id', val.value.split(' - ')[0])
             }}
           />
         </Form.Item>
@@ -182,7 +145,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           }
           rules={[{ required: true }]}
         >
-          <InputNumber min={0} style={styleInputNumber} />
+          <InputNumber
+            min={0}
+            style={styleInputNumber}
+            value={dataForm?.credit_limit_before?.toLocaleString() || 0}
+            placeholder="e.g 1.000.000"
+            onChange={(newVal) => {
+              onChangeForm('credit_limit_before', newVal)
+              form.setFieldsValue({
+                credit_limit_before: newVal?.toLocaleString() || 0,
+              })
+            }}
+          />
         </Form.Item>
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
@@ -198,7 +172,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           }
           rules={[{ required: true }]}
         >
-          <InputNumber min={0} style={styleInputNumber} />
+          <InputNumber
+            min={0}
+            style={styleInputNumber}
+            value={dataForm?.credit_limit_after?.toLocaleString() || 0}
+            placeholder="e.g 1.000.000"
+            onChange={(newVal) => {
+              onChangeForm('credit_limit_after', newVal)
+              form.setFieldsValue({
+                credit_limit_after: newVal?.toLocaleString() || 0,
+              })
+            }}
+          />
         </Form.Item>
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
@@ -220,6 +205,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fullWidth
             format={'DD-MMM-YYYY'}
             placeholder="Valid Before"
+            onChange={(val: any) => {
+              onChangeForm('valid_from', moment(val).format('YYYY-MM-DD'))
+            }}
           />
         </Form.Item>
         <Form.Item
@@ -242,6 +230,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fullWidth
             format={'DD-MMM-YYYY'}
             placeholder="Valid After"
+            onChange={(val: any) => {
+              onChangeForm('valid_to', moment(val).format('YYYY-MM-DD'))
+            }}
           />
         </Form.Item>
         <Spacer size={10} />
@@ -260,6 +251,17 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         loading={loading}
         cancelText="Cancel"
         okText={isOnEditMode ? 'Update' : 'Create'}
+      />
+      <Modal
+        title={'Confirm Cancellation'}
+        open={showConfirmModalCancel}
+        onOk={handleOkCancelConfirm}
+        onCancel={() => {
+          setShowConfirmModalCancel(false)
+        }}
+        content={'Are you sure want to cancel? Change you made so far will not saved'}
+        loading={loading}
+        width={432}
       />
       <Modal
         title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}

@@ -22,12 +22,12 @@ export const column = [
     children: [
       {
         title: 'Qty',
-        dataIndex: 'qty',
+        dataIndex: 'po_qty',
         width: 100,
       },
       {
         title: 'UoM',
-        dataIndex: 'uom_id',
+        dataIndex: 'po_uom_id',
         width: 100,
       },
     ],
@@ -39,12 +39,12 @@ export const column = [
     children: [
       {
         title: 'Qty',
-        dataIndex: 'base_qty',
+        dataIndex: 'outstanding_qty',
         width: 100,
       },
       {
         title: 'UoM',
-        dataIndex: 'base_uom_id',
+        dataIndex: 'outstanding_uom_id',
         width: 100,
       },
     ],

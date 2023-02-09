@@ -34,7 +34,7 @@ export default function Detail(props: any) {
     company_id: data.company_id,
     posting_date: moment(now).format('YYYY-MM-DD'),
     header_text: '',
-    branch_id: data.receive_plant_id,
+    branch_id: data.receive_branch_id,
     items: tableAddItems.dataSubmit.map((item: any, index) => {
       return {
         product_id: item.product_id,
@@ -60,7 +60,7 @@ export default function Detail(props: any) {
     }
   }
   const onSubmitFunction = async () => {
-    return await confitmGoodReceipt(data.id, { ...initialValue, ...dataForm })
+    return await confitmGoodReceipt(data.gr_number, { ...initialValue, ...dataForm })
   }
 
   return (
@@ -103,7 +103,7 @@ export default function Detail(props: any) {
       <Spacer size={20} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect type="input" label="DO Number" value={data.delivery_number} disabled />
+          <DebounceSelect type="input" label="DO Number" value={data.do_number} disabled />
           <DebounceSelect type="input" label="PO Number" value={data.po_number} disabled />
           <DebounceSelect
             type="input"
@@ -125,7 +125,7 @@ export default function Detail(props: any) {
           <DebounceSelect
             type="input"
             label="Supplying Branch"
-            value={`${data.suppl_branch_id} - ${data.suppl_branch_name}` as any}
+            value={`${data.supply_branch_id || ''} - ${data.supply_branch_name || ''}` as any}
             disabled
           />
           <DebounceSelect
@@ -138,7 +138,7 @@ export default function Detail(props: any) {
           <DebounceSelect
             type="input"
             label="Receiving Branch"
-            value={`${data.receive_plant_id} - ${data.receive_plant_name}` as any}
+            value={`${data.receive_branch_id || ''} - ${data.receive_branch_name || ''}` as any}
             disabled
           />
         </div>
@@ -178,7 +178,7 @@ export default function Detail(props: any) {
         successContent={(res: any) => (
           <>
             GR Number
-            <Typography.Text copyable={{ text: data?.id as string }}> {data?.id}</Typography.Text>
+            <Typography.Text copyable={{ text: data?.gr_number as string }}> {data?.gr_number}</Typography.Text>
             has been successfully Updated
           </>
         )}
