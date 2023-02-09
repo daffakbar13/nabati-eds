@@ -83,6 +83,7 @@ export default function PageDoStoDetail() {
         await updatePGIinventoryBooking(router.query.id as string, {
           sto_doc_type: 'ZDST',
           supply_branch_id: data.supply_branch_id,
+          receive_branch_id: data.receive_branch_id,
           items: data.items?.map((item: any, index) => ({
             product_id: item.product_id,
             received_qty: item.received_qty,
