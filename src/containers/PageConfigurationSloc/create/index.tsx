@@ -63,7 +63,6 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
   }
 
   const handleCancel = () => {
-    console.log('dataForm', dataForm)
     if (tableAddItems.data.length > 0) {
       setShowConfirmModalCancel(true)
     } else {
@@ -160,7 +159,9 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
           variant="primary"
           onClick={() => setConfirmModal(true)}
         >
-          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>Submit</span>
+          <span style={{ color: loading ? '#ad9d9d' : 'unset' }}>
+            {isOnEditMode ? 'Update' : 'Submit'}
+          </span>
         </Button>
       </div>
     </>
@@ -189,7 +190,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         width={432}
       />
       <Modal
-        title={isOnEditMode ? 'Confirm Edit' : 'Confirm Submit'}
+        title={isOnEditMode ? 'Confirm Update' : 'Confirm Submit'}
         open={showConfirmModal}
         onOk={handleSubmit}
         onCancel={() => {

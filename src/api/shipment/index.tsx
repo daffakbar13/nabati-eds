@@ -11,6 +11,8 @@ import { DeliveryOrder } from '../delivery-order/types'
 import { ShipmentItem } from './types'
 
 const url = 'v1/shipments'
+const subUrl = 'v1/proforma-invoices'
+
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getShipment = async (
@@ -20,6 +22,18 @@ export const getShipment = async (
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${url}/lists`,
+    data: params,
+  })
+  return response.data
+}
+
+export const getShipmentMT = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<ShipmentItem>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${subUrl}/list`,
     data: params,
   })
   return response.data

@@ -135,8 +135,6 @@ export const useTableDetailCollection = (
     </Modal>
   )
 
-  console.log(reasonUndeliveredID, reasonUndeliveredName)
-
   function PopupUndelivered(props: { id: string }) {
     const { id } = props
     return (

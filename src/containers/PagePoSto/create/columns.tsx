@@ -12,6 +12,7 @@ import { addColumn } from 'src/utils/createColumns'
 interface propsUseTable {
   idSupplyingBranch: string
   idReceivingBranch: string
+  sendItemReceiver: boolean
 }
 
 export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => void) => {
@@ -32,8 +33,12 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
   const [data, setData] = React.useState([])
   const [placeholder, setPlaceholder] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
+  const [baseAllProduct, setBaseAllProduct] = React.useState([])
+  const [optionsProduct, setOptionsProduct] = React.useState([])
+  const [fetching, setFetching] = React.useState<string>()
+  const [pending, setPending] = React.useState(0)
+  const [removedListProduct, setRemovedListProduct] = React.useState([])
   const [valueItemSender, setValueItemSender] = React.useState([])
-  const [fetching, setFetching] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
@@ -60,11 +65,8 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
   function handleDeleteRows(index: number) {
     setData(data.filter((_, i) => i !== index))
     setPlaceholder(placeholder.filter((_, i) => i !== index))
+    setFetching('product')
   }
-
-  React.useEffect(() => {
-    console.log('duplicate data', data)
-  }, [data])
 
   function handleAddItem() {
     setData([...data, initialValue])
@@ -119,7 +121,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
               handleChangeData('product_id', e.value, index)
               handleChangeData('description', e.label.split(' - ')[1] || '', index)
               handleChangePlaceHolder('product_id', e.label, index)
-              setFetching(true)
+              setFetching('product')
             }}
           />
         </Form.Item>
@@ -136,13 +138,14 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
           initialValue={order_qty}
           style={{ marginBottom: 0, marginTop: 0 }}
         >
-          <InputNumber
+          <DebounceSelect
+            type="input"
             disabled={isNullProductId(index)}
             min={isNullProductId(index) ? '0' : '1'}
             value={order_qty?.toLocaleString()}
-            onBlur={(newVal) => {
-              handleChangeData('qty', newVal, index)
-              handleChangeData('base_qty', newVal, index)
+            onBlur={(e) => {
+              handleChangeData('qty', parseInt(e.target.value), index)
+              handleChangeData('base_qty', parseInt(e.target.value), index)
             }}
             style={styleInputNumber}
           />
@@ -154,23 +157,24 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'UoM',
       dataIndex: 'uom_id',
       render: (uom_id, __, index) => (
-        <Form.Item
-          name={`UoM.${index + 1}`}
-          rules={[{ required: true }]}
-          initialValue={uom_id}
-          style={{ marginBottom: 0, marginTop: 0 }}
-        >
-          <DebounceSelect
-            type="select"
-            value={uom_id as any}
-            options={optionsUom[index] || []}
-            disabled={isNullProductId(index)}
-            onBlur={(e) => {
-              handleChangeData('uom_id', e.value, index)
-              handleChangeData('base_uom_id', e.value, index)
-            }}
-          />
-        </Form.Item>
+        // <Form.Item
+        //   name={`UoM.${index + 1}`}
+        //   rules={[{ required: true }]}
+        //   initialValue={uom_id}
+        //   style={{ marginBottom: 0, marginTop: 0 }}
+        // >
+        <DebounceSelect
+          type="select"
+          value={uom_id as any}
+          options={optionsUom[index] || []}
+          disabled={isNullProductId(index)}
+          onChange={(e) => {
+            handleChangeData('uom_id', e.value, index)
+            handleChangeData('base_uom_id', e.value, index)
+            setFetching('uom')
+          }}
+        />
+        // </Form.Item>
       ),
       width: 150,
     }),
@@ -236,7 +240,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
               handleChangeData('product_id', e.value, index)
               handleChangeData('description', e.label.split(' - ')[1] || '', index)
               handleChangePlaceHolder('product_id', e.label, index)
-              setFetching(true)
+              setFetching('product')
             }}
           />
         </Form.Item>
@@ -266,13 +270,14 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
           initialValue={order_qty}
           style={{ marginBottom: 0, marginTop: 0 }}
         >
-          <InputNumber
+          <DebounceSelect
+            type="input"
             disabled={isNullProductId(index)}
             min={isNullProductId(index) ? '0' : '1'}
             value={order_qty?.toLocaleString()}
-            onBlur={(newVal) => {
-              handleChangeData('qty', newVal, index)
-              handleChangeData('base_qty', newVal, index)
+            onBlur={(e) => {
+              handleChangeData('qty', parseInt(e.target.value), index)
+              handleChangeData('base_qty', parseInt(e.target.value), index)
             }}
             style={styleInputNumber}
           />
@@ -284,22 +289,23 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
       title: 'UoM',
       dataIndex: 'uom_id',
       render: (uom_id, __, index) => (
-        <Form.Item
-          name={`UoM.${index + 1}`}
-          initialValue={uom_id}
-          style={{ marginBottom: 0, marginTop: 0 }}
-        >
-          <DebounceSelect
-            type="select"
-            value={uom_id as any}
-            options={optionsUom[index] || []}
-            disabled={isNullProductId(index)}
-            onBlur={(e) => {
-              handleChangeData('uom_id', e.value, index)
-              handleChangeData('base_uom_id', e.value, index)
-            }}
-          />
-        </Form.Item>
+        // <Form.Item
+        //   name={`UoM.${index + 1}`}
+        //   initialValue={uom_id}
+        //   style={{ marginBottom: 0, marginTop: 0 }}
+        // >
+        <DebounceSelect
+          type="select"
+          value={uom_id as any}
+          options={optionsUom[index] || []}
+          disabled={isNullProductId(index)}
+          onChange={(e) => {
+            handleChangeData('uom_id', e.value, index)
+            handleChangeData('base_uom_id', e.value, index)
+            setFetching('uom')
+          }}
+        />
+        // </Form.Item>
       ),
       width: 150,
     }),
@@ -326,53 +332,54 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
   ]
 
   React.useEffect(() => {
-    if (fetching) {
-      data.forEach(({ product_id, uom_id, qty }, index) => {
+    async function api(product_id: string, uom_id: string, order_qty: number, index: number) {
+      const duplicateProduct = data.filter(
+        (obj, idx) => product_id === obj.product_id && idx !== index,
+      )
+      const fetchUom = await fieldUom(product_id).then((arr) => {
+        const newOptionsUom = optionsUom
+        const filteredArr = arr.filter(
+          ({ label }) => !duplicateProduct.map((obj) => obj.uom_id).includes(label),
+        )
+        newOptionsUom[index] = filteredArr
+        const newUom = uom_id === '' ? filteredArr[0]?.value : uom_id
+
+        handleChangeData('uom_id', newUom, index)
+        setOptionsUom(newOptionsUom)
+        setOptionsProduct(optionsProduct.map((obj) => ({ ...obj, show: true })))
+        if (filteredArr.length === 1) {
+          setRemovedListProduct((old) => [...old, product_id])
+        } else {
+          setRemovedListProduct(removedListProduct.filter((id) => id !== product_id))
+        }
+
+        return newUom
+      })
+
+      if (props.sendItemReceiver) {
+        await itemReceiver(product_id, 'Channel').then((response) => {
+          const newValueItemSender = [...valueItemSender]
+          handleChangeData('product_receiver_id', response?.product_mt || '', index)
+          newValueItemSender[index] = `${response?.product_mt} - ${response?.product_mt_name}`
+          setValueItemSender(newValueItemSender)
+        })
+      }
+      return true
+    }
+    if (fetching !== '') {
+      data.forEach(({ product_id, uom_id, order_qty }, index) => {
         if (product_id !== '') {
-          const duplicateProduct = data.filter(
-            (obj, idx) => product_id === obj.product_id && idx !== index,
-          )
-          console.log('duplicateProduct', duplicateProduct)
-          fieldUom(product_id).then((value) => {
-            const newOptionsUom = [...optionsUom]
-            const filteredArr = value.filter(
-              ({ label }) => !duplicateProduct.map((obj) => obj.uom_id).includes(label),
-            )
-            if (duplicateProduct.length === 0) {
-              const indexCTN = filteredArr.findIndex((x) => x.value === 'CTN')
-              handleChangeData('uom_id', filteredArr?.[indexCTN]?.value, index)
-              handleChangeData('base_uom_id', filteredArr?.[indexCTN]?.value, index)
-              form.setFieldsValue({
-                [`UoM.${index + 1}}`]: filteredArr?.[indexCTN]?.value,
-              })
-            } else {
-              if (filteredArr?.[0]?.value) {
-                handleChangeData('uom_id', filteredArr?.[0].value, index)
-                handleChangeData('base_uom_id', filteredArr?.[0].value, index)
-                form.setFieldsValue({
-                  [`UoM.${index + 1}}`]: filteredArr?.[0].value,
-                })
-              } else {
-                const newUom = uom_id
-                handleChangeData('uom_id', newUom, index)
-                handleChangeData('base_uom_id', newUom, index)
-                form.setFieldsValue({
-                  [`UoM.${index + 1}}`]: newUom,
-                })
-              }
+          setPending((current) => ++current)
+          api(product_id, uom_id, order_qty, index).then(() => {
+            setPending((current) => --current)
+            if (uom_id === '') {
+              setFetching('load again')
+              return false
             }
-            newOptionsUom[index] = filteredArr
-            setOptionsUom(newOptionsUom)
-          })
-          itemReceiver(product_id, 'Channel').then((response) => {
-            const newValueItemSender = [...valueItemSender]
-            handleChangeData('product_receiver_id', response?.product_mt || '', index)
-            newValueItemSender[index] = `${response?.product_mt} - ${response?.product_mt_name}`
-            setValueItemSender(newValueItemSender)
           })
         }
       })
-      setFetching(false)
+      setFetching(undefined)
     }
   }, [fetching])
 

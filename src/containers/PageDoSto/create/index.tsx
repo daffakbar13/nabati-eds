@@ -7,7 +7,7 @@ import { Card, Popup } from 'src/components'
 import { useTableAddItem } from './columns'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
-import { fieldPoStoByBranch, fieldBranchSupply } from 'src/configs/fieldFetches'
+import { fieldPoStoByBranch, fieldBranchSupplyDOSTO } from 'src/configs/fieldFetches'
 import { createDoSto, updateBookingStock } from 'src/api/logistic/do-sto'
 import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/po-sto'
 
@@ -177,7 +177,7 @@ export default function CreateBilling() {
                 label="Receiving Branch"
                 required
                 fetchOptions={(search) =>
-                  fieldBranchSupply(search, '', dataForm?.supply_branch_id || '')
+                  fieldBranchSupplyDOSTO(search, '', dataForm?.supply_branch_id || '')
                 }
                 onChange={(val: any) => {
                   onChangeForm('receive_branch_id', val.value)
@@ -207,7 +207,7 @@ export default function CreateBilling() {
                 label="Supplying Branch"
                 required
                 fetchOptions={(search) =>
-                  fieldBranchSupply(search, '', dataForm?.receive_branch_id || '')
+                  fieldBranchSupplyDOSTO(search, '', dataForm?.receive_branch_id || '')
                 }
                 onChange={(val: any) => {
                   onChangeForm('supply_branch_id', val.value)
@@ -312,7 +312,7 @@ export default function CreateBilling() {
               'Are you sure want to cancel? Change you made so far will not saved'
             ) : (
               <>
-                Request Number
+                Do Number
                 <Typography.Text copyable={{ text: newDoSTO as string }}>
                   {' '}
                   {newDoSTO}

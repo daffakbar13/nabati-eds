@@ -57,6 +57,7 @@ export function PageEdit() {
       items: dataDeliveryOrder.map((item) => {
         return {
           product_id: item.product_id,
+          product_name: item.product_name,
           remarks: item.remarks,
           qtys: [
             {

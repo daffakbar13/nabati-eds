@@ -28,7 +28,10 @@ export default function PageConfigurationSloc() {
     data,
   })
 
-  const { searchProps } = useFilters(table, 'Search by branch id', ['branch_id'])
+  const { searchProps } = useFilters(table, 'Search by branch id, sloc id', [
+    'branch_id',
+    'sloc_id',
+  ])
 
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => {

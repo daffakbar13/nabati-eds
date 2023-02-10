@@ -122,10 +122,7 @@ export const useTableAddItem = (props: any) => {
       title: 'Item PO',
       dataIndex: 'description',
       render: (text, record, index) => (
-        <Form.Item
-          name={`ItemPO.${index + 1}`}
-          initialValue={data[index].description_show}
-        >
+        <Form.Item name={`ItemPO.${index + 1}`} initialValue={data[index].description_show}>
           <DebounceSelect type="input" disabled value={data[index].description_show || ''} />
         </Form.Item>
       ),
@@ -292,7 +289,7 @@ export const useTableAddItem = (props: any) => {
           style={{ marginTop: -15, marginBottom: 0 }}
           initialValue={text}
         >
-          <DebounceSelect type="input" disabled value={text || ''} />
+          <DebounceSelect type="input" placeholder="e.g Batch" disabled value={text || ''} />
         </Form.Item>
       ),
       width: 250,
@@ -309,6 +306,7 @@ export const useTableAddItem = (props: any) => {
           <DebounceSelect
             type="input"
             value={text}
+            placeholder="e.g Remarks"
             onBlur={(e: any) => {
               handleChangeData('remarks', e.target.value, index)
             }}
