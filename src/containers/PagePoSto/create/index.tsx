@@ -50,6 +50,7 @@ export default function CreateBilling() {
   const [modalSubmit, setModalSubmit] = useState(false)
   const [modalDelete, setModalDelete] = useState(false)
   const [dataForm, setDataForm] = React.useState<dataForm>()
+  const [sendItemReceiver, setSendItemReceiver] = useState(false)
 
   const HandleDeleteRow = (row: any) => {
     setSelectedRow(row)
@@ -59,6 +60,7 @@ export default function CreateBilling() {
     {
       idSupplyingBranch: supplyingBranch.split(' - ')[0] || '',
       idReceivingBranch: receivingBranch.split(' - ')[0] || '',
+      sendItemReceiver: sendItemReceiver,
     },
     HandleDeleteRow,
   )
@@ -120,6 +122,14 @@ export default function CreateBilling() {
     }
   }, [tableAddItems?.data])
 
+  useEffect(() => {
+    if (receivingChannel != '' && supplyingChannel != '' && receivingChannel != supplyingChannel) {
+      setSendItemReceiver(true)
+    } else {
+      setSendItemReceiver(false)
+    }
+  }, [receivingChannel, supplyingChannel])
+
   return (
     <Col>
       <Text variant={'h4'}>Create New PO STO</Text>
@@ -169,7 +179,7 @@ export default function CreateBilling() {
                   fieldBranchSupply(search, '', dataForm?.suppl_branch_id || '')
                 }
                 onChange={(val: any) => {
-                  onChangeForm('receive_plant_id', val.label.split(' - ')[0])
+                  onChangeForm('receive_plant_id', val?.value)
                   setReceivingBranch(val.label)
                   setReceivingChannel(val.key)
                 }}
@@ -201,7 +211,7 @@ export default function CreateBilling() {
                   fieldBranchSupply(search, '', dataForm?.receive_plant_id || '')
                 }
                 onChange={(val: any) => {
-                  onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
+                  onChangeForm('suppl_branch_id', val?.value)
                   setSupplyingBranch(val.label)
                   setSupplyingChannel(val.key)
                 }}
@@ -223,9 +233,7 @@ export default function CreateBilling() {
           </div>
           <Divider style={{ borderColor: '#AAAAAA' }} />
           <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-            {receivingChannel != '' &&
-            supplyingChannel != '' &&
-            receivingChannel != supplyingChannel ? (
+            {sendItemReceiver ? (
               <Table
                 scroll={{ x: 'max-content', y: 600 }}
                 editable

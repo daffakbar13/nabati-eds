@@ -12,6 +12,7 @@ import { addColumn } from 'src/utils/createColumns'
 interface propsUseTable {
   idSupplyingBranch: string
   idReceivingBranch: string
+  sendItemReceiver: boolean
 }
 
 export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => void) => {
@@ -355,7 +356,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
         return newUom
       })
 
-      if (fetching == 'product') {
+      if (props.sendItemReceiver) {
         await itemReceiver(product_id, 'Channel').then((response) => {
           const newValueItemSender = [...valueItemSender]
           handleChangeData('product_receiver_id', response?.product_mt || '', index)
