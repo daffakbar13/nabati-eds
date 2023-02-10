@@ -54,7 +54,8 @@ export const useTableAddItem = (props: any) => {
   const [dataSubmit, setDataSubmit] = useState([])
   const [optionsUom, setOptionsUom] = useState([])
   const [optionsSloc, setOptionsSloc] = useState([])
-  const [fetching, setFetching] = useState(false)
+  const [fetching, setFetching] = React.useState<string>()
+  const [pending, setPending] = React.useState(0)
   const [loading, setLoading] = useState(false)
   const [rowSelection, setRowSelection] = useState({})
 
@@ -89,7 +90,7 @@ export const useTableAddItem = (props: any) => {
 
     setData(ItemsData)
     if (props.items?.length > 0) {
-      setFetching(true)
+      setFetching('product')
       setRowSelection(defineRowSelection)
     }
   }, [props.items])
@@ -231,10 +232,24 @@ export const useTableAddItem = (props: any) => {
                 value={text?.toLocaleString()}
                 style={styleInputNumber}
                 onBlur={(e: any) => {
-                  handleChangeData('received_qty', e.target.value, index)
+                  if (e.target.value >= record.do_qty) {
+                    props.form.setFieldsValue({
+                      [`DO.Qty.${index + 1}`]: record.do_qty,
+                    })
+                    handleChangeData('received_qty', record.do_qty, index)
+                  } else {
+                    handleChangeData('received_qty', e.target.value, index)
+                  }
                 }}
                 onPressEnter={(e: any) => {
-                  handleChangeData('received_qty', e.target.value, index)
+                  if (e.target.value >= record.do_qty) {
+                    props.form.setFieldsValue({
+                      [`DO.Qty.${index + 1}`]: record.do_qty,
+                    })
+                    handleChangeData('received_qty', record.do_qty, index)
+                  } else {
+                    handleChangeData('received_qty', e.target.value, index)
+                  }
                 }}
               />
             </Form.Item>
@@ -292,7 +307,7 @@ export const useTableAddItem = (props: any) => {
                     handleChangeData('received_qty', newQty, index)
                   }
                   handleChangeData('received_numerator', e.key, index)
-                  setFetching(true)
+                  setFetching('product')
                 }}
               />
             </Form.Item>
@@ -486,10 +501,26 @@ export const useTableAddItem = (props: any) => {
                 value={text?.toLocaleString()}
                 style={styleInputNumber}
                 onBlur={(e: any) => {
-                  handleChangeData('received_qty', e.target.value, index)
+                  if (e.target.value >= record.do_qty) {
+                    handleChangeData('received_qty', record.do_qty, index)
+                    props.form.setFieldsValue({
+                      [`DO.Qty.${index + 1}`]: record.do_qty,
+                    })
+                    handleChangeData('received_qty', record.do_qty, index)
+                  } else {
+                    handleChangeData('received_qty', e.target.value, index)
+                  }
                 }}
                 onPressEnter={(e: any) => {
-                  handleChangeData('received_qty', e.target.value, index)
+                  if (e.target.value >= record.do_qty) {
+                    handleChangeData('received_qty', record.do_qty, index)
+                    props.form.setFieldsValue({
+                      [`DO.Qty.${index + 1}`]: record.do_qty,
+                    })
+                    handleChangeData('received_qty', record.do_qty, index)
+                  } else {
+                    handleChangeData('received_qty', e.target.value, index)
+                  }
                 }}
               />
             </Form.Item>
@@ -547,7 +578,7 @@ export const useTableAddItem = (props: any) => {
                     handleChangeData('received_qty', newQty, index)
                   }
                   handleChangeData('received_numerator', e.key, index)
-                  setFetching(true)
+                  setFetching('product')
                 }}
               />
             </Form.Item>
@@ -621,34 +652,49 @@ export const useTableAddItem = (props: any) => {
   ]
 
   useEffect(() => {
+    async function api(
+      product_id: string,
+      uom_id: string,
+      received_numerator: number,
+      index: number,
+    ) {
+      await fieldUoMConversion(product_id).then((value) => {
+        const newOptionsUom = [...optionsUom]
+
+        if (uom_id === '') {
+          const newUom = value[0]?.value
+          handleChangeData('uom_id', newUom, index)
+        } else {
+          const newUom = uom_id
+          handleChangeData('uom_id', newUom, index)
+          if (received_numerator === 0) {
+            const numerator = value.filter((record, i) => record?.value === uom_id)
+            handleChangeData(
+              'received_numerator',
+              numerator?.[0]?.key ? numerator?.[0]?.key : 0,
+              index,
+            )
+          }
+        }
+
+        newOptionsUom[index] = value
+        setOptionsUom(newOptionsUom)
+      })
+      return true
+    }
     if (fetching) {
       data.forEach(({ product_id, uom_id, received_numerator }, index) => {
         if (product_id !== '') {
-          fieldUoMConversion(product_id).then((value) => {
-            const newOptionsUom = [...optionsUom]
-
+          api(product_id, uom_id, received_numerator, index).then(() => {
+            setPending((current) => --current)
             if (uom_id === '') {
-              const newUom = value[0]?.value
-              handleChangeData('uom_id', newUom, index)
-            } else {
-              const newUom = uom_id
-              handleChangeData('uom_id', newUom, index)
-              if (received_numerator === 0) {
-                const numerator = value.filter((record, i) => record?.value === uom_id)
-                handleChangeData(
-                  'received_numerator',
-                  numerator?.[0]?.key ? numerator?.[0]?.key : 0,
-                  index,
-                )
-              }
+              setFetching('load again')
+              return false
             }
-
-            newOptionsUom[index] = value
-            setOptionsUom(newOptionsUom)
           })
         }
       })
-      setFetching(false)
+      setFetching(undefined)
     }
   }, [fetching])
 
