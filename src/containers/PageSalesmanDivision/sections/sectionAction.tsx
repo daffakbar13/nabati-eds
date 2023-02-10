@@ -12,7 +12,10 @@ export default function SectionAction() {
   const {
     state: { selected },
   } = table
-  const { searchProps } = useFilters(table, 'Search By Salesman ID', ['salesman_id'])
+  const { searchProps } = useFilters(table, 'Search By Salesman, Division ID', [
+    'salesman_id',
+    'division_id',
+  ])
 
   return (
     <Row justify="space-between">

@@ -1,7 +1,11 @@
 import { Col, Modal, Row, Typography } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
-import { fieldDivisionID, fieldSalesmanID } from 'src/configs/fieldFetches'
+import {
+  fieldDivisionID,
+  fieldNewSalesmanDivision,
+  fieldSalesmanID,
+} from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { useSalesSalesmanDivisionContext } from '../states'
 import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessSubmit } from './alerts'
@@ -65,7 +69,7 @@ export default function SectionModalCreate() {
             label="Salesman ID"
             placeholder={'Select'}
             value={editable.salesman_id || ''}
-            fetchOptions={fieldSalesmanID}
+            fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
             onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
           />
         </Col>
