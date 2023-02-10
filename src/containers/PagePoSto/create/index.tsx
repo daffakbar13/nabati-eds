@@ -103,9 +103,6 @@ export default function CreateBilling() {
     try {
       return await createPoSto(reqBody)
     } catch (error) {
-      console.log('kont', error)
-      console.log('kont data initial', initialValue)
-      console.log('kont data form', dataForm)
       return false
     }
   }
@@ -116,7 +113,6 @@ export default function CreateBilling() {
   }
 
   useEffect(() => {
-    console.log('kont data', tableAddItems.data)
     if (tableAddItems?.data?.length > 0 && tableAddItems?.data?.[0].product_id != '') {
       setDisabledButton(false)
     } else {

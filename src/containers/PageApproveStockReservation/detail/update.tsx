@@ -69,10 +69,6 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
               onClick={() => {
                 setModalReject(true)
                 setStatusId('02')
-                console.log('rejected', {
-                  ...initialValue,
-                  ...dataForm,
-                })
               }}
             >
               Reject

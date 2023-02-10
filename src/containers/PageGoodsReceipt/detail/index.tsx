@@ -62,10 +62,6 @@ export default function DetailGR() {
     { label: 'LPB', key: '2' },
   ]
 
-  useEffect(() => {
-    console.log('tab', hashTab)
-  }, [hashTab])
-
   return (
     <>
       {loading && <Loader type="process" text="Wait for get data" />}

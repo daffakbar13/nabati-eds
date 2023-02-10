@@ -67,10 +67,6 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
     setFetching('product')
   }
 
-  React.useEffect(() => {
-    console.log('duplicate data', data)
-  }, [data])
-
   function handleAddItem() {
     setData([...data, initialValue])
     setPlaceholder([...placeholder, initialValue])
