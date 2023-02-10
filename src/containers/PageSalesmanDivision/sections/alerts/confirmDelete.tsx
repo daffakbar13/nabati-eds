@@ -47,7 +47,7 @@ export default function ConfirmCancel() {
                 .then(() => {
                   if (isLastIndex) {
                     stopProcess()
-                    showConfirm('delete')
+                    showConfirm('success-delete')
                   }
                 })
                 .catch(() => stopProcess())

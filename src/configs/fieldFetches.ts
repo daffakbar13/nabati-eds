@@ -1,3 +1,4 @@
+/* eslint-disable function-paren-newline */
 import {
   getCustomerByCompany,
   getSalesOrgByCompany,
@@ -48,8 +49,8 @@ export function fieldQuotationType(search: string) {
     result.data
       .filter(
         ({ order_type_id, doc_type_name }) =>
-          order_type_id.toLowerCase().includes(search.toLowerCase()) ||
-          doc_type_name.toLowerCase().includes(search.toLowerCase()),
+          order_type_id.toLowerCase().includes(search.toLowerCase())
+          || doc_type_name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ order_type_id, doc_type_name }) => ({
@@ -93,8 +94,8 @@ export function fieldSoldToCustomer(search: string) {
     result.data
       .filter(
         ({ sold_to_customer_id, name, branch_id }) =>
-          sold_to_customer_id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          sold_to_customer_id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // && branch === branch_id)
       .splice(0, 10)
@@ -110,8 +111,8 @@ export function fieldShipToCustomer(search: string) {
     result.data
       .filter(
         ({ ship_to_customer_id, name }) =>
-          ship_to_customer_id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          ship_to_customer_id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // && branch === branch_id)
       .splice(0, 10)
@@ -127,8 +128,8 @@ export function fieldSalesOrg(search: string) {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 1)
       .map(({ id, name }) => ({
@@ -148,8 +149,8 @@ export function fieldBranch(search: string) {
     result.data
       .filter(
         ({ branch_id, branch_name }) =>
-          branch_id.toLowerCase().includes(search.toLowerCase()) ||
-          branch_name.toLowerCase().includes(search.toLowerCase()),
+          branch_id.toLowerCase().includes(search.toLowerCase())
+          || branch_name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 1)
       .map(({ sales_org_id, sales_org_name, branch_id, branch_name }) => ({
@@ -165,9 +166,9 @@ export function fieldSalesman(search: string, branch: string) {
     result.data
       .filter(
         ({ id, name, branch_id }) =>
-          (id.toLowerCase().includes(search.toLowerCase()) ||
-            name.toLowerCase().includes(search.toLowerCase())) &&
-          branch_id === branch,
+          (id.toLowerCase().includes(search.toLowerCase())
+            || name.toLowerCase().includes(search.toLowerCase()))
+          && branch_id === branch,
       )
       .splice(0, 10)
       .map(({ id, name }) => ({
@@ -190,9 +191,9 @@ export function fieldItem(search: string) {
         result.data
           .filter(
             ({ name, product_id }) =>
-              (name.toLowerCase().includes(search.toLowerCase()) ||
-                product_id.toLowerCase().includes(search.toLowerCase())) &&
-              allPricing.includes(product_id),
+              (name.toLowerCase().includes(search.toLowerCase())
+                || product_id.toLowerCase().includes(search.toLowerCase()))
+              && allPricing.includes(product_id),
           )
           .splice(0, 10)
           .map(({ name, product_id }) => ({
@@ -270,8 +271,8 @@ export function fieldBranchAll(search: string) {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
       .map(({ id, name, branch_type }) => ({
@@ -303,10 +304,10 @@ export function fieldBranchSupply(search: string, channel = '', supplybranch = '
     result.data
       .filter(
         ({ id, name, branch_type }) =>
-          (id.toLowerCase().includes(search.toLowerCase()) ||
-            name.toLowerCase().includes(search.toLowerCase())) &&
-          branch_type !== channel &&
-          id !== supplybranch,
+          (id.toLowerCase().includes(search.toLowerCase())
+            || name.toLowerCase().includes(search.toLowerCase()))
+          && branch_type !== channel
+          && id !== supplybranch,
       )
       .splice(0, 10)
       .map(({ id, name, branch_type }) => ({
@@ -322,8 +323,8 @@ export function fieldRoute(search: string) {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ id, name }) => ({
@@ -338,8 +339,8 @@ export function productBranch(search: string, branchId: string) {
     result.data
       ?.filter(
         ({ product_id, product_name }) =>
-          product_id.toLowerCase().includes(search.toLowerCase()) ||
-          product_name.toLowerCase().includes(search.toLowerCase()),
+          product_id.toLowerCase().includes(search.toLowerCase())
+          || product_name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ product_id, product_name }) => ({
@@ -433,8 +434,8 @@ export async function fieldVehicle(search: string) {
           }))
           .filter(
             ({ VehicleID, driver_name }) =>
-              VehicleID.toLowerCase().includes(search.toLowerCase()) ||
-              driver_name.toLowerCase().includes(search.toLowerCase()),
+              VehicleID.toLowerCase().includes(search.toLowerCase())
+              || driver_name.toLowerCase().includes(search.toLowerCase()),
           )
           .splice(0, 10)
           .map(({ VehicleID, driver_name, VehicleCubication }) => ({
@@ -451,8 +452,8 @@ export function fieldOrderType(doc_type: string, search = '') {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ id, name }) => ({
@@ -467,8 +468,8 @@ export function fieldSalesOrganization(search = '') {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
       .map(({ id, name }) => ({
@@ -483,8 +484,8 @@ export function fieldSalesmanAll(search: string) {
     result.data
       .filter(
         ({ id, name, branch_id }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
       .map(({ id, name }) => ({
@@ -499,8 +500,8 @@ export function fieldCompanyList(search: string) {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
       .map(({ id, name }) => ({
@@ -515,8 +516,8 @@ export function fieldCustomerGroupCompany(search = '') {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
       .map(({ id, name }) => ({
@@ -531,8 +532,8 @@ export function fieldChannelCompany(search = '', companyId?: string) {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
       .map(({ id, name }) => ({
@@ -547,8 +548,8 @@ export function fieldSalesmanGroup(search = '') {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
       .map(({ id, name }) => ({
@@ -563,8 +564,8 @@ export function fieldUomList(search = '') {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ id, name }) => ({
@@ -601,10 +602,10 @@ export function fieldProductByCompany(search: string, oldProduct = '') {
     result.data
       .filter(
         ({ name, product_id }) =>
-          (name.toLowerCase().includes(search.toLowerCase()) ||
-            product_id.toLowerCase().includes(search.toLowerCase())) &&
-          name != oldProduct &&
-          product_id != oldProduct,
+          (name.toLowerCase().includes(search.toLowerCase())
+            || product_id.toLowerCase().includes(search.toLowerCase()))
+          && name != oldProduct
+          && product_id != oldProduct,
       )
       .splice(0, 10)
       .map(({ name, product_id }) => ({
@@ -619,8 +620,8 @@ export function fieldSalesOrgCompanyDynamic(search = '', company_id = '') {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ id, name }) => ({
@@ -635,8 +636,8 @@ export function fieldCustomerGroupCompanyDynamic(search = '', company_id = '') {
     result.data
       .filter(
         ({ id, name }) =>
-          id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          id.toLowerCase().includes(search.toLowerCase())
+          || name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ id, name }) => ({
@@ -804,8 +805,8 @@ export function FieldOrderType(search: string) {
     result.data
       .filter(
         ({ order_type_id, doc_type_name }) =>
-          order_type_id.toLowerCase().includes(search.toLowerCase()) ||
-          doc_type_name.toLowerCase().includes(search.toLowerCase()),
+          order_type_id.toLowerCase().includes(search.toLowerCase())
+          || doc_type_name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
       .map(({ order_type_id, doc_type_name }) => ({
@@ -854,4 +855,34 @@ export function fieldDivisionID(search: string) {
         value: e,
       })),
     )
+}
+
+export async function fieldNewSalesmanDivision(search: string) {
+  function isSame(value: any) {
+    return value.toLowerCase().includes(search.toLowerCase())
+  }
+  return getSalesmanByCompany()
+    .then((res) => res.data)
+    .then((res) => res.splice(0, 10))
+    .then((res) =>
+      res.filter(async ({ id, name }) => {
+        const salesmanExists = await getSalesmanDivision({
+          filters: [
+            {
+              field: 'salesman_id',
+              option: 'EQ',
+              from_value: id,
+            },
+          ],
+        })
+          .then((resp) => resp.data.results || [])
+          .then((resp) => resp.map((e) => e.salesman_id))
+
+        return salesmanExists.includes(id) && (isSame(id) || isSame(name))
+      }),
+    )
+    .then((res) => res.map((e) => ({
+      label: concatString(e.id, e.name),
+      value: e.id,
+    })))
 }
