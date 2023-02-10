@@ -4,7 +4,7 @@ import React from 'react'
 import PaperA4 from 'src/components/PaperA4'
 import dateFormat from 'src/utils/dateFormat'
 
-interface BSTFProps {
+interface BSTSProps {
   data: any
 }
 
@@ -109,7 +109,7 @@ function HeadTable(props: { label: string; value: string }) {
   )
 }
 
-export default function BSTF(props: BSTFProps) {
+export default function BSTS(props: BSTSProps) {
   const { data } = props
   const dataPrice = data[0].delivery_items.map((item) => item.price)
   const totalPrice = dataPrice.reduce((total, item) => total + item, 0)
