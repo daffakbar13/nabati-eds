@@ -243,7 +243,7 @@ export default function PageShipmentDetail() {
               trigger={() => (
                 <Button size="big" variant="primary">
                   {currentTab === '2' && 'Print BPB'}
-                  {currentTab === '3' && 'Print BSTF'}
+                  {currentTab === '3' && 'Print BSTS'}
                 </Button>
               )}
               content={() => componentRef.current}
