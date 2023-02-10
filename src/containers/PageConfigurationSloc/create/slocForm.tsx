@@ -13,7 +13,6 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
 
     if (!values.sloc_id) return
     if (!values.sloc_name) return
-    if (!values.sloc_type.value) return
 
     const newRow = {
       branch_name: values.branch_id?.label?.split(' - ')[1] || '',
@@ -21,7 +20,7 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
       sales_org: values.sales_org.value,
       sloc_id: values.sloc_id,
       sloc_name: values.sloc_name,
-      sloc_type: values.sloc_type.value,
+      sloc_type: values?.sloc_type?.value || '',
     }
 
     handleAdd(newRow)
@@ -89,10 +88,9 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
           </Form.Item>
         </Col>
         <Col span={4}>
-          <Form.Item name="sloc_type" rules={[{ required: true }]}>
+          <Form.Item name="sloc_type">
             <DebounceSelect
               label="Sloc Type"
-              required
               type="select"
               placeholder="Select"
               options={SLOC_TYPES_OPTIONS}

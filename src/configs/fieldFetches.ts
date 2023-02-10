@@ -28,6 +28,7 @@ import {
   getProductMasterData,
   getListProduct,
   getSlocbyConfigLogistic,
+  getProductConversionByProductId,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -889,6 +890,18 @@ export function fieldDivisionID(search: string) {
       [...new Set(res)].map((e) => ({
         label: e,
         value: e,
+      })),
+    )
+}
+
+export function fieldUoMConversion(product_id: string): Promise<any> {
+  return getProductConversionByProductId(product_id)
+    .then((result) => result.data)
+    .then((data) =>
+      data.map(({ uom_id, numerator }) => ({
+        label: uom_id,
+        value: uom_id,
+        key: numerator,
       })),
     )
 }
