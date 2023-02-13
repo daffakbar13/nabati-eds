@@ -25,6 +25,11 @@ export const getProformaInvoiceList = async (
           option: 'EQ',
           from_value: '10',
         },
+        {
+          field: 'status_id',
+          option: 'EQ',
+          from_value: '5',
+        },
         ...params.filters,
       ],
       limit: params.limit,
