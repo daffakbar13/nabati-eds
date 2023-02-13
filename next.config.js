@@ -5,7 +5,17 @@ const nextConfig = {
   //   images: {
   //     domains: ['mdm-portal.nabatisnack.co.id'],
   //   },
+  basePath: '/eds',
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/dashboard',
+        permanent: false,
+      },
+    ]
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
