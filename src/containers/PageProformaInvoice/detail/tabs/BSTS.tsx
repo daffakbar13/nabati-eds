@@ -4,7 +4,7 @@ import React from 'react'
 import PaperA4 from 'src/components/PaperA4'
 import dateFormat from 'src/utils/dateFormat'
 
-interface BSTFProps {
+interface BSTSProps {
   data: any
 }
 
@@ -109,8 +109,10 @@ function HeadTable(props: { label: string; value: string }) {
   )
 }
 
-export default function BSTF(props: BSTFProps) {
+export default function BSTS(props: BSTSProps) {
   const { data } = props
+  const dataPrice = data[0].delivery_items.map((item) => item.price)
+  const totalPrice = dataPrice.reduce((total, item) => total + item, 0)
 
   return (
     <PaperA4>
@@ -160,13 +162,13 @@ export default function BSTF(props: BSTFProps) {
         <table className="eds_paper_bsts">
           <thead>
             <tr>
-              <th rowSpan={3}>PCODE</th>
-              <th rowSpan={3}>Nama BARANG</th>
-              <th rowSpan={3}>KEMASAN</th>
-              <th rowSpan={3}>QTY</th>
-              <th rowSpan={3}>PRICE</th>
-              <th rowSpan={3}>JUMLAH(RP)</th>
-              <th rowSpan={3}>DISC</th>
+              <th>PCODE</th>
+              <th>Nama BARANG</th>
+              <th>KEMASAN</th>
+              <th>QTY</th>
+              <th>PRICE</th>
+              <th>JUMLAH(RP)</th>
+              <th>DISC</th>
             </tr>
           </thead>
           <tbody>
@@ -183,6 +185,22 @@ export default function BSTF(props: BSTFProps) {
             ))}
           </tbody>
         </table>
+      </div>
+      <div>
+        <Row>
+          <Col span={4}>
+            <strong>Total Karton Utuh : {totalPrice}</strong>
+          </Col>
+          <Col offset={1} span={4}>
+            <strong>DPP : {totalPrice}</strong>
+          </Col>
+          <Col offset={1} span={4}>
+            <strong>PPN : {totalPrice}</strong>
+          </Col>
+          <Col offset={1} span={4}>
+            <strong>JUMLAH(Rp) : {totalPrice}</strong>
+          </Col>
+        </Row>
       </div>
       <Row>
         <Col span={10}>

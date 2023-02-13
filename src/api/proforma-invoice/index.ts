@@ -87,7 +87,7 @@ export const getProformaInvoiceBpb = async (
   return response.data
 }
 
-export const getProformaInvoiceBstf = async (
+export const getProformaInvoiceBsts = async (
   params: CommonDetailParams,
 ): Promise<CommonDetailResponse<ProformaInvoice>> => {
   const response = await call({

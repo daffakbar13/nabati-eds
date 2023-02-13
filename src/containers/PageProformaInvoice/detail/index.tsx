@@ -4,7 +4,6 @@ import { Card, Popup } from 'src/components'
 import { Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { useDetail } from 'src/hooks'
-import { getDetailShipment, getShipmentBpb, getShipmentBstf, PGIShipment } from 'src/api/shipment'
 import { useRouter } from 'next/router'
 import ReactToPrint from 'react-to-print'
 import Loader from 'src/components/Loader'
@@ -14,12 +13,12 @@ import { PATH } from 'src/configs/menus'
 import AllTabs from './tabs'
 import DocumentHeader from './tabs/DocumentHeader'
 import BPB from './tabs/BPB'
-import BSTF from './tabs/BSTF'
+import BSTS from './tabs/BSTS'
 import {
   getDetailProformaInvoiceByShipment,
   getDetailProformaInvoiceByShipmentAndDevlivery,
   getProformaInvoiceBpb,
-  getProformaInvoiceBstf,
+  getProformaInvoiceBsts,
   PGIProformaInvoice,
 } from 'src/api/proforma-invoice'
 
@@ -33,7 +32,7 @@ export default function PageShipmentDetail() {
   const router = useRouter()
   const data = useDetail(getDetailProformaInvoiceByShipment, { id: router.query.id as string })
   const dataBpb = useDetail(getProformaInvoiceBpb, { id: router.query.id as string })
-  const dataBstf = useDetail(getProformaInvoiceBstf, { id: router.query.id as string })
+  const dataBsts = useDetail(getProformaInvoiceBsts, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
   const componentRef = React.useRef()
 
@@ -277,7 +276,7 @@ export default function PageShipmentDetail() {
               >
                 <div ref={componentRef}>
                   {currentTab === '2' && <BPB data={dataBpb} />}
-                  {currentTab === '3' && <BSTF data={dataBstf} />}
+                  {currentTab === '3' && <BSTS data={dataBsts} />}
                 </div>
               </div>
             )}

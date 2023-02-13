@@ -113,7 +113,7 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
       onChangeForm('branch_id', reqBody.branch_id)
       onChangeForm('branch_name', reqBody.branch_name)
       tableAddItems.handleAddItem({
-        // company_id: payload?.company_id || 'PP01',
+        company_id: payload?.company_id || 'PP01',
         // branch_id: payload?.branch_id,
         sales_org: reqBody?.sales_org,
         sloc_id: reqBody.sloc_id,
@@ -134,7 +134,8 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         handleAdd={handleAdd}
         disableSomeFields={tableAddItems.data.length > 0}
         isOnEditMode={isOnEditMode}
-        payload={payload}
+        payload={payload} 
+        itemsSloc={tableAddItems.data} 
       />
       <Table
         scroll={{ x: 'max-content', y: 600 }}

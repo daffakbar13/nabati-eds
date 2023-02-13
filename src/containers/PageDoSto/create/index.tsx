@@ -44,12 +44,15 @@ export default function CreateBilling() {
   const [cancel, setCancel] = useState(false)
   const [disabledPO, setdisabledPO] = useState(true)
   const [newDoSTO, setNewDoSTO] = useState()
-  const [dataForm, setDataForm] = React.useState<dataForm>()
-  const [dataPo, setDataPo] = React.useState<any>({})
-  const [suplyingVal, setSuplyingVal] = React.useState('')
-  const [receivingVal, setReceivingVal] = React.useState('')
-  const tableAddItems = useTableAddItem({ items: dataPo?.items } || { items: [] })
-  const [ItemCheckedError, setItemCheckedError] = React.useState(false)
+  const [dataForm, setDataForm] = useState<dataForm>()
+  const [dataPo, setDataPo] = useState<any>({})
+  const [suplyingVal, setSuplyingVal] = useState('')
+  const [receivingVal, setReceivingVal] = useState('')
+  const [ItemCheckedError, setItemCheckedError] = useState(false)
+  const [sendItemReceiver, setSendItemReceiver] = useState(false)
+  const tableAddItems = useTableAddItem(
+    { items: dataPo?.items, sendItemReceiver: sendItemReceiver, form: form } || { items: [] },
+  )
 
   const initialValue = {
     sto_doc_type: 'ZDST',
@@ -69,8 +72,13 @@ export default function CreateBilling() {
   }
 
   const onPoChange = (value: any) => {
-    getPoStoDetail({ id: value as string }).then((response) => {
+    getPoStoDetail({ id: value as string }).then((response: any) => {
       setDataPo(response.data)
+      if (response?.data?.channel_type === 'MT') {
+        setSendItemReceiver(true)
+      } else {
+        setSendItemReceiver(false)
+      }
       setSuplyingVal(`${response.data.suppl_branch_id}`)
       setReceivingVal(`${response.data.receive_plant_id}`)
     })
@@ -284,7 +292,7 @@ export default function CreateBilling() {
               scroll={{ x: 'max-content', y: 600 }}
               editable
               data={tableAddItems.data}
-              columns={tableAddItems.columns}
+              columns={sendItemReceiver ? tableAddItems.columnsSender : tableAddItems.columns}
               loading={tableAddItems.loading}
               rowSelection={tableAddItems.rowSelection}
             />

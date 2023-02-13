@@ -1,36 +1,49 @@
 import { Form, Col, Row } from 'antd'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
 import { fieldBranchAll, fieldSalesOrganization } from 'src/configs/fieldFetches'
 
-export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, payload }) {
+export default function SlocForm({
+  handleAdd,
+  disableSomeFields,
+  isOnEditMode,
+  payload,
+  itemsSloc,
+}) {
   const [form] = Form.useForm()
+  const [errorUnique, setErrorUnique] = useState(false)
 
   const onClickAdd = async () => {
     const values = await form.validateFields()
 
     if (!values.sloc_id) return
     if (!values.sloc_name) return
-    if (!values.sloc_type.value) return
 
-    const newRow = {
-      branch_name: values.branch_id?.label?.split(' - ')[1] || '',
-      branch_id: values.branch_id.value,
-      sales_org: values.sales_org.value,
-      sloc_id: values.sloc_id,
-      sloc_name: values.sloc_name,
-      sloc_type: values.sloc_type.value,
+    const duplicateSlocId = itemsSloc.filter((obj, idx) => values.sloc_id === obj.sloc_id)
+    console.log('itemsSLoc Duplicate', duplicateSlocId)
+    if (duplicateSlocId.length === 0) {
+      setErrorUnique(false)
+      const newRow = {
+        branch_name: values.branch_id?.label?.split(' - ')[1] || '',
+        branch_id: values.branch_id.value,
+        sales_org: values.sales_org.value,
+        sloc_id: values.sloc_id,
+        sloc_name: values.sloc_name,
+        sloc_type: values?.sloc_type?.value || '',
+      }
+
+      handleAdd(newRow)
+
+      form.setFieldsValue({
+        sloc_id: '',
+        sloc_name: '',
+        sloc_type: undefined,
+      })
+    } else {
+      setErrorUnique(true)
     }
-
-    handleAdd(newRow)
-
-    form.setFieldsValue({
-      sloc_id: '',
-      sloc_name: '',
-      sloc_type: undefined,
-    })
   }
 
   useEffect(() => {
@@ -41,6 +54,10 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
       })
     }
   }, [isOnEditMode, payload])
+
+  useEffect(() => {
+    console.log('itemsSloc', itemsSloc)
+  }, [itemsSloc])
 
   return (
     <Form
@@ -79,9 +96,12 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
           </Form.Item>
         </Col>
         <Col span={4}>
-          <Form.Item name="sloc_id" rules={[{ required: true }]}>
+          <Form.Item name="sloc_id" rules={[{ required: true }]} style={{ marginBottom: 0 }}>
             <DebounceSelect label="Sloc ID" required type="input" placeholder="e.g GS00" />
           </Form.Item>
+          {errorUnique && (
+            <div className="ant-form-item-explain-error">sloc id is already in use</div>
+          )}
         </Col>
         <Col span={4}>
           <Form.Item name="sloc_name" rules={[{ required: true }]}>
@@ -89,10 +109,9 @@ export default function SlocForm({ handleAdd, disableSomeFields, isOnEditMode, p
           </Form.Item>
         </Col>
         <Col span={4}>
-          <Form.Item name="sloc_type" rules={[{ required: true }]}>
+          <Form.Item name="sloc_type">
             <DebounceSelect
               label="Sloc Type"
-              required
               type="select"
               placeholder="Select"
               options={SLOC_TYPES_OPTIONS}
