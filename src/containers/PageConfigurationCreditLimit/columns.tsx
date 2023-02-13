@@ -41,6 +41,7 @@ export const columns = (
     title: 'Status',
     dataIndex: 'status_name',
     render: (text, record, index) => <TaggedStatus status={text || ''} />,
+    sorter: true,
   }),
   addColumn({
     title: 'Active / Inactive',
