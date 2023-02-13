@@ -11,7 +11,14 @@
     "lint:eslint": "eslint --ext .js,.ts,.tsx .",
     "lint:prettier": "prettier --check .",
     "fix": "prettier --write . && eslint --fix --ext .js,.ts,.tsx .",
-    "test": "jest"
+    "test": "jest",
+    "update:pink-lava-ui": "rm -rf ./node_modules/pink-lava-ui && cp -r ../pink-lava-design/dist ./node_modules/pink-lava-ui",
+    "epc-install": "yarn --ignore-scripts && yarn update:pink-lava-ui",
+    "epc-update": "rm -rf .git && git init && git remote add origin https://gitito.nabatisnack.co.id/edot/eds-web.git && git clean -f -d && git pull origin develop && rm -rf .git",
+    "epc-start": "next start -p 8001",
+    "epc-start:prod": "next start -p 8001",
+    "epc-dev": "next dev -p 8001",
+    "epc-build": "next build"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
