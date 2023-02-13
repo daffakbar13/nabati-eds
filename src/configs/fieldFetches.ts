@@ -284,6 +284,23 @@ export function fieldBranchAll(search: string) {
   )
 }
 
+export function fieldBranchAllSalesOrg(search: string) {
+  return getBranch().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      // .splice(0, 10)
+      .map(({ id, name, sales_org_id }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+        key: sales_org_id,
+      })),
+  )
+}
+
 export function fieldBranchSupply(search: string, channel = '', supplybranch = '') {
   return getBranch().then((result) =>
     result.data
