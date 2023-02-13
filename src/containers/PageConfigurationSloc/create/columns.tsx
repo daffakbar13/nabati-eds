@@ -45,7 +45,8 @@ export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
         sales_org: payload?.sales_org,
         sloc_id: payload?.sloc_id,
         sloc_name: payload?.sloc_function,
-        sloc_type: payload?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
+        sloc_type: payload?.sloc_type,
+        // sloc_type: payload?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
       }
       if (payload.children) {
         const newDataChild = payload.children?.map((item: any, index) => ({
@@ -54,7 +55,7 @@ export const useTableAddItem = (payload: any, isOnEditMode: boolean) => {
           sales_org: item?.sales_org,
           sloc_id: item?.sloc_id,
           sloc_name: item?.sloc_function,
-          sloc_type: item?.sloc_type == 'I' ? 'Intra Sloc' : 'Canvas',
+          sloc_type: item?.sloc_type,
         }))
         setData([newData, ...newDataChild])
       } else {

@@ -17,7 +17,6 @@ export const columns = (goToDetail: (a: any) => void) => [
   addColumn({
     title: 'Sloc Type',
     dataIndex: 'sloc_type',
-    render: (text: string, record: any, index: number) => (text === 'C' ? 'Canvas' : 'Intra Sloc'),
   }),
   addColumn({
     title: 'Action',
