@@ -17,7 +17,6 @@ export default function PageIntraChannelGoodIssueDetail() {
     },
     false,
   )
-  console.log('data', data)
   const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
