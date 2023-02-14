@@ -24,7 +24,7 @@ export default function PageDoSto() {
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
     'Search by PO, DO Number',
-    ['po_number', 'id'],
+    ['purchase_id', 'id'],
   )
 
   const [showConfirm, setShowConfirm] = React.useState('')

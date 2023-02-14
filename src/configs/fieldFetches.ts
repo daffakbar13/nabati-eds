@@ -40,6 +40,7 @@ import { getPoNumberList, getGoodReceiptList } from 'src/api/logistic/good-recei
 import { getDeliveryOrderList } from 'src/api/delivery-order'
 import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 import { getSalesmanDivision } from 'src/api/salesman-division'
+import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -477,6 +478,7 @@ export function fieldSlocFromBranch(doc_type: string, branch = '', branch_to = '
       })),
   )
 }
+
 export async function fieldVehicle(search: string) {
   return getDriverByCompanyId()
     .then((result) => result.data)
