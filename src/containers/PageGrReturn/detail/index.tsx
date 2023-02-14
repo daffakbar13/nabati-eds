@@ -1,16 +1,15 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
-import { useEffect, useState } from 'react'
-import { Card, GoBackArrow, Modal } from 'src/components'
 import { Tabs } from 'antd'
+import { useEffect, useState } from 'react'
+import { Card, GoBackArrow, Modal, Loader } from 'src/components'
 import { useRouter } from 'next/router'
 import { getGrReturnDetail } from 'src/api/logistic/good-return'
 import { cancelProcess } from 'src/api/logistic/good-receipt'
 import { PATH } from 'src/configs/menus'
-
 import DocumentHeader from './Tabs/DocumentHeader'
 import LRB from './Tabs/LRB'
 
-export default function DetailGrReturn() {
+export default function DetailGR() {
   const [loading, setLoading] = useState(false)
   const [details, setDetails] = useState<any>()
   const router = useRouter()
@@ -64,58 +63,63 @@ export default function DetailGrReturn() {
   ]
 
   return (
-    <Col>
-      <div style={{ display: 'flex', gap: 5 }}>
-        <GoBackArrow to={`${PATH.LOGISTIC}/gr-return`} />
-        <Text variant={'h4'}>View GR Return From Principal {`${router.query.id}`}</Text>
-        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {currentTab === '1' && (
-            <>
-              {details?.status_name === 'Done' && (
-                <Button
-                  size="big"
-                  variant="tertiary"
-                  onClick={() => setCancelProcessModal(true)}
-                  loading={loading}
-                >
-                  Cancel Process
+    <>
+      {loading && <Loader type="process" text="Wait for get data" />}
+      {!loading && (
+        <Col>
+          <div style={{ display: 'flex', gap: 5 }}>
+            <GoBackArrow to={`${PATH.LOGISTIC}/goods-receipt`} />
+            <Text variant={'h4'}>View GR From Principal {`${router.query.id}`}</Text>
+            <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
+              {currentTab === '1' && (
+                <>
+                  {details?.status_name === 'Done' && (
+                    <Button
+                      size="big"
+                      variant="tertiary"
+                      onClick={() => setCancelProcessModal(true)}
+                      loading={loading}
+                    >
+                      Cancel Process
+                    </Button>
+                  )}
+                </>
+              )}
+              {hashTab === '2' && (
+                <Button size="big" variant="primary" onClick={() => {}} loading={loading}>
+                  Print LPB
                 </Button>
               )}
-            </>
-          )}
-          {currentTab === '2' && (
-            <Button size="big" variant="primary" onClick={() => {}} loading={loading}>
-              Print LRB
-            </Button>
-          )}
-        </div>
-      </div>
-      <Spacer size={20} />
-      <Card style={{ padding: 0 }}>
-        <Tabs
-          defaultActiveKey="1"
-          onChange={(asd) => {
-            setCurrentTab(asd)
-          }}
-          items={AllTabs}
-        />
-        {currentTab === '1' ? (
-          <DocumentHeader loading={loading} details={details} />
-        ) : (
-          <LRB details={details} />
-        )}
-      </Card>
+            </div>
+          </div>
+          <Spacer size={20} />
+          <Card style={{ overflow: 'unset', marginBottom: 9 }}>
+            <Tabs
+              defaultActiveKey="1"
+              onChange={(asd) => {
+                setCurrentTab(asd)
+              }}
+              items={AllTabs}
+            />
+            {currentTab === '1' ? (
+              <DocumentHeader loading={loading} details={details} />
+            ) : (
+              <LRB details={details} />
+            )}
+          </Card>
 
-      <Modal
-        title="Confirm Cancel Process"
-        open={cancelProcessModal}
-        onOk={handleCancelProcess}
-        onCancel={() => setCancelProcessModal(false)}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gr-return`)}
-        content="Are you sure want to cancel process? Change you made so far will not saved"
-        successContent={(res: any) => 'Cancel Process Success'}
-        successOkText="OK"
-      />
-    </Col>
+          <Modal
+            title="Confirm Cancel Process"
+            open={cancelProcessModal}
+            onOk={handleCancelProcess}
+            onCancel={() => setCancelProcessModal(false)}
+            onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/gr-return`)}
+            content="Are you sure want to cancel process? Change you made so far will not saved"
+            successContent={(res: any) => 'Cancel Process Success'}
+            successOkText="OK"
+          />
+        </Col>
+      )}
+    </>
   )
 }

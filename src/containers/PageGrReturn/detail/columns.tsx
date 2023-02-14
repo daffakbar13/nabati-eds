@@ -7,14 +7,15 @@ import { addColumn } from 'src/utils/createColumns'
 export const columns = [
   addColumn({
     title: 'No',
-    dataIndex: 'product_id',
     render: (text, record, index) => index + 1,
     width: 50,
+    fixed: true,
   }),
   addColumn({
     title: 'Item PO',
     dataIndex: 'product_id',
     render: (text, record, index) => `${text}-${record.product_name}`,
+    width: 400,
     fixed: true,
   }),
   addColumn({

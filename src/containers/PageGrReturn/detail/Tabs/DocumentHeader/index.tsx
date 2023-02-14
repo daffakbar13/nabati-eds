@@ -33,7 +33,7 @@ export default function DocumentHeader({ details, loading = false }) {
         <List.Item label="Modified By" value={details?.modified_by} />
       </List>
       <div style={{ borderTop: '1px solid #AAAAAA', margin: '32px auto 0' }} />
-      <div style={{ overflow: 'scroll', marginTop: 16 }}>
+      <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
         <Table columns={columns} dataSource={details?.items || []} />
       </div>
     </>
