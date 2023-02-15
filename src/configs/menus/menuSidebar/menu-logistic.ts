@@ -195,12 +195,36 @@ export const menuLogistic = [
     onClick: () => Router.push(`${PATH.LOGISTIC}/swap-handling`),
   },
   {
-    key: 'stock-adjustment',
-    title: 'Stock Adjustment',
+    key: 'stock',
+    title: 'Stock',
     icon: LogisticIcStockAdjustment,
-    onClick: () => Router.push(`${PATH.LOGISTIC}/stock-adjustment`),
+    children: [
+      {
+        key: 'stock-opname',
+        title: 'Stock Opname',
+        content: () => 'Request',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/stock-opname`),
+      },
+      {
+        key: 'approval-stock-opname',
+        title: 'Approval Stock Opname',
+        content: () => 'Approval',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/approval-stock-opname`),
+      },
+      {
+        key: 'stock-adjustment',
+        title: 'Stock Adjusment',
+        content: () => 'Transfer to GS',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/stock-adjustment`),
+      },
+      {
+        key: 'approval-stock-adjustment',
+        title: 'Approval Stock Adjustment',
+        content: () => 'Approval',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/approval-stock-adjustment`),
+      },
+    ],
   },
-
   { type: 'title', title: 'GENERAL' },
   { type: 'divider' },
   {
