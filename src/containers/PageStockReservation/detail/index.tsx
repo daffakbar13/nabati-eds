@@ -1,17 +1,20 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Spacer, Text, Table, Row } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
-import { Col, Divider, Typography } from 'antd'
+import { Col, Divider, Typography, Input } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import useDetail from 'src/hooks/useDetail'
-import { getListStockReservationDetail } from 'src/api/logistic/stock-reservation'
+import {
+  getListStockReservationDetail,
+  updateStatusCancell,
+} from 'src/api/logistic/stock-reservation'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
-import { Loader } from 'src/components'
+import { Loader, Modal } from 'src/components'
 import { column } from './columns'
 
 export default function PageStockReservationDetail() {
@@ -23,9 +26,13 @@ export default function PageStockReservationDetail() {
     false,
   )
   const createDataList = (label: string, value: string) => ({ label, value })
-  const [approve] = React.useState(false)
-  const [reject, setReject] = React.useState(false)
-  const [loading, setLoading] = React.useState(true)
+  const [approve] = useState(false)
+  const [reject, setReject] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [reasonCancell, setReasonCancell] = useState('')
+  const [modalreject, setModalReject] = useState(false)
+  const [modalConfirmReject, setModalConfirmReject] = useState(false)
+  const [modalConfrimSubmit, setModalConfrimSubmit] = useState(false)
 
   const dataList = [
     // row 1
@@ -60,13 +67,45 @@ export default function PageStockReservationDetail() {
     ),
   ]
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data.movement_type_id) {
       setLoading(false)
     } else {
       setLoading(true)
     }
   }, [data])
+
+  const content = (
+    <>
+      <Text variant="headingSmall" textAlign="center" style={{ fontSize: 16, fontWeight: 'bold' }}>
+        Reason<span style={{ color: 'red' }}>*</span>
+      </Text>
+      <Input.TextArea
+        id="inputReason"
+        style={{
+          border: '1px solid #AAAAAA',
+          borderRadius: 8,
+          height: 150,
+          display: 'flex',
+          alignItems: 'center',
+        }}
+        onChange={(e: any) => {
+          setReasonCancell(e.target.value)
+        }}
+      />
+    </>
+  )
+
+  const onOkCancellation = async () => {
+    try {
+      return await updateStatusCancell(router.query.id as string, {
+        status_id: '02',
+        reason: reasonCancell,
+      })
+    } catch (error) {
+      return false
+    }
+  }
 
   return (
     <>
@@ -90,7 +129,7 @@ export default function PageStockReservationDetail() {
             <Text variant={'h4'}>{titlePage}</Text>
           </div>
           <Card style={{ overflow: 'unset' }}>
-            {data.status_name !== 'Pending' ? (
+            {data.status_id !== '00' ? (
               <Text variant={'h5'}>
                 <TaggedStatus status={data.status_name} size="h5" />
               </Text>
@@ -98,10 +137,16 @@ export default function PageStockReservationDetail() {
               ''
             )}
             <Row justifyContent="space-between" reverse>
-              {data.status_name === 'Pending' && (
+              {data.status_id === '00' && (
                 <>
                   <Row gap="16px">
-                    <Button size="big" variant="tertiary">
+                    <Button
+                      size="big"
+                      variant="tertiary"
+                      onClick={() => {
+                        setModalReject(true)
+                      }}
+                    >
                       Cancel Process
                     </Button>
                   </Row>
@@ -146,7 +191,7 @@ export default function PageStockReservationDetail() {
               </div>
               <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
                 {reject ? (
-                  `Are you sure want to Reject Request Intra Channel <strong>${data.id}</strong>?`
+                  `Are you sure want to Reject Request Intra Channel ${data.material_document_id}?`
                 ) : (
                   <>
                     Request Number
@@ -198,6 +243,58 @@ export default function PageStockReservationDetail() {
               </div>
             </Popup>
           )}
+
+          <Modal
+            title={'Confirm Cancellation'}
+            open={modalreject}
+            onOk={() => {
+              setModalConfrimSubmit(true)
+            }}
+            onCancel={() => {
+              if (reasonCancell !== '') {
+                setModalConfirmReject(true)
+              } else {
+                setModalReject(false)
+              }
+            }}
+            content={content}
+            loading={loading}
+            cancelText="No"
+            okText="Yes"
+          />
+          <Modal
+            title={'Confirm Cancellation'}
+            open={modalConfirmReject}
+            onOk={() => {
+              setModalReject(false)
+              setModalConfirmReject(false)
+              setReasonCancell('')
+            }}
+            onCancel={() => {
+              setModalConfirmReject(false)
+            }}
+            content={'Are you sure want to cancel? Change you made so far will not saved'}
+            loading={loading}
+            width={432}
+          />
+          <Modal
+            title={'Confirm Cancellation'}
+            open={modalConfrimSubmit}
+            onOk={onOkCancellation}
+            onCancel={() => {
+              setModalConfrimSubmit(false)
+            }}
+            content="Are you sure want to cancel this stock reservation?"
+            loading={loading}
+            onOkSuccess={() => {
+              setModalReject(false)
+              setModalConfirmReject(false)
+              router.push(`${PATH.LOGISTIC}/stock-reservation/detail/${router.query.id}`)
+            }}
+            successContent={(res: any) => 'Stock Reservation has been successfully Cancelled'}
+            successOkText="OK"
+            width={432}
+          />
         </Col>
       )}
     </>

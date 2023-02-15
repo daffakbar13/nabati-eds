@@ -45,3 +45,13 @@ export const getListStockReservationDetail = async (
   })
   return response.data
 }
+
+export const updateStatusCancell = async (idStock: string, payload: any) => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/edit/${idStock}`,
+    data: payload,
+  })
+  return response.data
+}
