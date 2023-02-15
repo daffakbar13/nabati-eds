@@ -42,8 +42,8 @@ export default function PageStockReservation() {
   }
 
   const statusOption = [
-    { label: 'Approved', value: '03' },
-    { label: 'Rejected', value: '02 ' },
+    { label: 'Done', value: '03' },
+    { label: 'Cancelled', value: '02 ' },
     { label: 'Wait For Approval', value: '00' },
   ]
 
