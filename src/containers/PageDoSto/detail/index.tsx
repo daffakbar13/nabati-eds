@@ -71,6 +71,7 @@ export default function PageDoStoDetail() {
           to_sloc: data.receive_branch_id,
           items: data.items?.map((item: any, index) => ({
             product_id: item.product_id,
+            product_receiver_id: item?.product_receiver_id || '',
             description: item.description,
             qty: item.received_qty,
             uom_id: item.received_uom_id,

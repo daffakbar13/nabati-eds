@@ -3,7 +3,7 @@ import React from 'react'
 import DataList from 'src/components/DataList'
 import dateFormat from 'src/utils/dateFormat'
 import { Table } from 'pink-lava-ui'
-import { column } from '../columns'
+import { column, columnMT } from '../columns'
 
 interface BillingProps {
   data: any
@@ -73,7 +73,11 @@ export default function DOSTO(props: BillingProps) {
       </Row>
       <Divider />
       <div style={{ overflow: 'scroll' }}>
-        <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
+        <Table
+          scroll={{ x: 'max-content', y: 600 }}
+          columns={data?.channel_type === 'MT' ? columnMT : column}
+          data={data.items}
+        />
       </div>
     </>
   )
