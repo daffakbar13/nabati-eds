@@ -64,24 +64,22 @@ export default function PageBilling() {
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
-      <Card style={{ overflow: 'unset' }}>
-        <Row gap="16px">
-          <Button
-            size="big"
-            variant={type === 'GT' ? 'primary' : 'secondary'}
-            onClick={() => setType('GT')}
-          >
-            General Trade (GT)
-          </Button>
-          <Button
-            size="big"
-            variant={type === 'MT' ? 'primary' : 'secondary'}
-            onClick={() => setType('MT')}
-          >
-            Modern Trade (MT)
-          </Button>
-        </Row>
-      </Card>
+      <Row gap="16px">
+        <Button
+          size="big"
+          variant={type === 'GT' ? 'primary' : 'secondary'}
+          onClick={() => setType('GT')}
+        >
+          General Trade (GT)
+        </Button>
+        <Button
+          size="big"
+          variant={type === 'MT' ? 'primary' : 'secondary'}
+          onClick={() => setType('MT')}
+        >
+          Modern Trade (MT)
+        </Button>
+      </Row>
       <Spacer size={10} />
       <Card style={{ overflow: 'unset' }}>
         <Row style={{ justifyContent: 'space-between' }}>
