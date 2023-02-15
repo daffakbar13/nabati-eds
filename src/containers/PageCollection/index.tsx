@@ -60,9 +60,9 @@ export default function PageCollection() {
         </Row>
       </Card>
       <Spacer size={10} />
-      <Card>
-        <Row justify="space-between">
-          <Row gutter={16}>
+      <Card style={{ overflow: 'unset' }}>
+        <Row style={{ justifyContent: 'space-between' }}>
+          <Row gap="16px">
             <Col>
               <Search {...searchProps} />
             </Col>
