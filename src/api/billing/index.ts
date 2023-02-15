@@ -11,14 +11,48 @@ import { BillingItem } from './types'
 const url = 'v1/billings'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
-export const getBilling = async (
+export const getBillingGT = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<BillingItem>> => {
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${url}/list`,
-    data: params,
+    data: {
+      filters: [
+        {
+          field: 'sales_org_id',
+          option: 'EQ',
+          from_value: 'PID1',
+        },
+        ...params.filters,
+      ],
+      limit: params.limit,
+      page: params.page,
+    },
+  })
+  return response.data
+}
+
+export const getBillingMT = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<BillingItem>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/list`,
+    data: {
+      filters: [
+        {
+          field: 'sales_org_id',
+          option: 'EQ',
+          from_value: 'PID2',
+        },
+        ...params.filters,
+      ],
+      limit: params.limit,
+      page: params.page,
+    },
   })
   return response.data
 }

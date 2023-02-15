@@ -1,23 +1,23 @@
-import React from 'react'
-import { Button, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
+import React, { useEffect, useState } from 'react'
+import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, SmartFilter } from 'src/components'
 // import { TableBilling } from 'src/data/tables'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { getCollectionList } from 'src/api/collection'
+import { getCollectionListGT, getCollectionListMT } from 'src/api/collection'
 import Pagination from 'src/components/Pagination'
 import { useFilters } from 'src/hooks'
-import { Col, Row } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldSalesOrganization, fieldBranchAll, fieldCustomer } from 'src/configs/fieldFetches'
 import { TableBilling } from './columns'
 
 export default function PageCollection() {
   const table = useTable({
-    funcApi: getCollectionList,
+    funcApi: getCollectionListGT,
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
+  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
   const statusOption = [
     { label: 'All', value: null },
@@ -27,13 +27,40 @@ export default function PageCollection() {
     { label: 'Cancel', value: 'Cancel' },
   ]
 
+  useEffect(() => {
+    if (type === 'MT') {
+      table.handler.updateData([])
+      table.handler.getApi(getCollectionListMT)
+    } else {
+      table.handler.updateData([])
+      table.handler.getApi(getCollectionListGT)
+    }
+  }, [type])
+
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
-      <Card>
-        <Row justify="space-between">
-          <Row gutter={16}>
+      <Row gap="16px">
+        <Button
+          size="big"
+          variant={type === 'GT' ? 'primary' : 'secondary'}
+          onClick={() => setType('GT')}
+        >
+          General Trade (GT)
+        </Button>
+        <Button
+          size="big"
+          variant={type === 'MT' ? 'primary' : 'secondary'}
+          onClick={() => setType('MT')}
+        >
+          Modern Trade (MT)
+        </Button>
+      </Row>
+      <Spacer size={10} />
+      <Card style={{ overflow: 'unset' }}>
+        <Row style={{ justifyContent: 'space-between' }}>
+          <Row gap="16px">
             <Col>
               <Search {...searchProps} />
             </Col>
