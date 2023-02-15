@@ -33,9 +33,8 @@ export default function PageIntraSlocRequest() {
   }
 
   const statusOption = [
-    { label: 'Approved', value: '01' },
     { label: 'Done', value: '03' },
-    { label: 'Wait For Approval', value: '00' },
+    { label: 'Pending', value: '00' },
   ]
 
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Doc. Number', [

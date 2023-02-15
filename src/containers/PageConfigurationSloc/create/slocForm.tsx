@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Button, Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { SLOC_TYPES_OPTIONS } from 'src/configs/slocTypes'
-import { fieldBranchAll, fieldSalesOrganization } from 'src/configs/fieldFetches'
+import { fieldBranchAllSalesOrg } from 'src/configs/fieldFetches'
 
 export default function SlocForm({
   handleAdd,
@@ -77,9 +77,14 @@ export default function SlocForm({
               label="Branch"
               required
               type="select"
-              fetchOptions={fieldBranchAll}
+              fetchOptions={fieldBranchAllSalesOrg}
               placeholder={payload?.branch}
               disabled={disableSomeFields}
+              onChange={(val: any) => {
+                form.setFieldsValue({
+                  sales_org: val.key,
+                })
+              }}
             />
           </Form.Item>
         </Col>
@@ -88,10 +93,9 @@ export default function SlocForm({
             <DebounceSelect
               label="Sales Org"
               required
-              type="select"
+              type="input"
               placeholder={payload?.sales_org}
-              fetchOptions={fieldSalesOrganization}
-              disabled={disableSomeFields}
+              disabled
             />
           </Form.Item>
         </Col>

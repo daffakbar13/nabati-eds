@@ -19,6 +19,7 @@ interface FormData {
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [form] = Form.useForm()
+  const now = new Date().toISOString()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
@@ -34,7 +35,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     width: '100%',
   }
 
-  const initialValue = { company_id: 'PP01' }
+  const initialValue = {
+    company_id: 'PP01',
+    credit_limit_before: 0,
+    valid_from: moment(now).format('YYYY-MM-DD'),
+  }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -144,12 +149,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
+          initialValue={dataForm?.credit_limit_before?.toLocaleString() || 0}
         >
           <InputNumber
             min={0}
             style={styleInputNumber}
             value={dataForm?.credit_limit_before?.toLocaleString() || 0}
             placeholder="e.g 1.000.000"
+            disabled
             onChange={(newVal) => {
               onChangeForm('credit_limit_before', newVal)
               form.setFieldsValue({
@@ -198,6 +205,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
+          initialValue={moment(now)}
         >
           <DatePickerInput
             required
@@ -205,6 +213,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fullWidth
             format={'DD-MMM-YYYY'}
             placeholder="Valid Before"
+            value={moment(now).format('YYYY-MM-DD')}
             onChange={(val: any) => {
               onChangeForm('valid_from', moment(val).format('YYYY-MM-DD'))
             }}

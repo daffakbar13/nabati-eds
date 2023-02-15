@@ -52,7 +52,7 @@ export default function PageIntraSlocRequest() {
   )
 
   useEffect(() => {
-    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+    fieldSlocFromBranch(branchfrom, branchTo).then((response) => {
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
@@ -64,7 +64,7 @@ export default function PageIntraSlocRequest() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-          <Search {...searchProps} />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"

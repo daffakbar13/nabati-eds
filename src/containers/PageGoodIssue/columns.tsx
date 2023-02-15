@@ -91,17 +91,17 @@ export const columns = [
   addColumn({
     title: 'Company',
     dataIndex: 'company_id',
-    render: (text, record, index) => <>{`${text} - ${record.company_name}`}</>,
+    render: (text, record, index) => `${text || ''} - ${record.company_name || ''}`,
   }),
   addColumn({
     title: 'Supplying Branch',
     dataIndex: 'supply_branch_id',
-    render: (text, record, index) => <>{`${text} - ${record.supply_branch_name}`}</>,
+    render: (text, record, index) => `${text || ''} - ${record.supply_branch_name || ''}`,
   }),
   addColumn({
     title: 'Receiving Branch',
     dataIndex: 'receive_branch_id',
-    render: (text, record, index) => <>{`${text} - ${record.receive_branch_name}`}</>,
+    render: (text, record, index) => `${text || ''} - ${record.receive_branch_name || ''}`,
   }),
   addColumn({
     title: 'Mov. Type',

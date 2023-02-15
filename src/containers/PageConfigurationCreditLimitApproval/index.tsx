@@ -22,6 +22,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   const table = useTable({
     funcApi: getCreditLimitList,
     columns: columns(goToDetailPage),
+    
   })
 
   const hasData = table.state.total > 0
@@ -50,6 +51,19 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       },
     ])
   }, [statusButton])
+
+  useEffect(() => {
+    if (table?.state?.body?.filters.length === 0) {
+      setFilters([
+        {
+          field: 'status',
+          option: 'EQ',
+          from_value: '00',
+          data_type: 'S',
+        },
+      ])
+    }
+  }, [table?.state?.body])
 
   const handleChangeButtonStatus = (statusId: string) => {
     setStatusButton(statusId)

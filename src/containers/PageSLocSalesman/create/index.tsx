@@ -90,7 +90,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }, [isOnEditMode, payload])
 
   useEffect(() => {
-    fieldSlocFromBranch('ZOP3', 'P104').then((response) => {
+    fieldSlocFromBranch('P104', '').then((response) => {
       setAllScloc(response)
     })
   }, [])

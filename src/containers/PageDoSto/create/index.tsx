@@ -64,7 +64,18 @@ export default function CreateBilling() {
     purchase_id: '1041400000004',
     header_text: '',
     status_id: '00',
-    items: tableAddItems.dataSubmit,
+    items: tableAddItems.dataSubmit.map((item: any, index) => ({
+      product_id: item.product_id || '',
+      product_receiver_id: item.product_receiver_id || '',
+      description: item.description || '',
+      qty: item.qty,
+      uom_id: item.uom_id || '',
+      received_qty: item.received_qty,
+      received_uom_id: item.received_uom_id || '',
+      sloc_id: item.sloc_id || '',
+      remarks: item.remarks || '',
+      batch: item.batch || '',
+    })),
   }
 
   const onChangeForm = (form: string, value: any) => {

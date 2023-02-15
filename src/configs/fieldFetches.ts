@@ -40,6 +40,7 @@ import { getPoNumberList, getGoodReceiptList } from 'src/api/logistic/good-recei
 import { getDeliveryOrderList } from 'src/api/delivery-order'
 import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 import { getSalesmanDivision } from 'src/api/salesman-division'
+import { getListSlocByMultipleBranch } from 'src/api/logistic/configuration-sloc'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -284,6 +285,23 @@ export function fieldBranchAll(search: string) {
   )
 }
 
+export function fieldBranchAllSalesOrg(search: string) {
+  return getBranch().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      // .splice(0, 10)
+      .map(({ id, name, sales_org_id }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+        key: sales_org_id,
+      })),
+  )
+}
+
 export function fieldBranchSupply(search: string, channel = '', supplybranch = '') {
   return getBranch().then((result) =>
     result.data
@@ -446,20 +464,47 @@ export function fieldSloc(search: string, doc_type_id?: string) {
   )
 }
 
-export function fieldSlocFromBranch(doc_type: string, branch = '', branch_to = '') {
-  return getConfigSloc().then((result) =>
-    result.data
-      .filter(
-        ({ doc_type_id, branch_id }) =>
-          doc_type_id === doc_type && (branch_id === branch || branch_id === branch_to),
-      )
-      .splice(0, 10)
-      .map(({ sloc_id }) => ({
-        label: sloc_id,
-        value: sloc_id,
+export function fieldSlocFromBranch(branch = '', branch_to = '') {
+  if (branch_to !== '') {
+    return getListSlocByMultipleBranch({
+      filters: [
+        {
+          field: 'branch_id',
+          option: 'BT',
+          from_value: branch,
+          to_value: branch_to,
+          data_type: 'S',
+        },
+      ],
+      limit: 10,
+      page: 1,
+    }).then((result) =>
+      result?.data?.splice(0, 10).map((item: any, index) => ({
+        label: `${item.sloc_id || ''} - ${item.sloc_name || ''}`,
+        value: item.sloc_id || '',
       })),
-  )
+    )
+  } else {
+    return getListSlocByMultipleBranch({
+      filters: [
+        {
+          field: 'branch_id',
+          option: 'EQ',
+          from_value: branch,
+          data_type: 'S',
+        },
+      ],
+      limit: 20,
+      page: 1,
+    }).then((result) =>
+      result?.data?.splice(0, 10).map((item: any, index) => ({
+        label: `${item.sloc_id || ''} - ${item.sloc_name || ''}`,
+        value: item.sloc_id || '',
+      })),
+    )
+  }
 }
+
 export async function fieldVehicle(search: string) {
   return getDriverByCompanyId()
     .then((result) => result.data)

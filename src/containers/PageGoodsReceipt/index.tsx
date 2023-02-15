@@ -9,6 +9,7 @@ import { colors } from 'src/configs/colors'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { columns } from './columns'
+import Pagination from 'src/components/Pagination'
 
 export default function PageGoodsReceipt() {
   const router = useRouter()
@@ -118,6 +119,7 @@ export default function PageGoodsReceipt() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </>
   )
