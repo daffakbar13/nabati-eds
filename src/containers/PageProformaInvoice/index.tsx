@@ -202,7 +202,7 @@ export default function PageProformaInvoice() {
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="order_date"
+                field="created_at"
                 dataType="S"
                 label="Order Date"
                 options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
