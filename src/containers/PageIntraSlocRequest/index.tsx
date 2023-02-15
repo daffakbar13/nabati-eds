@@ -16,11 +16,9 @@ export default function PageIntraSlocRequest() {
     funcApi: getListSloc,
     columns: useColumnRequestIntraSloc(),
   })
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search by Request Number',
-    ['id'],
-  )
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Request Number', [
+    'id',
+  ])
 
   const [branchfrom, setBranchFrom] = React.useState('')
   const [branchTo, setBranchTo] = React.useState('')
@@ -35,7 +33,7 @@ export default function PageIntraSlocRequest() {
   ]
 
   React.useEffect(() => {
-    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((res) => {
+    fieldSlocFromBranch(branchfrom, branchTo).then((res) => {
       setAllScloc(res)
     })
   }, [branchfrom, branchTo])
