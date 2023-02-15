@@ -25,7 +25,7 @@ import ProformaInvoiceCreateProvider from './edit/_provider'
 export default function PageProformaInvoice() {
   const table = useTable({
     funcApi: getProformaInvoiceList,
-    haveCheckBox: 'All',
+    haveCheckBox: [{ rowKey: 'status', member: ['Delivery'] }],
     columns: TableBilling,
   })
   const { oldfilters, searchProps, setFilters } = useFilters(table, 'Search Shipment ID')

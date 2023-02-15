@@ -22,7 +22,7 @@ import PrintBilling from './print'
 export default function PageBilling() {
   const table = useTable({
     funcApi: getBillingGT,
-    haveCheckBox: 'All',
+    haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
     columns: TableBilling,
   })
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Billing ID')

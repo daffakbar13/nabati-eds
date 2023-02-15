@@ -223,33 +223,33 @@ export const useTableDetailCollection = (
         title: 'Undelivered Reason',
         dataIndex: 'undelivered_reason_name',
       }),
-      addColumn({
-        title: 'Action',
-        render: (_, r) => (
-          <div style={{ display: 'flex', gap: 5 }}>
-            <Button
-              variant="primary"
-              size="small"
-              onClick={() => {
-                setShowModalDelivered(true)
-                setData(r)
-              }}
-            >
-              Delivered
-            </Button>
-            <Button
-              variant="tertiary"
-              size="small"
-              onClick={() => setShowPopupUndelivered(r.billing_number)}
-            >
-              Undelivered
-            </Button>
-            {showPopupUndelivered === r.billing_number && (
-              <PopupUndelivered id={r.billing_number} />
-            )}
-          </div>
-        ),
-      }),
+      // addColumn({
+      //   title: 'Action',
+      //   render: (_, r) => (
+      //     <div style={{ display: 'flex', gap: 5 }}>
+      //       <Button
+      //         variant="primary"
+      //         size="small"
+      //         onClick={() => {
+      //           setShowModalDelivered(true)
+      //           setData(r)
+      //         }}
+      //       >
+      //         Delivered
+      //       </Button>
+      //       <Button
+      //         variant="tertiary"
+      //         size="small"
+      //         onClick={() => setShowPopupUndelivered(r.billing_number)}
+      //       >
+      //         Undelivered
+      //       </Button>
+      //       {showPopupUndelivered === r.billing_number && (
+      //         <PopupUndelivered id={r.billing_number} />
+      //       )}
+      //     </div>
+      //   ),
+      // }),
     ],
   }
 }
