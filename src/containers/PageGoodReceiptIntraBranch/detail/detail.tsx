@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import TaggedStatus from 'src/components/TaggedStatus'
-import { column } from './columns'
+import { column, columnMT } from './columns'
 
 export default function Detail(props: any) {
   const router = useRouter()
@@ -95,7 +95,11 @@ export default function Detail(props: any) {
         </Row>
         <Divider />
         <div style={{ overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
+          <Table
+            scroll={{ x: 'max-content', y: 600 }}
+            columns={data.channel_type === 'MT' ? columnMT : column}
+            data={data.items}
+          />
         </div>
       </Card>
     </Col>
