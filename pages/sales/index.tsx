@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Col, Row, Space } from 'antd'
 import { Text, Button, Spacer } from 'pink-lava-ui'
-import { Main, DetailPerformance, Warehouse } from './dashboard'
+import { Main, DetailPerformance, Warehouse } from '../../src/containers/PageSalesDashboard'
 
 function TabNavItem({
   id,
