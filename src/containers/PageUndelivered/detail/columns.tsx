@@ -44,7 +44,7 @@ function Linked({ index, onReject, onReschedule }: PropsLinked) {
             setShowConfirm('reject')
           }}
         >
-          Cancel Progres
+          Cancel Process
         </Button>
       </div>
       {showConfirm === 'reject' && (
