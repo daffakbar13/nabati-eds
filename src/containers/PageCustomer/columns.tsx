@@ -1,8 +1,10 @@
-import CreateColumns from 'src/utils/createColumns'
+/* eslint-disable no-unused-expressions */
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { Switch } from 'antd'
-import React from 'react'
+import { PATH } from 'src/configs/menus'
 import { Button } from 'pink-lava-ui'
+import React from 'react'
+import { Switch } from 'antd'
 
 function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
   const router = useRouter()
@@ -47,15 +49,47 @@ function StatusAction({ isActive }: { isActive: any }) {
 }
 
 export const TableBilling = [
-  CreateColumns('ID', 'id', true),
-  CreateColumns('Name', 'name'),
-  CreateColumns('Sales Org', 'sales_org_name'),
-  CreateColumns('Sales Group', 'sales_group_name'),
-  CreateColumns('Branch', 'branch_name'),
-  CreateColumns('Channel', 'channel_name'),
-  CreateColumns('Customer Group', 'customer_group_name'),
+  addColumn({
+    title: 'ID',
+    dataIndex: 'id',
+    render: (link, record) => <Linked link={link} type="id" />,
+    fixed: true,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Name',
+    dataIndex: 'name',
+  }),
+  addColumn({
+    title: 'Sales Org',
+    dataIndex: 'sales_org_name',
+  }),
+  addColumn({
+    title: 'Sales Group',
+    dataIndex: 'sales_group_name',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch_name',
+  }),
+  addColumn({
+    title: 'Channel.',
+    dataIndex: 'channel_name',
+  }),
+  addColumn({
+    title: 'Customer Group',
+    dataIndex: 'customer_group_name',
+  }),
+  addColumn({
+    title: 'Branch Type',
+    dataIndex: 'branch_type',
+  }),
   CreateColumns('Active/Inactive', 'is_active', false, (status: any) => (
     <StatusAction isActive={status} />
   )),
-  CreateColumns('Action', 'id', false, (link: string) => <Linked link={link} type="action" />),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'id',
+    render: (link, record) => <Linked link={link} type="action" />,
+  }),
 ]
