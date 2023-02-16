@@ -14,7 +14,9 @@ export default function SectionAction() {
   } = table
   const { searchProps } = useFilters(table, 'Search By Salesman, Division ID', [
     'salesman_id',
+    'salesman_name',
     'division_id',
+    'division_name',
   ])
 
   return (
