@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { Button, Spacer, Text, Table, Row } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
 import { Col, Divider, Typography } from 'antd'
@@ -9,22 +9,24 @@ import { getPoStoDetail, updateStatusPoSto } from 'src/api/logistic/po-sto'
 import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import TaggedStatus from 'src/components/TaggedStatus'
-import { Loader } from 'src/components'
+import { Loader, Modal } from 'src/components'
 import { PATH } from 'src/configs/menus'
 import { columns, columnsMT } from './column'
 
 export default function PageApprovalDetail() {
   const router = useRouter()
-  const [loading, setLoading] = React.useState(true)
+  const [loading, setLoading] = useState(true)
   const data: any = useDetail(getPoStoDetail, { id: router.query.id as string }, false)
   const createDataList = (label: string, value: string) => ({ label, value })
-  const [approve, setApprove] = React.useState(false)
-  const [reject, setReject] = React.useState(false)
+  const [modalApprove, setModalApprove] = useState(false)
+  const [modalReject, setModalReject] = useState(false)
+  const [statusChange, setStatusChange] = useState('')
 
-  const changedStatus = (status: string) => {
-    updateStatusPoSto({ id: data.id, status_id: status })
-    if (status === '02') {
-      router.push(`${PATH.LOGISTIC}/approval`)
+  const changedStatus = async () => {
+    try {
+      return await updateStatusPoSto({ id: data.id, status_id: statusChange })
+    } catch (error) {
+      return false
     }
   }
 
@@ -63,7 +65,7 @@ export default function PageApprovalDetail() {
     ),
   ]
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data.receive_plant_id) {
       setLoading(false)
     } else {
@@ -109,7 +111,8 @@ export default function PageApprovalDetail() {
                       size="big"
                       variant="tertiary"
                       onClick={() => {
-                        setReject(true)
+                        setModalReject(true)
+                        setStatusChange('02')
                       }}
                     >
                       Reject
@@ -118,8 +121,8 @@ export default function PageApprovalDetail() {
                       size="big"
                       variant="primary"
                       onClick={() => {
-                        setApprove(true)
-                        changedStatus('01')
+                        setModalApprove(true)
+                        setStatusChange('01')
                       }}
                     >
                       Approve
@@ -164,74 +167,56 @@ export default function PageApprovalDetail() {
               )}
             </div>
           </Card>
-          {(reject || approve) && (
-            <Popup>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Text variant="headingSmall" textAlign="center">
-                  {reject ? 'Confirm Cancellation' : 'Success'}
-                </Text>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 4 }}>
-                {reject ? (
-                  `Are you sure want to Reject PO STO Intra Branch ${data.id}?`
-                ) : (
-                  <>
-                    Request Number
-                    <Typography.Text copyable={{ text: data.id as string }}>
-                      {' '}
-                      {data.id}
-                    </Typography.Text>
-                    has been
-                  </>
-                )}
-              </div>
-              {approve && (
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                  successfully approved
-                </div>
-              )}
-              <div style={{ display: 'flex', justifyContent: 'center', gap: 10 }}>
-                {reject && (
-                  <>
-                    <Button
-                      style={{ flexGrow: 1 }}
-                      size="big"
-                      variant="tertiary"
-                      onClick={() => {
-                        setReject(false)
-                      }}
-                    >
-                      No
-                    </Button>
-                    <Button
-                      style={{ flexGrow: 1 }}
-                      size="big"
-                      variant="primary"
-                      onClick={() => {
-                        changedStatus('02')
-                      }}
-                    >
-                      Yes
-                    </Button>
-                  </>
-                )}
-                {approve && (
-                  <>
-                    <Button
-                      style={{ flexGrow: 1 }}
-                      size="big"
-                      variant="primary"
-                      onClick={() => {
-                        router.push(`${PATH.LOGISTIC}/approval`)
-                      }}
-                    >
-                      Ok
-                    </Button>
-                  </>
-                )}
-              </div>
-            </Popup>
-          )}
+          <Modal
+            title={'Confirm Approve'}
+            open={modalApprove}
+            onOk={changedStatus}
+            onCancel={() => {
+              setModalApprove(false)
+            }}
+            content={'Are you sure want to Approve This PO STO ?'}
+            successTitle="Success"
+            onOkSuccess={() => {
+              router.push(`${PATH.LOGISTIC}/approval`)
+            }}
+            successContent={(res: any) => (
+              <p>
+                PO Number
+                <Typography.Text copyable={{ text: data?.id as string }}>
+                  {' '}
+                  {data?.id}
+                </Typography.Text>{' '}
+                has been successfully Approved
+              </p>
+            )}
+            successOkText="OK"
+            width={432}
+          />
+          <Modal
+            title={'Confirm Reject'}
+            open={modalReject}
+            onOk={changedStatus}
+            onCancel={() => {
+              setModalReject(false)
+            }}
+            content={'Are you sure want to Reject This PO STO ?'}
+            successTitle="Success"
+            onOkSuccess={() => {
+              router.push(`${PATH.LOGISTIC}/approval`)
+            }}
+            successContent={(res: any) => (
+              <p>
+                PO Number
+                <Typography.Text copyable={{ text: data.id as string }}>
+                  {' '}
+                  {data.id}
+                </Typography.Text>{' '}
+                has been successfully Rejected
+              </p>
+            )}
+            successOkText="OK"
+            width={432}
+          />
         </Col>
       )}
     </>

@@ -108,7 +108,7 @@ export default function CreateBilling() {
     })
     if (dataForm.purchase_id) {
       if (totalSisa == 0) {
-        updateStatusPoSto({ id: dataForm.purchase_id, status_id: '01' }).then(() => {
+        updateStatusPoSto({ id: dataForm.purchase_id, status_id: '03' }).then(() => {
           createDoSto({ ...initialValue, ...dataForm }).then((response) => {
             updateBookingStock({
               document_id: response.data.id,

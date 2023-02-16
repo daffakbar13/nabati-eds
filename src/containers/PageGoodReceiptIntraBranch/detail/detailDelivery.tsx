@@ -10,6 +10,7 @@ import { useTableAddItem } from './columnsDelivery'
 import DebounceSelect from 'src/components/DebounceSelect'
 import dateFormat from 'src/utils/dateFormat'
 import { confitmGoodReceipt } from 'src/api/logistic/good-receipt-intra-branch'
+import { updateStatusPoSto } from 'src/api/logistic/do-sto'
 
 interface ItemsState {
   remarks: string
@@ -60,7 +61,8 @@ export default function Detail(props: any) {
     }
   }
   const onSubmitFunction = async () => {
-    return await confitmGoodReceipt(data.gr_number, { ...initialValue, ...dataForm })
+    confitmGoodReceipt(data.gr_number, { ...initialValue, ...dataForm })
+    return await updateStatusPoSto(data.do_number, { status_id: '03' })
   }
 
   return (
@@ -178,7 +180,10 @@ export default function Detail(props: any) {
         successContent={(res: any) => (
           <>
             GR Number
-            <Typography.Text copyable={{ text: data?.gr_number as string }}> {data?.gr_number}</Typography.Text>
+            <Typography.Text copyable={{ text: data?.gr_number as string }}>
+              {' '}
+              {data?.gr_number}
+            </Typography.Text>
             has been successfully Updated
           </>
         )}
