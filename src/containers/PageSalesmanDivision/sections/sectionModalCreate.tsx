@@ -64,17 +64,7 @@ export default function SectionModalCreate() {
       <Row gutter={[10, 10]}>
         <Col span={24}>
           <DebounceSelect
-            type="select"
-            required
-            label="Salesman ID"
-            placeholder={'Select'}
-            value={editable.salesman_id || ''}
-            fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
-            onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
-          />
-        </Col>
-        <Col span={24}>
-          <DebounceSelect
+            disabled={!isModalCreate}
             type="select"
             required
             label="Division ID"
@@ -88,6 +78,17 @@ export default function SectionModalCreate() {
           <DebounceSelect
             type="select"
             required
+            label="Salesman ID"
+            placeholder={'Select'}
+            value={editable.salesman_id || ''}
+            fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
+            onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
+          />
+        </Col>
+        {/* <Col span={24}>
+          <DebounceSelect
+            type="select"
+            required
             label="Status"
             placeholder={'Select'}
             value={(editable.is_active || 'Active') === 'Active' ? 1 : (0 as any)}
@@ -97,7 +98,7 @@ export default function SectionModalCreate() {
             ]}
             onChange={(e) => handleEditable({ ...editable, is_active: e.label })}
           />
-        </Col>
+        </Col> */}
       </Row>
       {confirm === 'cancel' && <ConfirmCancel />}
       {confirm === 'submit' && <ConfirmSubmit />}

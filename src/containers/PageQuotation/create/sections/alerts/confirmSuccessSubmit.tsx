@@ -49,13 +49,23 @@ export default function ConfirmSuccessSubmit() {
         <Button
           size="big"
           style={{ flexGrow: 1 }}
-          variant="primary"
+          variant="tertiary"
           onClick={() => {
             const additional = isFromDetail ? `/detail/${router.query.id}` : ''
             router.push(`${PATH.SALES}/quotation${additional}`)
           }}
         >
           OK
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order/detail/${quotationId}`)
+          }}
+        >
+          Next Process
         </Button>
       </div>
     </Popup>

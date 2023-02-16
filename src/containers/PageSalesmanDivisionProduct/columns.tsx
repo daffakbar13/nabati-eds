@@ -23,24 +23,24 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     }),
     addColumn({
       title: 'Division ID',
-      render: (_, { salesman_id }) => (
-        <Link onClick={() => handleAction(salesman_id)}>{salesman_id}</Link>
+      render: (_, { division_id }) => (
+        <Link onClick={() => handleAction(division_id)}>{division_id}</Link>
       ),
       fixed: true,
       sorter: true,
     }),
     addColumn({
       title: 'Division Name',
-      dataIndex: 'salesman_name',
+      dataIndex: 'division_name',
       fixed: true,
     }),
     addColumn({
       title: 'Product ID',
-      dataIndex: 'division_id',
+      dataIndex: 'product_id',
     }),
     addColumn({
       title: 'Product Name',
-      dataIndex: 'division_name',
+      dataIndex: 'product_name',
     }),
     addColumn({
       title: 'Company ID',

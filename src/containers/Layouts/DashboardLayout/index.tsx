@@ -46,7 +46,7 @@ export default function DashboardLayout(props: React.PropsWithChildren<React.Rea
   return (
     <Layout style={{ height: '100vh' }}>
       <Sidebar
-        logo="/icons/logo-nabati.svg"
+        logo="/eds/icons/logo-nabati.svg"
         menu={setMenu(currentModulePath)}
         defaultMenu={'dashboard'}
       />

@@ -1,7 +1,7 @@
 import { Col, Row } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
-import { createQuotation, updateQuotation } from 'src/api/quotation'
+import { createQuotation, multipleSubmitQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
 import { useSalesQuotationCreateContext } from '../states'
 
@@ -72,9 +72,14 @@ export default function SectionAction() {
               runProcess('Wait for save Quotation')
               if (isCreateOrOrderAgain) {
                 createQuotation(dataSubmitted(1))
-                  .then((response) => {
-                    setQuotationId(response.data.id)
-                    showConfirm('newQuo')
+                  .then((res) => {
+                    multipleSubmitQuotation({ order_list: [{ id: res.data.id }] })
+                      .then((resp) => {
+                        setQuotationId(resp.data.id)
+                        showConfirm('newQuo')
+                        stopProcess()
+                      })
+                      .catch(() => stopProcess())
                     stopProcess()
                   })
                   .catch(() => stopProcess())

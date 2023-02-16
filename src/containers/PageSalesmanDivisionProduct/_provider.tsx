@@ -1,5 +1,5 @@
 import React from 'react'
-import { getQuotation } from 'src/api/quotation'
+import { getSalesmanDivisionProduct } from 'src/api/salesman-division-product'
 import useTable from 'src/hooks/useTable/index'
 import { useColumnQuotation } from './columns'
 import { useSalesSalesmanDivisionProvider } from './states'
@@ -10,7 +10,7 @@ export default function SalesSalesmanDivisionProductProvider(
   const { children } = props
   const SalesSalesmanDivisionProduct = useSalesSalesmanDivisionProvider()
   const table = useTable({
-    funcApi: getQuotation,
+    funcApi: getSalesmanDivisionProduct,
     haveCheckBox: 'All',
     columns: useColumnQuotation(SalesSalesmanDivisionProduct.handler),
   })
