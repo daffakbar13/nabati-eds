@@ -120,7 +120,7 @@ export default function BPB(props: BPBProps) {
         </Col>
         <Col offset={6} span={10}>
           <Information label="No. BPB" value={data.shipment_id} />
-          <Information label="Pengiriman" value={data.ritase} />
+          <Information label="Pengiriman" value={data.driver_id} />
           <Information label="Jumlah Toko" value={data.total_store} />
         </Col>
       </Row>
