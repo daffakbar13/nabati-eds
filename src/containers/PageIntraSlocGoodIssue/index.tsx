@@ -49,7 +49,7 @@ export default function PageIntraSlocGoodIssue() {
   const movTypeOption = [{ label: 'Z54 - GR Phys. Inv', value: 'Z54' }]
 
   React.useEffect(() => {
-    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+    fieldSlocFromBranch(branchfrom, branchTo).then((response) => {
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])

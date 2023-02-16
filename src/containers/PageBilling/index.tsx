@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
+import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, SmartFilter } from 'src/components'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { getBilling, printBilling } from 'src/api/billing'
+import { getBillingGT, getBillingMT, printBilling } from 'src/api/billing'
 import Pagination from 'src/components/Pagination'
 import FloatAction from 'src/components/FloatAction'
 import {
@@ -15,14 +15,14 @@ import {
 } from 'src/configs/fieldFetches'
 import { useFilters } from 'src/hooks'
 import ReactToPrint from 'react-to-print'
-import { Col, Row } from 'antd'
+// import { Col, Row } from 'antd'
 import { TableBilling } from './columns'
 import PrintBilling from './print'
 
 export default function PageBilling() {
   const table = useTable({
-    funcApi: getBilling,
-    haveCheckBox: 'All',
+    funcApi: getBillingGT,
+    haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
     columns: TableBilling,
   })
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Billing ID')
@@ -30,11 +30,21 @@ export default function PageBilling() {
   const [optionsOrderType, setOptionsOrderType] = useState([])
   const [invoice, setInvoice] = React.useState<any[]>()
   const [suratJalan, setSuratJalan] = React.useState<any[]>()
-
+  const [type, setType] = useState<'GT' | 'MT'>('GT')
+  const titlePage = useTitlePage('list')
+  // useEffect(() => {
+  //   fieldOrderType('M').then((result) => setOptionsOrderType(result))
+  // }, [])
   useEffect(() => {
     fieldOrderType('M').then((result) => setOptionsOrderType(result))
-  }, [])
-  const titlePage = useTitlePage('list')
+    if (type === 'MT') {
+      table.handler.updateData([])
+      table.handler.getApi(getBillingMT)
+    } else {
+      table.handler.updateData([])
+      table.handler.getApi(getBillingGT)
+    }
+  }, [type])
 
   const statusOption = [
     { label: 'All', value: null },
@@ -54,9 +64,26 @@ export default function PageBilling() {
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
+      <Row gap="16px">
+        <Button
+          size="big"
+          variant={type === 'GT' ? 'primary' : 'secondary'}
+          onClick={() => setType('GT')}
+        >
+          General Trade (GT)
+        </Button>
+        <Button
+          size="big"
+          variant={type === 'MT' ? 'primary' : 'secondary'}
+          onClick={() => setType('MT')}
+        >
+          Modern Trade (MT)
+        </Button>
+      </Row>
+      <Spacer size={10} />
       <Card style={{ overflow: 'unset' }}>
         <Row style={{ justifyContent: 'space-between' }}>
-          <Row gutter={16}>
+          <Row gap="16px">
             <Col>
               <Search {...searchProps} />
             </Col>

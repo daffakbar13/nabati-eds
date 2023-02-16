@@ -25,7 +25,7 @@ import ProformaInvoiceCreateProvider from './edit/_provider'
 export default function PageProformaInvoice() {
   const table = useTable({
     funcApi: getProformaInvoiceList,
-    haveCheckBox: 'All',
+    haveCheckBox: [{ rowKey: 'status', member: ['Delivery'] }],
     columns: TableBilling,
   })
   const { oldfilters, searchProps, setFilters } = useFilters(table, 'Search Shipment ID')
@@ -202,7 +202,7 @@ export default function PageProformaInvoice() {
                 <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="order_date"
+                field="created_at"
                 dataType="S"
                 label="Order Date"
                 options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}

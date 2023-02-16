@@ -35,9 +35,7 @@ export const createConfigSloc = async (params = {}): Promise<CommonListResponse<
   return response.data
 }
 
-export const updateConfigSloc = async (
-  params: any,
-): Promise<CommonListResponse<StockRealTime>> => {
+export const updateConfigSloc = async (params: any): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.PUT,
     subUrl: `${url}/update_config_sloc`,
@@ -66,6 +64,18 @@ export const updateStatus = async (
   const response = await call({
     method: METHODS.PUT,
     subUrl: `${url}/update_sloc_company/status/${options.company_id}/${options.key}/${options.sloc_id}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const getListSlocByMultipleBranch = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/list_config_sloc/filter_branch`,
     overrideBaseUrl,
     data: params,
   })

@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { Card, SearchQueryParams, Modal, Pagination } from 'src/components'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
+import { Card, Modal, Pagination } from 'src/components'
 import {
   getListSalesORGCustomer,
   UpdateStatusSalesORGCustomer,
 } from 'src/api/logistic/config-salesorg-customer'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { PATH } from 'src/configs/menus'
 import { columns } from './columns'
 
 import CreateModal from './create'
 
 export default function PageConfigSalesORGCustomerGroupMaterial() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -52,16 +51,11 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
 
   const hasData = table.state.total > 0
 
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'customer_id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Customer Id, Min. Line, Min. Qty, UoM, Min. Amount',
+    ['customer_id', 'total_line', 'qty', 'uom_id', 'condition_amount'],
+  )
 
   return (
     <>
@@ -70,7 +64,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Customer ID" />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>

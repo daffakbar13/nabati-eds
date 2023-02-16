@@ -8,6 +8,7 @@ import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
+import Pagination from 'src/components/Pagination'
 
 export default function PageGrReturn() {
   const router = useRouter()
@@ -114,6 +115,7 @@ export default function PageGrReturn() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )

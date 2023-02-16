@@ -95,7 +95,7 @@ export default function CreateBilling() {
   }
 
   useEffect(() => {
-    fieldSlocFromBranch('ZOP3', dataForm?.suppl_branch_id).then((response) => {
+    fieldSlocFromBranch(dataForm?.suppl_branch_id).then((response) => {
       setAllSloc(response)
     })
   }, [dataForm?.suppl_branch_id])

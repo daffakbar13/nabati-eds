@@ -23,15 +23,18 @@ export const columns = [
   addColumn({
     title: 'Sloc',
     dataIndex: 'sloc',
+    fixed: true,
   }),
   addColumn({
     title: 'Status',
     dataIndex: 'status',
     render: (status, rec) => <TaggedStatus status={status} />,
+    fixed: true,
   }),
   addColumn({
     title: 'Status Data',
     dataIndex: 'status_data',
+    fixed: true,
   }),
   addColumn({
     title: 'Stock',

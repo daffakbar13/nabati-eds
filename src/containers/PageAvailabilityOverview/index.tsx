@@ -37,7 +37,7 @@ export default function PageAvailabilityOverview() {
   )
 
   useEffect(() => {
-    fieldSlocFromBranch('ZOP3', branchfrom, branchTo).then((response) => {
+    fieldSlocFromBranch(branchfrom, branchTo).then((response) => {
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])

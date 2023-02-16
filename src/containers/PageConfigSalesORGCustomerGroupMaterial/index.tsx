@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { Card, SearchQueryParams, Modal } from 'src/components'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
+import { Card, Modal } from 'src/components'
 import Pagination from 'src/components/Pagination'
 import {
   getListSalesORGCustomerGroupMaterial,
   UpdateStatusSalesORGCustomerGroupMaterial,
 } from 'src/api/logistic/config-salesorg-customer-group-material'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { PATH } from 'src/configs/menus'
 import { columns } from './columns'
 
 import CreateModal from './create'
 
 export default function PageConfigSalesORGCustomerGroupMaterial() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
@@ -50,21 +49,15 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   const table = useTable({
     funcApi: getListSalesORGCustomerGroupMaterial,
     columns: columns(goToDetailPage, onClickSwitch),
-    // filters,
   })
 
   const hasData = table.state.total > 0
 
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'e.sales_org_id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
+  const { oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Sales Org Id, Product Id, Customer Group Id',
+    ['sales_org_id', 'customer_group_id', 'product_id'],
+  )
 
   return (
     <>
@@ -73,7 +66,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Salesman ID" />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
