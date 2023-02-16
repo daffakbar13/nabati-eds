@@ -118,7 +118,7 @@ export default function PageCollectionDetail() {
         <>
           {modalDelivered}
           <div style={{ display: 'flex' }}>
-            <Text variant={'h4'}>Confirm {titlePage}</Text>
+            <Text variant={'h4'}>Cash {titlePage}</Text>
             <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
               <Button>asd</Button>
               <ButtonPinkLava
