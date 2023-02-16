@@ -11,6 +11,7 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import dateFormat from 'src/utils/dateFormat'
 import { confitmGoodReceipt } from 'src/api/logistic/good-receipt-intra-branch'
 import { updateStatusPoSto } from 'src/api/logistic/do-sto'
+import { fieldSlocFromBranch } from 'src/configs/fieldFetches'
 
 interface ItemsState {
   remarks: string
@@ -143,6 +144,20 @@ export default function Detail(props: any) {
             value={`${data.receive_branch_id || ''} - ${data.receive_branch_name || ''}` as any}
             disabled
           />
+          {data.channel_type === 'MT' ? (
+            <>
+              <DebounceSelect type="input" label="From Sloc" value={'GS00' as any} disabled />
+              <DebounceSelect
+                type="select"
+                label="To Sloc"
+                fetchOptions={(search) =>
+                  fieldSlocFromBranch(data.supply_branch_id, data.receive_branch_id)
+                }
+              />
+            </>
+          ) : (
+            ''
+          )}
         </div>
         <Divider />
         {ItemCheckedError ? (
@@ -159,7 +174,7 @@ export default function Detail(props: any) {
             scroll={{ x: 'max-content', y: 600 }}
             editable
             data={tableAddItems.data}
-            columns={tableAddItems.columns}
+            columns={data.channel_type === 'MT' ? tableAddItems.columnsMT : tableAddItems.columns}
             loading={tableAddItems.loading}
             rowSelection={tableAddItems.rowSelection}
           />

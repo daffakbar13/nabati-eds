@@ -66,6 +66,10 @@ export const useTableAddItem = (props: any) => {
       product_id: item.product_id,
       description: item.description,
       description_show: `${item.product_id} - ${item.product_name}`,
+      product_receiver_id: item.product_receiver_id || '',
+      description_receiver_show: `${item.product_receiver_id || ''} - ${
+        item.product_receiver_name || ''
+      }`,
       remarks: '-',
       batch: item.batch,
       qty: item.po_qty,
@@ -117,10 +121,118 @@ export const useTableAddItem = (props: any) => {
   const columns = [
     addColumn({
       title: 'Item PO',
+      dataIndex: 'description_show',
+      render: (text, record, index) => <DebounceSelect type="input" disabled value={text || ''} />,
+      width: 400,
+    }),
+    addColumn({
+      title: 'DO',
+      dataIndex: 'qty',
+      width: 300,
+      children: [
+        {
+          title: 'Qty',
+          render: (rows, __, index) => (
+            <DebounceSelect type="input" disabled value={rows.qty || ''} />
+          ),
+          key: 'qty',
+          width: 150,
+        },
+        {
+          title: 'UoM',
+          render: (rows, __, index) => (
+            <DebounceSelect type="input" disabled value={rows.uom_id || ''} />
+          ),
+          key: 'uom_id',
+          width: 150,
+        },
+      ],
+    }),
+    addColumn({
+      title: 'Received',
+      dataIndex: 'qty_receiving',
+      width: 300,
+      children: [
+        {
+          title: 'Qty',
+          render: (rows, __, index) => (
+            <DebounceSelect type="input" value={rows.received_qty?.toLocaleString()} disabled />
+          ),
+          key: 'received_qty',
+          width: 150,
+        },
+        {
+          title: 'UoM',
+          render: (rows, __, index) => (
+            <DebounceSelect
+              type="input"
+              value={rows.received_uom_id as any}
+              options={optionsUom[index] || []}
+              disabled={true}
+              onChange={(e) => {
+                handleChangeData('received_uom_id', e.value, index)
+                setFetching(true)
+              }}
+            />
+          ),
+          key: 'received_uom_id',
+          width: 150,
+        },
+      ],
+    }),
+    addColumn({
+      title: 'SLoc',
       dataIndex: 'description',
-      render: (rows, _, index) => (
-        <DebounceSelect type="input" disabled value={data[index].description_show || ''} />
+      render: (rows, __, index) => (
+        <DebounceSelect
+          type="input"
+          required
+          value={data[index].sloc_id}
+          placeholder="Select SLoc"
+          options={optionsSloc}
+          onChange={(e: any) => {
+            handleChangeData('sloc_id', e.value, index)
+          }}
+          disabled
+        />
       ),
+      width: 100,
+    }),
+    addColumn({
+      title: 'Batch',
+      dataIndex: 'batch',
+      render: (batch, __, index) => (
+        <DebounceSelect type="input" disabled value={data[index]?.batch || ''} />
+      ),
+      width: 250,
+    }),
+    addColumn({
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      render: (row, __, index) => (
+        <DebounceSelect
+          type="input"
+          value={row.remarks}
+          onBlur={(e: any) => {
+            handleChangeData('remarks', e.target.value as string, index)
+          }}
+        />
+      ),
+      width: 250,
+    }),
+  ]
+
+  const columnsMT = [
+    addColumn({
+      title: 'Item Sender',
+      dataIndex: 'description_show',
+      render: (text, record, index) => <DebounceSelect type="input" disabled value={text || ''} />,
+      width: 400,
+    }),
+    addColumn({
+      title: 'Item Receiver',
+      dataIndex: 'description_receiver_show',
+      render: (text, record, index) => <DebounceSelect type="input" disabled value={text || ''} />,
       width: 400,
     }),
     addColumn({
@@ -248,6 +360,7 @@ export const useTableAddItem = (props: any) => {
     dataSubmit,
     handleAddItem,
     columns,
+    columnsMT,
     loading,
     rowSelection,
   }
