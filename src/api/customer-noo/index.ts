@@ -18,7 +18,18 @@ export const getCustomerList = async (
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${subUrl}`,
-    data: params,
+    data: {
+      filters: [
+        {
+          field: 'eds_customer_sales.sales_org_id',
+          option: 'EQ',
+          from_value: 'PID1',
+        },
+        ...params.filters,
+      ],
+      limit: params.limit,
+      page: params.page,
+    },
   })
   return response.data
 }

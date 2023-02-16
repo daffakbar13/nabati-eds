@@ -20,8 +20,8 @@ export default function useDetail(
       funcApi(params)
         .then((results) => setData(results.data))
         .catch((err) => {
-          // console.log(err)
-          router.push('/not-found-404')
+          console.log(err)
+          // router.push('/not-found-404')
         })
     }
   }, [router.query])

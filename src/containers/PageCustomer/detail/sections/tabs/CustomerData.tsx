@@ -20,16 +20,16 @@ export default function CustomerData() {
   const {
     state: { data },
   } = useSalesQuotationDetailContext()
-  const { customer, customer_group, customer_sales_data } = data!
+  const { customer, customer_group, customer_sales_data, salesman } = data!
 
   const dataCustomer: AllDataCustomer = {
     'Customer Information': {
-      Name: concatString(data?.id, data?.name),
-      'Active Customer': data?.is_active ? 'Yes' : 'No',
-      KTP: data?.ktp,
-      'Short Name': data?.short_name,
-      'Phone Number': data?.phone_number,
-      Email: data?.email,
+      Name: concatString(customer?.id, customer?.name),
+      'Active Customer': customer?.is_active ? 'Yes' : 'No',
+      KTP: customer?.ktp,
+      'Short Name': customer?.short_name,
+      'Phone Number': customer?.phone,
+      Email: customer?.email,
     },
     'Customer Group Information': {
       'Customer Group': concatString(
@@ -37,55 +37,82 @@ export default function CustomerData() {
         customer_group?.customer_group_name,
       ),
       'Customer Group 1': concatString(
-        customer_group?.customer_group1_id,
-        customer_group?.customer_group1_name,
+        customer_group?.customer_group_1_id,
+        customer_group?.customer_group_1_name,
       ),
       'Customer Group 2': concatString(
-        customer_group?.customer_group2_id,
-        customer_group?.customer_group2_name,
+        customer_group?.customer_group_2_id,
+        customer_group?.customer_group_2_name,
       ),
       'Customer Group 3': concatString(
-        customer_group?.customer_group3_id,
-        customer_group?.customer_group3_name,
+        customer_group?.customer_group_3_id,
+        customer_group?.customer_group_3_name,
       ),
       'Customer Group 4': concatString(
-        customer_group?.customer_group4_id,
-        customer_group?.customer_group4_name,
+        customer_group?.customer_group_4_id,
+        customer_group?.customer_group_4_name,
       ),
       'Customer Group 5': concatString(
-        customer_group?.customer_group5_id,
-        customer_group?.customer_group5_name,
+        customer_group?.customer_group_5_id,
+        customer_group?.customer_group_5_name,
       ),
     },
     'Company Information': {
-      'Sales Organization': concatString(data?.sales_org_id, data?.sales_org_name),
-      Company: concatString(data?.company_id, data?.company_name),
-      Branch: concatString(data?.branch_id, data?.branch_name),
-      Stock: concatString(data?.sloc_id, data?.sloc_name),
-      'Sales Office': concatString(data?.sales_offfice_id, data?.sales_offfice_name),
-      'Sales Division': concatString(data?.division_id, data?.division_name),
-      'Sales Channel': concatString(data?.channel_id, data?.channel_name),
-      'Sales Group': concatString(data?.sales_group_id, data?.sales_group_name),
+      'Sales Organization': concatString(
+        customer_sales_data?.sales_org_id,
+        customer_sales_data?.sales_org_name,
+      ),
+      Company: concatString(customer_sales_data?.company_id, customer_sales_data?.company_name),
+      Branch: concatString(customer_sales_data?.branch_id, customer_sales_data?.branch_name),
+      Stock: concatString(customer_sales_data?.sloc_id, customer_sales_data?.sloc_name),
+      'Sales Office': concatString(
+        customer_sales_data?.sales_offfice_id,
+        customer_sales_data?.sales_offfice_name,
+      ),
+      'Sales Division': concatString(
+        customer_sales_data?.division_id,
+        customer_sales_data?.division_name,
+      ),
+      'Sales Channel': concatString(
+        customer_sales_data?.channel_id,
+        customer_sales_data?.channel_name,
+      ),
+      'Sales Group': concatString(
+        customer_sales_data?.sales_group_id,
+        customer_sales_data?.sales_group_name,
+      ),
     },
     'Payment Information': {
-      'Term of Payment': concatString(data?.term_id, data?.term_name),
-      'Method of Payment': concatString(data?.payment_method_id, data?.payment_method_name),
-      Block: data?.is_blocked ? 'Yes' : 'No',
-      'Credit Limit': data?.credit_limit?.toString(),
-      'Credit Limit Valid To': dateFormat(data?.credit_limit_valid_to),
-      'Remaining Credit Limit': data?.credit_limit_usage?.toString(),
-      'Status Overdue': data?.is_overdue ? 'Active' : 'Non Active',
-      'Price Group': data?.price_group_name,
-      'Taxable Enter Num. (SPPKP)': data?.taxable,
-      'Risk Class': concatString(data?.risk_class_id, data?.risk_class_name),
-      'Modified Date': data?.modified_at,
-      'Price List': concatString(data?.price_list_id, data?.price_list_name),
-      'Tax Subject': data?.tax_subject ? 'With Tax' : 'Without Tax',
-      'Tax Reg Num. (NPWP)': data?.tax_reg_num,
-      Rules: concatString(data?.rules, data?.rule_name),
-      'Check Rule': concatString(data?.check_rule_id, data?.check_rule_name),
-      'Inco 1': data?.incoterm1,
-      'Inco 2': data?.incoterm2,
+      'Term of Payment': concatString(customer_sales_data?.term_id, customer_sales_data?.term_name),
+      'Method of Payment': concatString(
+        customer_sales_data?.payment_method_id,
+        customer_sales_data?.payment_method_name,
+      ),
+      Block: customer_sales_data?.is_blocked ? 'Yes' : 'No',
+      'Credit Limit': customer_sales_data?.credit_limit?.toString(),
+      'Credit Limit Valid To': dateFormat(customer_sales_data?.credit_limit_valid_to),
+      'Remaining Credit Limit': customer_sales_data?.credit_limit_usage?.toString(),
+      'Status Overdue': customer_sales_data?.is_overdue ? 'Active' : 'Non Active',
+      'Price Group': customer_sales_data?.price_group_name,
+      'Taxable Enter Num. (SPPKP)': customer_sales_data?.taxable,
+      'Risk Class': concatString(
+        customer_sales_data?.risk_class_id,
+        customer_sales_data?.risk_class_name,
+      ),
+      'Modified Date': customer_sales_data?.modified_at,
+      'Price List': concatString(
+        customer_sales_data?.price_list_id,
+        customer_sales_data?.price_list_name,
+      ),
+      'Tax Subject': customer_sales_data?.tax_subject ? 'With Tax' : 'Without Tax',
+      'Tax Reg Num. (NPWP)': customer_sales_data?.tax_reg_num,
+      Rules: concatString(customer_sales_data?.rules, customer_sales_data?.rule_name),
+      'Check Rule': concatString(
+        customer_sales_data?.check_rule_id,
+        customer_sales_data?.check_rule_name,
+      ),
+      'Inco 1': customer_sales_data?.incoterm1,
+      'Inco 2': customer_sales_data?.incoterm2,
     },
   }
 
@@ -96,6 +123,15 @@ export default function CustomerData() {
     ),
     limit: LimitData[title],
   }))
+
+  // const dataTable: TableInformation[] = salesman.map(
+  //   ({ salesman_id, salesman_name, salesman_group_id, salesman_group_name }) => {
+  //     return {
+  //       Salesman: concatString(salesman_id, salesman_name),
+  //       'Salesman Group': concatString(salesman_group_id, salesman_group_name),
+  //     }
+  //   },
+  // )
 
   return (
     <>
@@ -119,6 +155,14 @@ export default function CustomerData() {
           <Divider />
         </>
       ))}
+      {/* <Table
+        dataSource={dataTable}
+        columns={[
+          { title: 'Salesman', dataIndex: 'Salesman' },
+          { title: 'Salesman Group', dataIndex: 'Salesman Group' },
+        ]}
+        scroll={{ x: 'max-content' }}
+      /> */}
     </>
   )
 }

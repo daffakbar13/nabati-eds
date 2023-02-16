@@ -101,3 +101,15 @@ export const getDetailCustomer = async (
   })
   return response.data
 }
+
+export const updateCustomerStatus = async (customerID: string, status: number) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `v1/master/update/customer-status`,
+    data: {
+      customer_id: customerID,
+      status: status,
+    },
+  })
+  return response.data
+}
