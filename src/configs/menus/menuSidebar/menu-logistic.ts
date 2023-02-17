@@ -269,6 +269,12 @@ export const menuLogistic = [
         onClick: () => Router.push(`${PATH.LOGISTIC}/auto-so-to-do`),
       },
       {
+        key: 'configuration-approval-so-block',
+        title: 'Approval SO Block',
+        content: () => 'Approval SO Block',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-approval-so-block`),
+      },
+      {
         key: 'configuration-credit-limit',
         title: 'Credit Limit',
         content: () => 'Credit Limit',
