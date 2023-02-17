@@ -1,9 +1,9 @@
 import React from 'react'
-import CreatePage from 'src/containers/PageStockAdjustment/create'
+import CreatePage from 'src/containers/PageStockOpname/create'
 
 interface CreateProps {}
 
-export default function StockAdjustmentCreate(props: CreateProps) {
+export default function StockOpnameCreate(props: CreateProps) {
   const {} = props
 
   return <CreatePage />

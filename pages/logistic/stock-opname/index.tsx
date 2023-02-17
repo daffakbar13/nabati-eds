@@ -3,7 +3,7 @@ import PageStockOpname from 'src/containers/PageStockOpname'
 
 interface RealTimeProps {}
 
-export default function StockAdjustment(props: RealTimeProps) {
+export default function StockOpname(props: RealTimeProps) {
   const {} = props
 
   return <PageStockOpname />

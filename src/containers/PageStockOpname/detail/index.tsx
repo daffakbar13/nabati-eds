@@ -5,10 +5,7 @@ import { Card, GoBackArrow, Modal } from 'src/components'
 import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
 import { useRouter } from 'next/router'
-import {
-  getDetailStockAdjustment,
-  updateStatusStockAdjustment,
-} from 'src/api/logistic/stock-adjustment'
+import { getDetailStockOpname, updateStatusStockOpname } from 'src/api/logistic/stock-opname'
 import { PATH } from 'src/configs/menus'
 import { STOCK_ADJUSTMENT_STATUS as S } from 'src/configs/stockAdjustment'
 import dateFormat from 'src/utils/dateFormat'
@@ -17,7 +14,7 @@ import { columns } from './columns'
 import { Loader } from 'src/components'
 import useDetail from 'src/hooks/useDetail'
 
-export default function DetailStockAdjustment() {
+export default function DetailStockOpname() {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const id = String(router.query.id) || ''
@@ -29,7 +26,7 @@ export default function DetailStockAdjustment() {
   const handleReject = async () => {
     try {
       const payload = { status_id: S.rejected }
-      const res = await updateStatusStockAdjustment(id, payload)
+      const res = await updateStatusStockOpname(id, payload)
       return res
     } catch (error) {
       return false
@@ -38,14 +35,14 @@ export default function DetailStockAdjustment() {
   const handleApprove = async () => {
     try {
       const payload = { status_id: S.approved }
-      const res = await updateStatusStockAdjustment(id, payload)
+      const res = await updateStatusStockOpname(id, payload)
       return res
     } catch (error) {
       return false
     }
   }
 
-  const details: any = useDetail(getDetailStockAdjustment, { id: router.query.id as string }, false)
+  const details: any = useDetail(getDetailStockOpname, { id: router.query.id as string }, false)
 
   useEffect(() => {
     if (details.company_id) {
@@ -61,8 +58,8 @@ export default function DetailStockAdjustment() {
       {!loading && (
         <Col>
           <div style={{ display: 'flex', gap: 5 }}>
-            <GoBackArrow to={`${PATH.LOGISTIC}/stock-adjustment`} />
-            <Text variant={'h4'}>View Stock Adjustment {`${router.query.id}`}</Text>
+            <GoBackArrow to={`${PATH.LOGISTIC}/stock-opname`} />
+            <Text variant={'h4'}>View Stock Opname {`${router.query.id}`}</Text>
           </div>
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
@@ -90,7 +87,7 @@ export default function DetailStockAdjustment() {
                     size="big"
                     variant="secondary"
                     onClick={() => {
-                      router.push(`${PATH.LOGISTIC}/stock-adjustment/edit/${router.query.id}`)
+                      router.push(`${PATH.LOGISTIC}/stock-opname/edit/${router.query.id}`)
                     }}
                     loading={loading}
                   >
@@ -110,10 +107,6 @@ export default function DetailStockAdjustment() {
           </Card>
           <Card>
             <List loading={loading}>
-              <List.Item
-                label="Movement Type"
-                value={`${details?.movement_type_id}-${toTitleCase(details?.movement_type_name)}`}
-              />
               <List.Item
                 label="Branch"
                 value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
@@ -146,7 +139,7 @@ export default function DetailStockAdjustment() {
             onOk={handleReject}
             onCancel={() => setRejectModal(false)}
             onOkSuccess={() =>
-              router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${router.query.id}`)
+              router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)
             }
             content="Are you sure want to reject?"
             successContent={() => 'Reject Success'}
@@ -159,7 +152,7 @@ export default function DetailStockAdjustment() {
             onOk={handleApprove}
             onCancel={() => setApproveModal(false)}
             onOkSuccess={() =>
-              router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${router.query.id}`)
+              router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)
             }
             content="Are you sure want to approve?"
             successContent={() => 'Approve Success'}
