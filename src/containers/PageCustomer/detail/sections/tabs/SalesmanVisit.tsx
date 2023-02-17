@@ -14,7 +14,8 @@ export default function SalesmanVisit() {
   const dataTable: TableInformation[] = salesman?.map(
     ({ salesman_id, salesman_name, salesman_group_id, salesman_group_name }) => {
       return {
-        Salesman: concatString(salesman_id, salesman_name),
+        'Salesman Id': salesman_id,
+        Name: salesman_name,
         'Salesman Group': concatString(salesman_group_id, salesman_group_name),
       }
     },
@@ -25,7 +26,8 @@ export default function SalesmanVisit() {
       <Table
         dataSource={dataTable}
         columns={[
-          { title: 'Salesman', dataIndex: 'Salesman' },
+          { title: 'Salesman ID', dataIndex: 'Salesman Id' },
+          { title: 'Name', dataIndex: 'Name' },
           { title: 'Salesman Group', dataIndex: 'Salesman Group' },
         ]}
         scroll={{ x: 'max-content' }}

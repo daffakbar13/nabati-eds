@@ -124,14 +124,14 @@ export default function CustomerData() {
     limit: LimitData[title],
   }))
 
-  // const dataTable: TableInformation[] = salesman.map(
-  //   ({ salesman_id, salesman_name, salesman_group_id, salesman_group_name }) => {
-  //     return {
-  //       Salesman: concatString(salesman_id, salesman_name),
-  //       'Salesman Group': concatString(salesman_group_id, salesman_group_name),
-  //     }
-  //   },
-  // )
+  const dataTable: TableInformation[] = salesman.map(
+    ({ salesman_id, salesman_name, salesman_group_id, salesman_group_name }) => {
+      return {
+        Salesman: concatString(salesman_id, salesman_name),
+        'Salesman Group': concatString(salesman_group_id, salesman_group_name),
+      }
+    },
+  )
 
   return (
     <>
@@ -155,14 +155,14 @@ export default function CustomerData() {
           <Divider />
         </>
       ))}
-      {/* <Table
+      <Table
         dataSource={dataTable}
         columns={[
           { title: 'Salesman', dataIndex: 'Salesman' },
           { title: 'Salesman Group', dataIndex: 'Salesman Group' },
         ]}
         scroll={{ x: 'max-content' }}
-      /> */}
+      />
     </>
   )
 }
