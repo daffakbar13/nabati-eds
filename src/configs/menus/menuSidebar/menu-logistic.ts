@@ -202,7 +202,7 @@ export const menuLogistic = [
       {
         key: 'stock-opname',
         title: 'Stock Opname',
-        content: () => 'Request',
+        content: () => 'Stock Opname',
         onClick: () => Router.push(`${PATH.LOGISTIC}/stock-opname`),
       },
       {

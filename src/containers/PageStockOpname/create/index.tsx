@@ -7,7 +7,7 @@ import { PATH } from 'src/configs/menus'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/components'
 
-import { createStockAdjustment } from 'src/api/logistic/stock-adjustment'
+import { createStockOpname } from 'src/api/logistic/stock-opname'
 
 import { useTableAddItem } from './useTableEditable'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -15,7 +15,7 @@ import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldF
 
 const { Label, LabelRequired } = Text
 
-export default function CreateStockAdjustment() {
+export default function CreateStockOpname() {
   const now = new Date().toISOString()
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
@@ -52,7 +52,7 @@ export default function CreateStockAdjustment() {
     }
     try {
       setLoading(true)
-      const res = await createStockAdjustment(payload)
+      const res = await createStockOpname(payload)
       setLoading(false)
       return res
     } catch (error) {
@@ -72,7 +72,7 @@ export default function CreateStockAdjustment() {
 
   return (
     <Col>
-      <Title variant={'h4'}>Create Stock Adjustment</Title>
+      <Title variant={'h4'}>Create Stock Opname</Title>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
@@ -97,27 +97,6 @@ export default function CreateStockAdjustment() {
           scrollToFirstError
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <Form.Item name="movement_type" style={{ marginTop: -12, marginBottom: 0 }}>
-              <DebounceSelect
-                type="select"
-                label="Movement Type"
-                required
-                options={[
-                  { label: 'Z71 - GR Phys. Inv', value: 'Z71' },
-                  { label: 'Z72 - RE GR Phys. Inv', value: 'Z72' },
-                ]}
-                onChange={(e) => setMovementSelected(e.value)}
-              />
-            </Form.Item>
-            <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
-              <DatePickerInput
-                fullWidth
-                label="Doc. Date"
-                defaultValue={moment()}
-                format={'DD/MM/YYYY'}
-                required
-              />
-            </Form.Item>
             <Form.Item
               name="branch_id"
               style={{ marginTop: -12, marginBottom: 0 }}
@@ -126,10 +105,20 @@ export default function CreateStockAdjustment() {
               <DebounceSelect
                 type="select"
                 label="Branch"
-                required
                 fetchOptions={(search) => fieldBranchSupply(search)}
                 onChange={(e) => setBranchSelected(e.value)}
               />
+            </Form.Item>
+            <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DatePickerInput
+                fullWidth
+                label="Doc. Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+              />
+            </Form.Item>
+            <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
+              <DebounceSelect type="select" label="Sloc" required options={allSloc} />
             </Form.Item>
             <Form.Item name="posting_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
@@ -140,10 +129,6 @@ export default function CreateStockAdjustment() {
                 required
               />
             </Form.Item>
-            <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
-              <DebounceSelect type="select" label="Sloc" required options={allSloc} />
-            </Form.Item>
-
             <Form.Item name="header_text" style={{ marginTop: -12, marginBottom: 0 }}>
               <DebounceSelect label="Header Text" type="input" />
             </Form.Item>
@@ -180,13 +165,13 @@ export default function CreateStockAdjustment() {
       <Modal
         open={showSubmitModal}
         onOk={handleCreate}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
+        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-opname`)}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
-        content="Are you sure want Submit Stock Adjustment?"
+        content="Are you sure want Submit Stock Opname?"
         successContent={(res: any) => (
           <>
-            Stock Adjusment ID :
+            Stock Opname ID :
             <Typography.Text copyable={{ text: res?.data.material_doc_id as string }}>
               {' '}
               {res?.data.material_doc_id}

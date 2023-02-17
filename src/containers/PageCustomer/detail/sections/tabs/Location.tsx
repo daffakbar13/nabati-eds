@@ -29,11 +29,11 @@ export default function Location() {
 
   const dataCustomer: any = {
     Address: {
-      Address: data?.address,
+      Address: customer?.address,
       'Location Lattitude': customer_sales_data?.lattitude,
-      'Sales Region': data?.region_id,
-      'Transportation Zone': data?.transportation_zone_id,
-      City: data?.city,
+      'Sales Region': customer?.region_id,
+      'Transportation Zone': customer?.transportation_zone_id,
+      City: customer?.city,
       'Location Longitude': customer_sales_data?.long_lattitude,
       'Sales District': concatString(
         customer_sales_data?.sales_district_id,
@@ -41,28 +41,40 @@ export default function Location() {
       ),
     },
     'Sold to Customer': {
-      Customer: concatString(data?.sold_to_customer_id, data?.sold_to_customer_name),
-      Address: data?.sold_to_address,
-      'Location Lattitude': data?.sold_to_loc_lat,
-      'Location Longitude': data?.sold_to_loc_long_lat,
+      Customer: concatString(
+        sold_to_customer?.sold_to_customer_id,
+        sold_to_customer?.sold_to_customer_name,
+      ),
+      Address: sold_to_customer?.sold_to_address,
+      'Location Lattitude': sold_to_customer?.sold_to_loc_lat,
+      'Location Longitude': sold_to_customer?.sold_to_loc_long_lat,
     },
     'Ship to Customer': {
-      Customer: concatString(data?.ship_to_customer_id, data?.ship_to_customer_name),
-      Address: data?.ship_to_address,
-      'Location Lattitude': data?.ship_to_loc_lat,
-      'Location Longitude': data?.ship_to_loc_long_lat,
+      Customer: concatString(
+        ship_to_customer?.ship_to_customer_id,
+        ship_to_customer?.ship_to_customer_name,
+      ),
+      Address: ship_to_customer?.ship_to_address,
+      'Location Lattitude': ship_to_customer?.ship_to_loc_lat,
+      'Location Longitude': ship_to_customer?.ship_to_loc_long_lat,
     },
     'Bill to Customer': {
-      Customer: concatString(data?.bill_to_customer_id, data?.bill_to_customer_name),
-      Address: data?.bill_to_address,
-      'Location Lattitude': data?.bill_to_loc_lat,
-      'Location Longitude': data?.bill_to_loc_long_lat,
+      Customer: concatString(
+        bill_to_customer?.bill_to_customer_id,
+        bill_to_customer?.bill_to_customer_name,
+      ),
+      Address: bill_to_customer?.bill_to_address,
+      'Location Lattitude': bill_to_customer?.bill_to_loc_lat,
+      'Location Longitude': bill_to_customer?.bill_to_loc_long_lat,
     },
     'Pay to Customer': {
-      Customer: concatString(data?.pay_to_customer_id, data?.pay_to_customer_name),
-      Address: data?.pay_to_address,
-      'Location Lattitude': data?.pay_to_loc_lat,
-      'Location Longitude': data?.pay_to_loc_long_lat,
+      Customer: concatString(
+        pay_to_customer?.pay_to_customer_id,
+        pay_to_customer?.pay_to_customer_name,
+      ),
+      Address: pay_to_customer?.pay_to_address,
+      'Location Lattitude': pay_to_customer?.pay_to_loc_lat,
+      'Location Longitude': pay_to_customer?.pay_to_loc_long_lat,
     },
   }
 

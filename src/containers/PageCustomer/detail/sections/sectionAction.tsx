@@ -44,10 +44,10 @@ export default function SectionAction() {
                 fontWeight: 600,
                 border: '1.5px solid #aaa',
                 borderRadius: 10,
-                color: data?.is_active ? 'green' : 'red',
+                color: data?.customer?.is_active ? 'green' : 'red',
               }}
             >
-              {data?.is_active ? 'Active' : 'Inactive'}
+              {data?.customer?.is_active ? 'Active' : 'Inactive'}
             </div>
           </Card>
         </Col>
