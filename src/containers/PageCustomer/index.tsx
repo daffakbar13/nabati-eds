@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
@@ -8,22 +8,64 @@ import { MoreOutlined } from '@ant-design/icons'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getCustomerList } from 'src/api/customer'
 import Pagination from 'src/components/Pagination'
-import { TableBilling } from './columns'
+import { columns } from './columns'
 
-function showTotal(total: number, range: number[]) {
-  const ranges = range.join('-')
-  const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-  return <p>{text}</p>
-}
+// function showTotal(total: number, range: number[]) {
+//   const ranges = range.join('-')
+//   const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
+//   return <p>{text}</p>
+// }
 
 export default function PageCustomer() {
+  const [allSloc, setAllScloc] = useState([])
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
+  const [dataTable, setdataTable] = useState([])
+  const data = []
+
   const table = useTable({
     funcApi: getCustomerList,
-    haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
-    columns: TableBilling,
+    columns,
+    data,
   })
 
   const titlePage = useTitlePage('list')
+
+  useEffect(() => {
+    const dataApi = table.state.data.map((item: any, index) => {
+      if (item?.details?.length > 1) {
+        return {
+          key: index,
+          id: `${item?.id}`,
+          name: `${item?.name}`,
+          sales_org: `${item?.details?.[0].sales_org_id} - ${item?.details?.[0].sales_org_name}`,
+          sales_group: `${item?.details?.[0].sales_group_id} - ${item?.details?.[0].sales_group_name}`,
+          branch: `${item?.details?.[0].branch_id} - ${item?.details?.[0].branch_name}`,
+          channel: `${item?.details?.[0].channel_id} - ${item?.details?.[0].channel_name}`,
+          customer_group: `${item?.details?.[0].customer_group_id} - ${item?.details?.[0].customer_group_name}`,
+          children: item?.details?.slice(1).map((itemChild: any, indexChild) => ({
+            key: `${index}-${indexChild}`,
+            sales_org: `${itemChild?.sales_org_id} - ${itemChild?.sales_org_name}`,
+            sales_group: `${itemChild?.sales_group_id} - ${itemChild?.sales_group_name}`,
+            branch: `${itemChild?.branch_id} - ${itemChild?.branch_name}`,
+            channel: `${itemChild?.channel_id} - ${itemChild?.channel_name}`,
+            customer_group: `${itemChild?.customer_group_id} - ${itemChild?.customer_group_name}`,
+          })),
+        }
+      }
+      return {
+        key: index,
+        id: `${item?.id}`,
+        name: `${item?.name}`,
+        sales_org: `${item?.details?.[0].sales_org_id} - ${item?.details?.[0].sales_org_name}`,
+        sales_group: `${item?.details?.[0].sales_group_id} - ${item?.details?.[0].sales_group_name}`,
+        branch: `${item?.details?.[0].branch_id} - ${item?.details?.[0].branch_name}`,
+        channel: `${item?.details?.[0].channel_id} - ${item?.details?.[0].channel_name}`,
+        customer_group: `${item?.details?.[0].customer_group_id} - ${item?.details?.[0].customer_group_name}`,
+      }
+    })
+    setdataTable(dataApi)
+  }, [table?.state?.data])
 
   return (
     <Col>
@@ -41,11 +83,17 @@ export default function PageCustomer() {
         </Row>
       </Card>
       <Spacer size={10} />
-      <Card style={{ padding: '16px 20px' }}>
+      {/* <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
         {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
+      </Card> */}
+      <Card style={{ padding: '16px 20px' }}>
+        <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+          <Table {...table.state.tableProps} dataSource={dataTable} />
+        </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </Col>
   )
