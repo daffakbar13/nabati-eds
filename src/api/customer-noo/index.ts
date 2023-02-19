@@ -18,18 +18,7 @@ export const getCustomerList = async (
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${subUrl}`,
-    data: {
-      filters: [
-        {
-          field: 'eds_customer_sales.sales_org_id',
-          option: 'EQ',
-          from_value: 'PID1',
-        },
-        ...params.filters,
-      ],
-      limit: params.limit,
-      page: params.page,
-    },
+    data: params,
   })
   return response.data
 }
@@ -40,7 +29,8 @@ export const getDetailQuotation = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `v1/quotations/${params.id}/detail`,
+    // subUrl: `v1/quotations/${params.id}/detail`,
+    subUrl: `v1/master/get-customer/${params.company_id || 'PP01'}/${params.id}/detail`,
   })
   return response.data
 }
