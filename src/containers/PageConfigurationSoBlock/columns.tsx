@@ -35,7 +35,7 @@ export const columns = (
   addColumn({
     title: 'Approval',
     dataIndex: 'is_approved',
-    render: (text: string, record: any, index: number) => `${text === '1' ? 'Yes' : 'No'}`,
+    render: (text: any, record: any, index: number) => `${text === 1 ? 'Yes' : 'No'}`,
   }),
   addColumn({
     title: 'Action',

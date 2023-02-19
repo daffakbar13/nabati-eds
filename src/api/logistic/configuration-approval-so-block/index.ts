@@ -24,3 +24,13 @@ export const getConfigSoBlock = async (
   })
   return response.data
 }
+
+export const deleteConfigSoBlock = async (params = {}): Promise<CommonListResponse<ListApprovalBlock>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/delete`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
