@@ -12,7 +12,7 @@ import FloatAction from 'src/components/FloatAction'
 import { Modal } from 'src/components'
 import { Popover, Typography } from 'antd'
 import Pagination from 'src/components/Pagination'
-// import CreateModal from './create'
+import CreateModal from './create'
 
 export default function PageConfigurationSloc() {
   const router = useRouter()
@@ -182,14 +182,14 @@ export default function PageConfigurationSloc() {
         successOkText="OK"
         width={432}
       />
-      {/* <CreateModal
+      <CreateModal
         visible={showCreateModal}
         close={() => {
           setShowCreateModal(false)
           setSelectedRow(null)
         }}
         payload={selectedRow}
-      /> */}
+      />
     </>
   )
 }
