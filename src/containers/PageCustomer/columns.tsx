@@ -83,7 +83,12 @@ function StatusAction({ data }: { data: any }) {
   )
 }
 
-export const TableBilling = [
+export const columns = [
+  addColumn({
+    title: 'No',
+    render: (_, __, i) => i + 1,
+    fixed: true,
+  }),
   addColumn({
     title: 'ID',
     dataIndex: 'id',
@@ -97,23 +102,23 @@ export const TableBilling = [
   }),
   addColumn({
     title: 'Sales Org',
-    dataIndex: 'sales_org_name',
+    dataIndex: 'sales_org',
   }),
   addColumn({
     title: 'Sales Group',
-    dataIndex: 'sales_group_name',
+    dataIndex: 'sales_group',
   }),
   addColumn({
     title: 'Branch',
-    dataIndex: 'branch_name',
+    dataIndex: 'branch',
   }),
   addColumn({
-    title: 'Channel.',
-    dataIndex: 'channel_name',
+    title: 'Channel',
+    dataIndex: 'channel',
   }),
   addColumn({
     title: 'Customer Group',
-    dataIndex: 'customer_group_name',
+    dataIndex: 'customer_group',
   }),
   CreateColumns('Active/Inactive', 'is_active', false, (status: any, record) => (
     <StatusAction data={record} />

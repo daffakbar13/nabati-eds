@@ -29,6 +29,12 @@ export default function SalesmanVisit() {
           { title: 'Salesman ID', dataIndex: 'Salesman Id' },
           { title: 'Name', dataIndex: 'Name' },
           { title: 'Salesman Group', dataIndex: 'Salesman Group' },
+          { title: 'Day', dataIndex: '' },
+          { title: 'Week 1', dataIndex: '' },
+          { title: 'Week 2', dataIndex: '' },
+          { title: 'Week 3', dataIndex: '' },
+          { title: 'Week 4', dataIndex: '' },
+          { title: 'Sequence', dataIndex: '' },
         ]}
         scroll={{ x: 'max-content' }}
       />

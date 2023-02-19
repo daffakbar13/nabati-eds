@@ -31,14 +31,18 @@ export default function Location() {
     Address: {
       Address: customer?.address,
       'Location Lattitude': customer_sales_data?.lattitude,
-      'Sales Region': customer?.region_id,
+      'Sales Region': concatString(customer?.region_id, customer?.region_name),
       'Sales District': concatString(
         customer_sales_data?.sales_district_id,
         customer_sales_data?.sales_district_id,
       ),
       City: customer?.city,
       'Location Longitude': customer_sales_data?.long_lattitude,
-      'Transportation Zone': customer?.transportation_zone_id,
+      // 'Transportation Zone': customer?.transportation_zone_id,
+      'Transporttation Zone': concatString(
+        customer?.transportation_zone_id,
+        customer?.transportation_zone_name,
+      ),
     },
     'Sold to Customer': {
       Customer: concatString(
