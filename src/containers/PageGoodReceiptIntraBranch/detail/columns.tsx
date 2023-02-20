@@ -156,9 +156,11 @@ export const columnMT = [
   addColumn({
     title: 'Batch',
     dataIndex: 'batch',
+    width: 300,
   }),
   addColumn({
     title: 'Remarks',
     dataIndex: 'remarks',
+    width: 300,
   }),
 ]

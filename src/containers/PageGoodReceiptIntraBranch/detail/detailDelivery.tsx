@@ -36,15 +36,20 @@ export default function Detail(props: any) {
     company_id: data.company_id,
     posting_date: moment(now).format('YYYY-MM-DD'),
     header_text: '',
-    branch_id: data.receive_branch_id,
+    branch_id: data.supply_branch_id,
+    from_sloc: data.channel_type === 'MT' ? 'GS00' : '',
+    to_sloc: '',
+    config_sloc_branch: '',
     items: tableAddItems.dataSubmit.map((item: any, index) => {
       return {
         product_id: item.product_id,
-        base_qty: parseInt(item.base_qty),
-        base_uom_id: item.base_uom_id,
+        product_receiver_id: item.product_id,
+        qty: parseInt(item.base_qty),
+        uom_id: item.base_uom_id,
         sloc_id: item.sloc_id,
         batch: item.batch,
         remarks: item.remarks,
+        branch_id: data.receive_branch_id,
       }
     }),
   }
@@ -153,6 +158,10 @@ export default function Detail(props: any) {
                 fetchOptions={(search) =>
                   fieldSlocFromBranch(data.supply_branch_id, data.receive_branch_id)
                 }
+                onChange={(e: any) => {
+                  onChangeForm('config_sloc_branch', e.key)
+                  onChangeForm('to_sloc', e.value)
+                }}
               />
             </>
           ) : (

@@ -487,6 +487,7 @@ export function fieldSlocFromBranch(branch = '', branch_to = '') {
       result?.data?.splice(0, 10).map((item: any, index) => ({
         label: `${item.sloc_id || ''} - ${item.sloc_name || ''}`,
         value: item.sloc_id || '',
+        key: item.branch_id || '',
       })),
     )
   } else {
