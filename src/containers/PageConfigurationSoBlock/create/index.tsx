@@ -2,12 +2,13 @@ import { useRouter } from 'next/router'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
-import { Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Spacer, Text, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { InputNumber, Form } from 'antd'
+import { InputNumber, Form, Divider } from 'antd'
 import { fieldCompanyList, fieldSalesOrgCompanyDynamic } from 'src/configs/fieldFetches'
-import { createCreditLimit } from 'src/api/logistic/config-credit-limit'
+import { createConfigSoBlock } from 'src/api/logistic/configuration-approval-so-block'
 import { PATH } from 'src/configs/menus'
+import { useTableAddItem } from './useTableAddItem'
 
 interface FormData {
   company_id: string
@@ -17,27 +18,21 @@ interface FormData {
 
 export default function CreateModal({ visible = false, close = () => {}, payload }) {
   const [form] = Form.useForm()
-  const now = new Date().toISOString()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
   const [company, setCompany] = useState('PP01')
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
+  const tableAddItems = useTableAddItem({ dataUpdate: payload })
+
   const isOnEditMode = !!payload
-  const styleInputNumber = {
-    border: '1px solid #AAAAAA',
-    borderRadius: 8,
-    height: 46,
-    display: 'flex',
-    alignItems: 'center',
-    width: '100%',
-  }
 
   const initialValue = {
     company_id: 'PP01',
     sales_org_id: 'PID1',
     is_active_company: 1,
+    list_config: tableAddItems.data,
   }
 
   const onChangeForm = (form: string, value: any) => {
@@ -52,7 +47,7 @@ export default function CreateModal({ visible = false, close = () => {}, payload
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createCreditLimit(reqBody)
+      const res = createConfigSoBlock(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -161,7 +156,8 @@ export default function CreateModal({ visible = false, close = () => {}, payload
             }}
           />
         </Form.Item>
-        <Spacer size={10} />
+        <Divider />
+        <Table columns={tableAddItems.columns} data={tableAddItems.data} />
       </Form>
     </>
   )
@@ -204,7 +200,7 @@ export default function CreateModal({ visible = false, close = () => {}, payload
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.push(`${PATH.LOGISTIC}/configuration-credit-limit`)
+          router.push(`${PATH.LOGISTIC}/configuration-approval-so-block`)
         }}
         successContent={(res: any) =>
           isOnEditMode

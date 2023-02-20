@@ -34,3 +34,13 @@ export const deleteConfigSoBlock = async (params = {}): Promise<CommonListRespon
   })
   return response.data
 }
+
+export const createConfigSoBlock = async (params = {}): Promise<CommonListResponse<ListApprovalBlock>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/create`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
