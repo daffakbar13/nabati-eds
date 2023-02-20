@@ -8,6 +8,7 @@ import { cancelProcess } from 'src/api/logistic/good-receipt'
 import { PATH } from 'src/configs/menus'
 import DocumentHeader from './Tabs/DocumentHeader'
 import LRB from './Tabs/LRB'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 export default function DetailGR() {
   const [loading, setLoading] = useState(false)
@@ -92,6 +93,14 @@ export default function DetailGR() {
               )}
             </div>
           </div>
+          {currentTab === '1' && (
+            <>
+              <Spacer size={20} />
+              <Card style={{ overflow: 'unset', marginBottom: 9 }}>
+                <TaggedStatus status={details?.status_name} size="h5" />
+              </Card>
+            </>
+          )}
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
             <Tabs
@@ -102,7 +111,9 @@ export default function DetailGR() {
               items={AllTabs}
             />
             {currentTab === '1' ? (
-              <DocumentHeader loading={loading} details={details} />
+              <>
+                <DocumentHeader loading={loading} details={details} />
+              </>
             ) : (
               <LRB details={details} />
             )}
