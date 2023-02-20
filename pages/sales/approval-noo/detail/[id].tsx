@@ -1,10 +1,10 @@
 import React from 'react'
-import PageQuotationDetail from 'src/containers/PageQuotation/detail'
+import PageApprovalNOODetail from 'src/containers/PageApprovalNOO/detail'
 
-interface QuotationDetailProps {}
+interface ApprovalNOODetailProps {}
 
-export default function QuotationDetail(props: QuotationDetailProps) {
+export default function ApprovalNOODetail(props: ApprovalNOODetailProps) {
   const {} = props
 
-  return <PageQuotationDetail />
+  return <PageApprovalNOODetail />
 }
