@@ -6,11 +6,11 @@ export default function SectionLoader() {
   const {
     state: { data, processing },
   } = useSalesQuotationDetailContext()
-  const hasData = Object.keys(data).length > 0
+  const hasData = data && Object.keys(data).length > 0
 
   return (
     <>
-      {!hasData && <Loader type="process" text="Wait for get data" />}
+      {/* {!hasData && <Loader type="process" text="Wait for get data" />} */}
       {processing && <Loader type="process" text={processing} />}
     </>
   )

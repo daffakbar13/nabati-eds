@@ -31,13 +31,17 @@ export default function Location() {
     Address: {
       Address: customer?.address,
       'Location Lattitude': customer_sales_data?.lattitude,
-      'Sales Region': customer?.region_id,
-      'Transportation Zone': customer?.transportation_zone_id,
-      City: customer?.city,
-      'Location Longitude': customer_sales_data?.long_lattitude,
+      'Sales Region': concatString(customer?.region_id, customer?.region_name),
       'Sales District': concatString(
         customer_sales_data?.sales_district_id,
         customer_sales_data?.sales_district_id,
+      ),
+      City: customer?.city,
+      'Location Longitude': customer_sales_data?.long_lattitude,
+      // 'Transportation Zone': customer?.transportation_zone_id,
+      'Transporttation Zone': concatString(
+        customer?.transportation_zone_id,
+        customer?.transportation_zone_name,
       ),
     },
     'Sold to Customer': {
@@ -57,24 +61,6 @@ export default function Location() {
       Address: ship_to_customer?.ship_to_address,
       'Location Lattitude': ship_to_customer?.ship_to_loc_lat,
       'Location Longitude': ship_to_customer?.ship_to_loc_long_lat,
-    },
-    'Bill to Customer': {
-      Customer: concatString(
-        bill_to_customer?.bill_to_customer_id,
-        bill_to_customer?.bill_to_customer_name,
-      ),
-      Address: bill_to_customer?.bill_to_address,
-      'Location Lattitude': bill_to_customer?.bill_to_loc_lat,
-      'Location Longitude': bill_to_customer?.bill_to_loc_long_lat,
-    },
-    'Pay to Customer': {
-      Customer: concatString(
-        pay_to_customer?.pay_to_customer_id,
-        pay_to_customer?.pay_to_customer_name,
-      ),
-      Address: pay_to_customer?.pay_to_address,
-      'Location Lattitude': pay_to_customer?.pay_to_loc_lat,
-      'Location Longitude': pay_to_customer?.pay_to_loc_long_lat,
     },
   }
 

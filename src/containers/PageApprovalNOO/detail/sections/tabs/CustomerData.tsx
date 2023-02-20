@@ -20,7 +20,7 @@ export default function CustomerData() {
   const {
     state: { data },
   } = useSalesQuotationDetailContext()
-  const { customer, customer_group, customer_sales_data, salesman } = data
+  const { customer, customer_group, customer_sales_data, salesman } = data!
 
   const dataCustomer: AllDataCustomer = {
     'Customer Information': {
@@ -28,7 +28,7 @@ export default function CustomerData() {
       'Active Customer': customer?.is_active ? 'Yes' : 'No',
       KTP: customer?.ktp,
       'Short Name': customer?.short_name,
-      'Phone Number': customer?.phone_number,
+      'Phone Number': customer?.phone,
       Email: customer?.email,
     },
     'Customer Group Information': {
@@ -37,24 +37,24 @@ export default function CustomerData() {
         customer_group?.customer_group_name,
       ),
       'Customer Group 1': concatString(
-        customer_group?.customer_group1_id,
-        customer_group?.customer_group1_name,
+        customer_group?.customer_group_1_id,
+        customer_group?.customer_group_1_name,
       ),
       'Customer Group 2': concatString(
-        customer_group?.customer_group2_id,
-        customer_group?.customer_group2_name,
+        customer_group?.customer_group_2_id,
+        customer_group?.customer_group_2_name,
       ),
       'Customer Group 3': concatString(
-        customer_group?.customer_group3_id,
-        customer_group?.customer_group3_name,
+        customer_group?.customer_group_3_id,
+        customer_group?.customer_group_3_name,
       ),
       'Customer Group 4': concatString(
-        customer_group?.customer_group4_id,
-        customer_group?.customer_group4_name,
+        customer_group?.customer_group_4_id,
+        customer_group?.customer_group_4_name,
       ),
       'Customer Group 5': concatString(
-        customer_group?.customer_group5_id,
-        customer_group?.customer_group5_name,
+        customer_group?.customer_group_5_id,
+        customer_group?.customer_group_5_name,
       ),
     },
     'Company Information': {
@@ -89,9 +89,9 @@ export default function CustomerData() {
         customer_sales_data?.payment_method_name,
       ),
       Block: customer_sales_data?.is_blocked ? 'Yes' : 'No',
-      'Credit Limit': customer_sales_data?.credit_limit.toString(),
+      'Credit Limit': customer_sales_data?.credit_limit?.toString(),
       'Credit Limit Valid To': dateFormat(customer_sales_data?.credit_limit_valid_to),
-      'Remaining Credit Limit': customer_sales_data?.credit_limit_usage.toString(),
+      'Remaining Credit Limit': customer_sales_data?.credit_limit_usage?.toString(),
       'Status Overdue': customer_sales_data?.is_overdue ? 'Active' : 'Non Active',
       'Price Group': customer_sales_data?.price_group_name,
       'Taxable Enter Num. (SPPKP)': customer_sales_data?.taxable,

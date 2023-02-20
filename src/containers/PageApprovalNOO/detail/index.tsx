@@ -4,7 +4,7 @@ import { Col, Row } from 'antd'
 import { SectionAction, SectionConfirm, SectionLoader, SectionTab } from './sections'
 import SalesQuotationDetailProvider from './_provider'
 
-export default function PageApprovalNOODetail() {
+export default function PageQuotationDetail() {
   return (
     <SalesQuotationDetailProvider>
       <Row gutter={[20, 20]}>

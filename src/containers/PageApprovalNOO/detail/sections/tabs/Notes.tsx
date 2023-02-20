@@ -17,8 +17,8 @@ export default function Notes() {
 
   const dataCustomer: any = {
     Notes: {
-      'Gatget Note': other?.gadget_note,
-      'Other Note': other?.other_note,
+      'Gatget Note': data?.gadget_note,
+      'Other Note': data?.other_note,
     },
   }
 

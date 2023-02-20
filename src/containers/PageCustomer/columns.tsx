@@ -92,7 +92,12 @@ export const columns = [
   addColumn({
     title: 'ID',
     dataIndex: 'id',
-    render: (link, record) => <Linked link={link} type="id" />,
+    render: (text: string, record: any, index: number) => (
+      <>
+        <StatusAction data={record} />
+        <span style={{ marginLeft: 10 }}>{`${text || ''}`}</span>
+      </>
+    ),
     fixed: true,
     sorter: true,
   }),
@@ -103,6 +108,13 @@ export const columns = [
   addColumn({
     title: 'Sales Org',
     dataIndex: 'sales_org',
+    render: (text: string, record: any, index: number) => (
+      <>
+        <StatusAction data={record} />
+        <span style={{ marginLeft: 10 }}>{`${text || ''}`}</span>
+      </>
+    ),
+    sorter: true,
   }),
   addColumn({
     title: 'Sales Group',
@@ -120,9 +132,9 @@ export const columns = [
     title: 'Customer Group',
     dataIndex: 'customer_group',
   }),
-  CreateColumns('Active/Inactive', 'is_active', false, (status: any, record) => (
-    <StatusAction data={record} />
-  )),
+  // CreateColumns('Active/Inactive', 'is_active', false, (status: any, record) => (
+  //   <StatusAction data={record} />
+  // )),
   addColumn({
     title: 'Action',
     dataIndex: 'id',

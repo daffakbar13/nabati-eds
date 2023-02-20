@@ -17,7 +17,7 @@ export default function Picture() {
 
   const dataCustomer: any = {
     Picture: {
-      Picture: customer?.gadget_note,
+      Picture: data?.gadget_note,
     },
   }
 
