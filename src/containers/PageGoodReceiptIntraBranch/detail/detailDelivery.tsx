@@ -43,7 +43,7 @@ export default function Detail(props: any) {
     items: tableAddItems.dataSubmit.map((item: any, index) => {
       return {
         product_id: item.product_id,
-        product_receiver_id: item.product_id,
+        product_receiver_id: item.product_receiver_id,
         qty: parseInt(item.base_qty),
         uom_id: item.base_uom_id,
         sloc_id: item.sloc_id,
