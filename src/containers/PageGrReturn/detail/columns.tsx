@@ -51,7 +51,7 @@ export const columns = [
     ],
   }),
   addColumn({
-    title: 'PO',
+    title: 'Received',
     children: [
       addColumn({
         title: 'Qty',

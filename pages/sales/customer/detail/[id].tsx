@@ -1,5 +1,5 @@
 import React from 'react'
-import PageQuotationDetail from 'src/containers/PageQuotation/detail'
+import PageQuotationDetail from 'src/containers/PageCustomer/detail'
 
 interface QuotationDetailProps {}
 

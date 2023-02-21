@@ -10,6 +10,8 @@ import { useTableAddItem } from './columnsDelivery'
 import DebounceSelect from 'src/components/DebounceSelect'
 import dateFormat from 'src/utils/dateFormat'
 import { confitmGoodReceipt } from 'src/api/logistic/good-receipt-intra-branch'
+import { updateStatusPoSto } from 'src/api/logistic/do-sto'
+import { fieldSlocFromBranch } from 'src/configs/fieldFetches'
 
 interface ItemsState {
   remarks: string
@@ -34,15 +36,20 @@ export default function Detail(props: any) {
     company_id: data.company_id,
     posting_date: moment(now).format('YYYY-MM-DD'),
     header_text: '',
-    branch_id: data.receive_branch_id,
+    branch_id: data.supply_branch_id,
+    from_sloc: data.channel_type === 'MT' ? 'GS00' : '',
+    to_sloc: '',
+    config_sloc_branch: '',
     items: tableAddItems.dataSubmit.map((item: any, index) => {
       return {
         product_id: item.product_id,
-        base_qty: parseInt(item.base_qty),
-        base_uom_id: item.base_uom_id,
+        product_receiver_id: item.product_receiver_id,
+        qty: parseInt(item.base_qty),
+        uom_id: item.base_uom_id,
         sloc_id: item.sloc_id,
         batch: item.batch,
         remarks: item.remarks,
+        branch_id: data.receive_branch_id,
       }
     }),
   }
@@ -60,7 +67,8 @@ export default function Detail(props: any) {
     }
   }
   const onSubmitFunction = async () => {
-    return await confitmGoodReceipt(data.gr_number, { ...initialValue, ...dataForm })
+    confitmGoodReceipt(data.gr_number, { ...initialValue, ...dataForm })
+    return await updateStatusPoSto(data.do_number, { status_id: '03' })
   }
 
   return (
@@ -141,6 +149,24 @@ export default function Detail(props: any) {
             value={`${data.receive_branch_id || ''} - ${data.receive_branch_name || ''}` as any}
             disabled
           />
+          {data.channel_type === 'MT' ? (
+            <>
+              <DebounceSelect type="input" label="From Sloc" value={'GS00' as any} disabled />
+              <DebounceSelect
+                type="select"
+                label="To Sloc"
+                fetchOptions={(search) =>
+                  fieldSlocFromBranch(data.supply_branch_id, data.receive_branch_id)
+                }
+                onChange={(e: any) => {
+                  onChangeForm('config_sloc_branch', e.key)
+                  onChangeForm('to_sloc', e.value)
+                }}
+              />
+            </>
+          ) : (
+            ''
+          )}
         </div>
         <Divider />
         {ItemCheckedError ? (
@@ -157,7 +183,7 @@ export default function Detail(props: any) {
             scroll={{ x: 'max-content', y: 600 }}
             editable
             data={tableAddItems.data}
-            columns={tableAddItems.columns}
+            columns={data.channel_type === 'MT' ? tableAddItems.columnsMT : tableAddItems.columns}
             loading={tableAddItems.loading}
             rowSelection={tableAddItems.rowSelection}
           />
@@ -178,7 +204,10 @@ export default function Detail(props: any) {
         successContent={(res: any) => (
           <>
             GR Number
-            <Typography.Text copyable={{ text: data?.gr_number as string }}> {data?.gr_number}</Typography.Text>
+            <Typography.Text copyable={{ text: data?.gr_number as string }}>
+              {' '}
+              {data?.gr_number}
+            </Typography.Text>
             has been successfully Updated
           </>
         )}

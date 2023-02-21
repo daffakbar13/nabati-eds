@@ -113,7 +113,17 @@ export const column = [
     title: 'Status',
     dataIndex: 'status_name',
     render: (status_name) => (
-      <TaggedStatus status={status_name === 'Rejected' ? 'Cancelled' : status_name} />
+      <TaggedStatus
+        status={(() => {
+          if (status_name === 'Rejected') {
+            return 'Cancelled'
+          } else if (status_name === 'Done') {
+            return 'Approved'
+          } else {
+            return status_name
+          }
+        })()}
+      />
     ),
   }),
   addColumn({

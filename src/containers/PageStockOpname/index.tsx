@@ -5,7 +5,7 @@ import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from '
 import { PATH } from 'src/configs/menus'
 import { ExclamationBrownIc } from 'src/assets'
 
-import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
+import { getListStockOpname, checkIsFreezeList } from 'src/api/logistic/stock-opname'
 import { useTable, useFilters } from 'src/hooks'
 import { colors } from 'src/configs/colors'
 
@@ -22,10 +22,10 @@ export default function PageStockOpname() {
 
   const goToDetailPage = (id: string) =>
     // eslint-disable-next-line implicit-arrow-linebreak
-    router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${id}`)
+    router.push(`${PATH.LOGISTIC}/stock-opname/detail/${id}`)
 
   const table = useTable({
-    funcApi: getListStockAdjustment,
+    funcApi: getListStockOpname,
     columns: columns(goToDetailPage),
   })
 
@@ -66,7 +66,7 @@ export default function PageStockOpname() {
 
   return (
     <>
-      <Text variant={'h4'}>Stock Adjustment</Text>
+      <Text variant={'h4'}>Stock Opname</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
@@ -178,14 +178,14 @@ export default function PageStockOpname() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            {/* <div style={{ display: 'flex', alignItems: 'center' }}>
               <p style={{ fontWeight: 'bold', marginRight: 8 }}>Freeze Sloc?</p>
               <Switch
                 onChange={(e) => setFreezeModal(true)}
                 checked={freezeList.length > 0}
                 disabled={loading}
               />
-            </div>
+            </div> */}
             <Button
               size="big"
               variant="primary"

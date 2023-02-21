@@ -9,6 +9,7 @@ import {
 import { CustomerItem } from './types'
 
 const subUrl = 'v1/master/list/customer'
+const url = 'v1/master/list/customers'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getCustomerList = async (
@@ -17,7 +18,7 @@ export const getCustomerList = async (
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,
-    subUrl: `${subUrl}`,
+    subUrl: `${url}`,
     data: params,
   })
   return response.data
@@ -95,7 +96,20 @@ export const getDetailCustomer = async (
     method: METHODS.GET,
     overrideBaseUrl,
     // subUrl: `v1/quotations/${params.id}/detail`,
-    subUrl: `v1/master/get-customer/${params.company_id || 'PP01'}/${params.id}`,
+    // subUrl: `v1/master/get-customer/${params.company_id || 'PP01'}/${params.id}`,
+    subUrl: `v1/master/customer-detail/${params.id}`,
+  })
+  return response.data
+}
+
+export const updateCustomerStatus = async (customerID: string, status: number) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `v1/master/update/customer-status`,
+    data: {
+      customer_id: customerID,
+      status: status,
+    },
   })
   return response.data
 }

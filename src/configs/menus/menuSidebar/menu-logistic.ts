@@ -202,7 +202,7 @@ export const menuLogistic = [
       {
         key: 'stock-opname',
         title: 'Stock Opname',
-        content: () => 'Request',
+        content: () => 'Stock Opname',
         onClick: () => Router.push(`${PATH.LOGISTIC}/stock-opname`),
       },
       {
@@ -267,6 +267,12 @@ export const menuLogistic = [
         title: 'Auto SO to DO',
         content: () => 'Auto SO to DO',
         onClick: () => Router.push(`${PATH.LOGISTIC}/auto-so-to-do`),
+      },
+      {
+        key: 'configuration-approval-so-block',
+        title: 'Approval SO Block',
+        content: () => 'Approval SO Block',
+        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-approval-so-block`),
       },
       {
         key: 'configuration-credit-limit',

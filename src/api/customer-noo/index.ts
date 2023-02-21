@@ -29,7 +29,8 @@ export const getDetailQuotation = async (
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: `v1/quotations/${params.id}/detail`,
+    // subUrl: `v1/quotations/${params.id}/detail`,
+    subUrl: `v1/master/get-customer/${params.company_id || 'PP01'}/${params.id}/detail`,
   })
   return response.data
 }

@@ -42,7 +42,7 @@ export default function PageDoSto() {
 
   const statusOption = [
     { label: 'PGI Done', value: '07' },
-    { label: 'Done', value: '01' },
+    { label: 'Done', value: '03' },
     { label: 'Canceled', value: '02' },
     { label: 'Pending', value: '00' },
   ]

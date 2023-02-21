@@ -11,7 +11,7 @@ import dateFormat from 'src/utils/dateFormat'
 import DataList from 'src/components/DataList'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { Loader } from 'src/components'
-import { column } from './columns'
+import { column, columnMT } from './columns'
 
 export default function PageIntraChannelGoodIssueDetail() {
   const titlePage = useTitlePage('detail')
@@ -31,7 +31,10 @@ export default function PageIntraChannelGoodIssueDetail() {
   const dataList = [
     // row 1
     createDataList('Request Number', data.do_number || '-'),
-    createDataList('Supplying Branch', `${data.supply_branch_id} - ${data.supply_branch_name || ''}`),
+    createDataList(
+      'Supplying Branch',
+      `${data.supply_branch_id} - ${data.supply_branch_name || ''}`,
+    ),
     createDataList(
       'Receiving Branch',
       `${data.receive_branch_id} - ${data.receive_branch_name || ''}`,
@@ -117,7 +120,11 @@ export default function PageIntraChannelGoodIssueDetail() {
             </Row>
             <Divider />
             <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-              <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
+              <Table
+                scroll={{ x: 'max-content', y: 600 }}
+                columns={data?.channel_type === 'MT' ? columnMT : column}
+                data={data.items}
+              />
             </div>
           </Card>
         </Col>

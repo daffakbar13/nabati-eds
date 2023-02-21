@@ -20,7 +20,6 @@ function showTotal(total: number, range: number[]) {
 export default function PageCustomer() {
   const table = useTable({
     funcApi: getCustomerList,
-    haveCheckBox: [{ rowKey: 'status', member: ['new'] }],
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')

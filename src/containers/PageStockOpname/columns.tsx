@@ -5,7 +5,7 @@ import { addColumn } from 'src/utils/createColumns'
 
 export const columns = (goToDetail: (id: string) => {}) => [
   addColumn({
-    title: 'Doc. Number',
+    title: 'Reff. Number',
     dataIndex: 'id',
     fixed: true,
     render: (text: string, record: any) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
@@ -30,22 +30,8 @@ export const columns = (goToDetail: (id: string) => {}) => [
   }),
   addColumn({
     title: 'Sloc',
-    dataIndex: 'from_sloc',
-    render: (text: string, record: any) => <>{`${text} - ${record.from_sloc_name}`}</>,
-    width: 200,
-  }),
-  addColumn({
-    title: 'Move Type',
-    dataIndex: 'movement_type_id',
-    render: (text: string, record: any) => (
-      <Tooltip
-        overlayInnerStyle={{ width: 'fit-content' }}
-        color="#F4FBFC"
-        title={record.movement_type_name}
-      >
-        {text}
-      </Tooltip>
-    ),
+    dataIndex: 'sloc_id',
+    render: (text: string, record: any) => <>{`${text} - ${record.sloc_name}`}</>,
     width: 200,
   }),
   addColumn({

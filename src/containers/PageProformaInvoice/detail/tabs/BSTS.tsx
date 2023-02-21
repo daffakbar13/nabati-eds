@@ -176,7 +176,7 @@ export default function BSTS(props: BSTSProps) {
               <tr key={i}>
                 <td>{e.product_id}</td>
                 <td>{e.description}</td>
-                <td>{e.base_uom_id}</td>
+                <td>{e.uom_id}</td>
                 <td>{e.order_qty}</td>
                 <td>{e.price}</td>
                 <td>{e.gross_value}</td>

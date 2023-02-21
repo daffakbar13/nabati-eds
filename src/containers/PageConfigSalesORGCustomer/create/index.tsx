@@ -122,6 +122,12 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     changePlaceHolder('min_amount', payload.min_amount)
   }, [isOnEditMode, payload])
 
+  const UoMOption = [
+    { label: 'HG - High', value: 'HG' },
+    { label: 'MD - Medium', value: 'MD' },
+    { label: 'LW - Low', value: 'LW' },
+  ]
+
   const content = (
     <>
       <Spacer size={20} />
@@ -178,7 +184,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         label="UoM"
         required
         type="select"
-        fetchOptions={fieldUomList}
+        options={UoMOption}
         value={placeHolder?.uom ? placeHolder.uom : ''}
         onChange={(val: any) => {
           onChangeForm('uom', val.value)

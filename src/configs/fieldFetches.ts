@@ -30,6 +30,11 @@ import {
   getListProduct,
   getSlocbyConfigLogistic,
   getProductConversionByProductId,
+  getDistrictByCompanyId,
+  getDivisionByCompanyId,
+  getPaymentMethod,
+  getSalesOfficeByCompany,
+  getTermByCompanyId,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -482,6 +487,7 @@ export function fieldSlocFromBranch(branch = '', branch_to = '') {
       result?.data?.splice(0, 10).map((item: any, index) => ({
         label: `${item.sloc_id || ''} - ${item.sloc_name || ''}`,
         value: item.sloc_id || '',
+        key: item.branch_id || '',
       })),
     )
   } else {
@@ -982,4 +988,94 @@ export async function fieldNewSalesmanDivision(search: string) {
         value: e.id,
       })),
     )
+}
+
+export function fieldDistrictByCompany(search: string) {
+  return getDistrictByCompanyId().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, ' - ', name.split('-').join(' - ')].join(''),
+        value: id,
+      })),
+  )
+}
+
+export function fieldDivisionByCompany(search: string) {
+  return getDivisionByCompanyId().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, ' - ', name.split('-').join(' - ')].join(''),
+        value: id,
+      })),
+  )
+}
+
+export function fieldPaymentMethod(search: string) {
+  return getPaymentMethod().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, ' - ', name.split('-').join(' - ')].join(''),
+        value: id,
+      })),
+  )
+}
+
+export function fieldPriceGroupByCompanyId(search: string) {
+  return getPricingByCompany().then((result) =>
+    result.data
+      .filter(
+        ({ price_group_id, price }) =>
+          price_group_id.toLowerCase().includes(search.toLowerCase()) ||
+          price.toString().toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ price_group_id, price }) => ({
+        label: [price_group_id, ' - ', price.toString().split('-').join(' - ')].join(''),
+        value: price_group_id,
+      })),
+  )
+}
+
+export function fieldSalesOfficeByCompany(search: string) {
+  return getSalesOfficeByCompany().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, ' - ', name.split('-').join(' - ')].join(''),
+        value: id,
+      })),
+  )
+}
+
+export function fieldTermByCompanyId(search: string) {
+  return getTermByCompanyId().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, ' - ', name.split('-').join(' - ')].join(''),
+        value: id,
+      })),
+  )
 }

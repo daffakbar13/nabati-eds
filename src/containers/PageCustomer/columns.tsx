@@ -1,37 +1,143 @@
-import CreateColumns from 'src/utils/createColumns'
+/* eslint-disable no-unused-expressions */
+import CreateColumns, { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
-import { Switch } from 'antd'
+import { PATH } from 'src/configs/menus'
+import { Button, Switch } from 'pink-lava-ui'
+import React, { useState } from 'react'
+import { Modal } from 'src/components'
+import { updateCustomerStatus } from 'src/api/customer'
 
-function Action({ link }: { link: string }) {
+function Linked({ link, type }: { link: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
     router.push(`/sales/customer/detail/${link}`)
   }
+  const [hover, setHover] = React.useState(false)
+
   return (
-    <h4 onClick={navigate} style={{ cursor: 'pointer' }}>
-      View Detail
-    </h4>
+    <>
+      {type === 'id' ? (
+        <div
+          onClick={navigate}
+          onMouseEnter={() => {
+            setHover(true)
+          }}
+          onMouseLeave={() => {
+            setHover(false)
+          }}
+          style={{
+            cursor: 'pointer',
+            ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
+          }}
+        >
+          {link}
+        </div>
+      ) : (
+        <Button size="big" variant="tertiary" onClick={navigate}>
+          View Detail
+        </Button>
+      )}
+    </>
   )
 }
 
-function StatusAction({ isActive }: { isActive: any }) {
+function StatusAction({ data }: { data: any }) {
+  const [checked, setChecked] = useState<boolean>(data?.status_id === '0' ? false : true)
+  const [showConfirm, setShowConfirm] = useState(false)
+  const router = useRouter()
+
   const handleChange = (currentStatus: boolean) => {
-    console.log(currentStatus)
+    setShowConfirm(true)
   }
 
-  return <Switch defaultChecked={isActive} onChange={handleChange} />
+  const handleUpdateStatus = async () => {
+    try {
+      return await updateCustomerStatus(data.customer_id, data?.status_id === '0' ? 1 : 0)
+    } catch (error) {
+      return error
+    }
+  }
+
+  return (
+    <>
+      <Switch checked={checked} onChange={handleChange} />
+      <Modal
+        title={'Confirmation'}
+        open={showConfirm}
+        onOk={handleUpdateStatus}
+        onCancel={() => setShowConfirm(false)}
+        content={`Are you sure want to ${
+          data?.status_id === '0' ? 'activate' : 'inactivate'
+        } this customer ${data.customer_id}?`}
+        onOkSuccess={() => {
+          setChecked(data?.status_id === '0' ? true : false)
+          router.reload()
+        }}
+        successContent={(res: any) => `Customer ${data.customer_id} has been successfully 
+          ${data?.status_id === '0' ? 'activated' : 'inactivated'}`}
+        successOkText="OK"
+        // loading={loading}
+        width={432}
+      />
+    </>
+  )
 }
 
-export const TableBilling = [
-  CreateColumns('ID', 'id', true),
-  CreateColumns('Name', 'name'),
-  CreateColumns('Sales Org', 'driver'),
-  CreateColumns('Sales Group', 'create_date'),
-  CreateColumns('Branch', 'total_undelivered'),
-  CreateColumns('Channel', 'sales_org'),
-  CreateColumns('Customer Group', 'branch'),
-  CreateColumns('Active/Inactive', 'is_active', false, (status: any) => (
-    <StatusAction isActive={status} />
-  )),
-  CreateColumns('Action', 'id', false, (link: string) => <Action link={link} />),
+export const columns = [
+  addColumn({
+    title: 'No',
+    render: (_, __, i) => i + 1,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'ID',
+    dataIndex: 'id',
+    render: (text: string, record: any, index: number) => (
+      <>
+        <StatusAction data={record} />
+        <span style={{ marginLeft: 10 }}>{`${text || ''}`}</span>
+      </>
+    ),
+    fixed: true,
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Name',
+    dataIndex: 'name',
+  }),
+  addColumn({
+    title: 'Sales Org',
+    dataIndex: 'sales_org',
+    render: (text: string, record: any, index: number) => (
+      <>
+        <StatusAction data={record} />
+        <span style={{ marginLeft: 10 }}>{`${text || ''}`}</span>
+      </>
+    ),
+    sorter: true,
+  }),
+  addColumn({
+    title: 'Sales Group',
+    dataIndex: 'sales_group',
+  }),
+  addColumn({
+    title: 'Branch',
+    dataIndex: 'branch',
+  }),
+  addColumn({
+    title: 'Channel',
+    dataIndex: 'channel',
+  }),
+  addColumn({
+    title: 'Customer Group',
+    dataIndex: 'customer_group',
+  }),
+  // CreateColumns('Active/Inactive', 'is_active', false, (status: any, record) => (
+  //   <StatusAction data={record} />
+  // )),
+  addColumn({
+    title: 'Action',
+    dataIndex: 'id',
+    render: (link, record) => <Linked link={link} type="action" />,
+  }),
 ]
