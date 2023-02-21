@@ -1,14 +1,14 @@
 import { Tabs } from 'antd'
 import React from 'react'
 import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
-import { CustomerData, Location, Notes, Picture } from './tabs'
+import { CustomerData, Location, Notes, Picture, SalesmanVisit } from './tabs'
 
 export default function SectionTab() {
   const {
     state: { data },
   } = useSalesQuotationDetailContext()
   const [currentTab, setCurrentTab] = React.useState('1')
-  const hasData = Object.keys(data).length > 0
+  const hasData = data && Object.keys(data).length > 0
 
   const createTabs = (label: string, key: string) => ({
     label,
@@ -20,8 +20,9 @@ export default function SectionTab() {
   const AllTabs = [
     createTabs('Customer Data', '1'),
     createTabs('Location', '2'),
-    createTabs('Notes', '3'),
-    createTabs('Picture', '4'),
+    createTabs('Salesman Visit', '3'),
+    createTabs('Notes', '4'),
+    createTabs('Picture', '5'),
   ]
 
   return (
@@ -37,8 +38,9 @@ export default function SectionTab() {
         <>
           {currentTab === '1' && <CustomerData />}
           {currentTab === '2' && <Location />}
-          {currentTab === '3' && <Notes />}
-          {currentTab === '4' && <Picture />}
+          {currentTab === '3' && <SalesmanVisit />}
+          {currentTab === '4' && <Notes />}
+          {currentTab === '5' && <Picture />}
         </>
       )}
     </>

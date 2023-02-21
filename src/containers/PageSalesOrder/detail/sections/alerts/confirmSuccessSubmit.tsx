@@ -5,16 +5,15 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { Typography } from 'antd'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
-import { useSalesQuotationCreateContext } from '../../states'
+import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
 
 export default function ConfirmSuccessSubmit() {
   const {
-    state: { quotationId, confirm },
-  } = useSalesQuotationCreateContext()
+    state: { newDeliveryID },
+  } = useSalesSalesOrderDetailContext()
   const router = useRouter()
   const isEditPage = router.asPath.includes('edit')
   const isFromDetail = Object.keys(router.query).includes('id')
-  const isCreate = confirm === 'newQuo'
 
   return (
     <Popup>
@@ -24,7 +23,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> {isCreate ? 'Submit' : 'Saved'} Success
+            <CheckCircleFilled /> Submit Success
           </>
         </Text>
       </div>
@@ -37,11 +36,11 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {!isEditPage ? 'New' : ''} {' Sales Order '}
-          <Typography.Text copyable={{ text: quotationId.id }}>{quotationId.id}</Typography.Text>
+          {!isEditPage ? 'New' : ''} {' Delivery Order '}
+          <Typography.Text copyable={{ text: newDeliveryID }}>{newDeliveryID}</Typography.Text>
           {' has been'}
         </div>
-        <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
+        <div>successfully submitted</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -49,8 +48,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="tertiary"
           onClick={() => {
-            const additional = isFromDetail ? `/detail/${router.query.id}` : ''
-            router.push(`${PATH.SALES}/quotation${additional}`)
+            router.push(`${PATH.SALES}/sales-order`)
           }}
         >
           Back To List
@@ -60,8 +58,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            const pathNextProcess = quotationId.is_approval ? 'approval' : 'sales-order'
-            router.push(`${PATH.SALES}/${pathNextProcess}/detail/${quotationId.id}`)
+            router.push(`${PATH.SALES}/delivery-order/detail/${newDeliveryID}`)
           }}
         >
           Next Process

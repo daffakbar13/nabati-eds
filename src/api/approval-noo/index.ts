@@ -1,9 +1,15 @@
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
-import { CommonListParams, CommonListResponse, CommonDetailParams } from 'src/api/types'
+import {
+  CommonListParams,
+  CommonListResponse,
+  CommonDetailParams,
+  CommonDetailResponse,
+} from 'src/api/types'
 import { Approval } from './types'
 
 const url = 'v1/master'
+const subUrl = 'v1/approvals'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getApprovalNOOList = async (
@@ -20,18 +26,24 @@ export const getApprovalNOOList = async (
 
 export const getApprovalDetail = async (
   params: CommonDetailParams,
-): Promise<CommonListResponse<Approval>> => {
+  payload: any,
+): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
-    subUrl: `${url}/${params.id}/detail`,
+    overrideBaseUrl,
+    data: payload,
+    subUrl: `v1/master/get-customer/${params.company_id || 'PP01'}/${params.id}/detail`,
   })
   return response.data
 }
 
-export const multipleSubmitApprovalNOO = async (payload: any) => {
+export const multipleSubmitApprovalNOO = async (
+  params: CommonDetailParams,
+  payload: any,
+): Promise<any> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/submit`,
+    subUrl: `${subUrl}/${params.id}/update/customer-noo`,
     data: payload,
   })
   return response.data

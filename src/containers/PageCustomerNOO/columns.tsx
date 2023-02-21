@@ -15,6 +15,7 @@ function Action({ link }: { link: string }) {
 }
 
 export const TableBilling = [
+  CreateColumns('No', '', false, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
   CreateColumns('ID', 'customer_id', true),
   CreateColumns('Name', 'customer_name'),
   CreateColumns(
