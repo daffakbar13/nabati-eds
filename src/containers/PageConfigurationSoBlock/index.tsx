@@ -5,6 +5,7 @@ import { Card } from 'src/components'
 import {
   getConfigSoBlock,
   deleteConfigSoBlock,
+  updateStatusConfigSoBlock,
 } from 'src/api/logistic/configuration-approval-so-block'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
@@ -140,6 +141,16 @@ export default function PageConfigurationSloc() {
     }
   }
 
+  const handleChangeStatus = async () => {
+    try {
+      return await updateStatusConfigSoBlock(changeStatusPayload?.company_id, {
+        is_active_company: changeStatusPayload?.is_active_company === 1 ? 0 : 1,
+      })
+    } catch (error) {
+      return false
+    }
+  }
+
   return (
     <>
       <Text variant={'h4'}>Approval SO Block</Text>
@@ -222,6 +233,26 @@ export default function PageConfigurationSloc() {
           setSelectedRow(null)
         }}
         payload={selectedRow}
+      />
+      <Modal
+        title={`Confirm ${
+          changeStatusPayload?.is_active_company === 1 ? 'inactivate' : 'activate'
+        }`}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.is_active_company === 1 ? 'inactivate' : 'activate'
+        } this Approval SO block?`}
+        onOkSuccess={() => {
+          router.push('/logistic/configuration-approval-so-block')
+        }}
+        successContent={(res: any) => `Approval SO block has been successfully 
+          ${changeStatusPayload?.is_active_company === 1 ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
       />
     </>
   )

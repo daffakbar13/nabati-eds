@@ -61,3 +61,16 @@ export const updateConfigSoBlock = async (
   })
   return response.data
 }
+
+export const updateStatusConfigSoBlock = async (
+  company_id: string,
+  params = {},
+): Promise<CommonListResponse<ListApprovalBlock>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/update_status_company/${company_id}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
