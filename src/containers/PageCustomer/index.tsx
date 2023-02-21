@@ -38,18 +38,24 @@ export default function PageCustomer() {
           key: index,
           id: `${item?.id}`,
           name: `${item?.name}`,
+          sales_org_id: item?.details?.[0].sales_org_id,
           sales_org: `${item?.details?.[0].sales_org_id} - ${item?.details?.[0].sales_org_name}`,
           sales_group: `${item?.details?.[0].sales_group_id} - ${item?.details?.[0].sales_group_name}`,
           branch: `${item?.details?.[0].branch_id} - ${item?.details?.[0].branch_name}`,
           channel: `${item?.details?.[0].channel_id} - ${item?.details?.[0].channel_name}`,
           customer_group: `${item?.details?.[0].customer_group_id} - ${item?.details?.[0].customer_group_name}`,
+          status_id: item.status_id,
+          status_sales_org: item.details?.[0].status_sales_org,
           children: item?.details?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
+            id: `${item?.id}`,
+            sales_org_id: itemChild.sales_org_id,
             sales_org: `${itemChild?.sales_org_id} - ${itemChild?.sales_org_name}`,
             sales_group: `${itemChild?.sales_group_id} - ${itemChild?.sales_group_name}`,
             branch: `${itemChild?.branch_id} - ${itemChild?.branch_name}`,
             channel: `${itemChild?.channel_id} - ${itemChild?.channel_name}`,
             customer_group: `${itemChild?.customer_group_id} - ${itemChild?.customer_group_name}`,
+            status_sales_org: itemChild.status_sales_org,
           })),
         }
       }
@@ -57,11 +63,14 @@ export default function PageCustomer() {
         key: index,
         id: `${item?.id}`,
         name: `${item?.name}`,
+        sales_org_id: item?.details?.[0].sales_org_id,
         sales_org: `${item?.details?.[0].sales_org_id} - ${item?.details?.[0].sales_org_name}`,
         sales_group: `${item?.details?.[0].sales_group_id} - ${item?.details?.[0].sales_group_name}`,
         branch: `${item?.details?.[0].branch_id} - ${item?.details?.[0].branch_name}`,
         channel: `${item?.details?.[0].channel_id} - ${item?.details?.[0].channel_name}`,
         customer_group: `${item?.details?.[0].customer_group_id} - ${item?.details?.[0].customer_group_name}`,
+        status_id: item?.status_id,
+        status_sales_org: item.details?.[0].status_sales_org,
       }
     })
     setdataTable(dataApi)
@@ -83,12 +92,7 @@ export default function PageCustomer() {
         </Row>
       </Card>
       <Spacer size={10} />
-      {/* <Card style={{ padding: '16px 20px' }}>
-        <div style={{ overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
-        </div>
-        {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
-      </Card> */}
+
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} dataSource={dataTable} />
