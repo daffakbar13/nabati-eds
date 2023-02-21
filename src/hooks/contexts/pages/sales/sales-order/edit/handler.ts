@@ -18,10 +18,15 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'confirm', payload: undefined })
   }
 
+  function setNewDeliveryID(payload: string) {
+    dispatch({ type: 'newDeliveryID', payload })
+  }
+
   return {
     runProcess,
     stopProcess,
     showConfirm,
     unShowConfirm,
+    setNewDeliveryID,
   }
 }
