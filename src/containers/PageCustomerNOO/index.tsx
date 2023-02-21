@@ -10,6 +10,7 @@ import { getCustomerList } from 'src/api/customer-noo'
 import Pagination from 'src/components/Pagination'
 import { TableBilling } from './columns'
 import { useRouter } from 'next/router'
+import { useFilters } from 'src/hooks'
 
 function showTotal(total: number, range: number[]) {
   const ranges = range.join('-')
@@ -24,6 +25,10 @@ export default function PageCustomer() {
   })
   const titlePage = useTitlePage('list')
 
+  const { filters, setFilters, searchProps } = useFilters(table, 'Search Customer ID', [
+    'customer_id',
+  ])
+
   const router = useRouter()
 
   return (
@@ -32,13 +37,7 @@ export default function PageCustomer() {
       <Spacer size={20} />
       <Card>
         <Row justifyContent="space-between">
-          <Search
-            width="380px"
-            nameIcon="SearchOutlined"
-            placeholder="Search Menu Design Name"
-            colorIcon={colors.grey.regular}
-            onChange={() => {}}
-          />
+          <Search {...searchProps} />
           <Row gap="16px">
             <Button
               size="big"

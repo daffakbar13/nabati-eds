@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
+import { Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { colors } from 'src/configs/colors'
-// import { TableBilling } from 'src/data/tables'
 import useTable from 'src/hooks/useTable'
-import { MoreOutlined } from '@ant-design/icons'
+import { useFilters } from 'src/hooks'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { getCustomerList } from 'src/api/customer'
 import Pagination from 'src/components/Pagination'
 import { columns } from './columns'
-
-// function showTotal(total: number, range: number[]) {
-//   const ranges = range.join('-')
-//   const text = ['Showing', ranges, 'of', total, 'items'].join(' ')
-//   return <p>{text}</p>
-// }
 
 export default function PageCustomer() {
   const [allSloc, setAllScloc] = useState([])
@@ -30,6 +23,11 @@ export default function PageCustomer() {
   })
 
   const titlePage = useTitlePage('list')
+
+  const { filters, setFilters, searchProps } = useFilters(table, 'Search Customer ID', [
+    'id',
+    'name',
+  ])
 
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => {
@@ -82,13 +80,7 @@ export default function PageCustomer() {
       <Spacer size={20} />
       <Card>
         <Row justifyContent="space-between">
-          <Search
-            width="380px"
-            nameIcon="SearchOutlined"
-            placeholder="Search Menu Design Name"
-            colorIcon={colors.grey.regular}
-            onChange={() => {}}
-          />
+          <Search {...searchProps} />
         </Row>
       </Card>
       <Spacer size={10} />

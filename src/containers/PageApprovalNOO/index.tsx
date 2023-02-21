@@ -27,18 +27,7 @@ export default function PageApproval() {
   const { searchProps, filters, setFilters } = useFilters(
     table,
     'Search by Id, Name, Sales Org, Sales Group, Branch, Channel, etc',
-    [
-      'customer_id',
-      'customer_name',
-      'sales_org_id',
-      'sales_org_name',
-      'sales_group_id',
-      'sales_group_name',
-      'channel_id',
-      'channel_name',
-      'customer_group_id',
-      'customer_group_name',
-    ],
+    ['customer_id'],
   )
 
   useEffect(() => {
