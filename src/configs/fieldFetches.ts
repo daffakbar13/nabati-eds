@@ -35,6 +35,9 @@ import {
   getPaymentMethod,
   getSalesOfficeByCompany,
   getTermByCompanyId,
+  getSalesGroupByCompany,
+  getRegion,
+  getTransporationZone,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -568,6 +571,38 @@ export function fieldSalesOrganization(search = '') {
   )
 }
 
+export function fieldSalesGroup(search = '') {
+  return getSalesGroupByCompany().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      // .splice(0, 10)
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldRegion(search = '') {
+  return getRegion().then((result) =>
+    result.data
+      .filter(
+        ({ country_id, name }) =>
+          country_id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      // .splice(0, 10)
+      .map(({ id, country_id, name }) => ({
+        label: [country_id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
 export function fieldSalesmanAll(search: string) {
   return getSalesmanByCompany().then((result) =>
     result.data
@@ -1075,6 +1110,21 @@ export function fieldTermByCompanyId(search: string) {
       )
       .map(({ id, name }) => ({
         label: [id, ' - ', name.split('-').join(' - ')].join(''),
+        value: id,
+      })),
+  )
+}
+
+export function fieldTransportationZone(search = '') {
+  return getTransporationZone().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
         value: id,
       })),
   )

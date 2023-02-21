@@ -13,12 +13,15 @@ import {
   fieldDivisionByCompany,
   fieldPaymentMethod,
   fieldPriceGroupByCompanyId,
+  fieldRegion,
+  fieldSalesGroup,
   fieldSalesmanAll,
   fieldSalesmanGroup,
   fieldSalesOfficeByCompany,
   fieldSalesOrganization,
   fieldSloc,
   fieldTermByCompanyId,
+  fieldTransportationZone,
 } from 'src/configs/fieldFetches'
 import { useSalesQuotationCreateContext } from '../states'
 import { Card } from 'src/components'
@@ -321,7 +324,7 @@ export default function SectionField() {
                     label="Sales Group"
                     required
                     value={dataForm?.sales_group_id}
-                    fetchOptions={fieldSalesmanGroup}
+                    fetchOptions={fieldSalesGroup}
                     onChange={(e: any) => {
                       onChangeForm('sales_group_id', e.value)
                     }}
@@ -652,7 +655,7 @@ export default function SectionField() {
                     label="Sales Region"
                     required
                     value={dataForm?.customer_sales_region_id}
-                    fetchOptions={fieldDistrictByCompany}
+                    fetchOptions={fieldRegion}
                     onChange={(e: any) => {
                       onChangeForm('customer_sales_region_id', e.value)
                     }}
@@ -675,9 +678,199 @@ export default function SectionField() {
                     label="Transportation Zone"
                     required
                     value={dataForm?.transportation_zone_id}
-                    fetchOptions={fieldDistrictByCompany}
+                    fetchOptions={fieldTransportationZone}
                     onChange={(e: any) => {
                       onChangeForm('transportation_zone_id', e.value)
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+
+          <Col span={24}>
+            <Card>
+              <Row gutter={[10, 10]}>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Sold To Customer"
+                    placeholder={'Type here...'}
+                    value={dataForm?.sold_to_customer}
+                    onChange={(e: any) => {
+                      onChangeForm('sold_to_customer', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Bill To Customer"
+                    placeholder={'Type here...'}
+                    value={dataForm?.bill_to_customer}
+                    onChange={(e: any) => {
+                      onChangeForm('bill_to_customer', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Sold To Address"
+                    placeholder={'Type here...'}
+                    value={dataForm?.sold_to_address}
+                    onChange={(e: any) => {
+                      onChangeForm('sold_to_address', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Bill To Address"
+                    placeholder={'Type here...'}
+                    value={dataForm?.bill_to_address}
+                    onChange={(e: any) => {
+                      onChangeForm('bill_to_address', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Sold To Location Latitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.sold_to_loc_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('sold_to_loc_lat', e.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Bill To Location Latitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.bill_to_loc_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('bill_to_loc_lat', e.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Sold To Location Longitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.sold_to_loc_long_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('sold_to_loc_long_lat', e.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Bill To Location Longitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.bill_to_loc_long_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('bill_to_loc_long_lat', e.value)
+                    }}
+                  />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+
+          <Col span={24}>
+            <Card>
+              <Row gutter={[10, 10]}>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Ship To Customer"
+                    placeholder={'Type here...'}
+                    value={dataForm?.ship_to_customer}
+                    onChange={(e: any) => {
+                      onChangeForm('ship_to_customer', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Pay To Customer"
+                    placeholder={'Type here...'}
+                    value={dataForm?.pay_to_customer}
+                    onChange={(e: any) => {
+                      onChangeForm('pay_to_customer', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Ship To Address"
+                    placeholder={'Type here...'}
+                    value={dataForm?.ship_to_address}
+                    onChange={(e: any) => {
+                      onChangeForm('ship_to_address', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Pay To Address"
+                    placeholder={'Type here...'}
+                    value={dataForm?.pay_to_address}
+                    onChange={(e: any) => {
+                      onChangeForm('pay_to_address', e.target?.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Ship To Location Latitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.ship_to_loc_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('ship_to_loc_lat', e.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Pay To Location Latitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.pay_to_loc_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('pay_to_loc_lat', e.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Ship To Location Longitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.ship_to_loc_long_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('ship_to_loc_long_lat', e.value)
+                    }}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DebounceSelect
+                    type="input"
+                    label="Pay To Location Longitude"
+                    placeholder={'Type here...'}
+                    value={dataForm?.pay_to_loc_long_lat}
+                    onChange={(e: any) => {
+                      onChangeForm('pay_to_loc_long_lat', e.value)
                     }}
                   />
                 </Col>
@@ -696,10 +889,8 @@ export default function SectionField() {
                     label="Gatget Note"
                     placeholder={'Type here...'}
                     value={dataForm?.gadget_note}
-                    // fetchOptions={fieldCustomer}
                     onChange={(e: any) => {
                       onChangeForm('gadget_note', e.target?.value)
-                      // setFetching('customer')
                     }}
                   />
                 </Col>
