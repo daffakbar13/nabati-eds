@@ -42,7 +42,7 @@ export const columns = (
     dataIndex: 'action',
     render: (text: string, record: any) => (
       <>
-        {text != '' ? (
+        {text === 'true' ? (
           <Button size="big" variant="tertiary" onClick={() => goToDetail(record)}>
             View Detail
           </Button>

@@ -25,7 +25,9 @@ export const getConfigSoBlock = async (
   return response.data
 }
 
-export const deleteConfigSoBlock = async (params = {}): Promise<CommonListResponse<ListApprovalBlock>> => {
+export const deleteConfigSoBlock = async (
+  params = {},
+): Promise<CommonListResponse<ListApprovalBlock>> => {
   const response = await call({
     method: METHODS.PUT,
     subUrl: `${url}/delete`,
@@ -35,10 +37,25 @@ export const deleteConfigSoBlock = async (params = {}): Promise<CommonListRespon
   return response.data
 }
 
-export const createConfigSoBlock = async (params = {}): Promise<CommonListResponse<ListApprovalBlock>> => {
+export const createConfigSoBlock = async (
+  params = {},
+): Promise<CommonListResponse<ListApprovalBlock>> => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}/create`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const updateConfigSoBlock = async (
+  company_id: string,
+  params = {},
+): Promise<CommonListResponse<ListApprovalBlock>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/update/${company_id}`,
     overrideBaseUrl,
     data: params,
   })

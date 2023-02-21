@@ -10,7 +10,7 @@ import { MinusCircleFilled } from '@ant-design/icons'
 import { addColumn } from 'src/utils/createColumns'
 import { Checkbox } from 'antd'
 
-export const useTableAddItem = () => {
+export const useTableAddItem = (props: any) => {
   const initialValue = {
     config_approval_name: '',
     is_active_config: 1,
@@ -58,6 +58,22 @@ export const useTableAddItem = () => {
 
   function handleChangeData(key: string, value: string | number, index: number) {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
+  }
+
+  function handleChangePayload(
+    approval_name: string,
+    is_config_active: number,
+    is_approve_active: number,
+  ) {
+    setData((old) =>
+      old.map((obj, i) => ({
+        ...obj,
+        ...(approval_name === obj.config_approval_name && {
+          is_active_config: is_config_active,
+          is_approved: is_approve_active,
+        }),
+      })),
+    )
   }
 
   const onCheckAllChange = (e) => {
@@ -110,6 +126,41 @@ export const useTableAddItem = () => {
       }
     }
   }, [data])
+
+  useEffect(() => {
+    if (props?.selectedOrg != '') {
+      if (props?.selectedOrg === props?.dataUpdate?.sales_org_id) {
+        handleChangePayload(
+          props?.dataUpdate?.config_approval_name_initial,
+          props?.dataUpdate?.is_active_config,
+          props?.dataUpdate?.is_approved,
+        )
+        props?.dataUpdate.children
+          .filter(function (item) {
+            return item?.sales_org_id === props?.selectedOrg
+          })
+          .map((item: any, index) => {
+            handleChangePayload(
+              item?.config_approval_name_initial,
+              item?.is_active_config,
+              item?.is_approved,
+            )
+          })
+      } else {
+        props?.dataUpdate.children
+          .filter(function (item) {
+            return item?.sales_org_id === props?.selectedOrg
+          })
+          .map((item: any, index) => {
+            handleChangePayload(
+              item?.config_approval_name_initial,
+              item?.is_active_config,
+              item?.is_approved,
+            )
+          })
+      }
+    }
+  }, [props?.dataUpdate, props?.selectedOrg])
 
   const columns = [
     addColumn({
