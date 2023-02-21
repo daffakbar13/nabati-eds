@@ -28,7 +28,7 @@ interface PayloadCreate {
 export interface StateType {
   dataForm?: PayloadCreate
   tableProduct?: ReturnType<typeof useTableProduct>
-  quotationId?: string
+  quotationId?: any
   confirm?: 'newQuo' | 'draftQuo' | 'cancel'
   optionsOrderType: OptionsType[]
   optionsSalesman: OptionsType[]

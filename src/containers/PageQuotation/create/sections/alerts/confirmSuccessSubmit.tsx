@@ -37,10 +37,8 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {!isEditPage ? 'New' : ''} {' Quotation '}
-          <Typography.Text copyable={{ text: quotationId as string }}>
-            {quotationId}
-          </Typography.Text>
+          {!isEditPage ? 'New' : ''} {' Sales Order '}
+          <Typography.Text copyable={{ text: quotationId.id }}>{quotationId.id}</Typography.Text>
           {' has been'}
         </div>
         <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
@@ -55,14 +53,15 @@ export default function ConfirmSuccessSubmit() {
             router.push(`${PATH.SALES}/quotation${additional}`)
           }}
         >
-          OK
+          Back To List
         </Button>
         <Button
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/sales-order/detail/${quotationId}`)
+            const pathNextProcess = quotationId.is_approval ? 'approval' : 'sales-order'
+            router.push(`${PATH.SALES}/${pathNextProcess}/detail/${quotationId.id}`)
           }}
         >
           Next Process

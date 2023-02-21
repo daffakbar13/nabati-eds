@@ -73,14 +73,14 @@ export default function SectionAction() {
               if (isCreateOrOrderAgain) {
                 createQuotation(dataSubmitted(1))
                   .then((res) => {
+                    runProcess('Wait for submitting Quotation')
                     multipleSubmitQuotation({ order_list: [{ id: res.data.id }] })
                       .then((resp) => {
-                        setQuotationId(resp.data.id)
+                        setQuotationId(resp.data.results[0])
                         showConfirm('newQuo')
                         stopProcess()
                       })
                       .catch(() => stopProcess())
-                    stopProcess()
                   })
                   .catch(() => stopProcess())
               } else {
