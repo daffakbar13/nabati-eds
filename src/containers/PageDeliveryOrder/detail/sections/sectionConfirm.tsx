@@ -1,5 +1,5 @@
 import React from 'react'
-import { ConfirmCancel, ConfirmSuccessCancel } from './alerts'
+import { ConfirmCancel, ConfirmSuccessCancel, ConfirmSuccessSubmit } from './alerts'
 
 interface SectionConfirmProps {
   showConfirm: string
@@ -16,6 +16,7 @@ export default function SectionConfirm(props: SectionConfirmProps) {
         <ConfirmCancel handleProcess={handleProcess} handleShowConfirm={handleShowConfirm} />
       )}
       {showConfirm === 'success-cancel' && <ConfirmSuccessCancel />}
+      {showConfirm === 'success-submit' && <ConfirmSuccessSubmit />}
     </>
   )
 }

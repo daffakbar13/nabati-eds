@@ -6,14 +6,16 @@ import React from 'react'
 import { PATH } from 'src/configs/menus'
 import { Text, Button } from 'pink-lava-ui'
 import { useTitlePage } from 'src/hooks'
+import { manualSubmitDeliveryOrder } from 'src/api/delivery-order'
 
 interface SectionActionProps {
   handleShowConfirm: (confirm: string) => void
+  handleProcess: (process: string) => void
   data: any
 }
 
 export default function SectionAction(props: SectionActionProps) {
-  const { handleShowConfirm, data } = props
+  const { handleShowConfirm, handleProcess, data } = props
   const titlePage = useTitlePage('detail')
   const router = useRouter()
 
@@ -108,7 +110,15 @@ export default function SectionAction(props: SectionActionProps) {
                 size="big"
                 variant="primary"
                 onClick={() => {
-                  handleShowConfirm('cancel')
+                  handleProcess('Wait for submitting Delivery Order')
+                  manualSubmitDeliveryOrder(router.query.id as string)
+                    .then(() => {
+                      handleProcess(undefined)
+                      handleShowConfirm('success-submit')
+                    })
+                    .catch(() => {
+                      handleProcess(undefined)
+                    })
                 }}
               >
                 Submit
@@ -123,7 +133,7 @@ export default function SectionAction(props: SectionActionProps) {
               variant="primary"
               onClick={() => {
                 router.push(
-                  `${PATH.SALES}/delivery-order/create?id=${router.query.id}&status=${router.query.status}`,
+                  `${PATH.SALES}/delivery-order/create`,
                 )
               }}
             >
