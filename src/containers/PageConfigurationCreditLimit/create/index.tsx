@@ -118,6 +118,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     close()
   }
 
+  useEffect(() => {
+    if (isOnEditMode) {
+      form.setFieldsValue({
+        customer: `${payload?.customer_id} - ${payload?.customer_name_id}`,
+        credit_limit_before: payload?.credit_limit_before?.toLocaleString(),
+        credit_limit_after: payload?.credit_limit_after?.toLocaleString(),
+        valid_before: moment(payload?.valid_from),
+        valid_after: moment(payload?.valid_to),
+      })
+    }
+  }, [payload, isOnEditMode])
+
   const content = (
     <>
       <Form
