@@ -95,10 +95,9 @@ export default function SectionAction() {
                   fontWeight: 600,
                   border: '1.5px solid #aaa',
                   borderRadius: 10,
-                  color: data?.customer?.is_active ? 'green' : 'red',
                 }}
               >
-                {data?.customer?.is_active ? 'Active' : 'Inactive'}
+                {data?.status.description === 'Approved' ? 'Completed' : data?.status.description}
               </div>
               <Row gutter={10}>
                 {isStatus('02', '06') && (
