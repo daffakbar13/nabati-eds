@@ -1,66 +1,33 @@
-import { Input, Select, SelectMasterData } from 'src/components'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 
 export const columns = (onTableValuesChange: (opt: any) => void) => [
-  CreateColumns(
-    'No',
-    'id',
-    false,
-    (text: string, record: any, index: number) => index + 1,
-    50,
-    // 50,
-  ),
-
-  CreateColumns(
-    'Item',
-    'item_number',
-    true,
-    (text, rec) => <Input value={text} disabled type="text" label="" />,
-    200,
-  ),
-  CreateColumns(
-    'Qty',
-    'qty',
-    true,
-    (text, rec) => <Input value={text} disabled type="text" label="" />,
-    100,
-  ),
-  CreateColumns(
-    'UoM',
-    'uom_id',
-    true,
-    (text, rec) => <Input value={text} disabled type="text" label="" />,
-    100,
-  ),
-
-  CreateColumns(
-    'Batch',
-    'batch',
-    true,
-    (text, rec, index) => (
-      <Input
-        value={text}
-        disabled
-        type="text"
-        label=""
-        onChange={(e) => onTableValuesChange({ field: 'batch', value: e.target.value, index })}
-      />
-    ),
-    // 300,
-  ),
-  CreateColumns(
-    'Remark',
-    'remark',
-    true,
-    (text, rec, index) => (
-      <Input
-        value={text}
-        disabled
-        type="text"
-        label=""
-        onChange={(e) => onTableValuesChange({ field: 'remark', value: e.target.value, index })}
-      />
-    ),
-    // 300,
-  ),
+  addColumn({
+    title: 'No',
+    render: (text, record, index) => index + 1,
+    fixed: true,
+    width: 55,
+  }),
+  addColumn({
+    title: 'Item',
+    dataIndex: 'item',
+    fixed: true,
+    width: 400,
+  }),
+  addColumn({
+    title: 'Qty',
+    dataIndex: 'qty',
+    render: (text, record, index) => text?.toLocaleString(),
+  }),
+  addColumn({
+    title: 'UoM',
+    dataIndex: 'uom',
+  }),
+  addColumn({
+    title: 'Batch',
+    dataIndex: 'batch',
+  }),
+  addColumn({
+    title: 'Remarks',
+    dataIndex: 'remarks',
+  }),
 ]
