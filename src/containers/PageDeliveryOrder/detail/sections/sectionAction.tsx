@@ -1,4 +1,5 @@
-import { ArrowLeftOutlined } from '@ant-design/icons'
+/* eslint-disable no-unused-vars */
+import { ArrowLeftOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons'
 import { Col, Row } from 'antd'
 import { useRouter } from 'next/router'
 import React from 'react'
@@ -18,6 +19,45 @@ export default function SectionAction(props: SectionActionProps) {
 
   const isStatus = (...value: string[]) => value.includes(data.status)
   const isOrderType = (...value: string[]) => value.includes(data.order_type)
+
+  const moreContent = (
+    <>
+      <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 144 }}>
+        {isStatus('5', '1') && (
+          <Col
+            span={24}
+            onClick={() => {
+              router.push(`${PATH.SALES}/delivery-order/create?id=${router.query.id}`)
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <Row gutter={10}>
+              <Col>
+                <ProfileOutlined />
+              </Col>
+              <Col> Order Again</Col>
+            </Row>
+          </Col>
+        )}
+        {isStatus('1') && (
+          <Col
+            span={24}
+            onClick={() => {
+              router.push(`${PATH.SALES}/delivery-order/edit/${router.query.id}`)
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <Row gutter={10}>
+              <Col>
+                <EditOutlined />
+              </Col>
+              <Col> Edit</Col>
+            </Row>
+          </Col>
+        )}
+      </Row>
+    </>
+  )
 
   return (
     <Row justify="space-between">
@@ -63,9 +103,20 @@ export default function SectionAction(props: SectionActionProps) {
                 </Button>
               </Col>
             )}
+             <Col>
+              <Button
+                size="big"
+                variant="primary"
+                onClick={() => {
+                  handleShowConfirm('cancel')
+                }}
+              >
+                Submit
+              </Button>
+            </Col>
           </>
         )}
-        {isStatus('Complete', 'New') && isOrderType('ZDCC') && (
+        {/* {isStatus('Complete', 'New') && isOrderType('ZDCC') && (
           <Col>
             <Button
               size="big"
@@ -79,7 +130,7 @@ export default function SectionAction(props: SectionActionProps) {
               Order Again
             </Button>
           </Col>
-        )}
+        )} */}
       </Row>
     </Row>
   )
