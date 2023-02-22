@@ -101,7 +101,7 @@ export default function SectionAction() {
                 {data?.customer?.is_active ? 'Active' : 'Inactive'}
               </div>
               <Row gutter={10}>
-                {isStatus('02') && (
+                {isStatus('02', '06') && (
                   <>
                     {/* <Col>
                       <Button
