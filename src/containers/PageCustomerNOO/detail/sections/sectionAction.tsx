@@ -14,11 +14,11 @@ export default function SectionAction() {
   } = useSalesQuotationDetailContext()
   const titlePage = useTitlePage('detail')
   const router = useRouter()
-  const isStatus = (...value: string[]) => value.includes(data?.status?.id)
+  const isStatus = (...value: string[]) => value.includes(data?.status_id)
   // const isStatus = data?.status?.id
 
   // STATUS 00 WAIT APPROVAL, 01 APPROVED 02 = REJECT, 06 DRAFT
-  // console.log(data)
+  console.log(data)
   return (
     <>
       <Row justify="space-between">

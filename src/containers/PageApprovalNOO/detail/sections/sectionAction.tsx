@@ -149,7 +149,7 @@ export default function SectionAction() {
             setProccessing('Wait for rejecting')
             multipleSubmitApprovalNOO(
               { id: data?.bill_to_customer?.bill_to_customer_id },
-              { status_approved_id: '01', rejecet_reason_id: reason },
+              { status_approved_id: '02', rejecet_reason_id: reason },
             )
               .then(() => {
                 setShowConfirm('success-reject')
