@@ -15,6 +15,7 @@ const subUrl = {
   getCustomerByCompany: 'v1/master/get-customer/PP01',
   getCustomerList: 'v1/master/list/customer',
   getSalesOrgByCompany: 'v1/master/get-sales-org/PP01',
+  getSalesGroupByCompany: 'v1/master/get-sales-group/PP01',
   getSalesOfficeCompany: 'v1/master/get-sales-office',
   getSalesmanGroupByCompany: '/v1/master/get-salesman-group/PP01',
   getSalesmanByCompany: 'v1/master/get-salesman/PP01',
@@ -48,6 +49,8 @@ const subUrl = {
   getDivisionByCompanyId: 'v1/master/get-division',
   getDistrictByCompanyId: 'v1/master/get-district',
   getProductConversionByProductId: 'v1/master/get-product-conversion/PP01',
+  getRegion: '/v1/master/get-region',
+  getTransporationZone: '/v1/master/get-transportation-zone/PP01/ID',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -110,6 +113,16 @@ export const getSalesOrgByCompany = async (): Promise<CommonDetailResponse<any>>
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getSalesOrgByCompany,
+  })
+
+  return response.data
+}
+
+export const getSalesGroupByCompany = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getSalesGroupByCompany,
   })
 
   return response.data
@@ -520,6 +533,26 @@ export const getProductConversionByProductId = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${subUrl.getProductConversionByProductId}/${productId}`,
+  })
+
+  return response.data
+}
+
+export const getRegion = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getRegion,
+  })
+
+  return response.data
+}
+
+export const getTransporationZone = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getTransporationZone,
   })
 
   return response.data
