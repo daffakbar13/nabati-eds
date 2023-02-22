@@ -64,7 +64,12 @@ export default function DetailStockOpname() {
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
             <div style={{ display: 'flex' }}>
-              <TaggedStatus status={details.status} size="h5" />
+              <TaggedStatus
+                status={
+                  details.status === 'Wait Approval Opname' ? 'Wait For Approval' : details.status
+                }
+                size="h5"
+              />
 
               {details?.status && details?.status === 'Pending' && (
                 <div
@@ -108,12 +113,16 @@ export default function DetailStockOpname() {
           <Card>
             <List loading={loading}>
               <List.Item
+                label="Movement Type"
+                value={`${details?.branch_id} - ${toTitleCase(details?.branch_name)}`}
+              />
+              <List.Item
                 label="Branch"
-                value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
+                value={`${details?.branch_id} - ${toTitleCase(details?.branch_name)}`}
               />
               <List.Item
                 label="SLoc"
-                value={`${details?.from_sloc}-${toTitleCase(details?.from_sloc_name)}`}
+                value={`${details?.sloc_id} - ${toTitleCase(details?.sloc_name)}`}
               />
               <List.Item label="" value={''} />
 
@@ -128,8 +137,12 @@ export default function DetailStockOpname() {
               <List.Item label="Modified By" value={details?.modified_by} />
             </List>
             <Divider />
-            <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-              <Table columns={columns} dataSource={details?.items || []} />
+            <div style={{ overflow: 'scroll' }}>
+              <Table
+                scroll={{ x: 'max-content', y: 600 }}
+                columns={columns}
+                dataSource={details?.items || []}
+              />
             </div>
           </Card>
 
