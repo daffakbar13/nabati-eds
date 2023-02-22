@@ -9,6 +9,7 @@ import { fieldCustomer } from 'src/configs/fieldFetches'
 import { createCreditLimit } from 'src/api/logistic/config-credit-limit'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { ICExclamation } from 'src/assets'
 
 interface FormData {
   customer_id: string
@@ -132,6 +133,23 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const content = (
     <>
+      {payload?.status === '02' && (
+        <div
+          key={1}
+          style={{
+            marginTop: 10,
+            color: '#FFF',
+            background: '#b40e0e',
+            borderRadius: 8,
+            padding: '8px 16px',
+            display: 'grid',
+            gridTemplateColumns: '30px 1fr',
+          }}
+        >
+          <ICExclamation />
+          <p>{payload?.reject_reason || '-'}</p>
+        </div>
+      )}
       <Form
         form={form}
         labelCol={{ span: 24 }}
