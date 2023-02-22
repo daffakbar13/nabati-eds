@@ -97,7 +97,7 @@ export default function SectionAction() {
                   borderRadius: 10,
                 }}
               >
-                {data?.status.description === 'Approved' ? 'Completed' : data?.status.description}
+                {data?.status?.description === 'Approved' ? 'Completed' : data?.status?.description}
               </div>
               <Row gutter={10}>
                 {isStatus('02', '06') && (
