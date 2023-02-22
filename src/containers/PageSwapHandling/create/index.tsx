@@ -9,6 +9,7 @@ import { columns } from './columns'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldRefNumberSwapHandling } from 'src/configs/fieldFetches'
 import { getDeliveryOrderDetail } from 'src/api/delivery-order'
+import useDetail from 'src/hooks/useDetail'
 
 const { Label, LabelRequired } = Text
 
@@ -50,6 +51,7 @@ export default function CreateGoodsReceipt() {
   const [loading, setLoading] = useState(false)
   const [dataForm, setDataForm] = useState<DataFormTypes>()
   const [dataDisabled, setDataDisabled] = useState<DataDisabledTypes>()
+  const [referenceNumber, setReferenceNumber] = useState('')
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -117,6 +119,29 @@ export default function CreateGoodsReceipt() {
     )
   }
 
+  useEffect(() => {
+    if (referenceNumber !== '') {
+      setDataDisabled({
+        movement_type_id: '311 - TR Transfer in SLoc',
+        from_sloc: 'TR00 - Transit',
+        to_sloc: 'GS00 - Good Stock',
+      })
+      getDeliveryOrderDetail({ id: referenceNumber }).then((results) =>
+        setTableData(results?.data?.delivery_items),
+      )
+    } else {
+      setDataDisabled({
+        movement_type_id: '',
+        from_sloc: '',
+        to_sloc: '',
+      })
+      setTableData([])
+    }
+  }, [referenceNumber])
+
+  useEffect(() => {
+    console.log('hehey', tableData)
+  }, [tableData])
   return (
     <Col>
       <Title variant={'h4'}>Create New Swap Handling</Title>
@@ -196,7 +221,8 @@ export default function CreateGoodsReceipt() {
                   required
                   fetchOptions={(search) => fieldRefNumberSwapHandling(search, dataForm.branch_id)}
                   onChange={(val: any) => {
-                    onChangeForm('reference_number', val.label.split(' - ')[0])
+                    onChangeForm('reference_number', val.value)
+                    setReferenceNumber(val.value)
                   }}
                 />
               </Form.Item>

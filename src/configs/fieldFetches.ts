@@ -893,6 +893,12 @@ export function fieldRefNumberSwapHandling(search: string, branch_id = '') {
         from_value: `%${search}%`,
         data_type: 'S',
       },
+      {
+        field: 'delivery_type_id',
+        option: 'EQ',
+        from_value: `ZDW1`,
+        data_type: 'S',
+      },
     ],
     limit: 20,
     page: 1,
