@@ -41,7 +41,9 @@ export default function ConfirmSuccessSubmit() {
           <Typography.Text copyable={{ text: customerId as string }}>{customerId}</Typography.Text>
           {' has been'}
         </div>
-        <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
+        <div>
+          successfully {isEditPage ? 'updated' : confirm === 'newQuo' ? 'created' : 'saved'}
+        </div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -50,8 +52,9 @@ export default function ConfirmSuccessSubmit() {
           variant="primary"
           onClick={() => {
             // const additional = isFromDetail ? `/detail/${router.query.id}` : ''
-            // router.push(`${PATH.SALES}/customer-noo${additional}`)
-            router.push(`${PATH.SALES}/quotation/create`)
+            !isEditPage
+              ? router.push(`${PATH.SALES}/quotation/create`)
+              : router.push(`${PATH.SALES}/customer-noo}`)
           }}
         >
           OK
