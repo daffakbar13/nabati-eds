@@ -31,15 +31,17 @@ export default function PageApproval() {
   )
 
   useEffect(() => {
-    setFilters([
-      {
-        field: 'ecn.status_id',
-        option: 'EQ',
-        from_value: statusButton,
-        data_type: 'S',
-      },
-    ])
-  }, [statusButton])
+    if (table.state.data.length > 0) {
+      setFilters([
+        {
+          field: 'ecn.status_id',
+          option: 'EQ',
+          from_value: statusButton,
+          data_type: 'S',
+        },
+      ])
+    }
+  }, [table.state.data.length, statusButton])
 
   useEffect(() => {
     if (table?.state?.body?.filters.length === 0) {
