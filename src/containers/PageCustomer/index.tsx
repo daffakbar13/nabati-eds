@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Col, Row, Search, Spacer, Text, Table } from 'pink-lava-ui'
-import { Card } from 'src/components'
+import { Card, SmartFilter } from 'src/components'
 import { colors } from 'src/configs/colors'
 import useTable from 'src/hooks/useTable'
 import { useFilters } from 'src/hooks'
@@ -8,11 +8,11 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { getCustomerList } from 'src/api/customer'
 import Pagination from 'src/components/Pagination'
 import { columns } from './columns'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldBranchAll, fieldSalesGroup, fieldSalesOrganization } from 'src/configs/fieldFetches'
 
 export default function PageCustomer() {
   const [allSloc, setAllScloc] = useState([])
-  const [branchfrom, setBranchFrom] = useState('')
-  const [branchTo, setBranchTo] = useState('')
   const [dataTable, setdataTable] = useState([])
   const data = []
 
@@ -79,8 +79,34 @@ export default function PageCustomer() {
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
       <Card>
-        <Row justifyContent="space-between">
+        <Row gap="16px">
           <Search {...searchProps} />
+          <SmartFilter onOk={setFilters}>
+            <SmartFilter.Field
+              field="sales_org_id"
+              dataType="S"
+              label="Sales Org."
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldSalesOrganization} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="branch_id"
+              dataType="S"
+              label="Branch"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+            </SmartFilter.Field>
+            <SmartFilter.Field
+              field="sales_group_id"
+              dataType="S"
+              label="Sales Group"
+              options={['EQ', 'NE', 'BT', 'NB']}
+            >
+              <DebounceSelect type="select" fetchOptions={fieldSalesGroup} />
+            </SmartFilter.Field>
+          </SmartFilter>
         </Row>
       </Card>
       <Spacer size={10} />
