@@ -113,3 +113,20 @@ export const updateCustomerStatus = async (customerID: string, status: number) =
   })
   return response.data
 }
+
+export const updateSalesOrgCustomerStatus = async (
+  customerID: string,
+  salesOrgId: string,
+  status: number,
+) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `v1/master/update/customer-sales-org-status`,
+    data: {
+      customer_id: customerID,
+      sales_org_id: salesOrgId,
+      status: status,
+    },
+  })
+  return response.data
+}

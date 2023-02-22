@@ -3,7 +3,7 @@ import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { useRouter } from 'next/router'
 import { useSalesQuotationCreateContext } from '../states'
-import { createCustomerNOO } from 'src/api/customer-noo'
+import { createCustomerNOO, updateCustomerNOO } from 'src/api/customer-noo'
 
 export default function SectionAction() {
   const {
@@ -37,12 +37,20 @@ export default function SectionAction() {
             disabled={!canSave}
             onClick={() => {
               if (canSave) {
-                runProcess('Wait for save Quotation')
+                runProcess('Wait for save Customer NOO')
                 if (isCreateOrOrderAgain) {
                   createCustomerNOO(dataSubmitted(6))
                     .then((response) => {
                       setCustomerId(response.data.customer_id)
                       showConfirm('draftQuo')
+                      stopProcess()
+                    })
+                    .catch(() => stopProcess())
+                } else if (isEditPage) {
+                  updateCustomerNOO(dataSubmitted(6), router.query.id as string)
+                    .then((response) => {
+                      setCustomerId(response.data.customer_id)
+                      showConfirm('newQuo')
                       stopProcess()
                     })
                     .catch(() => stopProcess())
@@ -70,9 +78,17 @@ export default function SectionAction() {
           disabled={!canSave}
           onClick={() => {
             if (canSave) {
-              runProcess('Wait for save Quotation')
+              runProcess('Wait for save Customer NOO')
               if (isCreateOrOrderAgain) {
                 createCustomerNOO(dataSubmitted(1))
+                  .then((response) => {
+                    setCustomerId(response.data.customer_id)
+                    showConfirm('newQuo')
+                    stopProcess()
+                  })
+                  .catch(() => stopProcess())
+              } else if (isEditPage) {
+                updateCustomerNOO(dataSubmitted(1), router.query.id as string)
                   .then((response) => {
                     setCustomerId(response.data.customer_id)
                     showConfirm('newQuo')

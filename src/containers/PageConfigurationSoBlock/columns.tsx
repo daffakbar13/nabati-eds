@@ -13,7 +13,7 @@ export const columns = (
         {record.action === 'true' ? (
           <>
             <Switch
-              checked={record.is_active_config === 1 ? true : false}
+              checked={record.is_active_company === 1 ? true : false}
               onChange={(bool: boolean) => onClickSwitch(bool, record)}
             />
             <span style={{ marginLeft: 10 }}>{`${text || ''} - ${record.company_name || ''}`}</span>
@@ -42,7 +42,7 @@ export const columns = (
     dataIndex: 'action',
     render: (text: string, record: any) => (
       <>
-        {text != '' ? (
+        {text === 'true' ? (
           <Button size="big" variant="tertiary" onClick={() => goToDetail(record)}>
             View Detail
           </Button>

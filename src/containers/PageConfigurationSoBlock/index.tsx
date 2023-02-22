@@ -5,6 +5,7 @@ import { Card } from 'src/components'
 import {
   getConfigSoBlock,
   deleteConfigSoBlock,
+  updateStatusConfigSoBlock,
 } from 'src/api/logistic/configuration-approval-so-block'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
@@ -13,6 +14,7 @@ import { Modal } from 'src/components'
 import { Popover, Typography } from 'antd'
 import Pagination from 'src/components/Pagination'
 import CreateModal from './create'
+import EditModal from './edit'
 
 export default function PageConfigurationSloc() {
   const router = useRouter()
@@ -25,10 +27,11 @@ export default function PageConfigurationSloc() {
   const data = []
 
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
-    setShowCreateModal(true)
+    setShowEditModal(true)
   }
 
   const onClickSwitch = (a: boolean, rec: any) => {
@@ -65,18 +68,34 @@ export default function PageConfigurationSloc() {
           company_id: item.company_id,
           company_name: item.company_name,
           sales_org_id: item?.group_by_company?.[0].sales_org_id,
-          config_approval_name: item?.group_by_company?.[0].config_approval_name,
+          config_approval_name: item?.group_by_company?.[0].config_approval_name
+            ?.replaceAll('_', ' ')
+            .toLowerCase()
+            .replace(/\b[a-z]/g, function (letter) {
+              return letter.toUpperCase()
+            }),
+          config_approval_name_initial:
+            item?.group_by_company?.[0].config_approval_name?.replaceAll('_', ' '),
           is_active_company: item?.group_by_company?.[0].is_active_company,
           is_active_sales_org: item?.group_by_company?.[0].is_active_sales_org,
           is_approved: item?.group_by_company?.[0].is_approved,
           is_active_config: item?.group_by_company?.[0].is_active_config,
+          optionSales: [
+            ...new Set(item?.group_by_company?.slice(1).map((item) => item.sales_org_id)),
+          ],
           action: 'true',
           children: item?.group_by_company?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
             company_id: item.company_id,
             company_name: item.company_name,
             sales_org_id: itemChild?.sales_org_id,
-            config_approval_name: itemChild?.config_approval_name,
+            config_approval_name: itemChild?.config_approval_name
+              ?.replaceAll('_', ' ')
+              .toLowerCase()
+              .replace(/\b[a-z]/g, function (letter) {
+                return letter.toUpperCase()
+              }),
+            config_approval_name_initial: itemChild?.config_approval_name?.replaceAll('_', ' '),
             is_active_company: itemChild?.is_active_company,
             is_active_sales_org: itemChild?.is_active_sales_org,
             is_approved: itemChild?.is_approved,
@@ -90,11 +109,19 @@ export default function PageConfigurationSloc() {
           company_id: item.company_id,
           company_name: item.company_name,
           sales_org_id: item?.group_by_company?.[0].sales_org_id,
-          config_approval_name: item?.group_by_company?.[0].config_approval_name,
+          config_approval_name: item?.group_by_company?.[0].config_approval_name
+            ?.replaceAll('_', ' ')
+            .toLowerCase()
+            .replace(/\b[a-z]/g, function (letter) {
+              return letter.toUpperCase()
+            }),
+          config_approval_name_initial:
+            item?.group_by_company?.[0].config_approval_name?.replaceAll('_', ' '),
           is_active_company: item?.group_by_company?.[0].is_active_company,
           is_active_sales_org: item?.group_by_company?.[0].is_active_sales_org,
           is_approved: item?.group_by_company?.[0].is_approved,
           is_active_config: item?.group_by_company?.[0].is_active_config,
+          optionSales: [item?.group_by_company?.[0].sales_org_id],
           action: 'true',
         }
       }
@@ -108,6 +135,16 @@ export default function PageConfigurationSloc() {
         company_ids: table.state.selected.map((item: any, index) => ({
           company_id: item,
         })),
+      })
+    } catch (error) {
+      return false
+    }
+  }
+
+  const handleChangeStatus = async () => {
+    try {
+      return await updateStatusConfigSoBlock(changeStatusPayload?.company_id, {
+        is_active_company: changeStatusPayload?.is_active_company === 1 ? 0 : 1,
       })
     } catch (error) {
       return false
@@ -188,7 +225,34 @@ export default function PageConfigurationSloc() {
           setShowCreateModal(false)
           setSelectedRow(null)
         }}
+      />
+      <EditModal
+        visible={showEditModal}
+        close={() => {
+          setShowEditModal(false)
+          setSelectedRow(null)
+        }}
         payload={selectedRow}
+      />
+      <Modal
+        title={`Confirm ${
+          changeStatusPayload?.is_active_company === 1 ? 'inactivate' : 'activate'
+        }`}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.is_active_company === 1 ? 'inactivate' : 'activate'
+        } this Approval SO block?`}
+        onOkSuccess={() => {
+          router.push('/logistic/configuration-approval-so-block')
+        }}
+        successContent={(res: any) => `Approval SO block has been successfully 
+          ${changeStatusPayload?.is_active_company === 1 ? 'inactivated' : 'activated'}`}
+        successOkText="OK"
+        width={432}
       />
     </>
   )

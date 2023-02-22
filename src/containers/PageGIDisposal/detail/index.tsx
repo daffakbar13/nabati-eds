@@ -1,17 +1,18 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { Col } from 'antd'
+import { useEffect, useState, useRef } from 'react'
+import { Col, Tabs } from 'antd'
 import { Button, Spacer, Table, Text } from 'pink-lava-ui'
 import { Card, GoBackArrow, Modal, Loader } from 'src/components'
-import dateFormat from 'src/utils/dateFormat'
-import List from 'src/components/List'
+
 import { getDetailBadStock, updateStatusBadStock } from 'src/api/logistic/bad-stock'
 import { PATH } from 'src/configs/menus'
-import { toTitleCase } from 'src/utils/caseConverter'
-import { columns } from './columns'
 import TaggedStatus from 'src/components/TaggedStatus'
+import DocumentHeader from './tabs/DocumentHeader'
+import BAP from './tabs/BAP'
 
 export default function PageQuotationDetail() {
+  const componentRef = useRef()
+  const [currentTab, setCurrentTab] = useState('1')
   const [loading, setLoading] = useState(false)
   const [details, setDetails] = useState(null)
   const router = useRouter()
@@ -45,6 +46,11 @@ export default function PageQuotationDetail() {
     }
     fetchData()
   }, [id])
+
+  const AllTabs = [
+    { label: 'Document Header', key: '1' },
+    { label: 'BAP', key: '2' },
+  ]
 
   return (
     <>
@@ -90,38 +96,31 @@ export default function PageQuotationDetail() {
             </div>
           </Card>
           <Card>
-            <List loading={loading}>
-              <List.Item
-                label="Reservation Number"
-                value={`${details?.movement_type_id}-${toTitleCase(details?.movement_type_name)}`}
+            {details?.status_name === 'Approved' && (
+              <Tabs
+                defaultActiveKey="1"
+                onChange={(e) => {
+                  setCurrentTab(e)
+                }}
+                items={AllTabs}
               />
-              <List.Item
-                label="Movement Type"
-                value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
-              />
-              <List.Item
-                label="Branch"
-                value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
-              />
-              <List.Item
-                label="SLoc"
-                value={`${details?.sloc_id}-${toTitleCase(details?.sloc_name)}`}
-              />
-
-              <List.Item label="Requirement Date" value={dateFormat(details?.document_date)} />
-              <List.Item label="Header Text" value={details?.header_text} />
-              <List.Item label="" value={''} />
-              <List.Item label="" value={''} />
-
-              <List.Item label="Created On" value={dateFormat(details?.created_at)} />
-              <List.Item label="Created By" value={details?.created_by} />
-              <List.Item label="Modified On" value={dateFormat(details?.modified_at)} />
-              <List.Item label="Modified By" value={details?.modified_by} />
-            </List>
-            <div style={{ borderTop: '1px solid #AAAAAA', margin: '32px auto 0' }} />
-            <div style={{ overflow: 'scroll', marginTop: 16 }}>
-              <Table columns={columns} dataSource={details?.item || []} />
-            </div>
+            )}
+            {currentTab === '1' ? (
+              <DocumentHeader details={details} loading={loading} />
+            ) : (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  backgroundColor: 'grey',
+                  padding: '15px 0',
+                  maxHeight: 1122.5,
+                  overflow: 'scroll',
+                }}
+              >
+                <div ref={componentRef}>{currentTab === '2' && <BAP data={details} />}</div>
+              </div>
+            )}
           </Card>
 
           <Modal

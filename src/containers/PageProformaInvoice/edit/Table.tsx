@@ -112,26 +112,6 @@ export default function TableEditProformaInvoice() {
           scroll={{ x: 'max-content' }}
         />
       </div>
-      <Spacer size={30} />
-      {dataDeliveryOrder.length > 0 && (
-        <Row>
-          <Col span={12} offset={12}>
-            <Total
-              currency="Total"
-              label="Quantity"
-              value={dataDeliveryOrder.reduce((a, item) => (a = a + item.qty), 0)}
-            />
-          </Col>
-          <Spacer size={10} />
-          <Col span={12} offset={12}>
-            <Total
-              currency="Total"
-              label="Revised"
-              value={dataDeliveryOrder.reduce((a, item) => (a = a + item.revised_qty), 0)}
-            />
-          </Col>
-        </Row>
-      )}
     </>
   )
 }

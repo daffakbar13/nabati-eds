@@ -1,12 +1,10 @@
 import { useRouter } from 'next/router'
-import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer, Text, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { InputNumber, Form, Divider } from 'antd'
-import { fieldCompanyList, fieldSalesOrgCompanyDynamic } from 'src/configs/fieldFetches'
-import { createConfigSoBlock } from 'src/api/logistic/configuration-approval-so-block'
+import { Form, Divider } from 'antd'
+import { updateConfigSoBlock } from 'src/api/logistic/configuration-approval-so-block'
 import { PATH } from 'src/configs/menus'
 import { useTableAddItem } from './useTableAddItem'
 
@@ -16,20 +14,21 @@ interface FormData {
   is_active_company: number
 }
 
-export default function CreateModal({ visible = false, close = () => {} }) {
+export default function CreateModal({ visible = false, close = () => {}, payload }) {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
-  const [company, setCompany] = useState('PP01')
+  const [optionsSalesOrg, setOptionsSalesOrg] = useState([])
+  const [selectedSalesOrg, setSelectedSalesOrg] = useState('')
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
-  const tableAddItems = useTableAddItem()
+  const tableAddItems = useTableAddItem({ dataUpdate: payload, selectedOrg: selectedSalesOrg })
+
+  const isOnEditMode = !!payload
 
   const initialValue = {
-    company_id: 'PP01',
     sales_org_id: 'PID1',
-    is_active_company: 1,
     list_config: tableAddItems.data,
   }
 
@@ -42,10 +41,10 @@ export default function CreateModal({ visible = false, close = () => {} }) {
     setConfirmModal(true)
   }
 
-  const doCreate = async (reqBody: any) => {
+  const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSoBlock(reqBody)
+      const res = updateConfigSoBlock(payload?.company_id, reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -56,7 +55,8 @@ export default function CreateModal({ visible = false, close = () => {} }) {
   const handleSubmit = async () => {
     setDataForm(undefined)
     const reqBody = { ...initialValue, ...dataForm }
-    return doCreate(reqBody)
+
+    return doUpdate(reqBody)
   }
 
   const handleCancel = () => {
@@ -65,12 +65,11 @@ export default function CreateModal({ visible = false, close = () => {} }) {
     } else {
       setDataForm(undefined)
       form.setFieldsValue({
-        customer: undefined,
-        credit_limit_before: undefined,
-        credit_limit_after: undefined,
-        valid_before: undefined,
-        valid_after: undefined,
+        company: undefined,
+        sales_org_id: undefined,
       })
+      setShowConfirmModalCancel(false)
+      setSelectedSalesOrg('')
       close()
     }
   }
@@ -78,15 +77,23 @@ export default function CreateModal({ visible = false, close = () => {} }) {
   const handleOkCancelConfirm = () => {
     setDataForm(undefined)
     form.setFieldsValue({
-      customer: undefined,
-      credit_limit_before: undefined,
-      credit_limit_after: undefined,
-      valid_before: undefined,
-      valid_after: undefined,
+      company: undefined,
+      sales_org_id: undefined,
     })
     setShowConfirmModalCancel(false)
+    setSelectedSalesOrg('')
     close()
   }
+
+  useEffect(() => {
+    const salesOptions = payload?.optionSales.map((item: any, index) => {
+      return {
+        value: item,
+        label: item,
+      }
+    })
+    setOptionsSalesOrg(salesOptions)
+  }, [payload])
 
   const content = (
     <>
@@ -112,17 +119,9 @@ export default function CreateModal({ visible = false, close = () => {} }) {
             </Text>
           }
           rules={[{ required: true }]}
+          initialValue={`${payload?.company_id} - ${payload?.company_name}`}
         >
-          <DebounceSelect
-            required
-            type="select"
-            placeholder="e.g Company"
-            fetchOptions={fieldCompanyList}
-            onChange={(val: any) => {
-              onChangeForm('company_id', val.value.split(' - ')[0])
-              setCompany(val.value.split(' - ')[0])
-            }}
-          />
+          <DebounceSelect required type="select" placeholder="e.g Company" disabled />
         </Form.Item>
         <Spacer size={10} />
         <Form.Item
@@ -143,14 +142,19 @@ export default function CreateModal({ visible = false, close = () => {} }) {
             required
             type="select"
             placeholder="e.g Sales Org. ID"
-            fetchOptions={(search) => fieldSalesOrgCompanyDynamic(search, company)}
+            options={optionsSalesOrg}
             onChange={(val: any) => {
-              onChangeForm('sales_org_id', val.value.split(' - ')[0])
+              onChangeForm('sales_org_id', val.value)
+              setSelectedSalesOrg(val.value)
             }}
           />
         </Form.Item>
-        <Divider />
-        <Table columns={tableAddItems.columns} data={tableAddItems.data} />
+        {selectedSalesOrg != '' && (
+          <>
+            <Divider />
+            <Table columns={tableAddItems.columns} data={tableAddItems.data} />
+          </>
+        )}
       </Form>
     </>
   )
@@ -158,14 +162,14 @@ export default function CreateModal({ visible = false, close = () => {} }) {
   return (
     <>
       <Modal
-        title={'Create Approval SO Block'}
+        title={'View Approval SO Block'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
         content={content}
         loading={loading}
         cancelText="Cancel"
-        okText={'Create'}
+        okText={isOnEditMode ? 'Update' : 'Create'}
       />
       <Modal
         title={'Confirm Cancellation'}
@@ -179,19 +183,19 @@ export default function CreateModal({ visible = false, close = () => {} }) {
         width={432}
       />
       <Modal
-        title={'Confirm Submit'}
+        title={'Confirm Edit'}
         open={showConfirmModal}
         onOk={handleSubmit}
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content={'Are you sure want to submit approval SO block?'}
+        content={'Are you sure want to update approval SO block?'}
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.push(`${PATH.LOGISTIC}/configuration-approval-so-block`)
         }}
-        successContent={(res: any) => 'approval SO block has been successfully created'}
+        successContent={(res: any) => 'approval SO block has been successfully updated'}
         successOkText="OK"
         width={432}
       />

@@ -51,7 +51,7 @@ export const TableBilling = [
       `${record.customer_group_id || ''} - ${record.customer_group_name || ''}`,
   ),
   CreateColumns('Status', 'status_name', false, (status_name) => (
-    <TaggedStatus status={status_name} />
+    <TaggedStatus status={status_name === 'Approved' ? 'Complete' : status_name} />
   )),
   CreateColumns('Action', 'customer_id', false, (link: string) => <Action link={link} />),
 ]

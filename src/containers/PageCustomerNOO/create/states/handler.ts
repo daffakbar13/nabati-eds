@@ -274,12 +274,27 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
 
   function getDataFromDetail(table: ReturnType<typeof useTableProduct>) {
     const now = new Date().toISOString()
-    if (router.query.id && optionsOrderType?.length > 0 && !table.state.isLoading) {
+    // if (router.query.id && optionsOrderType?.length > 0 && !table.state.isLoading) {
+    if (router.query.id) {
+      console.log('CALL THIS')
       runProcess('Wait for get data')
       getDetailCustomerNOO({ company_id: '', id: router.query.id as string })
         .then((response) => {
           const { data } = response
-          const { customer_sales_data, customer, salesman, status, country, customer_group } = data
+          console.log(data)
+          const {
+            customer_sales_data,
+            customer,
+            salesman,
+            status,
+            country,
+            customer_group,
+            other,
+            sold_to_customer,
+            ship_to_customer,
+            bill_to_customer,
+            pay_to_customer,
+          } = data
 
           setDataForm({
             status_id: status.id,
@@ -289,43 +304,81 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
             customer_ktp: customer.ktp,
             customer_phone: customer.phone,
             customer_email: customer.email,
+
             customer_group_id: customer_group.customer_group_id,
             customer_group_1_id: customer_group.customer_group_1_id,
             customer_group_2_id: customer_group.customer_group_2_id,
             customer_group_3_id: customer_group.customer_group_3_id,
             customer_group_4_id: customer_group.customer_group_4_id,
             customer_group_5_id: customer_group.customer_group_5_id,
+
             company_id: customer_sales_data.company_id,
-            sales_org_id: customer_sales_data.sales_org_id,
-            branch_id: customer_sales_data.branch_id,
-            sloc_id: customer_sales_data.sloc_id,
-            salesman_id: salesman[0]?.salesman_id,
             sales_office_id: customer_sales_data.sales_offfice_id,
+            sales_org_id: customer_sales_data.sales_org_id,
             sales_divission_id: customer_sales_data.division_id,
+            branch_id: customer_sales_data.branch_id,
             sales_channel_id: customer_sales_data.channel_id,
+            sloc_id: customer_sales_data.sloc_id,
             sales_group_id: customer_sales_data.sales_group_id,
+            salesman_id: salesman[0]?.salesman_id,
+
             term_id: customer_sales_data.term_id,
+            tax_subject: customer_sales_data.tax_subject,
             method_payment_id: customer_sales_data.payment_method_id,
+            tax_npwp: customer_sales_data.tax_reg_num,
             is_blocked: customer_sales_data.is_blocked,
+            risk_class: customer_sales_data.risk_class_id,
             credit_limit_id: customer_sales_data.credit_limit,
             credit_limit_valid_to: customer_sales_data.credit_limit_valid_to,
             price_group_id: customer_sales_data.price_group_id,
-            // tax_number_sppkp,
+            tax_number_sppkp: customer_sales_data.taxable,
             price_list: customer_sales_data.price_list_id,
             pkp_name: customer_sales_data.pkp_name,
             pkp_address_1: customer_sales_data.address_pkp1,
             pkp_address_2: customer_sales_data.address_pkp2,
             pkp_address_city: customer_sales_data.city_pkp,
-            tax_subject: customer_sales_data.tax_subject,
             // tax_npwp,
-            risk_class: customer_sales_data.risk_class_id,
             rules: customer_sales_data.rules,
             check_rule: customer_sales_data.check_rule_id,
             inco_1: customer_sales_data.incoterm1,
             inco_2: customer_sales_data.incoterm2,
+
+            // LOCATION
             customer_address: customer.address,
+            customer_city: customer.city,
+            lattitude: customer_sales_data.lattitude,
+            long_lattitude: customer_sales_data.long_lattitude,
+            sales_disctrict_id: customer_sales_data.sales_disctrict_id,
             customer_sales_region_id: customer.region_id,
             transportation_zone_id: customer.transportation_zone_id,
+
+            // SOLD TO CUSTOMER
+            sold_to_address: sold_to_customer.sold_to_address,
+            sold_to_customer: sold_to_customer.sold_to_customer_id,
+            sold_to_loc_lat: sold_to_customer.sold_to_loc_lat,
+            sold_to_loc_long_lat: sold_to_customer.sold_to_loc_long_lat,
+
+            // BILL TO CUSTOMER
+            bill_to_address: bill_to_customer.bill_to_address,
+            bill_to_customer: bill_to_customer.bill_to_customer_id,
+            bill_to_loc_lat: bill_to_customer.bill_to_loc_lat,
+            bill_to_loc_long_lat: bill_to_customer.bill_to_loc_long_lat,
+
+            // SHIP TO CUSTOMER
+            ship_to_address: ship_to_customer.ship_to_address,
+            ship_to_customer: ship_to_customer.ship_to_customer_id,
+            ship_to_loc_lat: ship_to_customer.ship_to_loc_lat,
+            ship_to_loc_long_lat: ship_to_customer.ship_to_loc_long_lat,
+
+            // PAY TO CUSTOMER
+            pay_to_address: pay_to_customer.pay_to_address,
+            pay_to_customer: pay_to_customer.pay_to_customer_id,
+            pay_to_loc_lat: pay_to_customer.pay_to_loc_lat,
+            pay_to_loc_long_lat: pay_to_customer.pay_to_loc_long_lat,
+
+            // NOTES
+            other_note: other.other_note,
+            gadget_note: other.gadget_note,
           })
           // const dataItems: typeof table.state.data = data.items.map((p) => ({
           //   name: p.description,

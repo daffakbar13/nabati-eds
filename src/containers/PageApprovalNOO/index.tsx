@@ -27,30 +27,21 @@ export default function PageApproval() {
   const { searchProps, filters, setFilters } = useFilters(
     table,
     'Search by Id, Name, Sales Org, Sales Group, Branch, Channel, etc',
-    [
-      'customer_id',
-      'customer_name',
-      'sales_org_id',
-      'sales_org_name',
-      'sales_group_id',
-      'sales_group_name',
-      'channel_id',
-      'channel_name',
-      'customer_group_id',
-      'customer_group_name',
-    ],
+    ['customer_id'],
   )
 
   useEffect(() => {
-    setFilters([
-      {
-        field: 'ecn.status_id',
-        option: 'EQ',
-        from_value: statusButton,
-        data_type: 'S',
-      },
-    ])
-  }, [statusButton])
+    if (table.state.data.length > 0) {
+      setFilters([
+        {
+          field: 'ecn.status_id',
+          option: 'EQ',
+          from_value: statusButton,
+          data_type: 'S',
+        },
+      ])
+    }
+  }, [table.state.data.length, statusButton])
 
   useEffect(() => {
     if (table?.state?.body?.filters.length === 0) {
