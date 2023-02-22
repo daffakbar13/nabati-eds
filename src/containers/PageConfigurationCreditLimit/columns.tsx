@@ -53,4 +53,12 @@ export const columns = (
       />
     ),
   }),
+  addColumn({
+    title: 'Action',
+    render: (text, record, index) => (
+      <Button size="big" variant="tertiary" onClick={() => onClickDetail(record)}>
+        View Detail
+      </Button>
+    ),
+  }),
 ]

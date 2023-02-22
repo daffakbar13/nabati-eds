@@ -2,12 +2,13 @@ import { useRouter } from 'next/router'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
-import { Spacer, Text, DatePickerInput } from 'pink-lava-ui'
+import { Spacer, Text, DatePickerInput, Button } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { InputNumber, Form } from 'antd'
+import { InputNumber, Form, Modal as ModalANTD, Typography, Spin } from 'antd'
 import { fieldCustomer } from 'src/configs/fieldFetches'
 import { createCreditLimit } from 'src/api/logistic/config-credit-limit'
 import { PATH } from 'src/configs/menus'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 interface FormData {
   customer_id: string
@@ -57,8 +58,20 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       setLoading(false)
       return res
     } catch (error) {
-      return error
+      return false
     }
+  }
+
+  const doUpdate = async (reqBody: any) => {
+    // try {
+    //   setLoading(true)
+    //   const res = createCreditLimit(reqBody)
+    //   setLoading(false)
+    //   return res
+    // } catch (error) {
+    //   return false
+    // }
+    return true
   }
 
   const handleSubmit = async () => {
@@ -67,6 +80,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
+    }
+
+    if (isOnEditMode) {
+      return doUpdate(reqBody)
     }
 
     return false
@@ -124,6 +141,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               Customer <span style={{ color: 'red' }}> *</span>
             </Text>
           }
+          initialValue={
+            isOnEditMode ? `${payload?.customer_id} - ${payload?.customer_name_id}` : ''
+          }
           rules={[{ required: true }]}
         >
           <DebounceSelect
@@ -134,6 +154,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             onChange={(val: any) => {
               onChangeForm('customer_id', val.value.split(' - ')[0])
             }}
+            disabled={isOnEditMode ? true : false}
           />
         </Form.Item>
         <Form.Item
@@ -149,7 +170,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
-          initialValue={dataForm?.credit_limit_before?.toLocaleString() || 0}
+          initialValue={
+            isOnEditMode
+              ? payload?.credit_limit_before?.toLocaleString()
+              : dataForm?.credit_limit_before?.toLocaleString() || 0
+          }
         >
           <InputNumber
             min={0}
@@ -178,12 +203,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
+          initialValue={
+            isOnEditMode
+              ? payload?.credit_limit_after?.toLocaleString()
+              : dataForm?.credit_limit_after?.toLocaleString() || 0
+          }
         >
           <InputNumber
             min={0}
             style={styleInputNumber}
             value={dataForm?.credit_limit_after?.toLocaleString() || 0}
             placeholder="e.g 1.000.000"
+            disabled={!isOnEditMode || payload?.status === '02' ? false : true}
             onChange={(newVal) => {
               onChangeForm('credit_limit_after', newVal)
               form.setFieldsValue({
@@ -205,7 +236,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
-          initialValue={moment(now)}
+          initialValue={isOnEditMode ? moment(payload?.valid_from) : moment(now)}
         >
           <DatePickerInput
             required
@@ -214,6 +245,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             format={'DD-MMM-YYYY'}
             placeholder="Valid Before"
             value={moment(now).format('YYYY-MM-DD')}
+            disabled={!isOnEditMode || payload?.status === '02' ? false : true}
             onChange={(val: any) => {
               onChangeForm('valid_from', moment(val).format('YYYY-MM-DD'))
             }}
@@ -232,6 +264,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
+          initialValue={isOnEditMode ? moment(payload?.valid_to) : moment(now)}
         >
           <DatePickerInput
             required
@@ -239,6 +272,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fullWidth
             format={'DD-MMM-YYYY'}
             placeholder="Valid After"
+            disabled={!isOnEditMode || payload?.status === '02' ? false : true}
             onChange={(val: any) => {
               onChangeForm('valid_to', moment(val).format('YYYY-MM-DD'))
             }}
@@ -249,18 +283,55 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     </>
   )
 
+  const footerComponent = (
+    <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
+      <Button size="big" style={{ flexGrow: 1 }} variant="tertiary" onClick={handleCancel}>
+        Cancel
+      </Button>
+      <Button
+        size="big"
+        variant="primary"
+        onClick={onClickSubmit}
+        style={{ flexGrow: 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+      >
+        {loading && <Spin size="small" style={{ marginRight: 8, marginBottom: -4 }} />}
+        <span
+          style={{
+            color: loading ? '#fff' : 'unset',
+          }}
+        >
+          {isOnEditMode ? 'Update' : 'Create'}
+        </span>
+      </Button>
+    </div>
+  )
+
   return (
     <>
-      <Modal
-        title={isOnEditMode ? 'View Credit Limit' : 'Create Credit Limit'}
+      <ModalANTD
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
-        content={content}
-        loading={loading}
-        cancelText="Cancel"
-        okText={isOnEditMode ? 'Update' : 'Create'}
-      />
+        footer={!isOnEditMode || payload?.status === '02' ? footerComponent : null}
+        style={{ marginTop: 0 }}
+      >
+        <Typography.Title level={3} style={{ margin: 0 }}>
+          {isOnEditMode ? (
+            <>
+              View Credit Limit <TaggedStatus status={payload?.status_name || ''} />
+            </>
+          ) : (
+            'Create Credit Limit'
+          )}
+        </Typography.Title>
+
+        {typeof content === 'string' ? (
+          <Typography.Title level={5} style={{ margin: 0 }}>
+            {content}
+          </Typography.Title>
+        ) : null}
+        {typeof content === 'object' ? <>{content}</> : null}
+      </ModalANTD>
       <Modal
         title={'Confirm Cancellation'}
         open={showConfirmModalCancel}
