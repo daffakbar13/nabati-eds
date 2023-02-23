@@ -77,7 +77,14 @@ export default function CreateGoodsReceipt() {
     to_sloc: 'GS00',
     status_id: '00',
     created_by: 'SYSTEM',
-    items: tableData,
+    items: tableData.map((item: any) => ({
+      product_id: item?.item.split(' - ')[0],
+      qty: item?.qty,
+      uom_id: item?.uom_id,
+      remarks: item?.remarks,
+      batch: item?.batch,
+      movement_type_id: '311',
+    })),
   }
 
   const onChangeForm = (form: string, value: any) => {
@@ -95,14 +102,6 @@ export default function CreateGoodsReceipt() {
       const newLocal = false
       return newLocal
     }
-  }
-
-  const onChangeRefDocNo = async (refDocNo: any) => {
-    if (!refDocNo) {
-      setDisableSomeFields(false)
-      return
-    }
-    setDisableSomeFields(true)
   }
 
   const onTableValuesChange = ({ field, value, index }) => {
