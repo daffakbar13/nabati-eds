@@ -38,14 +38,12 @@ export const getDetailSwapHandling = async (
   return response.data
 }
 
-export const createSwapHandling = async (
-  params: CommonListParams = {},
-): Promise<CommonListResponse<StockRealTime>> => {
+export const createSwapHandling = async (payload: any) => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}`,
     overrideBaseUrl,
-    data: params,
+    data: payload,
   })
   return response.data
 }

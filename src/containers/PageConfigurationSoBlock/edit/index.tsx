@@ -7,6 +7,8 @@ import { Form, Divider } from 'antd'
 import { updateConfigSoBlock } from 'src/api/logistic/configuration-approval-so-block'
 import { PATH } from 'src/configs/menus'
 import { useTableAddItem } from './useTableAddItem'
+import { ICExclamation } from 'src/assets'
+
 
 interface FormData {
   company_id: string
@@ -19,6 +21,7 @@ export default function CreateModal({ visible = false, close = () => {}, payload
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
+  const [showErrorConfig, setShowErrorConfig] = useState(false)
   const [optionsSalesOrg, setOptionsSalesOrg] = useState([])
   const [selectedSalesOrg, setSelectedSalesOrg] = useState('')
   const router = useRouter()
@@ -38,7 +41,13 @@ export default function CreateModal({ visible = false, close = () => {}, payload
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
-    setConfirmModal(true)
+    const configIndeterminate = tableAddItems.data.filter((data) => data?.is_active_config === 1)
+    if (configIndeterminate.length > 0) {
+      setShowErrorConfig(false)
+      setConfirmModal(true)
+    } else {
+      setShowErrorConfig(true)
+    }
   }
 
   const doUpdate = async (reqBody: any) => {
@@ -152,6 +161,27 @@ export default function CreateModal({ visible = false, close = () => {}, payload
         {selectedSalesOrg != '' && (
           <>
             <Divider />
+
+            {showErrorConfig && (
+              <>
+                <div
+                  key={1}
+                  style={{
+                    marginTop: 10,
+                    color: '#FFF',
+                    background: '#b40e0e',
+                    borderRadius: 8,
+                    padding: '8px 16px',
+                    display: 'grid',
+                    gridTemplateColumns: '30px 1fr',
+                  }}
+                >
+                  <ICExclamation />
+                  <p>Belum ada config yang dipilih</p>
+                </div>
+                <Spacer size={10} />
+              </>
+            )}
             <Table columns={tableAddItems.columns} data={tableAddItems.data} />
           </>
         )}

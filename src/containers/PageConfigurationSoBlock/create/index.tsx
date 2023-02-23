@@ -9,6 +9,7 @@ import { fieldCompanyList, fieldSalesOrgCompanyDynamic } from 'src/configs/field
 import { createConfigSoBlock } from 'src/api/logistic/configuration-approval-so-block'
 import { PATH } from 'src/configs/menus'
 import { useTableAddItem } from './useTableAddItem'
+import { ICExclamation } from 'src/assets'
 
 interface FormData {
   company_id: string
@@ -21,6 +22,7 @@ export default function CreateModal({ visible = false, close = () => {} }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
+  const [showErrorConfig, setShowErrorConfig] = useState(false)
   const [company, setCompany] = useState('PP01')
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
@@ -39,7 +41,13 @@ export default function CreateModal({ visible = false, close = () => {} }) {
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
-    setConfirmModal(true)
+    const configIndeterminate = tableAddItems.data.filter((data) => data?.is_active_config === 1)
+    if (configIndeterminate.length > 0) {
+      setShowErrorConfig(false)
+      setConfirmModal(true)
+    } else {
+      setShowErrorConfig(true)
+    }
   }
 
   const doCreate = async (reqBody: any) => {
@@ -150,6 +158,27 @@ export default function CreateModal({ visible = false, close = () => {} }) {
           />
         </Form.Item>
         <Divider />
+
+        {showErrorConfig && (
+          <>
+            <div
+              key={1}
+              style={{
+                marginTop: 10,
+                color: '#FFF',
+                background: '#b40e0e',
+                borderRadius: 8,
+                padding: '8px 16px',
+                display: 'grid',
+                gridTemplateColumns: '30px 1fr',
+              }}
+            >
+              <ICExclamation />
+              <p>Belum ada config yang dipilih</p>
+            </div>
+            <Spacer size={10} />
+          </>
+        )}
         <Table columns={tableAddItems.columns} data={tableAddItems.data} />
       </Form>
     </>
