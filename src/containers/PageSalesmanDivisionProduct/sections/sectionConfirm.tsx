@@ -5,7 +5,7 @@ import {
   ConfirmCancel,
   ConfirmDelete,
   ConfirmSubmit,
-  ConfirmSuccessCancel,
+  ConfirmSuccessDelete,
   ConfirmSuccessSubmit,
 } from './alerts'
 
@@ -20,7 +20,7 @@ export default function SectionConfirm() {
       {confirm === 'delete' && <ConfirmDelete />}
       {confirm === 'success-submit' && <ConfirmSuccessSubmit />}
       {/* {confirm === 'cancel' && <ConfirmCancel />} */}
-      {confirm === 'success-cancel' && <ConfirmSuccessCancel />}
+      {confirm === 'success-delete' && <ConfirmSuccessDelete />}
     </>
   )
 }

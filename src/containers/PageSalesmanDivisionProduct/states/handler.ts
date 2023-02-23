@@ -18,9 +18,10 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'confirm', payload: 'undefined' })
   }
 
-  function changeSubmittedQuotation(payload: string[]) {
-    dispatch({ type: 'submittedQuotation', payload })
+  function changeSubmittedSalesmanDivisionProduct(payload: any) {
+    dispatch({ type: 'submittedSalesmanDivisionProduct', payload })
   }
+
   function handleShowModal(payload: StateType['showModal']) {
     dispatch({
       type: 'showModal',
@@ -45,7 +46,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     stopProcess,
     showConfirm,
     unShowConfirm,
-    changeSubmittedQuotation,
+    changeSubmittedSalesmanDivisionProduct,
     handleShowModal,
     unShowModal,
     handleEditable,

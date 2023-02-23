@@ -18,7 +18,7 @@ export function useSalesSalesmanDivisionProvider() {
     ctx,
     baseReducer,
     baseHandler,
-    { submittedQuotation: [] },
+    { submittedSalesmanDivisionProduct: [], editable: {} },
   )
 }
 

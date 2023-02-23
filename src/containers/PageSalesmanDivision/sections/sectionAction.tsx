@@ -39,7 +39,12 @@ export default function SectionAction() {
           </Button>
         </Col>
         <Col>
-          <Button size="big" variant="primary" onClick={() => handleShowModal('create')}>
+          <Button
+            size="big"
+            variant="primary"
+            disabled={selected.length > 0}
+            onClick={() => handleShowModal('create')}
+          >
             Create
           </Button>
         </Col>

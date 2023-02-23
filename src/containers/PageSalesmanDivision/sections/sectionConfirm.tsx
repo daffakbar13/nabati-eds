@@ -5,9 +5,8 @@ import {
   ConfirmActivation,
   ConfirmDelete,
   ConfirmSuccessActivation,
-  ConfirmSuccessCancel,
+  ConfirmSuccessDelete,
 } from './alerts'
-import ConfirmSuccessDelete from './alerts/confirmSuccessDelete'
 
 export default function SectionConfirm() {
   const {
@@ -18,7 +17,6 @@ export default function SectionConfirm() {
     <>
       {confirm === 'delete' && <ConfirmDelete />}
       {confirm === 'activation' && <ConfirmActivation />}
-      {confirm === 'success-cancel' && <ConfirmSuccessCancel />}
       {confirm === 'success-delete' && <ConfirmSuccessDelete />}
       {confirm === 'success-activation' && <ConfirmSuccessActivation />}
     </>

@@ -1,7 +1,7 @@
 export { default as ConfirmSubmit } from './confirmSubmit'
 export { default as ConfirmSuccessSubmit } from './confirmSuccessSubmit'
 export { default as ConfirmCancel } from './confirmCancel'
-export { default as ConfirmSuccessCancel } from './confirmSuccessDelete'
+export { default as ConfirmSuccessDelete } from './confirmSuccessDelete'
 export { default as ConfirmDelete } from './confirmDelete'
 export { default as ConfirmActivation } from './confirmActivation'
 export { default as ConfirmSuccessActivation } from './confirmSuccessActivation'

@@ -23,9 +23,7 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     }),
     addColumn({
       title: 'Division ID',
-      render: (_, { division_id }) => (
-        <Link onClick={() => handleAction(division_id)}>{division_id}</Link>
-      ),
+      render: (_, record) => <Link onClick={() => handleAction(record)}>{record.division_id}</Link>,
       fixed: true,
       sorter: true,
     }),
@@ -52,8 +50,8 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     }),
     addColumn({
       title: 'Action',
-      render: (_, { salesman_id }) => (
-        <Button size="big" variant="tertiary" onClick={() => handleAction(salesman_id)}>
+      render: (_, record) => (
+        <Button size="big" variant="tertiary" onClick={() => handleAction(record)}>
           View Detail
         </Button>
       ),
