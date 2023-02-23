@@ -13,7 +13,7 @@ import {
   UpdateRejectReservationMultiple,
 } from 'src/api/logistic/approve-stock-reservation'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldSloc, fieldCompanyList } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { colors } from 'src/configs/colors'
 import { CheckCircleFilled } from '@ant-design/icons'
@@ -25,10 +25,12 @@ export default function PageStockReservation() {
     columns: column,
     haveCheckBox: [{ rowKey: 'status_name', member: ['Wait For Approval'] }],
   })
-
-  const [showConfirm, setShowConfirm] = useState('')
   const [modalApprove, setModalApprove] = useState(false)
   const [modalReject, setModalReject] = useState(false)
+  const [branchfrom, setBranchFrom] = useState('')
+  const [branchTo, setBranchTo] = useState('')
+  const [allSloc, setAllScloc] = useState([])
+
   const hasData = table.state.total > 0
   const router = useRouter()
   const oneSelected = table.state.selected.length === 1
@@ -74,6 +76,12 @@ export default function PageStockReservation() {
     }
   }
 
+  useEffect(() => {
+    fieldSlocFromBranch(branchfrom, branchTo).then((res) => {
+      setAllScloc(res)
+    })
+  }, [branchfrom, branchTo])
+
   return (
     <Col>
       <Text variant={'h4'}>Approval Stock Reservation</Text>
@@ -95,20 +103,41 @@ export default function PageStockReservation() {
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"
-                label="Supplying Branch"
+                label="Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="receiving_branch_id"
+                field="supplying_sloc_id"
                 dataType="S"
-                label="Receiving Branch"
+                label="Supplying Sloc"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="receiving_sloc_id"
+                dataType="S"
+                label="Receiving Sloc"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
