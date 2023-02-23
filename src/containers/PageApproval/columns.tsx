@@ -24,14 +24,7 @@ function Linked(props: LinkedProps) {
   const navigate = () => {
     status === 'Draft'
       ? router.push(`${PATH.SALES}/approval/edit/${link}`)
-      : router.push({
-          pathname: `${PATH.SALES}/approval/detail/${link}`,
-          query: {
-            status,
-            page,
-            limit,
-          },
-        })
+      : router.push({ pathname: `${PATH.SALES}/approval/detail/${link}` })
   }
   const [hover, setHover] = React.useState(false)
 

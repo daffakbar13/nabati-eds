@@ -270,7 +270,7 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {router.query.status === 'Wait For Approval' && (
+          {data.status_id === '1' && (
             <>
               <Button
                 size="big"
