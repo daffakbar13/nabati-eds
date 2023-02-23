@@ -21,10 +21,13 @@ export default function CreateStockOpname() {
   const [headerData, setHeaderData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [branchSelected, setBranchSelected] = useState('')
-  const [movementSelected, setMovementSelected] = useState('')
+  const [slocSelected, setSlocSelected] = useState('')
+  // bikin init state sloc
+  // const [movementSelected, setMovementSelected] = useState('') // hapus
   const tableAddItems = useTableAddItem({
     idbranch: branchSelected.split(' - ')[0] || '',
-    MovementType: movementSelected,
+    idSloc: slocSelected,
+    // MovementType: movementSelected,
   })
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
@@ -67,6 +70,7 @@ export default function CreateStockOpname() {
       fieldSlocByConfigLogistic(branchSelected).then((result) => {
         setAllScloc(result)
       })
+      // tambahin logic manggil api stock real time
     }
   }, [branchSelected])
 
@@ -136,16 +140,9 @@ export default function CreateStockOpname() {
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
 
-        {branchSelected && (
-          <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-            + Add Item
-          </Button>
-        )}
-
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
-            editable
             data={tableAddItems.data}
             columns={tableAddItems.columns}
             loading={tableAddItems.loading}

@@ -11,7 +11,8 @@ import { addColumn } from 'src/utils/createColumns'
 
 interface propsUseTable {
   idbranch: string
-  MovementType: string
+  idSloc: string
+  // MovementType: string
 }
 
 export const useTableAddItem = (props: propsUseTable) => {
@@ -26,7 +27,7 @@ export const useTableAddItem = (props: propsUseTable) => {
     batch: '',
     qty_reverence: 0,
     uom_reverence: 'CTN',
-    movement_type_id: props.MovementType,
+    // movement_type_id: props.MovementType,
   }
   const [data, setData] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
@@ -65,7 +66,7 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   const columns = [
     addColumn({
-      title: '',
+      title: 'No',
       dataIndex: 'action',
       render: (text: string, record: any, index: number) => (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -80,7 +81,7 @@ export const useTableAddItem = (props: propsUseTable) => {
       width: 55,
     }),
     addColumn({
-      title: 'Item Sender',
+      title: 'Item',
       dataIndex: 'product_id_label',
       render: (text: string, record: any, index: number) => (
         <DebounceSelect
@@ -97,7 +98,7 @@ export const useTableAddItem = (props: propsUseTable) => {
       width: 400,
     }),
     addColumn({
-      title: 'Qty Stock',
+      title: 'Large',
       dataIndex: 'stock_qty',
       render: (text: string, record: any, index: number) => (
         <InputNumber
@@ -118,7 +119,7 @@ export const useTableAddItem = (props: propsUseTable) => {
       width: 130,
     }),
     addColumn({
-      title: 'UoM',
+      title: 'Middle',
       dataIndex: 'uom_stock_id',
       render: (text: string, record: any, index: number) => (
         <DebounceSelect
@@ -136,7 +137,7 @@ export const useTableAddItem = (props: propsUseTable) => {
       width: 150,
     }),
     addColumn({
-      title: 'Qty Physical',
+      title: 'Small',
       dataIndex: 'qty',
       render: (text: string, record: any, index: number) => (
         <InputNumber
@@ -155,86 +156,6 @@ export const useTableAddItem = (props: propsUseTable) => {
         />
       ),
       width: 130,
-    }),
-    addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_id',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_id', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
-    }),
-    addColumn({
-      title: 'Qty Reference',
-      dataIndex: 'qty_reverence',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={true}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty_reference', newVal, index)
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
-    }),
-    addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_reverence',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={true}
-          onChange={(e) => {
-            handleChangeData('uom_reverence', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
-    }),
-    addColumn({
-      title: 'Batch',
-      dataIndex: 'batch',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="input"
-          placeholder="e.g Testing"
-          value={text as any}
-          onChange={(e) => {
-            handleChangeData('batch', e.target.value, index)
-          }}
-        />
-      ),
-      width: 200,
-    }),
-    addColumn({
-      title: 'Remarks',
-      dataIndex: 'remarks',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="input"
-          placeholder="e.g Testing"
-          value={text as any}
-          onChange={(e) => {
-            handleChangeData('remarks', e.target.value, index)
-          }}
-        />
-      ),
-      width: 200,
     }),
   ]
 
