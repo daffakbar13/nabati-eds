@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Text, Table, Spacer, DatePickerInput, Row, Button } from 'pink-lava-ui'
 import { Card, Modal } from 'src/components'
-import { Col, Divider, Alert, Typography } from 'antd'
+import { Col, Divider, Alert, Typography, Tag } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import TaggedStatus from 'src/components/TaggedStatus'
@@ -12,6 +12,9 @@ import dateFormat from 'src/utils/dateFormat'
 import { confitmGoodReceipt } from 'src/api/logistic/good-receipt-intra-branch'
 import { updateStatusPoSto } from 'src/api/logistic/do-sto'
 import { fieldSlocFromBranch } from 'src/configs/fieldFetches'
+import {
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
 
 interface ItemsState {
   remarks: string
@@ -154,7 +157,14 @@ export default function Detail(props: any) {
               <DebounceSelect type="input" label="From Sloc" value={'GS00' as any} disabled />
               <DebounceSelect
                 type="select"
-                label="To Sloc"
+                label={
+                  <>
+                    To Sloc{' '}
+                    <Tag icon={<ExclamationCircleOutlined />} color="warning">
+                      You will do intra channel
+                    </Tag>
+                  </>
+                }
                 fetchOptions={(search) =>
                   fieldSlocFromBranch(data.supply_branch_id, data.receive_branch_id)
                 }
