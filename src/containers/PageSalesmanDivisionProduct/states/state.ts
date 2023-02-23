@@ -4,7 +4,7 @@ export interface StateType {
   table?: ReturnType<typeof useTable>
   processing?: string
   confirm?: string
-  submittedQuotation: string[]
+  submittedSalesmanDivisionProduct: string[]
   showModal?: 'create' | 'detail'
-  editable?: string
+  editable?: any
 }

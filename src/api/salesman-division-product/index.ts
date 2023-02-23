@@ -6,9 +6,8 @@ const url = 'v1/master'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 interface CreateSalesmanDivisionProduct {
-  salesman_id: string
   division_id: string
-  is_active: string
+  product_id: string
 }
 
 export const getSalesmanDivisionProduct = async (

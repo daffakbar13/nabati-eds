@@ -1,19 +1,21 @@
-import { Typography } from 'antd'
+import { Popover, Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
-import { concatString } from 'src/utils/concatString'
 import { useSalesSalesmanDivisionContext } from '../../states'
 
-export default function ConfirmSuccessSubmit() {
+export default function ConfirmSuccessDelete() {
   const {
-    state: { showModal, editable },
+    state: {
+      table: {
+        state: { selected, description },
+      },
+    },
   } = useSalesSalesmanDivisionContext()
   const router = useRouter()
-  const salesman = concatString(editable.salesman_id, editable.salesman_name)
-  const isCreate = showModal === 'create'
+  const oneSelected = selected.length === 1
 
   return (
     <Popup>
@@ -23,7 +25,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> {isCreate ? 'Submit' : 'Update'} Success
+            <CheckCircleFilled /> Delete Success
           </>
         </Text>
       </div>
@@ -37,12 +39,19 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {showModal === 'create' ? 'New ' : ''}
-          {'Salesman Division '}
-          <Typography.Text>{salesman}</Typography.Text>
-          {' has been '}
+          Product ID
+          <Typography.Text
+            copyable={{ text: oneSelected ? description.text : selected.join(', ') }}
+          >
+            {oneSelected ? (
+              ` ${description.text}`
+            ) : (
+              <Popover content={description.content}>{` ${description.text}`}</Popover>
+            )}
+          </Typography.Text>{' '}
+          {' has been'}
         </div>
-        <div>successfully {isCreate ? 'submitted' : 'updated'}</div>
+        <div>successfully deleted</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -50,10 +59,10 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(router.pathname)
+            router.push(router.asPath)
           }}
         >
-          Oke
+          OK
         </Button>
       </div>
     </Popup>

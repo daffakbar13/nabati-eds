@@ -21,6 +21,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
   function changeSubmittedSalesmanDivision(payload: any) {
     dispatch({ type: 'submittedSalesmanDivision', payload })
   }
+
   function handleShowModal(payload: StateType['showModal']) {
     dispatch({
       type: 'showModal',

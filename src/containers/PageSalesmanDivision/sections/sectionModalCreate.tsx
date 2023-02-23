@@ -85,20 +85,6 @@ export default function SectionModalCreate() {
             onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
           />
         </Col>
-        {/* <Col span={24}>
-          <DebounceSelect
-            type="select"
-            required
-            label="Status"
-            placeholder={'Select'}
-            value={(editable.is_active || 'Active') === 'Active' ? 1 : (0 as any)}
-            options={[
-              { label: 'Active', value: 1 },
-              { label: 'Non Active', value: 0 },
-            ]}
-            onChange={(e) => handleEditable({ ...editable, is_active: e.label })}
-          />
-        </Col> */}
       </Row>
       {confirm === 'cancel' && <ConfirmCancel />}
       {confirm === 'submit' && <ConfirmSubmit />}
