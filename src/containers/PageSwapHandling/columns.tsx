@@ -4,10 +4,10 @@ import dateFormat from 'src/utils/dateFormat'
 import Link from 'src/components/Link'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-export const columns = (goToDetail: (id: string) => {}) => [
+export const columns = (goToDetail: (id: string) => void) => [
   addColumn({
     title: 'Doc. Number',
-    dataIndex: 'doc_number',
+    dataIndex: 'id',
     render: (text, record, index) => <Link onClick={() => goToDetail(text)}>{text}</Link>,
     fixed: true,
     sorter: true,
