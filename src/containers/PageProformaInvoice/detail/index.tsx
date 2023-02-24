@@ -81,6 +81,7 @@ export default function PageShipmentDetail() {
           variant="primary"
           onClick={async () => {
             setProcessing('Wait For PGI')
+
             const unrevisedData = data?.proforma_invoice_items_detail?.filter((item) => {
               return (
                 revisedDelivery
@@ -115,12 +116,14 @@ export default function PageShipmentDetail() {
                         return {
                           product_id: element.product_id,
                           remarks: '',
-                          qtys: [
-                            {
-                              qty: element.qty,
-                              uom_id: element.uom_id,
-                            },
-                          ],
+                          qty: element.qty,
+                          uom_id: element.uom_id,
+                          // qtys: [
+                          //   {
+                          //     qty: element.qty,
+                          //     uom_id: element.uom_id,
+                          //   },
+                          // ],
                         }
                       }),
                     }
@@ -137,6 +140,8 @@ export default function PageShipmentDetail() {
             }
 
             await new Promise((resolve) => setTimeout(resolve, 1000))
+
+            console.log(payload)
 
             PGIProformaInvoice(router.query.id as string, payload)
               .then(() => {

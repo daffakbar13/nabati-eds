@@ -37,8 +37,8 @@ export function PageEdit() {
     if (window) {
       const revised = JSON.parse(window.localStorage.getItem('revised')) || []
       const findData = revised.find((item) => item.delivery_order_id === router.query.id)
-      if (findData) {
-        handler.handleSetDataTableDeliveryOrder(findData.items)
+      if (findData && data) {
+        handler.handleSetRevisedDataTableDeliveryOrder(data, findData.items)
       } else {
         if (data && data.length > 0) {
           handler.handleSetDataTableDeliveryOrder(data)
@@ -59,12 +59,14 @@ export function PageEdit() {
           product_id: item.product_id,
           product_name: item.product_name,
           remarks: item.remarks,
-          qtys: [
-            {
-              qty: item.revised_qty > 0 ? item.revised_qty : item.qty,
-              uom_id: item.uom_id,
-            },
-          ],
+          qty: item.revised_qty > 0 ? item.revised_qty : item.qty,
+          uom_id: item.uom_id,
+          // qtys: [
+          //   {
+          //     qty: item.revised_qty > 0 ? item.revised_qty : item.qty,
+          //     uom_id: item.uom_id,
+          //   },
+          // ],
         }
       }),
     }

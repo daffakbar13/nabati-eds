@@ -99,23 +99,23 @@ export const useTableAddItem = (props: propsUseTable) => {
     }),
     addColumn({
       title: 'Large',
-      dataIndex: 'stock_qty',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('stock_qty', newVal, index)
-            handleChangeData(
-              'qty_reverence',
-              Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
-      ),
+      dataIndex: 'product_id',
+      // render: (text: string, record: any, index: number) => (
+      //   <InputNumber
+      //     disabled={isNullProductId(index)}
+      //     min={isNullProductId(index) ? '0' : '1'}
+      //     value={text?.toLocaleString()}
+      //     onChange={(newVal) => {
+      //       handleChangeData('stock_qty', newVal, index)
+      //       handleChangeData(
+      //         'qty_reverence',
+      //         Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
+      //         index,
+      //       )
+      //     }}
+      //     style={styleInputNumber}
+      //   />
+      // ),
       width: 130,
     }),
     addColumn({

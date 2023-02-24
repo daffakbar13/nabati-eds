@@ -60,6 +60,35 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
     })
   }
 
+  function handleSetRevisedDataTableDeliveryOrder(data: any[], revisedData: any[]) {
+    const res =
+      data.length &&
+      data.map(({ product_id, product_name, qtys, qty, uom_id }) => {
+        let dataQtys = null
+        if (qtys && qtys.length > 0) {
+          dataQtys = qtys.filter((item) => item.qty > 0)[0]
+        }
+
+        return {
+          product_id,
+          product_name,
+          uom_id: dataQtys?.uom_id || uom_id || '',
+          qty: dataQtys?.qty || qty || 0,
+          revised_qty: revisedData.find(
+            (item) => item.product_id === product_id && item.uom_id === uom_id,
+          )?.qty,
+          remarks: revisedData.find(
+            (item) => item.product_id === product_id && item.uom_id === uom_id,
+          )?.remarks,
+        }
+      })
+
+    dispatch({
+      type: 'dataDeliveryOrder',
+      payload: res,
+    })
+  }
+
   function handleChangeDataDeliveryOrder(field: string, value: string, index: number) {
     const newData = [...state.dataDeliveryOrder]
     newData[index][field] = value
@@ -76,6 +105,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
     handleRemoveMultipleRevisedDeliveryOrder,
     handleClearRevisedDelivery,
     handleSetDataTableDeliveryOrder,
+    handleSetRevisedDataTableDeliveryOrder,
     handleChangeDataDeliveryOrder,
   }
 }

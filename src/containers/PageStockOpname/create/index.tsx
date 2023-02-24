@@ -27,7 +27,6 @@ export default function CreateStockOpname() {
   const tableAddItems = useTableAddItem({
     idbranch: branchSelected.split(' - ')[0] || '',
     idSloc: slocSelected,
-    // MovementType: movementSelected,
   })
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
