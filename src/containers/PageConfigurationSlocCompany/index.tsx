@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState } from 'react'
-import { Card, SearchQueryParams, Modal } from 'src/components'
+import { Card, Modal } from 'src/components'
 import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
@@ -41,6 +41,15 @@ export default function PageConfigurationSlocCompany() {
     columns: columns(goToDetailPage, onClickSwitch),
   })
 
+  const { searchProps } = useFilters(table, 'Search by Company, Key, SLoc, Description, etc', [
+    'company_id',
+    'company_name',
+    'console_group',
+    'key',
+    'sloc_id',
+    'description',
+  ])
+
   return (
     <>
       <Text variant={'h4'}>SLoc Company</Text>
@@ -48,7 +57,7 @@ export default function PageConfigurationSlocCompany() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
