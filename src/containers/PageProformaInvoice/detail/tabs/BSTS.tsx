@@ -135,7 +135,7 @@ export default function BSTS(props: BSTSProps) {
             PENCETAKAN ULANG
           </CustomText> */}
         </Col>
-        <Col offset={2} span={6}>
+        <Col offset={4} span={8}>
           <div style={{ marginTop: 10 }}>
             <strong>Kepada Yth. : {data[0].customer_id}</strong>
           </div>
