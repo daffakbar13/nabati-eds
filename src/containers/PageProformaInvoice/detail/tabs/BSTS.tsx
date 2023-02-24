@@ -119,43 +119,43 @@ export default function BSTS(props: BSTSProps) {
       <Row>
         <Col span={6}>
           <CustomText fontWeight="bold" fontSize={18}>
-            {data[0].company_detail.name}
+            {data[0].company_name}
           </CustomText>
+          <CustomText fontSize={16}>{data[0].branch_name}</CustomText>
+          <CustomText fontSize={16}>{data[0].branch_address}</CustomText>
+          <CustomText fontSize={16}>Telp. {data[0].phone_number}</CustomText>
+          <CustomText fontSize={16}>NPWP. {data[0].npwp}</CustomText>
+          <CustomText fontSize={16}>{data[0].sloc_name}</CustomText>
         </Col>
         <Col offset={2} span={4}>
           <CustomText fontWeight="bold" fontSize={24}>
             SURAT JALAN
           </CustomText>
-          <CustomText fontWeight="bold" fontSize={16}>
+          {/* <CustomText fontWeight="bold" fontSize={16}>
             PENCETAKAN ULANG
-          </CustomText>
+          </CustomText> */}
         </Col>
         <Col offset={2} span={6}>
-          <Information label="Tanggal Cetak" value={dateFormat(new Date().toISOString())} />
           <div style={{ marginTop: 10 }}>
-            <strong>Kepada Yth. : {data[0].customer_detail.id}</strong>
+            <strong>Kepada Yth. : {data[0].customer_id}</strong>
           </div>
           <div>
-            <strong>{data[0].customer_detail.name}</strong>
+            <strong>{data[0].customer_name}</strong>
           </div>
-          <div>
-            {data[0].customer_detail.address} {data[0].customer_detail.city}
-          </div>
+          <div>{data[0].customer_address}</div>
         </Col>
       </Row>
       <Row>
         <Col span={6}>
-          <Information label="TELP" value={data[0].customer_detail.phone} />
-          <Information label="NPWP" value="" />
-          <Information label="NO. PO" value="" />
-          <Information label="NO. SO" value="" />
-          <Information label="NO. DO" value="" />
+          <Information label="NO. PO" value={data[0].po_number} />
+          <Information label="NO. SO" value={data[0].so_number} />
+          <Information label="NO. DO" value={data[0].do_number} />
         </Col>
-        <Col span={6} />
-        <Col offset={2} span={6}>
-          <Information label="No. Faktur" value="" />
-          <Information label="TGL. Faktur" value="" />
-          <Information label="SALESMAN" value="" />
+        <Col span={4} />
+        <Col offset={6} span={8}>
+          <Information label="No. Faktur" value={data[0].invoices_number} />
+          <Information label="TGL. Faktur" value={dateFormat(data[0].invoice_date)} />
+          <Information label="SALESMAN" value={data[0].salesman_name} />
         </Col>
       </Row>
       <div>
@@ -189,13 +189,13 @@ export default function BSTS(props: BSTSProps) {
       <div>
         <Row>
           <Col span={4}>
-            <strong>Total Karton Utuh : {totalPrice}</strong>
+            <strong>Total Karton Utuh : {data[0].total_carton}</strong>
           </Col>
           <Col offset={1} span={4}>
-            <strong>DPP : {totalPrice}</strong>
+            <strong>DPP : </strong>
           </Col>
           <Col offset={1} span={4}>
-            <strong>PPN : {totalPrice}</strong>
+            <strong>PPN : </strong>
           </Col>
           <Col offset={1} span={4}>
             <strong>JUMLAH(Rp) : {totalPrice}</strong>
@@ -212,10 +212,9 @@ export default function BSTS(props: BSTSProps) {
         </Col>
         <Col offset={2} span={10}>
           <Row style={{ flexDirection: 'column', flexWrap: 'nowrap', gap: 10, marginTop: 20 }}>
-            <Information label="Special Discount" value="" />
-            <Information label="Total Discount" value="" />
-            <Information label="Discount Inv." value="" />
-            <Information label="Nilai Faktur" value="" />
+            <Information label="Special Discount" value={data[0].special_discount} />
+            <Information label="Total Discount" value={data[0].total_discount} />
+            <Information label="Nilai Faktur" value={data[0].invoice_value} />
           </Row>
         </Col>
       </Row>
