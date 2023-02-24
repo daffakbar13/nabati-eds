@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router'
 import { Button, DatePickerInput, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
-import { useState } from 'react'
 import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
 import { PATH } from 'src/configs/menus'
 import { getListSwapHandling } from 'src/api/logistic/swap-handling'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
-import { colors } from 'src/configs/colors'
+import Pagination from 'src/components/Pagination'
 
 export default function PageSwapHandling() {
   const router = useRouter()
@@ -103,6 +102,7 @@ export default function PageSwapHandling() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
     </>
   )
