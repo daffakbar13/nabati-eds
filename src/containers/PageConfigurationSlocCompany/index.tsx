@@ -2,12 +2,11 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
 import { useState } from 'react'
 import { Card, SearchQueryParams, Modal } from 'src/components'
-
 import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
 import { useTable } from 'src/hooks'
 import { columns } from './columns'
-
 import CreateModal from './create'
+import Pagination from 'src/components/Pagination'
 
 export default function PageConfigurationSlocCompany() {
   const [filters, setFilters] = useState([])
@@ -63,6 +62,7 @@ export default function PageConfigurationSlocCompany() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} />
         </div>
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
 
       <CreateModal
@@ -85,7 +85,7 @@ export default function PageConfigurationSlocCompany() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Sloc Company?`}
         onOkSuccess={() => {
-          router.reload()
+          router.push('/logistic/configuration-sloc-company')
         }}
         successContent={(res: any) => `Config sloc company has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}

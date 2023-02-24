@@ -173,7 +173,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.reload()
+          router.push('/logistic/configuration-sloc-company')
         }}
         successContent={(res: any) => 'Config sloc company has been successfully Updated'}
         successOkText="OK"
