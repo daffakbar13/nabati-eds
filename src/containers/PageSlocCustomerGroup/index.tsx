@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { Card, SearchQueryParams, Modal, Pagination } from 'src/components'
-import { UpdateStatusCustomerGroup } from 'src/api/logistic/configuration-sloc-costumer-group'
-import { useTable } from 'src/hooks'
-import { getListPoSto } from 'src/api/logistic/po-sto'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
+import { Card, Modal, Pagination } from 'src/components'
+import {
+  UpdateStatusCustomerGroup,
+  getListCustomerGroup,
+} from 'src/api/logistic/configuration-sloc-costumer-group'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
 
 export default function PageConfigurationSloc() {
-  const [filters, setFilters] = useState([])
   const [showCreateModal, setShowCreateModal] = useState(false)
   const router = useRouter()
 
@@ -41,26 +42,13 @@ export default function PageConfigurationSloc() {
   }
 
   const table = useTable({
-    funcApi: getListPoSto,
+    funcApi: getListCustomerGroup,
     columns: columns(goToDetailPage, onClickSwitch),
   })
 
   const hasData = table.state.total > 0
 
-  useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'e.customer_group2_id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
-
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { searchProps } = useFilters(table, 'Search by Customer Group ID', ['e.customer_group2_id'])
 
   return (
     <>
@@ -69,7 +57,7 @@ export default function PageConfigurationSloc() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Customer Group ID" />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
@@ -106,7 +94,7 @@ export default function PageConfigurationSloc() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Sloc Customer Group?`}
         onOkSuccess={() => {
-          router.reload()
+          router.push('/logistic/configuration-sloc-costumer-group')
         }}
         successContent={(res: any) => `Sloc Customer Group has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
