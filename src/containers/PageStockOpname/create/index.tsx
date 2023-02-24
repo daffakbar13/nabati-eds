@@ -74,7 +74,7 @@ export default function CreateStockOpname() {
       await freezeSlocIdByBranchId(
         {
           id: slocSelected,
-          is_freeze: 0,
+          is_freeze: 1,
         },
         branchSelected,
       )
