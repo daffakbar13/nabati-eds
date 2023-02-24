@@ -57,7 +57,7 @@ export const columns = (goToDetail: (id: string) => void) => [
   }),
   addColumn({
     title: 'Action',
-    dataIndex: 'gr_number',
+    dataIndex: 'id',
     render: (text, record, index) => (
       <Button size="big" variant="tertiary" onClick={() => goToDetail(text)}>
         View Detail
