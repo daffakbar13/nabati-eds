@@ -12,6 +12,7 @@ interface Props {
   onOk: () => any
   // eslint-disable-next-line no-unused-vars
   onOkSuccess?: (e) => any
+  onCancelSuccess?: () => any
   onCancel: () => void
   okText?: string
   successOkText?: string
@@ -30,8 +31,9 @@ const ModalCustomize = ({
   successContent = '',
   open,
   onOk, // if not success, return false
-  onOkSuccess,
   onCancel: close,
+  onOkSuccess,
+  onCancelSuccess,
   okText = 'YES',
   cancelText = 'NO',
   successOkText = 'OK',
@@ -118,8 +120,12 @@ const ModalCustomize = ({
 
       <SuccessModal
         onCancel={() => {
-          close()
-          setShowSuccessModal(false)
+          if (!cancelText) {
+            close()
+            setShowSuccessModal(false)
+          } else {
+            onCancelSuccess()
+          }
         }}
         open={showSuccessModal}
         onOk={() => {

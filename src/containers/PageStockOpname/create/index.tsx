@@ -7,7 +7,11 @@ import { PATH } from 'src/configs/menus'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/components'
 
-import { createStockOpname } from 'src/api/logistic/stock-opname'
+import {
+  createStockOpname,
+  freezeSlocIdByBranchId,
+  getListStockOpnameByBranchSloc,
+} from 'src/api/logistic/stock-opname'
 
 import { useTableAddItem } from './useTableEditable'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -18,19 +22,23 @@ const { Label, LabelRequired } = Text
 export default function CreateStockOpname() {
   const now = new Date().toISOString()
   const [form] = Form.useForm()
+
   const [headerData, setHeaderData] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [allSloc, setAllScloc] = useState([])
+  const [branchLabelSelected, setBranchLabelSelected] = useState('')
   const [branchSelected, setBranchSelected] = useState('')
   const [slocSelected, setSlocSelected] = useState('')
+  const [slocLabelSelected, setSlocLabelSelected] = useState('')
+  const [dataTable, setDataTable] = useState([])
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [showSubmitModal, setShowSubmitModal] = useState(false)
+
   // bikin init state sloc
   // const [movementSelected, setMovementSelected] = useState('') // hapus
   const tableAddItems = useTableAddItem({
     idbranch: branchSelected.split(' - ')[0] || '',
     idSloc: slocSelected,
   })
-  const [showCancelModal, setShowCancelModal] = useState(false)
-  const [showSubmitModal, setShowSubmitModal] = useState(false)
-  const [allSloc, setAllScloc] = useState([])
 
   const router = useRouter()
 
@@ -50,15 +58,28 @@ export default function CreateStockOpname() {
       header_text: headerData.header_text,
       sloc_id: headerData.sloc_id.value,
       status_id: '00',
-      items: tableAddItems.data.map((i) => i),
+      items: dataTable.length
+        ? dataTable.map((i) => ({
+            product_id: i.product_id,
+            large: i.large,
+            middle: i.middle,
+            small: i.small,
+            remarks: '',
+            batch: '',
+          }))
+        : [],
     }
     try {
-      setLoading(true)
       const res = await createStockOpname(payload)
-      setLoading(false)
+      await freezeSlocIdByBranchId(
+        {
+          id: slocSelected,
+          is_freeze: 0,
+        },
+        branchSelected,
+      )
       return res
     } catch (error) {
-      setLoading(false)
       const newLocal = false
       return newLocal
     }
@@ -72,6 +93,16 @@ export default function CreateStockOpname() {
       // tambahin logic manggil api stock real time
     }
   }, [branchSelected])
+
+  useEffect(() => {
+    if (branchSelected !== '' && slocSelected !== '') {
+      getListStockOpnameByBranchSloc(branchSelected, slocSelected).then((res: any) => {
+        if (res.data.result && res.data.result.length) {
+          setDataTable(res.data.result[0]?.ProductBySloc)
+        }
+      })
+    }
+  }, [branchSelected, slocSelected])
 
   return (
     <Col>
@@ -109,7 +140,10 @@ export default function CreateStockOpname() {
                 type="select"
                 label="Branch"
                 fetchOptions={(search) => fieldBranchSupply(search)}
-                onChange={(e) => setBranchSelected(e.value)}
+                onChange={(e) => {
+                  setBranchSelected(e.value)
+                  setBranchLabelSelected(e.label)
+                }}
               />
             </Form.Item>
             <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
@@ -121,7 +155,16 @@ export default function CreateStockOpname() {
               />
             </Form.Item>
             <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
-              <DebounceSelect type="select" label="Sloc" required options={allSloc} />
+              <DebounceSelect
+                type="select"
+                label="Sloc"
+                required
+                options={allSloc}
+                onChange={(e) => {
+                  setSlocSelected(e.value)
+                  setSlocLabelSelected(e.label)
+                }}
+              />
             </Form.Item>
             <Form.Item name="posting_date" style={{ marginTop: -12, marginBottom: 0 }}>
               <DatePickerInput
@@ -141,11 +184,7 @@ export default function CreateStockOpname() {
 
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            data={tableAddItems.data}
-            columns={tableAddItems.columns}
-            loading={tableAddItems.loading}
-          />
+          <Table data={dataTable} columns={tableAddItems.columns} loading={tableAddItems.loading} />
         </div>
       </Card>
 
@@ -161,21 +200,26 @@ export default function CreateStockOpname() {
       <Modal
         open={showSubmitModal}
         onOk={handleCreate}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-opname`)}
         onCancel={() => setShowSubmitModal(false)}
-        title="Confirm Submit"
-        content="Are you sure want Submit Stock Opname?"
+        title="Confirm Save"
+        content={`Are you sure want Save and Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`}
+        successOkText="Next Proccess"
+        successCancelText="Back to List"
+        onCancelSuccess={() => router.push(`${PATH.LOGISTIC}/stock-opname`)}
+        onOkSuccess={(res) =>
+          router.push(`${PATH.LOGISTIC}/stock-opname/edit/${res?.data?.stock_opname_id}`)
+        }
         successContent={(res: any) => (
           <>
-            Stock Opname ID :
-            <Typography.Text copyable={{ text: res?.data.material_doc_id as string }}>
+            Reff. Number :
+            <Typography.Text copyable={{ text: res?.data?.stock_opname_id as string }}>
               {' '}
-              {res?.data.material_doc_id}
+              {res?.data?.stock_opname_id}
             </Typography.Text>
-            has been successfully created
+            {` Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`} has been
+            successfully created
           </>
         )}
-        successOkText="OK"
       />
     </Col>
   )

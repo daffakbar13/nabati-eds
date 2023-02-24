@@ -19,6 +19,8 @@ export default function PageCollectionDetail() {
   const [dataTable, setDataTable] = React.useState([])
   const hasData = Object.keys(data).length > 0
 
+  const isSalesOrg = (...value: string[]) => value.includes(router.query.sales_org as string)
+
   function getTotalAmount() {
     if (hasData) {
       return [...data.details].map((d) => d.billing_amount).reduce((prev, curr) => prev + curr)
@@ -121,7 +123,26 @@ export default function PageCollectionDetail() {
             <Text variant={'h4'}>Cash {titlePage}</Text>
             <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
               <Button>asd</Button>
-              <ButtonPinkLava
+              {isSalesOrg('PID1%20-%20PMA%20-%20GT') && (
+                <>
+                  <ButtonPinkLava
+                    size="big"
+                    variant="primary"
+                    onClick={() => {
+                      setProcessing('Wait for finish collection')
+                      finishCollection(finishPayload)
+                        .then(() => {
+                          setProcessing(undefined)
+                          router.push(`${PATH.SALES}/collection`)
+                        })
+                        .catch(() => setProcessing(undefined))
+                    }}
+                  >
+                    Finish
+                  </ButtonPinkLava>
+                </>
+              )}
+              {/* <ButtonPinkLava
                 size="big"
                 variant="primary"
                 onClick={() => {
@@ -135,7 +156,7 @@ export default function PageCollectionDetail() {
                 }}
               >
                 Finish
-              </ButtonPinkLava>
+              </ButtonPinkLava> */}
             </div>
           </div>
           <Spacer size={20} />

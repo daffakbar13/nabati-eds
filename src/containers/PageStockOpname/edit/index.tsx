@@ -22,13 +22,13 @@ import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldF
 
 const { Label, LabelRequired } = Text
 
-export default function CreateStockAdjustment() {
+export default function UpdateStockOpname() {
   const now = new Date().toISOString()
   const router = useRouter()
   const data: any = useDetail(getDetailStockAdjustment, { id: router.query.id as string }, false)
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   const [branchSelected, setBranchSelected] = useState('')
   const [movementSelected, setMovementSelected] = useState('')
@@ -71,11 +71,11 @@ export default function CreateStockAdjustment() {
   }
 
   useEffect(() => {
-    if (data.company_id) {
-      setLoading(false)
-    } else {
-      setLoading(true)
-    }
+    // if (data.company_id) {
+    //   setLoading(false)
+    // } else {
+    //   setLoading(true)
+    // }
 
     if (data.branch_id) {
       fieldSlocByConfigLogistic(data.branch_id).then((result) => {
@@ -94,7 +94,7 @@ export default function CreateStockAdjustment() {
       {!loading && (
         <Col>
           <div style={{ display: 'flex', gap: 5 }}>
-            <GoBackArrow to={`${PATH.LOGISTIC}/stock-adjustment/detail/${router.query.id}`} />
+            <GoBackArrow to={`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`} />
             <Title variant={'h4'}>View Stock Adjustment {`${router.query.id}`}</Title>
           </div>
           <Spacer size={20} />
@@ -214,7 +214,7 @@ export default function CreateStockAdjustment() {
 
           <Modal
             open={showCancelModal}
-            onOk={() => router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${router.query.id}`)}
+            onOk={() => router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)}
             onCancel={() => setShowCancelModal(false)}
             title="Confirm Cancellation"
             content="Are you sure want to cancel ? Change you made so far
@@ -224,10 +224,10 @@ export default function CreateStockAdjustment() {
           <Modal
             open={showSubmitModal}
             onOk={handleCreate}
-            onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
+            onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-opname`)}
             onCancel={() => setShowSubmitModal(false)}
             title="Confirm Submit"
-            content="Are you sure want Submit Stock Adjustment?"
+            content="Are you sure want Submit Stock Opname?"
             successContent={(res: any) => (
               <>
                 Stock Adjusment ID :
