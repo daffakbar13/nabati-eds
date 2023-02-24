@@ -6,10 +6,10 @@ import { Button } from 'pink-lava-ui'
 import React from 'react'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-function Linked({ link, type }: { link: string; status: string; type: 'id' | 'action' }) {
+function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
   const router = useRouter()
   const navigate = () => {
-    router.push(`${PATH.SALES}/proforma-invoice/detail/${link}`)
+    router.push(`${PATH.SALES}/proforma-invoice/detail/${link}?status=${status}`)
   }
   const [hover, setHover] = React.useState(false)
 

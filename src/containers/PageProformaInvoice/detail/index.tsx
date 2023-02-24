@@ -237,11 +237,22 @@ export default function PageShipmentDetail() {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {currentTab === '1' && (
+          {isStatus('Delivery') && (
+            <>
+              {currentTab === '1' && (
+                <>
+                  <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
+                    Confirm PGI
+                  </Button>
+                </>
+              )}
+            </>
+          )}
+          {/* {currentTab === '1' && (
             <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
               Confirm PGI
             </Button>
-          )}
+          )} */}
           {currentTab !== '1' && (
             <ReactToPrint
               trigger={() => (
