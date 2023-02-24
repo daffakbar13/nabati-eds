@@ -206,7 +206,7 @@ export default function BSTS(props: BSTSProps) {
         <Col span={10}>
           <Row style={{ gap: 30, marginTop: 20 }}>
             <TTD label="Penerima" title="" />
-            <TTD label="Pengirim," title="" />
+            <TTD label="Pengirim" title="" />
             <TTD label="ADM Penjualan" title="" />
           </Row>
         </Col>
