@@ -58,8 +58,8 @@ export default function DetailStockAdjustment() {
       {!loading && (
         <Col>
           <div style={{ display: 'flex', gap: 5 }}>
-            <GoBackArrow to={`${PATH.LOGISTIC}/stock-opname`} />
-            <Text variant={'h4'}>View Stock Opname {`${router.query.id}`}</Text>
+            <GoBackArrow to={`${PATH.LOGISTIC}/approval-stock-opname`} />
+            <Text variant={'h4'}>View Approval Stock Opname {`${router.query.id}`}</Text>
           </div>
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
@@ -143,7 +143,7 @@ export default function DetailStockAdjustment() {
             onOk={handleReject}
             onCancel={() => setRejectModal(false)}
             onOkSuccess={() =>
-              router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)
+              router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${router.query.id}`)
             }
             content="Are you sure want to reject?"
             successContent={() => 'Reject Success'}
@@ -156,7 +156,7 @@ export default function DetailStockAdjustment() {
             onOk={handleApprove}
             onCancel={() => setApproveModal(false)}
             onOkSuccess={() =>
-              router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)
+              router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${router.query.id}`)
             }
             content="Are you sure want to approve?"
             successContent={() => 'Approve Success'}
