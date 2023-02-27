@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import moment from 'moment'
-import { Col, Row, Tabs, TabsProps } from 'antd'
+import { Col, Input, Row, Tabs, TabsProps } from 'antd'
 import { DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import {
@@ -25,6 +25,7 @@ import {
 } from 'src/configs/fieldFetches'
 import { useSalesQuotationCreateContext } from '../states'
 import { Card } from 'src/components'
+import { Label } from 'src/components/Text'
 
 export default function SectionField() {
   const {
@@ -54,6 +55,28 @@ export default function SectionField() {
       label: `Picture`,
     },
   ]
+
+  const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0]
+      const fsize = Math.round(file.size / 1024)
+
+      if (fsize > 64) {
+        alert('File too Big, please select a image file less than 64KB')
+        return
+      }
+      let imageDataUrl = await readFile(file)
+      onChangeForm('picture', imageDataUrl)
+    }
+  }
+
+  function readFile(file: any) {
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.addEventListener('load', () => resolve(reader.result), false)
+      reader.readAsDataURL(file)
+    })
+  }
 
   return (
     <>
@@ -1020,7 +1043,31 @@ export default function SectionField() {
             <Card>
               <Row gutter={[10, 10]}>
                 <Col span={12}>
-                  <DebounceSelect
+                  <Label>Picture</Label>
+                  <Input
+                    type="file"
+                    onChange={onFileChange}
+                    accept="image/*"
+                    style={{
+                      border: '1px solid #AAAAAA',
+                      borderRadius: 8,
+                      padding: 10,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  />
+                  {dataForm?.picture && (
+                    <img
+                      src={dataForm?.picture}
+                      alt=""
+                      style={{
+                        marginTop: 10,
+                        maxHeight: 500,
+                      }}
+                    />
+                  )}
+                  {/* <DebounceSelect
                     type="input"
                     label="Picture"
                     placeholder={'Type here...'}
@@ -1030,7 +1077,7 @@ export default function SectionField() {
                       onChangeForm('picture', e.target?.value)
                       // setFetching('customer')
                     }}
-                  />
+                  /> */}
                 </Col>
               </Row>
             </Card>
