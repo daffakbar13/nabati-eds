@@ -197,9 +197,25 @@ export default function UpdateStockOpname() {
             open={showCancelModal}
             onOk={handleCancel}
             onCancel={() => setShowCancelModal(false)}
-            title="Confirm Cancellation"
-            content="Are you sure want to cancel ? Change you made so far
-          will not be saved"
+            title="Confirm Cancel Process"
+            content={`Are you sure want Cancel and Unfreeze Process Reff. Number : ${data?.id} Branch ${data?.branch_id} - ${data?.branch_name}, Sloc ${data?.sloc_id} - ${data?.sloc_name}`}
+            successOkText="Next Proccess"
+            successCancelText="Back to List"
+            onCancelSuccess={() => router.push(`${PATH.LOGISTIC}/stock-opname`)}
+            onOkSuccess={(res) =>
+              router.push(`${PATH.LOGISTIC}/stock-opname/edit/${res?.data?.stock_opname_id}`)
+            }
+            successContent={(res: any) => (
+              <>
+                Reff. Number :
+                <Typography.Text copyable={{ text: res?.data?.id as string }}>
+                  {' '}
+                  {res?.data?.id}
+                </Typography.Text>
+                {` Freeze Branch ${data?.branch_id} - ${data?.branch_name}, Sloc $${data?.sloc_id} - ${data?.sloc_name}`}{' '}
+                has been successfully canceled
+              </>
+            )}
           />
 
           <Modal
