@@ -192,13 +192,13 @@ export default function BSTS(props: BSTSProps) {
             <strong>Total Karton Utuh : {data[0].total_carton}</strong>
           </Col>
           <Col offset={1} span={4}>
-            <strong>DPP : </strong>
+            <strong>DPP : {data[0].total_tax} </strong>
           </Col>
           <Col offset={1} span={4}>
-            <strong>PPN : </strong>
+            <strong>PPN : {data[0].total_tax_base}</strong>
           </Col>
           <Col offset={1} span={4}>
-            <strong>JUMLAH(Rp) : {totalPrice}</strong>
+            <strong>JUMLAH(Rp) : {data[0].total_price}</strong>
           </Col>
         </Row>
       </div>
