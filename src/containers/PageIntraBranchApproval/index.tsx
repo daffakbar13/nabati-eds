@@ -279,7 +279,7 @@ export default function PageApproval(props: Props) {
                 textAlign: 'center',
               }}
             >
-              <div>successfully approve PO STO success</div>
+              <div>PO STO approved successfully</div>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <Button
@@ -316,7 +316,7 @@ export default function PageApproval(props: Props) {
                 textAlign: 'center',
               }}
             >
-              <div>successfully reject PO STO success</div>
+              <div>PO STO Rejected successfully</div>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <Button
