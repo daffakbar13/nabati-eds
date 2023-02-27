@@ -2,7 +2,11 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getConfigSlocCompanyList, updateStatus } from 'src/api/logistic/configuration-sloc-company'
+import {
+  getConfigSlocCompanyList,
+  updateStatus,
+  deleteMultpileSlocCompany,
+} from 'src/api/logistic/configuration-sloc-company'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -68,24 +72,24 @@ export default function PageConfigurationSlocCompany() {
       table.state.selected.some((selected) => dataAll.idx === selected),
     )
 
-    // const DeletedData = ArrayFiltered.map((item: any) => ({
-    //   company_id: item.company_id,
-    //   customer_id: item.customer_id,
-    //   valid_from: moment(item.valid_from).format('YYYY-MM-DD'),
-    // }))
+    const DeletedData = ArrayFiltered.map((item: any) => ({
+      company_id: item.company_id,
+      key: item.key,
+      sloc_id: item.sloc_id,
+    }))
 
-    // setSelectedData(DeletedData)
+    setSelectedData(DeletedData)
   }, [table.state.selected])
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = DeleteCreditLimit({
-    //     delete_config: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
+    try {
+      const res = deleteMultpileSlocCompany({
+        delete_configs: selectedData,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
     return false
   }
 
