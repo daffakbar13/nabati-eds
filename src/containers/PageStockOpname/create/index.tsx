@@ -115,7 +115,7 @@ export default function CreateStockOpname() {
               Cancel
             </Button>
             <Button size="big" variant="primary" onClick={onClickSubmit}>
-              Submit
+              Save
             </Button>
           </Row>
         </Row>

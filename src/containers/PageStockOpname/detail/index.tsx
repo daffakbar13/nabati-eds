@@ -71,7 +71,7 @@ export default function DetailStockOpname() {
                 size="h5"
               />
 
-              {details?.status && details?.status === 'Pending' && (
+              {/* {details?.status && details?.status === 'Pending' && (
                 <div
                   style={{
                     display: 'grid',
@@ -105,6 +105,28 @@ export default function DetailStockOpname() {
                     loading={loading}
                   >
                     Approve
+                  </Button>
+                </div>
+              )} */}
+
+              {details?.status && details?.status === 'Rejected' && (
+                <div
+                  style={{
+                    display: 'grid',
+                    marginLeft: 'auto',
+                    gridTemplateColumns: '1fr',
+                    gap: 12,
+                  }}
+                >
+                  <Button
+                    size="big"
+                    variant="secondary"
+                    onClick={() => {
+                      router.push(`${PATH.LOGISTIC}/stock-opname/edit/${router.query.id}`)
+                    }}
+                    loading={loading}
+                  >
+                    Edit
                   </Button>
                 </div>
               )}
