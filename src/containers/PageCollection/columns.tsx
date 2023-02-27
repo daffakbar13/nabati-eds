@@ -7,20 +7,19 @@ import TaggedStatus from 'src/components/TaggedStatus'
 
 function Linked({
   link,
-  salesType,
+  status,
   type,
+  salesOrg,
 }: {
   link: string
   status: string
-  salesType: string
   type: 'id' | 'action'
+  salesOrg: string
 }) {
   const router = useRouter()
-  // const navigate = () => {
-  //   router.push(`${PATH.SALES}/collection/detail/${link}`)
-  // }
+  const tradeType = salesOrg?.includes('MT') ? 'MT' : 'GT'
   const navigate = () => {
-    router.push(`${PATH.SALES}/collection/detail/${link}?sales-type=${salesType}`)
+    router.push(`${PATH.SALES}/collection/detail/${link}?tradeType=${tradeType}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -55,7 +54,7 @@ export const TableBilling = [
   addColumn({
     title: 'Shipment',
     render: (_, { shipment_id, status, sales_org }) => (
-      <Linked link={shipment_id} status={status} type="id" salesType={sales_org} />
+      <Linked link={shipment_id} status={status} type="id" salesOrg={sales_org} />
     ),
     fixed: true,
     sorter: true,
@@ -94,7 +93,7 @@ export const TableBilling = [
   addColumn({
     title: 'Action',
     render: (_, { shipment_id, status, sales_org }) => (
-      <Linked link={shipment_id} status={status} salesType={sales_org} type="action" />
+      <Linked link={shipment_id} status={status} type="action" salesOrg={sales_org} />
     ),
   }),
 ]
