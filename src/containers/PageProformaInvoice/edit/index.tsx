@@ -144,9 +144,10 @@ export function PageEdit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push({
-              pathname: `${PATH.SALES}/proforma-invoice/detail/${router.query.shipment_id}`,
-            })
+            // router.push({
+            //   pathname: `${PATH.SALES}/proforma-invoice/detail/${router.query.shipment_id}`,
+            // })
+            router.back()
           }}
         >
           OK

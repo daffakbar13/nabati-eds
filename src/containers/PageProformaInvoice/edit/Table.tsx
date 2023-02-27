@@ -5,7 +5,6 @@ import { Col, Row, InputNumber, Input } from 'antd'
 import React from 'react'
 import { Table, Spacer } from 'pink-lava-ui'
 import { useProformaInvoiceCreateContext } from './states'
-import Total from 'src/components/Total'
 import { addColumn } from 'src/utils/createColumns'
 
 export default function TableEditProformaInvoice() {
@@ -13,6 +12,14 @@ export default function TableEditProformaInvoice() {
     state: { dataDeliveryOrder },
     handler: { handleChangeDataDeliveryOrder },
   } = useProformaInvoiceCreateContext()
+
+  const styleInputNumber = {
+    border: '1px solid #AAAAAA',
+    borderRadius: 8,
+    height: 46,
+    display: 'flex',
+    alignItems: 'center',
+  }
 
   const TableColumns = [
     addColumn({
@@ -38,22 +45,26 @@ export default function TableEditProformaInvoice() {
     addColumn({
       title: 'Quantity Revised',
       dataIndex: 'revised_qty',
-      render: (_, { revised_qty }, index) => (
+      render: (text, { qty }, index) => (
         <InputNumber
-          value={revised_qty}
+          value={text?.toLocaleString()}
+          max={qty}
+          min={0}
           onChange={(val) => {
             handleChangeDataDeliveryOrder('revised_qty', val, index)
           }}
+          style={styleInputNumber}
         />
       ),
     }),
     addColumn({
       title: 'Remarks',
       dataIndex: 'remarks',
-      render: (_, { remarks }, index) => (
+      render: (text, { remarks }, index) => (
         <input
-          value={remarks}
+          value={text?.toLocaleString()}
           onChange={(e) => handleChangeDataDeliveryOrder('remarks', e.target.value, index)}
+          style={styleInputNumber}
         />
       ),
     }),
