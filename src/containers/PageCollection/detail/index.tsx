@@ -19,7 +19,7 @@ export default function PageCollectionDetail() {
   const [dataTable, setDataTable] = React.useState([])
   const hasData = Object.keys(data).length > 0
 
-  const isSalesOrg = (...value: string[]) => value.includes(router.query.sales_org as string)
+  const tradeType = router.query.tradeType
 
   function getTotalAmount() {
     if (hasData) {
@@ -123,40 +123,23 @@ export default function PageCollectionDetail() {
             <Text variant={'h4'}>Cash {titlePage}</Text>
             <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 2 }}>
               <Button>asd</Button>
-              {isSalesOrg('PID1%20-%20PMA%20-%20GT') && (
-                <>
-                  <ButtonPinkLava
-                    size="big"
-                    variant="primary"
-                    onClick={() => {
-                      setProcessing('Wait for finish collection')
-                      finishCollection(finishPayload)
-                        .then(() => {
-                          setProcessing(undefined)
-                          router.push(`${PATH.SALES}/collection`)
-                        })
-                        .catch(() => setProcessing(undefined))
-                    }}
-                  >
-                    Finish
-                  </ButtonPinkLava>
-                </>
+              {tradeType !== 'MT' && (
+                <ButtonPinkLava
+                  size="big"
+                  variant="primary"
+                  onClick={() => {
+                    setProcessing('Wait for finish collection')
+                    finishCollection(finishPayload)
+                      .then(() => {
+                        setProcessing(undefined)
+                        router.push(`${PATH.SALES}/collection`)
+                      })
+                      .catch(() => setProcessing(undefined))
+                  }}
+                >
+                  Finish
+                </ButtonPinkLava>
               )}
-              {/* <ButtonPinkLava
-                size="big"
-                variant="primary"
-                onClick={() => {
-                  setProcessing('Wait for finish collection')
-                  finishCollection(finishPayload)
-                    .then(() => {
-                      setProcessing(undefined)
-                      router.push(`${PATH.SALES}/collection`)
-                    })
-                    .catch(() => setProcessing(undefined))
-                }}
-              >
-                Finish
-              </ButtonPinkLava> */}
             </div>
           </div>
           <Spacer size={20} />
