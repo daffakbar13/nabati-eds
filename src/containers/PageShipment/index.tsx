@@ -23,14 +23,15 @@ import { useFilters } from 'src/hooks'
 import { TableBilling } from './columns'
 
 export default function PageShipment() {
+  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const table = useTable({
-    funcApi: getShipment,
+    funcApi: type === 'GT' ? getShipment : getShipmentMT,
     haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
     columns: TableBilling,
   })
   const { oldfilters, searchProps, setFilters } = useFilters(table, 'Search Shipment ID')
+
   const titlePage = useTitlePage('list')
-  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [pending, setPending] = React.useState(0)
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
