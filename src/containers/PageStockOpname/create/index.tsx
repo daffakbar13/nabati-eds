@@ -202,7 +202,7 @@ export default function CreateStockOpname() {
         onOk={handleCreate}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Save"
-        content={`Are you sure want Save and Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`}
+        content={`Are you sure want to Save and Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`}
         successOkText="Next Proccess"
         successCancelText="Back to List"
         onCancelSuccess={() => router.push(`${PATH.LOGISTIC}/stock-opname`)}

@@ -17,16 +17,19 @@ interface propsUseTable {
 
 export const useTableAddItem = (props: propsUseTable) => {
   const initialValue = {
+    id: Math.floor(Math.random() * 10000)
+      .toString()
+      .padStart(4, '0')
+      .toString(),
     product_id: '',
     product_id_label: '',
-    qty: 1,
-    uom_id: 'CTN',
-    stock_qty: 1,
-    uom_stock_id: 'CTN',
-    remarks: '',
-    batch: '',
-    qty_reverence: 0,
-    uom_reverence: 'CTN',
+    stock_l: 0,
+    stock_m: 0,
+    stock_s: 0,
+    actual_l: 0,
+    actual_m: 0,
+    actual_s: 0,
+    base_stock_qty: 0,
     movement_type_id: props.MovementType,
   }
   const [data, setData] = React.useState([])
@@ -58,17 +61,16 @@ export const useTableAddItem = (props: propsUseTable) => {
 
   React.useEffect(() => {
     const ItemsData = props.itemsData?.map((item: any, index) => ({
+      id: item.id,
       product_id: item.product_id,
       product_id_label: `${item.product_id} - ${item.product_name}`,
-      qty: item.qty,
-      uom_id: item.uom_id,
-      stock_qty: item.stock_qty,
-      uom_stock_id: item.stock_uom_id,
-      remarks: item.remarks,
-      batch: item.batch,
-      qty_reverence: Math.round((parseFloat(item.stock_qty) - parseFloat(item.qty)) * 100) / 100,
-      uom_reverence: item.uom_id,
-      movement_type_id: props.MovementType,
+      stock_l: item.stock_unit.large,
+      stock_m: item.stock_unit.middle,
+      stock_s: item.stock_unit.small,
+      actual_l: 0,
+      actual_m: 0,
+      actual_s: 0,
+      base_stock_qty: item.base_stock_qty,
     }))
 
     setData(ItemsData)
@@ -100,9 +102,15 @@ export const useTableAddItem = (props: propsUseTable) => {
         </div>
       ),
       width: 55,
+      fixed: true,
     }),
     addColumn({
-      title: 'Item Sender',
+      title: 'No',
+      render: (_, __, i) => i + 1,
+      width: 50,
+    }),
+    addColumn({
+      title: 'Item',
       dataIndex: 'product_id_label',
       render: (text: string, record: any, index: number) => (
         <DebounceSelect
@@ -119,144 +127,115 @@ export const useTableAddItem = (props: propsUseTable) => {
       width: 400,
     }),
     addColumn({
-      title: 'Qty Stock',
-      dataIndex: 'stock_qty',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('stock_qty', newVal, index)
-            handleChangeData(
-              'qty_reverence',
-              Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
+      title: 'Stock Quantity',
+      dataIndex: 'stock_quanitity',
+      width: 400,
+      children: [
+        {
+          title: 'Large',
+          dataIndex: 'stock_l',
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: 'Middle',
+          dataIndex: 'stock_m',
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: 'Small',
+          dataIndex: 'stock_s',
+          width: 100,
+          align: 'center',
+        },
+      ],
     }),
     addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_stock_id',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_stock_id', e.value, index)
-            handleChangeData('uom_reverence', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
+      title: 'Actual Quantity',
+      dataIndex: 'actual_quanitity',
+      width: 400,
+      children: [
+        {
+          title: 'Large',
+          dataIndex: 'actual_l',
+          render: (text: string, record: any, index: number) => (
+            <InputNumber
+              disabled={isNullProductId(index)}
+              min={isNullProductId(index) ? '0' : '1'}
+              value={text?.toLocaleString()}
+              onChange={(newVal) => {
+                handleChangeData('actual_l', newVal, index)
+              }}
+              style={styleInputNumber}
+            />
+          ),
+          width: 130,
+        },
+        {
+          title: 'Middle',
+          dataIndex: 'actual_m',
+          render: (text: string, record: any, index: number) => (
+            <InputNumber
+              disabled={isNullProductId(index)}
+              min={isNullProductId(index) ? '0' : '1'}
+              value={text?.toLocaleString()}
+              onChange={(newVal) => {
+                handleChangeData('actual_m', newVal, index)
+              }}
+              style={styleInputNumber}
+            />
+          ),
+          width: 130,
+        },
+        {
+          title: 'Small',
+          dataIndex: 'actual_s',
+          render: (text: string, record: any, index: number) => (
+            <InputNumber
+              disabled={isNullProductId(index)}
+              min={isNullProductId(index) ? '0' : '1'}
+              value={text?.toLocaleString()}
+              onChange={(newVal) => {
+                handleChangeData('actual_s', newVal, index)
+              }}
+              style={styleInputNumber}
+            />
+          ),
+          width: 130,
+        },
+      ],
     }),
     addColumn({
-      title: 'Qty Physical',
-      dataIndex: 'qty',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty', newVal, index)
-            handleChangeData(
-              'qty_reverence',
-              Math.round((parseFloat(data?.[index].stock_qty) - parseFloat(newVal)) * 100) / 100,
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
-    }),
-    addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_id',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_id', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
-    }),
-    addColumn({
-      title: 'Qty Reference',
-      dataIndex: 'qty_reverence',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={true}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty_reference', newVal, index)
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
-    }),
-    addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_reverence',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={true}
-          onChange={(e) => {
-            handleChangeData('uom_reverence', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
-    }),
-    addColumn({
-      title: 'Batch',
-      dataIndex: 'batch',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="input"
-          placeholder="e.g Testing"
-          value={text as any}
-          onChange={(e) => {
-            handleChangeData('batch', e.target.value, index)
-          }}
-        />
-      ),
-      width: 200,
-    }),
-    addColumn({
-      title: 'Remarks',
-      dataIndex: 'remarks',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="input"
-          placeholder="e.g Testing"
-          value={text as any}
-          onChange={(e) => {
-            handleChangeData('remarks', e.target.value, index)
-          }}
-        />
-      ),
-      width: 200,
+      title: 'Reference Quantity',
+      dataIndex: 'reference_quanitity',
+      width: 400,
+      children: [
+        {
+          title: 'Large',
+          dataIndex: 'ref_l',
+          render: (text: string, record: any, index: number) =>
+            Number(record.stock_l) - Number(record.actual_l),
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: 'Middle',
+          dataIndex: 'ref_m',
+          render: (text: string, record: any, index: number) =>
+            Number(record.stock_m) - Number(record.actual_m),
+          width: 100,
+          align: 'center',
+        },
+        {
+          title: 'Small',
+          dataIndex: 'ref_s',
+          render: (text: string, record: any, index: number) =>
+            Number(record.stock_s) - Number(record.actual_s),
+          width: 100,
+          align: 'center',
+        },
+      ],
     }),
   ]
 

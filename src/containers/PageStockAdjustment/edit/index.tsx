@@ -15,29 +15,31 @@ import {
   Loader,
 } from 'src/components'
 import { useTableAddItem } from './useTableEditable'
-import { getDetailStockAdjustment, updateStockAdjustment } from 'src/api/logistic/stock-adjustment'
+import {
+  freezeSlocIdByBranchId,
+  getDetailStockAdjustment,
+  updateStatusStockAdjustment,
+  updateStockAdjustment,
+} from 'src/api/logistic/stock-adjustment'
 import useDetail from 'src/hooks/useDetail'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
 
 const { Label, LabelRequired } = Text
 
-export default function CreateStockAdjustment() {
+export default function UpdateStockAdjustment() {
   const now = new Date().toISOString()
   const router = useRouter()
   const data: any = useDetail(getDetailStockAdjustment, { id: router.query.id as string }, false)
   const [form] = Form.useForm()
   const [headerData, setHeaderData] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  const [branchSelected, setBranchSelected] = useState('')
   const [movementSelected, setMovementSelected] = useState('')
   const tableAddItems = useTableAddItem({
     idbranch: data?.branch_id,
     itemsData: data.items,
     MovementType: movementSelected,
   })
-  const [allSloc, setAllScloc] = useState([])
 
   // Modal
   const [showCancelModal, setShowCancelModal] = useState(false)
@@ -49,20 +51,27 @@ export default function CreateStockAdjustment() {
     setShowSubmitModal(true)
   }
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     const payload: any = {
-      branch_id: data.branch_id,
-      stock_doct_type: 'PI',
-      material_doc_type: 'WA',
-      document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
-      posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
       header_text: headerData.header_text,
-      sloc_id: headerData.sloc_id.value,
-      status_id: '00',
-      items: tableAddItems.data.map((i) => i),
+      items: tableAddItems.data.map((i) => ({
+        id: i.id,
+        product_id: i.product_id,
+        base_stock_qty: i.base_stock_qty,
+        qty_unit: {
+          large: i.actual_l,
+          middle: i.actual_m,
+          small: i.actual_s,
+        },
+      })),
     }
     try {
       const res = await updateStockAdjustment(data.id, payload)
+
+      // await updateStatusStockAdjustment(router.query.id as string, {
+      //   status_id: '01',
+      // })
+
       return res
     } catch (error) {
       const newLocal = false
@@ -70,22 +79,34 @@ export default function CreateStockAdjustment() {
     }
   }
 
+  const handleCancel = async () => {
+    try {
+      const payload = { status_id: '04' }
+      await updateStatusStockAdjustment(router.query.id as string, payload)
+
+      await freezeSlocIdByBranchId(
+        {
+          id: data?.sloc_id,
+          is_freeze: 0,
+        },
+        data?.branch_id,
+      )
+
+      router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)
+      // return res
+    } catch (error) {
+      return false
+    }
+  }
+
   useEffect(() => {
-    if (data.company_id) {
-      setLoading(false)
-    } else {
-      setLoading(true)
-    }
-
-    if (data.branch_id) {
-      fieldSlocByConfigLogistic(data.branch_id).then((result) => {
-        setAllScloc(result)
-      })
-    }
-
-    if (data.movement_type_id) {
-      setMovementSelected(data.movement_type_id)
-    }
+    form.setFieldsValue({
+      sloc_id: `${data?.sloc_id} - ${data?.sloc_name}`,
+      branch_id: `${data?.branch_id} - ${data?.branch_name}`,
+      header_text: data?.header_text,
+      document_date: moment(data?.document_date).format('YYYY-MM-DD'),
+      posting_date: moment(data?.posting_date).format('YYYY-MM-DD'),
+    })
   }, [data])
 
   return (
@@ -121,7 +142,7 @@ export default function CreateStockAdjustment() {
               scrollToFirstError
             >
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-                <Form.Item
+                {/* <Form.Item
                   name="movement_type"
                   style={{ marginTop: -12, marginBottom: 0 }}
                   initialValue={data?.movement_type_id}
@@ -136,62 +157,22 @@ export default function CreateStockAdjustment() {
                     ]}
                     onChange={(e) => setMovementSelected(e.value)}
                   />
+                </Form.Item> */}
+                <Form.Item name="branch_id" style={{ marginTop: -12, marginBottom: 0 }}>
+                  <Input type="input" label="Branch" disabled required />
                 </Form.Item>
-                <Form.Item
-                  name="document_date"
-                  style={{ marginTop: -12, marginBottom: 0 }}
-                  initialValue={moment(data?.document_date || now)}
-                >
-                  <DatePickerInput
-                    fullWidth
-                    label="Doc. Date"
-                    defaultValue={moment()}
-                    format={'DD/MM/YYYY'}
-                    required
-                  />
+                <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
+                  <Input label="Doc. Date" required disabled />
                 </Form.Item>
-                <Form.Item
-                  name="branch_id"
-                  style={{ marginTop: -12, marginBottom: 0 }}
-                  rules={[{ required: true }]}
-                  initialValue={`${data?.branch_id} - ${data?.branch_name}`}
-                >
-                  <DebounceSelect
-                    type="select"
-                    label="Branch"
-                    required
-                    fetchOptions={(search) => fieldBranchSupply(search)}
-                    onChange={(e) => setBranchSelected(e.value)}
-                    disabled
-                  />
+                <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
+                  <Input label="Sloc" required disabled />
                 </Form.Item>
-                <Form.Item
-                  name="posting_date"
-                  style={{ marginTop: -12, marginBottom: 0 }}
-                  initialValue={moment(data?.posting_date || now)}
-                >
-                  <DatePickerInput
-                    fullWidth
-                    label="Posting Date"
-                    defaultValue={moment()}
-                    format={'DD/MM/YYYY'}
-                    required
-                  />
-                </Form.Item>
-                <Form.Item
-                  name="sloc_id"
-                  style={{ marginTop: -12, marginBottom: 0 }}
-                  initialValue={data.from_sloc}
-                >
-                  <DebounceSelect type="select" label="Sloc" required options={allSloc} />
+                <Form.Item name="posting_date" style={{ marginTop: -12, marginBottom: 0 }}>
+                  <Input label="Posting Date" required disabled />
                 </Form.Item>
 
-                <Form.Item
-                  name="header_text"
-                  style={{ marginTop: -12, marginBottom: 0 }}
-                  initialValue={data.header_text}
-                >
-                  <DebounceSelect label="Header Text" type="input" />
+                <Form.Item name="header_text" style={{ marginTop: -12, marginBottom: 0 }}>
+                  <Input label="Header Text" type="input" disabled />
                 </Form.Item>
               </div>
             </Form>
@@ -214,7 +195,7 @@ export default function CreateStockAdjustment() {
 
           <Modal
             open={showCancelModal}
-            onOk={() => router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${router.query.id}`)}
+            onOk={handleCancel}
             onCancel={() => setShowCancelModal(false)}
             title="Confirm Cancellation"
             content="Are you sure want to cancel ? Change you made so far
@@ -223,17 +204,17 @@ export default function CreateStockAdjustment() {
 
           <Modal
             open={showSubmitModal}
-            onOk={handleCreate}
+            onOk={handleUpdate}
             onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
             onCancel={() => setShowSubmitModal(false)}
             title="Confirm Submit"
             content="Are you sure want Submit Stock Adjustment?"
             successContent={(res: any) => (
               <>
-                Stock Adjusment ID :
-                <Typography.Text copyable={{ text: res?.data.material_doc_id as string }}>
+                Stock Opname ID :
+                <Typography.Text copyable={{ text: router.query.id as string }}>
                   {' '}
-                  {res?.data.material_doc_id}
+                  {router.query.id}
                 </Typography.Text>
                 has been successfully Updated
               </>

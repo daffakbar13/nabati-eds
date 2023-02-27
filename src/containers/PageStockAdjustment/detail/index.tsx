@@ -110,17 +110,17 @@ export default function DetailStockAdjustment() {
           </Card>
           <Card>
             <List loading={loading}>
-              <List.Item
+              {/* <List.Item
                 label="Movement Type"
                 value={`${details?.movement_type_id}-${toTitleCase(details?.movement_type_name)}`}
-              />
+              /> */}
               <List.Item
                 label="Branch"
                 value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
               />
               <List.Item
                 label="SLoc"
-                value={`${details?.from_sloc}-${toTitleCase(details?.from_sloc_name)}`}
+                value={`${details?.sloc_id}-${toTitleCase(details?.sloc_name)}`}
               />
               <List.Item label="" value={''} />
 

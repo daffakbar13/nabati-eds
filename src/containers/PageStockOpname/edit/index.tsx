@@ -20,6 +20,7 @@ import useDetail from 'src/hooks/useDetail'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
 import {
+  freezeSlocIdByBranchId,
   getDetailStockOpname,
   updateStatusStockOpname,
   updateStockOpname,
@@ -52,7 +53,7 @@ export default function UpdateStockOpname() {
     setShowSubmitModal(true)
   }
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     const payload: any = {
       header_text: headerData.header_text,
       items: tableAddItems.data.map((i) => ({
@@ -68,10 +69,33 @@ export default function UpdateStockOpname() {
     }
     try {
       const res = await updateStockOpname(data.id, payload)
+      // await updateStatusStockOpname(router.query.id as string, {
+      //   status_id: '03',
+      // })
       return res
     } catch (error) {
       const newLocal = false
       return newLocal
+    }
+  }
+
+  const handleCancel = async () => {
+    try {
+      const payload = { status_id: '04' }
+      await updateStatusStockOpname(router.query.id as string, payload)
+
+      await freezeSlocIdByBranchId(
+        {
+          id: data?.sloc_id,
+          is_freeze: 0,
+        },
+        data?.branch_id,
+      )
+
+      router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)
+      // return res
+    } catch (error) {
+      return false
     }
   }
 
@@ -171,7 +195,7 @@ export default function UpdateStockOpname() {
 
           <Modal
             open={showCancelModal}
-            onOk={() => router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)}
+            onOk={handleCancel}
             onCancel={() => setShowCancelModal(false)}
             title="Confirm Cancellation"
             content="Are you sure want to cancel ? Change you made so far
@@ -180,7 +204,7 @@ export default function UpdateStockOpname() {
 
           <Modal
             open={showSubmitModal}
-            onOk={handleCreate}
+            onOk={handleUpdate}
             onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-opname`)}
             onCancel={() => setShowSubmitModal(false)}
             title="Confirm Submit"
