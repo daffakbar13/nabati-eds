@@ -35,27 +35,15 @@ export const columns = (goToDetail: (id: string) => {}) => [
     width: 200,
   }),
   addColumn({
-    title: 'Move Type',
-    dataIndex: 'movement_type_id',
-    render: (text: string, record: any) => (
-      <Tooltip
-        overlayInnerStyle={{ width: 'fit-content' }}
-        color="#F4FBFC"
-        title={record.movement_type_name}
-      >
-        {text}
-      </Tooltip>
-    ),
-    width: 200,
-  }),
-  addColumn({
     title: 'Header Text',
     dataIndex: 'header_text',
   }),
   addColumn({
     title: 'Status',
     dataIndex: 'status',
-    render: (text: string, record: any) => <TaggedStatus status={text} />,
+    render: (text: string, record: any) => (
+      <TaggedStatus status={text === 'Wait Approval Adjust' ? 'Wait For Approval' : text} />
+    ),
   }),
   addColumn({
     title: 'Action',
