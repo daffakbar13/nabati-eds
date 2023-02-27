@@ -50,11 +50,11 @@ export default function PrintBilling(props: PrintBillingProps) {
               <Col span={8}>
                 <h3>Tanggal Cetak : {dateFormat(new Date().toISOString(), true)}</h3>
                 <br />
-                <h3>Kepada Yth : {customer_id}</h3>
+                <h3>Kepada Yth : {customer_info?.customer?.id}</h3>
                 <h3>
-                  <b>{customer_info.name}</b>
+                  <b>{customer_info?.customer?.name}</b>
                 </h3>
-                <h3>{NOT_FOUND}</h3>
+                <h3>{customer_info?.customer?.address}</h3>
               </Col>
             </Row>
             <Row>
@@ -64,7 +64,7 @@ export default function PrintBilling(props: PrintBillingProps) {
                     <tr>
                       <td>TELP</td>
                       <td style={{ minWidth: 30, textAlign: 'center' }}> : </td>
-                      <td>{customer_info.phone_number}</td>
+                      <td>{NOT_FOUND}</td>
                     </tr>
                     <tr>
                       <td>NPWP</td>
@@ -77,7 +77,7 @@ export default function PrintBilling(props: PrintBillingProps) {
                       <td>{do_number}</td>
                     </tr>
                     <tr>
-                      <td>NO. ORDER</td>
+                      <td>NO. SO</td>
                       <td style={{ minWidth: 30, textAlign: 'center' }}> : </td>
                       <td>{so_number}</td>
                     </tr>
