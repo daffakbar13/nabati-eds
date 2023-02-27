@@ -123,7 +123,10 @@ export default function UpdateStockOpname() {
             <Row justifyContent="space-between" reverse>
               <Row gap="16px">
                 <Button size="big" variant="tertiary" onClick={() => setShowCancelModal(true)}>
-                  Cancel
+                  Cancel Process
+                </Button>
+                <Button size="big" variant="secondary">
+                  Print
                 </Button>
                 <Button size="big" variant="primary" onClick={onClickSubmit}>
                   Submit
@@ -224,7 +227,7 @@ export default function UpdateStockOpname() {
             onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-opname`)}
             onCancel={() => setShowSubmitModal(false)}
             title="Confirm Submit"
-            content="Are you sure want Submit Stock Opname?"
+            content={`Are you sure want Submit Reff. Number - ${data?.id}?`}
             successContent={(res: any) => (
               <>
                 Stock Opname ID :
@@ -232,7 +235,7 @@ export default function UpdateStockOpname() {
                   {' '}
                   {router.query.id}
                 </Typography.Text>
-                has been successfully Updated
+                has been successfully submitted
               </>
             )}
             successOkText="OK"
