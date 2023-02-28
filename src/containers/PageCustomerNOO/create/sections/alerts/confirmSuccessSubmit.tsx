@@ -54,7 +54,7 @@ export default function ConfirmSuccessSubmit() {
             // const additional = isFromDetail ? `/detail/${router.query.id}` : ''
             !isEditPage
               ? router.push(`${PATH.SALES}/quotation/create`)
-              : router.push(`${PATH.SALES}/customer-noo}`)
+              : router.push(`${PATH.SALES}/customer-noo`)
           }}
         >
           OK

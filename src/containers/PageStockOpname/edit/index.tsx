@@ -15,15 +15,22 @@ import {
   Loader,
 } from 'src/components'
 import { useTableAddItem } from './useTableEditable'
-import { getDetailStockAdjustment, updateStockAdjustment } from 'src/api/logistic/stock-adjustment'
+import {
+  getDetailStockAdjustment,
+  updateStockAdjustment,
+  checkIsFreezeList,
+} from 'src/api/logistic/stock-adjustment'
 import useDetail from 'src/hooks/useDetail'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
 import {
+  freezeSlocIdByBranchId,
   getDetailStockOpname,
   updateStatusStockOpname,
   updateStockOpname,
 } from 'src/api/logistic/stock-opname'
+import { ExclamationBrownIc } from 'src/assets'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 const { Label, LabelRequired } = Text
 
@@ -52,7 +59,7 @@ export default function UpdateStockOpname() {
     setShowSubmitModal(true)
   }
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     const payload: any = {
       header_text: headerData.header_text,
       items: tableAddItems.data.map((i) => ({
@@ -68,10 +75,33 @@ export default function UpdateStockOpname() {
     }
     try {
       const res = await updateStockOpname(data.id, payload)
+      // await updateStatusStockOpname(router.query.id as string, {
+      //   status_id: '03',
+      // })
       return res
     } catch (error) {
       const newLocal = false
       return newLocal
+    }
+  }
+
+  const handleCancel = async () => {
+    try {
+      const payload = { status_id: '04' }
+      await updateStatusStockOpname(router.query.id as string, payload)
+
+      await freezeSlocIdByBranchId(
+        {
+          id: data?.sloc_id,
+          is_freeze: 0,
+        },
+        data?.branch_id,
+      )
+
+      router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)
+      // return res
+    } catch (error) {
+      return false
     }
   }
 
@@ -85,6 +115,21 @@ export default function UpdateStockOpname() {
     })
   }, [data])
 
+  const [freezeList, setFreezeList] = useState([])
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        setLoading(true)
+        const res = await checkIsFreezeList()
+        setFreezeList(res.data || [])
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    }
+    fetch()
+  }, [])
+
   return (
     <>
       {loading && <Loader type="process" text="Wait for get data" />}
@@ -96,18 +141,64 @@ export default function UpdateStockOpname() {
           </div>
           <Spacer size={20} />
           <Card style={{ overflow: 'unset' }}>
-            <Row justifyContent="space-between" reverse>
-              <Row gap="16px">
-                <Button size="big" variant="tertiary" onClick={() => setShowCancelModal(true)}>
-                  Cancel
-                </Button>
-                <Button size="big" variant="primary" onClick={onClickSubmit}>
-                  Submit
-                </Button>
-              </Row>
-            </Row>
+            <div style={{ display: 'flex' }}>
+              <TaggedStatus status={data?.status} size="h5" />
+              {data?.status && data?.status !== 'Rejected' && (
+                <div
+                  style={{
+                    display: 'grid',
+                    marginLeft: 'auto',
+                    gridTemplateColumns: '1fr 1fr 1fr',
+                    gap: 12,
+                  }}
+                >
+                  <Button size="big" variant="tertiary" onClick={() => setShowCancelModal(true)}>
+                    Cancel Process
+                  </Button>
+                  <Button size="big" variant="secondary">
+                    Print
+                  </Button>
+                  <Button size="big" variant="primary" onClick={onClickSubmit}>
+                    Submit
+                  </Button>
+                </div>
+              )}
+              {data?.status && data?.status === 'Rejected' && (
+                <div
+                  style={{
+                    display: 'grid',
+                    marginLeft: 'auto',
+                    gridTemplateColumns: '1fr',
+                    gap: 12,
+                  }}
+                >
+                  <Button size="big" variant="primary" onClick={onClickSubmit}>
+                    Submit
+                  </Button>
+                </div>
+              )}
+            </div>
           </Card>
           <Spacer size={10} />
+
+          {freezeList.map((i) => (
+            <div
+              key={i.id}
+              style={{
+                marginBottom: 10,
+                color: '#B78101',
+                background: '#FFFBDF',
+                borderRadius: 8,
+                padding: '8px 16px',
+                display: 'grid',
+                gridTemplateColumns: '30px 1fr',
+              }}
+            >
+              <ExclamationBrownIc />
+              <p>{`Branch ${i.branch_id}-${i.branch_name}, SLoc ${i.id} ${i.name} is being frezee.`}</p>
+            </div>
+          ))}
+
           <Card style={{ overflow: 'unset', padding: '28px 20px' }}>
             <Form
               form={form}
@@ -171,20 +262,33 @@ export default function UpdateStockOpname() {
 
           <Modal
             open={showCancelModal}
-            onOk={() => router.push(`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`)}
+            onOk={handleCancel}
             onCancel={() => setShowCancelModal(false)}
-            title="Confirm Cancellation"
-            content="Are you sure want to cancel ? Change you made so far
-          will not be saved"
+            title="Confirm Cancel Process"
+            content={`Are you sure want Cancel and Unfreeze Process Reff. Number : ${data?.id} Branch ${data?.branch_id} - ${data?.branch_name}, Sloc ${data?.sloc_id} - ${data?.sloc_name}`}
+            successOkText="Next Proccess"
+            successCancelText="Back to List"
+            onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-opname`)}
+            successContent={(res: any) => (
+              <>
+                Reff. Number :
+                <Typography.Text copyable={{ text: res?.data?.id as string }}>
+                  {' '}
+                  {res?.data?.id}
+                </Typography.Text>
+                {` Freeze Branch ${data?.branch_id} - ${data?.branch_name}, Sloc $${data?.sloc_id} - ${data?.sloc_name}`}{' '}
+                has been successfully canceled
+              </>
+            )}
           />
 
           <Modal
             open={showSubmitModal}
-            onOk={handleCreate}
+            onOk={handleUpdate}
             onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-opname`)}
             onCancel={() => setShowSubmitModal(false)}
             title="Confirm Submit"
-            content="Are you sure want Submit Stock Opname?"
+            content={`Are you sure want Submit Reff. Number - ${data?.id}?`}
             successContent={(res: any) => (
               <>
                 Stock Opname ID :
@@ -192,7 +296,7 @@ export default function UpdateStockOpname() {
                   {' '}
                   {router.query.id}
                 </Typography.Text>
-                has been successfully Updated
+                has been successfully submitted
               </>
             )}
             successOkText="OK"

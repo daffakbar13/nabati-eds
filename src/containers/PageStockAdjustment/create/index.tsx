@@ -7,7 +7,11 @@ import { PATH } from 'src/configs/menus'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Input, Modal, SelectMasterData, Text, Select } from 'src/components'
 
-import { createStockAdjustment } from 'src/api/logistic/stock-adjustment'
+import {
+  createStockAdjustment,
+  freezeSlocIdByBranchId,
+  getListStockAdjustmentByBranchSloc,
+} from 'src/api/logistic/stock-adjustment'
 
 import { useTableAddItem } from './useTableEditable'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -18,17 +22,21 @@ const { Label, LabelRequired } = Text
 export default function CreateStockAdjustment() {
   const now = new Date().toISOString()
   const [form] = Form.useForm()
+
   const [headerData, setHeaderData] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [allSloc, setAllScloc] = useState([])
+  const [branchLabelSelected, setBranchLabelSelected] = useState('')
+  const [slocLabelSelected, setSlocLabelSelected] = useState('')
   const [branchSelected, setBranchSelected] = useState('')
-  const [movementSelected, setMovementSelected] = useState('')
-  const tableAddItems = useTableAddItem({
-    idbranch: branchSelected.split(' - ')[0] || '',
-    MovementType: movementSelected,
-  })
+  const [slocSelected, setSlocSelected] = useState('')
+  const [dataTable, setDataTable] = useState([])
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
-  const [allSloc, setAllScloc] = useState([])
+
+  const tableAddItems = useTableAddItem({
+    idbranch: branchSelected.split(' - ')[0] || '',
+    idSloc: slocSelected,
+  })
 
   const router = useRouter()
 
@@ -41,22 +49,36 @@ export default function CreateStockAdjustment() {
   const handleCreate = async () => {
     const payload: any = {
       branch_id: headerData.branch_id.value,
-      stock_doct_type: 'PI',
+      stock_doct_type: 'PIP',
       material_doc_type: 'WA',
       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
       header_text: headerData.header_text,
       sloc_id: headerData.sloc_id.value,
       status_id: '00',
-      items: tableAddItems.data.map((i) => i),
+      items: dataTable.length
+        ? dataTable.map((i) => ({
+            product_id: i.product_id,
+            large: i.large,
+            middle: i.middle,
+            small: i.small,
+            remarks: '',
+            batch: '',
+          }))
+        : [],
     }
+
     try {
-      setLoading(true)
       const res = await createStockAdjustment(payload)
-      setLoading(false)
+      await freezeSlocIdByBranchId(
+        {
+          id: slocSelected,
+          is_freeze: 1,
+        },
+        branchSelected,
+      )
       return res
     } catch (error) {
-      setLoading(false)
       const newLocal = false
       return newLocal
     }
@@ -69,6 +91,16 @@ export default function CreateStockAdjustment() {
       })
     }
   }, [branchSelected])
+
+  useEffect(() => {
+    if (branchSelected !== '' && slocSelected !== '') {
+      getListStockAdjustmentByBranchSloc(branchSelected, slocSelected).then((res: any) => {
+        if (res.data.result && res.data.result.length) {
+          setDataTable(res.data.result[0]?.ProductBySloc)
+        }
+      })
+    }
+  }, [branchSelected, slocSelected])
 
   return (
     <Col>
@@ -97,7 +129,7 @@ export default function CreateStockAdjustment() {
           scrollToFirstError
         >
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-            <Form.Item name="movement_type" style={{ marginTop: -12, marginBottom: 0 }}>
+            {/* <Form.Item name="movement_type" style={{ marginTop: -12, marginBottom: 0 }}>
               <DebounceSelect
                 type="select"
                 label="Movement Type"
@@ -107,6 +139,22 @@ export default function CreateStockAdjustment() {
                   { label: 'Z72 - RE GR Phys. Inv', value: 'Z72' },
                 ]}
                 onChange={(e) => setMovementSelected(e.value)}
+              />
+            </Form.Item> */}
+            <Form.Item
+              name="branch_id"
+              style={{ marginTop: -12, marginBottom: 0 }}
+              rules={[{ required: true }]}
+            >
+              <DebounceSelect
+                type="select"
+                label="Branch"
+                required
+                fetchOptions={(search) => fieldBranchSupply(search)}
+                onChange={(e) => {
+                  setBranchSelected(e.value)
+                  setBranchLabelSelected(e.label)
+                }}
               />
             </Form.Item>
             <Form.Item name="document_date" style={{ marginTop: -12, marginBottom: 0 }}>
@@ -118,17 +166,16 @@ export default function CreateStockAdjustment() {
                 required
               />
             </Form.Item>
-            <Form.Item
-              name="branch_id"
-              style={{ marginTop: -12, marginBottom: 0 }}
-              rules={[{ required: true }]}
-            >
+            <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
               <DebounceSelect
                 type="select"
-                label="Branch"
+                label="Sloc"
                 required
-                fetchOptions={(search) => fieldBranchSupply(search)}
-                onChange={(e) => setBranchSelected(e.value)}
+                options={allSloc}
+                onChange={(e) => {
+                  setSlocSelected(e.value)
+                  setSlocLabelSelected(e.label)
+                }}
               />
             </Form.Item>
             <Form.Item name="posting_date" style={{ marginTop: -12, marginBottom: 0 }}>
@@ -140,9 +187,6 @@ export default function CreateStockAdjustment() {
                 required
               />
             </Form.Item>
-            <Form.Item name="sloc_id" style={{ marginTop: -12, marginBottom: 0 }}>
-              <DebounceSelect type="select" label="Sloc" required options={allSloc} />
-            </Form.Item>
 
             <Form.Item name="header_text" style={{ marginTop: -12, marginBottom: 0 }}>
               <DebounceSelect label="Header Text" type="input" />
@@ -151,20 +195,15 @@ export default function CreateStockAdjustment() {
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
 
-        {branchSelected && (
+        {/* {branchSelected && (
           <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
             + Add Item
           </Button>
-        )}
+        )} */}
 
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table
-            editable
-            data={tableAddItems.data}
-            columns={tableAddItems.columns}
-            loading={tableAddItems.loading}
-          />
+          <Table data={dataTable} columns={tableAddItems.columns} loading={tableAddItems.loading} />
         </div>
       </Card>
 
@@ -180,21 +219,26 @@ export default function CreateStockAdjustment() {
       <Modal
         open={showSubmitModal}
         onOk={handleCreate}
-        onOkSuccess={(res) => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
         onCancel={() => setShowSubmitModal(false)}
-        title="Confirm Submit"
-        content="Are you sure want Submit Stock Adjustment?"
+        title="Confirm Save"
+        content={`Are you sure want to Save and Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`}
+        successOkText="Next Proccess"
+        successCancelText="Back to List"
+        onCancelSuccess={() => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
+        onOkSuccess={(res) =>
+          router.push(`${PATH.LOGISTIC}/stock-adjustment/edit/${res?.data?.stock_adjust_id}`)
+        }
         successContent={(res: any) => (
           <>
             Stock Adjusment ID :
-            <Typography.Text copyable={{ text: res?.data.material_doc_id as string }}>
+            <Typography.Text copyable={{ text: res?.data.stock_adjust_id as string }}>
               {' '}
-              {res?.data.material_doc_id}
+              {res?.data.stock_adjust_id}
             </Typography.Text>
-            has been successfully created
+            {` Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`} has been
+            successfully created
           </>
         )}
-        successOkText="OK"
       />
     </Col>
   )

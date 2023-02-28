@@ -14,6 +14,7 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import FreezeSlocModal from './modals/freezeSloc'
 import { columns } from './columns'
+import { getListStockOpname } from 'src/api/logistic/stock-opname'
 
 export default function PageApprovalStockOpname() {
   const [freezeModal, setFreezeModal] = useState(false)
@@ -22,10 +23,10 @@ export default function PageApprovalStockOpname() {
 
   const goToDetailPage = (id: string) =>
     // eslint-disable-next-line implicit-arrow-linebreak
-    router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${id}`)
+    router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${id}`)
 
   const table = useTable({
-    funcApi: getListStockAdjustment,
+    funcApi: getListStockOpname,
     columns: columns(goToDetailPage),
   })
 
@@ -66,7 +67,7 @@ export default function PageApprovalStockOpname() {
 
   return (
     <>
-      <Text variant={'h4'}>Stock Adjustment</Text>
+      <Text variant={'h4'}>Approval Stock Opname</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

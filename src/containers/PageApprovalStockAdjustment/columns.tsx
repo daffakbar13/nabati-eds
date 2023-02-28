@@ -30,22 +30,8 @@ export const columns = (goToDetail: (id: string) => {}) => [
   }),
   addColumn({
     title: 'Sloc',
-    dataIndex: 'from_sloc',
-    render: (text: string, record: any) => <>{`${text} - ${record.from_sloc_name}`}</>,
-    width: 200,
-  }),
-  addColumn({
-    title: 'Move Type',
-    dataIndex: 'movement_type_id',
-    render: (text: string, record: any) => (
-      <Tooltip
-        overlayInnerStyle={{ width: 'fit-content' }}
-        color="#F4FBFC"
-        title={record.movement_type_name}
-      >
-        {text}
-      </Tooltip>
-    ),
+    dataIndex: 'sloc_id',
+    render: (text: string, record: any) => <>{`${text} - ${record.sloc_name}`}</>,
     width: 200,
   }),
   addColumn({
@@ -55,7 +41,9 @@ export const columns = (goToDetail: (id: string) => {}) => [
   addColumn({
     title: 'Status',
     dataIndex: 'status',
-    render: (text: string, record: any) => <TaggedStatus status={text} />,
+    render: (text: string, record: any) => (
+      <TaggedStatus status={text === 'Wait Approval Adjust' ? 'Wait For Approval' : text} />
+    ),
   }),
   addColumn({
     title: 'Action',

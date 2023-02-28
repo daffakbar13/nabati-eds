@@ -30,8 +30,8 @@ export const columns = (goToDetail: (id: string) => {}) => [
   }),
   addColumn({
     title: 'Sloc',
-    dataIndex: 'from_sloc',
-    render: (text: string, record: any) => <>{`${text} - ${record.from_sloc_name}`}</>,
+    dataIndex: 'sloc_id',
+    render: (text: string, record: any) => <>{`${text} - ${record.sloc_name}`}</>,
     width: 200,
   }),
   addColumn({
