@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { addColumn } from 'src/utils/createColumns'
 import { Button, Table, DatePickerInput } from 'pink-lava-ui'
-import { concatString } from 'src/utils/concatString'
 import { Modal, Typography } from 'antd'
 import React from 'react'
 import { MinusCircleFilled } from '@ant-design/icons'
@@ -223,33 +222,33 @@ export const useTableDetailCollection = (
         title: 'Undelivered Reason',
         dataIndex: 'undelivered_reason_name',
       }),
-      // addColumn({
-      //   title: 'Action',
-      //   render: (_, r) => (
-      //     <div style={{ display: 'flex', gap: 5 }}>
-      //       <Button
-      //         variant="primary"
-      //         size="small"
-      //         onClick={() => {
-      //           setShowModalDelivered(true)
-      //           setData(r)
-      //         }}
-      //       >
-      //         Delivered
-      //       </Button>
-      //       <Button
-      //         variant="tertiary"
-      //         size="small"
-      //         onClick={() => setShowPopupUndelivered(r.billing_number)}
-      //       >
-      //         Undelivered
-      //       </Button>
-      //       {showPopupUndelivered === r.billing_number && (
-      //         <PopupUndelivered id={r.billing_number} />
-      //       )}
-      //     </div>
-      //   ),
-      // }),
+      addColumn({
+        title: 'Action',
+        render: (_, r) => (
+          <div style={{ display: 'flex', gap: 5 }}>
+            <Button
+              variant="primary"
+              size="small"
+              onClick={() => {
+                setShowModalDelivered(true)
+                setData(r)
+              }}
+            >
+              Delivered
+            </Button>
+            <Button
+              variant="tertiary"
+              size="small"
+              onClick={() => setShowPopupUndelivered(r.billing_number)}
+            >
+              Undelivered
+            </Button>
+            {showPopupUndelivered === r.billing_number && (
+              <PopupUndelivered id={r.billing_number} />
+            )}
+          </div>
+        ),
+      }),
     ],
   }
 }
