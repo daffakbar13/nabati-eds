@@ -113,14 +113,6 @@ export default function PageApprovalStockAdjustment() {
       await Promise.all(
         table.state.selected.map((id) => {
           getDetailStockAdjustment({ id }).then((item: any) => {
-            freezeSlocIdByBranchId(
-              {
-                id: item?.sloc_id,
-                is_freeze: 0,
-              },
-              item?.branch_id,
-            ).then((res) => console.log(res))
-
             const payload = { status_id: '03', header_text: item?.header_text, reason: '' }
             updateStatusStockAdjustment(id, payload).then((res) => console.log(res))
           })
@@ -135,7 +127,7 @@ export default function PageApprovalStockAdjustment() {
 
   return (
     <>
-      <Text variant={'h4'}>Stock Adjustment</Text>
+      <Text variant={'h4'}>Approval Stock Adjustment</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
