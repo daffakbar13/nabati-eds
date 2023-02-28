@@ -13,10 +13,14 @@ export const headerMenu = [
       </div>
     ),
   },
-  // {
-  //   path: PATH.HOME,
-  //   label: <Link href={{ pathname: '/home' }} >Home</Link>,
-  // },
+  {
+    path: '/dashboard?menu=config',
+    label: <Link href={{ pathname: '/dashboard?menu=config' }}>Config</Link>,
+  },
+  {
+    path: '/dashboard?menu=mdm',
+    label: <Link href={{ pathname: '/dashboard?menu=mdm' }}>Master Data Management</Link>,
+  },
   {
     path: PATH.SALES,
     label: <Link href={{ pathname: '/sales' }}>Sales</Link>,
@@ -24,6 +28,10 @@ export const headerMenu = [
   {
     path: PATH.LOGISTIC,
     label: <Link href={{ pathname: '/logistic' }}>Logistic</Link>,
+  },
+  {
+    path: '/fico',
+    label: <Link href={{ pathname: '/fico' }}>Finance</Link>,
   },
   {
     path: null,
