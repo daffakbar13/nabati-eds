@@ -264,7 +264,7 @@ export default function PageStockReservation() {
           onOkSuccess={() => {
             router.push('/logistic/approval-stock-reservation')
           }}
-          successContent={(res: any) => <>Stock Reservation has been successfully Rejected</>}
+          successContent={(res: any) => <>Stock Reservation has been successfully Approved</>}
           successOkText="OK"
           width={550}
         />
