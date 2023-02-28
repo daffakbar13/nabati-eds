@@ -19,7 +19,7 @@ export default function PageCollectionDetail() {
   const [dataTable, setDataTable] = React.useState([])
   const hasData = Object.keys(data).length > 0
 
-  const tradeType = router.query.tradeType
+  const { tradeType } = router.query
 
   function getTotalAmount() {
     if (hasData) {
