@@ -1,7 +1,8 @@
-import { Tag, Divider } from 'antd'
+import { Tag, Divider, Typography, Input } from 'antd'
 import { Col, Spacer, Table, Text, Button } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
 import { Card, GoBackArrow, Modal } from 'src/components'
+import { Popup } from 'src/components'
 import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
 import { useRouter } from 'next/router'
@@ -12,21 +13,32 @@ import TaggedStatus from 'src/components/TaggedStatus'
 import { columns } from './columns'
 import { Loader } from 'src/components'
 import useDetail from 'src/hooks/useDetail'
-import { getDetailStockOpname, updateStatusStockOpname } from 'src/api/logistic/stock-opname'
+import {
+  freezeSlocIdByBranchId,
+  getDetailStockOpname,
+  updateStatusStockOpname,
+} from 'src/api/logistic/stock-opname'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { Label } from 'src/components/Text'
 
 export default function DetailStockAdjustment() {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const id = String(router.query.id) || ''
+  const details: any = useDetail(getDetailStockOpname, { id: router.query.id as string }, false)
+  const [reason, setReason] = useState('')
 
   // Modals
+  const [successReject, setSuccessReject] = useState(false)
   const [rejectModal, setRejectModal] = useState(false)
   const [approveModal, setApproveModal] = useState(false)
 
   const handleReject = async () => {
     try {
-      const payload = { status_id: '05' }
+      const payload = { status_id: '05', header_text: details?.header_text, reason: reason }
       const res = await updateStatusStockOpname(id, payload)
+
+      setSuccessReject(true)
       return res
     } catch (error) {
       return false
@@ -34,15 +46,21 @@ export default function DetailStockAdjustment() {
   }
   const handleApprove = async () => {
     try {
-      const payload = { status_id: '03' }
+      const payload = { status_id: '03', header_text: details?.header_text, reason: '' }
       const res = await updateStatusStockOpname(id, payload)
+
+      await freezeSlocIdByBranchId(
+        {
+          id: details?.sloc_id,
+          is_freeze: 0,
+        },
+        details?.branch_id,
+      )
       return res
     } catch (error) {
       return false
     }
   }
-
-  const details: any = useDetail(getDetailStockOpname, { id: router.query.id as string }, false)
 
   useEffect(() => {
     if (details.company_id) {
@@ -137,30 +155,96 @@ export default function DetailStockAdjustment() {
             </div>
           </Card>
 
-          <Modal
-            title="Confirm Reject"
-            open={rejectModal}
-            onOk={handleReject}
-            onCancel={() => setRejectModal(false)}
-            onOkSuccess={() =>
-              router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${router.query.id}`)
-            }
-            content="Are you sure want to reject?"
-            successContent={() => 'Reject Success'}
-            successOkText="OK"
-          />
+          {rejectModal && (
+            <Popup onOutsideClick={() => setRejectModal(false)}>
+              <Typography.Title level={3} style={{ margin: 0 }}>
+                Confirm Rejectation
+              </Typography.Title>
+              <Label>Reason</Label>
+              <Input.TextArea
+                id="inputReason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                required
+              />
+              <div style={{ display: 'flex', gap: 10 }}>
+                <Button
+                  size="big"
+                  style={{ flexGrow: 1 }}
+                  variant="secondary"
+                  onClick={() => setRejectModal(false)}
+                >
+                  No
+                </Button>
+                <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={handleReject}>
+                  Yes
+                </Button>
+              </div>
+            </Popup>
+          )}
+
+          {successReject && (
+            <Popup>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Text
+                  textAlign="center"
+                  style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+                >
+                  <>
+                    <CheckCircleFilled /> Reject Success
+                  </>
+                </Text>
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 4,
+                  fontWeight: 'bold',
+                  flexDirection: 'column',
+                  textAlign: 'center',
+                }}
+              >
+                <div>
+                  Reff. Number :
+                  <Typography.Text copyable={{ text: router.query.id as string }}>
+                    {' '}
+                    {router.query.id}
+                  </Typography.Text>
+                  has been
+                </div>
+                <div>successfully rejected</div>
+              </div>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <Button
+                  size="big"
+                  style={{ flexGrow: 1 }}
+                  variant="primary"
+                  onClick={() => router.reload()}
+                >
+                  OK
+                </Button>
+              </div>
+            </Popup>
+          )}
 
           <Modal
             title="Confirm Approve"
             open={approveModal}
             onOk={handleApprove}
             onCancel={() => setApproveModal(false)}
-            onOkSuccess={() =>
-              router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${router.query.id}`)
-            }
+            onOkSuccess={() => router.reload()}
             content="Are you sure want to approve?"
-            successContent={() => 'Approve Success'}
             successOkText="OK"
+            successContent={(res: any) => (
+              <>
+                Reff. Number :
+                <Typography.Text copyable={{ text: router.query.id as string }}>
+                  {' '}
+                  {router.query.id}
+                </Typography.Text>{' '}
+                has been successfully approved
+              </>
+            )}
           />
         </Col>
       )}

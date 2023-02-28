@@ -1,7 +1,16 @@
 import { useRouter } from 'next/router'
 import { Button, DatePickerInput, Row, Spacer, Table, Text, Switch, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
+import {
+  Card,
+  FloatAction,
+  Modal,
+  Popup,
+  SearchQueryParams,
+  Select,
+  SelectMasterData,
+  SmartFilter,
+} from 'src/components'
 import { PATH } from 'src/configs/menus'
 import { ExclamationBrownIc } from 'src/assets'
 
@@ -14,11 +23,25 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import FreezeSlocModal from './modals/freezeSloc'
 import { columns } from './columns'
-import { getListStockOpname } from 'src/api/logistic/stock-opname'
+import {
+  freezeSlocIdByBranchId,
+  getDetailStockOpname,
+  getListStockOpname,
+  updateStockOpname,
+} from 'src/api/logistic/stock-opname'
+import { Input, Typography } from 'antd'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { Label } from 'src/components/Text'
 
 export default function PageApprovalStockOpname() {
   const [freezeModal, setFreezeModal] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [freezeList, setFreezeList] = useState([])
+  const [successReject, setSuccessReject] = useState(false)
+  const [rejectModal, setRejectModal] = useState(false)
+  const [approveModal, setApproveModal] = useState(false)
+  const [reason, setReason] = useState('')
+
   const router = useRouter()
 
   const goToDetailPage = (id: string) =>
@@ -27,6 +50,7 @@ export default function PageApprovalStockOpname() {
 
   const table = useTable({
     funcApi: getListStockOpname,
+    haveCheckBox: [{ rowKey: 'status', member: ['Wait Approval Opname'] }],
     columns: columns(goToDetailPage),
   })
 
@@ -34,7 +58,6 @@ export default function PageApprovalStockOpname() {
 
   const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
 
-  const [freezeList, setFreezeList] = useState([])
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -64,6 +87,48 @@ export default function PageApprovalStockOpname() {
       setAllScloc(response)
     })
   }, [branchfrom, branchTo])
+
+  const handleReject = async () => {
+    try {
+      await Promise.all(
+        table.state.selected.map((id) => {
+          getDetailStockOpname({ id }).then((item: any) => {
+            const payload = { status_id: '05', header_text: item?.header_text, reason: reason }
+            updateStockOpname(id, payload).then((res) => console.log(res))
+          })
+        }),
+      )
+
+      setSuccessReject(true)
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+  const handleApprove = async () => {
+    try {
+      await Promise.all(
+        table.state.selected.map((id) => {
+          getDetailStockOpname({ id }).then((item: any) => {
+            freezeSlocIdByBranchId(
+              {
+                id: item?.sloc_id,
+                is_freeze: 0,
+              },
+              item?.branch_id,
+            ).then((res) => console.log(res))
+
+            const payload = { status_id: '03', header_text: item?.header_text, reason: '' }
+            updateStockOpname(id, payload).then((res) => console.log(res))
+          })
+        }),
+      )
+
+      return true
+    } catch (error) {
+      return false
+    }
+  }
 
   return (
     <>
@@ -202,16 +267,142 @@ export default function PageApprovalStockOpname() {
 
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
+
+      {table.state.selected.length > 0 && (
+        <FloatAction>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <b>{table.state.selected.length} Document Stcok Opname are Selected</b>
+          </div>
+          <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => {
+                setRejectModal(true)
+              }}
+            >
+              Reject
+            </Button>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                setApproveModal(true)
+              }}
+            >
+              Approve
+            </Button>
+          </div>
+        </FloatAction>
+      )}
 
       <FreezeSlocModal
         ListFreezed={freezeList}
         isListFreezed={freezeList.length > 0}
         visible={freezeModal}
         close={() => setFreezeModal(false)}
+      />
+
+      {rejectModal && (
+        <Popup onOutsideClick={() => setRejectModal(false)}>
+          <Typography.Title level={3} style={{ margin: 0 }}>
+            Confirm Rejectation
+          </Typography.Title>
+          <Label>Reason</Label>
+          <Input.TextArea
+            id="inputReason"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            required
+          />
+          <div style={{ display: 'flex', gap: 10 }}>
+            <Button
+              size="big"
+              style={{ flexGrow: 1 }}
+              variant="secondary"
+              onClick={() => setRejectModal(false)}
+            >
+              No
+            </Button>
+            <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={handleReject}>
+              Yes
+            </Button>
+          </div>
+        </Popup>
+      )}
+
+      {successReject && (
+        <Popup>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Text
+              textAlign="center"
+              style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+            >
+              <>
+                <CheckCircleFilled /> Reject Success
+              </>
+            </Text>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 4,
+              fontWeight: 'bold',
+              flexDirection: 'column',
+              textAlign: 'center',
+            }}
+          >
+            <div>
+              Reff. Number :
+              <Typography.Text copyable={{ text: table.state.selected.join(', ') as string }}>
+                {' '}
+                {table.state.selected.join(', ')}
+              </Typography.Text>
+              has been
+            </div>
+            <div>successfully rejected</div>
+          </div>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <Button
+              size="big"
+              style={{ flexGrow: 1 }}
+              variant="primary"
+              onClick={() => router.reload()}
+            >
+              OK
+            </Button>
+          </div>
+        </Popup>
+      )}
+
+      <Modal
+        title="Confirm Approve"
+        open={approveModal}
+        onOk={handleApprove}
+        onCancel={() => setApproveModal(false)}
+        onOkSuccess={() => router.reload()}
+        content={`Are you sure want to approve? Reff. Number ${table.state.selected.join(', ')}`}
+        successOkText="OK"
+        successContent={(res: any) => (
+          <>
+            Reff. Number :
+            <Typography.Text copyable={{ text: table.state.selected.join(', ') as string }}>
+              {' '}
+              {table.state.selected.join(', ')}
+            </Typography.Text>{' '}
+            has been successfully approved
+          </>
+        )}
       />
     </>
   )

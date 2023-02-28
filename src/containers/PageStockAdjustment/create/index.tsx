@@ -35,7 +35,8 @@ export default function CreateStockAdjustment() {
 
   const tableAddItems = useTableAddItem({
     idbranch: branchSelected.split(' - ')[0] || '',
-    idSloc: slocSelected,
+    itemsData: dataTable,
+    MovementType: '',
   })
 
   const router = useRouter()
@@ -195,15 +196,20 @@ export default function CreateStockAdjustment() {
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
 
-        {/* {branchSelected && (
+        {branchSelected && slocSelected && (
           <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
             + Add Item
           </Button>
-        )} */}
+        )}
 
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table data={dataTable} columns={tableAddItems.columns} loading={tableAddItems.loading} />
+          <Table
+            editable
+            data={tableAddItems.data}
+            columns={tableAddItems.columns}
+            loading={tableAddItems.loading}
+          />
         </div>
       </Card>
 
@@ -221,12 +227,13 @@ export default function CreateStockAdjustment() {
         onOk={handleCreate}
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Save"
-        content={`Are you sure want to Save and Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`}
-        successOkText="Next Proccess"
-        successCancelText="Back to List"
-        onCancelSuccess={() => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
-        onOkSuccess={(res) =>
-          router.push(`${PATH.LOGISTIC}/stock-adjustment/edit/${res?.data?.stock_adjust_id}`)
+        content={`Are you sure want to Submit this data ?`}
+        successOkText="OK"
+        // successCancelText="Back to List"
+        // onCancelSuccess={() => router.push(`${PATH.LOGISTIC}/stock-adjustment`)}
+        onOkSuccess={
+          (res) => router.push(`${PATH.LOGISTIC}/stock-adjustment`)
+          // router.push(`${PATH.LOGISTIC}/stock-adjustment/edit/${res?.data?.stock_adjust_id}`)
         }
         successContent={(res: any) => (
           <>
@@ -235,8 +242,8 @@ export default function CreateStockAdjustment() {
               {' '}
               {res?.data.stock_adjust_id}
             </Typography.Text>
-            {` Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`} has been
-            successfully created
+            {/* {` Freeze Branch ${branchLabelSelected}, Sloc ${slocLabelSelected}`} has been */}
+            has been successfully created
           </>
         )}
       />
