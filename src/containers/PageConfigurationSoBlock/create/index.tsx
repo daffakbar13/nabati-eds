@@ -32,7 +32,9 @@ export default function CreateModal({ visible = false, close = () => {} }) {
     company_id: 'PP01',
     sales_org_id: 'PID1',
     is_active_company: 1,
-    list_config: tableAddItems.data,
+    list_config: tableAddItems.data.filter(
+      (dataAll) => dataAll?.is_active_config === 1 || dataAll?.is_approved === 1,
+    ),
   }
 
   const onChangeForm = (form: string, value: any) => {

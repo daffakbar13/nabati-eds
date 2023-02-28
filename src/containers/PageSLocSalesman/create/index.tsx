@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldSlocFromBranch, fieldSalesmanAll } from 'src/configs/fieldFetches'
-import { getDetailSlocman, updateSlocman, createSlocman } from 'src/api/logistic/sloc-salesman'
+import { fieldSalesmanAll, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
+import { updateSlocman, createSlocman } from 'src/api/logistic/sloc-salesman'
+import { getDetailSalesmanDivision } from 'src/api/salesman-division'
 import { PATH } from 'src/configs/menus'
 
 const { Label, LabelRequired } = Text
@@ -17,6 +18,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [dataForm, setDataForm] = useState({})
   const [slocPlacholder, setslocPlacholder] = useState('')
   const [salesPlaceholder, setsalesPlaceholder] = useState('')
+  const [branchSelected, setBranchSelected] = useState('')
   const isOnEditMode = !!payload
 
   const initialValue = {
@@ -87,13 +89,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     onChangeForm('sloc_id', payload.sloc_id)
     setsalesPlaceholder(`${payload.salesman_id} - ${payload.salesman_name}`)
     setslocPlacholder(payload.sloc_id)
+    getDetailSalesmanDivision(payload.salesman_id).then((response) => {
+      setBranchSelected(response?.data?.branch_id)
+    })
   }, [isOnEditMode, payload])
 
   useEffect(() => {
-    fieldSlocFromBranch('P104', '').then((response) => {
-      setAllScloc(response)
-    })
-  }, [])
+    if (branchSelected != '') {
+      fieldSlocByConfigLogistic(branchSelected).then((result) => {
+        setAllScloc(result)
+      })
+    }
+  }, [branchSelected])
 
   const content = (
     <>
@@ -107,6 +114,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onChange={(val: any) => {
           onChangeForm('salesman_id', val.value)
           setsalesPlaceholder(val.label)
+          setBranchSelected(val.key)
         }}
       />
       <Spacer size={10} />

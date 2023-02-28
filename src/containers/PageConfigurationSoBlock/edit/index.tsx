@@ -9,7 +9,6 @@ import { PATH } from 'src/configs/menus'
 import { useTableAddItem } from './useTableAddItem'
 import { ICExclamation } from 'src/assets'
 
-
 interface FormData {
   company_id: string
   sales_org_id: string
@@ -31,8 +30,12 @@ export default function CreateModal({ visible = false, close = () => {}, payload
   const isOnEditMode = !!payload
 
   const initialValue = {
+    company_id: payload?.company_id || 'PP01',
+    is_active_company: payload?.is_active_company || 1,
     sales_org_id: 'PID1',
-    list_config: tableAddItems.data,
+    list_config: tableAddItems.data.filter(
+      (dataAll) => dataAll?.is_active_config === 1 || dataAll?.is_approved === 1,
+    ),
   }
 
   const onChangeForm = (form: string, value: any) => {
