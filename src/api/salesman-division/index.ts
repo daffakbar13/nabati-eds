@@ -51,3 +51,12 @@ export const deleteSalesmanDivision = async (id: string): Promise<any> => {
   })
   return response.data
 }
+
+export const getDetailSalesmanDivision = async (salesmanId: string): Promise<any> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${url}/get-salesman-division/${salesmanId}`,
+  })
+  return response.data
+}

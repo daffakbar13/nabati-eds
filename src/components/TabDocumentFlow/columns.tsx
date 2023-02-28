@@ -14,7 +14,7 @@ function Linked(props: { process: string; id: string; status: string }) {
     case 'Quotation':
       document = 'quotation'
       break
-    case 'Order':
+    case 'Sales Order':
       document = 'sales-order'
       break
     case 'Delivery':
