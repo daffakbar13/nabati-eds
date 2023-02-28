@@ -26,7 +26,7 @@ import { columns } from './columns'
 import {
   freezeSlocIdByBranchId,
   getDetailStockOpname,
-  getListStockOpname,
+  getListApprovalStockOpname,
   updateStatusStockOpname,
 } from 'src/api/logistic/stock-opname'
 import { Input, Typography } from 'antd'
@@ -49,7 +49,7 @@ export default function PageApprovalStockOpname() {
     router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${id}`)
 
   const table = useTable({
-    funcApi: getListStockOpname,
+    funcApi: getListApprovalStockOpname,
     haveCheckBox: [{ rowKey: 'status', member: ['Wait Approval Opname'] }],
     columns: columns(goToDetailPage),
   })
