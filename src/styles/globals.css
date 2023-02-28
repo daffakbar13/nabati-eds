@@ -1,5 +1,5 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap'); */
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap'); */
 /*
   1. Use a more-intuitive box-sizing model.
 */
@@ -30,7 +30,6 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-family: Nunito Sans;
-  scrollbar-width: none !important; /* Firefox 64 */
   -ms-overflow-style: none; /* Disable scrollbar IE 10+ */
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
