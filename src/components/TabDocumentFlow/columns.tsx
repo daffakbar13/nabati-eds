@@ -1,5 +1,3 @@
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable camelcase */
 import { Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
@@ -23,10 +21,14 @@ function Linked(props: { process: string; id: string; status: string }) {
     case 'Shipment':
       document = 'shipment'
       break
-    case 'Invoice':
+    case 'Billing':
       document = 'billing'
       break
+    case 'Collection':
+      document = 'collection'
+      break
     default:
+      document = '/'
       break
   }
 
