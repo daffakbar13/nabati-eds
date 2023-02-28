@@ -81,6 +81,7 @@ export default function PageShipmentDetail() {
           variant="primary"
           onClick={async () => {
             setProcessing('Wait For PGI')
+
             const unrevisedData = data?.proforma_invoice_items_detail?.filter((item) => {
               return (
                 revisedDelivery
@@ -115,12 +116,14 @@ export default function PageShipmentDetail() {
                         return {
                           product_id: element.product_id,
                           remarks: '',
-                          qtys: [
-                            {
-                              qty: element.qty,
-                              uom_id: element.uom_id,
-                            },
-                          ],
+                          qty: element.qty,
+                          uom_id: element.uom_id,
+                          // qtys: [
+                          //   {
+                          //     qty: element.qty,
+                          //     uom_id: element.uom_id,
+                          //   },
+                          // ],
                         }
                       }),
                     }
@@ -137,6 +140,8 @@ export default function PageShipmentDetail() {
             }
 
             await new Promise((resolve) => setTimeout(resolve, 1000))
+
+            console.log(payload)
 
             PGIProformaInvoice(router.query.id as string, payload)
               .then(() => {
@@ -232,11 +237,22 @@ export default function PageShipmentDetail() {
         </div>
         <Text variant={'h4'}>{titlePage}</Text>
         <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
-          {currentTab === '1' && (
+          {isStatus('Delivery') && (
+            <>
+              {currentTab === '1' && (
+                <>
+                  <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
+                    Confirm PGI
+                  </Button>
+                </>
+              )}
+            </>
+          )}
+          {/* {currentTab === '1' && (
             <Button size="big" variant="primary" onClick={() => setShowConfirm('pgi')}>
               Confirm PGI
             </Button>
-          )}
+          )} */}
           {currentTab !== '1' && (
             <ReactToPrint
               trigger={() => (

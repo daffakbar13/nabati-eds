@@ -11,6 +11,7 @@ import dateFormat from 'src/utils/dateFormat'
 import { getTagColor } from 'src/utils/getTagColor'
 import { columns } from './columns'
 import { Loader } from 'src/components'
+import TaggedStatus from 'src/components/TaggedStatus'
 
 export default function DetailStockAdjustment() {
   const [loading, setLoading] = useState(false)
@@ -44,17 +45,7 @@ export default function DetailStockAdjustment() {
           </div>
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
-            <Tag
-              style={{
-                width: 200,
-                padding: '8px 20px',
-                border: '1px solid #AAAAAA',
-                borderRadius: 8,
-              }}
-              color={getTagColor(details?.status)}
-            >
-              {details?.status || <p style={{ color: 'black' }}>Status...</p>}
-            </Tag>
+            <TaggedStatus status={details?.status} size="h5" />
           </Card>
           <Card>
             <List loading={loading}>

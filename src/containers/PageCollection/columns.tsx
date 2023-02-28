@@ -5,10 +5,21 @@ import { Button } from 'pink-lava-ui'
 import React from 'react'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-function Linked({ link, status, type }: { link: string; status: string; type: 'id' | 'action' }) {
+function Linked({
+  link,
+  status,
+  type,
+  salesOrg,
+}: {
+  link: string
+  status: string
+  type: 'id' | 'action'
+  salesOrg: string
+}) {
   const router = useRouter()
+  const tradeType = salesOrg?.includes('MT') ? 'MT' : 'GT'
   const navigate = () => {
-    router.push(`${PATH.SALES}/collection/detail/${link}`)
+    router.push(`${PATH.SALES}/collection/detail/${link}?tradeType=${tradeType}`)
   }
   const [hover, setHover] = React.useState(false)
 
@@ -42,7 +53,9 @@ function Linked({ link, status, type }: { link: string; status: string; type: 'i
 export const TableBilling = [
   addColumn({
     title: 'Shipment',
-    render: (_, { shipment_id, status }) => <Linked link={shipment_id} status={status} type="id" />,
+    render: (_, { shipment_id, status, sales_org }) => (
+      <Linked link={shipment_id} status={status} type="id" salesOrg={sales_org} />
+    ),
     fixed: true,
     sorter: true,
   }),
@@ -79,8 +92,8 @@ export const TableBilling = [
   }),
   addColumn({
     title: 'Action',
-    render: (_, { shipment_id, status }) => (
-      <Linked link={shipment_id} status={status} type="action" />
+    render: (_, { shipment_id, status, sales_org }) => (
+      <Linked link={shipment_id} status={status} type="action" salesOrg={sales_org} />
     ),
   }),
 ]

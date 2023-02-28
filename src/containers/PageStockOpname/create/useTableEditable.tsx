@@ -64,98 +64,129 @@ export const useTableAddItem = (props: propsUseTable) => {
     alignItems: 'center',
   }
 
+  // const columns = [
+  //   addColumn({
+  //     title: 'No',
+  //     dataIndex: 'action',
+  //     render: (text: string, record: any, index: number) => (
+  //       <div style={{ display: 'flex', justifyContent: 'center' }}>
+  //         <MinusCircleFilled
+  //           style={{ color: 'red', margin: 'auto' }}
+  //           onClick={() => {
+  //             handleDeleteRows(index)
+  //           }}
+  //         />
+  //       </div>
+  //     ),
+  //     width: 55,
+  //   }),
+  //   addColumn({
+  //     title: 'Item',
+  //     dataIndex: 'product_id_label',
+  //     render: (text: string, record: any, index: number) => (
+  //       <DebounceSelect
+  //         type="select"
+  //         value={text as any}
+  //         fetchOptions={(search) => productBranch(search, props.idbranch)}
+  //         onChange={(e) => {
+  //           handleChangeData('product_id', e.value, index)
+  //           handleChangeData('product_id_label', e.label, index)
+  //           setFetching(true)
+  //         }}
+  //       />
+  //     ),
+  //     width: 400,
+  //   }),
+  //   addColumn({
+  //     title: 'Large',
+  //     dataIndex: 'product_id',
+  //     // render: (text: string, record: any, index: number) => (
+  //     //   <InputNumber
+  //     //     disabled={isNullProductId(index)}
+  //     //     min={isNullProductId(index) ? '0' : '1'}
+  //     //     value={text?.toLocaleString()}
+  //     //     onChange={(newVal) => {
+  //     //       handleChangeData('stock_qty', newVal, index)
+  //     //       handleChangeData(
+  //     //         'qty_reverence',
+  //     //         Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
+  //     //         index,
+  //     //       )
+  //     //     }}
+  //     //     style={styleInputNumber}
+  //     //   />
+  //     // ),
+  //     width: 130,
+  //   }),
+  //   addColumn({
+  //     title: 'Middle',
+  //     dataIndex: 'uom_stock_id',
+  //     render: (text: string, record: any, index: number) => (
+  //       <DebounceSelect
+  //         type="select"
+  //         value={text as any}
+  //         options={optionsUom[index] || []}
+  //         disabled={isNullProductId(index)}
+  //         onChange={(e) => {
+  //           handleChangeData('uom_stock_id', e.value, index)
+  //           handleChangeData('uom_reverence', e.value, index)
+  //           setFetching(true)
+  //         }}
+  //       />
+  //     ),
+  //     width: 150,
+  //   }),
+  //   addColumn({
+  //     title: 'Small',
+  //     dataIndex: 'qty',
+  //     render: (text: string, record: any, index: number) => (
+  //       <InputNumber
+  //         disabled={isNullProductId(index)}
+  //         min={isNullProductId(index) ? '0' : '1'}
+  //         value={text?.toLocaleString()}
+  //         onChange={(newVal) => {
+  //           handleChangeData('qty', newVal, index)
+  //           handleChangeData(
+  //             'qty_reverence',
+  //             Math.round((parseFloat(data?.[index].stock_qty) - parseFloat(newVal)) * 100) / 100,
+  //             index,
+  //           )
+  //         }}
+  //         style={styleInputNumber}
+  //       />
+  //     ),
+  //     width: 130,
+  //   }),
+  // ]
+
   const columns = [
     addColumn({
       title: 'No',
-      dataIndex: 'action',
-      render: (text: string, record: any, index: number) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MinusCircleFilled
-            style={{ color: 'red', margin: 'auto' }}
-            onClick={() => {
-              handleDeleteRows(index)
-            }}
-          />
-        </div>
-      ),
-      width: 55,
+      render: (_, __, i) => i + 1,
+      fixed: true,
+      width: 100,
     }),
     addColumn({
       title: 'Item',
-      dataIndex: 'product_id_label',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          fetchOptions={(search) => productBranch(search, props.idbranch)}
-          onChange={(e) => {
-            handleChangeData('product_id', e.value, index)
-            handleChangeData('product_id_label', e.label, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 400,
+      dataIndex: 'product_id',
+      sorter: true,
+      render: (text: string, record: any, index: number) => `${text} - ${record.product_name}`,
+      width: 600,
     }),
     addColumn({
       title: 'Large',
-      dataIndex: 'stock_qty',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('stock_qty', newVal, index)
-            handleChangeData(
-              'qty_reverence',
-              Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
+      dataIndex: 'large',
+      width: 120,
     }),
     addColumn({
       title: 'Middle',
-      dataIndex: 'uom_stock_id',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_stock_id', e.value, index)
-            handleChangeData('uom_reverence', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
+      dataIndex: 'middle',
+      width: 120,
     }),
     addColumn({
       title: 'Small',
-      dataIndex: 'qty',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty', newVal, index)
-            handleChangeData(
-              'qty_reverence',
-              Math.round((parseFloat(data?.[index].stock_qty) - parseFloat(newVal)) * 100) / 100,
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
+      dataIndex: 'small',
+      width: 120,
     }),
   ]
 

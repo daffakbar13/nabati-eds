@@ -1,5 +1,5 @@
 import React from 'react'
-import Edit from 'src/containers/PageStockAdjustment/edit'
+import Edit from 'src/containers/PageStockOpname/edit'
 
 interface Props {}
 export default function SwapHandlingDetail(props: Props) {

@@ -98,10 +98,14 @@ export default function PageStockReservationDetail() {
 
   const onOkCancellation = async () => {
     try {
-      return await updateStatusCancell(router.query.id as string, {
-        status_id: '02',
-        reason: reasonCancell,
-      })
+      return await updateStatusCancell(
+        router.query.id as string,
+        data.material_document_id as string,
+        {
+          status_id: '02',
+          reason: reasonCancell,
+        },
+      )
     } catch (error) {
       return false
     }
@@ -126,7 +130,7 @@ export default function PageStockReservationDetail() {
             >
               <ArrowLeftOutlined style={{ fontSize: 25 }} />
             </div>
-            <Text variant={'h4'}>{titlePage}</Text>
+            <Text variant={'h4'}>View Stock Reservation {data.material_document_id}</Text>
           </div>
           <Card style={{ overflow: 'unset' }}>
             {data.status_id !== '00' ? (
@@ -178,7 +182,7 @@ export default function PageStockReservationDetail() {
             </Row>
             <Divider />
             <div style={{ overflow: 'scroll' }}>
-              <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.item} />
+              <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={data.items} />
             </div>
           </Card>
 

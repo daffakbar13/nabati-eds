@@ -13,10 +13,12 @@ function Linked({
   link,
   linkType,
   type,
+  text,
 }: {
   link: string
   linkType: string
   type: 'id' | 'action'
+  text: string
 }) {
   const router = useRouter()
   const navigate = () => {
@@ -42,7 +44,7 @@ function Linked({
             ...(hover && { color: '#EB008B', textDecoration: 'underline' }),
           }}
         >
-          {link}
+          {text}
         </div>
       ) : (
         <Button size="big" variant="tertiary" onClick={navigate}>
@@ -57,7 +59,9 @@ export const column = [
   addColumn({
     title: 'Doc. Number',
     dataIndex: 'doc_number',
-    render: (text, record, index) => <Linked link={text} type="id" linkType="id" />,
+    render: (text, record, index) => (
+      <Linked text={text} link={record.reservation_number} type="id" linkType="id" />
+    ),
     fixed: true,
     sorter: true,
     width: 180,
@@ -89,6 +93,8 @@ export const column = [
   addColumn({
     title: 'Action',
     dataIndex: 'doc_number',
-    render: (text, record, index) => <Linked link={text} type="action" linkType="id" />,
+    render: (text, record, index) => (
+      <Linked text={text} link={record.reservation_number} type="action" linkType="id" />
+    ),
   }),
 ]

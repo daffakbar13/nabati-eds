@@ -58,6 +58,10 @@ export default function PageBilling() {
     .filter((d) => table.state.selected.includes(d.billing_number))
     .map((s) => s.shipment_number)
 
+  const shipmentSelectedInv = table.state.data
+    .filter((d) => table.state.selected.includes(d.billing_number))
+    .map((s) => s.billing_number)
+
   const printRef = React.useRef<HTMLDivElement>()
 
   return (
@@ -183,7 +187,7 @@ export default function PageBilling() {
             <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
               <ReactToPrint
                 onBeforeGetContent={() =>
-                  printBilling({ invoice_ids: shipmentSelected }).then((res) => {
+                  printBilling({ invoice_ids: shipmentSelectedInv }).then((res) => {
                     setInvoice(res.data.invoice)
                   })
                 }

@@ -46,11 +46,15 @@ export const getListStockReservationDetail = async (
   return response.data
 }
 
-export const updateStatusCancell = async (idStock: string, payload: any) => {
+export const updateStatusCancell = async (
+  reservationId: string,
+  documnetId: string,
+  payload: any,
+) => {
   const response = await call({
-    method: METHODS.POST,
+    method: METHODS.PUT,
     overrideBaseUrl,
-    subUrl: `${url}/edit/${idStock}`,
+    subUrl: `${url}/edit/${reservationId}/${documnetId}`,
     data: payload,
   })
   return response.data

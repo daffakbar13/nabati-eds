@@ -67,25 +67,21 @@ export default function DetailStockAdjustment() {
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
             <div style={{ display: 'flex' }}>
-              <TaggedStatus status={details.status} size="h5" />
-
-              {details?.status && details?.status === 'Pending' && (
+              <TaggedStatus
+                status={
+                  details.status === 'Wait Approval Adjust' ? 'Wait For Approval' : details.status
+                }
+                size="h5"
+              />
+              {details?.status && details?.status === 'Rejected' && (
                 <div
                   style={{
                     display: 'grid',
                     marginLeft: 'auto',
-                    gridTemplateColumns: '1fr 1fr 1fr',
+                    gridTemplateColumns: '1fr 1fr',
                     gap: 12,
                   }}
                 >
-                  <Button
-                    size="big"
-                    variant="tertiary"
-                    onClick={() => setRejectModal(true)}
-                    loading={loading}
-                  >
-                    Reject
-                  </Button>
                   <Button
                     size="big"
                     variant="secondary"
@@ -102,7 +98,7 @@ export default function DetailStockAdjustment() {
                     variant="primary"
                     loading={loading}
                   >
-                    Approve
+                    Submit
                   </Button>
                 </div>
               )}
@@ -111,16 +107,12 @@ export default function DetailStockAdjustment() {
           <Card>
             <List loading={loading}>
               <List.Item
-                label="Movement Type"
-                value={`${details?.movement_type_id}-${toTitleCase(details?.movement_type_name)}`}
-              />
-              <List.Item
                 label="Branch"
                 value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
               />
               <List.Item
                 label="SLoc"
-                value={`${details?.from_sloc}-${toTitleCase(details?.from_sloc_name)}`}
+                value={`${details?.sloc_id}-${toTitleCase(details?.sloc_name)}`}
               />
               <List.Item label="" value={''} />
 

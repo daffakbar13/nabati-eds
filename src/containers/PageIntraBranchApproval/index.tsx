@@ -43,7 +43,7 @@ export default function PageApproval(props: Props) {
     { label: 'Wait For Approval', value: '00' },
   ]
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by PO Number', ['id'])
 
   return (
     <Col>
@@ -52,42 +52,7 @@ export default function PageApproval(props: Props) {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <Search
-              autofocus
-              width="380px"
-              nameIcon="SearchOutlined"
-              placeholder="Search by PO Number"
-              colorIcon={colors.grey.regular}
-              value={filterId}
-              onChange={(e) => {
-                setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field == 'id')
-                if (idIndex > -1) {
-                  if (e.target.value === '') {
-                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field != 'id'))
-                  } else {
-                    const updateId = filters.map((data, i) => {
-                      if (i === idIndex) {
-                        return { ...data, from_value: `%${e.target.value}%` }
-                      }
-                      return { ...data }
-                    })
-                    setFilters(updateId)
-                  }
-                } else {
-                  setFilters([
-                    ...filters,
-                    {
-                      field: 'id',
-                      option: 'CP',
-                      from_value: `%${e.target.value}%`,
-                      data_type: 'S',
-                    },
-                  ])
-                }
-              }}
-              allowClear
-            />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="company_id"
@@ -314,7 +279,7 @@ export default function PageApproval(props: Props) {
                 textAlign: 'center',
               }}
             >
-              <div>successfully approve PO STO success</div>
+              <div>PO STO approved successfully</div>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <Button
@@ -351,7 +316,7 @@ export default function PageApproval(props: Props) {
                 textAlign: 'center',
               }}
             >
-              <div>successfully reject PO STO success</div>
+              <div>PO STO Rejected successfully</div>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <Button

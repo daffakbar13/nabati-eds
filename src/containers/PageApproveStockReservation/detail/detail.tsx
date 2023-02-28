@@ -92,7 +92,7 @@ export default function PageApproveStockReservationDetail(props: propsDetail) {
         </Row>
         <Divider />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={props.data.item} />
+          <Table scroll={{ x: 'max-content', y: 600 }} columns={column} data={props.data.items} />
         </div>
       </Card>
     </>

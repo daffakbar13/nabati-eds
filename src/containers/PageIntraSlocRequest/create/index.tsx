@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import { Divider, Typography, Form } from 'antd'
+import { Divider, Typography, Form, Tag } from 'antd'
 import { Button, Col, Row, Spacer, Text, DatePickerInput, Table } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, Loader, Modal } from 'src/components'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { createRequestIntraSloc } from 'src/api/logistic/request-intra-sloc'
-import { createGiGr } from 'src/api/logistic/good-issue-intra-sloc'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { fieldBranchAll, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 interface ItemsState {
   product_sender_id: string
@@ -252,8 +252,16 @@ export default function PageCreateRequestIntraSloc() {
               >
                 <DebounceSelect
                   type="select"
-                  label="To Sloc"
-                  required
+                  label={
+                    <>
+                      To Sloc<span style={{ color: 'red' }}> *</span>{' '}
+                      {ChannelBranch != 'GT' && (
+                        <Tag icon={<ExclamationCircleOutlined />} color="warning">
+                          You will do intra channel
+                        </Tag>
+                      )}
+                    </>
+                  }
                   options={allSloc}
                   disabled={branchSelected === ''}
                   onChange={(val: any) => {

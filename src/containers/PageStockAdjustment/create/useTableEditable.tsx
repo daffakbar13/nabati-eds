@@ -11,7 +11,8 @@ import { addColumn } from 'src/utils/createColumns'
 
 interface propsUseTable {
   idbranch: string
-  MovementType: string
+  idSloc: string
+  // MovementType: string
 }
 
 export const useTableAddItem = (props: propsUseTable) => {
@@ -26,7 +27,7 @@ export const useTableAddItem = (props: propsUseTable) => {
     batch: '',
     qty_reverence: 0,
     uom_reverence: 'CTN',
-    movement_type_id: props.MovementType,
+    // movement_type_id: props.MovementType,
   }
   const [data, setData] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
@@ -43,198 +44,38 @@ export const useTableAddItem = (props: propsUseTable) => {
     setData((old) => old.map((obj, i) => ({ ...obj, ...(index === i && { [key]: value }) })))
   }
 
-  function isNullProductId(index: number) {
-    return data.find((___, i) => i === index).product_id === ''
-  }
-
-  function handleDeleteRows(index: number) {
-    setData(data.filter((_, i) => i !== index))
-  }
-
   function handleAddItem() {
     setData([...data, initialValue])
   }
 
-  const styleInputNumber = {
-    border: '1px solid #AAAAAA',
-    borderRadius: 8,
-    height: 46,
-    display: 'flex',
-    alignItems: 'center',
-  }
-
   const columns = [
     addColumn({
-      title: '',
-      dataIndex: 'action',
-      render: (text: string, record: any, index: number) => (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <MinusCircleFilled
-            style={{ color: 'red', margin: 'auto' }}
-            onClick={() => {
-              handleDeleteRows(index)
-            }}
-          />
-        </div>
-      ),
-      width: 55,
+      title: 'No',
+      render: (_, __, i) => i + 1,
+      fixed: true,
+      width: 100,
     }),
     addColumn({
-      title: 'Item Sender',
-      dataIndex: 'product_id_label',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          fetchOptions={(search) => productBranch(search, props.idbranch)}
-          onChange={(e) => {
-            handleChangeData('product_id', e.value, index)
-            handleChangeData('product_id_label', e.label, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 400,
+      title: 'Item',
+      dataIndex: 'product_id',
+      sorter: true,
+      render: (text: string, record: any, index: number) => `${text} - ${record.product_name}`,
+      width: 600,
     }),
     addColumn({
-      title: 'Qty Stock',
-      dataIndex: 'stock_qty',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('stock_qty', newVal, index)
-            handleChangeData(
-              'qty_reverence',
-              Math.round((parseFloat(newVal) - parseFloat(data?.[index].qty)) * 100) / 100,
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
+      title: 'Large',
+      dataIndex: 'large',
+      width: 120,
     }),
     addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_stock_id',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_stock_id', e.value, index)
-            handleChangeData('uom_reverence', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
+      title: 'Middle',
+      dataIndex: 'middle',
+      width: 120,
     }),
     addColumn({
-      title: 'Qty Physical',
-      dataIndex: 'qty',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={isNullProductId(index)}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty', newVal, index)
-            handleChangeData(
-              'qty_reverence',
-              Math.round((parseFloat(data?.[index].stock_qty) - parseFloat(newVal)) * 100) / 100,
-              index,
-            )
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
-    }),
-    addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_id',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={isNullProductId(index)}
-          onChange={(e) => {
-            handleChangeData('uom_id', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
-    }),
-    addColumn({
-      title: 'Qty Reference',
-      dataIndex: 'qty_reverence',
-      render: (text: string, record: any, index: number) => (
-        <InputNumber
-          disabled={true}
-          min={isNullProductId(index) ? '0' : '1'}
-          value={text?.toLocaleString()}
-          onChange={(newVal) => {
-            handleChangeData('qty_reference', newVal, index)
-          }}
-          style={styleInputNumber}
-        />
-      ),
-      width: 130,
-    }),
-    addColumn({
-      title: 'UoM',
-      dataIndex: 'uom_reverence',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="select"
-          value={text as any}
-          options={optionsUom[index] || []}
-          disabled={true}
-          onChange={(e) => {
-            handleChangeData('uom_reverence', e.value, index)
-            setFetching(true)
-          }}
-        />
-      ),
-      width: 150,
-    }),
-    addColumn({
-      title: 'Batch',
-      dataIndex: 'batch',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="input"
-          placeholder="e.g Testing"
-          value={text as any}
-          onChange={(e) => {
-            handleChangeData('batch', e.target.value, index)
-          }}
-        />
-      ),
-      width: 200,
-    }),
-    addColumn({
-      title: 'Remarks',
-      dataIndex: 'remarks',
-      render: (text: string, record: any, index: number) => (
-        <DebounceSelect
-          type="input"
-          placeholder="e.g Testing"
-          value={text as any}
-          onChange={(e) => {
-            handleChangeData('remarks', e.target.value, index)
-          }}
-        />
-      ),
-      width: 200,
+      title: 'Small',
+      dataIndex: 'small',
+      width: 120,
     }),
   ]
 

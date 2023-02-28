@@ -54,8 +54,8 @@ export const updateStatusStockOpname = async (
   params: any = {},
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
-    subUrl: `${url}/${docNumber}/update_status`,
+    method: METHODS.PUT,
+    subUrl: `${url}/update_status/${docNumber}`,
     overrideBaseUrl,
     data: params,
   })
@@ -75,7 +75,7 @@ export const checkIsFreezeList = async (
 }
 
 export const freezeSlocIdByBranchId = async (
-  params: CommonListParams,
+  params: any,
   branchId: string,
 ): Promise<CommonListResponse<any>> => {
   const response = await call({
@@ -93,9 +93,40 @@ export const updateStockOpname = async (
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/${id}/update`,
+    subUrl: `${url}/edit/${id}`,
     overrideBaseUrl,
     data: params,
+  })
+  return response.data
+}
+
+export const getListStockOpnameByBranchSloc = async (
+  branchId: string,
+  slocId: string,
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `v1/stocks/list`,
+    // subUrl: `${url}/list`,
+    overrideBaseUrl,
+    data: {
+      filters: [
+        {
+          field: 'branch_id',
+          option: 'EQ',
+          from_value: branchId,
+          data_type: 'S',
+        },
+        {
+          field: 'sloc_id',
+          option: 'EQ',
+          from_value: slocId,
+          data_type: 'S',
+        },
+      ],
+      limit: 20,
+      page: 1,
+    },
   })
   return response.data
 }

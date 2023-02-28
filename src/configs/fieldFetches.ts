@@ -399,8 +399,8 @@ export function fieldRoute(search: string) {
 }
 
 export function productBranch(search: string, branchId: string) {
-  return getProductByBranch(branchId).then((result) =>
-    result.data
+  return getProductByBranch(branchId).then((result) => {
+    return result.data
       ?.filter(
         ({ product_id, product_name }) =>
           product_id.toLowerCase().includes(search.toLowerCase()) ||
@@ -410,8 +410,8 @@ export function productBranch(search: string, branchId: string) {
       .map(({ product_id, product_name }) => ({
         label: [product_id, product_name].join(' - '),
         value: product_id,
-      })),
-  )
+      }))
+  })
 }
 
 export function itemReceiver(productId: string, transType: string) {

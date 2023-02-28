@@ -157,7 +157,7 @@ export default function PageApproveStockReservationUpdate(props: propsDetail) {
         </div>
         <Divider />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table columns={column} data={props.data.item} />
+          <Table columns={column} data={props.data.items} />
         </div>
       </Card>
       <Modal
