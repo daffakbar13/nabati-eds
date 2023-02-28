@@ -11,10 +11,8 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import dateFormat from 'src/utils/dateFormat'
 import { confitmGoodReceipt } from 'src/api/logistic/good-receipt-intra-branch'
 import { updateStatusPoSto } from 'src/api/logistic/do-sto'
-import { fieldSlocFromBranch } from 'src/configs/fieldFetches'
-import {
-  ExclamationCircleOutlined,
-} from '@ant-design/icons';
+import { fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 
 interface ItemsState {
   remarks: string
@@ -33,6 +31,7 @@ export default function Detail(props: any) {
   const [ItemCheckedError, setItemCheckedError] = useState(false)
   const [modalConfirm, setModalConfirm] = useState(false)
   const [dataForm, setDataForm] = React.useState<dataForm>()
+  const [allSloc, setAllScloc] = useState([])
   const now = new Date().toISOString()
 
   const initialValue = {
@@ -73,6 +72,14 @@ export default function Detail(props: any) {
     confitmGoodReceipt(data.gr_number, { ...initialValue, ...dataForm })
     return await updateStatusPoSto(data.do_number, { status_id: '03' })
   }
+
+  useEffect(() => {
+    if (data?.receive_branch_id) {
+      fieldSlocByConfigLogistic(data?.receive_branch_id).then((result) => {
+        setAllScloc(result)
+      })
+    }
+  }, [data])
 
   return (
     <Col>
@@ -165,9 +172,7 @@ export default function Detail(props: any) {
                     </Tag>
                   </>
                 }
-                fetchOptions={(search) =>
-                  fieldSlocFromBranch(data.supply_branch_id, data.receive_branch_id)
-                }
+                options={allSloc}
                 onChange={(e: any) => {
                   onChangeForm('config_sloc_branch', e.key)
                   onChangeForm('to_sloc', e.value)
