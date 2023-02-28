@@ -609,12 +609,14 @@ export function fieldSalesmanAll(search: string) {
       .filter(
         ({ id, name, branch_id }) =>
           id.toLowerCase().includes(search.toLowerCase()) ||
-          name.toLowerCase().includes(search.toLowerCase()),
+          name.toLowerCase().includes(search.toLowerCase()) ||
+          branch_id.toLowerCase().includes(search.toLowerCase()),
       )
       // .splice(0, 10)
-      .map(({ id, name }) => ({
+      .map(({ id, name, branch_id }) => ({
         label: [id, name].join(' - '),
         value: id,
+        key: branch_id,
       })),
   )
 }
