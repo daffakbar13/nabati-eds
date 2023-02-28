@@ -80,9 +80,7 @@ export default function PageConfigurationSloc() {
           is_active_sales_org: item?.group_by_company?.[0].is_active_sales_org,
           is_approved: item?.group_by_company?.[0].is_approved,
           is_active_config: item?.group_by_company?.[0].is_active_config,
-          optionSales: [
-            ...new Set(item?.group_by_company?.slice(1).map((item) => item.sales_org_id)),
-          ],
+          optionSales: [...new Set(item?.group_by_company?.map((item) => item.sales_org_id))],
           action: 'true',
           children: item?.group_by_company?.slice(1).map((itemChild: any, indexChild) => ({
             key: `${index}-${indexChild}`,
