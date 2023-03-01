@@ -130,7 +130,7 @@ export default function PageStockReservationDetail() {
             >
               <ArrowLeftOutlined style={{ fontSize: 25 }} />
             </div>
-            <Text variant={'h4'}>View Stock Reservation {data.material_document_id}</Text>
+            <Text variant={'h4'}>View Stock Reservation Canvas {data.material_document_id}</Text>
           </div>
           <Card style={{ overflow: 'unset' }}>
             {data.status_id !== '00' ? (

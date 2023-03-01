@@ -313,16 +313,16 @@ export default function PageStockReservationCreate() {
           router.push(`${PATH.LOGISTIC}/stock-reservation`)
         }}
         successContent={(response: any) => (
-          <>
-            Doc Number
+          <p>
+            Doc Number {' '}
             <Typography.Text copyable={{ text: response?.data?.material_doc_id as string }}>
               {response?.data?.material_doc_id}
-            </Typography.Text>
-            has been
-          </>
+            </Typography.Text>{' '}
+            has been successfully created
+          </p>
         )}
         successOkText="OK"
-        width={450}
+        width={400}
       />
       {cancel && (
         <Popup>
