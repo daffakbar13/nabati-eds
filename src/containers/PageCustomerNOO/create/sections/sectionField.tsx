@@ -11,9 +11,11 @@ import {
   fieldCustomerGroupCompany,
   fieldDistrictByCompany,
   fieldDivisionByCompany,
+  fieldInco,
   fieldPaymentMethod,
   fieldPriceGroupByCompanyId,
   fieldRegion,
+  fieldRules,
   fieldSalesGroup,
   fieldSalesmanAll,
   fieldSalesmanGroup,
@@ -526,7 +528,7 @@ export default function SectionField() {
                       label="Rules"
                       required
                       value={dataForm?.rules}
-                      fetchOptions={fieldCustomer}
+                      fetchOptions={fieldRules}
                       onChange={(e: any) => {
                         onChangeForm('rules', e.value)
                         // setFetching('customer')
@@ -583,7 +585,7 @@ export default function SectionField() {
                       label="Inco 1"
                       required
                       value={dataForm?.inco_1}
-                      fetchOptions={fieldCustomer}
+                      fetchOptions={fieldInco}
                       onChange={(e: any) => {
                         onChangeForm('inco_1', e.value)
                         // setFetching('customer')
@@ -716,6 +718,7 @@ export default function SectionField() {
                   <Col span={12}>
                     <DebounceSelect
                       type="input"
+                      required
                       label="City"
                       placeholder={'Type here...'}
                       value={dataForm?.customer_city}

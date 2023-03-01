@@ -51,6 +51,8 @@ const subUrl = {
   getProductConversionByProductId: 'v1/master/get-product-conversion/PP01',
   getRegion: '/v1/master/get-region',
   getTransporationZone: '/v1/master/get-transportation-zone/PP01/ID',
+  getInco: '/v1/master/get-inco',
+  getRules: '/v1/master/get-rules',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -548,11 +550,31 @@ export const getRegion = async (): Promise<CommonDetailResponse<any>> => {
   return response.data
 }
 
-export const getTransporationZone = async (): Promise<CommonDetailResponse<any>> => {
+export const getTransportationZone = async (): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getTransporationZone,
+  })
+
+  return response.data
+}
+
+export const getInco = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getInco,
+  })
+
+  return response.data
+}
+
+export const getRules = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getRules,
   })
 
   return response.data
