@@ -84,7 +84,7 @@ export default function PageStockReservation() {
 
   return (
     <Col>
-      <Text variant={'h4'}>Approval Stock Reservation</Text>
+      <Text variant={'h4'}>Approval Stock Reservation Canvas</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

@@ -43,7 +43,7 @@ export default function PageIntraSlocRequest() {
 
   return (
     <Col>
-      <Text variant={'h4'}>Transfer to GS</Text>
+      <Text variant={'h4'}>Transfer to Good Stock</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
