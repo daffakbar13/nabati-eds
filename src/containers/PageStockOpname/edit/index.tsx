@@ -137,7 +137,7 @@ export default function UpdateStockOpname() {
         <Col>
           <div style={{ display: 'flex', gap: 5 }}>
             <GoBackArrow to={`${PATH.LOGISTIC}/stock-opname/detail/${router.query.id}`} />
-            <Title variant={'h4'}>View Stock Adjustment {`${router.query.id}`}</Title>
+            <Title variant={'h4'}>View Stock Opname {`${router.query.id}`}</Title>
           </div>
           <Spacer size={20} />
           <Card style={{ overflow: 'unset' }}>
