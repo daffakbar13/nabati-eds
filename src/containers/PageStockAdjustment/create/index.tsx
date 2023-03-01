@@ -71,13 +71,6 @@ export default function CreateStockAdjustment() {
 
     try {
       const res = await createStockAdjustment(payload)
-      await freezeSlocIdByBranchId(
-        {
-          id: slocSelected,
-          is_freeze: 1,
-        },
-        branchSelected,
-      )
       return res
     } catch (error) {
       const newLocal = false

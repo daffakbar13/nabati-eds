@@ -25,6 +25,36 @@ export const getListStockOpname = async (
   return response.data
 }
 
+export const getListApprovalStockOpname = async (
+  params: CommonListParams = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/list`,
+    overrideBaseUrl,
+    data: {
+      filters: [
+        {
+          field: 'status_id',
+          option: 'NE',
+          from_value: '00',
+          data_type: 'S',
+        },
+        {
+          field: 'status_id',
+          option: 'NE',
+          from_value: '04',
+          data_type: 'S',
+        },
+        ...params.filters,
+      ],
+      limit: params.limit,
+      page: params.page,
+    },
+  })
+  return response.data
+}
+
 export const getDetailStockOpname = async (
   params: CommonDetailParams = {},
 ): Promise<CommonDetailResponse<any>> => {

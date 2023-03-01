@@ -35,12 +35,16 @@ export default function DetailStockAdjustment() {
 
   const handleReject = async () => {
     try {
+      setLoading(true)
+
       const payload = { status_id: '05', header_text: details?.header_text, reason: reason }
       const res = await updateStatusStockOpname(id, payload)
 
       setSuccessReject(true)
+      setLoading(false)
       return res
     } catch (error) {
+      setLoading(false)
       return false
     }
   }
@@ -56,6 +60,7 @@ export default function DetailStockAdjustment() {
         },
         details?.branch_id,
       )
+
       return res
     } catch (error) {
       return false

@@ -1,11 +1,27 @@
 import { useRouter } from 'next/router'
 import { Button, DatePickerInput, Row, Spacer, Table, Text, Switch, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import { Card, SearchQueryParams, Select, SelectMasterData, SmartFilter } from 'src/components'
+import {
+  Card,
+  FloatAction,
+  Loader,
+  Modal,
+  Popup,
+  SearchQueryParams,
+  Select,
+  SelectMasterData,
+  SmartFilter,
+} from 'src/components'
 import { PATH } from 'src/configs/menus'
 import { ExclamationBrownIc } from 'src/assets'
 
-import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
+import {
+  getListStockAdjustment,
+  checkIsFreezeList,
+  updateStatusStockAdjustment,
+  freezeSlocIdByBranchId,
+  getDetailStockAdjustment,
+} from 'src/api/logistic/stock-adjustment'
 import { useTable, useFilters } from 'src/hooks'
 import { colors } from 'src/configs/colors'
 
@@ -14,18 +30,26 @@ import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/configs/fieldFetches'
 import FreezeSlocModal from './modals/freezeSloc'
 import { columns } from './columns'
+import { CheckCircleFilled } from '@ant-design/icons'
+import { Input, Typography } from 'antd'
+import { Label } from 'src/components/Text'
 
 export default function PageApprovalStockAdjustment() {
   const [freezeModal, setFreezeModal] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [successReject, setSuccessReject] = useState(false)
+  const [rejectModal, setRejectModal] = useState(false)
+  const [approveModal, setApproveModal] = useState(false)
+  const [reason, setReason] = useState('')
   const router = useRouter()
 
   const goToDetailPage = (id: string) =>
     // eslint-disable-next-line implicit-arrow-linebreak
-    router.push(`${PATH.LOGISTIC}/stock-adjustment/detail/${id}`)
+    router.push(`${PATH.LOGISTIC}/approval-stock-adjustment/detail/${id}`)
 
   const table = useTable({
     funcApi: getListStockAdjustment,
+    haveCheckBox: [{ rowKey: 'status', member: ['Wait Approval Adjust'] }],
     columns: columns(goToDetailPage),
   })
 
@@ -64,9 +88,46 @@ export default function PageApprovalStockAdjustment() {
     })
   }, [branchfrom, branchTo])
 
+  const handleReject = async () => {
+    try {
+      setLoading(true)
+      await Promise.all(
+        table.state.selected.map((id) => {
+          getDetailStockAdjustment({ id }).then((item: any) => {
+            const payload = { status_id: '05', header_text: item?.header_text, reason: reason }
+            updateStatusStockAdjustment(id, payload).then((res) => console.log(res))
+          })
+        }),
+      )
+
+      setSuccessReject(true)
+      setLoading(false)
+      return true
+    } catch (error) {
+      setLoading(false)
+      return false
+    }
+  }
+  const handleApprove = async () => {
+    try {
+      await Promise.all(
+        table.state.selected.map((id) => {
+          getDetailStockAdjustment({ id }).then((item: any) => {
+            const payload = { status_id: '03', header_text: item?.header_text, reason: '' }
+            updateStatusStockAdjustment(id, payload).then((res) => console.log(res))
+          })
+        }),
+      )
+
+      return true
+    } catch (error) {
+      return false
+    }
+  }
+
   return (
     <>
-      <Text variant={'h4'}>Stock Adjustment</Text>
+      <Text variant={'h4'}>Approval Stock Adjustment</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
@@ -201,10 +262,44 @@ export default function PageApprovalStockAdjustment() {
 
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {hasData && <Pagination {...table.state.paginationProps} />}
       </Card>
+
+      {table.state.selected.length > 0 && (
+        <FloatAction>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+            }}
+          >
+            <b>{table.state.selected.length} Document Stcok Adjustment are Selected</b>
+          </div>
+          <div style={{ flexGrow: 1, display: 'flex', justifyContent: 'end', gap: 10 }}>
+            <Button
+              size="big"
+              variant="tertiary"
+              onClick={() => {
+                setRejectModal(true)
+              }}
+            >
+              Reject
+            </Button>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                setApproveModal(true)
+              }}
+            >
+              Approve
+            </Button>
+          </div>
+        </FloatAction>
+      )}
 
       <FreezeSlocModal
         ListFreezed={freezeList}
@@ -212,6 +307,103 @@ export default function PageApprovalStockAdjustment() {
         visible={freezeModal}
         close={() => setFreezeModal(false)}
       />
+
+      {rejectModal && (
+        <Popup onOutsideClick={() => setRejectModal(false)}>
+          <Typography.Title level={3} style={{ margin: 0 }}>
+            Confirm Rejectation
+          </Typography.Title>
+          <Label>Reason</Label>
+          <Input.TextArea
+            id="inputReason"
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            required
+          />
+          <div style={{ display: 'flex', gap: 10 }}>
+            <Button
+              size="big"
+              style={{ flexGrow: 1 }}
+              variant="secondary"
+              onClick={() => setRejectModal(false)}
+            >
+              No
+            </Button>
+            <Button size="big" style={{ flexGrow: 1 }} variant="primary" onClick={handleReject}>
+              Yes
+            </Button>
+          </div>
+        </Popup>
+      )}
+
+      {successReject && (
+        <Popup>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Text
+              textAlign="center"
+              style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+            >
+              <>
+                <CheckCircleFilled /> Reject Success
+              </>
+            </Text>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 4,
+              fontWeight: 'bold',
+              flexDirection: 'column',
+              textAlign: 'center',
+            }}
+          >
+            <div>
+              Stock Adjustment ID :
+              <Typography.Text copyable={{ text: table.state.selected.join(', ') as string }}>
+                {' '}
+                {table.state.selected.join(', ')}
+              </Typography.Text>
+              has been
+            </div>
+            <div>successfully rejected</div>
+          </div>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <Button
+              size="big"
+              style={{ flexGrow: 1 }}
+              variant="primary"
+              onClick={() => router.reload()}
+            >
+              OK
+            </Button>
+          </div>
+        </Popup>
+      )}
+
+      {/* MODAL APPROVE */}
+      <Modal
+        title="Confirm Approve"
+        open={approveModal}
+        onOk={handleApprove}
+        onCancel={() => setApproveModal(false)}
+        onOkSuccess={() => router.reload()}
+        content={`Are you sure want to approve? Stock Adjustment ID : ${table.state.selected.join(
+          ', ',
+        )}`}
+        successOkText="OK"
+        successContent={(res: any) => (
+          <>
+            Stock Adjustment ID :
+            <Typography.Text copyable={{ text: table.state.selected.join(', ') as string }}>
+              {' '}
+              {table.state.selected.join(', ')}
+            </Typography.Text>{' '}
+            has been successfully approved
+          </>
+        )}
+      />
+
+      {loading && <Loader />}
     </>
   )
 }

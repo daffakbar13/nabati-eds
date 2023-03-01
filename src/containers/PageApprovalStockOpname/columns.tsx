@@ -55,7 +55,17 @@ export const columns = (goToDetail: (id: string) => {}) => [
   addColumn({
     title: 'Status',
     dataIndex: 'status',
-    render: (text: string, record: any) => <TaggedStatus status={text} />,
+    render: (text: string, record: any) => (
+      <TaggedStatus
+        status={
+          text === 'Wait Approval Opname'
+            ? 'Wait For Approval'
+            : text === 'Done'
+            ? 'Approved'
+            : text
+        }
+      />
+    ),
   }),
   addColumn({
     title: 'Action',

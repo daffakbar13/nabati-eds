@@ -26,8 +26,8 @@ import { columns } from './columns'
 import {
   freezeSlocIdByBranchId,
   getDetailStockOpname,
-  getListStockOpname,
-  updateStockOpname,
+  getListApprovalStockOpname,
+  updateStatusStockOpname,
 } from 'src/api/logistic/stock-opname'
 import { Input, Typography } from 'antd'
 import { CheckCircleFilled } from '@ant-design/icons'
@@ -49,7 +49,7 @@ export default function PageApprovalStockOpname() {
     router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${id}`)
 
   const table = useTable({
-    funcApi: getListStockOpname,
+    funcApi: getListApprovalStockOpname,
     haveCheckBox: [{ rowKey: 'status', member: ['Wait Approval Opname'] }],
     columns: columns(goToDetailPage),
   })
@@ -90,18 +90,21 @@ export default function PageApprovalStockOpname() {
 
   const handleReject = async () => {
     try {
+      setLoading(true)
       await Promise.all(
         table.state.selected.map((id) => {
           getDetailStockOpname({ id }).then((item: any) => {
             const payload = { status_id: '05', header_text: item?.header_text, reason: reason }
-            updateStockOpname(id, payload).then((res) => console.log(res))
+            updateStatusStockOpname(id, payload).then((res) => console.log(res))
           })
         }),
       )
 
       setSuccessReject(true)
+      setLoading(false)
       return true
     } catch (error) {
+      setLoading(false)
       return false
     }
   }
@@ -119,7 +122,7 @@ export default function PageApprovalStockOpname() {
             ).then((res) => console.log(res))
 
             const payload = { status_id: '03', header_text: item?.header_text, reason: '' }
-            updateStockOpname(id, payload).then((res) => console.log(res))
+            updateStatusStockOpname(id, payload).then((res) => console.log(res))
           })
         }),
       )
