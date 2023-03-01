@@ -14,11 +14,13 @@ import AllTabs from './tabs'
 import DocumentHeader from './tabs/DocumentHeader'
 import BPB from './tabs/BPB'
 import BSTS from './tabs/BSTS'
+import HPH from './tabs/HPH'
 import {
   getDetailProformaInvoiceByShipment,
   getDetailProformaInvoiceByShipmentAndDevlivery,
   getProformaInvoiceBpb,
   getProformaInvoiceBsts,
+  getProformaInvoiceHph,
   PGIProformaInvoice,
 } from 'src/api/proforma-invoice'
 
@@ -33,6 +35,7 @@ export default function PageShipmentDetail() {
   const data = useDetail(getDetailProformaInvoiceByShipment, { id: router.query.id as string })
   const dataBpb = useDetail(getProformaInvoiceBpb, { id: router.query.id as string })
   const dataBsts = useDetail(getProformaInvoiceBsts, { id: router.query.id as string })
+  const dataHph = useDetail(getProformaInvoiceHph, { id: router.query.id as string })
   const hasData = Object.keys(data).length > 0
   const componentRef = React.useRef()
 
@@ -259,6 +262,7 @@ export default function PageShipmentDetail() {
                 <Button size="big" variant="primary">
                   {currentTab === '2' && 'Print BPB'}
                   {currentTab === '3' && 'Print BSTS'}
+                  {currentTab === '4' && 'Print HPH'}
                 </Button>
               )}
               content={() => componentRef.current}
@@ -273,7 +277,7 @@ export default function PageShipmentDetail() {
           onChange={(current) => {
             setCurrentTab(current)
           }}
-          items={isStatus('New') ? AllTabs.slice(0, 2) : AllTabs}
+          items={isStatus('Delivery') ? AllTabs.slice(0, 2) : AllTabs}
         />
         {hasData && (
           <>
@@ -293,6 +297,7 @@ export default function PageShipmentDetail() {
                 <div ref={componentRef}>
                   {currentTab === '2' && <BPB data={dataBpb} />}
                   {currentTab === '3' && <BSTS data={dataBsts} />}
+                  {currentTab === '4' && <HPH data={dataHph} />}
                 </div>
               </div>
             )}

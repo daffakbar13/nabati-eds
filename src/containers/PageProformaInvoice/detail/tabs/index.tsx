@@ -7,6 +7,7 @@ const AllTabs = [
   CreateTabs(`Document Header`, '1'),
   CreateTabs(`BPB`, '2'),
   CreateTabs(`BSTS`, '3'),
+  CreateTabs(`HPH`, '4'),
 ]
 
 export default AllTabs
