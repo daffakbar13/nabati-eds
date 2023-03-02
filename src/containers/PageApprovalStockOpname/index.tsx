@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import {
   Card,
   FloatAction,
+  Loader,
   Modal,
   Popup,
   SearchQueryParams,
@@ -24,6 +25,7 @@ import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/confi
 import FreezeSlocModal from './modals/freezeSloc'
 import { columns } from './columns'
 import {
+  approvalStockOpname,
   freezeSlocIdByBranchId,
   getDetailStockOpname,
   getListApprovalStockOpname,
@@ -119,10 +121,25 @@ export default function PageApprovalStockOpname() {
                 is_freeze: 0,
               },
               item?.branch_id,
-            ).then((res) => console.log(res))
+            ).then((res) => console.log('FREEZE :', res))
 
-            const payload = { status_id: '03', header_text: item?.header_text, reason: '' }
-            updateStatusStockOpname(id, payload).then((res) => console.log(res))
+            const payload = {
+              company_id: item?.company_id,
+              id: item?.id,
+              posting_date: item?.posting_date,
+              document_date: item?.document_date,
+              branch_id: item?.branch_id,
+              sloc_id: item?.sloc_id,
+              header_text: item?.header_text,
+              items: item?.items?.length
+                ? item.items.map((element) => ({
+                    product_id: element?.product_id,
+                    base_qty: element?.base_qty,
+                    movement_type_id: element?.movement_type_id || '',
+                  }))
+                : [],
+            }
+            approvalStockOpname(id, payload).then((res) => console.log('APPROVAL :', res))
           })
         }),
       )
@@ -407,6 +424,8 @@ export default function PageApprovalStockOpname() {
           </>
         )}
       />
+
+      {loading && <Loader />}
     </>
   )
 }

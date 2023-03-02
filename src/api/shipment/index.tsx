@@ -123,3 +123,14 @@ export const getShipmentBstf = async (
   })
   return response.data
 }
+
+export const getShipmentBsts = async (
+  params: CommonDetailParams,
+): Promise<CommonDetailResponse<ShipmentItem>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl}/${params.id}/bsts`,
+  })
+  return response.data
+}

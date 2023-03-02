@@ -1,9 +1,8 @@
-import { Tag, Divider, Typography, Input } from 'antd'
-import { Col, Spacer, Table, Text, Button } from 'pink-lava-ui'
+import { Col, Row, Divider, Typography, Input } from 'antd'
+import { Spacer, Table, Text, Button } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
 import { Card, GoBackArrow, Modal } from 'src/components'
 import { Popup } from 'src/components'
-import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
@@ -14,12 +13,14 @@ import { columns } from './columns'
 import { Loader } from 'src/components'
 import useDetail from 'src/hooks/useDetail'
 import {
+  approvalStockOpname,
   freezeSlocIdByBranchId,
   getDetailStockOpname,
   updateStatusStockOpname,
 } from 'src/api/logistic/stock-opname'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { Label } from 'src/components/Text'
+import DataList from 'src/components/DataList'
 
 export default function DetailStockAdjustment() {
   const [loading, setLoading] = useState(true)
@@ -27,6 +28,21 @@ export default function DetailStockAdjustment() {
   const id = String(router.query.id) || ''
   const details: any = useDetail(getDetailStockOpname, { id: router.query.id as string }, false)
   const [reason, setReason] = useState('')
+
+  // datalist
+  const dataList = [
+    DataList.createDataList(
+      'Branch.',
+      `${details?.branch_id} - ${toTitleCase(details?.branch_name)}`,
+    ),
+    DataList.createDataList('SLoc', `${details?.sloc_id} - ${toTitleCase(details?.sloc_name)}`),
+    DataList.createDataList('Doc Date', dateFormat(details?.document_date)),
+    DataList.createDataList('Header Text', details?.header_text),
+    DataList.createDataList('Created On', dateFormat(details?.created_at)),
+    DataList.createDataList('Created By', details?.created_by),
+    DataList.createDataList('Modified On', dateFormat(details?.modified_at)),
+    DataList.createDataList('Modified By', details?.modified_by),
+  ]
 
   // Modals
   const [successReject, setSuccessReject] = useState(false)
@@ -50,8 +66,23 @@ export default function DetailStockAdjustment() {
   }
   const handleApprove = async () => {
     try {
-      const payload = { status_id: '03', header_text: details?.header_text, reason: '' }
-      const res = await updateStatusStockOpname(id, payload)
+      const payload = {
+        company_id: details?.company_id,
+        id: details?.id,
+        posting_date: details?.posting_date,
+        document_date: details?.document_date,
+        branch_id: details?.branch_id,
+        sloc_id: details?.sloc_id,
+        header_text: details?.header_text,
+        items: details?.items?.length
+          ? details.items.map((item) => ({
+              product_id: item?.product_id,
+              base_qty: item?.base_qty,
+              movement_type_id: item?.movement_type_id || '',
+            }))
+          : [],
+      }
+      const res = await approvalStockOpname(id, payload)
 
       await freezeSlocIdByBranchId(
         {
@@ -106,16 +137,6 @@ export default function DetailStockAdjustment() {
                   >
                     Reject
                   </Button>
-                  {/* <Button
-                    size="big"
-                    variant="secondary"
-                    onClick={() => {
-                      router.push(`${PATH.LOGISTIC}/stock-opname/edit/${router.query.id}`)
-                    }}
-                    loading={loading}
-                  >
-                    Edit
-                  </Button> */}
                   <Button
                     onClick={() => setApproveModal(true)}
                     size="big"
@@ -129,31 +150,18 @@ export default function DetailStockAdjustment() {
             </div>
           </Card>
           <Card>
-            <List loading={loading}>
-              {/* <List.Item
-                label="Movement Type"
-                value={`${details?.movement_type_id}-${toTitleCase(details?.movement_type_name)}`}
-              /> */}
-              <List.Item
-                label="Branch"
-                value={`${details?.branch_id}-${toTitleCase(details?.branch_name)}`}
-              />
-              <List.Item
-                label="SLoc"
-                value={`${details?.sloc_id}-${toTitleCase(details?.sloc_name)}`}
-              />
-              <List.Item label="" value={''} />
-
-              <List.Item label="Doc Date" value={dateFormat(details?.document_date)} />
-              <List.Item label="Posting Date" value={dateFormat(details?.posting_date)} />
-              <List.Item label="Header Text" value={details?.header_text} />
-              <List.Item label="" value={''} />
-
-              <List.Item label="Created On" value={dateFormat(details?.created_at)} />
-              <List.Item label="Created By" value={details?.created_by} />
-              <List.Item label="Modified On" value={dateFormat(details?.modified_at)} />
-              <List.Item label="Modified By" value={details?.modified_by} />
-            </List>
+            <Row gutter={12}>
+              <Col span={12}>
+                {dataList.slice(0, 4).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+              <Col span={10} offset={2}>
+                {dataList.slice(4, 8).map(({ label, value }, i) => (
+                  <DataList key={i} label={label} value={value} />
+                ))}
+              </Col>
+            </Row>
             <Divider />
             <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
               <Table columns={columns} dataSource={details?.items || []} />

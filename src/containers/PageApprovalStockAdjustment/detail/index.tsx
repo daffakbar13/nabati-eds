@@ -6,7 +6,7 @@ import List from 'src/components/List'
 import { toTitleCase } from 'src/utils/caseConverter'
 import { useRouter } from 'next/router'
 import {
-  freezeSlocIdByBranchId,
+  approvalStockAdjustment,
   getDetailStockAdjustment,
   updateStatusStockAdjustment,
 } from 'src/api/logistic/stock-adjustment'
@@ -48,16 +48,23 @@ export default function DetailStockAdjustment() {
   }
   const handleApprove = async () => {
     try {
-      const payload = { status_id: '03', header_text: details?.header_text, reason: '' }
-      const res = await updateStatusStockAdjustment(id, payload)
-
-      await freezeSlocIdByBranchId(
-        {
-          id: details?.sloc_id,
-          is_freeze: 0,
-        },
-        details?.branch_id,
-      )
+      const payload = {
+        company_id: details?.company_id,
+        id: details?.id,
+        posting_date: details?.posting_date,
+        document_date: details?.document_date,
+        branch_id: details?.branch_id,
+        sloc_id: details?.sloc_id,
+        header_text: details?.header_text,
+        items: details?.items?.length
+          ? details.items.map((item) => ({
+              product_id: item?.product_id,
+              base_qty: item?.base_qty,
+              movement_type_id: item?.movement_type_id || '',
+            }))
+          : [],
+      }
+      const res = await approvalStockAdjustment(id, payload)
 
       return res
     } catch (error) {

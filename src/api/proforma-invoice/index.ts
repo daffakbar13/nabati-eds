@@ -9,6 +9,7 @@ import {
 import { ProformaInvoice } from './types'
 
 const url = 'v1/proforma-invoices'
+const subUrl = 'v1/shipments'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_3
 
 export const getProformaInvoiceList = async (
@@ -99,6 +100,17 @@ export const getProformaInvoiceBsts = async (
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: `${url}/${params.id}/bsts`,
+  })
+  return response.data
+}
+
+export const getProformaInvoiceHph = async (
+  params: CommonDetailParams,
+): Promise<CommonDetailResponse<ProformaInvoice>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${subUrl}/${params.id}/hph`,
   })
   return response.data
 }

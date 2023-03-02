@@ -19,8 +19,8 @@ import {
   getListStockAdjustment,
   checkIsFreezeList,
   updateStatusStockAdjustment,
-  freezeSlocIdByBranchId,
   getDetailStockAdjustment,
+  approvalStockAdjustment,
 } from 'src/api/logistic/stock-adjustment'
 import { useTable, useFilters } from 'src/hooks'
 import { colors } from 'src/configs/colors'
@@ -113,8 +113,23 @@ export default function PageApprovalStockAdjustment() {
       await Promise.all(
         table.state.selected.map((id) => {
           getDetailStockAdjustment({ id }).then((item: any) => {
-            const payload = { status_id: '03', header_text: item?.header_text, reason: '' }
-            updateStatusStockAdjustment(id, payload).then((res) => console.log(res))
+            const payload = {
+              company_id: item?.company_id,
+              id: item?.id,
+              posting_date: item?.posting_date,
+              document_date: item?.document_date,
+              branch_id: item?.branch_id,
+              sloc_id: item?.sloc_id,
+              header_text: item?.header_text,
+              items: item?.items?.length
+                ? item.items.map((element) => ({
+                    product_id: element?.product_id,
+                    base_qty: element?.base_qty,
+                    movement_type_id: element?.movement_type_id || '',
+                  }))
+                : [],
+            }
+            approvalStockAdjustment(id, payload).then((res) => console.log('APPROVAL :', res))
           })
         }),
       )
