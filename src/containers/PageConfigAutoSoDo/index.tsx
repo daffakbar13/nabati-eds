@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Button, Row, Spacer, Table, Text } from 'pink-lava-ui'
-import { Card, SearchQueryParams, Modal, Pagination, FloatAction } from 'src/components'
-import { getListSOtoDO, UpdateStatusSOtoDO } from 'src/api/logistic/configuration-auto-so-to-do'
-import { useTable } from 'src/hooks'
+import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
+import { Card, Modal, Pagination, FloatAction } from 'src/components'
+import {
+  getListSOtoDO,
+  UpdateStatusSOtoDO,
+  DeleteSOtoDO,
+} from 'src/api/logistic/configuration-auto-so-to-do'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import { PATH } from 'src/configs/menus'
 import CreateModal from './create'
-import { Col as ColAntd, Row as RowAntd, Typography, Popover } from 'antd'
+import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
 
 export default function PageConfigurationSloc() {
   const [filters, setFilters] = useState([])
@@ -44,36 +48,38 @@ export default function PageConfigurationSloc() {
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
   })
-  const hasData = table.state.total > 0
+
+  const { searchProps } = useFilters(table, 'Search by Sales Org ID', ['id'])
+
+  const [selectedDataText, setSelectedDataText] = useState([])
+
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = selectedDataText?.[0]
+
+  const selectedText = {
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, +${table.state.selected.length - 1} more`,
+    content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
+  }
 
   useEffect(() => {
-    if (router.query.search) {
-      filters.push({
-        field: 'e.sales_org_id',
-        option: 'EQ',
-        from_value: router.query.search,
-        data_type: 'S',
-      })
-    }
-  }, [router.query.search])
+    let textselected = []
+    const ArrayFiltered = dataTable.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.idx === selected),
+    )
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(`${item.sales_org_id} - ${item.sales_org_name}`)
+      return {
+        company_id: item.company_id,
+        sales_org_id: item.sales_org_id,
+      }
+    })
 
-  // useEffect(() => {
-  //   const ArrayFiltered = dataTable.filter((dataAll) =>
-  //     table.state.selected.some((selected) => dataAll.idx === selected),
-  //   )
-
-  //   const DeletedData = ArrayFiltered.map((item: any) => ({
-  //     company_id: item.company_id,
-  //     customer_id: item.customer_id,
-  //     valid_from: moment(item.valid_from).format('YYYY-MM-DD'),
-  //   }))
-
-  //   setSelectedData(DeletedData)
-  // }, [table.state.selected])
+    setSelectedDataText(textselected)
+    setSelectedData(DeletedData)
+  }, [table.state.selected])
 
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => ({
@@ -84,14 +90,14 @@ export default function PageConfigurationSloc() {
   }, [table?.state?.data])
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = DeleteCreditLimit({
-    //     delete_config: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
+    try {
+      const res = DeleteSOtoDO({
+        datas: selectedData,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   return (
@@ -101,7 +107,7 @@ export default function PageConfigurationSloc() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams placeholder="Search by Sales Org ID" />
+            <Search {...searchProps} />
           </Row>
           <Row gap="16px">
             <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
@@ -115,7 +121,7 @@ export default function PageConfigurationSloc() {
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table {...table.state.tableProps} rowKey={'idx'} dataSource={dataTable} />
         </div>
-        {hasData && <Pagination {...table.state.paginationProps} />}
+        {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
           <FloatAction>
             <RowAntd justify="space-between" style={{ flexGrow: 1 }}>
@@ -157,14 +163,14 @@ export default function PageConfigurationSloc() {
         }}
         content={
           <>
-            Are you sure to delete this Auto SO to DO
-            {/* {oneSelected ? (
-              ` ${selectedQuotation.text} ?`
+            Are you sure to delete this Auto SO to DO{' '}
+            {oneSelected ? (
+              <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
-              <Popover content={selectedQuotation.content}>
-                {` ${selectedQuotation.text} ?`}
+              <Popover content={selectedText.content}>
+                {<span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>}
               </Popover>
-            )} */}
+            )}
           </>
         }
         onOkSuccess={() => {
