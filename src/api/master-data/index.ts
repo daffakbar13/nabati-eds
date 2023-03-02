@@ -51,6 +51,7 @@ const subUrl = {
   getProductConversionByProductId: 'v1/master/get-product-conversion/PP01',
   getRegion: '/v1/master/get-region',
   getTransporationZone: '/v1/master/get-transportation-zone/PP01/ID',
+  getSlocbyConfigSlocSalesman: '/v1/configuration/sloc_salesman',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -553,6 +554,17 @@ export const getTransporationZone = async (): Promise<CommonDetailResponse<any>>
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getTransporationZone,
+  })
+
+  return response.data
+}
+
+export const getSlocbyConfigSlocSalesman = async (
+  idbranch: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${BaseUrl2}${subUrl.getSlocbyConfigSlocSalesman}/${idbranch}`,
   })
 
   return response.data

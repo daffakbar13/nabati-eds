@@ -38,6 +38,7 @@ import {
   getSalesGroupByCompany,
   getRegion,
   getTransporationZone,
+  getSlocbyConfigSlocSalesman,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -817,6 +818,15 @@ export function fieldSlocByConfigLogistic(branch_id: string) {
   return getSlocbyConfigLogistic(branch_id).then((result) =>
     result.data?.map(({ sloc_id, sloc_name }) => ({
       label: [sloc_id, sloc_name].join(' - '),
+      value: sloc_id,
+    })),
+  )
+}
+
+export function fieldSlocByConfigSlocSalesman(branch_id: string) {
+  return getSlocbyConfigSlocSalesman(branch_id).then((result) =>
+    result.data?.map(({ sloc_id, salesman_id, salesman_name }) => ({
+      label: `${salesman_id} - ${salesman_name} (${sloc_id})`,
       value: sloc_id,
     })),
   )
