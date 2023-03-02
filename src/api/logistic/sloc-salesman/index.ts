@@ -63,3 +63,13 @@ export const UpdateStatusSlocman = async (id: string, payload: any) => {
   })
   return response.data
 }
+
+export const DeleteSlocman = async (payload: any) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/multiple_delete`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}
