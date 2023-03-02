@@ -81,7 +81,7 @@ export default function PageConfigurationSlocCompany() {
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.company_id} - ${selectedData[0]?.company_name} (${item.sloc_id})`)
+      textselected.push(`${item.company_id} - ${item.company_name} (${item.sloc_id})`)
       return {
         company_id: item.company_id,
         company_name: item.company_name,
