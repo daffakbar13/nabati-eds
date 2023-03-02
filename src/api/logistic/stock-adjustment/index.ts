@@ -130,3 +130,16 @@ export const getListStockAdjustmentByBranchSloc = async (
   })
   return response.data
 }
+
+export const approvalStockAdjustment = async (
+  docNumber: string,
+  params: any = {},
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/approval/${docNumber}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

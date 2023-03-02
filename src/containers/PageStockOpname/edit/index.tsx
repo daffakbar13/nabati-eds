@@ -31,6 +31,7 @@ import {
 } from 'src/api/logistic/stock-opname'
 import { ExclamationBrownIc } from 'src/assets'
 import TaggedStatus from 'src/components/TaggedStatus'
+import { ICPlus } from 'src/assets'
 
 const { Label, LabelRequired } = Text
 
@@ -245,10 +246,6 @@ export default function UpdateStockOpname() {
             </Form>
             <Divider style={{ borderColor: '#AAAAAA' }} />
 
-            <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-              + Add Item
-            </Button>
-
             <Spacer size={20} />
             <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
               <Table
@@ -258,6 +255,14 @@ export default function UpdateStockOpname() {
                 loading={tableAddItems.loading}
               />
             </div>
+            <Button
+              size="small"
+              variant="tertiary"
+              onClick={tableAddItems.handleAddItem}
+              style={{ margin: '32px 0 20px', border: 'transparent' }}
+            >
+              <ICPlus /> Add New
+            </Button>
           </Card>
 
           <Modal
