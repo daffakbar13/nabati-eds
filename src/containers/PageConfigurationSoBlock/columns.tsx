@@ -6,6 +6,10 @@ export const columns = (
   onClickSwitch: (a: boolean, rec: any) => void,
 ) => [
   addColumn({
+    title: 'No',
+    render: (text: any, record: any, index: number) => index + 1,
+  }),
+  addColumn({
     title: 'Company',
     dataIndex: 'company_id',
     render: (text: string, record: any, index: number) => (
