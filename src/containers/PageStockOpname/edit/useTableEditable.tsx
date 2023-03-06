@@ -221,7 +221,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           title: 'Large',
           dataIndex: 'ref_l',
           render: (text: string, record: any, index: number) =>
-            Number(record.stock_l) - Number(record.actual_l),
+            Number(record.actual_l) - Number(record.stock_l),
           width: 100,
           align: 'center',
         },
@@ -229,7 +229,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           title: 'Middle',
           dataIndex: 'ref_m',
           render: (text: string, record: any, index: number) =>
-            Number(record.stock_m) - Number(record.actual_m),
+            Number(record.actual_m) - Number(record.stock_m),
           width: 100,
           align: 'center',
         },
@@ -237,7 +237,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           title: 'Small',
           dataIndex: 'ref_s',
           render: (text: string, record: any, index: number) =>
-            Number(record.stock_s) - Number(record.actual_s),
+            Number(record.actual_s) - Number(record.stock_s),
           width: 100,
           align: 'center',
         },

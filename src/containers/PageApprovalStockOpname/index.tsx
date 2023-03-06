@@ -35,6 +35,8 @@ import { Input, Typography } from 'antd'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { Label } from 'src/components/Text'
 
+import moment from 'moment'
+
 export default function PageApprovalStockOpname() {
   const [freezeModal, setFreezeModal] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -126,8 +128,10 @@ export default function PageApprovalStockOpname() {
             const payload = {
               company_id: item?.company_id,
               id: item?.id,
-              posting_date: item?.posting_date,
-              document_date: item?.document_date,
+              // posting_date: item?.posting_date,
+              posting_date: moment(item?.posting_date).format('YYYY-MM-DD'),
+              // document_date: item?.document_date,
+              document_date: moment(item?.document_date).format('YYYY-MM-DD'),
               branch_id: item?.branch_id,
               sloc_id: item?.sloc_id,
               header_text: item?.header_text,
