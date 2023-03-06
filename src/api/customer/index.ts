@@ -105,7 +105,7 @@ export const getDetailCustomer = async (
 export const updateCustomerStatus = async (customerID: string, status: number) => {
   const response = await call({
     method: METHODS.PUT,
-    subUrl: `v1/master/update/customer-status`,
+    subUrl: `v1/master/update/customer-sales-org-status`,
     data: {
       customer_id: customerID,
       status: status,

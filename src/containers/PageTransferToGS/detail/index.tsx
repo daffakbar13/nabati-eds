@@ -43,7 +43,7 @@ export default function PageTransferToGSDetail() {
             >
               <ArrowLeftOutlined style={{ fontSize: 25 }} />
             </div>
-            <Text variant={'h4'}>{titlePage}</Text>
+            <Text variant={'h4'}>View Transfer to Good Stock {router.query.id}</Text>
           </div>
 
           {data.status_name != '' &&

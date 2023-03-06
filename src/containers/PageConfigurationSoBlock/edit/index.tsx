@@ -180,7 +180,7 @@ export default function CreateModal({ visible = false, close = () => {}, payload
                   }}
                 >
                   <ICExclamation />
-                  <p>Belum ada config yang dipilih</p>
+                  <p>No config selected yet</p>
                 </div>
                 <Spacer size={10} />
               </>

@@ -9,7 +9,11 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { createRequestStockReservation } from 'src/api/logistic/stock-reservation'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldBranchAll, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
+import {
+  fieldBranchAll,
+  fieldSlocByConfigLogistic,
+  fieldSlocByConfigSlocSalesman,
+} from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
 
 interface ItemsState {
@@ -40,6 +44,7 @@ export default function PageStockReservationCreate() {
   const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
   const [branchSelected, setBranchSelected] = React.useState('')
   const [allSloc, setAllScloc] = React.useState([])
+  const [toSloc, setToScloc] = React.useState([])
   const [modalDelete, setModalDelete] = React.useState(false)
   const [selectedRow, setSelectedRow] = React.useState<number>()
   const [disabledButton, setDisabledButton] = React.useState(true)
@@ -72,6 +77,10 @@ export default function PageStockReservationCreate() {
   const onChangeBranch = (value: any) => {
     fieldSlocByConfigLogistic(value).then((result) => {
       setAllScloc(result)
+    })
+
+    fieldSlocByConfigSlocSalesman(value).then((result) => {
+      setToScloc(result)
     })
   }
 
@@ -110,7 +119,7 @@ export default function PageStockReservationCreate() {
 
   return (
     <Col>
-      <Text variant={'h4'}>{titlePage}</Text>
+      <Text variant={'h4'}>Create Stock Reservation Canvas</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between" reverse>
@@ -242,10 +251,10 @@ export default function PageStockReservationCreate() {
                   type="select"
                   label="To Sloc"
                   required
-                  options={allSloc}
+                  options={toSloc}
                   disabled={branchSelected === ''}
                   onChange={(val: any) => {
-                    onChangeForm('receiving_sloc_id', val.label.split(' - ')[0])
+                    onChangeForm('receiving_sloc_id', val.value)
                   }}
                 />
               </Form.Item>
@@ -313,16 +322,16 @@ export default function PageStockReservationCreate() {
           router.push(`${PATH.LOGISTIC}/stock-reservation`)
         }}
         successContent={(response: any) => (
-          <>
-            Doc Number
+          <p>
+            Doc Number{' '}
             <Typography.Text copyable={{ text: response?.data?.material_doc_id as string }}>
               {response?.data?.material_doc_id}
-            </Typography.Text>
-            has been
-          </>
+            </Typography.Text>{' '}
+            has been successfully created
+          </p>
         )}
         successOkText="OK"
-        width={450}
+        width={400}
       />
       {cancel && (
         <Popup>

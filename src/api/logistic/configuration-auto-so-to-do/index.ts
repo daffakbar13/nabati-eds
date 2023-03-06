@@ -63,3 +63,13 @@ export const UpdateStatusSOtoDO = async (sales_org_id: string, payload: any) => 
   })
   return response.data
 }
+
+export const DeleteSOtoDO = async (payload: any) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/multiple_delete`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}

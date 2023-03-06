@@ -6,7 +6,7 @@ import { Spacer, Text, DatePickerInput, Button } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { InputNumber, Form, Modal as ModalANTD, Typography, Spin } from 'antd'
 import { fieldCustomer } from 'src/configs/fieldFetches'
-import { createCreditLimit } from 'src/api/logistic/config-credit-limit'
+import { createCreditLimit, UpdateCreditLimit } from 'src/api/logistic/config-credit-limit'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { ICExclamation } from 'src/assets'
@@ -64,14 +64,19 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const doUpdate = async (reqBody: any) => {
-    // try {
-    //   setLoading(true)
-    //   const res = createCreditLimit(reqBody)
-    //   setLoading(false)
-    //   return res
-    // } catch (error) {
-    //   return false
-    // }
+    try {
+      setLoading(true)
+      const res = UpdateCreditLimit(
+        payload?.company_id,
+        payload?.customer_id,
+        moment(payload?.valid_from).format('YYYY-MM-DD'),
+        reqBody,
+      )
+      setLoading(false)
+      return res
+    } catch (error) {
+      return false
+    }
     return true
   }
 
@@ -128,6 +133,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         valid_before: moment(payload?.valid_from),
         valid_after: moment(payload?.valid_to),
       })
+      onChangeForm('credit_limit_after', payload.credit_limit_after)
+      onChangeForm('new_valid_before', moment(payload?.valid_from).format('YYYY-MM-DD'))
+      onChangeForm('new_valid_after', moment(payload?.valid_to).format('YYYY-MM-DD'))
     }
   }, [payload, isOnEditMode])
 
@@ -278,6 +286,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             disabled={!isOnEditMode || payload?.status === '02' ? false : true}
             onChange={(val: any) => {
               onChangeForm('valid_from', moment(val).format('YYYY-MM-DD'))
+              onChangeForm('new_valid_before', moment(val).format('YYYY-MM-DD'))
             }}
           />
         </Form.Item>
@@ -305,6 +314,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             disabled={!isOnEditMode || payload?.status === '02' ? false : true}
             onChange={(val: any) => {
               onChangeForm('valid_to', moment(val).format('YYYY-MM-DD'))
+              onChangeForm('new_valid_after', moment(val).format('YYYY-MM-DD'))
             }}
           />
         </Form.Item>

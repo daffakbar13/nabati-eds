@@ -71,3 +71,15 @@ export const UpdateStatusCustomerGroup = async (
   })
   return response.data
 }
+
+export const DeleteMultipleCustomerGroup = async (
+  payload: any,
+) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/multiple_delete`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}

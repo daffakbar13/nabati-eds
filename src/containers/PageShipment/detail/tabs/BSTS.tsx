@@ -192,10 +192,10 @@ export default function BSTS(props: BSTSProps) {
             <strong>Total Karton Utuh : {data[0].total_carton}</strong>
           </Col>
           <Col offset={1} span={4}>
-            <strong>DPP : {data[0].total_tax_base} </strong>
+            <strong>DPP : {data[0].total_tax} </strong>
           </Col>
           <Col offset={1} span={4}>
-            <strong>PPN : {data[0].total_tax}</strong>
+            <strong>PPN : {data[0].total_tax_base}</strong>
           </Col>
           <Col offset={1} span={4}>
             <strong>JUMLAH(Rp) : {data[0].total_price}</strong>
@@ -219,7 +219,7 @@ export default function BSTS(props: BSTSProps) {
         </Col>
       </Row>
       <FooterText text="pembayaran dengan giro atau cek di atas namakan pt pinus merah abadi dianggap lunas bila giro atau cek telah cair. bila giro atau cek ditolak olh bank maka seluruh biaya ditanggung oleh customer" />
-      <FooterText text={data[0].terbilang} />
+      <FooterText text="terbilang: enam puluh enam ribu lima ratus ribu rupiah " />
     </PaperA4>
   )
 }

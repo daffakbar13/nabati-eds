@@ -35,6 +35,7 @@ export { default as ExpandMinusIc } from './expand-icon-minus.svg'
 export { default as ExpandPlusIc } from './expand-icon-plus.svg'
 export { default as ExclamationBrownIc } from './exclamation-brown.svg'
 export { default as ICLogo } from './favicon-eshop.ico'
+export { default as ICTruck } from './ic-truck.svg'
 
 // Filter Icon
 export { default as ICFilterAddFolder } from './Filter-addFolder.svg'

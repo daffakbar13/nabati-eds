@@ -64,3 +64,18 @@ export const DeleteCreditLimit = async (payload: any) => {
   })
   return response.data
 }
+
+export const UpdateCreditLimit = async (
+  company_id: string,
+  customer_id: string,
+  valid_from: string,
+  payload: any,
+) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/update/config_credit_limit/${company_id}/${customer_id}/${valid_from}`,
+    overrideBaseUrl,
+    data: payload,
+  })
+  return response.data
+}

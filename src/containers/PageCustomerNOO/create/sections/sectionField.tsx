@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import moment from 'moment'
-import { Col, Input, Row, Tabs, TabsProps } from 'antd'
+import { Col, Input, Row, Tabs, TabsProps, Typography } from 'antd'
 import { DatePickerInput } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import {
@@ -11,9 +11,11 @@ import {
   fieldCustomerGroupCompany,
   fieldDistrictByCompany,
   fieldDivisionByCompany,
+  fieldInco,
   fieldPaymentMethod,
   fieldPriceGroupByCompanyId,
   fieldRegion,
+  fieldRules,
   fieldSalesGroup,
   fieldSalesmanAll,
   fieldSalesmanGroup,
@@ -526,7 +528,7 @@ export default function SectionField() {
                       label="Rules"
                       required
                       value={dataForm?.rules}
-                      fetchOptions={fieldCustomer}
+                      fetchOptions={fieldRules}
                       onChange={(e: any) => {
                         onChangeForm('rules', e.value)
                         // setFetching('customer')
@@ -583,7 +585,7 @@ export default function SectionField() {
                       label="Inco 1"
                       required
                       value={dataForm?.inco_1}
-                      fetchOptions={fieldCustomer}
+                      fetchOptions={fieldInco}
                       onChange={(e: any) => {
                         onChangeForm('inco_1', e.value)
                         // setFetching('customer')
@@ -716,6 +718,7 @@ export default function SectionField() {
                   <Col span={12}>
                     <DebounceSelect
                       type="input"
+                      required
                       label="City"
                       placeholder={'Type here...'}
                       value={dataForm?.customer_city}
@@ -1008,34 +1011,71 @@ export default function SectionField() {
         </>
       ) : tabActive === 'notes' ? (
         <>
-          <Col span={24}>
-            <Card>
-              <Row gutter={[10, 10]}>
-                <Col span={12}>
-                  <DebounceSelect
-                    type="input"
-                    label="Gatget Note"
-                    placeholder={'Type here...'}
-                    value={dataForm?.gadget_note}
-                    onChange={(e: any) => {
-                      onChangeForm('gadget_note', e.target?.value)
-                    }}
-                  />
-                </Col>
-                <Col span={12}>
-                  <DebounceSelect
-                    type="input"
-                    label="Other Note"
-                    placeholder={'Type here...'}
-                    value={dataForm?.other_note}
-                    onChange={(e: any) => {
-                      onChangeForm('other_note', e.target?.value)
-                    }}
-                  />
-                </Col>
-              </Row>
-            </Card>
-          </Col>
+          <Card>
+            <Col span={24}>
+              {/* <DebounceSelect
+                type="input"
+                label="Gatget Note"
+                placeholder={'Type here...'}
+                value={dataForm?.gadget_note}
+                onChange={(e: any) => {
+                  onChangeForm('gadget_note', e.target?.value)
+                }}
+              /> */}
+              <Typography.Title level={5} style={{ marginBottom: 10 }}>
+                Gadget Notes
+              </Typography.Title>
+              <Input.TextArea
+                id="other-notes"
+                placeholder={'Type here...'}
+                value={dataForm?.gadget_note}
+                style={{
+                  border: '1px solid #AAAAAA',
+                  borderRadius: 8,
+                  height: 150,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                onChange={(e: any) => {
+                  onChangeForm('gadget_note', e.target?.value)
+                }}
+              />
+            </Col>
+            <Col span={24}>
+              <div style={{ color: '#FFD41F', margin: 5 }}>
+                Notes will be displayed in salesman gadget when visiting the customer
+              </div>
+            </Col>
+            <Col span={24} style={{ marginTop: 20 }}>
+              {/* <DebounceSelect
+                type="input"
+                label="Other Note"
+                placeholder={'Type here...'}
+                value={dataForm?.other_note}
+                onChange={(e: any) => {
+                  onChangeForm('other_note', e.target?.value)
+                }}
+              /> */}
+              <Typography.Title level={5} style={{ marginBottom: 10 }}>
+                Other Notes
+              </Typography.Title>
+              <Input.TextArea
+                id="other-notes"
+                placeholder={'Type here...'}
+                value={dataForm?.other_note}
+                style={{
+                  border: '1px solid #AAAAAA',
+                  borderRadius: 8,
+                  height: 150,
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+                onChange={(e: any) => {
+                  onChangeForm('other_note', e.target?.value)
+                }}
+              />
+            </Col>
+          </Card>
         </>
       ) : (
         <>

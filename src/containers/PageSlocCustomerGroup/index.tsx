@@ -5,6 +5,7 @@ import { Card, Modal, Pagination, FloatAction } from 'src/components'
 import {
   UpdateStatusCustomerGroup,
   getListCustomerGroup,
+  DeleteMultipleCustomerGroup,
 } from 'src/api/logistic/configuration-sloc-costumer-group'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
@@ -12,13 +13,12 @@ import CreateModal from './create'
 import { Col as ColAntd, Row as RowAntd, Typography, Popover } from 'antd'
 
 export default function PageConfigurationSloc() {
+  const router = useRouter()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [dataTable, setdataTable] = useState([])
   const [selectedData, setSelectedData] = useState([])
-
-  const router = useRouter()
-
+  const [selectedDataText, setSelectedDataText] = useState([])
   const [selectedRow, setSelectedRow] = useState(null)
 
   const goToDetailPage = (row: any) => {
@@ -64,38 +64,46 @@ export default function PageConfigurationSloc() {
 
   const { searchProps } = useFilters(table, 'Search by Customer Group ID', ['e.customer_group2_id'])
 
-  useEffect(() => {
-    const dataApi = table.state.data.map((item: any, index) => ({
-      idx: index,
-      ...item,
-    }))
-    setdataTable(dataApi)
-  }, [table?.state?.data])
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = selectedDataText?.[0]
+
+  const selectedText = {
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, +${table.state.selected.length - 1} more`,
+    content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
+  }
 
   useEffect(() => {
+    let textselected = []
     const ArrayFiltered = dataTable.filter((dataAll) =>
       table.state.selected.some((selected) => dataAll.idx === selected),
     )
 
-    // const DeletedData = ArrayFiltered.map((item: any) => ({
-    //   company_id: item.company_id,
-    //   customer_id: item.customer_id,
-    //   valid_from: moment(item.valid_from).format('YYYY-MM-DD'),
-    // }))
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(
+        `${item.company_id} - ${item.company_name} | ${item.customer_group2_id} - ${item.customer_group_name} (${item.sloc_id})`,
+      )
+      return {
+        company_id: item.company_id,
+        sales_org_id: item.sales_org_id,
+        customer_group2_id: item.customer_group2_id,
+      }
+    })
 
-    // setSelectedData(DeletedData)
+    setSelectedDataText(textselected)
+    setSelectedData(DeletedData)
   }, [table.state.selected])
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = DeleteCreditLimit({
-    //     delete_config: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
-    return false
+    try {
+      const res = DeleteMultipleCustomerGroup({
+        datas: selectedData,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   return (
@@ -162,14 +170,14 @@ export default function PageConfigurationSloc() {
         }}
         content={
           <>
-            Are you sure to delete this SLoc customer group
-            {/* {oneSelected ? (
-              ` ${selectedQuotation.text} ?`
+            Are you sure to delete this SLoc customer group{' '}
+            {oneSelected ? (
+              <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
-              <Popover content={selectedQuotation.content}>
-                {` ${selectedQuotation.text} ?`}
+              <Popover content={selectedText.content}>
+                {<span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>}
               </Popover>
-            )} */}
+            )}
           </>
         }
         onOkSuccess={() => {

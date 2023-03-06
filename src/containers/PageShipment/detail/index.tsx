@@ -8,6 +8,7 @@ import {
   getDetailShipment,
   getShipmentBpb,
   getShipmentBstf,
+  getShipmentBsts,
   getShipmentHph,
   PGIShipment,
 } from 'src/api/shipment'
@@ -22,6 +23,7 @@ import DocumentHeader from './tabs/DocumentHeader'
 import BPB from './tabs/BPB'
 import HPH from './tabs/HPH'
 import BSTF from './tabs/BSTF'
+import BSTS from './tabs/BSTS'
 
 export default function PageShipmentDetail() {
   const titlePage = useTitlePage('detail')
@@ -33,11 +35,13 @@ export default function PageShipmentDetail() {
   const data = useDetail(getDetailShipment, router.query)
   const dataBpb = useDetail(getShipmentBpb, router.query)
   const dataBstf = useDetail(getShipmentBstf, router.query)
+  const dataBsts = useDetail(getShipmentBsts, router.query)
   const dataHph = useDetail(getShipmentHph, router.query)
   const hasData = Object.keys(data).length > 0
   const componentRef = React.useRef()
 
   const isStatus = (...value: string[]) => value.includes(router.query.status as string)
+  const { tradeType } = router.query
 
   const ConfirmPGI = () => (
     <Popup
@@ -181,13 +185,21 @@ export default function PageShipmentDetail() {
           )}
           {currentTab !== '1' && (
             <ReactToPrint
-              trigger={() => (
-                <Button size="big" variant="primary">
-                  {currentTab === '2' && 'Print BPB'}
-                  {currentTab === '3' && 'Print BSTF'}
-                  {currentTab === '4' && 'Print HPH'}
-                </Button>
-              )}
+              trigger={() =>
+                tradeType === 'MT' ? (
+                  <Button size="big" variant="primary">
+                    {currentTab === '2' && 'Print BPB'}
+                    {currentTab === '3' && 'Print BSTS'}
+                    {currentTab === '4' && 'Print HPH'}
+                  </Button>
+                ) : (
+                  <Button size="big" variant="primary">
+                    {currentTab === '2' && 'Print BPB'}
+                    {currentTab === '3' && 'Print BSTF'}
+                    {currentTab === '4' && 'Print HPH'}
+                  </Button>
+                )
+              }
               content={() => componentRef.current}
             />
           )}
@@ -200,7 +212,11 @@ export default function PageShipmentDetail() {
           onChange={(current) => {
             setCurrentTab(current)
           }}
-          items={isStatus('New') ? AllTabs.slice(0, 2) : AllTabs}
+          items={
+            isStatus('New')
+              ? AllTabs(tradeType as 'MT' | 'GT').slice(0, 2)
+              : AllTabs(tradeType as 'MT' | 'GT')
+          }
         />
         {hasData && (
           <>
@@ -219,7 +235,11 @@ export default function PageShipmentDetail() {
               >
                 <div ref={componentRef}>
                   {currentTab === '2' && <BPB data={dataBpb} />}
-                  {currentTab === '3' && <BSTF data={dataBstf} />}
+                  {currentTab === '3' && tradeType === 'MT' ? (
+                    <BSTS data={dataBsts} />
+                  ) : (
+                    <BSTF data={dataBstf} />
+                  )}
                   {currentTab === '4' && <HPH data={dataHph} />}
                 </div>
               </div>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getListSlocman, UpdateStatusSlocman } from 'src/api/logistic/sloc-salesman'
+import { getListSlocman, UpdateStatusSlocman, DeleteSlocman } from 'src/api/logistic/sloc-salesman'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -18,6 +18,7 @@ export default function PageConfigurationSloc() {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [dataTable, setdataTable] = useState([])
   const [selectedData, setSelectedData] = useState([])
+  const [selectedDataText, setSelectedDataText] = useState([])
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
@@ -56,30 +57,43 @@ export default function PageConfigurationSloc() {
     setdataTable(dataApi)
   }, [table?.state?.data])
 
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = selectedDataText?.[0]
+
+  const selectedText = {
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, +${table.state.selected.length - 1} more`,
+    content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
+  }
+
   useEffect(() => {
+    let textselected = []
     const ArrayFiltered = dataTable.filter((dataAll) =>
       table.state.selected.some((selected) => dataAll.idx === selected),
     )
 
-    // const DeletedData = ArrayFiltered.map((item: any) => ({
-    //   company_id: item.company_id,
-    //   customer_id: item.customer_id,
-    //   valid_from: moment(item.valid_from).format('YYYY-MM-DD'),
-    // }))
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(` ${item.salesman_id} - ${item.salesman_name} (${item.sloc_id})`)
+      return {
+        company_id: item.company_id,
+        salesman_id: item.salesman_id,
+      }
+    })
 
-    // setSelectedData(DeletedData)
+    setSelectedDataText(textselected)
+    setSelectedData(DeletedData)
   }, [table.state.selected])
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = DeleteCreditLimit({
-    //     delete_config: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
-    return false
+    try {
+      const res = DeleteSlocman({
+        datas: selectedData,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   return (
@@ -147,13 +161,13 @@ export default function PageConfigurationSloc() {
         content={
           <>
             Are you sure to delete this SLoc salesman
-            {/* {oneSelected ? (
-              ` ${selectedQuotation.text} ?`
+            {oneSelected ? (
+              <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
-              <Popover content={selectedQuotation.content}>
-                {` ${selectedQuotation.text} ?`}
+              <Popover content={selectedText.content}>
+                {<span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>}
               </Popover>
-            )} */}
+            )}
           </>
         }
         onOkSuccess={() => {

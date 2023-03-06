@@ -37,7 +37,10 @@ import {
   getTermByCompanyId,
   getSalesGroupByCompany,
   getRegion,
-  getTransporationZone,
+  getSlocbyConfigSlocSalesman,
+  getTransportationZone,
+  getInco,
+  getRules,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -822,6 +825,15 @@ export function fieldSlocByConfigLogistic(branch_id: string) {
   )
 }
 
+export function fieldSlocByConfigSlocSalesman(branch_id: string) {
+  return getSlocbyConfigSlocSalesman(branch_id).then((result) =>
+    result.data?.map(({ sloc_id, salesman_id, salesman_name }) => ({
+      label: `${salesman_id} - ${salesman_name} (${sloc_id})`,
+      value: sloc_id,
+    })),
+  )
+}
+
 export function fieldPoStoByBranch(search: string, supplybranch: string, recevingbranch: string) {
   return getListPoSto({
     filters: [
@@ -1124,13 +1136,39 @@ export function fieldTermByCompanyId(search: string) {
 }
 
 export function fieldTransportationZone(search = '') {
-  return getTransporationZone().then((result) =>
+  return getTransportationZone().then((result) =>
     result.data
       .filter(
         ({ id, name }) =>
           id.toLowerCase().includes(search.toLowerCase()) ||
           name.toLowerCase().includes(search.toLowerCase()),
       )
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldInco(search = '') {
+  return getInco().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldRules(search = '') {
+  return getRules().then((result) =>
+    result.data
+      .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
       .map(({ id, name }) => ({
         label: [id, name].join(' - '),
         value: id,

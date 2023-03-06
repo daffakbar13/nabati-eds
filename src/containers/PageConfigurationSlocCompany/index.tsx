@@ -14,20 +14,17 @@ import Pagination from 'src/components/Pagination'
 import { Col as ColAntd, Row as RowAntd, Typography, Popover } from 'antd'
 
 export default function PageConfigurationSlocCompany() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
-
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [dataTable, setdataTable] = useState([])
   const [selectedData, setSelectedData] = useState([])
-
+  const [selectedDataText, setSelectedDataText] = useState([])
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
     setShowCreateModal(true)
   }
-
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const onClickSwitch = (a: boolean, rec: any) => {
@@ -50,6 +47,16 @@ export default function PageConfigurationSlocCompany() {
     haveCheckBox: 'All',
   })
 
+  const oneSelected = table.state.selected.length === 1
+  const firstSelected = selectedDataText?.[0]
+
+  const selectedText = {
+    text: oneSelected
+      ? firstSelected
+      : `${firstSelected}, +${table.state.selected.length - 1} more`,
+    content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
+  }
+
   const { searchProps } = useFilters(table, 'Search by Company, Key, SLoc, Description, etc', [
     'company_id',
     'company_name',
@@ -68,16 +75,22 @@ export default function PageConfigurationSlocCompany() {
   }, [table?.state?.data])
 
   useEffect(() => {
+    let textselected = []
     const ArrayFiltered = dataTable.filter((dataAll) =>
       table.state.selected.some((selected) => dataAll.idx === selected),
     )
 
-    const DeletedData = ArrayFiltered.map((item: any) => ({
-      company_id: item.company_id,
-      key: item.key,
-      sloc_id: item.sloc_id,
-    }))
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(`${item.company_id} - ${item.company_name} (${item.sloc_id})`)
+      return {
+        company_id: item.company_id,
+        company_name: item.company_name,
+        key: item.key,
+        sloc_id: item.sloc_id,
+      }
+    })
 
+    setSelectedDataText(textselected)
     setSelectedData(DeletedData)
   }, [table.state.selected])
 
@@ -157,14 +170,14 @@ export default function PageConfigurationSlocCompany() {
         }}
         content={
           <>
-            Are you sure to delete this SLoc Company
-            {/* {oneSelected ? (
-              ` ${selectedQuotation.text} ?`
+            Are you sure want delete this{' '}
+            {oneSelected ? (
+              <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
-              <Popover content={selectedQuotation.content}>
-                {` ${selectedQuotation.text} ?`}
+              <Popover content={selectedText.content}>
+                {<span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>}
               </Popover>
-            )} */}
+            )}
           </>
         }
         onOkSuccess={() => {

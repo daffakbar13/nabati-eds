@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import {
   Card,
   FloatAction,
+  Loader,
   Modal,
   Popup,
   SearchQueryParams,
@@ -24,10 +25,11 @@ import { fieldBranchAll, fieldSlocFromBranch, fieldCompanyList } from 'src/confi
 import FreezeSlocModal from './modals/freezeSloc'
 import { columns } from './columns'
 import {
+  approvalStockOpname,
   freezeSlocIdByBranchId,
   getDetailStockOpname,
-  getListStockOpname,
-  updateStockOpname,
+  getListApprovalStockOpname,
+  updateStatusStockOpname,
 } from 'src/api/logistic/stock-opname'
 import { Input, Typography } from 'antd'
 import { CheckCircleFilled } from '@ant-design/icons'
@@ -49,7 +51,7 @@ export default function PageApprovalStockOpname() {
     router.push(`${PATH.LOGISTIC}/approval-stock-opname/detail/${id}`)
 
   const table = useTable({
-    funcApi: getListStockOpname,
+    funcApi: getListApprovalStockOpname,
     haveCheckBox: [{ rowKey: 'status', member: ['Wait Approval Opname'] }],
     columns: columns(goToDetailPage),
   })
@@ -90,18 +92,21 @@ export default function PageApprovalStockOpname() {
 
   const handleReject = async () => {
     try {
+      setLoading(true)
       await Promise.all(
         table.state.selected.map((id) => {
           getDetailStockOpname({ id }).then((item: any) => {
             const payload = { status_id: '05', header_text: item?.header_text, reason: reason }
-            updateStockOpname(id, payload).then((res) => console.log(res))
+            updateStatusStockOpname(id, payload).then((res) => console.log(res))
           })
         }),
       )
 
       setSuccessReject(true)
+      setLoading(false)
       return true
     } catch (error) {
+      setLoading(false)
       return false
     }
   }
@@ -116,10 +121,25 @@ export default function PageApprovalStockOpname() {
                 is_freeze: 0,
               },
               item?.branch_id,
-            ).then((res) => console.log(res))
+            ).then((res) => console.log('FREEZE :', res))
 
-            const payload = { status_id: '03', header_text: item?.header_text, reason: '' }
-            updateStockOpname(id, payload).then((res) => console.log(res))
+            const payload = {
+              company_id: item?.company_id,
+              id: item?.id,
+              posting_date: item?.posting_date,
+              document_date: item?.document_date,
+              branch_id: item?.branch_id,
+              sloc_id: item?.sloc_id,
+              header_text: item?.header_text,
+              items: item?.items?.length
+                ? item.items.map((element) => ({
+                    product_id: element?.product_id,
+                    base_qty: element?.base_qty,
+                    movement_type_id: element?.movement_type_id || '',
+                  }))
+                : [],
+            }
+            approvalStockOpname(id, payload).then((res) => console.log('APPROVAL :', res))
           })
         }),
       )
@@ -404,6 +424,8 @@ export default function PageApprovalStockOpname() {
           </>
         )}
       />
+
+      {loading && <Loader />}
     </>
   )
 }
