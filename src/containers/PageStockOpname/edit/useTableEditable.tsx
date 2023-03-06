@@ -168,7 +168,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           render: (text: string, record: any, index: number) => (
             <InputNumber
               disabled={isNullProductId(index)}
-              min={isNullProductId(index) ? '0' : '1'}
+              min="0"
               value={text?.toLocaleString()}
               onChange={(newVal) => {
                 handleChangeData('actual_l', newVal, index)
@@ -184,7 +184,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           render: (text: string, record: any, index: number) => (
             <InputNumber
               disabled={isNullProductId(index)}
-              min={isNullProductId(index) ? '0' : '1'}
+              min="0"
               value={text?.toLocaleString()}
               onChange={(newVal) => {
                 handleChangeData('actual_m', newVal, index)
@@ -200,7 +200,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           render: (text: string, record: any, index: number) => (
             <InputNumber
               disabled={isNullProductId(index)}
-              min={isNullProductId(index) ? '0' : '1'}
+              min="0"
               value={text?.toLocaleString()}
               onChange={(newVal) => {
                 handleChangeData('actual_s', newVal, index)
