@@ -242,12 +242,12 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/transportation-shipping-type`),
     ),
     CreateMenu(
-      'mode-of-type',
+      'transportation-mode-of-transportation',
       'Mode of Transportaion',
       null,
       null,
       () => 'Mode-of-type',
-      () => Router.push(`${PATH.SALES}/mode-of-type`),
+      () => Router.push(`${PATH.SALES}/transportation-mode-of-transportation`),
     ),
   ]),
 ]
