@@ -16,8 +16,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
-  const router = useRouter()
   const [form] = Form.useForm()
+  const router = useRouter()
 
   const optionsType = [
     {
@@ -208,13 +208,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit config sloc company?"
+        content="Are you sure want to submit Driver?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.push('/logistic/configuration-sloc-company')
+          router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Config sloc company has been successfully Updated'}
+        successContent={(res: any) => 'Driver has been successfully Updated'}
         successOkText="OK"
         width={432}
       />
