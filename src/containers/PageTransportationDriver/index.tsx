@@ -7,7 +7,7 @@ import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 
-// import CreateModal from './create'
+import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
 
 export default function PageConfigurationSloc() {
@@ -80,14 +80,14 @@ export default function PageConfigurationSloc() {
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
 
-      {/* <CreateModal
+      <CreateModal
         visible={showCreateModal}
         close={() => {
           setShowCreateModal(false)
           setSelectedRow(null)
         }}
         payload={selectedRow}
-      /> */}
+      />
     </>
   )
 }
