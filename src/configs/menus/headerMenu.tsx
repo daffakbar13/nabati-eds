@@ -1,25 +1,21 @@
+/* eslint-disable no-return-assign */
 import React from 'react'
-import { ICGridMenu, ICNewTab } from 'src/assets'
-import Router from 'next/router'
+import { ICNewTab } from 'src/assets'
 import Link from 'next/link'
 import { PATH } from './path'
 
 export const headerMenu = [
   {
-    path: '/',
-    label: (
-      <div style={{ marginTop: 16 }} onClick={() => Router.push('/')}>
-        <ICGridMenu />
-      </div>
-    ),
-  },
-  {
     path: '/dashboard?menu=config',
-    label: <Link href={{ pathname: '/dashboard?menu=config' }}>Config</Link>,
+    label: <div onClick={() => (window.location.href = '/dashboard?menu=config')}>Config</div>,
   },
   {
     path: '/dashboard?menu=mdm',
-    label: <Link href={{ pathname: '/dashboard?menu=mdm' }}>Master Data Management</Link>,
+    label: (
+      <div onClick={() => (window.location.href = '/dashboard?menu=mdm')}>
+        Master Data Management
+      </div>
+    ),
   },
   {
     path: PATH.SALES,
@@ -31,7 +27,7 @@ export const headerMenu = [
   },
   {
     path: '/fico',
-    label: <Link href={{ pathname: '/fico' }}>Finance</Link>,
+    label: <div onClick={() => (window.location.href = '/fico')}>Finance</div>,
   },
   {
     path: null,
