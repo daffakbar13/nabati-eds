@@ -4,7 +4,6 @@ import {
   ICInventory,
   LogisticIcGr,
   LogisticIcIntraBranch,
-  LogisticIcIntraChannel,
   LogisticIcIntraSloc,
   LogisticIcCanvas,
   LogisticIcBadStock,
@@ -263,30 +262,6 @@ export const menuLogistic = [
         onClick: () => Router.push(`${PATH.LOGISTIC}/sloc-salesman`),
       },
       {
-        key: 'auto-so-to-do',
-        title: 'Auto SO to DO',
-        content: () => 'Auto SO to DO',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/auto-so-to-do`),
-      },
-      {
-        key: 'configuration-approval-so-block',
-        title: 'Approval SO Block',
-        content: () => 'Approval SO Block',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-approval-so-block`),
-      },
-      {
-        key: 'configuration-credit-limit',
-        title: 'Credit Limit',
-        content: () => 'Credit Limit',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-credit-limit`),
-      },
-      {
-        key: 'configuration-credit-limit-approval',
-        title: 'Credit Limit Approval',
-        content: () => 'Credit Limit Approval',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-credit-limit-approval`),
-      },
-      {
         key: 'configuration-order-type-to-sloc',
         title: 'Order Type to Sloc',
         content: () => 'Order Type to Sloc',
@@ -315,35 +290,6 @@ export const menuLogistic = [
         title: 'Mapping Product Intra',
         content: () => 'Mapping Product Intra',
         onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-mapping-product-intra`),
-      },
-    ],
-  },
-  {
-    key: 'sales-order-block',
-    title: 'Sales Order Block',
-    icon: LogisticIcConfiguration,
-    children: [
-      {
-        key: 'sales-organization-customer-group-material',
-        title: 'Sales Organization, Customer Group, Material',
-        content: () => 'Sales Organization, Customer Group, Material',
-        onClick: () =>
-          Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer-group-material`),
-      },
-      {
-        key: 'sales-organization-customer-group-salesman-grop',
-        title: 'Sales Organization, Customer Group, Salesman Group',
-        content: () => 'Sales Organization, Customer Group, Salesman Group',
-        onClick: () =>
-          Router.push(
-            `${PATH.LOGISTIC}/configuration-sales-organization-customer-group-salesman-grop`,
-          ),
-      },
-      {
-        key: 'sales-organization-customer',
-        title: 'Sales Organization, Customer',
-        content: () => 'Sales Organization, Customer',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-sales-organization-customer`),
       },
     ],
   },
