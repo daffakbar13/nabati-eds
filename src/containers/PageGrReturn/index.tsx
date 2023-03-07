@@ -35,7 +35,7 @@ export default function PageGrReturn() {
 
   return (
     <Col>
-      <Text variant={'h4'}>Goods Return</Text>
+      <Text variant={'h4'}>GR Return</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">

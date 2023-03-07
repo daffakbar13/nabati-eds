@@ -69,8 +69,8 @@ export default function DetailGR() {
       {!loading && (
         <Col>
           <div style={{ display: 'flex', gap: 5 }}>
-            <GoBackArrow to={`${PATH.LOGISTIC}/goods-receipt`} />
-            <Text variant={'h4'}>View GR From Principal {`${router.query.id}`}</Text>
+            <GoBackArrow to={`${PATH.LOGISTIC}/gr-return`} />
+            <Text variant={'h4'}>View GR Return From Principal {`${router.query.id}`}</Text>
             <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'end', gap: 10 }}>
               {currentTab === '1' && (
                 <>
