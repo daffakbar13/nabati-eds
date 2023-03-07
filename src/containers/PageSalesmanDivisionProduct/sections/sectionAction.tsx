@@ -1,58 +1,29 @@
 import { Col, Row } from 'antd'
 import { Search, Button } from 'pink-lava-ui'
 import React from 'react'
-import { colors } from 'src/configs/colors'
+import { useFilters } from 'src/hooks'
 import { useSalesSalesmanDivisionContext } from '../states'
 
 export default function SectionAction() {
   const {
-    state: {
-      table: {
-        state: {
-          body: { filters },
-          selected,
-        },
-        handler: { handleFilter },
-      },
-    },
+    state: { table },
     handler: { handleShowModal, showConfirm },
   } = useSalesSalesmanDivisionContext()
-  const [filterById, setFilterById] = React.useState<string>()
-
-  React.useEffect(() => {
-    const getFilterId = filters.find(({ field }) => field === 'eds_order.id')
-    if (getFilterId) {
-      setFilterById(getFilterId.from_value.split('%').join(''))
-    } else {
-      setFilterById(undefined)
-    }
-  }, [filters])
+  const {
+    state: { selected },
+  } = table
+  const { searchProps } = useFilters(table, 'Search by ID, Name', [
+    'division_id',
+    'division_name',
+    'product_id',
+    'product_name',
+  ])
 
   return (
     <Row justify="space-between">
       <Row gutter={10}>
         <Col>
-          <Search
-            width="380px"
-            nameIcon="SearchOutlined"
-            placeholder="Search Salesman ID"
-            colorIcon={colors.grey.regular}
-            {...(filterById && { value: filterById })}
-            onChange={(e) => {
-              const { value } = e.target
-              if (value === '') {
-                handleFilter([])
-              } else {
-                handleFilter([
-                  {
-                    field: 'eds_order.id',
-                    option: 'CP',
-                    from_value: `%${e.target.value}%`,
-                  },
-                ])
-              }
-            }}
-          />
+          <Search {...searchProps} />
         </Col>
       </Row>
       <Row gutter={10}>
