@@ -29,7 +29,7 @@ export default function TransferToGSUpdate(props: propsDetail) {
     movement_type_id: props.data.movement_type_id,
     branch_id: props.data.branch_id,
     supplying_sloc_id: props.data.receiving_sloc_id,
-    receiving_sloc_id: "GS00",
+    receiving_sloc_id: 'GS00',
     document_date: moment(props.data.document_date).format('YYYY-MM-DD'),
     posting_date: moment(props.data.posting_date).format('YYYY-MM-DD'),
     header_text: '',
@@ -76,7 +76,12 @@ export default function TransferToGSUpdate(props: propsDetail) {
             </Button>
           </Row>
           <Text variant={'h5'}>
-            <TaggedStatus status={props.data.status_name} size="h5" />
+            <TaggedStatus
+              status={
+                props.data.status_name === 'Wait For Approval' ? 'Pending' : props.data.status_name
+              }
+              size="h5"
+            />
           </Text>
         </Row>
       </Card>
