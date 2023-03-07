@@ -99,7 +99,7 @@ export default function PageConfigurationSloc() {
 
   return (
     <>
-      <Text variant={'h4'}>Driver</Text>
+      <Text variant={'h4'}>Mode of Transportation</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
@@ -123,7 +123,7 @@ export default function PageConfigurationSloc() {
           <FloatAction>
             <RowAntd justify="space-between" style={{ flexGrow: 1 }}>
               <b style={{ lineHeight: '48px' }}>
-                {table.state.selected.length} Driver are Selected
+                {table.state.selected.length} Mode of Transportation are Selected
               </b>
               <RowAntd gutter={10}>
                 <ColAntd>
@@ -161,7 +161,7 @@ export default function PageConfigurationSloc() {
         }}
         content={
           <>
-            Are you sure want Delete Driver{' '}
+            Are you sure want Delete Mode of Transportation{' '}
             {oneSelected ? (
               <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
@@ -174,7 +174,7 @@ export default function PageConfigurationSloc() {
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Driver has been successfully deleted`}
+        successContent={(res: any) => `Mode of Transportation has been successfully deleted`}
         successOkText="OK"
         width={432}
       />

@@ -107,28 +107,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={20} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="type"
+          name="no"
           rules={[{ required: true }]}
         >
           <DebounceSelect
-            label={'Type'}
-            required
-            type="select"
-            placeholder="Select Type"
-            options={optionsType}
-            onChange={(val: any) => {
-              onChangeForm('type', val.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="name"
-          rules={[{ required: true }]}
-        >
-          <DebounceSelect
-            label={'Name'}
+            label="No"
             required
             type="input"
             placeholder="e.g Name"
@@ -140,48 +123,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="nick_name"
+          name="name"
           rules={[{ required: true }]}
         >
           <DebounceSelect
-            label={'Nick Name'}
+            label="Name"
             required
             type="input"
-            placeholder="e.g Nick Name"
+            placeholder="e.g Name"
             onChange={(val: any) => {
-              onChangeForm('nick_name', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="company"
-          rules={[{ required: true }]}
-          initialValue={'PP01-Pinus Merah Abadi, PT'}
-        >
-          <DebounceSelect
-            label={'Company'}
-            required
-            type="input"
-            value={'PP01-Pinus Merah Abadi, PT' as any}
-            disabled
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="branch"
-          rules={[{ required: true }]}
-        >
-          <DebounceSelect
-            label={'Branch'}
-            required
-            type="select"
-            placeholder="Type to Search"
-            fetchOptions={fieldBranchAll}
-            onChange={(val: any) => {
-              onChangeForm('type', val.value)
+              onChangeForm('name', val.target.value)
             }}
           />
         </Form.Item>
@@ -192,7 +143,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Driver ' : 'Create Driver'}
+        title={isOnEditMode ? 'View Vehicle Type ' : 'Create Vehicle Type'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
@@ -208,13 +159,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit Driver?"
+        content="Are you sure want to submit Vehicle Type?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Driver has been successfully Updated'}
+        successContent={(res: any) => 'Vehicle Type has been successfully Updated'}
         successOkText="OK"
         width={432}
       />

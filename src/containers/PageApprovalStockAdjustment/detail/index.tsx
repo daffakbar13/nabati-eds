@@ -19,6 +19,8 @@ import useDetail from 'src/hooks/useDetail'
 import { Label } from 'src/components/Text'
 import { CheckCircleFilled } from '@ant-design/icons'
 
+import moment from 'moment'
+
 export default function DetailStockAdjustment() {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
@@ -51,8 +53,10 @@ export default function DetailStockAdjustment() {
       const payload = {
         company_id: details?.company_id,
         id: details?.id,
-        posting_date: details?.posting_date,
-        document_date: details?.document_date,
+        // posting_date: details?.posting_date,
+        posting_date: moment(details?.posting_date).format('YYYY-MM-DD'),
+        // document_date: details?.document_date,
+        document_date: moment(details?.document_date).format('YYYY-MM-DD'),
         branch_id: details?.branch_id,
         sloc_id: details?.sloc_id,
         header_text: details?.header_text,

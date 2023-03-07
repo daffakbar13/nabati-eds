@@ -19,17 +19,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [form] = Form.useForm()
   const router = useRouter()
 
-  const optionsType = [
-    {
-      label: 'Driver',
-      value: 'driver',
-    },
-    {
-      label: 'Helper',
-      value: 'helper',
-    },
-  ]
-
   const isOnEditMode = !!payload
 
   const initialValue = {
@@ -107,81 +96,32 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={20} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="type"
+          name="id"
           rules={[{ required: true }]}
         >
           <DebounceSelect
-            label={'Type'}
+            label="ID"
             required
-            type="select"
-            placeholder="Select Type"
-            options={optionsType}
+            type="input"
+            placeholder="e.g ID"
             onChange={(val: any) => {
-              onChangeForm('type', val.value)
+              onChangeForm('id', val.target.value)
             }}
           />
         </Form.Item>
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="name"
+          name="description"
           rules={[{ required: true }]}
         >
           <DebounceSelect
-            label={'Name'}
+            label="Description"
             required
             type="input"
-            placeholder="e.g Name"
+            placeholder="e.g Description"
             onChange={(val: any) => {
-              onChangeForm('name', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="nick_name"
-          rules={[{ required: true }]}
-        >
-          <DebounceSelect
-            label={'Nick Name'}
-            required
-            type="input"
-            placeholder="e.g Nick Name"
-            onChange={(val: any) => {
-              onChangeForm('nick_name', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="company"
-          rules={[{ required: true }]}
-          initialValue={'PP01-Pinus Merah Abadi, PT'}
-        >
-          <DebounceSelect
-            label={'Company'}
-            required
-            type="input"
-            value={'PP01-Pinus Merah Abadi, PT' as any}
-            disabled
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="branch"
-          rules={[{ required: true }]}
-        >
-          <DebounceSelect
-            label={'Branch'}
-            required
-            type="select"
-            placeholder="Type to Search"
-            fetchOptions={fieldBranchAll}
-            onChange={(val: any) => {
-              onChangeForm('type', val.value)
+              onChangeForm('description', val.target.value)
             }}
           />
         </Form.Item>
@@ -192,7 +132,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Driver ' : 'Create Driver'}
+        title={isOnEditMode ? 'View Mode of Transportation ' : 'Create Mode of Transportation'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
@@ -208,13 +148,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit Driver?"
+        content="Are you sure want to submit Mode of Transportation?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Driver has been successfully Updated'}
+        successContent={(res: any) => 'Mode of Transportation has been successfully Updated'}
         successOkText="OK"
         width={432}
       />
