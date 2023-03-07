@@ -31,6 +31,7 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     addColumn({
       title: 'Product ID',
       dataIndex: 'product_id',
+      sorter: true,
     }),
     addColumn({
       title: 'Product Name',

@@ -122,7 +122,16 @@ export default function DetailStockAdjustment() {
           <Spacer size={20} />
           <Card style={{ overflow: 'unset', marginBottom: 9 }}>
             <div style={{ display: 'flex' }}>
-              <TaggedStatus status={details.status} size="h5" />
+              <TaggedStatus
+                status={
+                  details.status === 'Wait Approval Opname'
+                    ? 'Wait For Approval'
+                    : details.status === 'Done'
+                    ? 'Approved'
+                    : details.status
+                }
+                size="h5"
+              />
 
               {details?.status_id && details?.status_id === '02' && (
                 <div
