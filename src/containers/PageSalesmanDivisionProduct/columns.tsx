@@ -1,16 +1,12 @@
-/* eslint-disable implicit-arrow-linebreak */
-/* eslint-disable radix */
-/* eslint-disable camelcase */
-/* eslint-disable no-unused-expressions */
 import { addColumn } from 'src/utils/createColumns'
 import React from 'react'
 import { concatString } from 'src/utils/concatString'
 import Link from 'src/components/Link'
-import { Button } from 'pink-lava-ui'
+import { Button, Switch } from 'pink-lava-ui'
 import { baseHandler } from './states/handler'
 
 export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
-  const { handleEditable, handleShowModal } = handler
+  const { handleEditable, handleShowModal, showConfirm } = handler
   function handleAction(id: string) {
     handleShowModal('detail')
     handleEditable(id)
@@ -47,6 +43,18 @@ export function useColumnQuotation(handler: ReturnType<typeof baseHandler>) {
     addColumn({
       title: 'Branch ID',
       render: (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
+    }),
+    addColumn({
+      title: 'Active/Inactive',
+      render: (_, r) => (
+        <Switch
+          checked={r.is_active === 'Active'}
+          onChange={() => {
+            handleEditable(r)
+            showConfirm('activation')
+          }}
+        />
+      ),
     }),
     addColumn({
       title: 'Action',

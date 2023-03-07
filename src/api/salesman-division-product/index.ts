@@ -46,11 +46,12 @@ export const updateSalesmanDivisionProduct = async (
   return response.data
 }
 
-export const deleteSalesmanDivisionProduct = async (id: string): Promise<any> => {
+export const deleteSalesmanDivisionProduct = async (id: number): Promise<any> => {
   const response = await call({
     method: METHODS.DELETE,
     overrideBaseUrl,
-    subUrl: `${url}/delete/salesman-division-product/${id}`,
+    subUrl: `${url}/delete/salesman-division-product`,
+    data: { id },
   })
   return response.data
 }

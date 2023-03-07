@@ -4,15 +4,13 @@ import { Button } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldDivisionID } from 'src/configs/fieldFetches'
 import { getListProduct } from 'src/api/master-data'
-import { createSalesmanDivisionProduct } from 'src/api/salesman-division-product'
-import { Loader } from 'src/components'
 import { useSalesSalesmanDivisionContext } from '../states'
 import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessSubmit } from './alerts'
 
 export default function SectionModalCreate() {
   const {
-    state: { editable, showModal, confirm, processing },
-    handler: { showConfirm, unShowModal, handleEditable },
+    state: { editable, showModal, confirm },
+    handler: { showConfirm, handleEditable },
   } = useSalesSalesmanDivisionContext()
   const isModalCreate = showModal === 'create'
 

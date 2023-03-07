@@ -16,7 +16,7 @@ export default function SectionTable() {
   return (
     <>
       <Row style={{ overflow: 'scroll' }}>
-        <Table {...tableProps} rowKey={'salesman_id'} />
+        <Table {...tableProps} rowKey={'id'} />
       </Row>
       {hasData && <Pagination {...paginationProps} />}
     </>

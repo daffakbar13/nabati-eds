@@ -1,10 +1,10 @@
-/* eslint-disable object-curly-newline */
 import React from 'react'
 import { useSalesSalesmanDivisionContext } from '../states'
 import {
-  ConfirmCancel,
+  ConfirmActivation,
   ConfirmDelete,
   ConfirmSubmit,
+  ConfirmSuccessActivation,
   ConfirmSuccessDelete,
   ConfirmSuccessSubmit,
 } from './alerts'
@@ -19,8 +19,9 @@ export default function SectionConfirm() {
       {confirm === 'submit' && <ConfirmSubmit />}
       {confirm === 'delete' && <ConfirmDelete />}
       {confirm === 'success-submit' && <ConfirmSuccessSubmit />}
-      {/* {confirm === 'cancel' && <ConfirmCancel />} */}
       {confirm === 'success-delete' && <ConfirmSuccessDelete />}
+      {confirm === 'activation' && <ConfirmActivation />}
+      {confirm === 'success-activation' && <ConfirmSuccessActivation />}
     </>
   )
 }
