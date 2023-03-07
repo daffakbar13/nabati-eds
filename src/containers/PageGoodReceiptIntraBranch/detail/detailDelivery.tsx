@@ -41,7 +41,7 @@ export default function Detail(props: any) {
     branch_id: data.supply_branch_id,
     from_sloc: data.channel_type === 'MT' ? 'GS00' : '',
     to_sloc: '',
-    config_sloc_branch: '',
+    config_sloc_branch: data.receive_branch_id,
     items: tableAddItems.dataSubmit.map((item: any, index) => {
       return {
         product_id: item.product_id,
@@ -174,7 +174,6 @@ export default function Detail(props: any) {
                 }
                 options={allSloc}
                 onChange={(e: any) => {
-                  onChangeForm('config_sloc_branch', e.key)
                   onChangeForm('to_sloc', e.value)
                 }}
               />
