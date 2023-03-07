@@ -43,11 +43,6 @@ export const column = [
     width: 200,
   }),
   addColumn({
-    title: 'Qty Sold',
-    dataIndex: 'qty_sold',
-    width: 200,
-  }),
-  addColumn({
     title: 'UoM',
     dataIndex: 'qty_sold_uom',
     width: 200,
