@@ -100,7 +100,11 @@ export default function DetailStockAdjustment() {
             <div style={{ display: 'flex' }}>
               <TaggedStatus
                 status={
-                  details.status === 'Wait Approval Adjust' ? 'Wait For Approval' : details.status
+                  details.status === 'Wait Approval Adjust'
+                    ? 'Wait For Approval'
+                    : details.status === 'Done'
+                    ? 'Approved'
+                    : details.status
                 }
                 size="h5"
               />

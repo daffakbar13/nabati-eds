@@ -126,7 +126,7 @@ export default function DetailStockAdjustment() {
                 status={
                   details.status === 'Wait Approval Opname'
                     ? 'Wait For Approval'
-                    : details.status === 'done'
+                    : details.status === 'Done'
                     ? 'Approved'
                     : details.status
                 }
