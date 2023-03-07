@@ -73,6 +73,13 @@ export default function SectionAction() {
             </Button>
           </Col>
         )}
+        {isStatus('7') && (
+          <Col>
+            <Button size="big" variant="primary" onClick={() => {}}>
+              Submit
+            </Button>
+          </Col>
+        )}
       </Row>
     </Row>
   )

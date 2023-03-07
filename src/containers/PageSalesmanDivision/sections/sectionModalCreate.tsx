@@ -4,7 +4,7 @@ import { Button } from 'pink-lava-ui'
 import {
   fieldDivisionID,
   fieldNewSalesmanDivision,
-  fieldSalesmanID,
+  // fieldSalesmanID,
 } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { useSalesSalesmanDivisionContext } from '../states'
@@ -81,7 +81,8 @@ export default function SectionModalCreate() {
             label="Salesman ID"
             placeholder={'Select'}
             value={editable.salesman_id || ''}
-            fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
+            // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
+            fetchOptions={fieldNewSalesmanDivision}
             onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
           />
         </Col>
