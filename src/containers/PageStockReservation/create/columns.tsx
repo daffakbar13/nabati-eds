@@ -130,8 +130,8 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
             disabled={isNullProductId(index)}
             min={isNullProductId(index) ? '0' : '1'}
             value={text?.toLocaleString()}
-            onBlur={(newVal) => {
-              handleChangeData('qty', newVal, index)
+            onBlur={(e) => {
+              handleChangeData('qty', parseInt(e.target.value), index)
             }}
             style={styleInputNumber}
           />
