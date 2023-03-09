@@ -174,14 +174,14 @@ export default function PageShipment() {
             variant={type === 'GT' ? 'primary' : 'secondary'}
             onClick={() => setType('GT')}
           >
-            General Trade (GT)
+            Cash
           </Button>
           <Button
             size="big"
             variant={type === 'MT' ? 'primary' : 'secondary'}
             onClick={() => setType('MT')}
           >
-            Modern Trade (MT)
+            TOP
           </Button>
         </Row>
       </Card>
