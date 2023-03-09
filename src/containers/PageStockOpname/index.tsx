@@ -111,7 +111,7 @@ export default function PageStockOpname() {
               <SmartFilter.Field
                 field="company_id"
                 dataType="S"
-                label="Company ID"
+                label="Company Code"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" fetchOptions={fieldCompanyList} />
@@ -120,7 +120,7 @@ export default function PageStockOpname() {
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"
-                label="Branch ID"
+                label="Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect

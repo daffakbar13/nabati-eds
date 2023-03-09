@@ -57,7 +57,7 @@ export default function ConfirmSuccessSubmit() {
               : router.push(`${PATH.SALES}/customer-noo`)
           }}
         >
-          OK
+          Go to Quotation
         </Button>
       </div>
     </Popup>

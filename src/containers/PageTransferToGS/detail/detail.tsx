@@ -70,7 +70,12 @@ export default function TransferToGSDetail(props: propsDetail) {
     <>
       <Card style={{ overflow: 'unset' }}>
         <Text variant={'h5'}>
-          <TaggedStatus status={props.data.status_name} size="h5" />
+          <TaggedStatus
+            status={
+              props.data.status_name === 'Wait For Approval' ? 'Pending' : props.data.status_name
+            }
+            size="h5"
+          />
         </Text>
       </Card>
       <Spacer size={20} />

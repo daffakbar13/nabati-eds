@@ -828,7 +828,7 @@ export function fieldSlocByConfigLogistic(branch_id: string) {
 export function fieldSlocByConfigSlocSalesman(branch_id: string) {
   return getSlocbyConfigSlocSalesman(branch_id).then((result) =>
     result.data?.map(({ sloc_id, salesman_id, salesman_name }) => ({
-      label: `${salesman_id} - ${salesman_name} (${sloc_id})`,
+      label: [sloc_id, salesman_id, salesman_name].join(' - '),
       value: sloc_id,
     })),
   )

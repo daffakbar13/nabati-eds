@@ -26,9 +26,14 @@ export const useTableAddItem = (props: propsUseTable) => {
     remarks: '',
   }
   const [data, setData] = React.useState([])
+  const [placeholder, setPlaceholder] = React.useState([])
   const [optionsUom, setOptionsUom] = React.useState([])
+  const [baseAllProduct, setBaseAllProduct] = React.useState([])
+  const [optionsProduct, setOptionsProduct] = React.useState([])
+  const [fetching, setFetching] = React.useState<string>()
+  const [pending, setPending] = React.useState(0)
+  const [removedListProduct, setRemovedListProduct] = React.useState([])
   const [valueItemSender, setValueItemSender] = React.useState([])
-  const [fetching, setFetching] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
@@ -46,7 +51,7 @@ export const useTableAddItem = (props: propsUseTable) => {
         remarks: obj.remarks,
       }))
       setData(items)
-      setFetching(true)
+      setFetching('product')
     }
   }, [props.items])
 
@@ -121,6 +126,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           disabled={isNullProductId(index)}
           onChange={(e) => {
             handleChangeData('uom_residual', e.value, index)
+            setFetching('uom')
           }}
         />
       ),
@@ -147,26 +153,46 @@ export const useTableAddItem = (props: propsUseTable) => {
   ]
 
   React.useEffect(() => {
-    if (fetching) {
-      data.forEach(({ product_id, uom_id, qty }, index) => {
+    async function api(product_id: string, uom_id: string, order_qty: number, index: number) {
+      const duplicateProduct = data.filter(
+        (obj, idx) => product_id === obj.product_id && idx !== index,
+      )
+      const fetchUom = await fieldUom(product_id).then((arr) => {
+        const newOptionsUom = optionsUom
+        const filteredArr = arr.filter(
+          ({ label }) => !duplicateProduct.map((obj) => obj.uom_id).includes(label),
+        )
+        newOptionsUom[index] = filteredArr
+        const newUom = uom_id === '' ? filteredArr[0]?.value : uom_id
+
+        handleChangeData('uom_id', newUom, index)
+        setOptionsUom(newOptionsUom)
+        setOptionsProduct(optionsProduct.map((obj) => ({ ...obj, show: true })))
+        if (filteredArr.length === 1) {
+          setRemovedListProduct((old) => [...old, product_id])
+        } else {
+          setRemovedListProduct(removedListProduct.filter((id) => id !== product_id))
+        }
+
+        return newUom
+      })
+
+      return true
+    }
+    if (fetching !== '') {
+      data.forEach(({ product_id, uom_id, order_qty }, index) => {
         if (product_id !== '') {
-          fieldUom(product_id).then((value) => {
-            const newOptionsUom = [...optionsUom]
-            if (value[2]?.value) {
-              const newUom = uom_id === '' ? value[2]?.value : uom_id
-              handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
-            } else {
-              const newUom = uom_id
-              handleChangeData('uom_id', newUom, index)
-              handleChangeData('base_uom_id', newUom, index)
+          setPending((current) => ++current)
+          api(product_id, uom_id, order_qty, index).then(() => {
+            setPending((current) => --current)
+            if (uom_id === '') {
+              setFetching('load again')
+              return false
             }
-            newOptionsUom[index] = value
-            setOptionsUom(newOptionsUom)
           })
         }
       })
-      setFetching(false)
+      setFetching(undefined)
     }
   }, [fetching])
 

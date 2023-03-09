@@ -47,14 +47,14 @@ export default function PageCollection() {
           variant={type === 'GT' ? 'primary' : 'secondary'}
           onClick={() => setType('GT')}
         >
-          General Trade (GT)
+          CASH
         </Button>
         <Button
           size="big"
           variant={type === 'MT' ? 'primary' : 'secondary'}
           onClick={() => setType('MT')}
         >
-          Modern Trade (MT)
+          TOP
         </Button>
       </Row>
       <Spacer size={10} />

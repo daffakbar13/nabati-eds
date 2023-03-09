@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 import { Text, Table, Spacer, DatePickerInput, Row, Button } from 'pink-lava-ui'
 import { Card, Modal } from 'src/components'
-import { Col, Divider, Alert, Typography, Tag } from 'antd'
+import { Col, Divider, Alert, Typography, Tag, Form } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import TaggedStatus from 'src/components/TaggedStatus'
@@ -25,6 +25,8 @@ interface dataForm {
 }
 
 export default function Detail(props: any) {
+  const [form] = Form.useForm()
+
   const router = useRouter()
   const data = props?.data
   const tableAddItems = useTableAddItem({ items: data?.items } || { items: [] })
@@ -61,6 +63,7 @@ export default function Detail(props: any) {
   }
 
   const onClickSubmit = async () => {
+    await form.validateFields()
     if (tableAddItems.dataSubmit.length > 0) {
       setItemCheckedError(false)
       setModalConfirm(true)
@@ -119,69 +122,110 @@ export default function Detail(props: any) {
         </Row>
       </Card>
       <Spacer size={20} />
+
       <Card style={{ padding: '16px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <DebounceSelect type="input" label="DO Number" value={data.do_number} disabled />
-          <DebounceSelect type="input" label="PO Number" value={data.po_number} disabled />
-          <DebounceSelect
-            type="input"
-            label="Doc Date"
-            value={dateFormat(data.document_date) as any}
-            disabled
-          />
-          <DebounceSelect type="input" label="Delivery Number" value={data.gi_number} disabled />
-          <DatePickerInput
-            fullWidth
-            label="Posting Date"
-            defaultValue={moment()}
-            format={'DD/MM/YYYY'}
-            required
-            onChange={(val: any) => {
-              onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
-            }}
-          />
-          <DebounceSelect
-            type="input"
-            label="Supplying Branch"
-            value={`${data.supply_branch_id || ''} - ${data.supply_branch_name || ''}` as any}
-            disabled
-          />
-          <DebounceSelect
-            type="input"
-            label="Header Text"
-            onChange={(e: any) => {
-              onChangeForm('header_text', e.target.value)
-            }}
-          />
-          <DebounceSelect
-            type="input"
-            label="Receiving Branch"
-            value={`${data.receive_branch_id || ''} - ${data.receive_branch_name || ''}` as any}
-            disabled
-          />
-          {data.channel_type === 'MT' ? (
-            <>
-              <DebounceSelect type="input" label="From Sloc" value={'GS00' as any} disabled />
-              <DebounceSelect
-                type="select"
-                label={
-                  <>
-                    To Sloc{' '}
-                    <Tag icon={<ExclamationCircleOutlined />} color="warning">
-                      You will do intra channel
-                    </Tag>
-                  </>
-                }
-                options={allSloc}
-                onChange={(e: any) => {
-                  onChangeForm('to_sloc', e.value)
+        <Form
+          form={form}
+          labelCol={{ span: 24 }}
+          wrapperCol={{ span: 24 }}
+          autoComplete="off"
+          requiredMark={false}
+          scrollToFirstError
+        >
+          <div
+            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 20, rowGap: 10 }}
+          >
+            <Form.Item name="do_number" initialValue={data.do_number} style={{ marginBottom: 0 }}>
+              <DebounceSelect type="input" label="DO Number" value={data.do_number} disabled />
+            </Form.Item>
+            <Form.Item name="po_number" initialValue={data.po_number} style={{ marginBottom: 0 }}>
+              <DebounceSelect type="input" label="PO Number" value={data.po_number} disabled />
+            </Form.Item>
+            <Form.Item
+              name="doc_date"
+              initialValue={dateFormat(data.document_date)}
+              style={{ marginBottom: 0 }}
+            >
+              <DebounceSelect type="input" label="Doc Date" disabled />
+            </Form.Item>
+            <Form.Item
+              name="delivery_number"
+              initialValue={data.gi_number}
+              style={{ marginBottom: 0 }}
+            >
+              <DebounceSelect type="input" label="Delivery Number" disabled />
+            </Form.Item>
+            <Form.Item name="posting_date" style={{ marginBottom: 0 }}>
+              <DatePickerInput
+                fullWidth
+                label="Posting Date"
+                defaultValue={moment()}
+                format={'DD/MM/YYYY'}
+                required
+                onChange={(val: any) => {
+                  onChangeForm('posting_date', moment(val).format('YYYY-MM-DD'))
                 }}
               />
-            </>
-          ) : (
-            ''
-          )}
-        </div>
+            </Form.Item>
+            <Form.Item
+              name="supplying_branch"
+              style={{ marginBottom: 0 }}
+              initialValue={
+                `${data.supply_branch_id || ''} - ${data.supply_branch_name || ''}` as any
+              }
+            >
+              <DebounceSelect type="input" label="Supplying Branch" disabled />
+            </Form.Item>
+            <Form.Item name="header_text" style={{ marginBottom: 0 }}>
+              <DebounceSelect
+                type="input"
+                label="Header Text"
+                onChange={(e: any) => {
+                  onChangeForm('header_text', e.target.value)
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="receiving_branch"
+              style={{ marginBottom: 0 }}
+              initialValue={
+                `${data.receive_branch_id || ''} - ${data.receive_branch_name || ''}` as any
+              }
+            >
+              <DebounceSelect type="input" label="Receiving Branch" disabled />
+            </Form.Item>
+            {data.channel_type === 'MT' ? (
+              <>
+                <Form.Item
+                  name="from_sloc"
+                  style={{ marginBottom: 0 }}
+                  initialValue={'GS00' as any}
+                >
+                  <DebounceSelect type="input" label="From Sloc" value={'GS00' as any} disabled />
+                </Form.Item>
+                <Form.Item name="to_sloc" style={{ marginBottom: 0 }} rules={[{ required: true }]}>
+                  <DebounceSelect
+                    type="select"
+                    label={
+                      <>
+                        To Sloc{' '}
+                        <Tag icon={<ExclamationCircleOutlined />} color="warning">
+                          You will do intra channel
+                        </Tag>
+                      </>
+                    }
+                    options={allSloc}
+                    onChange={(e: any) => {
+                      onChangeForm('to_sloc', e.value)
+                    }}
+                  />
+                </Form.Item>
+              </>
+            ) : (
+              ''
+            )}
+          </div>
+        </Form>
         <Divider />
         {ItemCheckedError ? (
           <>
