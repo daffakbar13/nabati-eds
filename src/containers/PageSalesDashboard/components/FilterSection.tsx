@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 import { Fragment, useState } from 'react'
-import { Col, Row, Divider, Select } from 'antd'
+import { Col, Row, Divider, Select, Radio } from 'antd'
 import { Card } from 'src/components'
+import DebounceSelect from 'src/components/DebounceSelect'
 import { Picker } from '../elements'
 
 const StyledSelect = styled(Select)`
@@ -22,6 +23,7 @@ export default function FilterSection({
   selectFilter?: boolean
 }) {
   const [pickerType, setPickerTypeValue] = useState<'hour' | 'day' | 'week' | 'month'>('month')
+  const arr = new Array(6)
 
   return (
     <Fragment>
@@ -48,7 +50,18 @@ export default function FilterSection({
 
         {dateFilter && selectFilter && <Divider style={{ borderColor: '#aaa' }} />}
 
-        {selectFilter && <h1>Hello World</h1>}
+        <Row gutter={16}>
+          {[1, 1, 1, 1, 1, 1].map((_, i) => (
+            <Col key={i} span={4}>
+              <DebounceSelect
+                type="select"
+                placeholder="Handsome People"
+                options={[{ label: 'Daffa' }, { label: 'Daffa' }, { label: 'Daffa' }]}
+                style={{ borderRadius: 24 }}
+              />
+            </Col>
+          ))}
+        </Row>
       </Card>
     </Fragment>
   )

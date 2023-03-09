@@ -29,7 +29,7 @@ export const menuSales = [
     null,
     NabatiIcons.ICInventory,
     () => 'Dashboard',
-    () => Router.push(PATH.DASHBOARD),
+    () => Router.push(PATH.SALES),
   ),
   CreateMenu('sales', 'Sales', 'title'),
   CreateMenu('order-to-cash', 'Order To Cash', null, NabatiIcons.ICDollar, null, null, [
