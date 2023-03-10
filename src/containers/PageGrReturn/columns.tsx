@@ -124,6 +124,8 @@ export const columns = (goToDetail) => [
   addColumn({
     title: 'Action',
     dataIndex: 'gr_number',
-    render: (text, record, index) => <Linked link={text} type="action" status={record.status_name} />,
+    render: (text, record, index) => (
+      <Linked link={text} type="action" status={record.status_name} />
+    ),
   }),
 ]

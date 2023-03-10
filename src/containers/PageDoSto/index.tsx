@@ -21,11 +21,10 @@ export default function PageDoSto() {
     columns,
   })
 
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search by PO, DO Number',
-    ['purchase_id', 'id'],
-  )
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by PO, DO Number', [
+    'purchase_id',
+    'id',
+  ])
 
   const [showConfirm, setShowConfirm] = React.useState('')
   const hasData = table.state.total > 0

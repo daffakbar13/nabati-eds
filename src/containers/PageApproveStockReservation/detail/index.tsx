@@ -47,7 +47,9 @@ export default function ApproveStocReservationDetail() {
             >
               <ArrowLeftOutlined style={{ fontSize: 25 }} />
             </div>
-            <Text variant={'h4'}>View Approval Stock Reservation Canvas {data.reservation_number}</Text>
+            <Text variant={'h4'}>
+              View Approval Stock Reservation Canvas {data.reservation_number}
+            </Text>
           </div>
 
           {data.status_name != '' &&

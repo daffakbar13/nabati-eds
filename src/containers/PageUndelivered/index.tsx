@@ -60,11 +60,11 @@ export default function PageUndelivered() {
             delivery_data:
               res.data?.item?.length > 0
                 ? res.data.item.map((detail) => ({
-                  delivery_id: detail?.delivery_oder_id,
-                  delivery_date: date,
-                  is_delivery: 1,
-                  cancelation_reason_id: '',
-                }))
+                    delivery_id: detail?.delivery_oder_id,
+                    delivery_date: date,
+                    is_delivery: 1,
+                    cancelation_reason_id: '',
+                  }))
                 : [],
           }))
           .catch(() => ({
@@ -100,11 +100,11 @@ export default function PageUndelivered() {
             delivery_data:
               res.data.item?.length > 0
                 ? res.data.item.map((detail) => ({
-                  delivery_id: detail?.delivery_oder_id,
-                  delivery_date: detail?.order_date,
-                  is_delivery: 0,
-                  cancelation_reason_id: reason,
-                }))
+                    delivery_id: detail?.delivery_oder_id,
+                    delivery_date: detail?.order_date,
+                    is_delivery: 0,
+                    cancelation_reason_id: reason,
+                  }))
                 : [],
           }))
           .catch(() => ({

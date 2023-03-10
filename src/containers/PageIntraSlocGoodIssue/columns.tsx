@@ -75,7 +75,11 @@ export function useColumnsIntraSlocGoodIssue() {
         <Button
           size="big"
           variant="tertiary"
-          onClick={() => router.push(`${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${id}?request_number=${request_number}`)}
+          onClick={() =>
+            router.push(
+              `${PATH.LOGISTIC}/goods-issue-intra-sloc/detail/${id}?request_number=${request_number}`,
+            )
+          }
         >
           View Detail
         </Button>

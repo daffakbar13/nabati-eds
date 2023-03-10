@@ -134,8 +134,8 @@ export default function CreateSlocModal({ visible = false, close = () => {}, pay
         handleAdd={handleAdd}
         disableSomeFields={tableAddItems.data.length > 0}
         isOnEditMode={isOnEditMode}
-        payload={payload} 
-        itemsSloc={tableAddItems.data} 
+        payload={payload}
+        itemsSloc={tableAddItems.data}
       />
       <Table
         scroll={{ x: 'max-content', y: 600 }}
