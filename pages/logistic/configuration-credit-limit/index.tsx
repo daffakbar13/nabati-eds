@@ -1,7 +1,10 @@
 import Router from 'next/router'
+import React from 'react'
 
 const Page = () => {
-  Router.push(Router.asPath.replace('logistic', 'sales'))
+  React.useEffect(() => {
+    Router.push(Router.asPath.replace('logistic', 'sales'))
+  })
   return <></>
 }
 

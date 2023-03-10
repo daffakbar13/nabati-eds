@@ -78,7 +78,9 @@ export const updateStatus = async (
   return response.data
 }
 
-export const deleteMultpileSlocCompany = async (params: any): Promise<CommonListResponse<StockRealTime>> => {
+export const deleteMultpileSlocCompany = async (
+  params: any,
+): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
     method: METHODS.PUT,
     subUrl: `${url}/sloc_company/multiple_delete`,

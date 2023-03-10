@@ -95,8 +95,8 @@ export default function CreateNewOrderTypeSLoc({
           >
             Sloc <span style={{ color: 'red' }}> *</span>
           </Text>
-        } initialValue={isOnEditMode ? payload?.sloc_id : ''}
-
+        }
+        initialValue={isOnEditMode ? payload?.sloc_id : ''}
         rules={[{ required: true }]}
       >
         <DebounceSelect

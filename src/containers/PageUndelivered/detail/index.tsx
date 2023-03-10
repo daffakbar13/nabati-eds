@@ -83,11 +83,11 @@ export default function PageApprovalDetail() {
       delivery_data:
         dataTable?.length > 0
           ? dataTable.map((item) => ({
-            delivery_id: item?.delivery_oder_id,
-            delivery_date: date,
-            is_delivery: 1,
-            cancelation_reason_id: '',
-          }))
+              delivery_id: item?.delivery_oder_id,
+              delivery_date: date,
+              is_delivery: 1,
+              cancelation_reason_id: '',
+            }))
           : [],
     }
     setPayloads(newPayload)
@@ -262,7 +262,12 @@ export default function PageApprovalDetail() {
         </Card>
       )}
       {showConfirm === 'confirm' && (
-        <ConfirmConfirm payload={payloads} onCancel={() => setShowConfirm('')} setProccessing={setProccessing} setShowConfirm={setShowConfirm} />
+        <ConfirmConfirm
+          payload={payloads}
+          onCancel={() => setShowConfirm('')}
+          setProccessing={setProccessing}
+          setShowConfirm={setShowConfirm}
+        />
       )}
       {showConfirm === 'approve' && (
         <ConfirmApprove

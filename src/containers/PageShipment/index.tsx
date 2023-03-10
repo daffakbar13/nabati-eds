@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, FloatAction, Popup, SmartFilter } from 'src/components'
-import { colors } from 'src/configs/colors'
 import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { CheckCircleFilled } from '@ant-design/icons'
@@ -174,7 +173,7 @@ export default function PageShipment() {
             variant={type === 'GT' ? 'primary' : 'secondary'}
             onClick={() => setType('GT')}
           >
-            Cash
+            CASH
           </Button>
           <Button
             size="big"
@@ -270,9 +269,10 @@ export default function PageShipment() {
               size="big"
               variant="primary"
               onClick={() => {
-                type === 'MT'
-                  ? router.push(`${router.pathname}/create?type=MT`)
-                  : router.push(`${router.pathname}/create`)
+                router.push({
+                  pathname: `${router.pathname}/create`,
+                  query: { type },
+                })
               }}
             >
               Create

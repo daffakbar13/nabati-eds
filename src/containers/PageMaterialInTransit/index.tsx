@@ -51,8 +51,14 @@ export default function PageMaterialInTransit() {
                 label="Request Document"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
-                <DebounceSelect type="select" fetchOptions={fieldRequestDocumentMaterialInTransit} />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldRequestDocumentMaterialInTransit}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldRequestDocumentMaterialInTransit}
+                />
               </SmartFilter.Field>
               {/* <SmartFilter.Field
                 field="transaction_type"

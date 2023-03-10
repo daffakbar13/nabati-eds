@@ -22,7 +22,6 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
   const table = useTable({
     funcApi: getCreditLimitList,
     columns: columns(goToDetailPage),
-    
   })
 
   const hasData = table.state.total > 0

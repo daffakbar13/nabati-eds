@@ -21,11 +21,11 @@ export default function PageGoodsReceipt() {
     columns: columns(goToDetailPage),
   })
 
-  const { oldfilters, setFilters, searchProps } = useFilters(
-    table,
-    'Search By GR, PO, GI Number',
-    ['id', 'po_number', 'gi_number'],
-  )
+  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search By GR, PO, GI Number', [
+    'id',
+    'po_number',
+    'gi_number',
+  ])
 
   const optionStatus = [
     { label: 'Done', value: '02' },

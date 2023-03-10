@@ -1,16 +1,9 @@
 import React, { useState } from 'react'
 import { Search, Spacer, Text, Table, DatePickerInput, Button } from 'pink-lava-ui'
 import { Card, FloatAction, Loader, SmartFilter } from 'src/components'
-import { colors } from 'src/configs/colors'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
-import {
-  confirmUndelivered,
-  downloadUndelivered,
-  getUndeliveredDetail,
-  getUndeliveredList,
-  multipleSubmitUndelivered,
-} from 'src/api/undelivered'
+import { downloadUndelivered, getUndeliveredDetail, getUndeliveredList } from 'src/api/undelivered'
 import Pagination from 'src/components/Pagination'
 import { fieldSalesOrganization, fieldBranchAll, fieldCustomer } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -33,7 +26,7 @@ export default function PageUndelivered() {
     'reject' | 'approve' | 'success-approve' | 'success-reject' | ''
   >('')
   const [proccessing, setProccessing] = React.useState('')
-
+  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const titlePage = useTitlePage('list')
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
   const statusOption = [
@@ -60,11 +53,11 @@ export default function PageUndelivered() {
             delivery_data:
               res.data?.item?.length > 0
                 ? res.data.item.map((detail) => ({
-                  delivery_id: detail?.delivery_oder_id,
-                  delivery_date: date,
-                  is_delivery: 1,
-                  cancelation_reason_id: '',
-                }))
+                    delivery_id: detail?.delivery_oder_id,
+                    delivery_date: date,
+                    is_delivery: 1,
+                    cancelation_reason_id: '',
+                  }))
                 : [],
           }))
           .catch(() => ({
@@ -100,11 +93,11 @@ export default function PageUndelivered() {
             delivery_data:
               res.data.item?.length > 0
                 ? res.data.item.map((detail) => ({
-                  delivery_id: detail?.delivery_oder_id,
-                  delivery_date: detail?.order_date,
-                  is_delivery: 0,
-                  cancelation_reason_id: reason,
-                }))
+                    delivery_id: detail?.delivery_oder_id,
+                    delivery_date: detail?.order_date,
+                    is_delivery: 0,
+                    cancelation_reason_id: reason,
+                  }))
                 : [],
           }))
           .catch(() => ({
@@ -139,6 +132,27 @@ export default function PageUndelivered() {
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
+      <Row gutter={16}>
+        <Col>
+          <Button
+            size="big"
+            variant={type === 'GT' ? 'primary' : 'secondary'}
+            onClick={() => setType('GT')}
+          >
+            CASH
+          </Button>
+        </Col>
+        <Col>
+          <Button
+            size="big"
+            variant={type === 'MT' ? 'primary' : 'secondary'}
+            onClick={() => setType('MT')}
+          >
+            TOP
+          </Button>
+        </Col>
+      </Row>
+      <Spacer size={10} />
       <Card>
         <Row justify="space-between">
           <Row gutter={16}>

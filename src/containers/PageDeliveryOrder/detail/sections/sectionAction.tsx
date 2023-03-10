@@ -105,7 +105,7 @@ export default function SectionAction(props: SectionActionProps) {
                 </Button>
               </Col>
             )}
-             <Col>
+            <Col>
               <Button
                 size="big"
                 variant="primary"

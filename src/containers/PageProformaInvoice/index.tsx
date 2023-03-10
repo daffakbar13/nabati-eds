@@ -9,18 +9,12 @@ import Pagination from 'src/components/Pagination'
 import { useFilters } from 'src/hooks'
 import { Col, Popover, Row, Typography } from 'antd'
 import DebounceSelect from 'src/components/DebounceSelect'
-import {
-  fieldSalesOrganization,
-  fieldBranchAll,
-  fieldCustomer,
-  fieldSalesOrg,
-} from 'src/configs/fieldFetches'
-import { TableBilling } from './columns'
+import { fieldBranchAll, fieldCustomer, fieldSalesOrg } from 'src/configs/fieldFetches'
 import moment from 'moment'
 import { useRouter } from 'next/router'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { PATH } from 'src/configs/menus'
-import ProformaInvoiceCreateProvider from './edit/_provider'
+import { TableBilling } from './columns'
 
 export default function PageProformaInvoice() {
   const table = useTable({
@@ -32,6 +26,7 @@ export default function PageProformaInvoice() {
   const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [pending, setPending] = React.useState(0)
+  const [type, setType] = React.useState<'GT' | 'MT'>('GT')
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
   const hasData = table.state.total > 0
   const router = useRouter()
@@ -155,6 +150,27 @@ export default function PageProformaInvoice() {
       {pending > 0 && <Loader type="process" text="Wait For PGI Proforma Invoice" />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
+      <Row gutter={16}>
+        <Col>
+          <Button
+            size="big"
+            variant={type === 'GT' ? 'primary' : 'secondary'}
+            onClick={() => setType('GT')}
+          >
+            CASH
+          </Button>
+        </Col>
+        <Col>
+          <Button
+            size="big"
+            variant={type === 'MT' ? 'primary' : 'secondary'}
+            onClick={() => setType('MT')}
+          >
+            TOP
+          </Button>
+        </Col>
+      </Row>
+      <Spacer size={10} />
       <Card style={{ overflow: 'unset' }}>
         <Row style={{ justifyContent: 'space-between' }}>
           <Row style={{ gap: 16 }}>

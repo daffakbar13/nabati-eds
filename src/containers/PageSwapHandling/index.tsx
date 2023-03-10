@@ -33,9 +33,7 @@ export default function PageSwapHandling() {
     { label: 'Pending', value: '00' },
   ]
 
-  const movementTypeOption = [
-    { label: '311 - TR Transfer in SLoc', value: '311' },
-  ]
+  const movementTypeOption = [{ label: '311 - TR Transfer in SLoc', value: '311' }]
 
   useEffect(() => {
     fieldSlocFromBranch(branchfrom, branchTo).then((res) => {

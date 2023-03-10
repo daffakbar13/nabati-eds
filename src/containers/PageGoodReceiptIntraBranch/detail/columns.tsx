@@ -95,7 +95,8 @@ export const columnMT = [
   addColumn({
     title: 'Item Receiver',
     dataIndex: 'product_receiver_id',
-    render: (product_receiver_id, rows, index) => `${product_receiver_id || ''} - ${rows.product_receiver_name || ''}`,
+    render: (product_receiver_id, rows, index) =>
+      `${product_receiver_id || ''} - ${rows.product_receiver_name || ''}`,
   }),
   addColumn({
     title: 'PO',
