@@ -148,66 +148,6 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/salesman-division-product`),
     ),
   ]),
-  {
-    key: 'configuration',
-    title: 'Configuration',
-    icon: LogisticIcConfiguration,
-    children: [
-      {
-        key: 'auto-so-to-do',
-        title: 'Auto SO to DO',
-        content: () => 'Auto SO to DO',
-        onClick: () => Router.push(`${PATH.SALES}/auto-so-to-do`),
-      },
-      {
-        key: 'configuration-approval-so-block',
-        title: 'Approval SO Block',
-        content: () => 'Approval SO Block',
-        onClick: () => Router.push(`${PATH.SALES}/configuration-approval-so-block`),
-      },
-      {
-        key: 'configuration-credit-limit',
-        title: 'Credit Limit',
-        content: () => 'Credit Limit',
-        onClick: () => Router.push(`${PATH.SALES}/configuration-credit-limit`),
-      },
-      {
-        key: 'configuration-credit-limit-approval',
-        title: 'Credit Limit Approval',
-        content: () => 'Credit Limit Approval',
-        onClick: () => Router.push(`${PATH.SALES}/configuration-credit-limit-approval`),
-      },
-    ],
-  },
-  {
-    key: 'sales-order-block',
-    title: 'Sales Order Block',
-    icon: LogisticIcConfiguration,
-    children: [
-      {
-        key: 'sales-organization-customer-group-material',
-        title: 'Sales Organization, Customer Group, Material',
-        content: () => 'Sales Organization, Customer Group, Material',
-        onClick: () =>
-          Router.push(`${PATH.SALES}/configuration-sales-organization-customer-group-material`),
-      },
-      {
-        key: 'sales-organization-customer-group-salesman-grop',
-        title: 'Sales Organization, Customer Group, Salesman Group',
-        content: () => 'Sales Organization, Customer Group, Salesman Group',
-        onClick: () =>
-          Router.push(
-            `${PATH.SALES}/configuration-sales-organization-customer-group-salesman-grop`,
-          ),
-      },
-      {
-        key: 'sales-organization-customer',
-        title: 'Sales Organization, Customer',
-        content: () => 'Sales Organization, Customer',
-        onClick: () => Router.push(`${PATH.SALES}/configuration-sales-organization-customer`),
-      },
-    ],
-  },
   CreateMenu('transportation', 'Transportation', null, NabatiIcons.ICTruck, null, null, [
     CreateMenu(
       'transportation-driver',
@@ -290,4 +230,64 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/transportation-route-determination`),
     ),
   ]),
+  {
+    key: 'configuration',
+    title: 'Configuration',
+    icon: LogisticIcConfiguration,
+    children: [
+      {
+        key: 'auto-so-to-do',
+        title: 'Auto SO to DO',
+        content: () => 'Auto SO to DO',
+        onClick: () => Router.push(`${PATH.SALES}/auto-so-to-do`),
+      },
+      {
+        key: 'configuration-approval-so-block',
+        title: 'Approval SO Block',
+        content: () => 'Approval SO Block',
+        onClick: () => Router.push(`${PATH.SALES}/configuration-approval-so-block`),
+      },
+      {
+        key: 'configuration-credit-limit',
+        title: 'Credit Limit',
+        content: () => 'Credit Limit',
+        onClick: () => Router.push(`${PATH.SALES}/configuration-credit-limit`),
+      },
+      {
+        key: 'configuration-credit-limit-approval',
+        title: 'Credit Limit Approval',
+        content: () => 'Credit Limit Approval',
+        onClick: () => Router.push(`${PATH.SALES}/configuration-credit-limit-approval`),
+      },
+    ],
+  },
+  {
+    key: 'sales-order-block',
+    title: 'Sales Order Block',
+    icon: LogisticIcConfiguration,
+    children: [
+      {
+        key: 'sales-organization-customer-group-material',
+        title: 'Sales Organization, Customer Group, Material',
+        content: () => 'Sales Organization, Customer Group, Material',
+        onClick: () =>
+          Router.push(`${PATH.SALES}/configuration-sales-organization-customer-group-material`),
+      },
+      {
+        key: 'sales-organization-customer-group-salesman-grop',
+        title: 'Sales Organization, Customer Group, Salesman Group',
+        content: () => 'Sales Organization, Customer Group, Salesman Group',
+        onClick: () =>
+          Router.push(
+            `${PATH.SALES}/configuration-sales-organization-customer-group-salesman-grop`,
+          ),
+      },
+      {
+        key: 'sales-organization-customer',
+        title: 'Sales Organization, Customer',
+        content: () => 'Sales Organization, Customer',
+        onClick: () => Router.push(`${PATH.SALES}/configuration-sales-organization-customer`),
+      },
+    ],
+  },
 ]

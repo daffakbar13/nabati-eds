@@ -2,12 +2,14 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
+import { getListDriver, updateStatusDriver } from 'src/api/transportation/driver'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
 import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
+import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
 
 export default function PageConfigurationSloc() {
   const [selectedRow, setSelectedRow] = useState(null)
@@ -32,7 +34,7 @@ export default function PageConfigurationSloc() {
   }
 
   const table = useTable({
-    funcApi: getConfigSlocList,
+    funcApi: getListDriver,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
     data,
@@ -41,17 +43,10 @@ export default function PageConfigurationSloc() {
   const { searchProps } = useFilters(table, 'Search by id', ['id'])
 
   useEffect(() => {
-    const dataApi = [
-      {
-        id: '1231231',
-        name: 'asep',
-        nickname: 'usep',
-        branch: 'P104 - pma dummy',
-        company: 'PP01 - dummy',
-        type: 'dummy',
-        status: 1,
-      },
-    ]
+    const dataApi = table.state.data.map((item: any, index) => ({
+      idx: index,
+      ...item,
+    }))
     setdataTable(dataApi)
   }, [table?.state?.data])
 
@@ -77,6 +72,21 @@ export default function PageConfigurationSloc() {
     return false
   }
 
+  const handleChangeStatus = async () => {
+    try {
+      const res = updateStatusDriver(
+        {
+          status: changeStatusPayload?.driver_status ? false : true,
+        },
+        changeStatusPayload?.driver_id,
+      )
+      return res
+    } catch (error) {
+      return error
+    }
+    return false
+  }
+
   useEffect(() => {
     let textselected = []
     // const ArrayFiltered = dataTable.filter((dataAll) =>
@@ -97,6 +107,27 @@ export default function PageConfigurationSloc() {
     // setSelectedData(DeletedData)
   }, [table.state.selected])
 
+  const moreContent = (
+    <RowAntd gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
+      <ColAntd span={24}>
+        <RowAntd gutter={10}>
+          <ColAntd>
+            <ICDownloadTemplate />
+          </ColAntd>
+          <ColAntd> Download Data</ColAntd>
+        </RowAntd>
+      </ColAntd>
+      <ColAntd span={24}>
+        <RowAntd gutter={10}>
+          <ColAntd>
+            <ICUploadTemplate />
+          </ColAntd>
+          <ColAntd> Upload Data</ColAntd>
+        </RowAntd>
+      </ColAntd>
+    </RowAntd>
+  )
+
   return (
     <>
       <Text variant={'h4'}>Driver</Text>
@@ -107,16 +138,32 @@ export default function PageConfigurationSloc() {
             <Search {...searchProps} />
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
-              Create
-            </Button>
+            <RowAntd gutter={10}>
+              <ColAntd>
+                <Popover placement="bottom" content={moreContent} trigger="click">
+                  <Button
+                    size="big"
+                    variant="secondary"
+                    // onClick={downloadTemplateQuotation}
+                    style={{ gap: 5 }}
+                  >
+                    More <DownOutlined />
+                  </Button>
+                </Popover>
+              </ColAntd>
+              <ColAntd>
+                <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
+                  Create
+                </Button>
+              </ColAntd>
+            </RowAntd>
           </Row>
         </Row>
       </Card>
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} />
+          <Table {...table.state.tableProps} dataSource={dataTable} rowKey="idx" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -175,6 +222,25 @@ export default function PageConfigurationSloc() {
           router.push(router.asPath)
         }}
         successContent={(res: any) => `Driver has been successfully deleted`}
+        successOkText="OK"
+        width={432}
+      />
+
+      <Modal
+        title={`Confirm ${changeStatusPayload?.driver_status ? 'inactivate' : 'activate'}`}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.driver_status ? 'inactivate' : 'activate'
+        } this Driver?`}
+        onOkSuccess={() => {
+          router.push(router.asPath)
+        }}
+        successContent={(res: any) => `Driver has been successfully 
+          ${changeStatusPayload?.driver_status ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
       />

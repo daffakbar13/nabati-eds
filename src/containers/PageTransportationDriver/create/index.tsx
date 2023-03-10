@@ -1,13 +1,9 @@
-import { Form } from 'antd'
+import { Form, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
-import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+import { createConfigDriver, updateConfigDriver } from 'src/api/transportation/driver'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
 
@@ -16,6 +12,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
+  const [initialValue, setInitialValue] = useState<any>()
+  const [nameDriver, setnameDriver] = useState('')
   const [form] = Form.useForm()
   const router = useRouter()
 
@@ -32,11 +30,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const isOnEditMode = !!payload
 
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
-
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
@@ -44,7 +37,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigDriver(reqBody, payload.driver_id)
       setLoading(false)
       return res
     } catch (error) {
@@ -55,7 +48,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigDriver(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -94,6 +87,33 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     }
   }
 
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        driverid: payload?.driver_id,
+        type: {
+          value: payload?.type || '',
+        },
+        name: payload?.driver_name,
+        nickname: payload?.driver_nickname,
+        branch: {
+          value: payload?.branch_id || '',
+          label: [payload?.branch_id, payload?.branch_name].join(' - '),
+        },
+      })
+      setInitialValue({
+        type: payload?.type,
+        name: payload?.driver_name,
+        nickname: payload?.driver_nickname,
+        branch_id: payload?.branch_id,
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
+
   const content = (
     <>
       <Form
@@ -105,6 +125,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
+        {isOnEditMode ? (
+          <>
+            <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="driverid">
+              <DebounceSelect label={'Driver ID'} type="input" disabled />
+            </Form.Item>
+            <Spacer size={10} />
+          </>
+        ) : (
+          ''
+        )}
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
           name="type"
@@ -134,13 +164,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             placeholder="e.g Name"
             onChange={(val: any) => {
               onChangeForm('name', val.target.value)
+              setnameDriver(val.target.value)
             }}
           />
         </Form.Item>
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="nick_name"
+          name="nickname"
           rules={[{ required: true }]}
         >
           <DebounceSelect
@@ -149,7 +180,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             type="input"
             placeholder="e.g Nick Name"
             onChange={(val: any) => {
-              onChangeForm('nick_name', val.target.value)
+              onChangeForm('nickname', val.target.value)
             }}
           />
         </Form.Item>
@@ -181,7 +212,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             placeholder="Type to Search"
             fetchOptions={fieldBranchAll}
             onChange={(val: any) => {
-              onChangeForm('type', val.value)
+              onChangeForm('branch_id', val.value)
             }}
           />
         </Form.Item>
@@ -208,13 +239,35 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit Driver?"
+        content={`Are you sure want to submit Driver?`}
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Driver has been successfully Updated'}
+        successContent={(res: any) => (
+          <>
+            {isOnEditMode ? (
+              <>
+                Driver
+                <Typography.Text copyable={{ text: payload?.driver_id as string }}>
+                  {' '}
+                  {[payload?.driver_id, payload?.driver_name].join(' - ')}
+                </Typography.Text>{' '}
+                has been successfully updated
+              </>
+            ) : (
+              <>
+                Driver
+                <Typography.Text copyable={{ text: res?.data as string }}>
+                  {' '}
+                  {[res?.data, nameDriver].join(' - ')}
+                </Typography.Text>{' '}
+                has been successfully created
+              </>
+            )}
+          </>
+        )}
         successOkText="OK"
         width={432}
       />

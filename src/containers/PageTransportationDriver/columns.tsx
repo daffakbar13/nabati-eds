@@ -11,35 +11,37 @@ export const columns = (
   }),
   addColumn({
     title: 'ID',
-    dataIndex: 'branch',
+    dataIndex: 'driver_id',
   }),
   addColumn({
     title: 'Name',
-    dataIndex: 'sloc_id',
+    dataIndex: 'driver_name',
   }),
   addColumn({
     title: 'Nick Name',
-    dataIndex: 'sloc_function',
+    dataIndex: 'driver_nickname',
   }),
   addColumn({
-    title: 'Branch ID',
-    dataIndex: 'sloc_type',
+    title: 'Branch',
+    dataIndex: 'branch_id',
+    render: (text: string, record: any, index: number) => `${text} - ${record.branch_name}`,
   }),
   addColumn({
-    title: 'Company ID',
-    dataIndex: 'sloc_type',
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text: string, record: any, index: number) => `${text} - ${record.company_name}`,
   }),
   addColumn({
     title: 'Type',
-    dataIndex: 'sloc_type',
+    dataIndex: 'type',
   }),
   addColumn({
     title: 'Active/Inactive',
-    dataIndex: 'company_id',
+    dataIndex: 'driver_status',
     render: (text: string, record: any, index: number) => (
       <>
         <Switch
-          checked={record.is_active_company === 1 ? true : false}
+          checked={text}
           onChange={(bool: boolean) => onClickSwitch(bool, record)}
         />
       </>
