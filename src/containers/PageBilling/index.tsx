@@ -74,7 +74,7 @@ export default function PageBilling() {
           variant={type === 'GT' ? 'primary' : 'secondary'}
           onClick={() => setType('GT')}
         >
-          Cash
+          CASH
         </Button>
         <Button
           size="big"
