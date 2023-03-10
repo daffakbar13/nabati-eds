@@ -9,7 +9,7 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { Drivers } from './types'
 
-const url = 'v1/drivers'
+const url = 'v1/transportation/drivers'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -55,6 +55,18 @@ export const updateStatusDriver = async (
   const response = await call({
     method: METHODS.PATCH,
     subUrl: `${url}/${driver_id}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const deleteDriver = async (
+  params: any,
+): Promise<CommonListResponse<Drivers>> => {
+  const response = await call({
+    method: METHODS.DELETE,
+    subUrl: `${url}`,
     overrideBaseUrl,
     data: params,
   })

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getListDriver, updateStatusDriver } from 'src/api/transportation/driver'
+import { getListDriver, updateStatusDriver, deleteDriver } from 'src/api/transportation/driver'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -20,7 +20,6 @@ export default function PageConfigurationSloc() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedData, setSelectedData] = useState([])
   const [selectedDataText, setSelectedDataText] = useState([])
-  const data = []
   const router = useRouter()
 
   const goToDetailPage = (row: any) => {
@@ -37,18 +36,9 @@ export default function PageConfigurationSloc() {
     funcApi: getListDriver,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
-    data,
   })
 
   const { searchProps } = useFilters(table, 'Search by id', ['id'])
-
-  useEffect(() => {
-    const dataApi = table.state.data.map((item: any, index) => ({
-      idx: index,
-      ...item,
-    }))
-    setdataTable(dataApi)
-  }, [table?.state?.data])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -61,15 +51,14 @@ export default function PageConfigurationSloc() {
   }
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = deleteMultpileSlocCompany({
-    //     delete_configs: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
-    return false
+    try {
+      const res = deleteDriver({
+        ids: table.state.selected,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   const handleChangeStatus = async () => {
@@ -84,27 +73,18 @@ export default function PageConfigurationSloc() {
     } catch (error) {
       return error
     }
-    return false
   }
-
   useEffect(() => {
     let textselected = []
-    // const ArrayFiltered = dataTable.filter((dataAll) =>
-    //   table.state.selected.some((selected) => dataAll.idx === selected),
-    // )
+    const ArrayFiltered = table.state.data.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.driver_id === selected),
+    )
 
-    // const DeletedData = ArrayFiltered.map((item: any) => {
-    //   textselected.push(`${item.company_id} - ${item.company_name} (${item.sloc_id})`)
-    //   return {
-    //     company_id: item.company_id,
-    //     company_name: item.company_name,
-    //     key: item.key,
-    //     sloc_id: item.sloc_id,
-    //   }
-    // })
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(`${item.driver_id} - ${item.driver_name}`)
+    })
 
-    // setSelectedDataText(textselected)
-    // setSelectedData(DeletedData)
+    setSelectedDataText(textselected)
   }, [table.state.selected])
 
   const moreContent = (
@@ -163,7 +143,7 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} rowKey="idx" />
+          <Table {...table.state.tableProps} rowKey="driver_id" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
