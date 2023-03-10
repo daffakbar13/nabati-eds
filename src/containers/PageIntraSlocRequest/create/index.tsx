@@ -175,7 +175,6 @@ export default function PageCreateRequestIntraSloc() {
                   onChange={(val: any) => {
                     onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
                     onChangeBranch(val.label.split(' - ')[0])
-                    setChannelBranch(val.key)
                     setBranchSelected(val.label)
                   }}
                   value={branchSelected}
@@ -255,7 +254,7 @@ export default function PageCreateRequestIntraSloc() {
                   label={
                     <>
                       To Sloc<span style={{ color: 'red' }}> *</span>{' '}
-                      {ChannelBranch != 'GT' && (
+                      {ChannelBranch == 'Intra Channel' && (
                         <Tag icon={<ExclamationCircleOutlined />} color="warning">
                           You will do intra channel
                         </Tag>
@@ -266,6 +265,7 @@ export default function PageCreateRequestIntraSloc() {
                   disabled={branchSelected === ''}
                   onChange={(val: any) => {
                     onChangeForm('receive_sloc_id', val.label.split(' - ')[0])
+                    setChannelBranch(val.key)
                   }}
                 />
               </Form.Item>
