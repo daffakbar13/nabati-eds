@@ -34,6 +34,7 @@ export default function Detail(props: any) {
   const [modalConfirm, setModalConfirm] = useState(false)
   const [dataForm, setDataForm] = React.useState<dataForm>()
   const [allSloc, setAllScloc] = useState([])
+  const [ChannelBranch, setChannelBranch] = useState('')
   const now = new Date().toISOString()
 
   const initialValue = {
@@ -209,14 +210,17 @@ export default function Detail(props: any) {
                     label={
                       <>
                         To Sloc{' '}
-                        <Tag icon={<ExclamationCircleOutlined />} color="warning">
-                          You will do intra channel
-                        </Tag>
+                        {ChannelBranch == 'Intra Channel' && (
+                          <Tag icon={<ExclamationCircleOutlined />} color="warning">
+                            You will do intra channel
+                          </Tag>
+                        )}
                       </>
                     }
                     options={allSloc}
                     onChange={(e: any) => {
                       onChangeForm('to_sloc', e.value)
+                      setChannelBranch(e.key)
                     }}
                   />
                 </Form.Item>
