@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 import React from 'react'
-import PageConfigSalesORGCustomerGroupMaterial from 'src/containers/PageConfigurationCreditLimit'
+import PageConfigSalesORGCustomerGroupMaterial from 'src/containers/PageConfigSalesORGCustomerGroupMaterial'
 
 const Page: NextPage = () => <PageConfigSalesORGCustomerGroupMaterial />
 
