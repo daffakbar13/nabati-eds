@@ -11,23 +11,28 @@ export const columns = (
   }),
   addColumn({
     title: 'ID',
-    dataIndex: 'branch',
+    dataIndex: 'id',
   }),
   addColumn({
     title: 'Description',
-    dataIndex: 'branch',
+    dataIndex: 'description',
   }),
   addColumn({
     title: 'Delivery in Days',
-    dataIndex: 'branch',
+    dataIndex: 'delivery_in_days',
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text: string, record: any, index: number) => `${text} - ${record.company_name}`,
   }),
   addColumn({
     title: 'Active/Inactive',
-    dataIndex: 'company_id',
+    dataIndex: 'is_active',
     render: (text: string, record: any, index: number) => (
       <>
         <Switch
-          checked={record.is_active_company === 1 ? true : false}
+          checked={Number(text) === 1 ? true : false}
           onChange={(bool: boolean) => onClickSwitch(bool, record)}
         />
       </>

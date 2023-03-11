@@ -10,6 +10,7 @@ import {
 } from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { createTransportationRoute, updateTransportationRoute } from 'src/api/transportation/route'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
@@ -33,7 +34,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateTransportationRoute(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -44,7 +45,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createTransportationRoute(reqBody)
       setLoading(false)
       return res
     } catch (error) {
