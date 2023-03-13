@@ -6,11 +6,12 @@ import { PATH } from 'src/configs/menus'
 import { Text, Button } from 'pink-lava-ui'
 import { useTitlePage } from 'src/hooks'
 import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
+import { multipleSubmitQuotation } from 'src/api/quotation'
 
 export default function SectionAction() {
   const {
     state: { data },
-    handler: { showConfirm },
+    handler: { showConfirm, runProcess, stopProcess, setNewSalesOrder },
   } = useSalesQuotationDetailContext()
   const titlePage = useTitlePage('detail')
   const router = useRouter()
@@ -75,7 +76,20 @@ export default function SectionAction() {
         )}
         {isStatus('7') && (
           <Col>
-            <Button size="big" variant="primary" onClick={() => {}}>
+            <Button
+              size="big"
+              variant="primary"
+              onClick={() => {
+                runProcess('Wait for submitting Sales Order')
+                multipleSubmitQuotation({ order_list: [{ id: router.query.id as string }] })
+                  .then((res) => {
+                    setNewSalesOrder(res.id)
+                    showConfirm('success-submit')
+                    stopProcess()
+                  })
+                  .catch(() => stopProcess())
+              }}
+            >
               Submit
             </Button>
           </Col>
