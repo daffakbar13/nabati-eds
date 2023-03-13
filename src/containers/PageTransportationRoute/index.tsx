@@ -8,6 +8,13 @@ import { columns } from './columns'
 import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
 import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
+import { DownOutlined } from '@ant-design/icons'
+import { ICDownloadTemplate, ICUploadTemplate } from 'src/assets'
+import {
+  deleteTransportationRoute,
+  getLisTransportationRoute,
+  updateStatusTransportationRoute,
+} from 'src/api/transportation/route'
 
 export default function PageTransporationRoute() {
   const [selectedRow, setSelectedRow] = useState(null)
@@ -32,28 +39,13 @@ export default function PageTransporationRoute() {
   }
 
   const table = useTable({
-    funcApi: getConfigSlocList,
+    funcApi: getLisTransportationRoute,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
     data,
   })
 
   const { searchProps } = useFilters(table, 'Search by id', ['id'])
-
-  useEffect(() => {
-    const dataApi = [
-      {
-        id: '1231231',
-        name: 'asep',
-        nickname: 'usep',
-        branch: 'P104 - pma dummy',
-        company: 'PP01 - dummy',
-        type: 'dummy',
-        status: 1,
-      },
-    ]
-    setdataTable(dataApi)
-  }, [table?.state?.data])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -66,36 +58,60 @@ export default function PageTransporationRoute() {
   }
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = deleteMultpileSlocCompany({
-    //     delete_configs: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
-    return false
+    try {
+      const res = deleteTransportationRoute({
+        ids: table.state.selected,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
+  const handleChangeStatus = async () => {
+    try {
+      const res = updateStatusTransportationRoute({
+        id: changeStatusPayload?.id,
+        is_active: changeStatusPayload?.is_active ? 0 : 1,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
   useEffect(() => {
     let textselected = []
-    // const ArrayFiltered = dataTable.filter((dataAll) =>
-    //   table.state.selected.some((selected) => dataAll.idx === selected),
-    // )
+    const ArrayFiltered = table.state.data.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.id === selected),
+    )
 
-    // const DeletedData = ArrayFiltered.map((item: any) => {
-    //   textselected.push(`${item.company_id} - ${item.company_name} (${item.sloc_id})`)
-    //   return {
-    //     company_id: item.company_id,
-    //     company_name: item.company_name,
-    //     key: item.key,
-    //     sloc_id: item.sloc_id,
-    //   }
-    // })
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(`${item.id} - ${item.description} - ${item.delivery_in_days}`)
+    })
 
-    // setSelectedDataText(textselected)
-    // setSelectedData(DeletedData)
+    setSelectedDataText(textselected)
   }, [table.state.selected])
+
+  const moreContent = (
+    <RowAntd gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
+      <ColAntd span={24}>
+        <RowAntd gutter={10}>
+          <ColAntd>
+            <ICDownloadTemplate />
+          </ColAntd>
+          <ColAntd> Download Data</ColAntd>
+        </RowAntd>
+      </ColAntd>
+      <ColAntd span={24}>
+        <RowAntd gutter={10}>
+          <ColAntd>
+            <ICUploadTemplate />
+          </ColAntd>
+          <ColAntd> Upload Data</ColAntd>
+        </RowAntd>
+      </ColAntd>
+    </RowAntd>
+  )
 
   return (
     <>
@@ -107,9 +123,25 @@ export default function PageTransporationRoute() {
             <Search {...searchProps} />
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
-              Create
-            </Button>
+            <RowAntd gutter={10}>
+              <ColAntd>
+                <Popover placement="bottom" content={moreContent} trigger="click">
+                  <Button
+                    size="big"
+                    variant="secondary"
+                    // onClick={downloadTemplateQuotation}
+                    style={{ gap: 5 }}
+                  >
+                    More <DownOutlined />
+                  </Button>
+                </Popover>
+              </ColAntd>
+              <ColAntd>
+                <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
+                  Create
+                </Button>
+              </ColAntd>
+            </RowAntd>
           </Row>
         </Row>
       </Card>
@@ -159,7 +191,7 @@ export default function PageTransporationRoute() {
         }}
         content={
           <>
-            Are you sure want Delete Route{' '}
+            Are you sure want Delete Transportation Route{' '}
             {oneSelected ? (
               <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
@@ -172,7 +204,26 @@ export default function PageTransporationRoute() {
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Route has been successfully deleted`}
+        successContent={(res: any) => `Transportation Route has been successfully deleted`}
+        successOkText="OK"
+        width={432}
+      />
+
+      <Modal
+        title={`Confirm ${changeStatusPayload?.is_active ? 'inactivate' : 'activate'}`}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.is_active ? 'inactivate' : 'activate'
+        } this Transportation Route?`}
+        onOkSuccess={() => {
+          router.push(router.asPath)
+        }}
+        successContent={(res: any) => `Transportation Route has been successfully 
+          ${changeStatusPayload?.is_active ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
       />
