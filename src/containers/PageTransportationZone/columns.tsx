@@ -11,19 +11,25 @@ export const columns = (
   }),
   addColumn({
     title: 'ID',
-    dataIndex: 'branch',
+    dataIndex: 'id',
   }),
   addColumn({
     title: 'Name',
-    dataIndex: 'branch',
+    dataIndex: 'name',
   }),
   addColumn({
-    title: 'Country ID',
-    dataIndex: 'branch',
+    title: 'Country',
+    dataIndex: 'country_id',
+    render: (text: string, record: any, index: number) => `${text} - ${record.country_name}`,
+  }),
+  addColumn({
+    title: 'Company',
+    dataIndex: 'company_id',
+    render: (text: string, record: any, index: number) => `${text} - ${record.company_name}`,
   }),
   addColumn({
     title: 'Active/Inactive',
-    dataIndex: 'company_id',
+    dataIndex: 'is_active',
     render: (text: string, record: any, index: number) => (
       <>
         <Switch
