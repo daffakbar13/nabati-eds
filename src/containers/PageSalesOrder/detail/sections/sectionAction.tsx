@@ -107,8 +107,6 @@ export default function SectionAction() {
                 runProcess('Wait for submitting Sales Order')
                 multipleSubmitSalesOrder(router.query.id as string)
                   .then((res) => {
-                    console.log(res.data.id)
-
                     showConfirm('success-submit')
                     setNewDeliveryID(res.data.id)
                     stopProcess()

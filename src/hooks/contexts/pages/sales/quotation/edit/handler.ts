@@ -18,10 +18,15 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'confirm', payload: undefined })
   }
 
+  function setNewSalesOrder(payload: string) {
+    dispatch({ type: 'newSalesOrder', payload })
+  }
+
   return {
     runProcess,
     stopProcess,
     showConfirm,
     unShowConfirm,
+    setNewSalesOrder,
   }
 }

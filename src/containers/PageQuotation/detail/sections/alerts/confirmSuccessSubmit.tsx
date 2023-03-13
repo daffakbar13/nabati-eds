@@ -5,12 +5,12 @@ import { CheckCircleFilled } from '@ant-design/icons'
 import { Typography } from 'antd'
 import { PATH } from 'src/configs/menus'
 import { useRouter } from 'next/router'
-import { useSalesSalesOrderDetailContext } from 'src/hooks/contexts'
+import { useSalesQuotationDetailContext } from 'src/hooks/contexts'
 
 export default function ConfirmSuccessSubmit() {
   const {
-    state: { newDeliveryID },
-  } = useSalesSalesOrderDetailContext()
+    state: { newSalesOrder },
+  } = useSalesQuotationDetailContext()
   const router = useRouter()
   const isEditPage = router.asPath.includes('edit')
 
@@ -35,8 +35,8 @@ export default function ConfirmSuccessSubmit() {
         }}
       >
         <div>
-          {!isEditPage ? 'New' : ''} {' Delivery Order '}
-          <Typography.Text copyable={{ text: newDeliveryID }}>{newDeliveryID}</Typography.Text>
+          {!isEditPage ? 'New' : ''} {' Sales Order '}
+          <Typography.Text copyable={{ text: newSalesOrder }}>{newSalesOrder}</Typography.Text>
           {' has been'}
         </div>
         <div>successfully submitted</div>
@@ -47,7 +47,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="tertiary"
           onClick={() => {
-            router.push(`${PATH.SALES}/sales-order`)
+            router.push(`${PATH.SALES}/quotation`)
           }}
         >
           Back To List
@@ -57,7 +57,7 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/delivery-order/detail/${newDeliveryID}`)
+            router.push(`${PATH.SALES}/sales-order/detail/${newSalesOrder}`)
           }}
         >
           Next Process
