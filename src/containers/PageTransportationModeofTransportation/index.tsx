@@ -2,7 +2,11 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
+import {
+  getListTrasportationMode,
+  deleteTrasportationMode,
+  updateStatusTrasportationMode,
+} from 'src/api/transportation/transportation-mode'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -16,7 +20,6 @@ export default function PageConfigurationSloc() {
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedData, setSelectedData] = useState([])
   const [selectedDataText, setSelectedDataText] = useState([])
   const data = []
   const router = useRouter()
@@ -32,28 +35,13 @@ export default function PageConfigurationSloc() {
   }
 
   const table = useTable({
-    funcApi: getConfigSlocList,
+    funcApi: getListTrasportationMode,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
     data,
   })
 
-  const { searchProps } = useFilters(table, 'Search by id', ['id'])
-
-  useEffect(() => {
-    const dataApi = [
-      {
-        id: '1231231',
-        name: 'asep',
-        nickname: 'usep',
-        branch: 'P104 - pma dummy',
-        company: 'PP01 - dummy',
-        type: 'dummy',
-        status: 1,
-      },
-    ]
-    setdataTable(dataApi)
-  }, [table?.state?.data])
+  const { searchProps } = useFilters(table, 'Search by id', ['id', 'description'])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -66,35 +54,41 @@ export default function PageConfigurationSloc() {
   }
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = deleteMultpileSlocCompany({
-    //     delete_configs: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
-    return false
+    try {
+      const res = deleteTrasportationMode({
+        ids: table.state.selected,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
+  const handleChangeStatus = async () => {
+    try {
+      const res = updateStatusTrasportationMode(
+        {
+          status: changeStatusPayload?.status ? false : true,
+        },
+        changeStatusPayload?.id,
+      )
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   useEffect(() => {
     let textselected = []
-    // const ArrayFiltered = dataTable.filter((dataAll) =>
-    //   table.state.selected.some((selected) => dataAll.idx === selected),
-    // )
+    const ArrayFiltered = table.state.data.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.id === selected),
+    )
 
-    // const DeletedData = ArrayFiltered.map((item: any) => {
-    //   textselected.push(`${item.company_id} - ${item.company_name} (${item.sloc_id})`)
-    //   return {
-    //     company_id: item.company_id,
-    //     company_name: item.company_name,
-    //     key: item.key,
-    //     sloc_id: item.sloc_id,
-    //   }
-    // })
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(item.description)
+    })
 
-    // setSelectedDataText(textselected)
-    // setSelectedData(DeletedData)
+    setSelectedDataText(textselected)
   }, [table.state.selected])
 
   return (
@@ -116,7 +110,7 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -175,6 +169,24 @@ export default function PageConfigurationSloc() {
           router.push(router.asPath)
         }}
         successContent={(res: any) => `Mode of Transportation has been successfully deleted`}
+        successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={`Confirm ${changeStatusPayload?.status ? 'inactivate' : 'activate'}`}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.status ? 'inactivate' : 'activate'
+        } this Mode of Transportation?`}
+        onOkSuccess={() => {
+          router.push(router.asPath)
+        }}
+        successContent={(res: any) => `Mode of Transportation has been successfully 
+          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
       />

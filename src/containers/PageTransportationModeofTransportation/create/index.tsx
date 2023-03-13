@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+  createConfigTrasportationMode,
+  updateConfigTrasportationMode,
+} from 'src/api/transportation/transportation-mode'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
 
@@ -16,15 +15,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
+  const [initialValue, setInitialValue] = useState<any>()
   const [form] = Form.useForm()
   const router = useRouter()
 
   const isOnEditMode = !!payload
-
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -33,7 +28,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigTrasportationMode(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -44,7 +39,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigTrasportationMode(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -83,6 +78,22 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     }
   }
 
+  useEffect(() => {
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        id: payload?.id || '',
+        description: payload?.description || '',
+      })
+      setInitialValue({
+        id: payload?.id || '',
+        description: payload?.description || '',
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
+
   const content = (
     <>
       <Form
@@ -104,6 +115,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             required
             type="input"
             placeholder="e.g ID"
+            disabled={isOnEditMode ? true : false}
             onChange={(val: any) => {
               onChangeForm('id', val.target.value)
             }}

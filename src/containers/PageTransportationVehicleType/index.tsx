@@ -21,6 +21,8 @@ export default function PageConfigurationSloc() {
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [selectedData, setSelectedData] = useState([])
+  const [selectedDataText, setSelectedDataText] = useState([])
   const router = useRouter()
 
   const goToDetailPage = (row: any) => {
@@ -42,13 +44,13 @@ export default function PageConfigurationSloc() {
   const { searchProps } = useFilters(table, 'Search by id', ['id', 'description'])
 
   const oneSelected = table.state.selected.length === 1
-  const firstSelected = table.state.selected.length?.[0]
+  const firstSelected = selectedDataText?.[0]
 
   const selectedText = {
     text: oneSelected
       ? firstSelected
       : `${firstSelected}, +${table.state.selected.length - 1} more`,
-    content: <div style={{ textAlign: 'center' }}>{table.state.selected.slice(1).join(', ')}</div>,
+    content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
   }
 
   const handleDeleteData = async () => {
@@ -75,6 +77,19 @@ export default function PageConfigurationSloc() {
       return error
     }
   }
+
+  useEffect(() => {
+    let textselected = []
+    const ArrayFiltered = table.state.data.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.id === selected),
+    )
+
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(item.description)
+    })
+
+    setSelectedDataText(textselected)
+  }, [table.state.selected])
 
   const moreContent = (
     <RowAntd gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
