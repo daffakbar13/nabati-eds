@@ -3,11 +3,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
-import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
 import { createTransportationRoute, updateTransportationRoute } from 'src/api/transportation/route'
@@ -22,10 +17,33 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const isOnEditMode = !!payload
 
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
+  // const initialValue = {
+  //   company_id: 'PP01',
+  //   credit_limit_before: 0,
+  // }
+
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        // description: payload?.description,
+        id: payload?.id,
+        identification: payload?.identification,
+        transportation_mode_id: payload?.transportation_mode_id,
+        shipment_type_id: payload?.shipment_type_id,
+        // factory_calendar: payload?.factory_calendar,
+      })
+      setDataForm({
+        id: payload?.id,
+        identification: payload?.identification,
+        transportation_mode_id: payload?.transportation_mode_id,
+        shipment_type_id: payload?.shipment_type_id,
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -55,7 +73,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
+    // const reqBody = { ...initialValue, ...dataForm }
+    // const reqBody = isOnEditMode ? { ...{ id: payload?.id }, ...dataForm } : { ...dataForm }
+    const reqBody = { ...dataForm }
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
@@ -111,7 +131,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
           <DebounceSelect
             label="Description"
             type="input"
@@ -120,7 +140,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('description', val.target.value)
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Spacer size={10} />
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="identification">
           <DebounceSelect
@@ -133,29 +153,29 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="mode-of-transport">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="transportation_mode_id">
           <DebounceSelect
             label="Mode of Transport"
             type="input"
             placeholder="e.g Mode of Transport"
             onChange={(val: any) => {
-              onChangeForm('mode_of_transport', val.target.value)
+              onChangeForm('transportation_mode_id', val.target.value)
             }}
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="shipping-type">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="shipment_type_id">
           <DebounceSelect
             label="Shipping Type"
             type="input"
             placeholder="e.g Shipping Type"
             onChange={(val: any) => {
-              onChangeForm('shipping_type', val.target.value)
+              onChangeForm('shipment_type_id', val.target.value)
             }}
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="factory-calendar">
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="factory_calendar">
           <DebounceSelect
             label="Factory Calendar"
             type="input"
@@ -164,7 +184,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('factory_calendar', val.target.value)
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </>
   )

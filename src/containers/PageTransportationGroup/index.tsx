@@ -55,10 +55,17 @@ export default function PageTransportationGroup() {
 
   const handleDeleteData = async () => {
     try {
-      const res = deleteTransportationGroup({
-        ids: table.state.selected,
-      })
-      return res
+      await Promise.all(
+        table.state.selected.map((id) => {
+          deleteTransportationGroup({ id }).then((res) => console.log(res))
+        }),
+      )
+      return true
+
+      // const res = deleteTransportationGroup({
+      //   id: table.state.selected,
+      // })
+      // return res
     } catch (error) {
       return error
     }
@@ -66,12 +73,10 @@ export default function PageTransportationGroup() {
 
   const handleChangeStatus = async () => {
     try {
-      const res = updateStatusTransportationGroup(
-        {
-          status: changeStatusPayload?.is_active ? false : true,
-        },
-        changeStatusPayload?.id,
-      )
+      const res = updateStatusTransportationGroup({
+        id: changeStatusPayload?.id,
+        is_active: changeStatusPayload?.is_active ? 0 : 1,
+      })
       return res
     } catch (error) {
       return error

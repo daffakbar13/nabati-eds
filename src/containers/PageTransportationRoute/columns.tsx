@@ -26,10 +26,10 @@ export const columns = (
     title: 'Shipping Type',
     dataIndex: 'shipment_type_id',
   }),
-  addColumn({
-    title: 'Factory Calendar',
-    dataIndex: 'country_id',
-  }),
+  // addColumn({
+  //   title: 'Factory Calendar',
+  //   dataIndex: 'factory_calendar',
+  // }),
   addColumn({
     title: 'Active/Inactive',
     dataIndex: 'is_active',

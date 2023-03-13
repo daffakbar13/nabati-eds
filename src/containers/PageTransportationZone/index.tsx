@@ -23,7 +23,6 @@ export default function PageTransportationZone() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedData, setSelectedData] = useState([])
   const [selectedDataText, setSelectedDataText] = useState([])
-  const data = []
   const router = useRouter()
 
   const goToDetailPage = (row: any) => {
@@ -40,7 +39,6 @@ export default function PageTransportationZone() {
     funcApi: getLisTransportationZone,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
-    data,
   })
 
   const { searchProps } = useFilters(table, 'Search by id', ['id'])
@@ -57,10 +55,16 @@ export default function PageTransportationZone() {
 
   const handleDeleteData = async () => {
     try {
-      const res = deleteTransportationZone({
-        ids: table.state.selected,
-      })
-      return res
+      await Promise.all(
+        table.state.selected.map((id) => {
+          deleteTransportationZone({ id }).then((res) => console.log(res))
+        }),
+      )
+      return true
+      // const res = deleteTransportationZone({
+      //   id: table.state.selected,
+      // })
+      // return res
     } catch (error) {
       return error
     }
@@ -146,7 +150,7 @@ export default function PageTransportationZone() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (

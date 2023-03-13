@@ -36,10 +36,34 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const isOnEditMode = !!payload
 
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        route_id: payload?.route_id,
+        depature_country: payload?.depature_country,
+        departure_zone_id: payload?.departure_zone_id,
+        destination_country_id: payload?.destination_country_id,
+        destination_zone_id: payload?.destination_zone_id,
+        shipping_condition: payload?.shipping_condition,
+        transportation_group_id: payload?.transportation_group_id,
+        weight_group_id: payload?.weight_group_id,
+      })
+      setDataForm({
+        route_id: payload?.route_id,
+        depature_country: payload?.depature_country,
+        departure_zone_id: payload?.departure_zone_id,
+        destination_country_id: payload?.destination_country_id,
+        destination_zone_id: payload?.destination_zone_id,
+        shipping_condition: payload?.shipping_condition,
+        transportation_group_id: payload?.transportation_group_id,
+        weight_group_id: payload?.weight_group_id,
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -69,7 +93,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
+    // const reqBody = { ...initialValue, ...dataForm }
+    const reqBody = { ...dataForm }
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
@@ -111,7 +136,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={20} />
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 20, rowGap: 30 }}>
           <Form.Item
-            name="id"
+            name="route_id"
             style={{ marginTop: -12, marginBottom: 0 }}
             rules={[{ required: true }]}
           >
@@ -121,7 +146,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               type="input"
               placeholder="e.g ID"
               onChange={(val: any) => {
-                onChangeForm('id', val.target.value)
+                onChangeForm('route_id', val.target.value)
               }}
             />
           </Form.Item>
@@ -135,33 +160,33 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               }}
             />
           </Form.Item>
-          <Form.Item name="Depature_zone" style={{ marginTop: -12, marginBottom: 0 }}>
+          <Form.Item name="departure_zone_id" style={{ marginTop: -12, marginBottom: 0 }}>
             <DebounceSelect
               label="Depature Zone"
               type="input"
               placeholder="e.g Depature Zone"
               onChange={(val: any) => {
-                onChangeForm('depature_zone', val.target.value)
+                onChangeForm('departure_zone_id', val.target.value)
               }}
             />
           </Form.Item>
-          <Form.Item name="destination_country" style={{ marginTop: -12, marginBottom: 0 }}>
+          <Form.Item name="destination_country_id" style={{ marginTop: -12, marginBottom: 0 }}>
             <DebounceSelect
               label="Destination Country"
               type="input"
               placeholder="e.g Destination Country"
               onChange={(val: any) => {
-                onChangeForm('destination_country', val.target.value)
+                onChangeForm('destination_country_id', val.target.value)
               }}
             />
           </Form.Item>
-          <Form.Item name="destination_zone" style={{ marginTop: -12, marginBottom: 0 }}>
+          <Form.Item name="destination_zone_id" style={{ marginTop: -12, marginBottom: 0 }}>
             <DebounceSelect
               label="Destination Zone"
               type="input"
               placeholder="e.g Destination Zone"
               onChange={(val: any) => {
-                onChangeForm('destination_zone', val.target.value)
+                onChangeForm('destination_zone_id', val.target.value)
               }}
             />
           </Form.Item>
@@ -177,7 +202,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           </Form.Item>
           <Form.Item
             style={{ marginTop: -12, marginBottom: 0 }}
-            name="branch"
+            name="transportation_group_id"
             rules={[{ required: true }]}
           >
             <DebounceSelect
@@ -187,17 +212,17 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               placeholder="Type to Search"
               fetchOptions={fieldBranchAll}
               onChange={(val: any) => {
-                onChangeForm('transportation_group', val.value)
+                onChangeForm('transportation_group_id', val.value)
               }}
             />
           </Form.Item>
-          <Form.Item name="weight_group" style={{ marginTop: -12, marginBottom: 0 }}>
+          <Form.Item name="weight_group_id" style={{ marginTop: -12, marginBottom: 0 }}>
             <DebounceSelect
               label="Weight Group"
               type="input"
               placeholder="e.g Weight Group"
               onChange={(val: any) => {
-                onChangeForm('weight_group', val.target.value)
+                onChangeForm('weight_group_id', val.target.value)
               }}
             />
           </Form.Item>

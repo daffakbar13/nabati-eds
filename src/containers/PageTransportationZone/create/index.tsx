@@ -1,6 +1,6 @@
 import { Form } from 'antd'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -20,10 +20,29 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const isOnEditMode = !!payload
 
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
+  // const initialValue = {
+  //   company_id: 'PP01',
+  //   credit_limit_before: 0,
+  // }
+
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        id: payload?.id,
+        name: payload?.name,
+        country_id: payload?.country_id,
+      })
+      setDataForm({
+        id: payload?.id,
+        name: payload?.name,
+        country_id: payload?.country_id,
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -53,7 +72,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
+    // const reqBody = { ...initialValue, ...dataForm }
+    const reqBody = { ...dataForm }
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
@@ -127,7 +147,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="delivery_in_days"
+          name="country_id"
           rules={[{ required: true }]}
         >
           <DebounceSelect

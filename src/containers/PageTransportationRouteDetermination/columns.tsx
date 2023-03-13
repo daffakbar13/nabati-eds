@@ -15,7 +15,7 @@ export const columns = (
   }),
   addColumn({
     title: 'Depature Country',
-    dataIndex: 'branch',
+    dataIndex: 'depature_country',
   }),
   addColumn({
     title: 'Depature Zone',
@@ -27,7 +27,7 @@ export const columns = (
   }),
   addColumn({
     title: 'Destination Zone',
-    dataIndex: 'branch',
+    dataIndex: 'destination_zone_id',
   }),
   addColumn({
     title: 'Shipping Condition',

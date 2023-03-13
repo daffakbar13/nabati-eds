@@ -58,10 +58,16 @@ export default function PageTransporationShippingCondition() {
 
   const handleDeleteData = async () => {
     try {
-      const res = deleteShippingCondition({
-        ids: table.state.selected,
-      })
-      return res
+      await Promise.all(
+        table.state.selected.map((id) => {
+          deleteShippingCondition({ id }).then((res) => console.log(res))
+        }),
+      )
+      return true
+      // const res = deleteShippingCondition({
+      //   id: table.state.selected,
+      // })
+      // return res
     } catch (error) {
       return error
     }
