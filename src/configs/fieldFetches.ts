@@ -53,6 +53,8 @@ import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 import { getSalesmanDivision } from 'src/api/salesman-division'
 import { getListSlocByMultipleBranch } from 'src/api/logistic/configuration-sloc'
 import { getListTrasportationMode } from 'src/api/transportation/transportation-mode'
+import { getListVehicleType } from 'src/api/transportation/vehicle-type'
+import { getListDriver } from 'src/api/transportation/driver'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -1193,6 +1195,83 @@ export function fieldModeOfTransportation(search = '') {
     result?.data?.results?.splice(0, 10).map(({ id, description }) => ({
       label: [id, description].join(' - '),
       value: id,
+    })),
+  )
+}
+
+export function fieldVehicleType(search = '') {
+  return getListVehicleType({
+    filters: [
+      {
+        field: 'description',
+        option: 'CP',
+        from_value: `%${search}%`,
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.results?.splice(0, 10).map(({ id, description }) => ({
+      label: [id, description].join(' - '),
+      value: id,
+    })),
+  )
+}
+
+export function fieldTransportationDriver(search = '', branch_id = '') {
+  return getListDriver({
+    filters: [
+      {
+        field: 'branch_id',
+        option: 'CP',
+        from_value: `%${branch_id}%`,
+      },
+      {
+        field: 'name',
+        option: 'CP',
+        from_value: `%${search}%`,
+      },
+      {
+        field: 'type',
+        option: 'EQ',
+        from_value: `driver`,
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.results?.splice(0, 10).map(({ driver_id, driver_name }) => ({
+      label: [driver_id, driver_name].join(' - '),
+      value: driver_id,
+    })),
+  )
+}
+
+export function fieldTransportationHelper(search = '', branch_id = '') {
+  return getListDriver({
+    filters: [
+      {
+        field: 'branch_id',
+        option: 'CP',
+        from_value: `%${branch_id}%`,
+      },
+      {
+        field: 'name',
+        option: 'CP',
+        from_value: `%${search}%`,
+      },
+      {
+        field: 'type',
+        option: 'EQ',
+        from_value: `helper`,
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.results?.splice(0, 10).map(({ driver_id, driver_name }) => ({
+      label: [driver_id, driver_name].join(' - '),
+      value: driver_id,
     })),
   )
 }
