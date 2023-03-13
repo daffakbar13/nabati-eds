@@ -4,38 +4,21 @@ import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+  createConfigVehicleType,
+  updateConfigVehicleType,
+} from 'src/api/transportation/vehicle-type'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
+  const [initialValue, setInitialValue] = useState<any>()
   const [form] = Form.useForm()
   const router = useRouter()
 
-  const optionsType = [
-    {
-      label: 'Driver',
-      value: 'driver',
-    },
-    {
-      label: 'Helper',
-      value: 'helper',
-    },
-  ]
-
   const isOnEditMode = !!payload
-
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -44,7 +27,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigVehicleType(reqBody, payload?.id || '')
       setLoading(false)
       return res
     } catch (error) {
@@ -55,7 +38,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigVehicleType(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -94,6 +77,20 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     }
   }
 
+  useEffect(() => {
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        name: payload?.description || '',
+      })
+      setInitialValue({
+        description: payload?.description || '',
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
+
   const content = (
     <>
       <Form
@@ -105,22 +102,28 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="no"
-          rules={[{ required: true }]}
-        >
-          <DebounceSelect
-            label="No"
-            required
-            type="input"
-            placeholder="e.g Name"
-            onChange={(val: any) => {
-              onChangeForm('name', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
+        {/* {isOnEditMode ? (
+          <>
+            <Form.Item
+              style={{ marginBottom: 0, paddingBottom: 0 }}
+              name="no"
+              rules={[{ required: true }]}
+            >
+              <DebounceSelect
+                label="No"
+                required
+                type="input"
+                placeholder="e.g Name"
+                onChange={(val: any) => {
+                  onChangeForm('name', val.target.value)
+                }}
+              />
+            </Form.Item>
+            <Spacer size={10} />
+          </>
+        ) : (
+          ''
+        )} */}
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
           name="name"
@@ -132,7 +135,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             type="input"
             placeholder="e.g Name"
             onChange={(val: any) => {
-              onChangeForm('name', val.target.value)
+              onChangeForm('description', val.target.value)
             }}
           />
         </Form.Item>
