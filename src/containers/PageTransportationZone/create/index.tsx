@@ -1,15 +1,10 @@
 import { Form } from 'antd'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { Modal, Text } from 'src/components'
+import { useState } from 'react'
+import { Modal } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
-import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldRegion } from 'src/configs/fieldFetches'
 import {
   createTransportationZone,
   updateTransportationZone,
@@ -116,16 +111,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="description"
+          name="name"
           rules={[{ required: true }]}
         >
           <DebounceSelect
-            label="Description"
+            label="Name"
             required
             type="input"
-            placeholder="e.g Description"
+            placeholder="e.g Name"
             onChange={(val: any) => {
-              onChangeForm('description', val.target.value)
+              onChangeForm('name', val.target.value)
             }}
           />
         </Form.Item>
@@ -136,12 +131,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           rules={[{ required: true }]}
         >
           <DebounceSelect
+            type="select"
             label="Country ID"
             required
-            type="input"
-            placeholder="e.g Country ID"
-            onChange={(val: any) => {
-              onChangeForm('country_id', val.target.value)
+            value={dataForm?.country_id}
+            placeholder="Type to search"
+            fetchOptions={fieldRegion}
+            onChange={(e: any) => {
+              onChangeForm('country_id', e.value)
             }}
           />
         </Form.Item>

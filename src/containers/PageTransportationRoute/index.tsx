@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -18,7 +17,6 @@ import {
 
 export default function PageTransporationRoute() {
   const [selectedRow, setSelectedRow] = useState(null)
-  const [dataTable, setdataTable] = useState([])
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
@@ -148,7 +146,7 @@ export default function PageTransporationRoute() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} />
+          <Table {...table.state.tableProps} />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (

@@ -9,7 +9,7 @@ import {
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { TransportationGroup } from './types'
 
-const url = 'v1/master/list/transportation-group'
+const url = 'v1/master'
 
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL
 
@@ -18,7 +18,7 @@ export const getListTransportationGroup = async (
 ): Promise<CommonListResponse<TransportationGroup>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}`,
+    subUrl: `${url}/list/transportation-group`,
     overrideBaseUrl,
     data: params,
   })
@@ -30,7 +30,7 @@ export const createTransportationGroup = async (
 ): Promise<CommonListResponse<TransportationGroup>> => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}`,
+    subUrl: `${url}/create/transportation-group`,
     overrideBaseUrl,
     data: params,
   })
@@ -39,11 +39,10 @@ export const createTransportationGroup = async (
 
 export const updateTransportationGroup = async (
   params: any,
-  id: any,
 ): Promise<CommonListResponse<TransportationGroup>> => {
   const response = await call({
     method: METHODS.PUT,
-    subUrl: `${url}/${id}`,
+    subUrl: `${url}/update/transportation-group`,
     overrideBaseUrl,
     data: params,
   })
@@ -52,11 +51,10 @@ export const updateTransportationGroup = async (
 
 export const updateStatusTransportationGroup = async (
   params: any,
-  id: any,
 ): Promise<CommonListResponse<TransportationGroup>> => {
   const response = await call({
-    method: METHODS.PATCH,
-    subUrl: `${url}/${id}`,
+    method: METHODS.PUT,
+    subUrl: `${url}/update/transportation-group-status`,
     overrideBaseUrl,
     data: params,
   })
@@ -68,7 +66,7 @@ export const deleteTransportationGroup = async (
 ): Promise<CommonListResponse<TransportationGroup>> => {
   const response = await call({
     method: METHODS.DELETE,
-    subUrl: `${url}`,
+    subUrl: `${url}/delete/transportation-group`,
     overrideBaseUrl,
     data: params,
   })

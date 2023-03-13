@@ -3,11 +3,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
-import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
 import {
   createShippingCondition,
@@ -26,7 +21,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const initialValue = {
     company_id: 'PP01',
-    credit_limit_before: 0,
+    is_active: 1,
   }
 
   const onChangeForm = (form: string, value: any) => {

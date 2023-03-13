@@ -23,7 +23,10 @@ export const columns = (
     dataIndex: 'is_active',
     render: (text: string, record: any, index: number) => (
       <>
-        <Switch checked={text} onChange={(bool: boolean) => onClickSwitch(bool, record)} />
+        <Switch
+          checked={Number(text) === 1 ? true : false}
+          onChange={(bool: boolean) => onClickSwitch(bool, record)}
+        />
       </>
     ),
   }),

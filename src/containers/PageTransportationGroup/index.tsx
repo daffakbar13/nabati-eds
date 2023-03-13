@@ -17,7 +17,6 @@ import {
 
 export default function PageTransportationGroup() {
   const [selectedRow, setSelectedRow] = useState(null)
-  const [dataTable, setdataTable] = useState([])
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
