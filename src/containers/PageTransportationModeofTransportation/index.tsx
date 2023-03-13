@@ -11,11 +11,12 @@ import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
+import { DownOutlined } from '@ant-design/icons'
+import { ICDownloadTemplate, ICUploadTemplate } from 'src/assets'
 import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
 
 export default function PageConfigurationSloc() {
   const [selectedRow, setSelectedRow] = useState(null)
-  const [dataTable, setdataTable] = useState([])
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
@@ -91,6 +92,27 @@ export default function PageConfigurationSloc() {
     setSelectedDataText(textselected)
   }, [table.state.selected])
 
+  const moreContent = (
+    <RowAntd gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
+      <ColAntd span={24}>
+        <RowAntd gutter={10}>
+          <ColAntd>
+            <ICDownloadTemplate />
+          </ColAntd>
+          <ColAntd> Download Data</ColAntd>
+        </RowAntd>
+      </ColAntd>
+      <ColAntd span={24}>
+        <RowAntd gutter={10}>
+          <ColAntd>
+            <ICUploadTemplate />
+          </ColAntd>
+          <ColAntd> Upload Data</ColAntd>
+        </RowAntd>
+      </ColAntd>
+    </RowAntd>
+  )
+
   return (
     <>
       <Text variant={'h4'}>Mode of Transportation</Text>
@@ -101,9 +123,25 @@ export default function PageConfigurationSloc() {
             <Search {...searchProps} />
           </Row>
           <Row gap="16px">
-            <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
-              Create
-            </Button>
+            <RowAntd gutter={10}>
+              <ColAntd>
+                <Popover placement="bottom" content={moreContent} trigger="click">
+                  <Button
+                    size="big"
+                    variant="secondary"
+                    // onClick={downloadTemplateQuotation}
+                    style={{ gap: 5 }}
+                  >
+                    More <DownOutlined />
+                  </Button>
+                </Popover>
+              </ColAntd>
+              <ColAntd>
+                <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
+                  Create
+                </Button>
+              </ColAntd>
+            </RowAntd>
           </Row>
         </Row>
       </Card>

@@ -52,6 +52,7 @@ import { getDeliveryOrderList } from 'src/api/delivery-order'
 import { getListGISloc } from 'src/api/logistic/good-issue-intra-sloc'
 import { getSalesmanDivision } from 'src/api/salesman-division'
 import { getListSlocByMultipleBranch } from 'src/api/logistic/configuration-sloc'
+import { getListTrasportationMode } from 'src/api/transportation/transportation-mode'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -1174,5 +1175,24 @@ export function fieldRules(search = '') {
         label: [id, name].join(' - '),
         value: id,
       })),
+  )
+}
+
+export function fieldModeOfTransportation(search = '') {
+  return getListTrasportationMode({
+    filters: [
+      {
+        field: 'description',
+        option: 'CP',
+        from_value: `%${search}%`,
+      },
+    ],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result?.data?.results?.splice(0, 10).map(({ id, description }) => ({
+      label: [id, description].join(' - '),
+      value: id,
+    })),
   )
 }

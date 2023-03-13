@@ -4,27 +4,22 @@ import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+  createConfigShippingType,
+  updateConfigShippingType,
+} from 'src/api/transportation/shipping-type'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldModeOfTransportation } from 'src/configs/fieldFetches'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
+  const [initialValue, setInitialValue] = useState<any>()
   const [form] = Form.useForm()
   const router = useRouter()
 
   const isOnEditMode = !!payload
-
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -33,7 +28,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigShippingType(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -44,7 +39,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigShippingType(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -83,6 +78,29 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     }
   }
 
+  useEffect(() => {
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        id: payload?.id || '',
+        description: payload?.description || '',
+        mode_of_transportation: {
+          value: payload?.transportation_mode_id,
+          label: [payload?.transportation_mode_id, payload?.transportation_mode_description].join(
+            ' - ',
+          ),
+        },
+      })
+      setInitialValue({
+        id: payload?.id || '',
+        description: payload?.description || '',
+        transportation_mode_id: payload?.transportation_mode_id || '',
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
+
   const content = (
     <>
       <Form
@@ -104,6 +122,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             required
             type="input"
             placeholder="e.g ID"
+            disabled={isOnEditMode ? true : false}
             onChange={(val: any) => {
               onChangeForm('id', val.target.value)
             }}
@@ -134,10 +153,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <DebounceSelect
             label="Mode of Trasportation"
             required
-            type="input"
+            type="select"
             placeholder="e.g Mode of Transportation"
+            fetchOptions={(search) => fieldModeOfTransportation(search)}
             onChange={(val: any) => {
-              onChangeForm('mode_of_transportation', val.target.value)
+              onChangeForm('transportation_mode_id', val.value)
             }}
           />
         </Form.Item>
