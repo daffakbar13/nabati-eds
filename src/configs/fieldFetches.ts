@@ -1188,6 +1188,11 @@ export function fieldModeOfTransportation(search = '') {
         option: 'CP',
         from_value: `%${search}%`,
       },
+      {
+        field: 'status',
+        option: 'CP',
+        from_value: true,
+      },
     ],
     limit: 20,
     page: 1,
