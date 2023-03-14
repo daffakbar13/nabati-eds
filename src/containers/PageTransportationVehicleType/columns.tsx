@@ -12,6 +12,7 @@ export const columns = (
   addColumn({
     title: 'Vehicle Type',
     dataIndex: 'description',
+    render: (text: string, record: any, index: number) => [record.id, text].join(' - '),
   }),
   addColumn({
     title: 'Active/Inactive',

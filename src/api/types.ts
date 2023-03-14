@@ -33,7 +33,7 @@ export interface CommonDetailParams {
 export interface CommonFiltersPayload {
   field: string
   option: string
-  from_value?: string
+  from_value?: string | boolean
   to_value?: string
   data_type?: string
 }
