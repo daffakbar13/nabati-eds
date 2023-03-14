@@ -3,6 +3,7 @@ import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { createQuotation, multipleSubmitQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
+import { updateStatusWaitingApprovalCustomerNOO } from 'src/api/customer-noo'
 import { useSalesQuotationCreateContext } from '../states'
 
 export default function SectionAction() {
@@ -11,6 +12,8 @@ export default function SectionAction() {
     handler: { stopProcess, runProcess, dataSubmitted, showConfirm, setQuotationId },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
+  const { cus_noo_id } = router.query
+  const isNoo = router.query.is_cus_noo === 'true'
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
@@ -42,8 +45,14 @@ export default function SectionAction() {
                   createQuotation(dataSubmitted(6))
                     .then((response) => {
                       setQuotationId(response.data.id)
+                      if (isNoo) {
+                        updateStatusWaitingApprovalCustomerNOO(cus_noo_id as string)
+                          .then(() => stopProcess())
+                          .catch(() => stopProcess())
+                      } else {
+                        stopProcess()
+                      }
                       showConfirm('draftQuo')
-                      stopProcess()
                     })
                     .catch(() => stopProcess())
                 } else {

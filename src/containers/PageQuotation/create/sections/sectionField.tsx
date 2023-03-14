@@ -14,6 +14,8 @@ export default function SectionField() {
   } = useSalesQuotationCreateContext()
   const router = useRouter()
   const isEditPage = router.asPath.includes('edit')
+  const { is_cus_noo } = router.query
+  const isNoo = is_cus_noo as string === 'true'
 
   return (
     <Row gutter={[10, 10]}>
@@ -22,7 +24,7 @@ export default function SectionField() {
           type="select"
           required
           label="Order Type"
-          disabled={isEditPage}
+          disabled={isEditPage || isNoo}
           placeholder={'Select'}
           value={dataForm.order_type_id}
           options={optionsOrderType}
@@ -36,7 +38,7 @@ export default function SectionField() {
           type="select"
           label="Sold To Customer"
           required
-          disabled={isEditPage}
+          disabled={isEditPage || isNoo}
           value={dataForm?.customer_id}
           fetchOptions={fieldCustomer}
           onChange={(e: any) => {
@@ -50,7 +52,7 @@ export default function SectionField() {
           type="select"
           label="Ship To Customer"
           placeholder={'Select'}
-          disabled={isEditPage}
+          disabled={isEditPage || isNoo}
           value={dataForm?.ship_to_id}
           options={[{ label: dataForm?.customer_id, value: dataForm?.customer_id }]}
           onChange={(e: any) => {
@@ -78,7 +80,7 @@ export default function SectionField() {
           type="select"
           label="Sales Organization"
           placeholder={'Select'}
-          disabled={isEditPage}
+          disabled={isEditPage || isNoo}
           value={dataForm?.sales_org_id}
           options={optionsSalesOrg}
           onChange={(e: any) => {
@@ -91,7 +93,7 @@ export default function SectionField() {
           type="select"
           label="Branch"
           placeholder={'Select'}
-          disabled={isEditPage}
+          disabled={isEditPage || isNoo}
           value={dataForm?.branch_id}
           options={optionsBranch}
           onChange={(e: any) => {

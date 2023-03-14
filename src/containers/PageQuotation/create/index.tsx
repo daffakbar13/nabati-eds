@@ -21,9 +21,12 @@ import SalesQuotationCreateProvider from './_provider'
 
 export default function PageCreateQuotation() {
   const router = useRouter()
+  const isNoo = (router.query.is_cus_noo as string) === 'true'
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
-  const titlePage = useTitlePage(isCreatePage ? 'create' : isEditPage ? 'edit' : 'order-again')
+  const titlePage = useTitlePage(
+    isCreatePage || isNoo ? 'create' : isEditPage ? 'edit' : 'order-again',
+  )
 
   return (
     <SalesQuotationCreateProvider>
