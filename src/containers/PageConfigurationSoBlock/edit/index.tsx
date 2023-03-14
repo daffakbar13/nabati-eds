@@ -26,6 +26,7 @@ export default function CreateModal({ visible = false, close = () => {}, payload
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const tableAddItems = useTableAddItem({ dataUpdate: payload, selectedOrg: selectedSalesOrg })
+  const configIndeterminate = tableAddItems.data.filter((data) => data?.is_active_config === 1)
 
   const isOnEditMode = !!payload
 
@@ -44,13 +45,7 @@ export default function CreateModal({ visible = false, close = () => {}, payload
 
   const onClickSubmit = async () => {
     const values = await form.validateFields()
-    const configIndeterminate = tableAddItems.data.filter((data) => data?.is_active_config === 1)
-    if (configIndeterminate.length > 0) {
-      setShowErrorConfig(false)
-      setConfirmModal(true)
-    } else {
-      setShowErrorConfig(true)
-    }
+    setConfirmModal(true)
   }
 
   const doUpdate = async (reqBody: any) => {
@@ -165,7 +160,7 @@ export default function CreateModal({ visible = false, close = () => {}, payload
           <>
             <Divider />
 
-            {showErrorConfig && (
+            {configIndeterminate.length == 0 && (
               <>
                 <div
                   key={1}
