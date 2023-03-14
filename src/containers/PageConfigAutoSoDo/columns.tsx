@@ -9,12 +9,17 @@ export const columns = (
   onClickSwitch: (a: boolean, rec: any) => void,
 ) => [
   CreateColumns('No', '', false, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
-  CreateColumns('Sales Org', 'sales_org_id', true, (text: string, rec) => (
+  // CreateColumns('Sales Org', 'sales_org_id', true, (text: string, rec) => (
+  //   <>
+  //     {rec.sales_org_id} - {rec.sales_org_name}
+  //   </>
+  // )),
+  CreateColumns('Create From', 'sales_org_id', true, (text: string, rec) => (
     <>
       {rec.sales_org_id} - {rec.sales_org_name}
     </>
   )),
-  CreateColumns('Execute DO', 'execute_do', true, (text: string, rec) => (
+  CreateColumns('Partial Avability', 'execute_do', true, (text: string, rec) => (
     <>{rec.execute_do == 1 ? 'Yes' : 'No'}</>
   )),
   CreateColumns('Note', 'note'),

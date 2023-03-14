@@ -45,6 +45,12 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     { label: 'No', value: 0 },
   ]
 
+  const optionsCreateFrom = [
+    { label: 'EDS', value: 'EDS' },
+    { label: 'SFA', value: 'SFA' },
+    { label: 'eMitra', value: 'eMitra' },
+  ]
+
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
@@ -122,11 +128,22 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const content = (
     <>
       <Spacer size={20} />
-      <DebounceSelect
+      {/* <DebounceSelect
         label="Sales Org"
         required
         type="select"
         fetchOptions={fieldSalesOrganization}
+        value={placeHolder?.sales_org ? placeHolder.sales_org : ''}
+        onChange={(val: any) => {
+          onChangeForm('sales_org_id', val.value)
+          changePlaceHolder('sales_org', val.label)
+        }}
+      /> */}
+      <DebounceSelect
+        label="Create From"
+        required
+        type="select"
+        options={optionsCreateFrom}
         value={placeHolder?.sales_org ? placeHolder.sales_org : ''}
         onChange={(val: any) => {
           onChangeForm('sales_org_id', val.value)
@@ -139,7 +156,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         textAlign="center"
         style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
       >
-        Execute Do ?
+        Partial Avability ?
       </Text>
       <Radio.Group
         options={optionsRadio}
