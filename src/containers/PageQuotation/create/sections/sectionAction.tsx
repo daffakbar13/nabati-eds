@@ -3,6 +3,7 @@ import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { createQuotation, multipleSubmitQuotation, updateQuotation } from 'src/api/quotation'
 import { useRouter } from 'next/router'
+import { updateStatusWaitingApprovalCustomerNOO } from 'src/api/customer-noo'
 import { useSalesQuotationCreateContext } from '../states'
 
 export default function SectionAction() {
@@ -11,6 +12,8 @@ export default function SectionAction() {
     handler: { stopProcess, runProcess, dataSubmitted, showConfirm, setQuotationId },
   } = useSalesQuotationCreateContext()
   const router = useRouter()
+  const { cus_noo_id } = router.query
+  const isNoo = router.query.is_cus_noo === 'true'
   const isCreatePage = router.asPath.split('/').includes('create')
   const isEditPage = router.asPath.split('/').includes('edit')
   const isOrderAgainPage = !isCreatePage && !isEditPage
@@ -42,8 +45,8 @@ export default function SectionAction() {
                   createQuotation(dataSubmitted(6))
                     .then((response) => {
                       setQuotationId(response.data.id)
-                      showConfirm('draftQuo')
                       stopProcess()
+                      showConfirm('draftQuo')
                     })
                     .catch(() => stopProcess())
                 } else {
@@ -68,19 +71,28 @@ export default function SectionAction() {
           variant="primary"
           disabled={!canSave}
           onClick={() => {
+            const submitQuo = (id: string) => {
+              runProcess('Wait for submitting Quotation')
+              multipleSubmitQuotation({ order_list: [{ id }] })
+                .then((resp) => {
+                  setQuotationId(resp.data.results[0])
+                  showConfirm('newQuo')
+                  stopProcess()
+                })
+                .catch(() => stopProcess())
+            }
             if (canSave) {
               runProcess('Wait for save Quotation')
               if (isCreateOrOrderAgain) {
                 createQuotation(dataSubmitted(1))
                   .then((res) => {
-                    runProcess('Wait for submitting Quotation')
-                    multipleSubmitQuotation({ order_list: [{ id: res.data.id }] })
-                      .then((resp) => {
-                        setQuotationId(resp.data.results[0])
-                        showConfirm('newQuo')
-                        stopProcess()
-                      })
-                      .catch(() => stopProcess())
+                    if (isNoo) {
+                      updateStatusWaitingApprovalCustomerNOO(cus_noo_id as string)
+                        .then(() => submitQuo(res.data.id))
+                        .catch(() => stopProcess())
+                    } else {
+                      submitQuo(res.data.id)
+                    }
                   })
                   .catch(() => stopProcess())
               } else {

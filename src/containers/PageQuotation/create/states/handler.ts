@@ -3,6 +3,7 @@
 /* eslint-disable camelcase */
 import { useRouter } from 'next/router'
 import React from 'react'
+import { getDetailCustomerNOO } from 'src/api/customer-noo'
 import { getCustomerByFilter, getDocTypeByCategory } from 'src/api/master-data'
 import { getDetailQuotation } from 'src/api/quotation'
 import { useTableProduct } from 'src/components/TableProduct/hooks'
@@ -106,7 +107,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
     })
   }
 
-  function setFetching(payload: 'customer' | 'load-options') {
+  function setFetching(payload: typeof state.fetching) {
     dispatch({
       type: 'fetching',
       payload,
@@ -178,52 +179,88 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
   function handleFetching() {
     if (fetching) {
       runProcess('Wait for load customer')
-      const customer_id = dataForm?.customer_id.split(' - ')[0]
-      getCustomerByFilter({
-        branch_id: '',
-        customer_id,
-        sales_org_id: '',
-        salesman_id: '',
-      })
-        .then((result) => {
-          const { data } = result
-          const newOptions = {
-            salesman: data.map(({ salesman_id, salesman_name }) => ({
-              label: [salesman_id, salesman_name].join(' - '),
-              value: [salesman_id, salesman_name].join(' - '),
-            })),
-            sales_org: data.splice(0, 1).map(({ sales_org_id, sales_org_name }) => ({
-              label: [sales_org_id, sales_org_name].join(' - '),
-              value: [sales_org_id, sales_org_name].join(' - '),
-            })),
-            branch: data.splice(0, 1).map(({ branch_id, branch_name }) => ({
-              label: [branch_id, branch_name].join(' - '),
-              value: [branch_id, branch_name].join(' - '),
-            })),
-          }
-          setOptionsSalesman(newOptions.salesman)
-          setOptionsSalesOrg(newOptions.sales_org)
-          setOptionsBranch(newOptions.branch)
-          onChangeForm('ship_to_id', dataForm?.customer_id)
-          if (fetching === 'customer') {
+      if (fetching === 'customer-noo') {
+        getDetailCustomerNOO({ id: router.query.cus_noo_id as string })
+          .then((res) => {
+            const {
+              data: {
+                customer_sales_data: { sales_org_id, sales_org_name, branch_id, branch_name },
+                ship_to_customer: { ship_to_customer_id, ship_to_customer_name },
+                sold_to_customer: { sold_to_customer_id, sold_to_customer_name },
+                salesman,
+              },
+            } = res
+            const optionsSalesman = salesman.map((e) => ({
+              label: concatString(e.salesman_id, e.salesman_name),
+              value: concatString(e.salesman_id, e.salesman_name),
+            }))
+            dispatch({ type: 'optionsSalesman', payload: optionsSalesman })
             dispatch({
               type: 'dataForm',
               payload: {
                 ...dataForm,
-                ship_to_id: dataForm?.customer_id,
-                sales_org_id: newOptions.sales_org[0].value,
-                branch_id: newOptions.branch[0].value,
-                salesman_id: newOptions.salesman[0].value,
+                customer_id: concatString(sold_to_customer_id, sold_to_customer_name),
+                ship_to_id: concatString(ship_to_customer_id, ship_to_customer_name),
+                sales_org_id: concatString(sales_org_id, sales_org_name),
+                branch_id: concatString(branch_id, branch_name),
+                salesman_id: optionsSalesman[0].value,
               },
             })
-          }
-          stopProcess()
-          stopFetching()
+            stopProcess()
+            stopFetching()
+          })
+          .catch(() => {
+            stopProcess()
+            stopFetching()
+          })
+      } else {
+        const customer_id = dataForm?.customer_id.split(' - ')[0]
+        getCustomerByFilter({
+          branch_id: '',
+          customer_id,
+          sales_org_id: '',
+          salesman_id: '',
         })
-        .catch(() => {
-          stopProcess()
-          stopFetching()
-        })
+          .then((result) => {
+            const { data } = result
+            const newOptions = {
+              salesman: data.map(({ salesman_id, salesman_name }) => ({
+                label: [salesman_id, salesman_name].join(' - '),
+                value: [salesman_id, salesman_name].join(' - '),
+              })),
+              sales_org: data.splice(0, 1).map(({ sales_org_id, sales_org_name }) => ({
+                label: [sales_org_id, sales_org_name].join(' - '),
+                value: [sales_org_id, sales_org_name].join(' - '),
+              })),
+              branch: data.splice(0, 1).map(({ branch_id, branch_name }) => ({
+                label: [branch_id, branch_name].join(' - '),
+                value: [branch_id, branch_name].join(' - '),
+              })),
+            }
+            setOptionsSalesman(newOptions.salesman)
+            setOptionsSalesOrg(newOptions.sales_org)
+            setOptionsBranch(newOptions.branch)
+            onChangeForm('ship_to_id', dataForm?.customer_id)
+            if (fetching === 'customer') {
+              dispatch({
+                type: 'dataForm',
+                payload: {
+                  ...dataForm,
+                  ship_to_id: dataForm?.customer_id,
+                  sales_org_id: newOptions.sales_org[0].value,
+                  branch_id: newOptions.branch[0].value,
+                  salesman_id: newOptions.salesman[0].value,
+                },
+              })
+            }
+            stopProcess()
+            stopFetching()
+          })
+          .catch(() => {
+            stopProcess()
+            stopFetching()
+          })
+      }
     }
   }
 
@@ -264,6 +301,10 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
       .catch(() => stopProcess())
   }
 
+  function handleIDNOO(payload: string) {
+    dispatch({ type: 'IDNOO', payload })
+  }
+
   return {
     setDataForm,
     onChangeForm,
@@ -285,5 +326,6 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
     handleFetching,
     getDocType,
     handleCanSubmit,
+    handleIDNOO,
   }
 }

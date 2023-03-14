@@ -31,9 +31,17 @@ export default function SalesQuotationCreateProvider(
   const tableProduct = useTableProduct()
   const {
     state: { optionsOrderType, fetching, dataForm },
-    handler: { getDataFromDetail, handleFetching, handleCanSubmit, getDocType, onChangeForm },
+    handler: {
+      getDataFromDetail,
+      handleFetching,
+      handleCanSubmit,
+      getDocType,
+      onChangeForm,
+      setFetching,
+    },
   } = SalesQuotationCreate
   const router = useRouter()
+  const { is_cus_noo } = router.query
 
   React.useEffect(() => {
     onChangeForm('items', tableProduct.state.data)
@@ -58,6 +66,12 @@ export default function SalesQuotationCreateProvider(
       tableProduct.handler.resetData()
     }
   }, [dataForm.salesman_id])
+
+  React.useEffect(() => {
+    if ((is_cus_noo as string) === 'true' && dataForm.order_type_id) {
+      setFetching('customer-noo')
+    }
+  }, [router, dataForm.order_type_id])
 
   React.useEffect(() => {
     getDocType()

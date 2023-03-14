@@ -34,8 +34,9 @@ export interface StateType {
   optionsSalesman: OptionsType[]
   optionsSalesOrg: OptionsType[]
   optionsBranch: OptionsType[]
-  fetching?: 'customer' | 'load-options'
+  fetching?: 'customer' | 'customer-noo' | 'load-options'
   processing?: string
   canSave?: boolean
   canSaveAsDraft: boolean
+  IDNOO?: string
 }

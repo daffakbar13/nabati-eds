@@ -92,7 +92,7 @@ export const multipleSubmitQuotation = async (payload: { order_list: { id: strin
 export const createCustomerNOO = async (payload: any) => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `v1/master/create/customer-noo`,
+    subUrl: 'v1/master/create/customer-noo',
     data: payload,
   })
   return response.data
@@ -103,6 +103,14 @@ export const updateCustomerNOO = async (payload: any, customerId: string) => {
     method: METHODS.PUT,
     subUrl: `v1/master/update/${customerId}/customer-noo`,
     data: payload,
+  })
+  return response.data
+}
+
+export const updateStatusWaitingApprovalCustomerNOO = async (id:string) => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `v1/master/update/${id}/status-waiting-approval/customer-noo`,
   })
   return response.data
 }

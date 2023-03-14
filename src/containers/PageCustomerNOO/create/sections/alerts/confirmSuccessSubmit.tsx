@@ -13,7 +13,6 @@ export default function ConfirmSuccessSubmit() {
   } = useSalesQuotationCreateContext()
   const router = useRouter()
   const isEditPage = router.asPath.includes('edit')
-  const isFromDetail = Object.keys(router.query).includes('id')
   const isCreate = confirm === 'newQuo'
 
   return (
@@ -51,9 +50,14 @@ export default function ConfirmSuccessSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            // const additional = isFromDetail ? `/detail/${router.query.id}` : ''
             !isEditPage
-              ? router.push(`${PATH.SALES}/quotation/create`)
+              ? router.push({
+                pathname: `${PATH.SALES}/quotation/create`,
+                query: {
+                  is_cus_noo: true,
+                  cus_noo_id: customerId,
+                },
+              })
               : router.push(`${PATH.SALES}/customer-noo`)
           }}
         >
