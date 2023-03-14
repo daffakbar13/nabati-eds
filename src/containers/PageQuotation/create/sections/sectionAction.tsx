@@ -45,13 +45,7 @@ export default function SectionAction() {
                   createQuotation(dataSubmitted(6))
                     .then((response) => {
                       setQuotationId(response.data.id)
-                      if (isNoo) {
-                        updateStatusWaitingApprovalCustomerNOO(cus_noo_id as string)
-                          .then(() => stopProcess())
-                          .catch(() => stopProcess())
-                      } else {
-                        stopProcess()
-                      }
+                      stopProcess()
                       showConfirm('draftQuo')
                     })
                     .catch(() => stopProcess())
@@ -77,19 +71,28 @@ export default function SectionAction() {
           variant="primary"
           disabled={!canSave}
           onClick={() => {
+            const submitQuo = (id: string) => {
+              runProcess('Wait for submitting Quotation')
+              multipleSubmitQuotation({ order_list: [{ id }] })
+                .then((resp) => {
+                  setQuotationId(resp.data.results[0])
+                  showConfirm('newQuo')
+                  stopProcess()
+                })
+                .catch(() => stopProcess())
+            }
             if (canSave) {
               runProcess('Wait for save Quotation')
               if (isCreateOrOrderAgain) {
                 createQuotation(dataSubmitted(1))
                   .then((res) => {
-                    runProcess('Wait for submitting Quotation')
-                    multipleSubmitQuotation({ order_list: [{ id: res.data.id }] })
-                      .then((resp) => {
-                        setQuotationId(resp.data.results[0])
-                        showConfirm('newQuo')
-                        stopProcess()
-                      })
-                      .catch(() => stopProcess())
+                    if (isNoo) {
+                      updateStatusWaitingApprovalCustomerNOO(cus_noo_id as string)
+                        .then(() => submitQuo(res.data.id))
+                        .catch(() => stopProcess())
+                    } else {
+                      submitQuo(res.data.id)
+                    }
                   })
                   .catch(() => stopProcess())
               } else {
