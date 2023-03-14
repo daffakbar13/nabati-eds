@@ -3,11 +3,6 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
-import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
 import {
   createShippingCondition,
@@ -19,15 +14,36 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
+  const [initialValue, setInitialValue] = useState<any>({
+    company_id: 'PP01',
+    is_active: 1,
+  })
   const [form] = Form.useForm()
   const router = useRouter()
 
   const isOnEditMode = !!payload
 
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        // id: payload?.id,
+        description: payload?.description,
+        delivery_in_days: payload?.delivery_in_days,
+      })
+      setDataForm({
+        description: payload?.description,
+        delivery_in_days: payload?.delivery_in_days,
+      })
+      setInitialValue({
+        company_id: payload?.company_id,
+        is_active: payload?.is_active,
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -57,7 +73,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
+
+    dataForm.delivery_in_days = Number(dataForm.delivery_in_days)
+
+    // const reqBody = { ...initialValue, ...dataForm }
+    const reqBody = isOnEditMode
+      ? { ...{ id: payload?.id }, ...dataForm }
+      : { ...initialValue, ...dataForm }
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
@@ -97,7 +119,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
-        <Form.Item
+        {/* <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
           name="id"
           rules={[{ required: true }]}
@@ -111,7 +133,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('id', val.target.value)
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}

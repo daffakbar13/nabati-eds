@@ -10,6 +10,10 @@ import {
 } from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll } from 'src/configs/fieldFetches'
+import {
+  createTransportationGroup,
+  updateTransportationGroup,
+} from 'src/api/transportation/transportation-group'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
@@ -21,10 +25,25 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const isOnEditMode = !!payload
 
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
+  // const initialValue = {
+  //   company_id: 'PP01',
+  //   credit_limit_before: 0,
+  // }
+
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        description: payload?.description,
+      })
+      setDataForm({
+        description: payload?.description,
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -33,7 +52,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateTransportationGroup(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -44,7 +63,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createTransportationGroup(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -54,7 +73,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
+    // const reqBody = { ...initialValue, ...dataForm }
+    const reqBody = isOnEditMode ? { ...{ id: payload?.id }, ...dataForm } : { ...dataForm }
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
@@ -94,7 +114,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
-        <Form.Item
+        {/* <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
           name="id"
           rules={[{ required: true }]}
@@ -108,7 +128,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('id', val.target.value)
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}

@@ -11,35 +11,38 @@ export const columns = (
   }),
   addColumn({
     title: 'Branch',
-    dataIndex: 'branch',
+    dataIndex: 'branch_id',
+    render: (text: string, record: any, index: number) => [text, record.branch_name].join(' - '),
   }),
   addColumn({
     title: 'Vehicle Number',
-    dataIndex: 'sloc_id',
+    dataIndex: 'vehicle_number',
   }),
   addColumn({
     title: 'Vehicle Type',
-    dataIndex: 'sloc_function',
+    dataIndex: 'vehicle_type',
   }),
   addColumn({
     title: 'Vehicle Cubication',
-    dataIndex: 'sloc_type',
+    dataIndex: 'vehicle_cubication',
   }),
   addColumn({
     title: 'Max Ultiize',
-    dataIndex: 'sloc_type',
+    dataIndex: 'max_utilize',
   }),
   addColumn({
     title: 'Gross Weight',
-    dataIndex: 'sloc_type',
+    dataIndex: 'gross_weight',
   }),
   addColumn({
     title: 'Driver',
-    dataIndex: 'sloc_type',
+    dataIndex: 'driver_id',
+    render: (text: string, record: any, index: number) => [text, record.driver_name].join(' - '),
   }),
   addColumn({
     title: 'Helper',
-    dataIndex: 'sloc_type',
+    dataIndex: 'helper_id',
+    render: (text: string, record: any, index: number) => [text, record.helper_name].join(' - '),
   }),
   addColumn({
     title: 'Modified Date',
@@ -47,13 +50,10 @@ export const columns = (
   }),
   addColumn({
     title: 'Active/Inactive',
-    dataIndex: 'company_id',
+    dataIndex: 'driver_status',
     render: (text: string, record: any, index: number) => (
       <>
-        <Switch
-          checked={record.is_active_company === 1 ? true : false}
-          onChange={(bool: boolean) => onClickSwitch(bool, record)}
-        />
+        <Switch checked={text} onChange={(bool: boolean) => onClickSwitch(bool, record)} />
       </>
     ),
   }),

@@ -1,15 +1,10 @@
 import { Form } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Modal, Text } from 'src/components'
+import { Modal } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
-import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldRegion } from 'src/configs/fieldFetches'
 import {
   createTransportationZone,
   updateTransportationZone,
@@ -25,10 +20,29 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const isOnEditMode = !!payload
 
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
+  // const initialValue = {
+  //   company_id: 'PP01',
+  //   credit_limit_before: 0,
+  // }
+
+  useEffect(() => {
+    // form.resetFields()
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        id: payload?.id,
+        name: payload?.name,
+        country_id: payload?.country_id,
+      })
+      setDataForm({
+        id: payload?.id,
+        name: payload?.name,
+        country_id: payload?.country_id,
+      })
+    }
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -58,7 +72,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    const reqBody = { ...initialValue, ...dataForm }
+    // const reqBody = { ...initialValue, ...dataForm }
+    const reqBody = { ...dataForm }
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
@@ -116,32 +131,34 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="description"
+          name="name"
           rules={[{ required: true }]}
         >
           <DebounceSelect
-            label="Description"
+            label="Name"
             required
             type="input"
-            placeholder="e.g Description"
+            placeholder="e.g Name"
             onChange={(val: any) => {
-              onChangeForm('description', val.target.value)
+              onChangeForm('name', val.target.value)
             }}
           />
         </Form.Item>
         <Spacer size={10} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="delivery_in_days"
+          name="country_id"
           rules={[{ required: true }]}
         >
           <DebounceSelect
+            type="select"
             label="Country ID"
             required
-            type="input"
-            placeholder="e.g Country ID"
-            onChange={(val: any) => {
-              onChangeForm('country_id', val.target.value)
+            value={dataForm?.country_id}
+            placeholder="Type to search"
+            fetchOptions={fieldRegion}
+            onChange={(e: any) => {
+              onChangeForm('country_id', e.value)
             }}
           />
         </Form.Item>

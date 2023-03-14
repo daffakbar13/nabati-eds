@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
+import { getListVehicle, deleteVehicle, updateStatusVehicle } from 'src/api/transportation/vehicle'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -32,28 +32,12 @@ export default function PageConfigurationSloc() {
   }
 
   const table = useTable({
-    funcApi: getConfigSlocList,
+    funcApi: getListVehicle,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
-    data,
   })
 
-  const { searchProps } = useFilters(table, 'Search by id', ['id'])
-
-  useEffect(() => {
-    const dataApi = [
-      {
-        id: '1231231',
-        name: 'asep',
-        nickname: 'usep',
-        branch: 'P104 - pma dummy',
-        company: 'PP01 - dummy',
-        type: 'dummy',
-        status: 1,
-      },
-    ]
-    setdataTable(dataApi)
-  }, [table?.state?.data])
+  const { searchProps } = useFilters(table, 'Search by id', ['id', 'description'])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -66,35 +50,41 @@ export default function PageConfigurationSloc() {
   }
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = deleteMultpileSlocCompany({
-    //     delete_configs: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
-    return false
+    try {
+      const res = deleteVehicle({
+        ids: table.state.selected,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
+  const handleChangeStatus = async () => {
+    try {
+      const res = updateStatusVehicle(
+        {
+          status: changeStatusPayload?.status ? false : true,
+        },
+        changeStatusPayload?.vehicle_id,
+      )
+      return res
+    } catch (error) {
+      return error
+    }
   }
 
   useEffect(() => {
     let textselected = []
-    // const ArrayFiltered = dataTable.filter((dataAll) =>
-    //   table.state.selected.some((selected) => dataAll.idx === selected),
-    // )
+    const ArrayFiltered = table.state.data.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.vehicle_id === selected),
+    )
 
-    // const DeletedData = ArrayFiltered.map((item: any) => {
-    //   textselected.push(`${item.company_id} - ${item.company_name} (${item.sloc_id})`)
-    //   return {
-    //     company_id: item.company_id,
-    //     company_name: item.company_name,
-    //     key: item.key,
-    //     sloc_id: item.sloc_id,
-    //   }
-    // })
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(item.vehicle_id)
+    })
 
-    // setSelectedDataText(textselected)
-    // setSelectedData(DeletedData)
+    setSelectedDataText(textselected)
   }, [table.state.selected])
 
   return (
@@ -116,7 +106,7 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} />
+          <Table {...table.state.tableProps} rowKey="vehicle_id" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -175,6 +165,24 @@ export default function PageConfigurationSloc() {
           router.push(router.asPath)
         }}
         successContent={(res: any) => `Vehicle has been successfully deleted`}
+        successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={`Confirm ${changeStatusPayload?.status ? 'inactivate' : 'activate'}`}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.status ? 'inactivate' : 'activate'
+        } this Vehicle?`}
+        onOkSuccess={() => {
+          router.push(router.asPath)
+        }}
+        successContent={(res: any) => `Vehicle has been successfully 
+          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
       />

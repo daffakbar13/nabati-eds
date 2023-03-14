@@ -3,39 +3,26 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer, Row, Button } from 'pink-lava-ui'
-import {
-  createConfigSlocCompany,
-  getConfigSlocCompanyDetail,
-  updateConfigSlocCompany,
-} from 'src/api/logistic/configuration-sloc-company'
+import { createConfigVehicle, updateConfigVehicle } from 'src/api/transportation/vehicle'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import {
+  fieldBranchAll,
+  fieldVehicleType,
+  fieldTransportationDriver,
+  fieldTransportationHelper,
+} from 'src/configs/fieldFetches'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
+  const [initialValue, setInitialValue] = useState<any>()
+  const [branchId, setBranchId] = useState('')
   const [form] = Form.useForm()
   const router = useRouter()
 
-  const optionsType = [
-    {
-      label: 'TST - Dummy type',
-      value: 'TST',
-    },
-    {
-      label: 'TST - Dummy type',
-      value: 'TST',
-    },
-  ]
-
   const isOnEditMode = !!payload
-
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-  }
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
@@ -44,7 +31,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigSlocCompany(reqBody, reqBody.company_id, reqBody.sloc_id, reqBody.key)
+      const res = updateConfigVehicle(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -55,7 +42,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigSlocCompany(reqBody)
+      const res = createConfigVehicle(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -93,6 +80,52 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       close()
     }
   }
+
+  useEffect(() => {
+    if (!isOnEditMode) return
+    const fetchData = async () => {
+      form.setFieldsValue({
+        vehicle_id: payload?.vehicle_id || '',
+        name: payload?.vehicle_name || '',
+        vehicle_number: payload?.vehicle_number || '',
+        vehicle_type: {
+          label: payload?.vehicle_type,
+          value: payload?.vehicle_type.split(' - ')[0],
+        },
+        vehicle_cubication: payload?.vehicle_cubication,
+        max_ultilize: payload?.max_utilize,
+        gross_weight: payload?.gross_weight,
+        branch: {
+          label: [payload?.branch_id, payload?.branch_name].join(' - '),
+          value: payload?.branch_id,
+        },
+        driver_id: {
+          label: [payload?.driver_id, payload?.driver_name].join(' - '),
+          value: payload?.driver_id,
+        },
+        helper: {
+          label: [payload?.helper_id, payload?.helper_name].join(' - '),
+          value: payload?.helper_id,
+        },
+      })
+      setInitialValue({
+        vehicle_id: payload?.vehicle_id || '',
+        vehicle_name: payload?.vehicle_name || '',
+        vehicle_number: payload?.vehicle_number || '',
+        vehicle_type_id: payload?.vehicle_type.split(' - ')[0] || '',
+        vehicle_cubication: payload?.vehicle_cubication || 0,
+        max_utilize: payload?.max_utilize || 0,
+        gross_weight: payload?.gross_weight || 0,
+        driver_id: payload?.driver_id || '',
+        helper_id: payload?.helper_id || '',
+        branch_id: payload?.branch_id || '',
+      })
+    }
+
+    setBranchId(payload?.branch_id)
+
+    fetchData()
+  }, [form, isOnEditMode, payload])
 
   const content = (
     <>
@@ -132,7 +165,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               type="input"
               placeholder="e.g name"
               onChange={(val: any) => {
-                onChangeForm('name', val.target.value)
+                onChangeForm('vehicle_name', val.target.value)
               }}
             />
           </Form.Item>
@@ -161,9 +194,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               required
               type="select"
               placeholder="Select Vehicle Type"
-              options={optionsType}
+              fetchOptions={(search) => fieldVehicleType(search)}
               onChange={(val: any) => {
-                onChangeForm('vehicle_type', val.target.value)
+                onChangeForm('vehicle_type_id', val.value)
               }}
             />
           </Form.Item>
@@ -178,7 +211,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               type="input"
               placeholder="e.g Vehicle Cubication"
               onChange={(val: any) => {
-                onChangeForm('vehicle_cubication', val.target.value)
+                onChangeForm('vehicle_cubication', parseInt(val.target.value))
               }}
             />
           </Form.Item>
@@ -193,7 +226,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               type="input"
               placeholder="e.g Max ultilize"
               onChange={(val: any) => {
-                onChangeForm('max_ultilize', val.target.value)
+                onChangeForm('max_utilize', parseInt(val.target.value))
               }}
             />
           </Form.Item>
@@ -208,7 +241,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               type="input"
               placeholder="e.g Gross Weight (KG)"
               onChange={(val: any) => {
-                onChangeForm('gross_weight', val.target.value)
+                onChangeForm('gross_weight', parseInt(val.target.value))
               }}
             />
           </Form.Item>
@@ -238,7 +271,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               placeholder="Type to Search"
               fetchOptions={fieldBranchAll}
               onChange={(val: any) => {
-                onChangeForm('branch', val.value)
+                onChangeForm('branch_id', val.value)
+                setBranchId(val.value)
               }}
             />
           </Form.Item>
@@ -252,15 +286,15 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               required
               type="select"
               placeholder="Select Driver"
-              options={optionsType}
-              disabled={dataForm?.branch ? false : true}
+              fetchOptions={(search) => fieldTransportationDriver(search, branchId)}
+              disabled={branchId != '' ? false : true}
               onChange={(val: any) => {
-                onChangeForm('driver_id', val.target.value)
+                onChangeForm('driver_id', val.value)
               }}
             />
           </Form.Item>
           <Form.Item
-            name="Helper"
+            name="helper"
             style={{ marginTop: -12, marginBottom: 0 }}
             rules={[{ required: true }]}
           >
@@ -269,10 +303,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               required
               type="select"
               placeholder="Select Helper"
-              options={optionsType}
-              disabled={dataForm?.branch ? false : true}
+              fetchOptions={(search) => fieldTransportationHelper(search, branchId)}
+              disabled={branchId != '' ? false : true}
               onChange={(val: any) => {
-                onChangeForm('helper_id', val.target.value)
+                onChangeForm('helper_id', val.value)
               }}
             />
           </Form.Item>

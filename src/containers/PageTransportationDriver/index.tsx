@@ -9,7 +9,7 @@ import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
 import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
 import { DownOutlined } from '@ant-design/icons'
-import { ICDownloadTemplate, ICSyncData, ICUploadTemplate } from 'src/assets'
+import { ICDownloadTemplate, ICUploadTemplate } from 'src/assets'
 
 export default function PageConfigurationSloc() {
   const [selectedRow, setSelectedRow] = useState(null)

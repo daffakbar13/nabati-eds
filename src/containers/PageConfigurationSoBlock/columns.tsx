@@ -7,7 +7,9 @@ export const columns = (
 ) => [
   addColumn({
     title: 'No',
-    render: (text: any, record: any, index: number) => index + 1,
+    render: (text: any, record: any, index: number) => (
+      <>{record.action === 'true' ? index + 1 : ''}</>
+    ),
   }),
   addColumn({
     title: 'Company',

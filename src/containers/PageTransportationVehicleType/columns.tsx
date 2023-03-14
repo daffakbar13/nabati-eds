@@ -11,17 +11,14 @@ export const columns = (
   }),
   addColumn({
     title: 'Vehicle Type',
-    dataIndex: 'branch',
+    dataIndex: 'description',
   }),
   addColumn({
     title: 'Active/Inactive',
-    dataIndex: 'company_id',
+    dataIndex: 'status',
     render: (text: string, record: any, index: number) => (
       <>
-        <Switch
-          checked={record.is_active_company === 1 ? true : false}
-          onChange={(bool: boolean) => onClickSwitch(bool, record)}
-        />
+        <Switch checked={text} onChange={(bool: boolean) => onClickSwitch(bool, record)} />
       </>
     ),
   }),

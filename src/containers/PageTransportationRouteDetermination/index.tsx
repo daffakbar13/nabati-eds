@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -12,13 +11,13 @@ import {
   deleteRouteDetermination,
   getLisRouteDetermination,
   updateRouteDetermination,
+  updateStatusRouteDetermination,
 } from 'src/api/transportation/route-determination'
 import { ICDownloadTemplate, ICUploadTemplate } from 'src/assets'
 import { DownOutlined } from '@ant-design/icons'
 
 export default function PageTransporationRouteDetermination() {
   const [selectedRow, setSelectedRow] = useState(null)
-  const [dataTable, setdataTable] = useState([])
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
@@ -59,10 +58,16 @@ export default function PageTransporationRouteDetermination() {
 
   const handleDeleteData = async () => {
     try {
-      const res = deleteRouteDetermination({
-        ids: table.state.selected,
-      })
-      return res
+      await Promise.all(
+        table.state.selected.map((id) => {
+          deleteRouteDetermination({ route_id: id }).then((res) => console.log(res))
+        }),
+      )
+      return true
+      // const res = deleteRouteDetermination({
+      //   route_id: table.state.selected,
+      // })
+      // return res
     } catch (error) {
       return error
     }
@@ -70,8 +75,8 @@ export default function PageTransporationRouteDetermination() {
 
   const handleChangeStatus = async () => {
     try {
-      const res = updateRouteDetermination({
-        id: changeStatusPayload?.id,
+      const res = updateStatusRouteDetermination({
+        route_id: changeStatusPayload?.route_id,
         is_active: changeStatusPayload?.is_active ? 0 : 1,
       })
       return res
@@ -82,11 +87,11 @@ export default function PageTransporationRouteDetermination() {
   useEffect(() => {
     let textselected = []
     const ArrayFiltered = table.state.data.filter((dataAll) =>
-      table.state.selected.some((selected) => dataAll.id === selected),
+      table.state.selected.some((selected) => dataAll.route_id === selected),
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.id} - ${item.description} - ${item.delivery_in_days}`)
+      textselected.push(`${item.route_id} - ${item.description} - ${item.delivery_in_days}`)
     })
 
     setSelectedDataText(textselected)
@@ -148,7 +153,7 @@ export default function PageTransporationRouteDetermination() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} />
+          <Table {...table.state.tableProps} rowKey="route_id" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (
@@ -193,7 +198,7 @@ export default function PageTransporationRouteDetermination() {
         }}
         content={
           <>
-            Are you sure want Delete Shipmnet Condition{' '}
+            Are you sure want Delete Route Determination{' '}
             {oneSelected ? (
               <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
@@ -206,7 +211,7 @@ export default function PageTransporationRouteDetermination() {
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Shipmnet Condition has been successfully deleted`}
+        successContent={(res: any) => `Route Determination has been successfully deleted`}
         successOkText="OK"
         width={432}
       />
@@ -220,11 +225,11 @@ export default function PageTransporationRouteDetermination() {
         }}
         content={`Are you sure want to ${
           changeStatusPayload?.is_active ? 'inactivate' : 'activate'
-        } this Shipmnet Condition?`}
+        } this Route Determination?`}
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Shipmnet Condition has been successfully 
+        successContent={(res: any) => `Route Determination has been successfully 
           ${changeStatusPayload?.is_active ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
