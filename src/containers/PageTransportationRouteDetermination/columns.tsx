@@ -11,43 +11,43 @@ export const columns = (
   }),
   addColumn({
     title: 'Route',
-    dataIndex: 'branch',
+    dataIndex: 'route_id',
   }),
   addColumn({
     title: 'Depature Country',
-    dataIndex: 'branch',
+    dataIndex: 'depature_country',
   }),
   addColumn({
     title: 'Depature Zone',
-    dataIndex: 'branch',
+    dataIndex: 'departure_zone_id',
   }),
   addColumn({
     title: 'Destination Country',
-    dataIndex: 'branch',
+    dataIndex: 'destination_country_id',
   }),
   addColumn({
     title: 'Destination Zone',
-    dataIndex: 'branch',
+    dataIndex: 'destination_zone_id',
   }),
   addColumn({
     title: 'Shipping Condition',
-    dataIndex: 'branch',
+    dataIndex: 'shipping_condition',
   }),
   addColumn({
     title: 'Transportation Group',
-    dataIndex: 'branch',
+    dataIndex: 'transportation_group_id',
   }),
   addColumn({
     title: 'Weight Group',
-    dataIndex: 'branch',
+    dataIndex: 'weight_group_id',
   }),
   addColumn({
     title: 'Active/Inactive',
-    dataIndex: 'company_id',
+    dataIndex: 'is_active',
     render: (text: string, record: any, index: number) => (
       <>
         <Switch
-          checked={record.is_active_company === 1 ? true : false}
+          checked={record.is_active === 1 ? true : false}
           onChange={(bool: boolean) => onClickSwitch(bool, record)}
         />
       </>

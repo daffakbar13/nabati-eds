@@ -18,7 +18,6 @@ import { ICDownloadTemplate, ICUploadTemplate } from 'src/assets'
 
 export default function PageTransporationShippingCondition() {
   const [selectedRow, setSelectedRow] = useState(null)
-  const [dataTable, setdataTable] = useState([])
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
@@ -40,7 +39,6 @@ export default function PageTransporationShippingCondition() {
 
   const table = useTable({
     funcApi: getListShippingCondition,
-    // funcApi: getConfigSlocList,
     columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
     data,
@@ -60,10 +58,16 @@ export default function PageTransporationShippingCondition() {
 
   const handleDeleteData = async () => {
     try {
-      const res = deleteShippingCondition({
-        ids: table.state.selected,
-      })
-      return res
+      await Promise.all(
+        table.state.selected.map((id) => {
+          deleteShippingCondition({ id }).then((res) => console.log(res))
+        }),
+      )
+      return true
+      // const res = deleteShippingCondition({
+      //   id: table.state.selected,
+      // })
+      // return res
     } catch (error) {
       return error
     }
@@ -149,7 +153,7 @@ export default function PageTransporationShippingCondition() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} rowKey="id" />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (

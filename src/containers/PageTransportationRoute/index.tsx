@@ -2,7 +2,6 @@ import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
 import { Card, Modal, FloatAction } from 'src/components'
-import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import CreateModal from './create'
@@ -18,7 +17,6 @@ import {
 
 export default function PageTransporationRoute() {
   const [selectedRow, setSelectedRow] = useState(null)
-  const [dataTable, setdataTable] = useState([])
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
   const [modalConfirmDelete, setModalConfirmDelete] = useState(false)
@@ -59,10 +57,17 @@ export default function PageTransporationRoute() {
 
   const handleDeleteData = async () => {
     try {
-      const res = deleteTransportationRoute({
-        ids: table.state.selected,
-      })
-      return res
+      await Promise.all(
+        table.state.selected.map((id) => {
+          deleteTransportationRoute({ id }).then((res) => console.log(res))
+        }),
+      )
+      return true
+
+      // const res = deleteTransportationRoute({
+      //   id: table.state.selected,
+      // })
+      // return res
     } catch (error) {
       return error
     }
@@ -86,7 +91,7 @@ export default function PageTransporationRoute() {
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.id} - ${item.description} - ${item.delivery_in_days}`)
+      textselected.push(`${item.id} - ${item.identification}`)
     })
 
     setSelectedDataText(textselected)
@@ -148,7 +153,7 @@ export default function PageTransporationRoute() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} dataSource={dataTable} />
+          <Table {...table.state.tableProps} rowKey="id" />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
         {table.state.selected.length > 0 && (

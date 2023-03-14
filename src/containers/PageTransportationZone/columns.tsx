@@ -12,20 +12,15 @@ export const columns = (
   addColumn({
     title: 'ID',
     dataIndex: 'id',
+    sorter: true,
   }),
   addColumn({
     title: 'Name',
     dataIndex: 'name',
   }),
   addColumn({
-    title: 'Country',
+    title: 'Country ID',
     dataIndex: 'country_id',
-    render: (text: string, record: any, index: number) => `${text} - ${record.country_name}`,
-  }),
-  addColumn({
-    title: 'Company',
-    dataIndex: 'company_id',
-    render: (text: string, record: any, index: number) => `${text} - ${record.company_name}`,
   }),
   addColumn({
     title: 'Active/Inactive',
@@ -33,7 +28,7 @@ export const columns = (
     render: (text: string, record: any, index: number) => (
       <>
         <Switch
-          checked={record.is_active_company === 1 ? true : false}
+          checked={Number(text) === 1 ? true : false}
           onChange={(bool: boolean) => onClickSwitch(bool, record)}
         />
       </>

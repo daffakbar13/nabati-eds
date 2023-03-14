@@ -12,6 +12,7 @@ export const columns = (
   addColumn({
     title: 'ID',
     dataIndex: 'id',
+    sorter: true,
   }),
   addColumn({
     title: 'Description',
@@ -20,11 +21,6 @@ export const columns = (
   addColumn({
     title: 'Delivery in Days',
     dataIndex: 'delivery_in_days',
-  }),
-  addColumn({
-    title: 'Company',
-    dataIndex: 'company_id',
-    render: (text: string, record: any, index: number) => `${text} - ${record.company_name}`,
   }),
   addColumn({
     title: 'Active/Inactive',
