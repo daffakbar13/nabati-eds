@@ -168,7 +168,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Vehicle Type ' : 'Create Vehicle Type'}
+        title={isOnEditMode ? 'View Shipping Type ' : 'Create Shipping Type'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
@@ -184,13 +184,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit Vehicle Type?"
+        content="Are you sure want to submit Shipping Type?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Vehicle Type has been successfully Updated'}
+        successContent={(res: any) => 'Shipping Type has been successfully Updated'}
         successOkText="OK"
         width={432}
       />
