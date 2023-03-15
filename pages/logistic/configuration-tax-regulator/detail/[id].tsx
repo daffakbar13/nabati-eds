@@ -1,8 +1,11 @@
+import Router from 'next/router'
 import React from 'react'
-import Detail from 'src/containers/PageGoodsReceipt/detail'
 
-interface Props {}
-export default function GoodsReceiptDetail(props: Props) {
-  const {} = props
-  return <Detail />
+const Page = () => {
+  React.useEffect(() => {
+    Router.push(Router.asPath.replace('logistic', 'sales'))
+  })
+  return <></>
 }
+
+export default Page

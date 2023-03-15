@@ -1,6 +1,11 @@
+import Router from 'next/router'
 import React from 'react'
-import PageConfigurationTaxRegulator from 'src/containers/PageConfigurationTaxRegulator'
 
-export default function ConfigurationCompany() {
-  return <PageConfigurationTaxRegulator />
+const Page = () => {
+  React.useEffect(() => {
+    Router.push(Router.asPath.replace('logistic', 'sales'))
+  })
+  return <></>
 }
+
+export default Page

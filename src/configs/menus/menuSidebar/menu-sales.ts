@@ -259,6 +259,12 @@ export const menuSales = [
         content: () => 'Credit Limit Approval',
         onClick: () => Router.push(`${PATH.SALES}/configuration-credit-limit-approval`),
       },
+      {
+        key: 'configuration-tax-regulator',
+        title: 'Tax Regulator',
+        content: () => 'Tax Regulator',
+        onClick: () => Router.push(`${PATH.SALES}/configuration-tax-regulator`),
+      },
     ],
   },
   {
