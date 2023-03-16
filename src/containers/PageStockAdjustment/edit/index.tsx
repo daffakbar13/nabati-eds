@@ -23,6 +23,7 @@ import {
 } from 'src/api/logistic/stock-adjustment'
 import useDetail from 'src/hooks/useDetail'
 import DebounceSelect from 'src/components/DebounceSelect'
+import { ICPlus } from 'src/assets'
 
 const { Label, LabelRequired } = Text
 
@@ -178,10 +179,6 @@ export default function UpdateStockAdjustment() {
             </Form>
             <Divider style={{ borderColor: '#AAAAAA' }} />
 
-            <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-              + Add Item
-            </Button>
-
             <Spacer size={20} />
             <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
               <Table
@@ -191,6 +188,14 @@ export default function UpdateStockAdjustment() {
                 loading={tableAddItems.loading}
               />
             </div>
+            <Button
+              size="small"
+              variant="tertiary"
+              onClick={tableAddItems.handleAddItem}
+              style={{ margin: '32px 0 20px', border: 'transparent' }}
+            >
+              <ICPlus /> Add New
+            </Button>
           </Card>
 
           <Modal
