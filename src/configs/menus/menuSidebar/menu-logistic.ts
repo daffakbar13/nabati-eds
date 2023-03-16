@@ -268,12 +268,6 @@ export const menuLogistic = [
         onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-order-type-to-sloc`),
       },
       {
-        key: 'tax-regulator',
-        title: 'Tax Regulator',
-        content: () => 'Tax Regulator',
-        onClick: () => Router.push(`${PATH.LOGISTIC}/configuration-tax-regulator`),
-      },
-      {
         key: 'item-category',
         title: 'Item Category',
         content: () => 'Item Category',

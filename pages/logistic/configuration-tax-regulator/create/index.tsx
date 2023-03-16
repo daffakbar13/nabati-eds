@@ -1,10 +1,11 @@
+import Router from 'next/router'
 import React from 'react'
-import CreatePage from 'src/containers/PageGoodsReceipt/create'
 
-interface CreateProps {}
-
-export default function GoodReceiptCreate(props: CreateProps) {
-  const {} = props
-
-  return <CreatePage />
+const Page = () => {
+  React.useEffect(() => {
+    Router.push(Router.asPath.replace('logistic', 'sales'))
+  })
+  return <></>
 }
+
+export default Page

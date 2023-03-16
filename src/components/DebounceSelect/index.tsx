@@ -111,6 +111,21 @@ function DebounceSelect<
           }}
         />
       )}
+      {type === 'number' && (
+        <Input
+          size="large"
+          type='number'
+          {...(props as any)}
+          style={{
+            border: '1px solid #AAAAAA',
+            borderRadius: 8,
+            height: 48,
+            display: 'flex',
+            alignItems: 'center',
+            ...style,
+          }}
+        />
+      )}
     </>
   )
 

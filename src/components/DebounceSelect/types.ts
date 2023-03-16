@@ -8,6 +8,6 @@ export interface DebounceSelectProps<ValueType = any>
   debounceTimeout?: number
   label?: React.ReactNode
   required?: boolean
-  type?: 'select' | 'input'
+  type?: 'select' | 'input' | 'number'
   options?: any[]
 }

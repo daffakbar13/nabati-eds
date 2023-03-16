@@ -149,6 +149,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               required
               type="input"
               placeholder="e.g vehicle id"
+              disabled={isOnEditMode ? true : false}
               onChange={(val: any) => {
                 onChangeForm('vehicle_id', val.target.value)
               }}
@@ -208,7 +209,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             <DebounceSelect
               label="Vehicle Cubication (M3)"
               required
-              type="input"
+              type="number"
               placeholder="e.g Vehicle Cubication"
               onChange={(val: any) => {
                 onChangeForm('vehicle_cubication', parseInt(val.target.value))
@@ -223,7 +224,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             <DebounceSelect
               label="Max ultilize %"
               required
-              type="input"
+              type="number"
               placeholder="e.g Max ultilize"
               onChange={(val: any) => {
                 onChangeForm('max_utilize', parseInt(val.target.value))
@@ -238,7 +239,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             <DebounceSelect
               label="Gross Weight"
               required
-              type="input"
+              type="number"
               placeholder="e.g Gross Weight (KG)"
               onChange={(val: any) => {
                 onChangeForm('gross_weight', parseInt(val.target.value))
@@ -328,7 +329,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Vechile ' : 'Create Vechile'}
+        title={isOnEditMode ? 'View Vehicle ' : 'Create Vehicle'}
         open={visible}
         onOk={() => {}}
         onCancel={handleCancel}

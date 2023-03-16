@@ -37,7 +37,11 @@ export default function PageConfigurationSloc() {
     haveCheckBox: 'All',
   })
 
-  const { searchProps } = useFilters(table, 'Search by id', ['id', 'description'])
+  const { searchProps } = useFilters(table, 'Search by ID, Branch, and Vehicle Number', [
+    'id',
+    'branch_id',
+    'vehicle_number',
+  ])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
