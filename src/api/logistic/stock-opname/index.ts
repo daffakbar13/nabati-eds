@@ -5,6 +5,7 @@ import {
   CommonDetailResponse,
   CommonListParams,
   CommonDetailParams,
+  CommonCheckFreeze,
 } from 'src/api/types'
 import { API_BASE_URL_2 } from 'src/configs/env'
 import { StockRealTime } from './types'
@@ -98,6 +99,20 @@ export const checkIsFreezeList = async (
   const response = await call({
     method: METHODS.GET,
     subUrl: 'v1/sloc/check/freeze',
+    overrideBaseUrl,
+    data: { ...params },
+  })
+  return response.data
+}
+
+export const ValidatefreezeSlocId = async (
+  params: any,
+  branchId: string,
+  slocId: string,
+): Promise<CommonCheckFreeze<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `v1/sloc/check/${branchId}/${slocId}`,
     overrideBaseUrl,
     data: { ...params },
   })
