@@ -117,8 +117,6 @@ export const column = [
         status={(() => {
           if (status_name === 'Rejected') {
             return 'Cancelled'
-          } else if (status_name === 'Done') {
-            return 'Approved'
           } else {
             return status_name
           }

@@ -68,7 +68,16 @@ export default function PageApproveStockReservationDetail(props: propsDetail) {
     <>
       <Card style={{ overflow: 'unset' }}>
         <Text variant={'h5'}>
-          <TaggedStatus status={props.data.status_name} size="h5" />
+          <TaggedStatus
+            status={(() => {
+              if (props.data.status_name === 'Rejected') {
+                return 'Cancelled'
+              } else {
+                return props.data.status_name
+              }
+            })()}
+            size="h5"
+          />
         </Text>
       </Card>
       <Spacer size={20} />

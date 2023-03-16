@@ -13,9 +13,6 @@ import { columns } from './columns'
 import CreateModal from './create'
 
 export default function PageConfigurationTaxRegulator() {
-  const [filters, setFilters] = useState([])
-  const router = useRouter()
-
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
 
@@ -23,27 +20,10 @@ export default function PageConfigurationTaxRegulator() {
     setSelectedRow(row)
     setShowCreateModal(true)
   }
-
-  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
-  const [changeStatusPayload, setChangeStatusPayload] = useState(null)
-  const onClickSwitch = (a: boolean, rec: any) => {
-    setChangeStatusPayload(rec)
-    setShowChangeStatusModal(true)
-  }
-
-  const handleChangeStatus = async () => {
-    const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
-    try {
-      return await updateStatus(reqBody, changeStatusPayload)
-    } catch (error) {
-      return error
-    }
-  }
-
   const table = useTable({
     funcApi: getConfigTaxRegulatorList,
-    columns: columns(goToDetailPage, onClickSwitch),
-    // filters,
+    columns: columns(goToDetailPage),
+    haveCheckBox: 'All'
   })
 
   return (
@@ -76,25 +56,6 @@ export default function PageConfigurationTaxRegulator() {
           setSelectedRow(null)
           setShowCreateModal(false)
         }}
-      />
-
-      <Modal
-        title={'Confirm Submit'}
-        open={showChangeStatusModal}
-        onOk={handleChangeStatus}
-        onCancel={() => {
-          setShowChangeStatusModal(false)
-        }}
-        content={`Are you sure want to ${
-          changeStatusPayload?.status ? 'inactivate' : 'activate'
-        } this Sloc Company?`}
-        onOkSuccess={() => {
-          router.reload()
-        }}
-        successContent={(res: any) => `Config sloc company has been successfully 
-          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
-        successOkText="OK"
-        width={432}
       />
     </>
   )
