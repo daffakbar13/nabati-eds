@@ -15,6 +15,7 @@ export default function ConfirmSuccessSubmit() {
   const isEditPage = router.asPath.includes('edit')
   const isFromDetail = Object.keys(router.query).includes('id')
   const isCreate = confirm === 'newQuo'
+  const isCusNoo = router.query.is_cus_noo === 'true'
 
   return (
     <Popup>
@@ -44,28 +45,42 @@ export default function ConfirmSuccessSubmit() {
         <div>successfully {confirm === 'newQuo' ? 'created' : 'saved'}</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="tertiary"
-          onClick={() => {
-            const additional = isFromDetail ? `/detail/${router.query.id}` : ''
-            router.push(`${PATH.SALES}/quotation${additional}`)
-          }}
-        >
-          Back To List
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            const pathNextProcess = quotationId.is_approval ? 'approval' : 'sales-order'
-            router.push(`${PATH.SALES}/${pathNextProcess}/detail/${quotationId.id}`)
-          }}
-        >
-          Next Process
-        </Button>
+        {isCusNoo && (
+          <Button
+            size="big"
+            style={{ flexGrow: 1 }}
+            variant="tertiary"
+            onClick={() => router.push(`${PATH.SALES}/approval-noo`)}
+          >
+            OKE
+          </Button>
+        )}
+        {!isCusNoo && (
+          <>
+            <Button
+              size="big"
+              style={{ flexGrow: 1 }}
+              variant="tertiary"
+              onClick={() => {
+                const additional = isFromDetail ? `/detail/${router.query.id}` : ''
+                router.push(`${PATH.SALES}/quotation${additional}`)
+              }}
+            >
+              Back To List
+            </Button>
+            <Button
+              size="big"
+              style={{ flexGrow: 1 }}
+              variant="primary"
+              onClick={() => {
+                const pathNextProcess = quotationId.is_approval ? 'approval' : 'sales-order'
+                router.push(`${PATH.SALES}/${pathNextProcess}/detail/${quotationId.id}`)
+              }}
+            >
+              Next Process
+            </Button>
+          </>
+        )}
       </div>
     </Popup>
   )

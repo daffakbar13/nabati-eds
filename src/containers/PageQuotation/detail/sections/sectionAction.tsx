@@ -1,5 +1,5 @@
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import { Col, Row } from 'antd'
+import { ArrowLeftOutlined, DownOutlined, EditOutlined, ProfileOutlined } from '@ant-design/icons'
+import { Col, Popover, Row } from 'antd'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { PATH } from 'src/configs/menus'
@@ -16,6 +16,45 @@ export default function SectionAction() {
   const titlePage = useTitlePage('detail')
   const router = useRouter()
   const isStatus = (...value: string[]) => value.includes(data.status_id)
+
+  const moreContent = (
+    <>
+      <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 144 }}>
+        {isStatus('7', '1') && (
+          <Col
+            span={24}
+            onClick={() => {
+              router.push(`${PATH.SALES}/quotation/create?id=${router.query.id}`)
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <Row gutter={10}>
+              <Col>
+                <ProfileOutlined />
+              </Col>
+              <Col> Order Again</Col>
+            </Row>
+          </Col>
+        )}
+        {isStatus('7', '1') && (
+          <Col
+            span={24}
+            onClick={() => {
+              router.push(`${PATH.SALES}/quotation/edit/${router.query.id}`)
+            }}
+            style={{ cursor: 'pointer' }}
+          >
+            <Row gutter={10}>
+              <Col>
+                <EditOutlined />
+              </Col>
+              <Col> Edit</Col>
+            </Row>
+          </Col>
+        )}
+      </Row>
+    </>
+  )
 
   return (
     <Row justify="space-between">
@@ -75,6 +114,19 @@ export default function SectionAction() {
           </Col>
         )}
         {isStatus('7') && (
+          <>
+            <Col>
+          <Popover placement="bottom" content={moreContent} trigger="click">
+            <Button
+              size="big"
+              variant="secondary"
+              // onClick={downloadTemplateQuotation}
+              style={{ gap: 5 }}
+            >
+              More <DownOutlined />
+            </Button>
+          </Popover>
+        </Col>
           <Col>
             <Button
               size="big"
@@ -93,6 +145,7 @@ export default function SectionAction() {
               Submit
             </Button>
           </Col>
+          </>
         )}
       </Row>
     </Row>
