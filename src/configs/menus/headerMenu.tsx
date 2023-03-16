@@ -6,6 +6,10 @@ import { PATH } from './path'
 
 export const headerMenu = [
   {
+    path: PATH.SFA,
+    label: <Link href={{ pathname: '/sfa' }}>Home</Link>,
+  },
+  {
     path: '/dashboard?menu=config',
     label: <div onClick={() => (window.location.href = '/dashboard?menu=config')}>Config</div>,
   },

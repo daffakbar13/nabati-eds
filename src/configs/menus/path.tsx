@@ -3,4 +3,5 @@ export const PATH = {
   HOME: '/home',
   LOGISTIC: '/logistic',
   SALES: '/sales',
+  SFA: '/sfa',
 }
