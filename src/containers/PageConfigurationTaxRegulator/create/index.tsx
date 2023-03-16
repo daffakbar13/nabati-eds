@@ -1,35 +1,34 @@
 import { Form } from 'antd'
 import { useRouter } from 'next/router'
-import moment from 'moment'
 import { useEffect, useState } from 'react'
-import { Input, Modal, SelectMasterData, Text } from 'src/components'
-import { DatePickerInput, RangePicker } from 'pink-lava-ui'
-
+import { Modal, Text } from 'src/components'
+import { Spacer } from 'pink-lava-ui'
 import {
-  createConfigTaxRegulator,
-  getConfigTaxRegulatorDetail,
-  updateConfigTaxRegulator,
-} from 'src/api/logistic/configuration-tax-regulator'
-
-const { Label, LabelRequired } = Text
+  createConfigShippingType,
+  updateConfigShippingType,
+} from 'src/api/transportation/shipping-type'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { fieldModeOfTransportation } from 'src/configs/fieldFetches'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
+  const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
+  const [dataForm, setDataForm] = useState<any>()
+  const [initialValue, setInitialValue] = useState<any>()
+  const [form] = Form.useForm()
   const router = useRouter()
+
   const isOnEditMode = !!payload
 
-  const [form] = Form.useForm()
-
-  const onClickSubmit = async () => {
-    await form.validateFields()
-    setConfirmModal(true)
+  const onChangeForm = (form: string, value: any) => {
+    setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
 
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigTaxRegulator(reqBody, reqBody.tax_subject)
+      const res = updateConfigShippingType(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -40,7 +39,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigTaxRegulator(reqBody)
+      const res = createConfigShippingType(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -49,16 +48,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const handleSubmit = async () => {
-    const values = form.getFieldsValue(true)
-    const reqBody = {
-      company_id: values.company_id.value,
-      tax_subject: values.tax_subject,
-      tax_cl_material: values.tax_cl_material,
-      tax_name: values.tax_name,
-      amount: +values.amount,
-      valid_from: values.valid_from.format('YYYY-MM-DD'),
-      valid_to: values.valid_to.format('YYYY-MM-DD'),
-    }
+    setDataForm(undefined)
+    const reqBody = { ...initialValue, ...dataForm }
 
     if (!isOnEditMode) {
       return doCreate(reqBody)
@@ -71,138 +62,146 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     return false
   }
 
+  const onClickSubmit = async () => {
+    await form.validateFields()
+    setConfirmModal(true)
+  }
+
   const handleCancel = () => {
-    setConfirmModal(false)
-    form.resetFields()
-    close()
+    if (dataForm) {
+      setConfirmCancelModal(true) 
+    } else {
+      setDataForm(null)
+      setConfirmModal(false)
+      form.resetFields()
+      close()
+    }
   }
 
   useEffect(() => {
-    // form.resetFields()
     if (!isOnEditMode) return
     const fetchData = async () => {
-      try {
-        setLoading(true)
-        const res = await getConfigTaxRegulatorDetail(payload.company_id, payload.tax_subject)
-        form.setFieldsValue({
-          company_id: {
-            value: res?.data?.company_id,
-            label: `${res?.data?.company_id} - ${res?.data?.company_name}`,
-          },
-          tax_subject: res?.data?.tax_subject,
-          tax_cl_material: res?.data?.tax_cl_material,
-          tax_name: res?.data?.tax_name,
-          amount: res?.data?.amount,
-          valid_from: moment(res?.data?.valid_from),
-          valid_to: moment(res?.data?.valid_to),
-        })
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        return error
-      }
+      form.setFieldsValue({
+        id: payload?.id || '',
+        description: payload?.description || '',
+        mode_of_transportation: {
+          value: payload?.transportation_mode_id,
+          label: [payload?.transportation_mode_id, payload?.transportation_mode_description].join(
+            ' - ',
+          ),
+        },
+      })
+      setInitialValue({
+        id: payload?.id || '',
+        description: payload?.description || '',
+        transportation_mode_id: payload?.transportation_mode_id || '',
+      })
     }
 
     fetchData()
   }, [form, isOnEditMode, payload])
 
   const content = (
-    <Form
-      form={form}
-      labelCol={{ span: 24 }}
-      wrapperCol={{ span: 24 }}
-      autoComplete="off"
-      requiredMark={false}
-      scrollToFirstError
-      preserve={false}
-    >
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20, marginTop: 40 }}>
-        {/* <Form.Item
+    <>
+      <Form
+        form={form}
+        labelCol={{ span: 24 }}
+        wrapperCol={{ span: 24 }}
+        autoComplete="off"
+        requiredMark={false}
+        scrollToFirstError
+      >
+        <Spacer size={20} />
+        <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
           name="country"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Country</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
-        </Form.Item> */}
-        <Form.Item
-          name="company_id"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Company</LabelRequired>}
-          rules={[{ required: true }]}
-        >
-          <SelectMasterData type="COMPANY" style={{ marginTop: -8 }} />
+          <DebounceSelect
+            label="Country"
+            required
+            type="select"
+            placeholder="e.g country"
+            fetchOptions={(search) => fieldModeOfTransportation(search)}
+            onChange={(val: any) => {
+              onChangeForm('country', val.value)
+            }}
+          />
         </Form.Item>
+        <Spacer size={10} />
         <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
+          name="company"
+          rules={[{ required: true }]}
+        >
+          <DebounceSelect
+            label="Company"
+            required
+            type="select"
+            placeholder="e.g company"
+            fetchOptions={(search) => fieldModeOfTransportation(search)}
+            onChange={(val: any) => {
+              onChangeForm('company', val.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
           name="tax_subject"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Tax Subject</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+          <DebounceSelect
+            label="Tax Subject"
+            required
+            type="input"
+            placeholder="e.g Tax Subject"
+            onChange={(val: any) => {
+              onChangeForm('tax_subject', val.target.value)
+            }}
+          />
         </Form.Item>
+        <Spacer size={10} />
         <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
           name="tax_cl_material"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Tax CL Material</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+          <DebounceSelect
+            label="Tax CL Material"
+            required
+            type="input"
+            placeholder="e.g Tax CL Material"
+            onChange={(val: any) => {
+              onChangeForm('tax_cl_material', val.target.value)
+            }}
+          />
         </Form.Item>
+        <Spacer size={10} />
         <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
           name="tax_name"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Tax Name</LabelRequired>}
           rules={[{ required: true }]}
         >
-          <Input style={{ marginTop: -12 }} placeholder="Type" size="large" />
+          <DebounceSelect
+            label="Tax Name"
+            required
+            type="select"
+            placeholder="e.g company"
+            fetchOptions={(search) => fieldModeOfTransportation(search)}
+            onChange={(val: any) => {
+              onChangeForm('tax_name', val.value)
+            }}
+          />
         </Form.Item>
-        <Form.Item
-          name="amount"
-          style={{ marginTop: -12, marginBottom: 0 }}
-          label={<LabelRequired>Amount</LabelRequired>}
-          rules={[{ required: true }]}
-        >
-          <Input type="number" style={{ marginTop: -12 }} placeholder="Type" size="large" />
-        </Form.Item>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-          <Form.Item
-            name="valid_from"
-            style={{ marginTop: -12, marginBottom: 0 }}
-            label={<LabelRequired>Valid From</LabelRequired>}
-            rules={[{ required: true }]}
-          >
-            <DatePickerInput
-              style={{ height: 54, marginTop: -12 }}
-              fullWidth
-              label={''}
-              // defaultValue={moment()}
-              format={'DD-MMM-YYYY'}
-            />
-          </Form.Item>
-          <Form.Item
-            name="valid_to"
-            style={{ marginTop: -12, marginBottom: 0 }}
-            label={<LabelRequired>Valid To</LabelRequired>}
-            rules={[{ required: true }]}
-          >
-            <DatePickerInput
-              style={{ height: 54, marginTop: -12 }}
-              fullWidth
-              label={''}
-              // defaultValue={moment()}
-              format={'DD-MMM-YYYY'}
-            />
-          </Form.Item>
-        </div>
-      </div>
-    </Form>
+      </Form>
+    </>
   )
 
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Detail Config Tax Regulator' : 'Create Config Tax Regulator'}
+        title={isOnEditMode ? 'View Tax Regulator ' : 'Create Tax Regulator'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
@@ -218,14 +217,29 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit config Tax Regulator?"
+        content="Are you sure want to submit Tax Regulator?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.reload()
+          router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Config Tax Regulator has been successfully Updated'}
+        successContent={(res: any) => 'Tax Regulator has been successfully Updated'}
         successOkText="OK"
+        width={432}
+      />
+      <Modal
+        title={'Confirm Cancellation'}
+        open={showConfirmCancelModal}
+        onOk={() => {
+          setDataForm(null)
+          setConfirmCancelModal(false)
+          form.resetFields()
+          close()
+        }}
+        onCancel={() => {
+          setConfirmCancelModal(false)
+        }}
+        content="Are you sure want to cancel? Change you made so far will not safed"
         width={432}
       />
     </>
