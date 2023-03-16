@@ -55,7 +55,7 @@ export default function UpdateStockAdjustment() {
     const payload: any = {
       header_text: headerData.header_text,
       items: tableAddItems.data.map((i) => ({
-        id: i.id,
+        // id: i.id,
         product_id: i.product_id,
         base_stock_qty: i.base_stock_qty,
         qty_unit: {
