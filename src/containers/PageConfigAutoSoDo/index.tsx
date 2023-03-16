@@ -14,7 +14,6 @@ import CreateModal from './create'
 import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
 
 export default function PageConfigurationSloc() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
@@ -37,7 +36,11 @@ export default function PageConfigurationSloc() {
   const handleChangeStatus = async () => {
     const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
     try {
-      return await UpdateStatusSOtoDO(changeStatusPayload.sales_org_id as string, reqBody)
+      return await UpdateStatusSOtoDO(
+        reqBody,
+        changeStatusPayload.company_id,
+        changeStatusPayload.create_from,
+      )
     } catch (error) {
       return error
     }
@@ -70,10 +73,10 @@ export default function PageConfigurationSloc() {
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.sales_org_id} - ${item.sales_org_name}`)
+      textselected.push(`${item.create_from} - ${item.notes}`)
       return {
         company_id: item.company_id,
-        sales_org_id: item.sales_org_id,
+        create_from: item.create_from,
       }
     })
 
