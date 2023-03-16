@@ -41,7 +41,11 @@ export default function PageTransportationZone() {
     haveCheckBox: 'All',
   })
 
-  const { searchProps } = useFilters(table, 'Search by id', ['id'])
+  const { searchProps } = useFilters(table, 'Search by ID, Name, Country ID', [
+    'id',
+    'name',
+    'country_id',
+  ])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -88,7 +92,7 @@ export default function PageTransportationZone() {
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.id} - ${item.description} - ${item.delivery_in_days}`)
+      textselected.push(`${item.id} - ${item.name}`)
     })
 
     setSelectedDataText(textselected)
