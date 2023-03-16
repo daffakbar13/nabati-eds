@@ -135,7 +135,16 @@ export default function PageStockReservationDetail() {
           <Card style={{ overflow: 'unset' }}>
             {data.status_id !== '00' ? (
               <Text variant={'h5'}>
-                <TaggedStatus status={data.status_name} size="h5" />
+                <TaggedStatus
+                  status={(() => {
+                    if (data.status === 'Rejected') {
+                      return 'Cancelled'
+                    } else {
+                      return data.status
+                    }
+                  })()}
+                  size="h5"
+                />
               </Text>
             ) : (
               ''

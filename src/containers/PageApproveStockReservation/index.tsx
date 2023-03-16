@@ -49,6 +49,8 @@ export default function PageStockReservation() {
     { label: 'Wait For Approval', value: '00' },
   ]
 
+  const movTypeOption = [{ label: '313 - Transfer Posting Sloc to Sloc', value: '313' }]
+
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
     'Search by Reservation Number',
@@ -122,40 +124,40 @@ export default function PageStockReservation() {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="supplying_sloc_id"
+                field="sloc_id"
                 dataType="S"
-                label="Supplying Sloc"
+                label="SLoc"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" options={allSloc} />
                 <DebounceSelect type="select" options={allSloc} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="receiving_sloc_id"
+                field="movement_type_id"
                 dataType="S"
-                label="Receiving Sloc"
+                label="Mov. Type"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <DebounceSelect type="select" options={allSloc} />
-                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
+                <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="posting_date"
+                field="requirement_date"
                 dataType="S"
-                label="Posting Date"
+                label="Requirement Date"
                 options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DatePickerInput
                   label={''}
                   fullWidth
                   format={'DD-MMM-YYYY'}
-                  placeholder="Posting Date"
+                  placeholder="Requirement Date"
                 />
                 <DatePickerInput
                   fullWidth
                   label={''}
                   format={'DD-MMM-YYYY'}
-                  placeholder="Posting Date"
+                  placeholder="Requirement Date"
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
