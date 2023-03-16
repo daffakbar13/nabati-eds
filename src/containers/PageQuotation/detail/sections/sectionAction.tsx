@@ -135,7 +135,8 @@ export default function SectionAction() {
                 runProcess('Wait for submitting Sales Order')
                 multipleSubmitQuotation({ order_list: [{ id: router.query.id as string }] })
                   .then((res) => {
-                    setNewSalesOrder(res.id)
+                    const [first] = res.data.results
+                    setNewSalesOrder(first.id)
                     showConfirm('success-submit')
                     stopProcess()
                   })
