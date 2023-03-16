@@ -73,9 +73,9 @@ export default function PageApprovalStockAdjustment() {
   }, [])
 
   const optionsStatus = [
-    { label: 'Pending', value: '00' },
-    { label: 'Done', value: '01' },
-    { label: 'Canceled', value: '02' },
+    { label: 'Waiting Approval Adjust', value: '01' },
+    { label: 'Approve', value: '03' },
+    { label: 'Rejected', value: '05' },
   ]
 
   const [branchfrom, setBranchFrom] = useState('')
