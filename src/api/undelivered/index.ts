@@ -18,6 +18,29 @@ export const getUndeliveredList = async (
   return response.data
 }
 
+export const getUndeliveredListMT = async (
+  params: CommonListParams,
+): Promise<CommonListResponse<Undelivered>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${subUrl}/list`,
+    data: {
+      filters: [
+        {
+          field: 'sales_org_id',
+          option: 'EQ',
+          from_value: 'PID2',
+        },
+        ...params.filters,
+      ],
+      limit: params.limit,
+      page: params.page,
+    },
+  })
+  return response.data
+}
+
 export const getUndeliveredDetail = async (
   params: CommonDetailParams,
 ): Promise<CommonListResponse<Undelivered>> => {

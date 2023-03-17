@@ -260,9 +260,9 @@ export const useTableAddItem = (props: propsUseTable) => {
           Number(record.stock_s) -
           Number(record.actual_s)
         if (refQty < 0) {
-          return 'Z72 - RE GR Phys. Inv (-)'
+          return 'Z72 - RE GR Phys. Inv (+)'
         } else {
-          return 'Z71 - GR Phys. Inv (+)'
+          return 'Z71 - GR Phys. Inv (-)'
         }
       },
     }),
