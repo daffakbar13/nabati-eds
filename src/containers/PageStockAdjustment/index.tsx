@@ -82,10 +82,12 @@ export default function PageStockAdjustment() {
               value={filterId}
               onChange={(e) => {
                 setFilterId(e.target.value)
-                const idIndex = filters.findIndex((obj) => obj?.field === 'id')
+                const idIndex = filters.findIndex((obj) => obj?.field === 'reference_id')
                 if (idIndex > -1) {
                   if (e.target.value === '') {
-                    setFilters((oldFilter) => oldFilter.filter((data) => data?.field !== 'id'))
+                    setFilters((oldFilter) =>
+                      oldFilter.filter((data) => data?.field !== 'reference_id'),
+                    )
                   } else {
                     const updateId = filters.map((data, i) => {
                       if (i === idIndex) {
@@ -99,7 +101,7 @@ export default function PageStockAdjustment() {
                   setFilters([
                     ...filters,
                     {
-                      field: 'id',
+                      field: 'reference_id',
                       option: 'CP',
                       from_value: `%${e.target.value}%`,
                       data_type: 'S',

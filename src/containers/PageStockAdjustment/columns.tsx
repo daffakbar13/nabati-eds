@@ -12,6 +12,11 @@ export const columns = (goToDetail: (id: string) => {}) => [
     width: 180,
   }),
   addColumn({
+    title: 'Reff. Number',
+    dataIndex: 'reference_id',
+    width: 180,
+  }),
+  addColumn({
     title: 'Posting Date',
     dataIndex: 'posting_date',
     width: 180,
