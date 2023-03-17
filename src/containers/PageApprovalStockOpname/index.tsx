@@ -77,9 +77,9 @@ export default function PageApprovalStockOpname() {
   }, [])
 
   const optionsStatus = [
-    { label: 'Pending', value: '00' },
-    { label: 'Done', value: '01' },
-    { label: 'Canceled', value: '02' },
+    { label: 'Wait Approval Opname', value: '02' },
+    { label: 'Approve', value: '03' },
+    { label: 'Rejected', value: '05' },
   ]
 
   const [branchfrom, setBranchFrom] = useState('')

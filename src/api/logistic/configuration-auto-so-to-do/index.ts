@@ -44,20 +44,20 @@ export const getDetailSOtoDO = async (sales_org_id: string) => {
   return response.data
 }
 
-export const updateSOtoDO = async (sales_org_id: string, payload: any) => {
+export const updateSOtoDO = async (payload: any, create_from: string) => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/update/${sales_org_id}`,
+    subUrl: `${url}/update/${create_from}`,
     overrideBaseUrl,
     data: payload,
   })
   return response.data
 }
 
-export const UpdateStatusSOtoDO = async (sales_org_id: string, payload: any) => {
+export const UpdateStatusSOtoDO = async (payload: any, companyId: string, createFrom: string) => {
   const response = await call({
     method: METHODS.POST,
-    subUrl: `${url}/status/${sales_org_id}`,
+    subUrl: `${url}/status/${companyId}/${createFrom}`,
     overrideBaseUrl,
     data: payload,
   })

@@ -16,6 +16,8 @@ import {
 import { useTableAddItem } from './useTableEditable'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchSupply, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
+import { ValidatefreezeSlocId } from 'src/api/logistic/stock-opname'
+import { ICPlus } from 'src/assets'
 
 const { Label, LabelRequired } = Text
 
@@ -30,6 +32,7 @@ export default function CreateStockAdjustment() {
   const [branchSelected, setBranchSelected] = useState('')
   const [slocSelected, setSlocSelected] = useState('')
   const [dataTable, setDataTable] = useState([])
+  const [showCheckFreezeModal, setShowCekFreezeModal] = useState(false)
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
 
@@ -48,33 +51,44 @@ export default function CreateStockAdjustment() {
   }
 
   const handleCreate = async () => {
-    const payload: any = {
-      branch_id: headerData.branch_id.value,
-      stock_doct_type: 'PIP',
-      material_doc_type: 'WA',
-      document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
-      posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      header_text: headerData.header_text,
-      sloc_id: headerData.sloc_id.value,
-      status_id: '00',
-      items: dataTable.length
-        ? dataTable.map((i) => ({
-            product_id: i.product_id,
-            large: i.large,
-            middle: i.middle,
-            small: i.small,
-            remarks: '',
-            batch: '',
-          }))
-        : [],
-    }
+    const validateResponse = await ValidatefreezeSlocId(
+      {},
+      headerData.branch_id.value,
+      headerData.sloc_id.value,
+    )
 
-    try {
-      const res = await createStockAdjustment(payload)
-      return res
-    } catch (error) {
-      const newLocal = false
-      return newLocal
+    if (validateResponse.data.is_freeze === false) {
+      const payload: any = {
+        branch_id: headerData.branch_id.value,
+        stock_doct_type: 'PIP',
+        material_doc_type: 'WA',
+        document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
+        posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
+        header_text: headerData.header_text,
+        sloc_id: headerData.sloc_id.value,
+        status_id: '00',
+        items: dataTable.length
+          ? dataTable.map((i) => ({
+              product_id: i.product_id,
+              large: i.large,
+              middle: i.middle,
+              small: i.small,
+              remarks: '',
+              batch: '',
+            }))
+          : [],
+      }
+      try {
+        const res = await createStockAdjustment(payload)
+        return res
+      } catch (error) {
+        const newLocal = false
+        return newLocal
+      }
+    } else {
+      setShowCekFreezeModal(true)
+      setShowSubmitModal(false)
+      return false
     }
   }
 
@@ -189,12 +203,6 @@ export default function CreateStockAdjustment() {
         </Form>
         <Divider style={{ borderColor: '#AAAAAA' }} />
 
-        {branchSelected && slocSelected && (
-          <Button size="big" variant="tertiary" onClick={tableAddItems.handleAddItem}>
-            + Add Item
-          </Button>
-        )}
-
         <Spacer size={20} />
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
           <Table
@@ -204,7 +212,25 @@ export default function CreateStockAdjustment() {
             loading={tableAddItems.loading}
           />
         </div>
+        {branchSelected && slocSelected && (
+          <Button
+            size="small"
+            variant="tertiary"
+            onClick={tableAddItems.handleAddItem}
+            style={{ margin: '32px 0 20px', border: 'transparent' }}
+          >
+            <ICPlus /> Add New
+          </Button>
+        )}
       </Card>
+
+      <Modal
+        open={showCheckFreezeModal}
+        onOk={() => router.back()}
+        onCancel={() => setShowCekFreezeModal(false)}
+        title="Warning"
+        content={`Branch ${branchLabelSelected}, Sloc ${slocLabelSelected} is being freeze.`}
+      />
 
       <Modal
         open={showCancelModal}

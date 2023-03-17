@@ -129,14 +129,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="name"
-          rules={[{ required: true }]}
-        >
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="name">
           <DebounceSelect
             label="Name"
-            required
             type="input"
             placeholder="e.g Name"
             onChange={(val: any) => {
@@ -145,15 +140,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="country_id"
-          rules={[{ required: true }]}
-        >
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="country_id">
           <DebounceSelect
             type="select"
             label="Country ID"
-            required
             value={dataForm?.country_id}
             placeholder="Type to search"
             fetchOptions={fieldRegion}

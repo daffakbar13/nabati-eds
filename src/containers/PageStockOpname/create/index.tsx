@@ -11,6 +11,7 @@ import {
   createStockOpname,
   freezeSlocIdByBranchId,
   getListStockOpnameByBranchSloc,
+  ValidatefreezeSlocId,
 } from 'src/api/logistic/stock-opname'
 
 import { useTableAddItem } from './useTableEditable'
@@ -30,6 +31,7 @@ export default function CreateStockOpname() {
   const [slocSelected, setSlocSelected] = useState('')
   const [slocLabelSelected, setSlocLabelSelected] = useState('')
   const [dataTable, setDataTable] = useState([])
+  const [showCheckFreezeModal, setShowCekFreezeModal] = useState(false)
   const [showCancelModal, setShowCancelModal] = useState(false)
   const [showSubmitModal, setShowSubmitModal] = useState(false)
 
@@ -49,39 +51,50 @@ export default function CreateStockOpname() {
   }
 
   const handleCreate = async () => {
-    const payload: any = {
-      branch_id: headerData.branch_id.value,
-      stock_doct_type: 'PI',
-      material_doc_type: 'WA',
-      document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
-      posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
-      header_text: headerData.header_text,
-      sloc_id: headerData.sloc_id.value,
-      status_id: '00',
-      items: dataTable.length
-        ? dataTable.map((i) => ({
-            product_id: i.product_id,
-            large: i.large,
-            middle: i.middle,
-            small: i.small,
-            remarks: '',
-            batch: '',
-          }))
-        : [],
-    }
-    try {
-      const res = await createStockOpname(payload)
-      await freezeSlocIdByBranchId(
-        {
-          id: slocSelected,
-          is_freeze: 1,
-        },
-        branchSelected,
-      )
-      return res
-    } catch (error) {
-      const newLocal = false
-      return newLocal
+    const validateResponse = await ValidatefreezeSlocId(
+      {},
+      headerData.branch_id.value,
+      headerData.sloc_id.value,
+    )
+
+    if (validateResponse.data.is_freeze === false) {
+      const payload: any = {
+        branch_id: headerData.branch_id.value,
+        stock_doct_type: 'PI',
+        material_doc_type: 'WA',
+        document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
+        posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
+        header_text: headerData.header_text,
+        sloc_id: headerData.sloc_id.value,
+        status_id: '00',
+        items: dataTable.length
+          ? dataTable.map((i) => ({
+              product_id: i.product_id,
+              large: i.large,
+              middle: i.middle,
+              small: i.small,
+              remarks: '',
+              batch: '',
+            }))
+          : [],
+      }
+      try {
+        const res = await createStockOpname(payload)
+        await freezeSlocIdByBranchId(
+          {
+            id: slocSelected,
+            is_freeze: 1,
+          },
+          branchSelected,
+        )
+        return res
+      } catch (error) {
+        return false
+      }
+    } else {
+      setShowCekFreezeModal(true)
+      setShowSubmitModal(false)
+      return false
     }
   }
 
@@ -187,6 +200,14 @@ export default function CreateStockOpname() {
           <Table data={dataTable} columns={tableAddItems.columns} loading={tableAddItems.loading} />
         </div>
       </Card>
+
+      <Modal
+        open={showCheckFreezeModal}
+        onOk={() => router.back()}
+        onCancel={() => setShowCekFreezeModal(false)}
+        title="Warning"
+        content={`Branch ${branchLabelSelected}, Sloc ${slocLabelSelected} is being freeze.`}
+      />
 
       <Modal
         open={showCancelModal}

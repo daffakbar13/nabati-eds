@@ -17,6 +17,14 @@ export interface CommonListResponse<T = any> {
   }
 }
 
+export interface CommonCheckFreeze<T = any> {
+  status: string
+  message: string
+  data: {
+    is_freeze: boolean
+  }
+}
+
 export interface CommonDetailResponse<T> {
   data: T
 }

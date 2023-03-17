@@ -27,18 +27,20 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     if (!isOnEditMode) return
     const fetchData = async () => {
       form.setFieldsValue({
-        // description: payload?.description,
+        description: payload?.description,
         id: payload?.id,
         identification: payload?.identification,
         transportation_mode_id: payload?.transportation_mode_id,
         shipment_type_id: payload?.shipment_type_id,
-        // factory_calendar: payload?.factory_calendar,
+        factory_calendar: payload?.factory_calendar,
       })
       setDataForm({
         id: payload?.id,
+        description: payload?.description,
         identification: payload?.identification,
         transportation_mode_id: payload?.transportation_mode_id,
         shipment_type_id: payload?.shipment_type_id,
+        factory_calendar: payload?.factory_calendar,
       })
     }
 
@@ -131,7 +133,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
           <DebounceSelect
             label="Description"
             type="input"
@@ -140,7 +142,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('description', val.target.value)
             }}
           />
-        </Form.Item> */}
+        </Form.Item>
         <Spacer size={10} />
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="identification">
           <DebounceSelect
@@ -175,7 +177,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="factory_calendar">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="factory_calendar">
           <DebounceSelect
             label="Factory Calendar"
             type="input"
@@ -184,7 +186,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('factory_calendar', val.target.value)
             }}
           />
-        </Form.Item> */}
+        </Form.Item>
       </Form>
     </>
   )
