@@ -6,8 +6,6 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import { PATH } from 'src/configs/menus'
-import DateFormat from 'src/components/DateFormat'
-import { Tag } from 'antd'
 import TaggedStatus from 'src/components/TaggedStatus'
 
 interface LinkedProps {
@@ -19,7 +17,7 @@ interface LinkedProps {
 }
 
 function Linked(props: LinkedProps) {
-  const { link, status, type, limit, page } = props
+  const { link, status, type } = props
   const router = useRouter()
   const navigate = () => {
     status === 'Draft'

@@ -17,6 +17,8 @@ export default function PageCollectionDetail() {
   const [finishPayload, setFinishPayload] = React.useState<any>({})
   const [processing, setProcessing] = React.useState<string>()
   const [dataTable, setDataTable] = React.useState([])
+  const [delivered, setDelivered] = React.useState<number[]>([])
+  const [canSubmit, setCanSubmit] = React.useState(false)
   const hasData = Object.keys(data).length > 0
 
   const { tradeType } = router.query
@@ -35,8 +37,13 @@ export default function PageCollectionDetail() {
   ) {
     setFinishPayload((prev) => ({
       shipment_id: prev.shipment_id,
-      billings: prev.billings?.map((b) => {
+      billings: prev.billings?.map((b, i) => {
         if (b.billing_id === billing_id) {
+          setDelivered((d) => {
+            const newArr = d
+            newArr[i] = 0
+            return newArr
+          })
           return {
             ...b,
             is_delivered: 0,
@@ -53,8 +60,13 @@ export default function PageCollectionDetail() {
   function deliveBilling(data_billing: any) {
     setFinishPayload((prev) => ({
       shipment_id: prev.shipment_id,
-      billings: prev.billings?.map((b) => {
+      billings: prev.billings?.map((b, i) => {
         if (b.billing_id === data_billing.billing_number) {
+          setDelivered((d) => {
+            const newArr = d
+            newArr[i] = data_billing.paid_amount
+            return newArr
+          })
           return {
             ...b,
             is_delivered: 1,
@@ -77,7 +89,11 @@ export default function PageCollectionDetail() {
     }))
   }
 
-  const { columns, modalDelivered } = useTableDetailCollection(undeliveBilling, deliveBilling)
+  const { columns, modalDelivered } = useTableDetailCollection(
+    undeliveBilling,
+    deliveBilling,
+    delivered,
+  )
 
   React.useEffect(() => {
     if (hasData) {
@@ -101,6 +117,7 @@ export default function PageCollectionDetail() {
         })),
       }))
       setDataTable(data.details)
+      setDelivered(data.details.map(() => 0))
     }
   }, [data])
 
@@ -110,7 +127,11 @@ export default function PageCollectionDetail() {
       undelivered_reason_id: finishPayload.billings[i]?.cancelation_reason_id,
       undelivered_reason_name: finishPayload.billings[i]?.cancelation_reason_name,
     }))
+    const mappingCanSubmit = newDataTable.map(
+      (e, i) => delivered[i] > 0 || e.undelivered_reason_id !== '',
+    )
     setDataTable(newDataTable)
+    setCanSubmit(!mappingCanSubmit.includes(false))
   }, [finishPayload])
 
   return (
@@ -127,6 +148,7 @@ export default function PageCollectionDetail() {
                 <ButtonPinkLava
                   size="big"
                   variant="primary"
+                  disabled={!canSubmit}
                   onClick={() => {
                     setProcessing('Wait for finish collection')
                     finishCollection(finishPayload)

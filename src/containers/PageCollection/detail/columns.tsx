@@ -9,6 +9,7 @@ import moment from 'moment'
 import Total from 'src/components/Total'
 import { Popup } from 'src/components'
 import { fieldReason } from 'src/configs/fieldFetches'
+import currency from 'src/utils/currencyFormat'
 
 interface PaymentTypes {
   billing_amount?: number
@@ -90,6 +91,7 @@ export const useTableDetailCollection = (
   ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
+  delivered: number[],
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
@@ -208,7 +210,8 @@ export const useTableDetailCollection = (
       }),
       addColumn({
         title: 'Paid Amount',
-        dataIndex: 'paid_amount',
+        // dataIndex: 'paid_amount',
+        render: (_, __, i) => currency(delivered[i] || 0),
       }),
       addColumn({
         title: 'Payment Method',
