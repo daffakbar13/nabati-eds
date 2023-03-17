@@ -79,3 +79,12 @@ export const UpdateCreditLimit = async (
   })
   return response.data
 }
+
+export const getDetailCreditLimit = async (company_id, customer_id, valid_from) => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `${url}/detail/config_credit_limit/${company_id}/${customer_id}/${valid_from}`,
+    overrideBaseUrl,
+  })
+  return response.data
+}
