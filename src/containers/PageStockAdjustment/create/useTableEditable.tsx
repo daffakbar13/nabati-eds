@@ -219,7 +219,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           title: 'Large',
           dataIndex: 'ref_l',
           render: (text: string, record: any, index: number) => {
-            const diff = Number(record.stock_l) - Number(record.actual_l)
+            const diff = Number(record.actual_l) - Number(record.stock_l)
             return diff >= 0 ? `+${diff}` : `${diff}`
           },
           width: 100,
@@ -229,7 +229,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           title: 'Middle',
           dataIndex: 'ref_m',
           render: (text: string, record: any, index: number) => {
-            const diff = Number(record.stock_m) - Number(record.actual_m)
+            const diff = Number(record.actual_m) - Number(record.stock_m)
             return diff >= 0 ? `+${diff}` : `${diff}`
           },
           width: 100,
@@ -239,7 +239,7 @@ export const useTableAddItem = (props: propsUseTable) => {
           title: 'Small',
           dataIndex: 'ref_s',
           render: (text: string, record: any, index: number) => {
-            const diff = Number(record.stock_s) - Number(record.actual_s)
+            const diff = Number(record.actual_s) - Number(record.stock_s)
             return diff >= 0 ? `+${diff}` : `${diff}`
           },
           width: 100,
