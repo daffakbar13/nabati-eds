@@ -50,6 +50,8 @@ const subUrl = {
   getDistrictByCompanyId: 'v1/master/get-district',
   getProductConversionByProductId: 'v1/master/get-product-conversion/PP01',
   getRegion: '/v1/master/get-region',
+  getCountry: '/v1/master/get-country',
+  getWeightGroup: '/v1/master/get-weight-group/PP01',
   getTransporationZone: '/v1/master/get-transportation-zone/PP01/ID',
   getSlocbyConfigSlocSalesman: '/v1/configuration/sloc_salesman',
   getInco: '/v1/master/get-inco',
@@ -546,6 +548,26 @@ export const getRegion = async (): Promise<CommonDetailResponse<any>> => {
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getRegion,
+  })
+
+  return response.data
+}
+
+export const getCountry = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getCountry,
+  })
+
+  return response.data
+}
+
+export const getWeightGroup = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getWeightGroup,
   })
 
   return response.data
