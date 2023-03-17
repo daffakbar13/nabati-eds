@@ -1,5 +1,5 @@
 import moment from 'moment'
-import CreateColumns from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { Button, Switch } from 'pink-lava-ui'
 import { Tag } from 'antd'
 import Link from 'src/components/Link'
@@ -8,25 +8,41 @@ export const columns = (
   onClickDetail: (rec: any) => void,
   onClickSwitch: (a: boolean, rec: any) => void,
 ) => [
-  CreateColumns('No', '', true, (text: string, rec, index) => <>{index + 1}</>, 70, 'left'),
-  CreateColumns('Company ID', 'company_id', true),
-  CreateColumns('Company Name', 'company_name', true),
-  CreateColumns('Console Group', 'console_group', true),
-  CreateColumns('Value', 'value', true),
-  CreateColumns(
-    'Active/Inactive',
-    'status',
-    true,
-    (status: string, rec) => (
+  addColumn({
+    title: 'No',
+    render: (text, record, index) => index + 1,
+    width: 55,
+  }),
+  addColumn({
+    title: 'Company ID',
+    dataIndex: 'company_id',
+  }),
+  addColumn({
+    title: 'Company Name',
+    dataIndex: 'company_name',
+  }),
+  addColumn({
+    title: 'Console Group',
+    dataIndex: 'console_group',
+  }),
+  addColumn({
+    title: 'Value',
+    dataIndex: 'value',
+  }),
+  addColumn({
+    title: 'Active/Inactive',
+    render: (text, record, index) => (
       <>
-        <Switch checked={status} onChange={(bool: boolean) => onClickSwitch(bool, rec)} />
+        <Switch checked={text} onChange={(bool: boolean) => onClickSwitch(bool, record)} />
       </>
     ),
-    180,
-  ),
-  CreateColumns('Action', 'gr_number', false, (text, rec) => (
-    <Button size="big" variant="tertiary" onClick={() => onClickDetail(rec)}>
-      View Detail
-    </Button>
-  )),
+  }),
+  addColumn({
+    title: 'Action',
+    render: (text, record, index) => (
+      <Button size="big" variant="tertiary" onClick={() => onClickDetail(record)}>
+        View Detail
+      </Button>
+    ),
+  }),
 ]

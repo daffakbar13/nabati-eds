@@ -6,11 +6,7 @@ import { Spacer, Text, DatePickerInput, Button } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { InputNumber, Form, Modal as ModalANTD, Typography, Spin } from 'antd'
 import { fieldCustomer } from 'src/configs/fieldFetches'
-import {
-  createCreditLimit,
-  UpdateCreditLimit,
-  getDetailCreditLimit,
-} from 'src/api/logistic/config-credit-limit'
+import { createCreditLimit, UpdateCreditLimit } from 'src/api/logistic/config-credit-limit'
 import { PATH } from 'src/configs/menus'
 import TaggedStatus from 'src/components/TaggedStatus'
 import { ICExclamation } from 'src/assets'
@@ -29,9 +25,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmModalCancel, setShowConfirmModalCancel] = useState(false)
-  const [limitbefore, setLimitBefore] = useState<number>(0)
-  const [customerId, setCustomerId] = useState('')
-  const [validBefore, setvalidBefore] = useState('')
+  const [initialValue, setInitialValue] = useState<any>({
+    company_id: 'PP01',
+    credit_limit_before: 0,
+    valid_from: moment(now).format('YYYY-MM-DD'),
+  })
   const router = useRouter()
   const [dataForm, setDataForm] = useState<FormData>()
   const isOnEditMode = !!payload
@@ -42,12 +40,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     display: 'flex',
     alignItems: 'center',
     width: '100%',
-  }
-
-  const initialValue = {
-    company_id: 'PP01',
-    credit_limit_before: 0,
-    valid_from: moment(now).format('YYYY-MM-DD'),
   }
 
   const onChangeForm = (form: string, value: any) => {
@@ -84,7 +76,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     } catch (error) {
       return false
     }
-    return true
   }
 
   const handleSubmit = async () => {
@@ -132,19 +123,41 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   useEffect(() => {
-    if (customerId != '' && validBefore != '') {
-      getDetailCreditLimit('PP01', customerId, validBefore).then((response) => {
-        setLimitBefore(response?.data?.credit_limit_after)
-        onChangeForm('credit_limit_before', parseInt(response?.data?.credit_limit_after))
-        form.setFieldsValue({
-          credit_limit_before: response?.data?.credit_limit_after?.toLocaleString() || 0,
-        })
+    if (isOnEditMode) {
+      form.setFieldsValue({
+        customer: `${payload?.customer_id} - ${payload?.customer_name_id}`,
+        credit_limit_before: payload?.credit_limit_before?.toLocaleString(),
+        credit_limit_after: payload?.credit_limit_after?.toLocaleString(),
+        valid_before: moment(payload?.valid_from),
+        valid_after: moment(payload?.valid_to),
+      })
+      setInitialValue({
+        credit_limit_after: payload.credit_limit_after,
+        new_valid_before: moment(payload?.valid_from).format('YYYY-MM-DD'),
+        new_valid_after: moment(payload?.valid_to).format('YYYY-MM-DD'),
       })
     }
-  }, [customerId, validBefore])
+  }, [payload, isOnEditMode])
 
   const content = (
     <>
+      {payload?.status === '02' && (
+        <div
+          key={1}
+          style={{
+            marginTop: 10,
+            color: '#FFF',
+            background: '#b40e0e',
+            borderRadius: 8,
+            padding: '8px 16px',
+            display: 'grid',
+            gridTemplateColumns: '30px 1fr',
+          }}
+        >
+          <ICExclamation />
+          <p>{payload?.reject_reason || '-'}</p>
+        </div>
+      )}
       <Form
         form={form}
         labelCol={{ span: 24 }}
@@ -178,7 +191,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fetchOptions={fieldCustomer}
             onChange={(val: any) => {
               onChangeForm('customer_id', val.value.split(' - ')[0])
-              setCustomerId(val.value.split(' - ')[0])
             }}
             disabled={isOnEditMode ? true : false}
           />
@@ -205,7 +217,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <InputNumber
             min={0}
             style={styleInputNumber}
-            value={limitbefore || 0}
+            value={dataForm?.credit_limit_before?.toLocaleString() || 0}
             placeholder="e.g 1.000.000"
             disabled
             onChange={(newVal) => {
@@ -275,7 +287,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             onChange={(val: any) => {
               onChangeForm('valid_from', moment(val).format('YYYY-MM-DD'))
               onChangeForm('new_valid_before', moment(val).format('YYYY-MM-DD'))
-              setvalidBefore(moment(val).format('YYYY-MM-DD'))
             }}
           />
         </Form.Item>
