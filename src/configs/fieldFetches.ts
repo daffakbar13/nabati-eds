@@ -41,6 +41,9 @@ import {
   getTransportationZone,
   getInco,
   getRules,
+  getCountry,
+  getCompanybyCountry,
+  getTaxbyCompany,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -1293,5 +1296,50 @@ export function fieldTransportationHelper(search = '', branch_id = '') {
       label: [driver_id, driver_name].join(' - '),
       value: driver_id,
     })),
+  )
+}
+
+export function fieldCountry(search = '') {
+  return getCountry().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldCompanybyCountry(search = '', country_id = '') {
+  return getCompanybyCountry(country_id).then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldTaxbyCompany(search = '', company_id = '') {
+  return getTaxbyCompany(company_id).then((result) =>
+    result.data
+      .filter(
+        ({ company_id, tax_name }) =>
+          company_id.toLowerCase().includes(search.toLowerCase()) ||
+          tax_name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .map(({ tax_name }) => ({
+        label: tax_name,
+        value: tax_name,
+      })),
   )
 }

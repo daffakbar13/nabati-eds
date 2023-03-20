@@ -42,7 +42,7 @@ export const updateConfigTaxRegulator = async (
   taxSubject: string,
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
+    method: METHODS.PUT,
     subUrl: `${url}/update/${taxSubject}`,
     overrideBaseUrl,
     data: params,
