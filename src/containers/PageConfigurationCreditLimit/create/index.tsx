@@ -240,7 +240,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             style={styleInputNumber}
             value={dataForm?.credit_limit_after?.toLocaleString() || 0}
             placeholder="e.g 1.000.000"
-            disabled={!isOnEditMode || payload?.status === '02' ? false : true}
+            disabled={validBefore != '' && customerId != '' ? false : true}
             onChange={(newVal) => {
               onChangeForm('credit_limit_after', newVal)
               form.setFieldsValue({
@@ -262,7 +262,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
-          initialValue={isOnEditMode ? moment(payload?.valid_from) : moment(now)}
         >
           <DatePickerInput
             required
@@ -270,7 +269,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fullWidth
             format={'DD-MMM-YYYY'}
             placeholder="Valid Before"
-            value={moment(now).format('YYYY-MM-DD')}
             disabled={!isOnEditMode || payload?.status === '02' ? false : true}
             onChange={(val: any) => {
               onChangeForm('valid_from', moment(val).format('YYYY-MM-DD'))
@@ -292,7 +290,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             </Text>
           }
           rules={[{ required: true }]}
-          initialValue={isOnEditMode ? moment(payload?.valid_to) : moment(now)}
         >
           <DatePickerInput
             required
@@ -300,7 +297,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fullWidth
             format={'DD-MMM-YYYY'}
             placeholder="Valid After"
-            disabled={!isOnEditMode || payload?.status === '02' ? false : true}
+            disabled={validBefore != '' && customerId != '' ? false : true}
             onChange={(val: any) => {
               onChangeForm('valid_to', moment(val).format('YYYY-MM-DD'))
               onChangeForm('new_valid_after', moment(val).format('YYYY-MM-DD'))
@@ -345,13 +342,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         style={{ marginTop: 0 }}
       >
         <Typography.Title level={3} style={{ margin: 0 }}>
-          {isOnEditMode ? (
-            <>
-              View Credit Limit <TaggedStatus status={payload?.status_name || ''} />
-            </>
-          ) : (
-            'Create Credit Limit'
-          )}
+          Create Credit Limit
         </Typography.Title>
 
         {typeof content === 'string' ? (
