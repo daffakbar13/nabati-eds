@@ -175,7 +175,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit Auto SO to DO?"
+        content={isOnEditMode ? "Are you sure want to update config Auto SO to DO?" : "Are you sure want to submit config Auto SO to DO?"}
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
