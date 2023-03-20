@@ -9,7 +9,7 @@ import {
   updateConfigSlocCompany,
 } from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldWeightGroup } from 'src/configs/fieldFetches'
 import {
   createRouteDetermination,
   updateRouteDetermination,
@@ -200,14 +200,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               }}
             />
           </Form.Item>
-          <Form.Item
-            style={{ marginTop: -12, marginBottom: 0 }}
-            name="transportation_group_id"
-            rules={[{ required: true }]}
-          >
+          <Form.Item style={{ marginTop: -12, marginBottom: 0 }} name="transportation_group_id">
             <DebounceSelect
               label={'Transportation Group'}
-              required
               type="select"
               placeholder="Type to Search"
               fetchOptions={fieldBranchAll}
@@ -216,13 +211,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               }}
             />
           </Form.Item>
-          <Form.Item name="weight_group_id" style={{ marginTop: -12, marginBottom: 0 }}>
+          <Form.Item style={{ marginTop: -12, marginBottom: 0 }} name="weight_group_id">
             <DebounceSelect
-              label="Weight Group"
-              type="input"
-              placeholder="e.g Weight Group"
+              label={'Weight Group'}
+              type="select"
+              placeholder="Type to Search"
+              fetchOptions={fieldWeightGroup}
               onChange={(val: any) => {
-                onChangeForm('weight_group_id', val.target.value)
+                onChangeForm('weight_group_id', val.value)
               }}
             />
           </Form.Item>

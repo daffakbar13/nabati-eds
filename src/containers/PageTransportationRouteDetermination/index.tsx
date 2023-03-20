@@ -44,7 +44,7 @@ export default function PageTransporationRouteDetermination() {
     data,
   })
 
-  const { searchProps } = useFilters(table, 'Search by id', ['id'])
+  const { searchProps } = useFilters(table, 'Search by ID, Name, Country ID', ['route_id'])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -91,7 +91,7 @@ export default function PageTransporationRouteDetermination() {
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.route_id} - ${item.description} - ${item.delivery_in_days}`)
+      textselected.push(`${item.route_id}`)
     })
 
     setSelectedDataText(textselected)

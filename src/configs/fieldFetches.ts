@@ -42,8 +42,7 @@ import {
   getInco,
   getRules,
   getCountry,
-  getCompanybyCountry,
-  getTaxbyCompany,
+  getWeightGroup,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -607,6 +606,34 @@ export function fieldRegion(search = '') {
       // .splice(0, 10)
       .map(({ id, country_id, name }) => ({
         label: [country_id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldCountry(search = '') {
+  return getCountry().then((result) =>
+    result.data
+      .filter(({ country_id }) => country_id.toLowerCase().includes(search.toLowerCase()))
+      // .splice(0, 10)
+      .map(({ id, country_id }) => ({
+        label: [country_id].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldWeightGroup(search = '') {
+  return getWeightGroup().then((result) =>
+    result.data
+      .filter(
+        ({ id, name }) =>
+          id.toLowerCase().includes(search.toLowerCase()) ||
+          description.toLowerCase().includes(search.toLowerCase()),
+      )
+      // .splice(0, 10)
+      .map(({ id, description }) => ({
+        label: [id, description].join(' - '),
         value: id,
       })),
   )
