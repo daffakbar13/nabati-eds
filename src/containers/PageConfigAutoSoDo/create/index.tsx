@@ -181,7 +181,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           handleCancel()
           router.push(`${PATH.LOGISTIC}/auto-so-to-do`)
         }}
-        successContent={(res: any) => 'Auto SO to DO has been successfully Updated'}
+        successContent={(res: any) =>
+          isOnEditMode
+            ? 'Auto SO to DO has been successfully Updated'
+            : 'Auto SO to DO has been successfully Created'
+        }
         successOkText="OK"
         width={432}
       />
