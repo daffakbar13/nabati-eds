@@ -74,3 +74,15 @@ export const updateStatus = async (
   })
   return response.data
 }
+
+export const deletemultipleTaxRegulator = async (
+  params: any,
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/multiple_delete`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}

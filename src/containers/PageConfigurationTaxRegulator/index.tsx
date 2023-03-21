@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, FloatAction, Modal } from 'src/components'
 import {
   getConfigTaxRegulatorList,
-  updateStatus,
+  deletemultipleTaxRegulator,
 } from 'src/api/logistic/configuration-tax-regulator'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
@@ -57,16 +57,33 @@ export default function PageConfigurationTaxRegulator() {
   ])
 
   const handleDeleteData = async () => {
-    // try {
-    //   const res = deleteMultpileSlocCompany({
-    //     delete_configs: selectedData,
-    //   })
-    //   return res
-    // } catch (error) {
-    //   return error
-    // }
-    return false
+    try {
+      const res = deletemultipleTaxRegulator({
+        deletes: selectedData,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
   }
+
+  useEffect(() => {
+    let textselected = []
+    const ArrayFiltered = dataTable.filter((dataAll) =>
+      table.state.selected.some((selected) => dataAll.idx === selected),
+    )
+
+    const DeletedData = ArrayFiltered.map((item: any) => {
+      textselected.push(`${item.company_id} - ${item.company_name} (${item.tax_name})`)
+      return {
+        company_id: item.company_id,
+        tax_subject: item.tax_subject,
+        country_id: item.country_id,
+      }
+    })
+    setSelectedDataText(textselected)
+    setSelectedData(DeletedData)
+  }, [table.state.selected])
 
   return (
     <>
@@ -132,7 +149,7 @@ export default function PageConfigurationTaxRegulator() {
         }}
         content={
           <>
-            Are you sure want delete this{' '}
+            Are you sure want delete this Tax Regulator{' '}
             {oneSelected ? (
               <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
