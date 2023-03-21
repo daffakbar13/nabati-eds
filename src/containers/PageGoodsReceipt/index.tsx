@@ -22,7 +22,7 @@ export default function PageGoodsReceipt() {
   })
 
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search By GR, PO, GI Number', [
-    'id',
+    'gr_number',
     'po_number',
     'gi_number',
   ])
