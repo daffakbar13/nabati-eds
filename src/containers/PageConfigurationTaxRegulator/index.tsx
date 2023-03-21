@@ -162,7 +162,7 @@ export default function PageConfigurationTaxRegulator() {
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Delete SLoc company has been success`}
+        successContent={(res: any) => `Delete Tax Regulator company has been success`}
         successOkText="OK"
         width={432}
       />
