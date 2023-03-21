@@ -236,6 +236,12 @@ export const menuSales = [
     icon: LogisticIcConfiguration,
     children: [
       {
+        key: 'general-setting',
+        title: 'General Setting',
+        content: () => 'General Setting',
+        onClick: () => Router.push(`${PATH.SALES}/general-setting`),
+      },
+      {
         key: 'auto-so-to-do',
         title: 'Auto SO to DO',
         content: () => 'Auto SO to DO',
