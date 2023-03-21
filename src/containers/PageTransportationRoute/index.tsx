@@ -43,7 +43,11 @@ export default function PageTransporationRoute() {
     data,
   })
 
-  const { searchProps } = useFilters(table, 'Search by id', ['id'])
+  const { searchProps } = useFilters(
+    table,
+    'Search by ID, identification, Mode of Transport, Shipping, etc',
+    ['id', 'identification, transportation_mode_id, shipment_type_id'],
+  )
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldCountry } from 'src/configs/fieldFetches'
 import { createTransportationRoute, updateTransportationRoute } from 'src/api/transportation/route'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
@@ -179,11 +179,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={10} />
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="factory_calendar">
           <DebounceSelect
+            type="select"
             label="Factory Calendar"
-            type="input"
-            placeholder="e.g Factory Calendar"
-            onChange={(val: any) => {
-              onChangeForm('factory_calendar', val.target.value)
+            value={dataForm?.factory_calendar}
+            placeholder="Type to search"
+            fetchOptions={fieldCountry}
+            onChange={(e: any) => {
+              onChangeForm('factory_calendar', e.value)
             }}
           />
         </Form.Item>
@@ -216,7 +218,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Route has been successfully Updated'}
+        successContent={(res: any) => (
+          <>
+            {isOnEditMode
+              ? 'Route has been successfully updated'
+              : 'Route has been successfully created'}
+          </>
+        )}
         successOkText="OK"
         width={432}
       />

@@ -175,7 +175,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Transportation group has been successfully Updated'}
+        successContent={(res: any) => (
+          <>
+            {isOnEditMode
+              ? 'Transportation Group has been successfully updated'
+              : 'Transportation Group has been successfully created'}
+          </>
+        )}
         successOkText="OK"
         width={432}
       />

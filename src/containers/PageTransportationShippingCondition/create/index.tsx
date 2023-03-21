@@ -195,7 +195,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Shipping condition has been successfully Updated'}
+        successContent={(res: any) => (
+          <>
+            {isOnEditMode
+              ? 'Shipping Condition has been successfully updated'
+              : 'Shipping Condition has been successfully created'}
+          </>
+        )}
         successOkText="OK"
         width={432}
       />

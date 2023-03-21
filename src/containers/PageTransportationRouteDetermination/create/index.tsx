@@ -263,7 +263,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Route Determination has been successfully Updated'}
+        successContent={(res: any) => (
+          <>
+            {isOnEditMode
+              ? 'Route Determination has been successfully updated'
+              : 'Route Determination has been successfully created'}
+          </>
+        )}
         successOkText="OK"
         width={432}
       />

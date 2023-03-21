@@ -181,7 +181,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Transportation zone has been successfully Updated'}
+        successContent={(res: any) => (
+          <>
+            {isOnEditMode
+              ? 'Transportation Zone has been successfully updated'
+              : 'Transportation Zone has been successfully created'}
+          </>
+        )}
         successOkText="OK"
         width={432}
       />
