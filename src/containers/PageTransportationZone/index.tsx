@@ -57,18 +57,32 @@ export default function PageTransportationZone() {
     content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
   }
 
+  // const handleDeleteData = async () => {
+  //   try {
+  //     await Promise.all(
+  //       table.state.selected.map((id, country_id) => {
+  //         deleteTransportationZone({ id, country_id }).then((res) => console.log(res))
+  //       }),
+  //     )
+  //     return true
+  //     // const res = deleteTransportationZone({
+  //     //   id: table.state.selected,
+  //     // })
+  //     // return res
+  //   } catch (error) {
+  //     return error
+  //   }
+  // }
+
   const handleDeleteData = async () => {
     try {
       await Promise.all(
         table.state.selected.map((id) => {
-          deleteTransportationZone({ id }).then((res) => console.log(res))
+          const country_id = table.state.data.find((item) => item.id === id).country_id
+          return deleteTransportationZone({ id, country_id }).then((res) => console.log(res))
         }),
       )
       return true
-      // const res = deleteTransportationZone({
-      //   id: table.state.selected,
-      // })
-      // return res
     } catch (error) {
       return error
     }
@@ -86,17 +100,17 @@ export default function PageTransportationZone() {
       return error
     }
   }
+
   useEffect(() => {
     let textselected = []
-    const ArrayFiltered = table.state.data.filter((dataAll) =>
-      table.state.selected.some((selected) => dataAll.id === selected),
-    )
-
-    const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.id} - ${item.name}`)
+    const DeletedData = table.state.selected.map((id) => {
+      const country_id = table.state.data.find((item) => item.id === id).country_id
+      return deleteTransportationZone({ id, country_id }).then(() => {
+        const item = table.state.data.find((item) => item.id === id)
+        if (item) textselected.push(`${item.id} - ${item.name}`)
+      })
     })
-
-    setSelectedDataText(textselected)
+    Promise.all(DeletedData).then(() => setSelectedDataText(textselected))
   }, [table.state.selected])
 
   const moreContent = (
