@@ -626,9 +626,7 @@ export const getCompanybyCountry = async (
   return response.data
 }
 
-export const getTaxbyCompany = async (
-  idCompany: string,
-): Promise<CommonDetailResponse<any>> => {
+export const getTaxbyCompany = async (idCompany: string): Promise<CommonDetailResponse<any>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `${BaseUrl2}${subUrl.getTaxbyCompany}/${idCompany}`,

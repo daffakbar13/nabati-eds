@@ -78,6 +78,7 @@ export default function PageTransportationZone() {
     try {
       const res = updateStatusTransportationZone({
         id: changeStatusPayload?.id,
+        country_id: changeStatusPayload?.country_id,
         is_active: changeStatusPayload?.is_active ? 0 : 1,
       })
       return res
