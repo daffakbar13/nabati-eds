@@ -41,20 +41,34 @@ export default function PageApproval() {
         },
       ])
     }
-  }, [table.state.data.length, statusButton])
+    // }, [table.state.data.length, statusButton])
+  }, [statusButton])
 
   useEffect(() => {
-    if (table?.state?.body?.filters.length === 0) {
+    if (!searchProps.value && table.state.data.length > 0) {
       setFilters([
         {
-          field: 'ecn.customer_id',
+          field: 'ecn.status_id',
           option: 'EQ',
-          from_value: '00',
+          from_value: statusButton,
           data_type: 'S',
         },
       ])
     }
-  }, [table?.state?.body])
+  }, [table.state.data.length])
+
+  // useEffect(() => {
+  //   if (table?.state?.body?.filters.length === 0) {
+  //     setFilters([
+  //       {
+  //         field: 'ecn.status_id',
+  //         option: 'EQ',
+  //         from_value: '00',
+  //         data_type: 'S',
+  //       },
+  //     ])
+  //   }
+  // }, [table?.state?.body])
 
   const handleChangeButtonStatus = (statusId: string) => {
     setStatusButton(statusId)
