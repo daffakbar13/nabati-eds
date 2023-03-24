@@ -114,7 +114,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item> */}
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
           <DebounceSelect
             type="select"
             label="Condition Type"
@@ -125,9 +125,19 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('cond_type_id', e.value)
             }}
           />
+        </Form.Item> */}
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
+          <DebounceSelect
+            label="Condition Type"
+            type="input"
+            placeholder="e.g Condition Type"
+            onChange={(val: any) => {
+              onChangeForm('cond_type_id', val.target.value)
+            }}
+          />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
           <DebounceSelect
             type="select"
             label="G/L Account"
@@ -136,6 +146,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             fetchOptions={fieldCountry}
             onChange={(e: any) => {
               onChangeForm('gl_account_id', e.value)
+            }}
+          />
+        </Form.Item> */}
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
+          <DebounceSelect
+            label="G/L Account"
+            type="input"
+            placeholder="e.g G/L Account"
+            onChange={(val: any) => {
+              onChangeForm('gl_account_id', val.target.value)
             }}
           />
         </Form.Item>
