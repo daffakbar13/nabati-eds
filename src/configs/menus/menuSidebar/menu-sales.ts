@@ -106,6 +106,26 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/approval`),
     ),
   ]),
+  CreateMenu('sfa', 'SFA Module', 'title'),
+  CreateMenu('call-plan', 'Call Plan', null, NabatiIcons.ICDollar, null, null, [
+    CreateMenu(
+      'call-plan-pattern',
+      'Call Plan Pattern',
+      null,
+      null,
+      () => 'Call Plan Pattern',
+      () => Router.push(`${PATH.SALES}/call-plan-pattern`),
+    ),
+    CreateMenu(
+      'call-plan-list',
+      'Call Plan List',
+      null,
+      null,
+      () => 'Call Plan List',
+      () => Router.push(`${PATH.SALES}/call-plan-list`),
+    ),
+  ]),
+  CreateMenu('general', 'General', 'title'),
   CreateMenu('master-data', 'Master Data', null, NabatiIcons.LogisticIcSwapHandling, null, null, [
     CreateMenu(
       'customer',
