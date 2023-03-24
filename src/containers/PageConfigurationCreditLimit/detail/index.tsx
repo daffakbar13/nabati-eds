@@ -132,6 +132,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         valid_after: moment(payload?.valid_to),
       })
       setInitialValue({
+        credit_limit_before: payload.credit_limit_before,
         credit_limit_after: payload.credit_limit_after,
         new_valid_before: moment(payload?.valid_from).format('YYYY-MM-DD'),
         new_valid_after: moment(payload?.valid_to).format('YYYY-MM-DD'),

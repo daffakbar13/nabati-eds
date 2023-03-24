@@ -38,7 +38,7 @@ export const createCreditLimit = async (payload: any) => {
 export const ApproveCreditLimit = async (payload: any) => {
   const response = await call({
     method: METHODS.PUT,
-    subUrl: `${url}/update/config_credit_limit`,
+    subUrl: `${url}/update_status_approval/config_credit_limit`,
     overrideBaseUrl,
     data: payload,
   })
