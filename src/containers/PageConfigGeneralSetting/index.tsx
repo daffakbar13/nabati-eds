@@ -1,12 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
-import { Card, Modal, Pagination, FloatAction } from 'src/components'
-import {
-  getListSOtoDO,
-  UpdateStatusSOtoDO,
-  DeleteSOtoDO,
-} from 'src/api/logistic/configuration-auto-so-to-do'
+import { Card, Modal, Pagination } from 'src/components'
+import { getListGeneralSetting, updateStatusGeneralSetting } from 'src/api/general-setting'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 import { PATH } from 'src/configs/menus'
@@ -17,9 +13,6 @@ export default function PageConfigurationSloc() {
   const router = useRouter()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
-  const [selectedData, setSelectedData] = useState([])
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [dataTable, setdataTable] = useState([])
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
@@ -34,74 +27,24 @@ export default function PageConfigurationSloc() {
   }
 
   const handleChangeStatus = async () => {
-    const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
+    const reqBody = {
+      company_id: changeStatusPayload.company_id,
+      id: changeStatusPayload.id,
+      is_active: changeStatusPayload.is_active == 1 ? 0 : 1,
+    }
     try {
-      return await UpdateStatusSOtoDO(
-        reqBody,
-        changeStatusPayload.company_id,
-        changeStatusPayload.create_from,
-      )
+      return await updateStatusGeneralSetting(reqBody)
     } catch (error) {
       return error
     }
   }
 
   const table = useTable({
-    funcApi: getListSOtoDO,
+    funcApi: getListGeneralSetting,
     columns: columns(goToDetailPage, onClickSwitch),
-    haveCheckBox: 'All',
   })
 
   const { searchProps } = useFilters(table, 'Search by Sales Org ID', ['id'])
-
-  const [selectedDataText, setSelectedDataText] = useState([])
-
-  const oneSelected = table.state.selected.length === 1
-  const firstSelected = selectedDataText?.[0]
-
-  const selectedText = {
-    text: oneSelected
-      ? firstSelected
-      : `${firstSelected}, +${table.state.selected.length - 1} more`,
-    content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
-  }
-
-  useEffect(() => {
-    let textselected = []
-    const ArrayFiltered = dataTable.filter((dataAll) =>
-      table.state.selected.some((selected) => dataAll.idx === selected),
-    )
-
-    const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.create_from} - ${item.notes}`)
-      return {
-        company_id: item.company_id,
-        create_from: item.create_from,
-      }
-    })
-
-    setSelectedDataText(textselected)
-    setSelectedData(DeletedData)
-  }, [table.state.selected])
-
-  useEffect(() => {
-    const dataApi = table.state.data.map((item: any, index) => ({
-      idx: index,
-      ...item,
-    }))
-    setdataTable(dataApi)
-  }, [table?.state?.data])
-
-  const handleDeleteData = async () => {
-    try {
-      const res = DeleteSOtoDO({
-        datas: selectedData,
-      })
-      return res
-    } catch (error) {
-      return error
-    }
-  }
 
   return (
     <>
@@ -122,31 +65,9 @@ export default function PageConfigurationSloc() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px', overflow: 'scroll' }}>
         <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} rowKey={'idx'} dataSource={dataTable} />
+          <Table {...table.state.tableProps} />
         </div>
         {table.state.total > 0 && <Pagination {...table.state.paginationProps} />}
-        {table.state.selected.length > 0 && (
-          <FloatAction>
-            <RowAntd justify="space-between" style={{ flexGrow: 1 }}>
-              <b style={{ lineHeight: '48px' }}>
-                {table.state.selected.length} General Setting are Selected
-              </b>
-              <RowAntd gutter={10}>
-                <ColAntd>
-                  <Button
-                    size="big"
-                    variant="tertiary"
-                    onClick={() => {
-                      setShowDeleteModal(true)
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </ColAntd>
-              </RowAntd>
-            </RowAntd>
-          </FloatAction>
-        )}
       </Card>
       <CreateModal
         visible={showCreateModal}
@@ -155,33 +76,6 @@ export default function PageConfigurationSloc() {
           setSelectedRow(null)
           setShowCreateModal(false)
         }}
-      />
-
-      <Modal
-        title={'Confirm Delete'}
-        open={showDeleteModal}
-        onOk={handleDeleteData}
-        onCancel={() => {
-          setShowDeleteModal(false)
-        }}
-        content={
-          <>
-            Are you sure to delete this General Setting{' '}
-            {oneSelected ? (
-              <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
-            ) : (
-              <Popover content={selectedText.content}>
-                {<span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>}
-              </Popover>
-            )}
-          </>
-        }
-        onOkSuccess={() => {
-          router.push(router.asPath)
-        }}
-        successContent={(res: any) => `Delete General Setting has been success`}
-        successOkText="OK"
-        width={432}
       />
 
       <Modal

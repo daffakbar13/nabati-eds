@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer, Text } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { CreateSOtoDO, updateSOtoDO } from 'src/api/logistic/configuration-auto-so-to-do'
+import { createGeneralSetting, updateGeneralSetting } from 'src/api/general-setting'
 import { fieldCompanyList } from 'src/configs/fieldFetches'
 
 interface FormData {
@@ -33,7 +33,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateSOtoDO(reqBody, payload.create_from)
+      const res = updateGeneralSetting(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -44,7 +44,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = CreateSOtoDO(reqBody)
+      const res = createGeneralSetting(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -77,9 +77,18 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     if (!isOnEditMode) return
     setInitialValue({
       company_id: payload.company_id,
-      create_from: payload.create_from,
-      partial_availability: payload.partial_availability,
-      notes: payload.notes,
+      id: payload.id,
+      description: payload.description,
+      value: payload.value,
+    })
+    form.setFieldsValue({
+      company: {
+        value: payload.company_id,
+        label: `${payload.company_id} - ${payload.company_name}`,
+      },
+      key: payload.id,
+      description: payload.description,
+      value: payload.value,
     })
   }, [isOnEditMode, payload])
 
@@ -104,8 +113,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             required
             type="select"
             fetchOptions={fieldCompanyList}
+            disabled={isOnEditMode}
             onChange={(val: any) => {
-              onChangeForm('company', val.value)
+              onChangeForm('company_id', val.value)
             }}
           />
         </Form.Item>
@@ -119,8 +129,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             label="Key"
             required
             type="input"
+            disabled={isOnEditMode}
             onChange={(val: any) => {
-              onChangeForm('key', val.target.value)
+              onChangeForm('id', val.target.value)
             }}
           />
         </Form.Item>

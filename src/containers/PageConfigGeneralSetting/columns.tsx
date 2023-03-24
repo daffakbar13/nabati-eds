@@ -11,28 +11,28 @@ export const columns = (
   }),
   addColumn({
     title: 'Company ID',
-    dataIndex: 'create_from',
+    dataIndex: 'company_id',
     sorter: true,
   }),
   addColumn({
     title: 'Company Name',
-    dataIndex: 'create_from',
+    dataIndex: 'company_name',
   }),
   addColumn({
     title: 'Key',
-    dataIndex: 'create_from',
+    dataIndex: 'id',
   }),
   addColumn({
     title: 'Description',
-    dataIndex: 'notes',
+    dataIndex: 'description',
   }),
   addColumn({
     title: 'Value',
-    dataIndex: 'notes',
+    dataIndex: 'value',
   }),
   addColumn({
     title: 'Active/Inactive',
-    dataIndex: 'status',
+    dataIndex: 'is_active',
     render: (text, record, index) => (
       <>
         <Switch
