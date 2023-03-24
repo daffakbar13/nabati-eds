@@ -18,11 +18,13 @@ import { PATH } from 'src/configs/menus'
 import { columns } from './columns'
 
 import CreateModal from './create'
+import DetailModal from './detail'
 
 export default function PageConfigSalesORGCustomerGroupMaterial() {
   const router = useRouter()
 
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showDetailModal, setShowDetailModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
   const [selectedData, setSelectedData] = useState([])
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
@@ -32,7 +34,7 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
-    setShowCreateModal(true)
+    setShowDetailModal(true)
   }
 
   const onClickSwitch = (a: boolean, rec: any) => {
@@ -212,6 +214,14 @@ export default function PageConfigSalesORGCustomerGroupMaterial() {
         close={() => {
           setSelectedRow(null)
           setShowCreateModal(false)
+        }}
+      />
+      <DetailModal
+        visible={showDetailModal}
+        payload={selectedRow || null}
+        close={() => {
+          setSelectedRow(null)
+          setShowDetailModal(false)
         }}
       />
     </>

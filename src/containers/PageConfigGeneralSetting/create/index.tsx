@@ -1,13 +1,11 @@
+import { Form } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer, Text } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { Radio } from 'antd'
-import { PATH } from 'src/configs/menus'
-
-import { fieldSalesOrganization } from 'src/configs/fieldFetches'
 import { CreateSOtoDO, updateSOtoDO } from 'src/api/logistic/configuration-auto-so-to-do'
+import { fieldCompanyList } from 'src/configs/fieldFetches'
 
 interface FormData {
   company_id: string
@@ -17,35 +15,17 @@ interface FormData {
 }
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
+  const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const router = useRouter()
-  const [valueRadio, setValueRadio] = useState(1)
   const [initialValue, setInitialValue] = useState<any>({ company_id: 'PP01' })
   const [dataForm, setDataForm] = useState<FormData>()
-
-  const [placeHolder, setPlaceHolder] = useState<FormData>()
   const isOnEditMode = !!payload
-
-  const optionsRadio = [
-    { label: 'Yes', value: 1 },
-    { label: 'No', value: 0 },
-  ]
-
-  const optionsCreateFrom = [
-    { label: 'EDS', value: 'EDS' },
-    { label: 'SFA', value: 'SFA' },
-    { label: 'eMitra', value: 'eMitra' },
-  ]
 
   const onChangeForm = (form: string, value: any) => {
     setDataForm((old) => ({ ...old, ...{ [form]: value } }))
   }
-
-  const changePlaceHolder = (form: string, value: any) => {
-    setPlaceHolder((old) => ({ ...old, ...{ [form]: value } }))
-  }
-
   const onClickSubmit = async () => {
     setConfirmModal(true)
   }
@@ -73,7 +53,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const handleSubmit = async () => {
-    setPlaceHolder(undefined)
     setDataForm(undefined)
     const reqBody = { ...initialValue, ...dataForm }
 
@@ -90,20 +69,12 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleCancel = () => {
     setConfirmModal(false)
-    setPlaceHolder(undefined)
     setDataForm(undefined)
     close()
   }
 
   useEffect(() => {
     if (!isOnEditMode) return
-    setValueRadio(payload.partial_availability)
-    setPlaceHolder({
-      company_id: payload.company_id,
-      create_from: payload.create_from,
-      partial_availability: payload.partial_availability,
-      notes: payload.notes,
-    })
     setInitialValue({
       company_id: payload.company_id,
       create_from: payload.create_from,
@@ -114,52 +85,79 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const content = (
     <>
-      <Spacer size={20} />
-      <DebounceSelect
-        label="Create From"
-        required
-        type="select"
-        options={optionsCreateFrom}
-        value={placeHolder?.create_from ? placeHolder.create_from : ''}
-        onChange={(val: any) => {
-          onChangeForm('create_from', val.value)
-          changePlaceHolder('create_from', val.label)
-        }}
-      />
-      <Spacer size={10} />
-      <Text
-        variant="headingSmall"
-        textAlign="center"
-        style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
+      <Form
+        form={form}
+        labelCol={{ span: 24 }}
+        wrapperCol={{ span: 24 }}
+        autoComplete="off"
+        requiredMark={false}
+        scrollToFirstError
       >
-        Partial Avability ?
-      </Text>
-      <Radio.Group
-        options={optionsRadio}
-        value={valueRadio}
-        onChange={(e: any) => {
-          setValueRadio(e.target.value)
-          onChangeForm('partial_availability', e.target.value)
-          changePlaceHolder('partial_availability', e.target.value)
-        }}
-      />
-      <Spacer size={10} />
-      <DebounceSelect
-        label="Notes"
-        type="input"
-        value={placeHolder?.notes ? placeHolder.notes : ''}
-        onChange={(e: any) => {
-          onChangeForm('notes', e.target.value)
-          changePlaceHolder('notes', e.target.value)
-        }}
-      />
+        <Spacer size={20} />
+        <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
+          name="company"
+          rules={[{ required: true }]}
+        >
+          <DebounceSelect
+            label="Company"
+            required
+            type="select"
+            fetchOptions={fieldCompanyList}
+            onChange={(val: any) => {
+              onChangeForm('company', val.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
+          name="key"
+          rules={[{ required: true }]}
+        >
+          <DebounceSelect
+            label="Key"
+            required
+            type="input"
+            onChange={(val: any) => {
+              onChangeForm('key', val.target.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
+          <DebounceSelect
+            label="Description"
+            type="input"
+            onChange={(val: any) => {
+              onChangeForm('description', val.target.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
+          name="value"
+          rules={[{ required: true }]}
+        >
+          <DebounceSelect
+            label="Value"
+            required
+            type="input"
+            onChange={(val: any) => {
+              onChangeForm('value', val.target.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+      </Form>
     </>
   )
 
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Detail Auto SO to DO' : 'Create Auto SO to DO'}
+        title={isOnEditMode ? 'View Detail General Setting' : 'Create General Setting'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
@@ -175,16 +173,20 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content={isOnEditMode ? "Are you sure want to update config Auto SO to DO?" : "Are you sure want to submit config Auto SO to DO?"}
+        content={
+          isOnEditMode
+            ? 'Are you sure want to update config General Setting?'
+            : 'Are you sure want to submit config General Setting?'
+        }
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.push(`${PATH.LOGISTIC}/auto-so-to-do`)
+          router.push(router.asPath)
         }}
         successContent={(res: any) =>
           isOnEditMode
-            ? 'Auto SO to DO has been successfully Updated'
-            : 'Auto SO to DO has been successfully Created'
+            ? 'General Setting has been successfully Updated'
+            : 'General Setting has been successfully Created'
         }
         successOkText="OK"
         width={432}

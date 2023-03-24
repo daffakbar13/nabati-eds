@@ -76,28 +76,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   useEffect(() => {
     // form.resetFields()
     if (!isOnEditMode) return
-    const fetchData = async () => {
-      try {
-        setLoading(true)
-        const res = await getConfigCompanyDetail(payload.company_id, payload.key)
-        form.setFieldsValue({
-          company_id: {
-            value: res?.data?.company_id,
-            label: `${res?.data?.company_id} - ${res?.data?.company_name}`,
-          },
-          console_group: res?.data?.console_group,
-          description: res?.data?.description,
-          key: res?.data?.key,
-          value: res?.data?.value,
-        })
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        return error
-      }
-    }
-
-    fetchData()
+    form.setFieldsValue({
+      company_id: {
+        value: payload?.company_id,
+        label: `${payload?.company_id} - ${payload?.company_name}`,
+      },
+      description: payload?.description,
+      key: payload?.key,
+      value: payload?.value,
+      console_group: payload?.console_group,
+    })
   }, [form, isOnEditMode, payload])
 
   const content = (

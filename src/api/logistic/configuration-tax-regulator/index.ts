@@ -42,7 +42,7 @@ export const updateConfigTaxRegulator = async (
   taxSubject: string,
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
+    method: METHODS.PUT,
     subUrl: `${url}/update/${taxSubject}`,
     overrideBaseUrl,
     data: params,
@@ -69,6 +69,18 @@ export const updateStatus = async (
   const response = await call({
     method: METHODS.PUT,
     subUrl: `${url}/update_sloc_company/status/${options.company_id}/${options.key}/${options.sloc_id}`,
+    overrideBaseUrl,
+    data: params,
+  })
+  return response.data
+}
+
+export const deletemultipleTaxRegulator = async (
+  params: any,
+): Promise<CommonListResponse<StockRealTime>> => {
+  const response = await call({
+    method: METHODS.PUT,
+    subUrl: `${url}/multiple_delete`,
     overrideBaseUrl,
     data: params,
   })

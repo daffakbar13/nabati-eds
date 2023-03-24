@@ -9,11 +9,12 @@ export const columns = (
     title: 'No',
     render: (text: string, record: any, index: number) => index + 1,
   }),
-  addColumn({
+  {
     title: 'ID',
     dataIndex: 'id',
-    sorter: true,
-  }),
+    width: 100,
+    sorter: (a, b) => a.id! - b.id!,
+  },
   addColumn({
     title: 'Description',
     dataIndex: 'description',

@@ -1,8 +1,5 @@
-import moment from 'moment'
 import { addColumn } from 'src/utils/createColumns'
 import { Button, Switch } from 'pink-lava-ui'
-import { Tag } from 'antd'
-import Link from 'src/components/Link'
 
 export const columns = (
   onClickDetail: (rec: any) => void,
@@ -11,29 +8,37 @@ export const columns = (
   addColumn({
     title: 'No',
     render: (text, record, index) => index + 1,
-    width: 55,
   }),
   addColumn({
     title: 'Company ID',
-    dataIndex: 'company_id',
+    dataIndex: 'create_from',
+    sorter: true,
   }),
   addColumn({
     title: 'Company Name',
-    dataIndex: 'company_name',
+    dataIndex: 'create_from',
   }),
   addColumn({
-    title: 'Console Group',
-    dataIndex: 'console_group',
+    title: 'Key',
+    dataIndex: 'create_from',
+  }),
+  addColumn({
+    title: 'Description',
+    dataIndex: 'notes',
   }),
   addColumn({
     title: 'Value',
-    dataIndex: 'value',
+    dataIndex: 'notes',
   }),
   addColumn({
     title: 'Active/Inactive',
+    dataIndex: 'status',
     render: (text, record, index) => (
       <>
-        <Switch checked={text} onChange={(bool: boolean) => onClickSwitch(bool, record)} />
+        <Switch
+          checked={text === 1 ? true : false}
+          onChange={(bool: boolean) => onClickSwitch(bool, record)}
+        />
       </>
     ),
   }),

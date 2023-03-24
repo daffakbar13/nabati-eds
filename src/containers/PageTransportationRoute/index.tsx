@@ -43,7 +43,11 @@ export default function PageTransporationRoute() {
     data,
   })
 
-  const { searchProps } = useFilters(table, 'Search by id', ['id'])
+  const { searchProps } = useFilters(
+    table,
+    'Search by ID, identification, Mode of Transport, Shipping, etc',
+    ['id', 'identification, transportation_mode_id, shipment_type_id'],
+  )
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -196,7 +200,7 @@ export default function PageTransporationRoute() {
         }}
         content={
           <>
-            Are you sure want Delete Transportation Route{' '}
+            Are you sure want Delete Route{' '}
             {oneSelected ? (
               <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
@@ -209,7 +213,7 @@ export default function PageTransporationRoute() {
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Transportation Route has been successfully deleted`}
+        successContent={(res: any) => `Route has been successfully deleted`}
         successOkText="OK"
         width={432}
       />

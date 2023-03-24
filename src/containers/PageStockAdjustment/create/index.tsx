@@ -50,6 +50,48 @@ export default function CreateStockAdjustment() {
     setShowSubmitModal(true)
   }
 
+  // const handleCreate = async () => {
+  //   const validateResponse = await ValidatefreezeSlocId(
+  //     {},
+  //     headerData.branch_id.value,
+  //     headerData.sloc_id.value,
+  //   )
+
+  //   if (validateResponse.data.is_freeze === false) {
+  //     const payload: any = {
+  //       branch_id: headerData.branch_id.value,
+  //       stock_doct_type: 'PIP',
+  //       material_doc_type: 'WA',
+  //       document_date: moment(headerData.document_date).format('YYYY-MM-DD'),
+  //       posting_date: moment(headerData.posting_date).format('YYYY-MM-DD'),
+  //       header_text: headerData.header_text,
+  //       sloc_id: headerData.sloc_id.value,
+  //       status_id: '00',
+  //       items: dataTable.length
+  //         ? dataTable.map((i) => ({
+  //             product_id: i.product_id,
+  //             large: i.large,
+  //             middle: i.middle,
+  //             small: i.small,
+  //             remarks: '',
+  //             batch: '',
+  //           }))
+  //         : [],
+  //     }
+  //     try {
+  //       const res = await createStockAdjustment(payload)
+  //       return res
+  //     } catch (error) {
+  //       const newLocal = false
+  //       return newLocal
+  //     }
+  //   } else {
+  //     setShowCekFreezeModal(true)
+  //     setShowSubmitModal(false)
+  //     return false
+  //   }
+  // }
+
   const handleCreate = async () => {
     const validateResponse = await ValidatefreezeSlocId(
       {},
@@ -68,13 +110,20 @@ export default function CreateStockAdjustment() {
         sloc_id: headerData.sloc_id.value,
         status_id: '00',
         items: dataTable.length
-          ? dataTable.map((i) => ({
-              product_id: i.product_id,
-              large: i.large,
-              middle: i.middle,
-              small: i.small,
-              remarks: '',
-              batch: '',
+          ? dataTable.map((item) => ({
+              product_id: item.product_id,
+              stock_unit: {
+                large: item.stock_unit.large,
+                middle: item.stock_unit.middle,
+                small: item.stock_unit.small,
+              },
+              qty_unit: {
+                large: item.qty_unit.large,
+                middle: item.qty_unit.middle,
+                small: item.qty_unit.small,
+              },
+              remarks: item.remarks || '',
+              batch: item.batch || '',
             }))
           : [],
       }
@@ -82,8 +131,7 @@ export default function CreateStockAdjustment() {
         const res = await createStockAdjustment(payload)
         return res
       } catch (error) {
-        const newLocal = false
-        return newLocal
+        return false
       }
     } else {
       setShowCekFreezeModal(true)

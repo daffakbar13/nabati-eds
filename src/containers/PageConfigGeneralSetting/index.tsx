@@ -1,44 +1,60 @@
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
-import { useState, useEffect } from 'react'
-import { Card, FloatAction, Modal } from 'src/components'
+import { Card, Modal, Pagination, FloatAction } from 'src/components'
 import {
-  getConfigTaxRegulatorList,
-  deletemultipleTaxRegulator,
-} from 'src/api/logistic/configuration-tax-regulator'
+  getListSOtoDO,
+  UpdateStatusSOtoDO,
+  DeleteSOtoDO,
+} from 'src/api/logistic/configuration-auto-so-to-do'
 import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
-
+import { PATH } from 'src/configs/menus'
 import CreateModal from './create'
-import Pagination from 'src/components/Pagination'
 import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
 
-export default function PageConfigurationTaxRegulator() {
+export default function PageConfigurationSloc() {
   const router = useRouter()
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
+  const [selectedData, setSelectedData] = useState([])
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [dataTable, setdataTable] = useState([])
-  const [selectedData, setSelectedData] = useState([])
-  const [selectedDataText, setSelectedDataText] = useState([])
 
   const goToDetailPage = (row: any) => {
     setSelectedRow(row)
     setShowCreateModal(true)
   }
+
+  const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
+  const [changeStatusPayload, setChangeStatusPayload] = useState(null)
+  const onClickSwitch = (a: boolean, rec: any) => {
+    setChangeStatusPayload(rec)
+    setShowChangeStatusModal(true)
+  }
+
+  const handleChangeStatus = async () => {
+    const reqBody = { status: changeStatusPayload.status ? 0 : 1 }
+    try {
+      return await UpdateStatusSOtoDO(
+        reqBody,
+        changeStatusPayload.company_id,
+        changeStatusPayload.create_from,
+      )
+    } catch (error) {
+      return error
+    }
+  }
+
   const table = useTable({
-    funcApi: getConfigTaxRegulatorList,
-    columns: columns(goToDetailPage),
+    funcApi: getListSOtoDO,
+    columns: columns(goToDetailPage, onClickSwitch),
     haveCheckBox: 'All',
   })
 
-  useEffect(() => {
-    const dataApi = table.state.data.map((item: any, index) => ({
-      idx: index,
-      ...item,
-    }))
-    setdataTable(dataApi)
-  }, [table?.state?.data])
+  const { searchProps } = useFilters(table, 'Search by Sales Org ID', ['id'])
+
+  const [selectedDataText, setSelectedDataText] = useState([])
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -50,23 +66,6 @@ export default function PageConfigurationTaxRegulator() {
     content: <div style={{ textAlign: 'center' }}>{selectedDataText.slice(1).join(', ')}</div>,
   }
 
-  const { searchProps } = useFilters(table, 'Search by Company, Key, SLoc, Description, etc', [
-    'company_id',
-    'tax_subject',
-    'tax_cl_material',
-  ])
-
-  const handleDeleteData = async () => {
-    try {
-      const res = deletemultipleTaxRegulator({
-        deletes: selectedData,
-      })
-      return res
-    } catch (error) {
-      return error
-    }
-  }
-
   useEffect(() => {
     let textselected = []
     const ArrayFiltered = dataTable.filter((dataAll) =>
@@ -74,20 +73,39 @@ export default function PageConfigurationTaxRegulator() {
     )
 
     const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.company_id} - ${item.company_name} (${item.tax_name})`)
+      textselected.push(`${item.create_from} - ${item.notes}`)
       return {
         company_id: item.company_id,
-        tax_subject: item.tax_subject,
-        country_id: item.country_id,
+        create_from: item.create_from,
       }
     })
+
     setSelectedDataText(textselected)
     setSelectedData(DeletedData)
   }, [table.state.selected])
 
+  useEffect(() => {
+    const dataApi = table.state.data.map((item: any, index) => ({
+      idx: index,
+      ...item,
+    }))
+    setdataTable(dataApi)
+  }, [table?.state?.data])
+
+  const handleDeleteData = async () => {
+    try {
+      const res = DeleteSOtoDO({
+        datas: selectedData,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
   return (
     <>
-      <Text variant={'h4'}>Tax Regulator</Text>
+      <Text variant={'h4'}>General Setting</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
@@ -111,7 +129,7 @@ export default function PageConfigurationTaxRegulator() {
           <FloatAction>
             <RowAntd justify="space-between" style={{ flexGrow: 1 }}>
               <b style={{ lineHeight: '48px' }}>
-                {table.state.selected.length} Tax Regulator group are Selected
+                {table.state.selected.length} General Setting are Selected
               </b>
               <RowAntd gutter={10}>
                 <ColAntd>
@@ -130,7 +148,6 @@ export default function PageConfigurationTaxRegulator() {
           </FloatAction>
         )}
       </Card>
-
       <CreateModal
         visible={showCreateModal}
         payload={selectedRow || null}
@@ -149,7 +166,7 @@ export default function PageConfigurationTaxRegulator() {
         }}
         content={
           <>
-            Are you sure want delete this Tax Regulator{' '}
+            Are you sure to delete this General Setting{' '}
             {oneSelected ? (
               <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
@@ -162,7 +179,26 @@ export default function PageConfigurationTaxRegulator() {
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Delete Tax Regulator company has been success`}
+        successContent={(res: any) => `Delete General Setting has been success`}
+        successOkText="OK"
+        width={432}
+      />
+
+      <Modal
+        title={'Confirm Submit'}
+        open={showChangeStatusModal}
+        onOk={handleChangeStatus}
+        onCancel={() => {
+          setShowChangeStatusModal(false)
+        }}
+        content={`Are you sure want to ${
+          changeStatusPayload?.status ? 'inactivate' : 'activate'
+        } this General Setting?`}
+        onOkSuccess={() => {
+          router.push(router.asPath)
+        }}
+        successContent={(res: any) => `General Setting Group has been successfully 
+          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
       />

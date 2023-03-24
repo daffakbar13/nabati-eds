@@ -1,9 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Search, Spacer, Text, Table, DatePickerInput, Button } from 'pink-lava-ui'
 import { Card, FloatAction, Loader, SmartFilter } from 'src/components'
 import useTable from 'src/hooks/useTable'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { downloadUndelivered, getUndeliveredDetail, getUndeliveredList } from 'src/api/undelivered'
+import {
+  downloadUndelivered,
+  getUndeliveredDetail,
+  getUndeliveredList,
+  getUndeliveredListMT,
+} from 'src/api/undelivered'
 import Pagination from 'src/components/Pagination'
 import { fieldSalesOrganization, fieldBranchAll, fieldCustomer } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
@@ -16,8 +21,9 @@ import ConfirmSuccessApprove from './alerts/ConfirmSuccessApprove'
 import ConfirmSuccessReject from './alerts/ConfirmSuccessReject'
 
 export default function PageUndelivered() {
+  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const table = useTable({
-    funcApi: getUndeliveredList,
+    funcApi: type === 'GT' ? getUndeliveredList : getUndeliveredListMT,
     // haveCheckBox: 'All',
     columns: TableUndelivered,
   })
@@ -26,7 +32,6 @@ export default function PageUndelivered() {
     'reject' | 'approve' | 'success-approve' | 'success-reject' | ''
   >('')
   const [proccessing, setProccessing] = React.useState('')
-  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const titlePage = useTitlePage('list')
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
   const statusOption = [
@@ -36,6 +41,16 @@ export default function PageUndelivered() {
     { label: 'Complete', value: 'Complete' },
     { label: 'Cancel', value: 'Cancel' },
   ]
+
+  useEffect(() => {
+    if (type === 'MT') {
+      table.handler.updateData([])
+      table.handler.getApi(getUndeliveredListMT)
+    } else {
+      table.handler.updateData([])
+      table.handler.getApi(getUndeliveredList)
+    }
+  }, [type])
 
   const handleCancelSelectedAction = () => {
     table.handler.handleSelected([])

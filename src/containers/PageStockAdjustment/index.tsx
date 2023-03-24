@@ -180,14 +180,14 @@ export default function PageStockAdjustment() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            {/* <div style={{ display: 'flex', alignItems: 'center' }}>
               <p style={{ fontWeight: 'bold', marginRight: 8 }}>Freeze Sloc?</p>
               <Switch
                 onChange={(e) => setFreezeModal(true)}
                 checked={freezeList.length > 0}
                 disabled={loading}
               />
-            </div>
+            </div> */}
             <Button
               size="big"
               variant="primary"

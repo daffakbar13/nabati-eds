@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldRegion } from 'src/configs/fieldFetches'
+import { fieldCountry } from 'src/configs/fieldFetches'
 import {
   createTransportationZone,
   updateTransportationZone,
@@ -146,7 +146,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             label="Country ID"
             value={dataForm?.country_id}
             placeholder="Type to search"
-            fetchOptions={fieldRegion}
+            fetchOptions={fieldCountry}
             onChange={(e: any) => {
               onChangeForm('country_id', e.value)
             }}
@@ -181,7 +181,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           handleCancel()
           router.push(router.asPath)
         }}
-        successContent={(res: any) => 'Transportation zone has been successfully Updated'}
+        successContent={(res: any) => (
+          <>
+            {isOnEditMode
+              ? 'Transportation Zone has been successfully updated'
+              : 'Transportation Zone has been successfully created'}
+          </>
+        )}
         successOkText="OK"
         width={432}
       />

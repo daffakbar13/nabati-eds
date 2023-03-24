@@ -2,22 +2,25 @@ import { Form } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
-import { Spacer } from 'pink-lava-ui'
+import { Spacer, DatePickerInput, Text as Textpinklava } from 'pink-lava-ui'
 import {
-  createConfigShippingType,
-  updateConfigShippingType,
-} from 'src/api/transportation/shipping-type'
+  createConfigTaxRegulator,
+  updateConfigTaxRegulator,
+} from 'src/api/logistic/configuration-tax-regulator'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldModeOfTransportation } from 'src/configs/fieldFetches'
+import moment from 'moment'
+import { fieldCompanybyCountry, fieldCountry, fieldTaxbyCompany } from 'src/configs/fieldFetches'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
   const [initialValue, setInitialValue] = useState<any>()
   const [form] = Form.useForm()
-  const router = useRouter()
+  const [countryId, setCountryId] = useState('')
+  const [companyId, setCompanyId] = useState('')
 
   const isOnEditMode = !!payload
 
@@ -28,7 +31,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateConfigShippingType(reqBody)
+      const res = updateConfigTaxRegulator(reqBody, payload.tax_subject)
       setLoading(false)
       return res
     } catch (error) {
@@ -39,7 +42,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createConfigShippingType(reqBody)
+      const res = createConfigTaxRegulator(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -69,7 +72,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleCancel = () => {
     if (dataForm) {
-      setConfirmCancelModal(true) 
+      setConfirmCancelModal(true)
     } else {
       setDataForm(null)
       setConfirmModal(false)
@@ -82,24 +85,53 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     if (!isOnEditMode) return
     const fetchData = async () => {
       form.setFieldsValue({
-        id: payload?.id || '',
-        description: payload?.description || '',
-        mode_of_transportation: {
-          value: payload?.transportation_mode_id,
-          label: [payload?.transportation_mode_id, payload?.transportation_mode_description].join(
-            ' - ',
-          ),
+        country: {
+          value: payload?.country_id,
+          label: [payload?.country_id, payload?.country_name].join(' - '),
         },
+        company: {
+          value: payload?.company_id,
+          label: [payload?.company_id, payload?.company_name].join(' - '),
+        },
+        tax_subject: payload?.tax_subject,
+        tax_cl_material: payload?.tax_cl_material,
+        tax_name: {
+          value: payload?.tax_name,
+          label: payload?.tax_name,
+        },
+        amount: payload?.amount,
+        valid_from: moment(payload?.valid_from),
+        valid_to: moment(payload?.valid_to),
       })
       setInitialValue({
-        id: payload?.id || '',
-        description: payload?.description || '',
-        transportation_mode_id: payload?.transportation_mode_id || '',
+        country_id: payload?.country_id,
+        company_id: payload?.company_id,
+        tax_subject: payload?.tax_subject,
+        tax_cl_material: payload?.tax_cl_material,
+        tax_name: payload?.tax_name,
+        amount: parseInt(payload?.amount),
+        valid_from: moment(payload?.valid_from).format('YYYY-MM-DD'),
+        valid_to: moment(payload?.valid_to).format('YYYY-MM-DD'),
       })
+      setCountryId(payload?.country_id)
+      setCompanyId(payload?.company_id)
     }
 
     fetchData()
   }, [form, isOnEditMode, payload])
+
+  function LabelRequired({ label }: { label: string }) {
+    return (
+      <Textpinklava
+        variant="headingSmall"
+        textAlign="center"
+        style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}
+      >
+        {label}
+        <span style={{ color: 'red' }}> *</span>
+      </Textpinklava>
+    )
+  }
 
   const content = (
     <>
@@ -122,9 +154,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             required
             type="select"
             placeholder="e.g country"
-            fetchOptions={(search) => fieldModeOfTransportation(search)}
+            fetchOptions={(search) => fieldCountry(search)}
             onChange={(val: any) => {
-              onChangeForm('country', val.value)
+              onChangeForm('country_id', val.value)
+              setCountryId(val.value)
             }}
           />
         </Form.Item>
@@ -139,9 +172,10 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             required
             type="select"
             placeholder="e.g company"
-            fetchOptions={(search) => fieldModeOfTransportation(search)}
+            fetchOptions={(search) => fieldCompanybyCountry(search, countryId)}
             onChange={(val: any) => {
-              onChangeForm('company', val.value)
+              onChangeForm('company_id', val.value)
+              setCompanyId(val.value)
             }}
           />
         </Form.Item>
@@ -188,12 +222,63 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             required
             type="select"
             placeholder="e.g company"
-            fetchOptions={(search) => fieldModeOfTransportation(search)}
+            fetchOptions={(search) => fieldTaxbyCompany(search, companyId)}
             onChange={(val: any) => {
               onChangeForm('tax_name', val.value)
             }}
           />
         </Form.Item>
+        <Spacer size={10} />
+        <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
+          name="amount"
+          rules={[{ required: true }]}
+        >
+          <DebounceSelect
+            label="Amount"
+            required
+            type="number"
+            placeholder="e.g Amount"
+            onChange={(val: any) => {
+              onChangeForm('amount', parseInt(val.target.value))
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <Form.Item
+            name="valid_from"
+            style={{ marginBottom: 0, paddingBottom: 0 }}
+            label={<LabelRequired label="Valid From" />}
+            rules={[{ required: true }]}
+          >
+            <DatePickerInput
+              style={{ height: 54, marginTop: -12 }}
+              fullWidth
+              label={''}
+              format={'DD-MMM-YYYY'}
+              onChange={(val: any) => {
+                onChangeForm('valid_from', moment(val).format('YYYY-MM-DD'))
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            name="valid_to"
+            style={{ marginBottom: 0, paddingBottom: 0 }}
+            label={<LabelRequired label="Valid To" />}
+            rules={[{ required: true }]}
+          >
+            <DatePickerInput
+              style={{ height: 54, marginTop: -12 }}
+              fullWidth
+              label={''}
+              format={'DD-MMM-YYYY'}
+              onChange={(val: any) => {
+                onChangeForm('valid_to', moment(val).format('YYYY-MM-DD'))
+              }}
+            />
+          </Form.Item>
+        </div>
       </Form>
     </>
   )

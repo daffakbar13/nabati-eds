@@ -27,7 +27,7 @@ export default function PageApproval() {
   const { searchProps, filters, setFilters } = useFilters(
     table,
     'Search by Id, Name, Sales Org, Sales Group, Branch, Channel, etc',
-    ['customer_id'],
+    ['ecn.customer_id'],
   )
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function PageApproval() {
     if (table?.state?.body?.filters.length === 0) {
       setFilters([
         {
-          field: 'ecn.status_id',
+          field: 'ecn.customer_id',
           option: 'EQ',
           from_value: '00',
           data_type: 'S',

@@ -10,8 +10,8 @@ export const columns = (onClickDetail: (rec: any) => void) => [
   }),
   addColumn({
     title: 'Country',
-    dataIndex: 'company_id',
-    render: (text, record, index) => '-',
+    dataIndex: 'country_id',
+    render: (text, record, index) => `${text || ''} - ${record.country_name || ''}`,
   }),
   addColumn({
     title: 'Company',
