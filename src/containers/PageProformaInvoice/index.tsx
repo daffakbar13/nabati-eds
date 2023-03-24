@@ -22,11 +22,10 @@ export default function PageProformaInvoice() {
     haveCheckBox: [{ rowKey: 'status', member: ['Delivery'] }],
     columns: TableBilling,
   })
-  const { oldfilters, searchProps, setFilters } = useFilters(table, 'Search Shipment ID')
+  const { oldfilters, searchProps, setFilters } = useFilters(table, 'Search by Shipment')
   const titlePage = useTitlePage('list')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [pending, setPending] = React.useState(0)
-  const [type, setType] = React.useState<'GT' | 'MT'>('GT')
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
   const hasData = table.state.total > 0
   const router = useRouter()
@@ -150,27 +149,6 @@ export default function PageProformaInvoice() {
       {pending > 0 && <Loader type="process" text="Wait For PGI Proforma Invoice" />}
       <Text variant={'h4'}>{titlePage}</Text>
       <Spacer size={20} />
-      <Row gutter={16}>
-        <Col>
-          <Button
-            size="big"
-            variant={type === 'GT' ? 'primary' : 'secondary'}
-            onClick={() => setType('GT')}
-          >
-            CASH
-          </Button>
-        </Col>
-        <Col>
-          <Button
-            size="big"
-            variant={type === 'MT' ? 'primary' : 'secondary'}
-            onClick={() => setType('MT')}
-          >
-            TOP
-          </Button>
-        </Col>
-      </Row>
-      <Spacer size={10} />
       <Card style={{ overflow: 'unset' }}>
         <Row style={{ justifyContent: 'space-between' }}>
           <Row style={{ gap: 16 }}>
