@@ -32,7 +32,7 @@ const ConfirmSuccessApprove: React.FC<Props> = ({ selectedItems, onOk }) => (
         }}
       >
         <div>
-          Shipment
+          Undelivere
           <Typography.Text copyable={{ text: selectedItems.join(',') as string }}>
             {' '}
             {selectedItems.join(', ')}
