@@ -109,18 +109,18 @@ export default function CreateStockAdjustment() {
         header_text: headerData.header_text,
         sloc_id: headerData.sloc_id.value,
         status_id: '00',
-        items: dataTable.length
-          ? dataTable.map((item) => ({
+        items: tableAddItems.data.length
+          ? tableAddItems.data.map((item) => ({
               product_id: item.product_id,
               stock_unit: {
-                large: item.stock_unit.large,
-                middle: item.stock_unit.middle,
-                small: item.stock_unit.small,
+                large: item.stock_l,
+                middle: item.stock_m,
+                small: item.stock_s,
               },
               qty_unit: {
-                large: item.qty_unit.large,
-                middle: item.qty_unit.middle,
-                small: item.qty_unit.small,
+                large: item.actual_l,
+                middle: item.actual_m,
+                small: item.actual_s,
               },
               remarks: item.remarks || '',
               batch: item.batch || '',
@@ -131,6 +131,7 @@ export default function CreateStockAdjustment() {
         const res = await createStockAdjustment(payload)
         return res
       } catch (error) {
+        console.log(error)
         return false
       }
     } else {
