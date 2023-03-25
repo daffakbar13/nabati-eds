@@ -250,11 +250,15 @@ export const getPricingByIdAndUom = async (
   return response.data
 }
 
-export const getReason = async (doc_category_id: string): Promise<CommonDetailResponse<any>> => {
+export const getReason = async (
+  doc_category_id: string = 'C',
+): Promise<CommonDetailResponse<any>> => {
+  console.log(doc_category_id)
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,
-    subUrl: subUrl.getReason + doc_category_id,
+    // subUrl: subUrl.getReason + doc_category_id ? doc_category_id : 'C',
+    subUrl: `v1/master/get-reason/PP01/${doc_category_id || 'C'}`,
   })
 
   return response.data
@@ -348,6 +352,25 @@ export const getVehicleByCompany = async (): Promise<CommonDetailResponse<any>> 
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getVehicleByCompany,
+  })
+
+  return response.data
+}
+
+export const getVehicle = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: 'v1/transportation/vehicles/list',
+    data: {
+      filters: [
+        {
+          field: 'status',
+          option: 'EQ',
+          from_value: true,
+        },
+      ],
+    },
   })
 
   return response.data

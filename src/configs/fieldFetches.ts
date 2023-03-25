@@ -45,6 +45,7 @@ import {
   getCountry,
   getCompanybyCountry,
   getTaxbyCompany,
+  getVehicle,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -549,6 +550,23 @@ export async function fieldVehicle(search: string) {
     )
 }
 
+export async function fieldVehicle_v2(search: string) {
+  return getVehicle().then((result) =>
+    result.data.results
+      .filter(
+        ({ vehicle_id, driver_name }) =>
+          vehicle_id.toLowerCase().includes(search.toLowerCase()) ||
+          driver_name.toLowerCase().includes(search.toLowerCase()),
+      )
+      .splice(0, 10)
+      .map(({ vehicle_id, driver_name, VehicleCubication }) => ({
+        key: VehicleCubication,
+        label: [vehicle_id, driver_name].join(' - '),
+        value: [vehicle_id, driver_name].join(' - '),
+      })),
+  )
+}
+
 export function fieldOrderType(doc_type: string, search = '') {
   return getDocTypeByCategory(doc_type).then((result) =>
     result.data
@@ -617,7 +635,7 @@ export function fieldWeightGroup(search = '') {
   return getWeightGroup().then((result) =>
     result.data
       .filter(
-        ({ id, name }) =>
+        ({ id, description }) =>
           id.toLowerCase().includes(search.toLowerCase()) ||
           description.toLowerCase().includes(search.toLowerCase()),
       )

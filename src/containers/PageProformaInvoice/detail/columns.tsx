@@ -8,10 +8,12 @@ export function Linked({
   link,
   status,
   type,
+  onUndelivered,
 }: {
   link: string
   status: string
   type: 'id' | 'action'
+  onUndelivered: () => any
 }) {
   const router = useRouter()
   const navigate = () => {
@@ -38,9 +40,14 @@ export function Linked({
           {link}
         </div>
       ) : (
-        <Button size="small" variant="tertiary" onClick={navigate}>
-          Delivered
-        </Button>
+        <div style={{ display: 'flex', gap: 5 }}>
+          <Button size="small" variant="primary" onClick={navigate}>
+            Delivered
+          </Button>
+          <Button size="small" variant="tertiary" onClick={onUndelivered}>
+            Undelivered
+          </Button>
+        </div>
       )}
     </>
   )

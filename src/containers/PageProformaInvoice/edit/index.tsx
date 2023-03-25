@@ -35,6 +35,7 @@ export function PageEdit() {
 
   useEffect(() => {
     if (window) {
+      // FIND EXISTING REVISED DATA
       const revised = JSON.parse(window.localStorage.getItem('revised')) || []
       const findData = revised.find((item) => item.delivery_order_id === router.query.id)
       if (findData && data) {
@@ -59,7 +60,9 @@ export function PageEdit() {
           product_id: item.product_id,
           product_name: item.product_name,
           remarks: item.remarks,
-          qty: item.revised_qty > 0 ? item.revised_qty : item.qty,
+          // qty: item.revised_qty > 0 ? item.revised_qty : item.qty,
+          qty: item.revised_qty,
+          status: item.revised_qty === item.qty ? 'Delivered' : 'Revised',
           uom_id: item.uom_id,
           // qtys: [
           //   {
