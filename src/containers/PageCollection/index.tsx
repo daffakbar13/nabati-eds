@@ -12,12 +12,13 @@ import { fieldSalesOrganization, fieldBranchAll, fieldCustomer } from 'src/confi
 import { TableBilling } from './columns'
 
 export default function PageCollection() {
+  const [type, setType] = useState<'GT' | 'MT'>('GT')
+
   const table = useTable({
     funcApi: getCollectionListGT,
     columns: TableBilling,
   })
   const titlePage = useTitlePage('list')
-  const [type, setType] = useState<'GT' | 'MT'>('GT')
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Shipment ID')
   const statusOption = [
     { label: 'All', value: null },
@@ -143,7 +144,7 @@ export default function PageCollection() {
       <Spacer size={10} />
       <Card style={{ padding: '16px 20px' }}>
         <div style={{ overflow: 'scroll' }}>
-          <Table {...table.state.tableProps} />
+          <Table {...table.state.tableProps} rowKey="shipment_id" />
         </div>
         {table.state.data.length > 0 && <Pagination {...table.state.paginationProps} />}
       </Card>
