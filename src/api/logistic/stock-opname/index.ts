@@ -68,6 +68,17 @@ export const getDetailStockOpname = async (
   return response.data
 }
 
+export const getPrint = async (
+  params: CommonDetailParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${url}/${params.id}/print`,
+  })
+  return response.data
+}
+
 export const createStockOpname = async (
   params: CommonListParams = {},
 ): Promise<CommonListResponse<StockRealTime>> => {

@@ -60,6 +60,10 @@ export default function UpdateStockOpname() {
     setShowSubmitModal(true)
   }
 
+  const navigate = () => {
+    router.push(`${PATH.LOGISTIC}/stock-opname/print/${router.query.id}`)
+  }
+
   const handleUpdate = async () => {
     const payload: any = {
       header_text: headerData.header_text,
@@ -156,7 +160,7 @@ export default function UpdateStockOpname() {
                   <Button size="big" variant="tertiary" onClick={() => setShowCancelModal(true)}>
                     Cancel Process
                   </Button>
-                  <Button size="big" variant="secondary">
+                  <Button size="big" variant="secondary" onClick={navigate}>
                     Print
                   </Button>
                   <Button size="big" variant="primary" onClick={onClickSubmit}>
