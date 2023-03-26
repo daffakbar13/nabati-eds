@@ -1,9 +1,10 @@
 import styled from 'styled-components'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Col, Row, Divider, Select, Radio } from 'antd'
 import { Card } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Picker } from '../elements'
+import moment from 'moment'
 
 const StyledSelect = styled(Select)`
   width: 102%;
@@ -18,9 +19,11 @@ const StyledSelect = styled(Select)`
 export default function FilterSection({
   dateFilter = true,
   selectFilter = true,
+  onDateChange,
 }: {
   dateFilter?: boolean
   selectFilter?: boolean
+  onDateChange?: (dates: any) => any
 }) {
   const [pickerType, setPickerTypeValue] = useState<'hour' | 'day' | 'week' | 'month'>('month')
   const arr = new Array(6)
@@ -43,7 +46,16 @@ export default function FilterSection({
             </Col>
 
             <Col span={8}>
-              <Picker type={pickerType} onChange={() => {}} />
+              <Picker
+                type={pickerType}
+                onChange={(date) => {
+                  if (date && date[0] && date[1]) {
+                    onDateChange(date)
+                  } else {
+                    onDateChange([moment().startOf('month'), moment().endOf('month')])
+                  }
+                }}
+              />
             </Col>
           </Row>
         )}
