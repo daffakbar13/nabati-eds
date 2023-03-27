@@ -124,6 +124,14 @@ export const menuSales = [
       () => 'Call Plan List',
       () => Router.push(`${PATH.SALES}/call-plan-list`),
     ),
+    CreateMenu(
+      'non-call-plan-list',
+      'Non Call Plan List',
+      null,
+      null,
+      () => 'Non Call Plan List',
+      () => Router.push(`${PATH.SALES}/non-call-plan-list`),
+    ),
   ]),
   CreateMenu('general', 'General', 'title'),
   CreateMenu('master-data', 'Master Data', null, NabatiIcons.LogisticIcSwapHandling, null, null, [
