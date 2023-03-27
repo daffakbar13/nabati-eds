@@ -53,8 +53,11 @@ export function PageEdit() {
     let currentListRevisedDelivery = JSON.parse(localStorage.getItem('revised')) || []
     const { id } = router.query
 
+    const isRevisedStatus = dataDeliveryOrder.filter((item) => item.revised_qty !== item.qty)
+
     const confirmData = {
       delivery_order_id: id,
+      status: isRevisedStatus.length > 0 ? 'Revised' : 'Delivered',
       items: dataDeliveryOrder.map((item) => {
         return {
           product_id: item.product_id,
@@ -62,7 +65,7 @@ export function PageEdit() {
           remarks: item.remarks,
           // qty: item.revised_qty > 0 ? item.revised_qty : item.qty,
           qty: item.revised_qty,
-          status: item.revised_qty === item.qty ? 'Delivered' : 'Revised',
+          // status: item.revised_qty === item.qty ? 'Delivered' : 'Revised',
           uom_id: item.uom_id,
           // qtys: [
           //   {
@@ -77,6 +80,7 @@ export function PageEdit() {
     if (currentListRevisedDelivery.find((item) => item.delivery_order_id === id)) {
       const newData = [...currentListRevisedDelivery]
       const index = newData.findIndex((item) => item.delivery_order_id === id)
+      newData[index].status = isRevisedStatus.length > 0 ? 'Revised' : 'Delivered'
       newData[index].items = confirmData.items
 
       currentListRevisedDelivery = newData
