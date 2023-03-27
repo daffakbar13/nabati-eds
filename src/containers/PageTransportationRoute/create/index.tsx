@@ -133,13 +133,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="name">
           <DebounceSelect
             label="Description"
             type="input"
             placeholder="e.g Description"
             onChange={(val: any) => {
-              onChangeForm('description', val.target.value)
+              onChangeForm('name', val.target.value)
             }}
           />
         </Form.Item>
