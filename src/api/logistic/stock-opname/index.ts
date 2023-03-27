@@ -33,25 +33,32 @@ export const getListApprovalStockOpname = async (
     method: METHODS.POST,
     subUrl: `${url}/list`,
     overrideBaseUrl,
-    data: {
-      filters: [
-        {
-          field: 'status_id',
-          option: 'NE',
-          from_value: '00',
-          data_type: 'S',
-        },
-        {
-          field: 'status_id',
-          option: 'NE',
-          from_value: '04',
-          data_type: 'S',
-        },
-        ...params.filters,
-      ],
-      limit: params.limit,
-      page: params.page,
-    },
+    data: params,
+    // data: {
+    //   filters: [
+    //     {
+    //       field: 'status_id',
+    //       option: 'EQ',
+    //       from_value: '03',
+    //       data_type: 'S',
+    //     },
+    //     {
+    //       field: 'status_id',
+    //       option: 'EQ',
+    //       from_value: '02',
+    //       data_type: 'S',
+    //     },
+    //     {
+    //       field: 'status_id',
+    //       option: 'EQ',
+    //       from_value: '05',
+    //       data_type: 'S',
+    //     },
+    //     ...params.filters,
+    //   ],
+    //   limit: params.limit,
+    //   page: params.page,
+    // },
   })
   return response.data
 }
@@ -64,6 +71,17 @@ export const getDetailStockOpname = async (
     subUrl: `${url}/${params.id}/detail`,
     overrideBaseUrl,
     data: { ...params, doc_type: 'WA' },
+  })
+  return response.data
+}
+
+export const getPrint = async (
+  params: CommonDetailParams = {},
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: `${url}/${params.id}/print`,
   })
   return response.data
 }

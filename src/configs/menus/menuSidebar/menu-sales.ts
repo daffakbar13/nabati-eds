@@ -270,6 +270,12 @@ export const menuSales = [
         onClick: () => Router.push(`${PATH.SALES}/general-setting`),
       },
       {
+        key: 'mapping-cond-to-gl',
+        title: 'Mapping Condition Type to GL Account',
+        content: () => 'Mapping Condition Type to GL Account',
+        onClick: () => Router.push(`${PATH.SALES}/mapping-cond-to-gl`),
+      },
+      {
         key: 'auto-so-to-do',
         title: 'Auto SO to DO',
         content: () => 'Auto SO to DO',

@@ -16,7 +16,7 @@ import {
 import { createShipment } from 'src/api/shipment'
 import TitleDataList from 'src/components/TitleDataList'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldVehicle } from 'src/configs/fieldFetches'
+import { fieldVehicle, fieldVehicle_v2 } from 'src/configs/fieldFetches'
 import { ICDelete } from 'src/assets'
 import { Card } from 'src/components'
 import { useSalesShipmentCreateContext } from '../states'
@@ -67,6 +67,7 @@ export default function SectionSelectedInformation() {
         type="select"
         value={dataForm?.vehicle_id as any}
         fetchOptions={fieldVehicle}
+        // fetchOptions={fieldVehicle_v2}
         onChange={(e) => {
           handleVehicleSize(parseInt(e.key.split('.').join(''), 10) / 1000)
           handleDataForm({ ...dataForm, vehicle_id: e.value })

@@ -1,11 +1,11 @@
 import { Form } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Modal, Text } from 'src/components'
+import { Modal } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll, fieldCountry } from 'src/configs/fieldFetches'
-import { createTransportationRoute, updateTransportationRoute } from 'src/api/transportation/route'
+import { fieldCountry } from 'src/configs/fieldFetches'
+import { createMappingCondToGL, updateMappingCondToGL } from 'src/api/mapping-cond-to-gl'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
@@ -17,30 +17,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const isOnEditMode = !!payload
 
-  // const initialValue = {
-  //   company_id: 'PP01',
-  //   credit_limit_before: 0,
-  // }
-
   useEffect(() => {
-    // form.resetFields()
     if (!isOnEditMode) return
     const fetchData = async () => {
       form.setFieldsValue({
-        description: payload?.description,
-        id: payload?.id,
-        identification: payload?.identification,
-        transportation_mode_id: payload?.transportation_mode_id,
-        shipment_type_id: payload?.shipment_type_id,
-        factory_calendar: payload?.factory_calendar,
+        cond_type_id: payload?.cond_type_id,
+        gl_account_id: payload?.gl_account_id,
       })
       setDataForm({
-        id: payload?.id,
-        description: payload?.description,
-        identification: payload?.identification,
-        transportation_mode_id: payload?.transportation_mode_id,
-        shipment_type_id: payload?.shipment_type_id,
-        factory_calendar: payload?.factory_calendar,
+        cond_type_id: payload?.cond_type_id,
+        gl_account_id: payload?.gl_account_id,
       })
     }
 
@@ -54,7 +40,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateTransportationRoute(reqBody)
+      const res = updateMappingCondToGL(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -65,7 +51,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createTransportationRoute(reqBody)
+      const res = createMappingCondToGL(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -75,8 +61,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   const handleSubmit = async () => {
     setDataForm(undefined)
-    // const reqBody = { ...initialValue, ...dataForm }
-    // const reqBody = isOnEditMode ? { ...{ id: payload?.id }, ...dataForm } : { ...dataForm }
     const reqBody = { ...dataForm }
 
     if (!isOnEditMode) {
@@ -117,75 +101,61 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         scrollToFirstError
       >
         <Spacer size={20} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="id"
-          rules={[{ required: true }]}
-        >
-          <DebounceSelect
-            label="ID"
-            required
-            type="input"
-            placeholder="e.g ID"
-            onChange={(val: any) => {
-              onChangeForm('id', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="name">
-          <DebounceSelect
-            label="Description"
-            type="input"
-            placeholder="e.g Description"
-            onChange={(val: any) => {
-              onChangeForm('name', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="identification">
-          <DebounceSelect
-            label="Identification"
-            type="input"
-            placeholder="e.g Identification"
-            onChange={(val: any) => {
-              onChangeForm('identification', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="transportation_mode_id">
-          <DebounceSelect
-            label="Mode of Transport"
-            type="input"
-            placeholder="e.g Mode of Transport"
-            onChange={(val: any) => {
-              onChangeForm('transportation_mode_id', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="shipment_type_id">
-          <DebounceSelect
-            label="Shipping Type"
-            type="input"
-            placeholder="e.g Shipping Type"
-            onChange={(val: any) => {
-              onChangeForm('shipment_type_id', val.target.value)
-            }}
-          />
-        </Form.Item>
-        <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="factory_calendar">
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="country_id">
           <DebounceSelect
             type="select"
-            label="Factory Calendar"
-            value={dataForm?.factory_calendar}
+            label="Country ID"
+            value={dataForm?.country_id}
             placeholder="Type to search"
             fetchOptions={fieldCountry}
             onChange={(e: any) => {
-              onChangeForm('factory_calendar', e.value)
+              onChangeForm('country_id', e.value)
+            }}
+          />
+        </Form.Item> */}
+        <Spacer size={10} />
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
+          <DebounceSelect
+            type="select"
+            label="Condition Type"
+            value={dataForm?.cond_type_id}
+            placeholder="Type to search"
+            fetchOptions={fieldCountry}
+            onChange={(e: any) => {
+              onChangeForm('cond_type_id', e.value)
+            }}
+          />
+        </Form.Item> */}
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
+          <DebounceSelect
+            label="Condition Type"
+            type="input"
+            placeholder="e.g Condition Type"
+            onChange={(val: any) => {
+              onChangeForm('cond_type_id', val.target.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
+          <DebounceSelect
+            type="select"
+            label="G/L Account"
+            value={dataForm?.gl_account_id}
+            placeholder="Type to search"
+            fetchOptions={fieldCountry}
+            onChange={(e: any) => {
+              onChangeForm('gl_account_id', e.value)
+            }}
+          />
+        </Form.Item> */}
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
+          <DebounceSelect
+            label="G/L Account"
+            type="input"
+            placeholder="e.g G/L Account"
+            onChange={(val: any) => {
+              onChangeForm('gl_account_id', val.target.value)
             }}
           />
         </Form.Item>
@@ -196,7 +166,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Route ' : 'Create Route'}
+        title={
+          isOnEditMode
+            ? 'View Condition Type to GL Account '
+            : 'Create Condition Type to GL Account'
+        }
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
@@ -212,7 +186,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit Route?"
+        content="Are you sure want to submit Condition Type?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
@@ -221,8 +195,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         successContent={(res: any) => (
           <>
             {isOnEditMode
-              ? 'Route has been successfully updated'
-              : 'Route has been successfully created'}
+              ? 'Condition Type has been successfully updated'
+              : 'Condition Type has been successfully created'}
           </>
         )}
         successOkText="OK"

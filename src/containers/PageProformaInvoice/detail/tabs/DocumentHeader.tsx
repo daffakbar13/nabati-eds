@@ -12,10 +12,12 @@ import { Linked } from '../columns'
 interface DocumentHeaderProps {
   data: any
   revisedDelivery: any[]
+  reason: string
+  onUndelivered: (delivery_order_id: string, delivery_date: string) => any
 }
 
 export default function DocumentHeader(props: DocumentHeaderProps) {
-  const { data, revisedDelivery } = props
+  const { data, revisedDelivery, reason, onUndelivered } = props
   const { proforma_invoice_detail, proforma_invoice_items_detail } = data
 
   const dataList = [
@@ -79,15 +81,26 @@ export default function DocumentHeader(props: DocumentHeaderProps) {
     addColumn({
       title: 'Status',
       dataIndex: 'status',
-      render: (_, { status, delivery_order_id }) =>
+      render: (_, { status, delivery_order_id, delivery_date }) =>
         revisedDelivery.find((item) => item.delivery_order_id === delivery_order_id)
-          ? 'Revised'
+          ? revisedDelivery.find((item) => item.delivery_order_id === delivery_order_id)?.items[0]
+              ?.status || status
           : status,
     }),
     addColumn({
+      title: 'Undelivered Reason',
+      dataIndex: 'undelivered_reason_name',
+      render: (_, { status }) => (reason ? reason : ''),
+    }),
+    addColumn({
       title: 'Action',
-      render: (_, { delivery_order_id, status }) => (
-        <Linked link={delivery_order_id} status={status} type="action" />
+      render: (_, { delivery_order_id, delivery_date, status }) => (
+        <Linked
+          link={delivery_order_id}
+          status={status}
+          type="action"
+          onUndelivered={() => onUndelivered(delivery_order_id, delivery_date)}
+        />
       ),
     }),
   ]
@@ -114,6 +127,7 @@ export default function DocumentHeader(props: DocumentHeaderProps) {
       <Divider />
       <div style={{ overflow: 'scroll' }}>
         <Table
+          rowKey="delivery_order_id"
           columns={TableDocumentHeader}
           dataSource={proforma_invoice_items_detail}
           scroll={{ x: 'max-content' }}

@@ -31,7 +31,11 @@ export default function PageStockAdjustment() {
 
   const hasData = table.state.total > 0
 
-  const { filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(table)
+  const { searchProps, filters, oldfilters, setFilters, filterId, setFilterId } = useFilters(
+    table,
+    'Search by Doc. Reff. Number',
+    ['id', 'reference_id'],
+  )
 
   const [freezeList, setFreezeList] = useState([])
   useEffect(() => {
@@ -74,6 +78,7 @@ export default function PageStockAdjustment() {
         <Row justifyContent="space-between">
           <Row gap="16px">
             <Search
+              // {...searchProps}
               autofocus
               width="380px"
               nameIcon="SearchOutlined"

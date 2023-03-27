@@ -49,7 +49,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
         product_name,
         uom_id: dataQtys?.uom_id || uom_id || '',
         qty: dataQtys?.qty || qty || 0,
-        revised_qty: 0,
+        revised_qty: dataQtys?.qty || qty || 0,
         remarks: '',
       }
     })

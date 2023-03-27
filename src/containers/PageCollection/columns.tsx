@@ -85,9 +85,15 @@ export const TableBilling = [
   }),
   addColumn({
     title: 'Status',
-    render: (_, { status }) => (
-      <TaggedStatus status={status === 'PGI Complete' ? 'Billing Created' : status} />
-    ),
+    render: (_, { status, sales_org }) => {
+      let state = status
+      if (sales_org?.includes('MT')) {
+        if (status === 'PGI Complete' || status === 'Billing Created') {
+          state = 'Unpaid'
+        }
+      }
+      return <TaggedStatus status={state} />
+    },
   }),
   addColumn({
     title: 'Action',

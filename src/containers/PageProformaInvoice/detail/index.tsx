@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Col, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
+import DebounceSelect from 'src/components/DebounceSelect'
 import { Tabs, Typography } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
 import { useDetail } from 'src/hooks'
@@ -23,14 +24,23 @@ import {
   getProformaInvoiceHph,
   PGIProformaInvoice,
 } from 'src/api/proforma-invoice'
+import { fieldReason } from 'src/configs/fieldFetches'
+import { confirmUndelivered } from 'src/api/undelivered'
 
 export default function PageShipmentDetail() {
   const titlePage = useTitlePage('detail')
   const [currentTab, setCurrentTab] = React.useState('1')
-  const [showConfirm, setShowConfirm] = React.useState<'pgi' | 'success-pgi' | ''>('')
+  const [showConfirm, setShowConfirm] = React.useState<
+    'pgi' | 'success-pgi' | 'undelivered' | 'success-undelivered' | ''
+  >('')
+  const [reason, setReason] = useState('')
+  const [reasonName, setReasonName] = useState('')
   const [processing, setProcessing] = React.useState('')
   const [revisedDelivery, setRevisedDelivery] = useState([])
+  const [undeliveredOrderId, setUndeliveredOrderId] = useState('')
+  const [deliveryDate, setDeliveryDate] = useState('')
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
+
   const router = useRouter()
   const data = useDetail(getDetailProformaInvoiceByShipment, { id: router.query.id as string })
   const dataBpb = useDetail(getProformaInvoiceBpb, { id: router.query.id as string })
@@ -101,7 +111,7 @@ export default function PageShipmentDetail() {
               // )
               return (
                 data?.proforma_invoice_items_detail
-                  .map((revised) => revised.delivery_order_id)
+                  ?.map((revised) => revised.delivery_order_id)
                   .indexOf(item.delivery_order_id) !== -1
               )
             })
@@ -136,10 +146,22 @@ export default function PageShipmentDetail() {
               )
             }
 
-            // console.log(revisedData)
             const payload = {
               posting_date: postingDate,
-              confirm_delivery_orders: revisedData,
+              confirm_delivery_orders: revisedData.map((item) => {
+                return {
+                  delivery_order_id: item.delivery_order_id,
+                  is_delivered: reasonName ? 1 : 0,
+                  cancelation_reason_name: reason.split(' - ')[1] || '',
+                  cancelation_reason_id: reason.split(' - ')[0] || '',
+                  items: item.items.map((element) => ({
+                    product_id: element.product_id,
+                    remarks: element.remarks || '',
+                    qty: element.qty,
+                    uom_id: element.uom_id,
+                  })),
+                }
+              }),
             }
 
             await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -199,6 +221,98 @@ export default function PageShipmentDetail() {
           has been
         </div>
         <div>successfully submitted</div>
+      </div>
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/proforma-invoice`)
+          }}
+        >
+          OK
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmUndelivered = () => (
+    <Popup
+      onOutsideClick={() => {
+        setShowConfirm('')
+      }}
+    >
+      <Typography.Title level={3} style={{ margin: 0 }}>
+        Confirm Undelivered
+      </Typography.Title>
+      <DebounceSelect
+        type="select"
+        label="Reason"
+        required
+        fetchOptions={fieldReason}
+        value={reason}
+        onChange={(e: any) => {
+          setReason(`${e.value} - ${e.label}`)
+        }}
+      />
+      <div style={{ display: 'flex', gap: 10 }}>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="secondary"
+          onClick={() => {
+            setShowConfirm('')
+          }}
+        >
+          No
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={async () => {
+            console.log(reason)
+            setReasonName(reason.split(' - ')[1] || '')
+            // setReason('')
+            setShowConfirm('')
+          }}
+        >
+          Yes
+        </Button>
+      </div>
+    </Popup>
+  )
+
+  const ConfirmSuccessUndelivered = () => (
+    <Popup>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Text
+          textAlign="center"
+          style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
+        >
+          <>
+            <CheckCircleFilled /> Undelivered Success
+          </>
+        </Text>
+      </div>
+      <div
+        style={{
+          display: 'flex',
+          gap: 4,
+          fontWeight: 'bold',
+          flexDirection: 'column',
+          textAlign: 'center',
+        }}
+      >
+        <div>
+          Proforma Invoice
+          <Typography.Text copyable={{ text: router.query.id as string }}>
+            {router.query.id}
+          </Typography.Text>
+          has been
+        </div>
+        <div>successfully undelivered</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -282,7 +396,16 @@ export default function PageShipmentDetail() {
         {hasData && (
           <>
             {currentTab === '1' ? (
-              <DocumentHeader data={data} revisedDelivery={revisedDelivery} />
+              <DocumentHeader
+                data={data}
+                revisedDelivery={revisedDelivery}
+                reason={reasonName}
+                onUndelivered={(delivery_order_id, delivery_date) => {
+                  setShowConfirm('undelivered')
+                  setUndeliveredOrderId(delivery_order_id as string)
+                  setDeliveryDate(delivery_date)
+                }}
+              />
             ) : (
               <div
                 style={{
@@ -306,6 +429,8 @@ export default function PageShipmentDetail() {
       </Card>
       {showConfirm === 'pgi' && <ConfirmPGI />}
       {showConfirm === 'success-pgi' && <ConfirmSuccessPGI />}
+      {showConfirm === 'undelivered' && <ConfirmUndelivered />}
+      {showConfirm === 'success-undelivered' && <ConfirmSuccessUndelivered />}
     </Col>
   )
 }

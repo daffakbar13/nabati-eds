@@ -32,7 +32,7 @@ const ConfirmSuccessReschedule: React.FC<Props> = ({ selectedItems, onOk }) => (
         }}
       >
         <div>
-          Shipment
+          Undelivere
           <Typography.Text copyable={{ text: selectedItems.join(',') }}>
             {' '}
             {selectedItems.join(', ')}
