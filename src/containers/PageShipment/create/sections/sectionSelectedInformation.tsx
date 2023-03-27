@@ -69,7 +69,7 @@ export default function SectionSelectedInformation() {
         // fetchOptions={fieldVehicle}
         fetchOptions={fieldVehicle_v2}
         onChange={(e) => {
-          handleVehicleSize(parseInt(e.key.toString().split('.').join(''), 10) / 1000)
+          handleVehicleSize(parseInt(e.key.toString().split('.').join(''), 10))
           handleDataForm({ ...dataForm, vehicle_id: e.value })
         }}
       />
