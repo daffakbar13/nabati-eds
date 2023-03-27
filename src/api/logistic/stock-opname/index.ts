@@ -33,25 +33,32 @@ export const getListApprovalStockOpname = async (
     method: METHODS.POST,
     subUrl: `${url}/list`,
     overrideBaseUrl,
-    data: {
-      filters: [
-        {
-          field: 'status_id',
-          option: 'NE',
-          from_value: '00',
-          data_type: 'S',
-        },
-        {
-          field: 'status_id',
-          option: 'NE',
-          from_value: '04',
-          data_type: 'S',
-        },
-        ...params.filters,
-      ],
-      limit: params.limit,
-      page: params.page,
-    },
+    data: params,
+    // data: {
+    //   filters: [
+    //     {
+    //       field: 'status_id',
+    //       option: 'EQ',
+    //       from_value: '03',
+    //       data_type: 'S',
+    //     },
+    //     {
+    //       field: 'status_id',
+    //       option: 'EQ',
+    //       from_value: '02',
+    //       data_type: 'S',
+    //     },
+    //     {
+    //       field: 'status_id',
+    //       option: 'EQ',
+    //       from_value: '05',
+    //       data_type: 'S',
+    //     },
+    //     ...params.filters,
+    //   ],
+    //   limit: params.limit,
+    //   page: params.page,
+    // },
   })
   return response.data
 }

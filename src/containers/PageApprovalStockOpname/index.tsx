@@ -15,7 +15,7 @@ import {
 import { PATH } from 'src/configs/menus'
 import { ExclamationBrownIc } from 'src/assets'
 
-import { getListStockAdjustment, checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
+import { checkIsFreezeList } from 'src/api/logistic/stock-adjustment'
 import { useTable, useFilters } from 'src/hooks'
 import { colors } from 'src/configs/colors'
 
@@ -76,11 +76,28 @@ export default function PageApprovalStockOpname() {
     fetch()
   }, [])
 
+  const [selectedStatus, setSelectedStatus] = useState(null)
   const optionsStatus = [
     { label: 'Wait Approval Opname', value: '02' },
     { label: 'Approve', value: '03' },
     { label: 'Rejected', value: '05' },
   ]
+
+  useEffect(() => {
+    let newFilters = []
+    if (selectedStatus) {
+      newFilters = [
+        { field: 'status_id', option: 'EQ', from_value: selectedStatus, data_type: 'S' },
+      ]
+    } else {
+      newFilters = [
+        { field: 'status_id', option: 'EQ', from_value: '03', data_type: 'S' },
+        { field: 'status_id', option: 'EQ', from_value: '02', data_type: 'S' },
+        { field: 'status_id', option: 'EQ', from_value: '05', data_type: 'S' },
+      ]
+    }
+    setFilters(newFilters)
+  }, [selectedStatus])
 
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')
@@ -262,8 +279,13 @@ export default function PageApprovalStockOpname() {
                 label="Status"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <Select options={optionsStatus} />
-                <Select options={optionsStatus} />
+                {/* <Select options={optionsStatus} />
+                <Select options={optionsStatus} /> */}
+                <Select
+                  options={optionsStatus}
+                  value={selectedStatus}
+                  // onChange={(value) => setSelectedStatus(value)}
+                />
               </SmartFilter.Field>
             </SmartFilter>
           </Row>
