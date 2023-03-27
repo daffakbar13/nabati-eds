@@ -5,8 +5,30 @@ import { useEffect, useState } from 'react'
 import { getDashboard } from 'src/api/sales-dashboard'
 import { Card, Loader } from 'src/components'
 import { FilterSection } from './components'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Line, Bar } from 'react-chartjs-2'
 
 export default function Main() {
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+  )
   const startOfMonth = moment().startOf('month')
   const endOfMonth = moment().endOf('month')
 
@@ -36,6 +58,58 @@ export default function Main() {
       })
       .catch((err) => setShowLoader(false))
   }, [selectedDates])
+
+  const data = {
+    labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    datasets: [
+      {
+        label: 'My First Dataset',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+      },
+    ],
+  }
+
+  const dataROA = {
+    labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    datasets: [
+      {
+        label: 'My First Dataset',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        fill: false,
+        borderColor: 'rgb(235 0 139)',
+        tension: 0.1,
+      },
+    ],
+  }
+
+  const dataSalesByProduct = {
+    labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    datasets: [
+      {
+        label: 'My First Dataset',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        fill: false,
+        backgroundColor: 'rgb(170 229 234)',
+        tension: 0.1,
+      },
+    ],
+  }
+
+  const datadropSize = {
+    labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    datasets: [
+      {
+        label: 'My First Dataset',
+        data: [65, 59, 80, 81, 56, 55, 40],
+        fill: false,
+        borderColor: 'rgb(1 168 98)',
+        tension: 0.1,
+      },
+    ],
+  }
 
   return (
     <>
@@ -458,6 +532,118 @@ export default function Main() {
             </Col>
           </Row>
         </Card>
+        <Row gutter={8} wrap={false}>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Revenue</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Radio.Group defaultValue={'Day'} size="middle">
+                    <Radio.Button value="Day" style={{ borderRadius: '16px 0 0 16px' }}>
+                      <b>Day</b>
+                    </Radio.Button>
+                    <Radio.Button value="Week">
+                      <b>Week</b>
+                    </Radio.Button>
+                    <Radio.Button value="Month">
+                      <b>Month</b>
+                    </Radio.Button>
+                  </Radio.Group>
+                </Col>
+                <Line data={data} />
+              </Row>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Customer (ROA)</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Radio.Group defaultValue={'Day'} size="middle">
+                    <Radio.Button value="Day" style={{ borderRadius: '16px 0 0 16px' }}>
+                      <b>Day</b>
+                    </Radio.Button>
+                    <Radio.Button value="Week">
+                      <b>Week</b>
+                    </Radio.Button>
+                    <Radio.Button value="Month">
+                      <b>Month</b>
+                    </Radio.Button>
+                  </Radio.Group>
+                </Col>
+                <Line data={dataROA} />
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+        <Row gutter={8} wrap={false}>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Sales By Product</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Radio.Group defaultValue={'Day'} size="middle">
+                    <Radio.Button value="Day" style={{ borderRadius: '16px 0 0 16px' }}>
+                      <b>Day</b>
+                    </Radio.Button>
+                    <Radio.Button value="Week">
+                      <b>Week</b>
+                    </Radio.Button>
+                    <Radio.Button value="Month">
+                      <b>Month</b>
+                    </Radio.Button>
+                  </Radio.Group>
+                </Col>
+                <Bar data={dataSalesByProduct} />
+              </Row>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Dropsize</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Radio.Group defaultValue={'Day'} size="middle">
+                    <Radio.Button value="Day" style={{ borderRadius: '16px 0 0 16px' }}>
+                      <b>Day</b>
+                    </Radio.Button>
+                    <Radio.Button value="Week">
+                      <b>Week</b>
+                    </Radio.Button>
+                    <Radio.Button value="Month">
+                      <b>Month</b>
+                    </Radio.Button>
+                  </Radio.Group>
+                </Col>
+                <Line data={datadropSize} />
+              </Row>
+            </Card>
+          </Col>
+        </Row>
       </div>
     </>
   )
