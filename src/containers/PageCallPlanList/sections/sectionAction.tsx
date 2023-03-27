@@ -9,9 +9,7 @@ export default function SectionAction() {
   const {
     state: { table },
   } = useSalesQuotationListContext()
-  const { searchProps } = useFilters(table, 'Salesman ID, Customer ID, Company ID, etc', [
-    'eds_order.id',
-  ])
+  const { searchProps } = useFilters(table, 'Salesman ID, Customer ID, etc', ['eds_order.id'])
   // const router = useRouter()
 
   return (
@@ -46,7 +44,7 @@ export default function SectionAction() {
             variant="primary"
             // onClick={() => router.push(`${router.pathname}/create`)}
           >
-            Create New
+            Generate
           </Button>
         </Col>
       </Row>
