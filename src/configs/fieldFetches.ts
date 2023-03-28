@@ -559,8 +559,8 @@ export async function fieldVehicle_v2(search: string) {
           driver_name.toLowerCase().includes(search.toLowerCase()),
       )
       .splice(0, 10)
-      .map(({ vehicle_id, driver_name, VehicleCubication }) => ({
-        key: VehicleCubication,
+      .map(({ vehicle_id, driver_name, vehicle_cubication }) => ({
+        key: vehicle_cubication,
         label: [vehicle_id, driver_name].join(' - '),
         value: [vehicle_id, driver_name].join(' - '),
       })),

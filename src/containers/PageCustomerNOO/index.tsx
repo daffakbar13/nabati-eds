@@ -25,7 +25,7 @@ export default function PageCustomer() {
   const titlePage = useTitlePage('list')
 
   const { filters, setFilters, searchProps } = useFilters(table, 'Search Customer ID', [
-    'customer_id',
+    'ecn.customer_id',
   ])
 
   const router = useRouter()
