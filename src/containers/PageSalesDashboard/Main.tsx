@@ -4,7 +4,11 @@ import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { getDashboard } from 'src/api/sales-dashboard'
 import { Card, Loader } from 'src/components'
-import { FilterSection } from './components'
+import { FilterSection, ChartStatusOrder } from './components'
+import { Button, Modal, Spacer, Text, Table } from 'pink-lava-ui'
+import { ICFilter } from 'src/assets'
+import DebounceSelect from 'src/components/DebounceSelect'
+import { useTable } from 'src/hooks'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,8 +19,12 @@ import {
   Title,
   Tooltip,
   Legend,
+  Filler,
+  ScriptableContext,
 } from 'chart.js'
 import { Line, Bar } from 'react-chartjs-2'
+import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
+import { columnsTopProductQTY, columnsTopProductRevenue } from './components/column/MainColumn'
 
 export default function Main() {
   ChartJS.register(
@@ -28,13 +36,28 @@ export default function Main() {
     Title,
     Tooltip,
     Legend,
+    Filler,
   )
   const startOfMonth = moment().startOf('month')
   const endOfMonth = moment().endOf('month')
 
   const [showLoader, setShowLoader] = useState(true)
   const [summaryData, setSummaryData] = useState(null)
+  const [showFilterTopProduct, setShowFilterTopProduct] = useState(false)
   const [selectedDates, setSelectedDate] = useState<[any, any]>([startOfMonth, endOfMonth])
+  const [tabsTopProduct, setTabsTopProduct] = useState('Revenue')
+
+  const statusOption = [
+    { label: 'Hour', value: '03' },
+    { label: 'Day', value: '02 ' },
+    { label: 'Week', value: '00' },
+    { label: 'Month', value: '00' },
+  ]
+
+  const table = useTable({
+    funcApi: getConfigSlocList,
+    columns: tabsTopProduct === 'Revenue' ? columnsTopProductRevenue : columnsTopProductQTY,
+  })
 
   useEffect(() => {
     const payload = {
@@ -63,10 +86,17 @@ export default function Main() {
     labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
     datasets: [
       {
+        fill: true,
         label: 'My First Dataset',
         data: [65, 59, 80, 81, 56, 55, 40],
-        fill: false,
         borderColor: 'rgb(75, 192, 192)',
+        backgroundColor: (context: ScriptableContext<'line'>) => {
+          const ctx = context.chart.ctx
+          const gradient = ctx.createLinearGradient(0, 0, 0, 200)
+          gradient.addColorStop(0, 'rgba(170,229,234,1)')
+          gradient.addColorStop(1, 'rgba(170,229,234,0)')
+          return gradient
+        },
         tension: 0.1,
       },
     ],
@@ -76,10 +106,16 @@ export default function Main() {
     labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
     datasets: [
       {
+        fill: true,
         label: 'My First Dataset',
         data: [65, 59, 80, 81, 56, 55, 40],
-        fill: false,
-        borderColor: 'rgb(235 0 139)',
+        backgroundColor: (context: ScriptableContext<'line'>) => {
+          const ctx = context.chart.ctx
+          const gradient = ctx.createLinearGradient(0, 0, 0, 200)
+          gradient.addColorStop(0, 'rgba(255,52,172,1)')
+          gradient.addColorStop(1, 'rgba(255,52,172,0)')
+          return gradient
+        },
         tension: 0.1,
       },
     ],
@@ -89,9 +125,9 @@ export default function Main() {
     labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
     datasets: [
       {
+        fill: true,
         label: 'My First Dataset',
         data: [65, 59, 80, 81, 56, 55, 40],
-        fill: false,
         backgroundColor: 'rgb(170 229 234)',
         tension: 0.1,
       },
@@ -102,14 +138,96 @@ export default function Main() {
     labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
     datasets: [
       {
+        fill: true,
         label: 'My First Dataset',
         data: [65, 59, 80, 81, 56, 55, 40],
-        fill: false,
         borderColor: 'rgb(1 168 98)',
+        backgroundColor: (context: ScriptableContext<'line'>) => {
+          const ctx = context.chart.ctx
+          const gradient = ctx.createLinearGradient(0, 0, 0, 200)
+          gradient.addColorStop(0, 'rgba(1,168,98,1)')
+          gradient.addColorStop(1, 'rgba(1,168,98,0)')
+          return gradient
+        },
         tension: 0.1,
       },
     ],
   }
+
+  const options = {
+    responsive: true,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  }
+
+  const content = (
+    <>
+      <Spacer size={20} />
+      <Row>
+        <Col flex={'20%'}>
+          <Text
+            width="fluid"
+            variant="headingSmall"
+            textAlign="left"
+            style={{ fontSize: 16, marginTop: 10 }}
+          >
+            Product
+          </Text>
+        </Col>
+        <Col flex={'80%'}>
+          <DebounceSelect type="select" options={statusOption} />
+        </Col>
+      </Row>
+      <Spacer size={20} />
+      <Row>
+        <Col flex={'20%'}>
+          <Text
+            width="fluid"
+            variant="headingSmall"
+            textAlign="left"
+            style={{ fontSize: 16, marginTop: 10 }}
+          >
+            Date
+          </Text>
+        </Col>
+        <Col flex={'80%'}>
+          <DebounceSelect type="select" options={statusOption} />
+        </Col>
+      </Row>
+      <div
+        style={{ display: 'flex', gap: 10, marginBottom: 20, paddingBottom: 20, paddingTop: 60 }}
+      >
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="tertiary"
+          onClick={() => setShowFilterTopProduct(false)}
+        >
+          Clear All
+        </Button>
+        <Button
+          size="big"
+          variant="primary"
+          style={{ flexGrow: 1 }}
+          onClick={() => setShowFilterTopProduct(false)}
+        >
+          Apply
+        </Button>
+      </div>
+    </>
+  )
 
   return (
     <>
@@ -532,6 +650,7 @@ export default function Main() {
             </Col>
           </Row>
         </Card>
+        <ChartStatusOrder />
         <Row gutter={8} wrap={false}>
           <Col span={12}>
             <Card>
@@ -556,7 +675,7 @@ export default function Main() {
                     </Radio.Button>
                   </Radio.Group>
                 </Col>
-                <Line data={data} />
+                <Line options={options} data={data} />
               </Row>
             </Card>
           </Col>
@@ -583,7 +702,7 @@ export default function Main() {
                     </Radio.Button>
                   </Radio.Group>
                 </Col>
-                <Line data={dataROA} />
+                <Line options={options} data={dataROA} />
               </Row>
             </Card>
           </Col>
@@ -612,7 +731,7 @@ export default function Main() {
                     </Radio.Button>
                   </Radio.Group>
                 </Col>
-                <Bar data={dataSalesByProduct} />
+                <Bar options={options} data={dataSalesByProduct} />
               </Row>
             </Card>
           </Col>
@@ -639,8 +758,75 @@ export default function Main() {
                     </Radio.Button>
                   </Radio.Group>
                 </Col>
-                <Line data={datadropSize} />
+                <Line options={options} data={datadropSize} />
               </Row>
+            </Card>
+          </Col>
+        </Row>
+        <Row gutter={8} wrap={false}>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Top 10 Product</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Button
+                    size="small"
+                    variant="tertiary"
+                    onClick={() => setShowFilterTopProduct(true)}
+                    style={{
+                      border: '1px solid #888888',
+                      color: '#888888',
+                      backgroundColor: 'white',
+                      justifyContent: 'flex-start',
+                      gap: 16,
+                    }}
+                  >
+                    <ICFilter /> Filter
+                  </Button>
+                  <Modal
+                    onCancel={() => setShowFilterTopProduct(false)}
+                    destroyOnClose
+                    visible={showFilterTopProduct}
+                    title={'Filter'}
+                    width={500}
+                    footer={false}
+                    content={content}
+                    maskClosable={false}
+                  />
+                </Col>
+              </Row>
+              <Spacer size={10} />
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 10,
+                }}
+              >
+                <Button
+                  size="small"
+                  variant={tabsTopProduct === 'Revenue' ? 'primary' : 'tertiary'}
+                  onClick={() => setTabsTopProduct('Revenue')}
+                >
+                  Revenue
+                </Button>
+                <Button
+                  size="small"
+                  variant={tabsTopProduct === 'QTY' ? 'primary' : 'tertiary'}
+                  onClick={() => setTabsTopProduct('QTY')}
+                >
+                  Qty (PCS)
+                </Button>
+              </div>
+              <Spacer size={20} />
+              <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+                <Table {...table.state.tableProps} />
+              </div>
             </Card>
           </Col>
         </Row>
