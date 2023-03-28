@@ -13,15 +13,15 @@ interface ctxType {
 
 const ctx = React.createContext<ctxType>(undefined)
 
-export function useSalesQuotationListProvider() {
+export function useSFACallPlanPatternProvider() {
   return useCreatePageProvider<ctxType, StateType, DispatchType, typeof baseHandler>(
     ctx,
     baseReducer,
     baseHandler,
-    { submittedQuotation: [] },
+    { submittedQuotation: [], showModal: false },
   )
 }
 
-export function useSalesQuotationListContext() {
+export function useSFACallPlanPatternContext() {
   return React.useContext(ctx)
 }

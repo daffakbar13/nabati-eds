@@ -7,7 +7,7 @@ import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { useSalesQuotationListContext } from '../../states'
+import { useSFACallPlanListContext } from '../../states'
 
 export default function ConfirmSuccessCancel() {
   const {
@@ -16,7 +16,7 @@ export default function ConfirmSuccessCancel() {
         state: { selected, description },
       },
     },
-  } = useSalesQuotationListContext()
+  } = useSFACallPlanListContext()
   const router = useRouter()
   const oneSelected = selected.length === 1
 

@@ -1,12 +1,12 @@
 /* eslint-disable object-curly-newline */
 import React from 'react'
-import { useSalesQuotationListContext } from '../states'
+import { useSFACallPlanListContext } from '../states'
 import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessCancel, ConfirmSuccessSubmit } from './alerts'
 
 export default function SectionConfirm() {
   const {
     state: { confirm },
-  } = useSalesQuotationListContext()
+  } = useSFACallPlanListContext()
 
   return (
     <>

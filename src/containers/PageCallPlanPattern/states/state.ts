@@ -5,4 +5,6 @@ export interface StateType {
   processing?: string
   confirm?: string
   submittedQuotation: string[]
+  showModal: boolean
+  selected?: any
 }
