@@ -1,7 +1,7 @@
 import { addColumn } from 'src/utils/createColumns'
 import TaggedStatus from 'src/components/TaggedStatus'
 
-export function useColumnQuotation() {
+export function useColumnCallPlanList() {
   return [
     addColumn({
       title: 'No',

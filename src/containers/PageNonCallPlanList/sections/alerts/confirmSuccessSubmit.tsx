@@ -7,7 +7,7 @@ import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { useSalesQuotationListContext } from '../../states'
+import { useSFANonCallPlanListContext } from '../../states'
 
 export default function ConfirmSuccessSubmit() {
   const {
@@ -17,7 +17,7 @@ export default function ConfirmSuccessSubmit() {
       },
       submittedQuotation,
     },
-  } = useSalesQuotationListContext()
+  } = useSFANonCallPlanListContext()
   const router = useRouter()
   const oneSelected = selected.length === 1
 

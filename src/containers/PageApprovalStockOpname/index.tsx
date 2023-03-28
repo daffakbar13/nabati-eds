@@ -83,21 +83,36 @@ export default function PageApprovalStockOpname() {
     { label: 'Rejected', value: '05' },
   ]
 
+  // useEffect(() => {
+  //   let newFilters = []
+  //   if (selectedStatus) {
+  //     newFilters = [
+  //       { field: 'status_id', option: 'EQ', from_value: selectedStatus, data_type: 'S' },
+  //     ]
+  //   } else {
+  //     newFilters = [
+  //       { field: 'status_id', option: 'EQ', from_value: '03', data_type: 'S' },
+  //       { field: 'status_id', option: 'EQ', from_value: '02', data_type: 'S' },
+  //       { field: 'status_id', option: 'EQ', from_value: '05', data_type: 'S' },
+  //     ]
+  //   }
+  //   setFilters(newFilters)
+  // }, [selectedStatus])
+
   useEffect(() => {
-    let newFilters = []
-    if (selectedStatus) {
-      newFilters = [
-        { field: 'status_id', option: 'EQ', from_value: selectedStatus, data_type: 'S' },
-      ]
-    } else {
-      newFilters = [
+    // if (!filters.find((item) => item.field === 'status_id')) {
+    if (filters.length === 0) {
+      const newFilters = [
         { field: 'status_id', option: 'EQ', from_value: '03', data_type: 'S' },
         { field: 'status_id', option: 'EQ', from_value: '02', data_type: 'S' },
         { field: 'status_id', option: 'EQ', from_value: '05', data_type: 'S' },
       ]
+      if (table.state.data.length > 0) {
+        setFilters(newFilters)
+        table.handler.handleFilter(newFilters)
+      }
     }
-    setFilters(newFilters)
-  }, [selectedStatus])
+  }, [filters, table.state.data.length])
 
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')

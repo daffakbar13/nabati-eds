@@ -1,12 +1,17 @@
-/* eslint-disable object-curly-newline */
 import React from 'react'
-import { useSalesQuotationListContext } from '../states'
-import { ConfirmCancel, ConfirmSubmit, ConfirmSuccessCancel, ConfirmSuccessSubmit } from './alerts'
+import { useSFACallPlanPatternContext } from '../states'
+import {
+  ConfirmActivation,
+  ConfirmCancel,
+  ConfirmSubmit,
+  ConfirmSuccessCancel,
+  ConfirmSuccessSubmit,
+} from './alerts'
 
 export default function SectionConfirm() {
   const {
     state: { confirm },
-  } = useSalesQuotationListContext()
+  } = useSFACallPlanPatternContext()
 
   return (
     <>
@@ -14,6 +19,7 @@ export default function SectionConfirm() {
       {confirm === 'success-submit' && <ConfirmSuccessSubmit />}
       {confirm === 'cancel' && <ConfirmCancel />}
       {confirm === 'success-cancel' && <ConfirmSuccessCancel />}
+      {confirm === 'activation' && <ConfirmActivation />}
     </>
   )
 }

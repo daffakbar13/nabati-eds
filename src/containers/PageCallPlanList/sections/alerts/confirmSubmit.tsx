@@ -1,21 +1,14 @@
 /* eslint-disable operator-linebreak */
-import { Popover, Typography } from 'antd'
+import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
-import { multipleSubmitQuotation } from 'src/api/quotation'
-import { useSalesQuotationListContext } from '../../states'
+import { useSFACallPlanListContext } from '../../states'
 
 export default function ConfirmSubmit() {
   const {
     handler: { showConfirm, unShowConfirm, runProcess, stopProcess, changeSubmittedQuotation },
-    state: {
-      table: {
-        state: { selected, description },
-      },
-    },
-  } = useSalesQuotationListContext()
-  const oneSelected = selected.length === 1
+  } = useSFACallPlanListContext()
 
   return (
     <Popup>
@@ -23,14 +16,7 @@ export default function ConfirmSubmit() {
         Confirm Submit
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
-        Are you sure to submit quotation
-        <Typography.Text>
-          {oneSelected && ` ${description.text}`}
-          {!oneSelected && (
-            <Popover content={description.content}>{` ${description.text}`}</Popover>
-          )}
-        </Typography.Text>
-        {' ?'}
+        Are you sure to submit call plan list ?
       </Typography.Title>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -45,17 +31,18 @@ export default function ConfirmSubmit() {
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => {
-            runProcess('Wait for submitting Quotation')
-            multipleSubmitQuotation({ order_list: selected.map((id) => ({ id })) })
-              .then((response) => response.data)
-              .then((data) => {
-                showConfirm('success-submit')
-                changeSubmittedQuotation(data.results.map(({ id }) => id))
-                stopProcess()
-              })
-              .catch(() => stopProcess())
-          }}
+          // onClick={() => {
+          //   runProcess('Wait for submitting Quotation')
+          //   multipleSubmitQuotation({ order_list: selected.map((id) => ({ id })) })
+          //     .then((response) => response.data)
+          //     .then((data) => {
+          //       showConfirm('success-submit')
+          //       changeSubmittedQuotation(data.results.map(({ id }) => id))
+          //       stopProcess()
+          //     })
+          //     .catch(() => stopProcess())
+          // }}
+          onClick={() => unShowConfirm()}
         >
           Yes
         </Button>

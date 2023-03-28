@@ -2,7 +2,7 @@ import { Col, Row } from 'antd'
 import { Table, Button } from 'pink-lava-ui'
 import React from 'react'
 import { FloatAction, Pagination } from 'src/components'
-import { useSalesQuotationListContext } from '../states'
+import { useSFACallPlanPatternContext } from '../states'
 
 export default function SectionTable() {
   const {
@@ -12,7 +12,7 @@ export default function SectionTable() {
       },
     },
     handler,
-  } = useSalesQuotationListContext()
+  } = useSFACallPlanPatternContext()
   const hasData = data.length > 0
   return (
     <>

@@ -118,8 +118,8 @@ export default function PageShipmentDetail() {
 
             if (unrevisedData.length > 0) {
               await Promise.all(
-                unrevisedData.map((item) => {
-                  getDetailProformaInvoiceByShipmentAndDevlivery({
+                unrevisedData.map(async (item) => {
+                  await getDetailProformaInvoiceByShipmentAndDevlivery({
                     delivery_id: item.delivery_order_id,
                     shipment_id: router.query.id as string,
                   }).then((res) => {
@@ -151,7 +151,7 @@ export default function PageShipmentDetail() {
               confirm_delivery_orders: revisedData.map((item) => {
                 return {
                   delivery_order_id: item.delivery_order_id,
-                  is_delivered: reasonName ? 1 : 0,
+                  is_delivered: reasonName ? 0 : 1,
                   cancelation_reason_name: reason.split(' - ')[1] || '',
                   cancelation_reason_id: reason.split(' - ')[0] || '',
                   items: item.items.map((element) => ({

@@ -83,9 +83,9 @@ export default function DocumentHeader(props: DocumentHeaderProps) {
       dataIndex: 'status',
       render: (_, { status, delivery_order_id, delivery_date }) =>
         revisedDelivery.find((item) => item.delivery_order_id === delivery_order_id)
-          ? revisedDelivery.find((item) => item.delivery_order_id === delivery_order_id)?.items[0]
-              ?.status || status
-          : status,
+          ? revisedDelivery.find((item) => item.delivery_order_id === delivery_order_id)?.status ||
+            'Delivery'
+          : 'Delivery',
     }),
     addColumn({
       title: 'Undelivered Reason',

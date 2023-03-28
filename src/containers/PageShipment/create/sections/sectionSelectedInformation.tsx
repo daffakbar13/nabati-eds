@@ -66,10 +66,10 @@ export default function SectionSelectedInformation() {
       <DebounceSelect
         type="select"
         value={dataForm?.vehicle_id as any}
-        fetchOptions={fieldVehicle}
-        // fetchOptions={fieldVehicle_v2}
+        // fetchOptions={fieldVehicle}
+        fetchOptions={fieldVehicle_v2}
         onChange={(e) => {
-          handleVehicleSize(parseInt(e.key.split('.').join(''), 10) / 1000)
+          handleVehicleSize(parseInt(e.key.toString().split('.').join(''), 10))
           handleDataForm({ ...dataForm, vehicle_id: e.value })
         }}
       />

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Loader } from 'src/components'
-import { useSalesQuotationListContext } from '../states'
+import { useSFACallPlanPatternContext } from '../states'
 
 export default function SectionLoader() {
   const {
     state: { processing },
-  } = useSalesQuotationListContext()
+  } = useSFACallPlanPatternContext()
   return <>{processing && <Loader type="process" text={processing} />}</>
 }

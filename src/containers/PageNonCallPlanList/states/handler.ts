@@ -22,11 +22,16 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'submittedQuotation', payload })
   }
 
+  function handleShowModal(payload: boolean) {
+    dispatch({ type: 'showModal', payload })
+  }
+
   return {
     runProcess,
     stopProcess,
     showConfirm,
     unShowConfirm,
     changeSubmittedQuotation,
+    handleShowModal,
   }
 }

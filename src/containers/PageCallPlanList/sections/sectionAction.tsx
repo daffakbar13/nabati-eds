@@ -3,12 +3,13 @@ import { Col, Row } from 'antd'
 import { Search, Button } from 'pink-lava-ui'
 import React from 'react'
 import { useFilters } from 'src/hooks'
-import { useSalesQuotationListContext } from '../states'
+import { useSFACallPlanListContext } from '../states'
 
 export default function SectionAction() {
   const {
     state: { table },
-  } = useSalesQuotationListContext()
+    handler: { handleShowModal },
+  } = useSFACallPlanListContext()
   const { searchProps } = useFilters(table, 'Salesman ID, Customer ID, etc', ['eds_order.id'])
   // const router = useRouter()
 
@@ -39,11 +40,7 @@ export default function SectionAction() {
           </Button>
         </Col>
         <Col>
-          <Button
-            size="big"
-            variant="primary"
-            // onClick={() => router.push(`${router.pathname}/create`)}
-          >
+          <Button size="big" variant="primary" onClick={() => handleShowModal(true)}>
             Generate
           </Button>
         </Col>

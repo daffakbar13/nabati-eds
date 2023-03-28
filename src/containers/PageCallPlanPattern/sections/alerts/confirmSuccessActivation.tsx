@@ -1,24 +1,18 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable operator-linebreak */
-import { Popover, Typography } from 'antd'
+import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button, Text } from 'pink-lava-ui'
 import { CheckCircleFilled } from '@ant-design/icons'
 import { useRouter } from 'next/router'
-import { PATH } from 'src/configs/menus'
+import { concatString } from 'src/utils/concatString'
 import { useSFACallPlanPatternContext } from '../../states'
 
-export default function ConfirmSuccessCancel() {
+export default function ConfirmSuccessActivation() {
   const {
-    state: {
-      table: {
-        state: { selected, description },
-      },
-    },
+    state: { selected },
   } = useSFACallPlanPatternContext()
   const router = useRouter()
-  const oneSelected = selected.length === 1
+  const isActive = selected.is_active === 'Active'
 
   return (
     <Popup>
@@ -28,7 +22,7 @@ export default function ConfirmSuccessCancel() {
           style={{ color: '#00C572', fontSize: 22, fontWeight: 'bold', marginBottom: 8 }}
         >
           <>
-            <CheckCircleFilled /> Cancel Success
+            <CheckCircleFilled /> Success
           </>
         </Text>
       </div>
@@ -41,20 +35,8 @@ export default function ConfirmSuccessCancel() {
           textAlign: 'center',
         }}
       >
-        <div>
-          Quoatation
-          <Typography.Text
-            copyable={{ text: oneSelected ? description.text : selected.join(', ') }}
-          >
-            {oneSelected ? (
-              ` ${description.text}`
-            ) : (
-              <Popover content={description.content}>{` ${description.text}`}</Popover>
-            )}
-          </Typography.Text>{' '}
-          has been
-        </div>
-        <div>successfully canceled</div>
+        <div>{'Call Plan Pattern has been'}</div>
+        <div>successfully {isActive ? 'inactived' : 'actived'}</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -62,10 +44,10 @@ export default function ConfirmSuccessCancel() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            router.push(`${PATH.SALES}/quotation`)
+            router.push(router.pathname)
           }}
         >
-          OK
+          Oke
         </Button>
       </div>
     </Popup>

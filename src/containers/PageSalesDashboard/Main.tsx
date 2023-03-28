@@ -3,6 +3,7 @@ import { Col, Radio, Row, Typography } from 'antd'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { getDashboard } from 'src/api/sales-dashboard'
+import { CommonListParams } from 'src/api/types'
 import { Card, Loader } from 'src/components'
 import { FilterSection, ChartStatusOrder } from './components'
 import { Button, Modal, Spacer, Text, Table } from 'pink-lava-ui'
@@ -60,8 +61,8 @@ export default function Main() {
   })
 
   useEffect(() => {
-    const payload = {
-      filters: [
+    const resFilters = [
+      ...[
         {
           field: 'summary_date',
           option: 'BT',
@@ -69,12 +70,17 @@ export default function Main() {
           to_value: moment(selectedDates[1]).format('YYYY-MM-DD'),
         },
       ],
+      ...filters,
+    ]
+
+    const payload = {
+      filters: resFilters,
       limit: 100,
       page: 1,
     }
 
     setShowLoader(true)
-    getDashboard(payload)
+    getDashboard(payload as CommonListParams)
       .then((res) => {
         setShowLoader(false)
         setSummaryData(res.data?.summary)
@@ -231,10 +237,11 @@ export default function Main() {
 
   return (
     <>
-      {showLoader && <Loader />}
-
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-        <FilterSection onDateChange={(dates) => setSelectedDate(dates)} />
+        <FilterSection
+          onFilterChange={setFilters}
+          onDateChange={(dates) => setSelectedDate(dates)}
+        />
         <Card style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <Row justify="space-between" align="middle">
             <Col>
@@ -403,73 +410,7 @@ export default function Main() {
                           gap: 8,
                         }}
                       >
-                        <Typography.Text>SKU</Typography.Text>
-                        <Typography.Title level={4} style={{ margin: 0 }}>
-                          {summaryData?.sku_total}
-                        </Typography.Title>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>VsLM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.sku_vslm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>Vs3LM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.sku_vs3lm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                      </Card>
-                    </Col>
-                    <Col flex="auto" style={{ height: 154 }}>
-                      <Card
-                        style={{
-                          border: '1px solid rgba(43, 190, 203, 0.2)',
-                          height: '100%',
-                          padding: 12,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 8,
-                        }}
-                      >
-                        <Typography.Text>CTN</Typography.Text>
-                        <Typography.Title level={4} style={{ margin: 0 }}>
-                          {summaryData?.ctn_total}
-                        </Typography.Title>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>VsLM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.ctn_vslm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>Vs3LM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.ctn_vs3lm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                      </Card>
-                    </Col>
-                  </Row>
-                </Col>
-                <Col span={24}>
-                  <Row gutter={8} wrap={false}>
-                    <Col flex="auto" style={{ height: 154 }}>
-                      <Card
-                        style={{
-                          border: '1px solid rgba(43, 190, 203, 0.2)',
-                          height: '100%',
-                          padding: 12,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 8,
-                        }}
-                      >
-                        <Typography.Text>Customer</Typography.Text>
+                        <Typography.Text>Customer (ROA)</Typography.Text>
                         <Typography.Title level={4} style={{ margin: 0 }}>
                           {summaryData?.customer_total}
                         </Typography.Title>
@@ -484,99 +425,6 @@ export default function Main() {
                           <Typography.Text>Vs3LM</Typography.Text>
                           <Typography.Text style={{ color: 'red' }}>
                             -{summaryData?.customer_vs3lm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                      </Card>
-                    </Col>
-                    <Col flex="auto" style={{ height: 154 }}>
-                      <Card
-                        style={{
-                          border: '1px solid rgba(43, 190, 203, 0.2)',
-                          height: '100%',
-                          padding: 12,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 8,
-                        }}
-                      >
-                        <Typography.Text>Product Gross</Typography.Text>
-                        <Typography.Title level={4} style={{ margin: 0 }}>
-                          {summaryData?.product_gross_total}
-                        </Typography.Title>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>VsLM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.product_gross_vslm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>Vs3LM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.product_gross_vs3lm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                      </Card>
-                    </Col>
-                    <Col flex="auto" style={{ height: 154 }}>
-                      <Card
-                        style={{
-                          border: '1px solid rgba(43, 190, 203, 0.2)',
-                          height: '100%',
-                          padding: 12,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 8,
-                        }}
-                      >
-                        <Typography.Text>Selling Price</Typography.Text>
-                        <Typography.Title level={4} style={{ margin: 0 }}>
-                          {summaryData?.selling_price_total}
-                        </Typography.Title>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>VsLM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.selling_price_vslm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>Vs3LM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.selling_price_vs3lm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                      </Card>
-                    </Col>
-                    <Col flex="auto" style={{ height: 154 }}>
-                      <Card
-                        style={{
-                          border: '1px solid rgba(43, 190, 203, 0.2)',
-                          height: '100%',
-                          padding: 12,
-                          display: 'flex',
-                          flexDirection: 'column',
-                          gap: 8,
-                        }}
-                      >
-                        <Typography.Text>Salesman Billing</Typography.Text>
-                        <Typography.Title level={4} style={{ margin: 0 }}>
-                          {summaryData?.salesman_billing_total}
-                        </Typography.Title>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>VsLM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.salesman_billing_vslm_percent}%
-                          </Typography.Text>
-                          <ArrowDownOutlined style={{ color: 'red' }} />
-                        </div>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                          <Typography.Text>Vs3LM</Typography.Text>
-                          <Typography.Text style={{ color: 'red' }}>
-                            -{summaryData?.salesman_billing_vs3lm_percent}%
                           </Typography.Text>
                           <ArrowDownOutlined style={{ color: 'red' }} />
                         </div>
@@ -624,7 +472,32 @@ export default function Main() {
                           gap: 8,
                         }}
                       >
-                        <Typography.Text>Customer NOO</Typography.Text>
+                        <Typography.Text>Salesman</Typography.Text>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                          {summaryData?.salesman_total}
+                        </Typography.Title>
+                        <Typography.Text>SKU</Typography.Text>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                          {summaryData?.sku_total}
+                        </Typography.Title>
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col span={24}>
+                  <Row gutter={8} wrap={false}>
+                    <Col flex="auto" style={{ height: 154 }}>
+                      <Card
+                        style={{
+                          border: '1px solid rgba(43, 190, 203, 0.2)',
+                          height: '100%',
+                          padding: 12,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 8,
+                        }}
+                      >
+                        <Typography.Text>NOO</Typography.Text>
                         <Typography.Title level={4} style={{ margin: 0 }}>
                           {summaryData?.customer_noo_total}
                         </Typography.Title>
@@ -642,6 +515,116 @@ export default function Main() {
                           </Typography.Text>
                           <ArrowDownOutlined style={{ color: 'red' }} />
                         </div>
+                      </Card>
+                    </Col>
+                    <Col flex="auto" style={{ height: 154 }}>
+                      <Card
+                        style={{
+                          border: '1px solid rgba(43, 190, 203, 0.2)',
+                          height: '100%',
+                          padding: 12,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 8,
+                        }}
+                      >
+                        <Typography.Text>CTN</Typography.Text>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                          {summaryData?.ctn_total}
+                        </Typography.Title>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <Typography.Text>VsLM</Typography.Text>
+                          <Typography.Text style={{ color: 'red' }}>
+                            -{summaryData?.ctn_vslm_percent}%
+                          </Typography.Text>
+                          <ArrowDownOutlined style={{ color: 'red' }} />
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <Typography.Text>Vs3LM</Typography.Text>
+                          <Typography.Text style={{ color: 'red' }}>
+                            -{summaryData?.ctn_vs3lm_percent}%
+                          </Typography.Text>
+                          <ArrowDownOutlined style={{ color: 'red' }} />
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col flex="auto" style={{ height: 154 }}>
+                      <Card
+                        style={{
+                          border: '1px solid rgba(43, 190, 203, 0.2)',
+                          height: '100%',
+                          padding: 12,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 8,
+                        }}
+                      >
+                        <Typography.Text>Selling Price/CTN </Typography.Text>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                          {summaryData?.selling_price_total}
+                        </Typography.Title>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <Typography.Text>VsLM</Typography.Text>
+                          <Typography.Text style={{ color: 'red' }}>
+                            -{summaryData?.selling_price_vslm_percent}%
+                          </Typography.Text>
+                          <ArrowDownOutlined style={{ color: 'red' }} />
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <Typography.Text>Vs3LM</Typography.Text>
+                          <Typography.Text style={{ color: 'red' }}>
+                            -{summaryData?.selling_price_vs3lm_percent}%
+                          </Typography.Text>
+                          <ArrowDownOutlined style={{ color: 'red' }} />
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col flex="auto" style={{ height: 154 }}>
+                      <Card
+                        style={{
+                          border: '1px solid rgba(43, 190, 203, 0.2)',
+                          height: '100%',
+                          padding: 12,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 8,
+                        }}
+                      >
+                        <Typography.Text>Total Visit</Typography.Text>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                          {summaryData?.sku_total}
+                        </Typography.Title>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <Typography.Text>VsLM</Typography.Text>
+                          <Typography.Text style={{ color: 'red' }}>
+                            -{summaryData?.sku_vslm_percent}%
+                          </Typography.Text>
+                          <ArrowDownOutlined style={{ color: 'red' }} />
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                          <Typography.Text>Vs3LM</Typography.Text>
+                          <Typography.Text style={{ color: 'red' }}>
+                            -{summaryData?.sku_vs3lm_percent}%
+                          </Typography.Text>
+                          <ArrowDownOutlined style={{ color: 'red' }} />
+                        </div>
+                      </Card>
+                    </Col>
+                    <Col flex="auto" style={{ height: 154 }}>
+                      <Card
+                        style={{
+                          border: '1px solid rgba(43, 190, 203, 0.2)',
+                          height: '100%',
+                          padding: 12,
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 8,
+                        }}
+                      >
+                        <Typography.Text>SPPO/M</Typography.Text>
+                        <Typography.Title level={4} style={{ margin: 0 }}>
+                          {summaryData?.product_gross_total}
+                        </Typography.Title>
                       </Card>
                     </Col>
                   </Row>

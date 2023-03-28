@@ -3,14 +3,14 @@ import { Text } from 'pink-lava-ui'
 import { Card } from 'src/components'
 import { Col, Row } from 'antd'
 import useTitlePage from 'src/hooks/useTitlePage'
-import { SectionAction, SectionConfirm, SectionLoader, SectionTable } from './sections'
-import SalesQuotationListProvider from './_provider'
+import { SectionAction, SectionConfirm, SectionLoader, SectionModalCreate, SectionTable } from './sections'
+import SFANonCallPlanListProvider from './_provider'
 
-export default function PageQuotation() {
+export default function PageNonCallPlan() {
   const titlePage = useTitlePage('list')
 
   return (
-    <SalesQuotationListProvider>
+    <SFANonCallPlanListProvider>
       <Row gutter={[20, 20]}>
         <Col span={24}>
           <Text variant={'h4'}>{titlePage}</Text>
@@ -26,8 +26,9 @@ export default function PageQuotation() {
           </Card>
         </Col>
       </Row>
+      <SectionModalCreate/>
       <SectionConfirm />
       <SectionLoader />
-    </SalesQuotationListProvider>
+    </SFANonCallPlanListProvider>
   )
 }

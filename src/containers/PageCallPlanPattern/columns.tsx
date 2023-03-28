@@ -1,8 +1,10 @@
 import { addColumn } from 'src/utils/createColumns'
 import { concatString } from 'src/utils/concatString'
 import { Switch } from 'pink-lava-ui'
+import { baseHandler } from './states/handler'
 
-export function useColumnQuotation() {
+export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>) {
+  const { showConfirm, handleSelected } = handler
   return [
     addColumn({
       title: 'No',
@@ -56,7 +58,15 @@ export function useColumnQuotation() {
     }),
     addColumn({
       title: 'Active/Inactive',
-      render: () => <Switch />,
+      render: () => (
+        <Switch
+          checked={true}
+          onChange={() => {
+            handleSelected({ is_active: 'Active' })
+            showConfirm('activation')
+          }}
+        />
+      ),
     }),
   ]
 }

@@ -2,18 +2,13 @@ import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
-import { deleteSalesmanDivision, updateSalesmanDivision } from 'src/api/salesman-division'
+import { updateSalesmanDivision } from 'src/api/salesman-division'
 import { concatString } from 'src/utils/concatString'
 import { useSalesSalesmanDivisionContext } from '../../states'
 
 export default function ConfirmActivation() {
   const {
-    state: {
-      table: {
-        state: { selected },
-      },
-      editable,
-    },
+    state: { editable },
     handler: { showConfirm, unShowConfirm, runProcess, stopProcess },
   } = useSalesSalesmanDivisionContext()
   const isActive = editable.is_active === 'Active'

@@ -1,31 +1,31 @@
 import React from 'react'
 import { getQuotation } from 'src/api/quotation'
 import useTable from 'src/hooks/useTable/index'
-import { useColumnQuotation } from './columns'
-import { useSalesQuotationListProvider } from './states'
+import { useColumnNonCallPlanList } from './columns'
+import { useSFANonCallPlanListProvider } from './states'
 
-export default function SalesQuotationListProvider(
+export default function SFANonCallPlanListProvider(
   props: React.PropsWithChildren<React.ReactNode>,
 ) {
   const { children } = props
   const table = useTable({
     funcApi: getQuotation,
     // haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
-    columns: useColumnQuotation(),
+    columns: useColumnNonCallPlanList(),
   })
-  const SalesQuotationList = useSalesQuotationListProvider()
+  const SFANonCallPlanList = useSFANonCallPlanListProvider()
 
   return (
-    <SalesQuotationList.Provider
+    <SFANonCallPlanList.Provider
       value={{
         state: {
-          ...SalesQuotationList.state,
+          ...SFANonCallPlanList.state,
           table,
         },
-        handler: SalesQuotationList.handler,
+        handler: SFANonCallPlanList.handler,
       }}
     >
       {children}
-    </SalesQuotationList.Provider>
+    </SFANonCallPlanList.Provider>
   )
 }
