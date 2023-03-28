@@ -24,10 +24,7 @@ export default function PageCustomer() {
 
   const titlePage = useTitlePage('list')
 
-  const { filters, setFilters, searchProps } = useFilters(table, 'Search Customer ID', [
-    'id',
-    'name',
-  ])
+  const { filters, setFilters, searchProps } = useFilters(table, 'Search Customer ID', ['id'])
 
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => {
