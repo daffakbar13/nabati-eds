@@ -10,6 +10,7 @@ import { Button, Modal, Spacer, Text, Table } from 'pink-lava-ui'
 import { ICFilter } from 'src/assets'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { useTable } from 'src/hooks'
+import { FilterValueObj } from 'src/components/SmartFilter2'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -46,6 +47,7 @@ export default function Main() {
   const [summaryData, setSummaryData] = useState(null)
   const [showFilterTopProduct, setShowFilterTopProduct] = useState(false)
   const [selectedDates, setSelectedDate] = useState<[any, any]>([startOfMonth, endOfMonth])
+  const [filters, setFilters] = useState<FilterValueObj[]>([])
   const [tabsTopProduct, setTabsTopProduct] = useState('Revenue')
 
   const statusOption = [
