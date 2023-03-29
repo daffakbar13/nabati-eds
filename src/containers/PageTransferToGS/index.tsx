@@ -9,7 +9,7 @@ import { useFilters } from 'src/hooks'
 import FloatAction from 'src/components/FloatAction'
 import { getListTransferGS } from 'src/api/logistic/transfer-to-gs'
 import Popup from 'src/components/Popup'
-import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldCompanyList, fieldSlocFromBranch } from 'src/configs/fieldFetches'
 import Pagination from 'src/components/Pagination'
 import { column } from './columns'
 
@@ -20,6 +20,10 @@ export default function PageIntraSlocRequest() {
   })
 
   const [showConfirm, setShowConfirm] = React.useState('')
+  const [branchfrom, setBranchFrom] = React.useState('')
+  const [branchTo, setBranchTo] = React.useState('')
+  const [allSloc, setAllScloc] = React.useState([])
+
   const hasData = table.state.total > 0
   const router = useRouter()
   const oneSelected = table.state.selected.length === 1
@@ -40,6 +44,12 @@ export default function PageIntraSlocRequest() {
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Doc. Number', [
     'document_number',
   ])
+
+  React.useEffect(() => {
+    fieldSlocFromBranch(branchfrom, branchTo).then((res) => {
+      setAllScloc(res)
+    })
+  }, [branchfrom, branchTo])
 
   return (
     <Col>
@@ -62,20 +72,41 @@ export default function PageIntraSlocRequest() {
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"
-                label="Supplying Branch"
+                label="Branch"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchFrom(val.label.split(' - ')[0])
+                  }}
+                />
+                <DebounceSelect
+                  type="select"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(val: any) => {
+                    setBranchTo(val.label.split(' - ')[0])
+                  }}
+                />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="receiving_branch_id"
+                field="supplying_sloc"
                 dataType="S"
-                label="Receiving Branch"
+                label="Supplying SLoc"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
-                <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="receiving_sloc"
+                dataType="S"
+                label="Receiving SLoc"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
               </SmartFilter.Field>
               <SmartFilter.Field
                 field="posting_date"
