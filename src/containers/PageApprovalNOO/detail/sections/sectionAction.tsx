@@ -33,7 +33,7 @@ export default function SectionAction() {
       <Typography.Title level={3} style={{ margin: 0 }}>
         Confirm Approve
       </Typography.Title>
-      Are you sure to approve Sales Order {router.query.id} ?
+      Are you sure to approve customer {router.query.id} ?
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
           size="big"
@@ -90,13 +90,12 @@ export default function SectionAction() {
         }}
       >
         <div>
-          Sales Order
+          Customer
           <Typography.Text copyable={{ text: router.query.id as string }}>
             {` ${router.query.id}`}
           </Typography.Text>{' '}
-          has been
         </div>
-        <div>successfully approved</div>
+        <div>Approved successfully</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
