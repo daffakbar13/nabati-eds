@@ -36,6 +36,19 @@ export default function PageMaterialInTransit() {
     { label: 'Intra Sloc', value: 'Intra Sloc' },
   ]
 
+  const downloadFunction = async (reqBody: any) => {
+    try {
+      const res = exportExcelMaterialInTransit({
+        filters: oldfilters,
+        limit: 20,
+        page: 1,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
   return (
     <Col>
       <Text variant={'h4'}>Material In Transit</Text>
@@ -99,7 +112,7 @@ export default function PageMaterialInTransit() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <DownloadButton downloadApi={exportExcelMaterialInTransit} />
+            <DownloadButton downloadApi={downloadFunction} />
           </Row>
         </Row>
       </Card>

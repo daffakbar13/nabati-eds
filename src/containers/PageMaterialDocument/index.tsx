@@ -35,6 +35,9 @@ export default function PageRealTime() {
 
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Material Document', [
     'id',
+    'product_id',
+    'branch_id',
+    'sloc_id',
   ])
   return (
     <Col>
