@@ -4,6 +4,7 @@ import { Button, Table } from 'pink-lava-ui'
 import Total from 'src/components/Total'
 import { payloadCreate } from '..'
 import { useTableProduct } from '../columns'
+import { ICPlusWhite } from 'src/assets'
 
 interface SectionTableProps {
   dataForm: payloadCreate
@@ -22,8 +23,16 @@ export default function SectionTable(props: SectionTableProps) {
         />
       </Row>
       {dataForm.sold_to_customer && (
-        <Button size="small" variant="primary" onClick={tableProduct.handleAddItem}>
-          Add Item
+        // <Button size="small" variant="primary" onClick={tableProduct.handleAddItem}>
+        //   Add Item
+        // </Button>
+        <Button
+          size="big"
+          variant="primary"
+          onClick={tableProduct.handleAddItem}
+          style={{ margin: '32px 0 20px', border: 'transparent' }}
+        >
+          <ICPlusWhite /> Add New
         </Button>
       )}
       <Row justify="end">
