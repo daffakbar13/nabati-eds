@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import moment from 'moment'
-import { Divider, Form } from 'antd'
+import { Divider, Form, Typography } from 'antd'
 import { useRouter } from 'next/router'
 import { Button, Col, DatePickerInput, Row, Spacer, Table, Text as Title } from 'pink-lava-ui'
 import { Card, Modal, Text } from 'src/components'
@@ -289,7 +289,16 @@ export default function CreateGoodsReceipt() {
         onCancel={() => setShowSubmitModal(false)}
         title="Confirm Submit"
         content="Are you sure want Submit Swap Handling?"
-        successContent={(res: any) => `GR Number ${res?.data} has been successfully created`}
+        successContent={(res: any) => (
+          <p>
+            Swap Handling Number
+            <Typography.Text copyable={{ text: res?.data?.id as string }}>
+              {' '}
+              {res?.data?.id}
+            </Typography.Text>{' '}
+            has been successfully created
+          </p>
+        )}
         successOkText="Print"
       />
     </Col>
