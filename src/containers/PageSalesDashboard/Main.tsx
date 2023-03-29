@@ -18,15 +18,23 @@ import {
   PointElement,
   LineElement,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend,
   Filler,
   ScriptableContext,
 } from 'chart.js'
-import { Line, Bar } from 'react-chartjs-2'
-import { getConfigSlocList } from 'src/api/logistic/configuration-sloc'
-import { columnsTopProductQTY, columnsTopProductRevenue } from './components/column/MainColumn'
+import { Line, Bar, Doughnut } from 'react-chartjs-2'
+import {
+  columnsTopProductQTY,
+  columnsTopProductRevenue,
+  columnsWorstProductRevenue,
+  columnsWorstProductQTY,
+  columnsSalesmanRevenue,
+  columnsSalesmanEC,
+  columnsSalesmanOA,
+} from './components/column/MainColumn'
 
 export default function Main() {
   ChartJS.register(
@@ -35,20 +43,38 @@ export default function Main() {
     PointElement,
     LineElement,
     BarElement,
+    ArcElement,
     Title,
     Tooltip,
     Legend,
     Filler,
   )
+  const getKey = (array, key) =>
+    array?.map((a) =>
+      key === 'date' ? moment(a[key]).format('DD MMMM') : a[key],
+    )
+
   const startOfMonth = moment().startOf('month')
   const endOfMonth = moment().endOf('month')
 
   const [showLoader, setShowLoader] = useState(true)
   const [summaryData, setSummaryData] = useState(null)
+  const [revenueData, setRevenueData] = useState(null)
+  const [custROAData, setCustROAData] = useState(null)
+  const [salesProductData, setSalesProductData] = useState(null)
+  const [dropsizeData, setDropSizeData] = useState(null)
+  const [TopProductData, setTopProductData] = useState(null)
+  const [WorstProductData, setWorstProductData] = useState(null)
+  const [topSalesManData, setTopSalesManDataData] = useState(null)
+  const [outletActiveData, setOutletActiveData] = useState(null)
   const [showFilterTopProduct, setShowFilterTopProduct] = useState(false)
+  const [showFilterWorstProduct, setShowFilterWorstProduct] = useState(false)
+  const [showFilterSalesman, setShowFilterSalesman] = useState(false)
   const [selectedDates, setSelectedDate] = useState<[any, any]>([startOfMonth, endOfMonth])
   const [filters, setFilters] = useState<FilterValueObj[]>([])
   const [tabsTopProduct, setTabsTopProduct] = useState('Revenue')
+  const [tabsWorstProduct, setTabsWorstProduct] = useState('Revenue')
+  const [tabsSalesman, setTabsSalesman] = useState('Revenue')
 
   const statusOption = [
     { label: 'Hour', value: '03' },
@@ -57,11 +83,7 @@ export default function Main() {
     { label: 'Month', value: '00' },
   ]
 
-  const table = useTable({
-    funcApi: getConfigSlocList,
-    columns: tabsTopProduct === 'Revenue' ? columnsTopProductRevenue : columnsTopProductQTY,
-  })
-
+  console.log('custROAData', getKey(custROAData, 'customer_roa'))
   useEffect(() => {
     const resFilters = [
       ...[
@@ -86,17 +108,25 @@ export default function Main() {
       .then((res) => {
         setShowLoader(false)
         setSummaryData(res.data?.summary)
+        setRevenueData(res.data?.revenue)
+        setCustROAData(res.data?.customer_roa)
+        setSalesProductData(res.data?.sales_by_product)
+        setDropSizeData(res.data?.dropsize)
+        setTopProductData(res.data?.top_product_data)
+        setWorstProductData(res.data?.worst_product)
+        setTopSalesManDataData(res.data?.top_salesman_data)
+        setOutletActiveData(res.data?.outlet_active)
       })
       .catch((err) => setShowLoader(false))
   }, [selectedDates])
 
   const data = {
-    labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    labels: getKey(revenueData, 'date'),
     datasets: [
       {
         fill: true,
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
+        label: 'Revenue',
+        data: getKey(revenueData, 'revenue'),
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: (context: ScriptableContext<'line'>) => {
           const ctx = context.chart.ctx
@@ -111,12 +141,12 @@ export default function Main() {
   }
 
   const dataROA = {
-    labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    labels: getKey(custROAData, 'date'),
     datasets: [
       {
         fill: true,
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
+        label: 'Customer (ROA)',
+        data: getKey(custROAData, 'customer_roa'),
         backgroundColor: (context: ScriptableContext<'line'>) => {
           const ctx = context.chart.ctx
           const gradient = ctx.createLinearGradient(0, 0, 0, 200)
@@ -143,12 +173,12 @@ export default function Main() {
   }
 
   const datadropSize = {
-    labels: ['a', 'b', 'c', 'd', 'e', 'f', 'g'],
+    labels: getKey(dropsizeData, 'date'),
     datasets: [
       {
         fill: true,
-        label: 'My First Dataset',
-        data: [65, 59, 80, 81, 56, 55, 40],
+        label: 'Dropsize',
+        data: getKey(dropsizeData, 'dropsize'),
         borderColor: 'rgb(1 168 98)',
         backgroundColor: (context: ScriptableContext<'line'>) => {
           const ctx = context.chart.ctx
@@ -158,6 +188,19 @@ export default function Main() {
           return gradient
         },
         tension: 0.1,
+      },
+    ],
+  }
+
+  const dataOutletType = {
+    labels: ['KR-KIOS ROKOK'],
+    datasets: [
+      {
+        label: '# of Votes',
+        data: [12],
+        backgroundColor: ['rgb(26 114 122)'],
+        borderColor: ['rgb(26 114 122)'],
+        borderWidth: 1,
       },
     ],
   }
@@ -180,6 +223,15 @@ export default function Main() {
     },
   }
 
+  const optionsDoughnut = {
+    center: {
+      text: 'Revenue',
+      sidePadding: 20,
+      minFontSize: 25,
+      lineHeight: 25,
+    },
+  }
+
   const content = (
     <>
       <Spacer size={20} />
@@ -192,6 +244,120 @@ export default function Main() {
             style={{ fontSize: 16, marginTop: 10 }}
           >
             Product
+          </Text>
+        </Col>
+        <Col flex={'80%'}>
+          <DebounceSelect type="select" options={statusOption} />
+        </Col>
+      </Row>
+      <Spacer size={20} />
+      <Row>
+        <Col flex={'20%'}>
+          <Text
+            width="fluid"
+            variant="headingSmall"
+            textAlign="left"
+            style={{ fontSize: 16, marginTop: 10 }}
+          >
+            Date
+          </Text>
+        </Col>
+        <Col flex={'80%'}>
+          <DebounceSelect type="select" options={statusOption} />
+        </Col>
+      </Row>
+      <div
+        style={{ display: 'flex', gap: 10, marginBottom: 20, paddingBottom: 20, paddingTop: 60 }}
+      >
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="tertiary"
+          onClick={() => setShowFilterTopProduct(false)}
+        >
+          Clear All
+        </Button>
+        <Button
+          size="big"
+          variant="primary"
+          style={{ flexGrow: 1 }}
+          onClick={() => setShowFilterTopProduct(false)}
+        >
+          Apply
+        </Button>
+      </div>
+    </>
+  )
+
+  const contentFilterOUtletType = (
+    <>
+      <Spacer size={20} />
+      <Row>
+        <Col flex={'20%'}>
+          <Text
+            width="fluid"
+            variant="headingSmall"
+            textAlign="left"
+            style={{ fontSize: 16, marginTop: 10 }}
+          >
+            Outlet Type
+          </Text>
+        </Col>
+        <Col flex={'80%'}>
+          <DebounceSelect type="select" options={statusOption} />
+        </Col>
+      </Row>
+      <Spacer size={20} />
+      <Row>
+        <Col flex={'20%'}>
+          <Text
+            width="fluid"
+            variant="headingSmall"
+            textAlign="left"
+            style={{ fontSize: 16, marginTop: 10 }}
+          >
+            Date
+          </Text>
+        </Col>
+        <Col flex={'80%'}>
+          <DebounceSelect type="select" options={statusOption} />
+        </Col>
+      </Row>
+      <div
+        style={{ display: 'flex', gap: 10, marginBottom: 20, paddingBottom: 20, paddingTop: 60 }}
+      >
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="tertiary"
+          onClick={() => setShowFilterTopProduct(false)}
+        >
+          Clear All
+        </Button>
+        <Button
+          size="big"
+          variant="primary"
+          style={{ flexGrow: 1 }}
+          onClick={() => setShowFilterTopProduct(false)}
+        >
+          Apply
+        </Button>
+      </div>
+    </>
+  )
+
+  const contentFilterSalesman = (
+    <>
+      <Spacer size={20} />
+      <Row>
+        <Col flex={'20%'}>
+          <Text
+            width="fluid"
+            variant="headingSmall"
+            textAlign="left"
+            style={{ fontSize: 16, marginTop: 10 }}
+          >
+            Salesman
           </Text>
         </Col>
         <Col flex={'80%'}>
@@ -810,7 +976,231 @@ export default function Main() {
               </div>
               <Spacer size={20} />
               <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
-                <Table {...table.state.tableProps} />
+                {tabsTopProduct === 'Revenue' ? (
+                  <Table
+                    columns={columnsTopProductRevenue}
+                    dataSource={TopProductData?.top_product_by_revenue || []}
+                  />
+                ) : (
+                  <Table
+                    columns={columnsTopProductQTY}
+                    dataSource={TopProductData?.top_product_by_qty || []}
+                  />
+                )}
+              </div>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Outlet Type</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Button
+                    size="small"
+                    variant="tertiary"
+                    onClick={() => setShowFilterTopProduct(true)}
+                    style={{
+                      border: '1px solid #888888',
+                      color: '#888888',
+                      backgroundColor: 'white',
+                      justifyContent: 'flex-start',
+                      gap: 16,
+                    }}
+                  >
+                    <ICFilter /> Filter
+                  </Button>
+                  <Modal
+                    onCancel={() => setShowFilterTopProduct(false)}
+                    destroyOnClose
+                    visible={showFilterTopProduct}
+                    title={'Filter'}
+                    width={500}
+                    footer={false}
+                    content={contentFilterOUtletType}
+                    maskClosable={false}
+                  />
+                </Col>
+              </Row>
+              <Spacer size={20} />
+              <Row>
+                <Col span={12}>
+                  <Doughnut data={dataOutletType} />
+                </Col>
+                <Col span={12}>
+                  <Doughnut data={dataOutletType} />
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+        </Row>
+        <Row gutter={8} wrap={false}>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Worst 10 Product</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Button
+                    size="small"
+                    variant="tertiary"
+                    onClick={() => setShowFilterWorstProduct(true)}
+                    style={{
+                      border: '1px solid #888888',
+                      color: '#888888',
+                      backgroundColor: 'white',
+                      justifyContent: 'flex-start',
+                      gap: 16,
+                    }}
+                  >
+                    <ICFilter /> Filter
+                  </Button>
+                  <Modal
+                    onCancel={() => setShowFilterWorstProduct(false)}
+                    destroyOnClose
+                    visible={showFilterWorstProduct}
+                    title={'Filter'}
+                    width={500}
+                    footer={false}
+                    content={content}
+                    maskClosable={false}
+                  />
+                </Col>
+              </Row>
+              <Spacer size={10} />
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 10,
+                }}
+              >
+                <Button
+                  size="small"
+                  variant={tabsWorstProduct === 'Revenue' ? 'primary' : 'tertiary'}
+                  onClick={() => setTabsWorstProduct('Revenue')}
+                >
+                  Revenue
+                </Button>
+                <Button
+                  size="small"
+                  variant={tabsWorstProduct === 'QTY' ? 'primary' : 'tertiary'}
+                  onClick={() => setTabsWorstProduct('QTY')}
+                >
+                  Qty (PCS)
+                </Button>
+              </div>
+              <Spacer size={20} />
+              <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+                {tabsWorstProduct === 'Revenue' ? (
+                  <Table
+                    columns={columnsWorstProductRevenue}
+                    dataSource={WorstProductData?.worst_product_by_revenue || []}
+                  />
+                ) : (
+                  <Table
+                    columns={columnsWorstProductQTY}
+                    dataSource={WorstProductData?.worst_product_by_qty || []}
+                  />
+                )}
+              </div>
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card>
+              <Row justify="space-between" align="middle">
+                <Col>
+                  <Row gutter={8}>
+                    <Col>
+                      <Typography.Text strong>Top 10 Salesman</Typography.Text>
+                    </Col>
+                  </Row>
+                </Col>
+                <Col>
+                  <Button
+                    size="small"
+                    variant="tertiary"
+                    onClick={() => setShowFilterSalesman(true)}
+                    style={{
+                      border: '1px solid #888888',
+                      color: '#888888',
+                      backgroundColor: 'white',
+                      justifyContent: 'flex-start',
+                      gap: 16,
+                    }}
+                  >
+                    <ICFilter /> Filter
+                  </Button>
+                  <Modal
+                    onCancel={() => setShowFilterSalesman(false)}
+                    destroyOnClose
+                    visible={showFilterSalesman}
+                    title={'Filter'}
+                    width={500}
+                    footer={false}
+                    content={contentFilterSalesman}
+                    maskClosable={false}
+                  />
+                </Col>
+              </Row>
+              <Spacer size={10} />
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 10,
+                }}
+              >
+                <Button
+                  size="small"
+                  variant={tabsSalesman === 'Revenue' ? 'primary' : 'tertiary'}
+                  onClick={() => setTabsSalesman('Revenue')}
+                >
+                  Revenue
+                </Button>
+                <Button
+                  size="small"
+                  variant={tabsSalesman === 'EC' ? 'primary' : 'tertiary'}
+                  onClick={() => setTabsSalesman('EC')}
+                >
+                  EC
+                </Button>
+                <Button
+                  size="small"
+                  variant={tabsSalesman === 'OA' ? 'primary' : 'tertiary'}
+                  onClick={() => setTabsSalesman('OA')}
+                >
+                  OA
+                </Button>
+              </div>
+              <Spacer size={20} />
+              <div style={{ display: 'flex', flexGrow: 1, overflow: 'scroll' }}>
+                {tabsSalesman === 'Revenue' && (
+                  <Table
+                    columns={columnsSalesmanRevenue}
+                    dataSource={topSalesManData?.top_salesman_by_revenue || []}
+                  />
+                )}
+                {tabsSalesman === 'EC' && (
+                  <Table
+                    columns={columnsSalesmanEC}
+                    dataSource={topSalesManData?.top_salesman_by_ec || []}
+                  />
+                )}
+                {tabsSalesman === 'OA' && (
+                  <Table
+                    columns={columnsSalesmanOA}
+                    dataSource={topSalesManData?.top_salesman_by_oa || []}
+                  />
+                )}
               </div>
             </Card>
           </Col>
