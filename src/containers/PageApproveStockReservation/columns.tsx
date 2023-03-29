@@ -88,7 +88,7 @@ export const column = [
       `${record.branch_id || ''} - ${record.branch_name || ''}`,
   }),
   addColumn({
-    title: 'Suppling SLoc',
+    title: 'Supplying SLoc',
     dataIndex: 'supplying_sloc_id',
     render: (text: string, record: any) =>
       `${record.supplying_sloc_id || ''} - ${record.supplying_sloc_name || ''}`,

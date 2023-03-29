@@ -124,9 +124,18 @@ export default function PageStockReservation() {
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="sloc_id"
+                field="supplying_sloc"
                 dataType="S"
-                label="SLoc"
+                label="Supplying SLoc"
+                options={['EQ', 'NE', 'BT', 'NB']}
+              >
+                <DebounceSelect type="select" options={allSloc} />
+                <DebounceSelect type="select" options={allSloc} />
+              </SmartFilter.Field>
+              <SmartFilter.Field
+                field="receiving_sloc"
+                dataType="S"
+                label="Receiving SLoc"
                 options={['EQ', 'NE', 'BT', 'NB']}
               >
                 <DebounceSelect type="select" options={allSloc} />
@@ -142,22 +151,22 @@ export default function PageStockReservation() {
                 <DebounceSelect type="select" placeholder={'Select'} options={movTypeOption} />
               </SmartFilter.Field>
               <SmartFilter.Field
-                field="requirement_date"
+                field="posting_date"
                 dataType="S"
-                label="Requirement Date"
+                label="Posting Date"
                 options={['GE', 'EQ', 'LE', 'GT', 'LT', 'NE']}
               >
                 <DatePickerInput
                   label={''}
                   fullWidth
                   format={'DD-MMM-YYYY'}
-                  placeholder="Requirement Date"
+                  placeholder="Posting Date"
                 />
                 <DatePickerInput
                   fullWidth
                   label={''}
                   format={'DD-MMM-YYYY'}
-                  placeholder="Requirement Date"
+                  placeholder="Posting Date"
                 />
               </SmartFilter.Field>
               <SmartFilter.Field
