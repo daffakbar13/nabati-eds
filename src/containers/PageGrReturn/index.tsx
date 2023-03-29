@@ -23,7 +23,7 @@ export default function PageGrReturn() {
   const { oldfilters, setFilters, searchProps } = useFilters(
     table,
     'Search By Doc, GR, PO, GI Number',
-    ['doc_number', 'id', 'po_number', 'gi_number'],
+    ['doc_number', 'gr_number', 'po_number', 'gi_number'],
   )
 
   const statusOption = [
