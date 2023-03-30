@@ -213,7 +213,7 @@ export const useTableAddItem = (props: propsUseTable) => {
       ],
     }),
     addColumn({
-      title: 'Reference Quantity',
+      title: 'Adjustment Quantity',
       dataIndex: 'reference_quanitity',
       width: 400,
       children: [

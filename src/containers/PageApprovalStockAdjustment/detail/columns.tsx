@@ -71,7 +71,7 @@ export const columns = [
     ],
   }),
   addColumn({
-    title: 'Reference Quantity',
+    title: 'Adjustment Quantity',
     dataIndex: 'reference quantity',
     width: 400,
     children: [
