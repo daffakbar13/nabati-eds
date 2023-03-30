@@ -103,7 +103,7 @@ export default function PrintStockOpname() {
                     <th rowSpan={3}>UoM</th>
                     <th rowSpan={3}>Adjustment Quantity</th>
                     <th rowSpan={3}>UoM</th>
-                    <th rowSpan={3}>Move Type</th>
+                    <th rowSpan={3}>Movement Type</th>
                     {/* <th rowSpan={3}>Batch</th> */}
                     {/* <th rowSpan={3}>Remark</th> */}
                   </tr>

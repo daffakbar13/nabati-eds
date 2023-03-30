@@ -145,6 +145,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               required
               type="input"
               placeholder="e.g ID"
+              maxLength={10}
               onChange={(val: any) => {
                 onChangeForm('route_id', val.target.value)
               }}

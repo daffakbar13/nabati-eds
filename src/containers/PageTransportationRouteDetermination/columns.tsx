@@ -15,7 +15,7 @@ export const columns = (
   }),
   addColumn({
     title: 'Depature Country',
-    dataIndex: 'depature_country',
+    dataIndex: 'country_id',
   }),
   addColumn({
     title: 'Depature Zone',
