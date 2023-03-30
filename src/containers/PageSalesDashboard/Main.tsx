@@ -83,7 +83,6 @@ export default function Main() {
     { label: 'Month', value: '00' },
   ]
 
-  console.log('custROAData', getKey(custROAData, 'customer_roa'))
   useEffect(() => {
     const resFilters = [
       ...[
