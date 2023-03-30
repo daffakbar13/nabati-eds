@@ -1,6 +1,7 @@
 import { Button, Col, Spacer, Text } from 'pink-lava-ui'
 import { Tabs } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import ReactToPrint from 'react-to-print'
 import { Card, GoBackArrow, Modal, Loader } from 'src/components'
 import { useRouter } from 'next/router'
 import { getGrReturnDetail } from 'src/api/logistic/good-return'
@@ -16,6 +17,7 @@ export default function DetailGR() {
   const router = useRouter()
   const [currentTab, setCurrentTab] = useState('1')
   const id = String(router.query.id) || ''
+  const componentRef = useRef()
 
   // Modals
   const [cancelProcessModal, setCancelProcessModal] = useState(false)
@@ -86,10 +88,15 @@ export default function DetailGR() {
                   )}
                 </>
               )}
-              {hashTab === '2' && (
-                <Button size="big" variant="primary" onClick={() => {}} loading={loading}>
-                  Print LPB
-                </Button>
+              {currentTab === '2' && (
+                <ReactToPrint
+                  trigger={() => (
+                    <Button size="big" variant="primary">
+                      Print LPB
+                    </Button>
+                  )}
+                  content={() => componentRef.current}
+                />
               )}
             </div>
           </div>
@@ -115,7 +122,7 @@ export default function DetailGR() {
                 <DocumentHeader loading={loading} details={details} />
               </>
             ) : (
-              <LRB details={details} />
+              <LRB details={details} refs={componentRef} />
             )}
           </Card>
 
