@@ -15,6 +15,10 @@ export const columns = (
     sorter: true,
   }),
   addColumn({
+    title: 'Description',
+    dataIndex: 'name',
+  }),
+  addColumn({
     title: 'Identification',
     dataIndex: 'identification',
   }),

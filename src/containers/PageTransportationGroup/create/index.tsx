@@ -130,14 +130,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item> */}
         <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="description"
-          rules={[{ required: true }]}
-        >
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
           <DebounceSelect
             label="Description"
-            required
             type="input"
             placeholder="e.g Description"
             onChange={(val: any) => {

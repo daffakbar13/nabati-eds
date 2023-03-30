@@ -135,14 +135,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item> */}
         <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="description"
-          rules={[{ required: true }]}
-        >
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="description">
           <DebounceSelect
             label="Description"
-            required
             type="input"
             placeholder="e.g Description"
             onChange={(val: any) => {
@@ -151,14 +146,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item
-          style={{ marginBottom: 0, paddingBottom: 0 }}
-          name="delivery_in_days"
-          rules={[{ required: true }]}
-        >
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="delivery_in_days">
           <DebounceSelect
             label="Delivery in Days"
-            required
             type="input"
             placeholder="e.g Delivery in Dats"
             onChange={(val: any) => {
