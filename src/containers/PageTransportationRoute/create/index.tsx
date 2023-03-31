@@ -27,7 +27,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     if (!isOnEditMode) return
     const fetchData = async () => {
       form.setFieldsValue({
-        description: payload?.description,
+        description: payload?.name,
         id: payload?.id,
         identification: payload?.identification,
         transportation_mode_id: payload?.transportation_mode_id,
@@ -36,7 +36,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       })
       setDataForm({
         id: payload?.id,
-        description: payload?.description,
+        description: payload?.name,
         identification: payload?.identification,
         transportation_mode_id: payload?.transportation_mode_id,
         shipment_type_id: payload?.shipment_type_id,
@@ -127,6 +127,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             required
             type="input"
             placeholder="e.g ID"
+            maxLength={10}
             onChange={(val: any) => {
               onChangeForm('id', val.target.value)
             }}

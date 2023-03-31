@@ -122,6 +122,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             label="ID"
             required
             type="input"
+            maxLength={6}
             placeholder="e.g ID"
             onChange={(val: any) => {
               onChangeForm('id', val.target.value)
