@@ -33,12 +33,24 @@ export default function PageRealTime() {
     })
   }, [branchfrom, branchTo])
 
-  const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search by Material Document', [
-    'id',
-    'product_id',
-    'branch_id',
-    'sloc_id',
-  ])
+  const { filters, oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Material Document',
+    ['id', 'product_id', 'branch_id', 'sloc_id'],
+  )
+
+  const downloadFunction = async (reqBody: any) => {
+    try {
+      const res = exportExcelMaterialDocument({
+        filters: filters,
+        limit: table.state.limit,
+        page: table.state.page,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
   return (
     <Col>
       <Text variant={'h4'}>Material Document</Text>
@@ -88,7 +100,7 @@ export default function PageRealTime() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <DownloadButton downloadApi={exportExcelMaterialDocument} />
+            <DownloadButton downloadApi={downloadFunction} />
           </Row>
         </Row>
       </Card>

@@ -1,9 +1,9 @@
-import { Col, Row, Spacer, Table, Text, Button } from 'pink-lava-ui'
+import { Col, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import { Card, SearchQueryParams, SmartFilter } from 'src/components'
+import { Card, SmartFilter, DownloadButton } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { exportExcelStockRealTime, getStockRealtimeList } from 'src/api/logistic/stock-real-time'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import {
   fieldBranchAll,
   fieldSlocFromBranch,
@@ -14,7 +14,6 @@ import Pagination from 'src/components/Pagination'
 import { columns } from './columns'
 
 export default function PageRealTime() {
-  const [filters, setFilters] = useState([])
   const [allSloc, setAllScloc] = useState([])
   const [branchfrom, setBranchFrom] = useState('')
   const [branchTo, setBranchTo] = useState('')
@@ -27,9 +26,11 @@ export default function PageRealTime() {
     data,
   })
 
-  useEffect(() => {
-    table.handler.handleFilter(filters)
-  }, [filters])
+  const { filters, oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search By Branch ID, Material ID, Sloc ID',
+    ['branch_id', 'product_id', 'sloc_id'],
+  )
 
   useEffect(() => {
     fieldSlocFromBranch(branchfrom, branchTo).then((response) => {
@@ -81,6 +82,19 @@ export default function PageRealTime() {
     setdataTable(dataApi)
   }, [table?.state?.data])
 
+  const downloadFunction = async (reqBody: any) => {
+    try {
+      const res = exportExcelStockRealTime({
+        filters: filters,
+        limit: table.state.limit,
+        page: table.state.page,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
   return (
     <Col>
       <Text variant={'h4'}>Stock Realtime</Text>
@@ -88,8 +102,8 @@ export default function PageRealTime() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
-            <SmartFilter onOk={setFilters}>
+            <Search {...searchProps} />
+            <SmartFilter onOk={setFilters} oldFilter={oldfilters}>
               <SmartFilter.Field
                 field="branch_id"
                 dataType="S"
@@ -132,19 +146,7 @@ export default function PageRealTime() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <Button
-              size="big"
-              variant="secondary"
-              onClick={() =>
-                exportExcelStockRealTime({
-                  filters,
-                  limit: table.state.limit,
-                  page: table.state.page,
-                })
-              }
-            >
-              Download
-            </Button>
+            <DownloadButton downloadApi={downloadFunction} />
           </Row>
         </Row>
       </Card>

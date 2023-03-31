@@ -25,7 +25,7 @@ export default function PageMaterialInTransit() {
     columns,
   })
 
-  const { oldfilters, setFilters, searchProps } = useFilters(
+  const { filters, oldfilters, setFilters, searchProps } = useFilters(
     table,
     'Search By Request Document, Delivery Order Document',
     ['request_number', 'delivery_order_document'],
@@ -39,9 +39,9 @@ export default function PageMaterialInTransit() {
   const downloadFunction = async (reqBody: any) => {
     try {
       const res = exportExcelMaterialInTransit({
-        filters: oldfilters,
-        limit: 20,
-        page: 1,
+        filters: filters,
+        limit: table.state.limit,
+        page: table.state.page,
       })
       return res
     } catch (error) {

@@ -14,19 +14,35 @@ import {
   exportExcelListSwapHandling,
   getListSwapHandling,
 } from 'src/api/logistic/wh-stock-mutation'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 
 import { Props } from './types'
 
 export default function PageWhStockMutation(props: Props) {
-  const [filters, setFilters] = useState([])
-  const router = useRouter()
-
   const table = useTable({
     funcApi: getListSwapHandling,
     columns,
   })
+
+  const { filters, oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Branch ID, Product ID & Sloc ID',
+    ['product_id', 'branch_id', 'sloc_id'],
+  )
+
+  const downloadFunction = async (reqBody: any) => {
+    try {
+      const res = exportExcelListSwapHandling({
+        filters: filters,
+        limit: table.state.limit,
+        page: table.state.page,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
 
   return (
     <Col>
@@ -84,7 +100,7 @@ export default function PageWhStockMutation(props: Props) {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <DownloadButton downloadApi={exportExcelListSwapHandling} />
+            <DownloadButton downloadApi={downloadFunction} />
           </Row>
         </Row>
       </Card>

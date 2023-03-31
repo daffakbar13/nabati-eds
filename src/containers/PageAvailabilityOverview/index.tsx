@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { Col, Row, Spacer, Table, Text, Button, Search } from 'pink-lava-ui'
 import { useState, useEffect } from 'react'
-import { Card, SmartFilter } from 'src/components'
+import { Card, SmartFilter, DownloadButton } from 'src/components'
 import DebounceSelect from 'src/components/DebounceSelect'
 import {
   exportExcelAvailabilityOverview,
@@ -126,6 +126,19 @@ export default function PageAvailabilityOverview() {
     setdataTable(dataApi)
   }, [table?.state?.data])
 
+  const downloadFunction = async (reqBody: any) => {
+    try {
+      const res = exportExcelAvailabilityOverview({
+        filters: filters,
+        limit: table.state.limit,
+        page: table.state.page,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
   return (
     <Col>
       <Text variant={'h4'}>Availability Overview</Text>
@@ -177,19 +190,7 @@ export default function PageAvailabilityOverview() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <Button
-              size="big"
-              variant="secondary"
-              onClick={() =>
-                exportExcelAvailabilityOverview({
-                  filters,
-                  limit: table.state.limit,
-                  page: table.state.page,
-                })
-              }
-            >
-              Download
-            </Button>
+            <DownloadButton downloadApi={downloadFunction} />
           </Row>
         </Row>
       </Card>
