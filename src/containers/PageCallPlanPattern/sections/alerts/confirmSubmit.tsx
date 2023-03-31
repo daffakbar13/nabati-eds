@@ -4,10 +4,11 @@ import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
 import { useSFACallPlanPatternContext } from '../../states'
+import { createCallPlanPattern } from 'src/api/call-plan-pattern'
 
 export default function ConfirmSubmit() {
   const {
-    handler: { showConfirm, unShowConfirm, runProcess, stopProcess, changeSubmittedQuotation },
+    handler: { showConfirm, unShowConfirm, runProcess, stopProcess, changeCreateCallPlanPattern },
   } = useSFACallPlanPatternContext()
 
   return (
@@ -31,18 +32,27 @@ export default function ConfirmSubmit() {
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          // onClick={() => {
-          //   runProcess('Wait for submitting Quotation')
-          //   multipleSubmitQuotation({ order_list: selected.map((id) => ({ id })) })
-          //     .then((response) => response.data)
-          //     .then((data) => {
-          //       showConfirm('success-submit')
-          //       changeSubmittedQuotation(data.results.map(({ id }) => id))
-          //       stopProcess()
-          //     })
-          //     .catch(() => stopProcess())
-          // }}
-          onClick={() => unShowConfirm()}
+          onClick={() => {
+            runProcess('Wait for submitting Quotation')
+            createCallPlanPattern({
+              company_id: '',
+              customer_id: '',
+              salesman_id: '',
+              visit_day: '',
+              cycle: '',
+              is_active: '',
+            })
+              .then((params) => {
+                //showConfirm('success-submit')
+                changeCreateCallPlanPattern(params)
+                stopProcess()
+              })
+              .catch(() => {
+                stopProcess()
+              })
+          }}
+
+          //</div>onClick={() => unShowConfirm()}
         >
           Yes
         </Button>
