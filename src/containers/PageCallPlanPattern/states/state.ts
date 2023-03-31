@@ -4,7 +4,8 @@ export interface StateType {
   table?: ReturnType<typeof useTable>
   processing?: string
   confirm?: string
-  submittedQuotation: string[]
+  createCallPlanPattern: string[]
   showModal: boolean
+  editable?: any
   selected?: any
 }
