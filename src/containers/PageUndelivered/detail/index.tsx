@@ -66,7 +66,7 @@ export default function PageApprovalDetail() {
   React.useEffect(() => {
     setPayloads(() => ({
       shipment_id: router.query.id,
-      delivery_data: dataTable.map((d, i) => ({
+      delivery_data: dataTable?.map((d, i) => ({
         delivery_id: d.delivery_oder_id,
         delivery_date: d.order_date,
         is_delivery: 0,
