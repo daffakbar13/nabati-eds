@@ -1,0 +1,1 @@
+export { rightAlign } from './rightAlign'

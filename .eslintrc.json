@@ -1,0 +1,38 @@
+{
+  "extends": ["next/core-web-vitals", "airbnb-base"],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off",
+    "no-unused-vars": "warn",
+    "import/no-cycle": "off",
+    "import/named": "off",
+    "no-undef": "off",
+    "eol-last": "off",
+    "import/prefer-default-export": "off",
+    "no-empty-pattern": "off",
+    "camelcase": "off",
+    "import/no-named-as-default": 0,
+    "linebreak-style": 0,
+    "implicit-arrow-linebreak": 0,
+    "object-curly-newline": [
+      "warn",
+      {
+        "ObjectExpression": {
+          "multiline": true,
+          "minProperties": 5
+        }
+      }
+    ],
+    "semi": "off",
+    "indent": 1,
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
+  }
+}

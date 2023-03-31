@@ -1,0 +1,259 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap'); */
+/* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap'); */
+/*
+  1. Use a more-intuitive box-sizing model.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+/*
+    2. Remove default margin
+*/
+* {
+  margin: 0;
+}
+/*
+    3. Allow percentage-based heights in the application
+*/
+html,
+body {
+  height: 100%;
+}
+/*
+    Typographic tweaks!
+    4. Add accessible line-height
+    5. Improve text rendering
+*/
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-family: Nunito Sans;
+  -ms-overflow-style: none; /* Disable scrollbar IE 10+ */
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+/*
+    6. Improve media defaults
+*/
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+/*
+    7. Remove built-in form typography styles
+*/
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+/*
+    8. Avoid text overflows
+*/
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+/*
+    9. Create a root stacking context
+*/
+#root,
+#__next {
+  isolation: isolate;
+}
+
+p {
+  margin: 0;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+} */
+
+/* START - ANTD SELECT */
+.ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0);
+  border: 0px;
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+/* END - ANTD SELECT */
+
+::-webkit-scrollbar {
+  display: none;
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+::-moz-scrollbar {
+  width: 0; /* Remove scrollbar space */
+  background: transparent; /* Optional: just make scrollbar invisible */
+}
+
+/* th.ant-table-cell::before {
+    display: none;
+} */
+
+.ant-tabs-ink-bar {
+  border-bottom: 4px solid #2bbecb;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #2bbecb;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #2bbecb;
+  border-color: #2bbecb;
+}
+
+/* .ant-table-cell.ant-table-selection-column {
+  z-index: 4 !important;
+}
+
+.ant-table-cell-fix-left.ant-table-cell-ellipsis {
+  z-index: 3;
+}
+
+.ant-table-cell-fix-left.ant-table-cell-ellipsis.have-checkbox {
+  left: 32px !important;
+} */
+
+.ant-spin-dot-item {
+  background-color: #2bbecb;
+}
+
+.masterDataSelect.ant-select-single.ant-select-lg:not(.ant-select-customize-input)
+  .ant-select-selector {
+  border-radius: 8px;
+}
+
+.ant-table-ping-left .ant-table-cell-fix-left-last::after,
+.ant-table-ping-right .ant-table-cell-fix-right::after {
+  box-shadow: none;
+}
+
+table.eds_paper {
+  width: 100%;
+}
+
+table.eds_paper th {
+  text-align: center !important;
+}
+
+table.eds_paper td {
+  vertical-align: top;
+}
+
+table.eds_paper,
+.eds_paper th,
+.eds_paper td {
+  border: 0.5px solid;
+  padding: 2px 5px;
+  text-align: left;
+}
+
+table.eds_paper_bsts {
+  width: 100%;
+}
+
+table.eds_paper_bsts th {
+  text-align: left !important;
+}
+
+table.eds_paper_bsts td {
+  vertical-align: top;
+}
+
+table.eds_paper_bsts,
+.eds_paper_bsts th,
+.eds_paper_bsts td {
+  padding: 2px 5px;
+  text-align: left;
+}
+
+.right-align {
+  text-align: right !important;
+}
+
+table.eds_create_shipment {
+  width: 100%;
+}
+
+table.eds_create_shipment thead tr {
+  text-align: left;
+  color: grey;
+  border-top: 1px dashed #88888888;
+  border-bottom: 1px dashed #88888888;
+  background: #ffffffff;
+}
+
+table.eds_create_shipment tbody tr td {
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+table.eds_promotion_list {
+  width: 100%;
+}
+
+table.eds_promotion_list tr {
+  background: #ffffffff;
+  font-weight: bold;
+}
+
+table.eds_promotion_list thead tr {
+  background: #f4f4f4f4;
+}
+
+table.eds_promotion_list tbody tr td,
+table.eds_promotion_list thead tr th {
+  text-align: center;
+  border: 0.5px solid #88888888;
+  padding: 10px;
+}
+
+table.eds_promotion_log {
+  table-layout: fixed;
+  width: 100%;
+}
+
+table.eds_promotion_log tbody tr td,
+table.eds_promotion_log thead tr th {
+  border: 0px;
+  padding: 5px 0;
+  border-spacing: 0;
+}
+
+.antd-table-thead tr th,
+.antd-table-tbody tr td {
+  padding: 10px !important;
+}
+
+table.eds_print_invoice {
+  table-layout: auto;
+  width: 100%;
+}
+
+table.eds_print_invoice tr th,
+table.eds_print_invoice tr td {
+  text-align: left;
+  padding: 5px;
+}

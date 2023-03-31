@@ -1,0 +1,88 @@
+{
+  "status": "success",
+  "message": "success",
+  "data": {
+    "result": [
+      {
+        "id": "1041000000000",
+        "order_type_id": "ZQP1",
+        "order_date": "2022-09-27T00:00:00Z",
+        "sold_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "ship_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "salesman_id": "131603",
+        "sales_org_id": "PID1",
+        "branch_id": "P104",
+        "status_name": "New",
+        "total_amount": 0
+      },
+      {
+        "id": "1041000000001",
+        "order_type_id": "ZQP1",
+        "order_date": "2022-09-27T00:00:00Z",
+        "sold_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "ship_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "salesman_id": "131603",
+        "sales_org_id": "PID1",
+        "branch_id": "P104",
+        "status_name": "New",
+        "total_amount": 0
+      },
+      {
+        "id": "1041000000021",
+        "order_type_id": "ZQP1",
+        "order_date": "2022-09-27T00:00:00Z",
+        "sold_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "ship_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "salesman_id": "131603",
+        "sales_org_id": "PID1",
+        "branch_id": "P104",
+        "status_name": "New",
+        "total_amount": 0
+      },
+      {
+        "id": "1041000000022",
+        "order_type_id": "ZQP1",
+        "order_date": "2022-09-27T00:00:00Z",
+        "sold_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "ship_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "salesman_id": "131603",
+        "sales_org_id": "PID1",
+        "branch_id": "P104",
+        "status_name": "New",
+        "total_amount": 0
+      },
+      {
+        "id": "1041000000023",
+        "order_type_id": "ZQP1",
+        "order_date": "2022-09-28T00:00:00Z",
+        "sold_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "ship_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "salesman_id": "131603",
+        "sales_org_id": "PID1",
+        "branch_id": "P104",
+        "status_name": "New",
+        "total_amount": 0
+      },
+      {
+        "id": "1041000000024",
+        "order_type_id": "ZQP1",
+        "order_date": "2022-09-27T00:00:00Z",
+        "sold_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "ship_to_customer_id": "C1624001-SANGKAKALA,TK",
+        "salesman_id": "131603",
+        "sales_org_id": "PID1",
+        "branch_id": "P104",
+        "status_name": "New",
+        "total_amount": 0
+      }
+    ],
+    "pagination": {
+      "total": 6,
+      "per_page": 100,
+      "previous_page": 0,
+      "current_page": 1,
+      "next_page": 0,
+      "total_page": 1
+    }
+  }
+}

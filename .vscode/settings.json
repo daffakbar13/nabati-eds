@@ -1,0 +1,30 @@
+{
+  "cSpell.words": [
+    "antd",
+    "camelcase",
+    "Parens",
+    "Popconfirm",
+    "snakecase",
+    "Storeloc"
+  ],
+  // "editor.rulers": [80, 100, 120],
+  // "workbench.colorCustomizations": {
+  //   "editorRuler.foreground": "#FF69B4"
+  // },
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.formatDocument": true,
+    "source.fixAll.eslint": true
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "prettier.printWidth": 80,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

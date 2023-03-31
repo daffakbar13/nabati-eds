@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2015",
+    "lib": ["dom", "dom.iterable", "esnext", "ES2015"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "incremental": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve"
+  },
+  "include": [
+    "next-env.d.ts",
+    "additional-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "utils/formatter.js",
+    "next.config.js",
+    "pages/_document.js"
+  ],
+  "exclude": ["node_modules"]
+}
