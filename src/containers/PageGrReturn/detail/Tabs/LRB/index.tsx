@@ -26,7 +26,7 @@ function Information(props: { label: string; value: string }) {
   )
 }
 
-export default function LRB({ details, loading = false }) {
+export default function LRB({ details, refs }) {
   return (
     <>
       Print Preview - Lembar Return Barang (LRB)
@@ -41,66 +41,68 @@ export default function LRB({ details, loading = false }) {
           overflow: 'scroll',
         }}
       >
-        <PaperA4>
-          <Row>
-            <Col span={20}>
-              <Row justify="center">
-                <CustomText fontWeight="bold" fontSize={24}>
-                  Laporan Return Barang
-                </CustomText>
-              </Row>
-            </Col>
-            <Col span={4}>
-              No. Dokumen. <br />
-              {details?.material_doc_id}
-            </Col>
-          </Row>
-          <Row>
-            <Col span={8}>
-              Penerima : <br />
-              {`${details?.branch_id} - ${details?.branch_name}`} <br />
-              JL. SOEKARNO HATTA NO 588 ALAMAT NOT IMPLEMENT
-              <br />
-              Sloc not implement YET <br />
-            </Col>
-            <Col span={8}>
-              <Information
-                label="Tanggal Doc"
-                value={moment(details?.document_date).format('DD MMM YYYY')}
-              />
-              <Information label="NO. Prof PO" value={details?.po_number} />
-              <Information label="No SUrat Jalan" value="1231234134 NOT IMPLEMENT YET" />
-            </Col>
-            <Col span={8}>
-              Pengirim : <br />
-              {`${details?.vendor_id} - ${details?.vendor_name}`} <br />
-              JL. SOEKARNO HATTA NO 588 ALAMAT NOT IMPLEMENT
-              <br />
-            </Col>
-          </Row>
-          <table className="eds_paper">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>Kode Barang</th>
-                <th>Deskripsi Barang (nama, spec)</th>
-                <th>Jumlah</th>
-                <th>Keterangan</th>
-              </tr>
-            </thead>
-            <tbody>
-              {details?.items?.map((item, index) => (
-                <tr key={index}>
-                  <td>{index + 1}</td>
-                  <td>{item.product_id}</td>
-                  <td>{item.product_name}</td>
-                  <td>{`${item.qty_gr} ${item.uom_id}`}</td>
-                  <td>{item.remarks}</td>
+        <div ref={refs}>
+          <PaperA4>
+            <Row>
+              <Col span={20}>
+                <Row justify="center">
+                  <CustomText fontWeight="bold" fontSize={24}>
+                    Laporan Return Barang
+                  </CustomText>
+                </Row>
+              </Col>
+              <Col span={4}>
+                No. Dokumen. <br />
+                {details?.material_doc_id}
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8}>
+                Penerima : <br />
+                {`${details?.branch_id} - ${details?.branch_name}`} <br />
+                JL. SOEKARNO HATTA NO 588 ALAMAT NOT IMPLEMENT
+                <br />
+                Sloc not implement YET <br />
+              </Col>
+              <Col span={8}>
+                <Information
+                  label="Tanggal Doc"
+                  value={moment(details?.document_date).format('DD MMM YYYY')}
+                />
+                <Information label="NO. Prof PO" value={details?.po_number} />
+                <Information label="No SUrat Jalan" value="1231234134 NOT IMPLEMENT YET" />
+              </Col>
+              <Col span={8}>
+                Pengirim : <br />
+                {`${details?.vendor_id} - ${details?.vendor_name}`} <br />
+                JL. SOEKARNO HATTA NO 588 ALAMAT NOT IMPLEMENT
+                <br />
+              </Col>
+            </Row>
+            <table className="eds_paper">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Kode Barang</th>
+                  <th>Deskripsi Barang (nama, spec)</th>
+                  <th>Jumlah</th>
+                  <th>Keterangan</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </PaperA4>
+              </thead>
+              <tbody>
+                {details?.items?.map((item, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{item.product_id}</td>
+                    <td>{item.product_name}</td>
+                    <td>{`${item.qty_gr} ${item.uom_id}`}</td>
+                    <td>{item.remarks}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </PaperA4>
+        </div>
       </div>
     </>
   )
