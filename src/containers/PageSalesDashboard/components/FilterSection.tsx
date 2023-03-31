@@ -86,8 +86,10 @@ export default function FilterSection({
 
         {dateFilter && selectFilter && <Divider style={{ borderColor: '#aaa' }} />}
 
-        <Row gutter={16}>
-          {/* <Col span={4}>
+        {selectFilter && (
+          <>
+            <Row gutter={16}>
+              {/* <Col span={4}>
             <DebounceSelect
               type="select"
               placeholder="Bussines Unit"
@@ -102,52 +104,52 @@ export default function FilterSection({
               style={{ borderRadius: 24 }}
             />
           </Col> */}
-          <Col span={4}>
-            <DebounceSelect
-              type="select"
-              placeholder="Region"
-              fetchOptions={fieldRegion}
-              onChange={(e) =>
-                handleChange({
-                  field: 'region_id',
-                  option: 'EQ',
-                  fromValue: e.value,
-                })
-              }
-              style={{ borderRadius: 24 }}
-            />
-          </Col>
-          <Col span={4}>
-            <DebounceSelect
-              type="select"
-              placeholder="Branch"
-              fetchOptions={fieldBranchAll}
-              onChange={(e) =>
-                handleChange({
-                  field: 'branch_id',
-                  option: 'EQ',
-                  fromValue: e.value,
-                })
-              }
-              style={{ borderRadius: 24 }}
-            />
-          </Col>
-          <Col span={4}>
-            <DebounceSelect
-              type="select"
-              placeholder="Channel"
-              fetchOptions={fieldChannelCompany}
-              onChange={(e) =>
-                handleChange({
-                  field: 'channel_id',
-                  option: 'EQ',
-                  fromValue: e.value,
-                })
-              }
-              style={{ borderRadius: 24 }}
-            />
-          </Col>
-          {/* <Col span={4}>
+              <Col span={4}>
+                <DebounceSelect
+                  type="select"
+                  placeholder="Region"
+                  fetchOptions={fieldRegion}
+                  onChange={(e) =>
+                    handleChange({
+                      field: 'region_id',
+                      option: 'EQ',
+                      fromValue: e.value,
+                    })
+                  }
+                  style={{ borderRadius: 24 }}
+                />
+              </Col>
+              <Col span={4}>
+                <DebounceSelect
+                  type="select"
+                  placeholder="Branch"
+                  fetchOptions={fieldBranchAll}
+                  onChange={(e) =>
+                    handleChange({
+                      field: 'branch_id',
+                      option: 'EQ',
+                      fromValue: e.value,
+                    })
+                  }
+                  style={{ borderRadius: 24 }}
+                />
+              </Col>
+              <Col span={4}>
+                <DebounceSelect
+                  type="select"
+                  placeholder="Channel"
+                  fetchOptions={fieldChannelCompany}
+                  onChange={(e) =>
+                    handleChange({
+                      field: 'channel_id',
+                      option: 'EQ',
+                      fromValue: e.value,
+                    })
+                  }
+                  style={{ borderRadius: 24 }}
+                />
+              </Col>
+              {/* <Col span={4}>
             <DebounceSelect
               type="select"
               placeholder="Outlet Type"
@@ -162,7 +164,7 @@ export default function FilterSection({
               style={{ borderRadius: 24 }}
             />
           </Col> */}
-          {/* <Col span={4}>
+              {/* <Col span={4}>
             <DebounceSelect
               type="select"
               placeholder="SKU"
@@ -177,7 +179,9 @@ export default function FilterSection({
               style={{ borderRadius: 24 }}
             />
           </Col> */}
-        </Row>
+            </Row>
+          </>
+        )}
       </Card>
     </Fragment>
   )
