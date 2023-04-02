@@ -126,11 +126,25 @@ export const checkIsFreezeList = async (
 export const ValidatefreezeSlocId = async (
   params: any,
   branchId: string,
-  slocId: string,
+  slocId?: string,
 ): Promise<CommonCheckFreeze<any>> => {
   const response = await call({
     method: METHODS.GET,
     subUrl: `v1/sloc/check/${branchId}/${slocId}`,
+    overrideBaseUrl,
+    data: { ...params },
+  })
+  return response.data
+}
+
+export const validateFreezeByBranchId = async (
+  params: any,
+  branchId: string,
+  isFreeze?: 0 | 1,
+): Promise<CommonCheckFreeze<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    subUrl: `v1/sloc/branch/${branchId}?isFreeze=${isFreeze}`,
     overrideBaseUrl,
     data: { ...params },
   })

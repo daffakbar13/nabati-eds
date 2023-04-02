@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Col, Spacer, Text, DatePickerInput } from 'pink-lava-ui'
 import { Card, Popup } from 'src/components'
 import { Tabs, Typography } from 'antd'
@@ -24,6 +24,8 @@ import BPB from './tabs/BPB'
 import HPH from './tabs/HPH'
 import BSTF from './tabs/BSTF'
 import BSTS from './tabs/BSTS'
+import { Modal } from 'src/components'
+import { validateFreezeByBranchId } from 'src/api/logistic/stock-opname'
 
 export default function PageShipmentDetail() {
   const titlePage = useTitlePage('detail')
@@ -31,7 +33,10 @@ export default function PageShipmentDetail() {
   const [showConfirm, setShowConfirm] = React.useState('')
   const [processing, setProcessing] = React.useState('')
   const [postingDate, setPostingDate] = React.useState(moment().format('YYYY-MM-DD'))
+  const [showCheckFreezeModal, setShowCekFreezeModal] = React.useState(false)
+
   const router = useRouter()
+
   const data = useDetail(getDetailShipment, router.query)
   const dataBpb = useDetail(getShipmentBpb, router.query)
   const dataBstf = useDetail(getShipmentBstf, router.query)
@@ -78,8 +83,21 @@ export default function PageShipmentDetail() {
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          onClick={() => {
+          onClick={async () => {
             setProcessing('Wait For PGI')
+
+            const validateResponse = await validateFreezeByBranchId(
+              {},
+              data?.shipment_detail?.branch_id,
+              1,
+            )
+            if (validateResponse.data !== null) {
+              setShowCekFreezeModal(true)
+              setShowConfirm('')
+              setProcessing('')
+              return
+            }
+
             PGIShipment(router.query.id as string, { posting_date: postingDate })
               .then(() => {
                 setProcessing('')
@@ -118,7 +136,7 @@ export default function PageShipmentDetail() {
         }}
       >
         <div>
-          Shipment
+          Shipment{' '}
           <Typography.Text copyable={{ text: router.query.id as string }}>
             {router.query.id}
           </Typography.Text>
@@ -249,6 +267,13 @@ export default function PageShipmentDetail() {
       </Card>
       {showConfirm === 'pgi' && <ConfirmPGI />}
       {showConfirm === 'success-pgi' && <ConfirmSuccessPGI />}
+      <Modal
+        open={showCheckFreezeModal}
+        onOk={() => router.back()}
+        onCancel={() => setShowCekFreezeModal(false)}
+        title="Warning"
+        content={`This transactionn cannot be processed, because the Branch ${data?.shipment_detail?.branch_id} with the SLoc ${data?.shipment_detail?.sloc_id} is being freeze, please wait a few moments`}
+      />
     </Col>
   )
 }
