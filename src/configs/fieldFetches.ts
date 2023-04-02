@@ -60,6 +60,8 @@ import { getListSlocByMultipleBranch } from 'src/api/logistic/configuration-sloc
 import { getListTrasportationMode } from 'src/api/transportation/transportation-mode'
 import { getListVehicleType } from 'src/api/transportation/vehicle-type'
 import { getListDriver } from 'src/api/transportation/driver'
+import { getListShippingType } from 'src/api/transportation/shipping-type'
+import { getListTransportationGroup } from 'src/api/transportation/transportation-group'
 
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable camelcase */
@@ -1218,6 +1220,25 @@ export function fieldRules(search = '') {
   )
 }
 
+export function fieldShippingType(search = '') {
+  return getListShippingType({
+    filters: [],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result.data.results
+      // ?.filter(
+      //   ({ id, description }) =>
+      //     id.toLowerCase().includes(search.toLowerCase()) ||
+      //     description.toLowerCase().includes(search.toLowerCase()),
+      // )
+      .map(({ id, description }) => ({
+        label: [id, description].join(' - '),
+        value: id,
+      })),
+  )
+}
+
 export function fieldModeOfTransportation(search = '') {
   return getListTrasportationMode({
     filters: [
@@ -1235,7 +1256,21 @@ export function fieldModeOfTransportation(search = '') {
     limit: 20,
     page: 1,
   }).then((result) =>
-    result?.data?.results?.splice(0, 10).map(({ id, description }) => ({
+    // result?.data?.results?.splice(0, 10).map(({ id, description }) => ({
+    result?.data?.results?.map(({ id, description }) => ({
+      label: [id, description].join(' - '),
+      value: id,
+    })),
+  )
+}
+
+export function fieldTransportationGroup(search = '') {
+  return getListTransportationGroup({
+    filters: [],
+    limit: 20,
+    page: 1,
+  }).then((result) =>
+    result.data.results.map(({ id, description }) => ({
       label: [id, description].join(' - '),
       value: id,
     })),

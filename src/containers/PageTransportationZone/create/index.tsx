@@ -14,6 +14,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
+  const [showError, setShowError] = useState('')
   const [dataForm, setDataForm] = useState<any>()
   const [form] = Form.useForm()
   const router = useRouter()
@@ -51,8 +52,12 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateTransportationZone(reqBody)
+      const res = await updateTransportationZone(reqBody)
       setLoading(false)
+      if (res.status !== 'success') {
+        setShowError(res.message)
+        return
+      }
       return res
     } catch (error) {
       return error
@@ -62,8 +67,12 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = createTransportationZone(reqBody)
+      const res = await createTransportationZone(reqBody)
       setLoading(false)
+      if (res.status !== 'success') {
+        setShowError(res.message)
+        return
+      }
       return res
     } catch (error) {
       return error
@@ -206,6 +215,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         }}
         content="Are you sure want to cancel? Change you made so far will not safed"
         width={432}
+      />
+
+      <Modal
+        open={showError !== ''}
+        onOk={() => setShowError('')}
+        onCancel={() => setShowError('')}
+        title="Warning"
+        content={showError}
       />
     </>
   )

@@ -9,7 +9,11 @@ import {
   updateConfigSlocCompany,
 } from 'src/api/logistic/configuration-sloc-company'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll, fieldWeightGroup } from 'src/configs/fieldFetches'
+import {
+  fieldBranchAll,
+  fieldTransportationGroup,
+  fieldWeightGroup,
+} from 'src/configs/fieldFetches'
 import {
   createRouteDetermination,
   updateRouteDetermination,
@@ -206,7 +210,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               label={'Transportation Group'}
               type="select"
               placeholder="Type to Search"
-              fetchOptions={fieldBranchAll}
+              fetchOptions={fieldTransportationGroup}
               onChange={(val: any) => {
                 onChangeForm('transportation_group_id', val.value)
               }}
