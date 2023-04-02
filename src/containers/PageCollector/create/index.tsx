@@ -4,15 +4,8 @@ import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import {
-  fieldBranchAll,
-  fieldCountry,
-  fieldCustomer,
-  fieldModeOfTransportation,
-  fieldShippingType,
-} from 'src/configs/fieldFetches'
-import { createTransportationRoute, updateTransportationRoute } from 'src/api/transportation/route'
-import { createCollector } from 'src/api/collector'
+import { fieldBranchAll, fieldCustomerByID, fieldCompanyList } from 'src/configs/fieldFetches'
+import { createCollector, updateCollector } from 'src/api/collector'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
@@ -35,8 +28,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     const fetchData = async () => {
       form.setFieldsValue({
         name: payload?.name,
-        company_id: payload?.company_id,
-        branch_id: payload?.branch_id,
+        company_id: `${payload?.company_id} - ${payload?.company_name}`,
+        branch_id: `${payload?.branch_id} - ${payload?.branch_name}`,
         customer_ids: payload?.customer_ids,
       })
       setDataForm({
@@ -58,7 +51,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = updateTransportationRoute(reqBody)
+      const res = updateCollector(reqBody)
       setLoading(false)
       return res
     } catch (error) {
@@ -152,10 +145,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="company_id">
           <DebounceSelect
             label="Company"
-            type="input"
-            placeholder="e.g Company ID"
+            type="select"
+            placeholder="e.g Company"
+            fetchOptions={fieldCompanyList}
             onChange={(val: any) => {
-              onChangeForm('company_id', val.target.value)
+              onChangeForm('company_id', val.value)
             }}
           />
         </Form.Item>
@@ -177,7 +171,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             label="Customer"
             type="select"
             placeholder="e.g Customer"
-            fetchOptions={fieldCustomer}
+            fetchOptions={fieldCustomerByID}
             onChange={(val: any) => {
               onChangeForm('customer_ids', val.value)
             }}

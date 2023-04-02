@@ -35,12 +35,10 @@ export const createCollector = async (params: any): Promise<CommonListResponse<C
   return response.data
 }
 
-export const updateTransportationRoute = async (
-  params: any,
-): Promise<CommonListResponse<Collector>> => {
+export const updateCollector = async (params: any): Promise<CommonListResponse<Collector>> => {
   const response = await call({
     method: METHODS.PUT,
-    subUrl: `${url}/update/route`,
+    subUrl: `${url}/update/collectors`,
     overrideBaseUrl,
     data: params,
   })

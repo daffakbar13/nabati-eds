@@ -112,6 +112,35 @@ export function fieldCustomer(search: string) {
   })
 }
 
+export function fieldCustomerByID(search: string) {
+  async function runApi(field: 'id' | 'eds_customer.name') {
+    return getCustomerList({
+      filters: [
+        {
+          field,
+          option: 'CP',
+          from_value: `%${search}%`,
+        },
+      ],
+      limit: 10,
+      page: 1,
+    })
+      .then((result) => result.data)
+      .then((data) =>
+        data.results.map(({ id, name }) => ({
+          label: [id, name].join(' - '),
+          value: id,
+        })),
+      )
+  }
+  return runApi('id').then((arr) => {
+    if (arr.length > 0) {
+      return arr
+    }
+    return runApi('eds_customer.name')
+  })
+}
+
 export function fieldSoldToCustomer(search: string) {
   return getCustomerByCompany().then((result) =>
     result.data
