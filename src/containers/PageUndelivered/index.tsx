@@ -111,7 +111,7 @@ export default function PageUndelivered() {
                     delivery_id: detail?.delivery_oder_id,
                     delivery_date: detail?.order_date,
                     is_delivery: 0,
-                    cancelation_reason_id: reason,
+                    cancelation_reason_id: reason?.split(' - ')[0],
                   }))
                 : [],
           }))
