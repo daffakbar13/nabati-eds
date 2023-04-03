@@ -1,11 +1,7 @@
 import { Col, Modal, Row, Typography } from 'antd'
 import React from 'react'
 import { Button, DatePickerInput } from 'pink-lava-ui'
-import {
-  fieldDivisionID,
-  fieldNewSalesmanDivision,
-  // fieldSalesmanID,
-} from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
 import moment from 'moment'
 import { useSFANonCallPlanListContext } from '../states'
@@ -55,7 +51,7 @@ export default function SectionModalCreate() {
             label="Company"
             placeholder={'Select'}
             // value={editable.division_id || ''}
-            fetchOptions={fieldDivisionID}
+            fetchOptions={fieldCompanyList}
             // onChange={(e) => handleEditable({ ...editable, division_id: e.value })}
           />
         </Col>
@@ -67,7 +63,7 @@ export default function SectionModalCreate() {
             placeholder={'Select'}
             // value={editable.salesman_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
-            fetchOptions={fieldNewSalesmanDivision}
+            fetchOptions={fieldBranchAll}
             // onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
           />
         </Col>
@@ -81,7 +77,7 @@ export default function SectionModalCreate() {
             // }}
             label="Generate Date"
             disabledDate={(current) => current < moment().startOf('day')}
-            value={moment(new Date().toISOString())}
+            defaultValue={moment(new Date().toISOString())}
             format={'DD-MMM-YYYY'}
             required
           />
