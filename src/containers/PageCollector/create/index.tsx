@@ -1,20 +1,16 @@
 import { Form } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { Modal } from 'src/components'
+import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldCountry } from 'src/configs/fieldFetches'
-import {
-  createTransportationZone,
-  updateTransportationZone,
-} from 'src/api/transportation/transportation-zone'
+import { fieldBranchAll, fieldCustomerByID, fieldCompanyList } from 'src/configs/fieldFetches'
+import { createCollector, updateCollector } from 'src/api/collector'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
-  const [showError, setShowError] = useState('')
   const [dataForm, setDataForm] = useState<any>()
   const [form] = Form.useForm()
   const router = useRouter()
@@ -31,14 +27,17 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     if (!isOnEditMode) return
     const fetchData = async () => {
       form.setFieldsValue({
-        id: payload?.id,
         name: payload?.name,
-        country_id: payload?.country_id,
+        company_id: `${payload?.company_id} - ${payload?.company_name}`,
+        branch_id: `${payload?.branch_id} - ${payload?.branch_name}`,
+        customer_ids: payload?.customer_ids,
       })
       setDataForm({
         id: payload?.id,
         name: payload?.name,
-        country_id: payload?.country_id,
+        company_id: payload?.company_id,
+        branch_id: payload?.branch_id,
+        customer_ids: payload?.customer_ids,
       })
     }
 
@@ -52,12 +51,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doUpdate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = await updateTransportationZone(reqBody)
+      const res = updateCollector(reqBody)
       setLoading(false)
-      if (res.status !== 'success') {
-        setShowError(res.message)
-        return
-      }
       return res
     } catch (error) {
       return error
@@ -67,12 +62,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const doCreate = async (reqBody: any) => {
     try {
       setLoading(true)
-      const res = await createTransportationZone(reqBody)
+      const res = createCollector(reqBody)
       setLoading(false)
-      if (res.status !== 'success') {
-        setShowError(res.message)
-        return
-      }
       return res
     } catch (error) {
       return error
@@ -82,6 +73,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   const handleSubmit = async () => {
     setDataForm(undefined)
     // const reqBody = { ...initialValue, ...dataForm }
+    // const reqBody = isOnEditMode ? { ...{ id: payload?.id }, ...dataForm } : { ...dataForm }
     const reqBody = { ...dataForm }
 
     if (!isOnEditMode) {
@@ -121,7 +113,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         requiredMark={false}
         scrollToFirstError
       >
-        <Spacer size={20} />
+        {/* <Spacer size={20} />
         <Form.Item
           style={{ marginBottom: 0, paddingBottom: 0 }}
           name="id"
@@ -131,13 +123,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             label="ID"
             required
             type="input"
-            maxLength={6}
             placeholder="e.g ID"
+            maxLength={10}
             onChange={(val: any) => {
               onChangeForm('id', val.target.value)
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Spacer size={10} />
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="name">
           <DebounceSelect
@@ -150,15 +142,38 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="country_id">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="company_id">
           <DebounceSelect
+            label="Company"
             type="select"
-            label="Country ID"
-            value={dataForm?.country_id}
-            placeholder="Type to search"
-            fetchOptions={fieldCountry}
-            onChange={(e: any) => {
-              onChangeForm('country_id', e.value)
+            placeholder="e.g Company"
+            fetchOptions={fieldCompanyList}
+            onChange={(val: any) => {
+              onChangeForm('company_id', val.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="branch_id">
+          <DebounceSelect
+            label="Branch"
+            type="select"
+            placeholder="e.g Branch"
+            fetchOptions={fieldBranchAll}
+            onChange={(val: any) => {
+              onChangeForm('branch_id', val.value)
+            }}
+          />
+        </Form.Item>
+        <Spacer size={10} />
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="customer_ids">
+          <DebounceSelect
+            label="Customer"
+            type="select"
+            placeholder="e.g Customer"
+            fetchOptions={fieldCustomerByID}
+            onChange={(val: any) => {
+              onChangeForm('customer_ids', val.value)
             }}
           />
         </Form.Item>
@@ -169,7 +184,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   return (
     <>
       <Modal
-        title={isOnEditMode ? 'View Transportation Zone ' : 'Create Transportation Zone'}
+        title={isOnEditMode ? 'View Collector ' : 'Create Collector'}
         open={visible}
         onOk={onClickSubmit}
         onCancel={handleCancel}
@@ -185,7 +200,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         onCancel={() => {
           setConfirmModal(false)
         }}
-        content="Are you sure want to submit transportation zone?"
+        content="Are you sure want to submit Collector?"
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
@@ -194,8 +209,8 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         successContent={(res: any) => (
           <>
             {isOnEditMode
-              ? 'Transportation Zone has been successfully updated'
-              : 'Transportation Zone has been successfully created'}
+              ? 'Collector has been successfully updated'
+              : 'Collector has been successfully created'}
           </>
         )}
         successOkText="OK"
@@ -215,14 +230,6 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         }}
         content="Are you sure want to cancel? Change you made so far will not safed"
         width={432}
-      />
-
-      <Modal
-        open={showError !== ''}
-        onOk={() => setShowError('')}
-        onCancel={() => setShowError('')}
-        title="Warning"
-        content={showError}
       />
     </>
   )

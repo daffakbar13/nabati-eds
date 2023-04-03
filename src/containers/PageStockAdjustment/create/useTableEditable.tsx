@@ -70,9 +70,9 @@ export const useTableAddItem = (props: propsUseTable) => {
         stock_l: item.large,
         stock_m: item.middle,
         stock_s: item.small,
-        actual_l: 0,
-        actual_m: 0,
-        actual_s: 0,
+        actual_l: item.large,
+        actual_m: item.middle,
+        actual_s: item.small,
         base_stock_qty: item.base_stock_qty,
       }))
 

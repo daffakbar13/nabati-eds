@@ -176,6 +176,17 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/salesman-division-product`),
     ),
   ]),
+  CreateMenu('collection', 'Collection', null, NabatiIcons.ICInventory, null, null, [
+    CreateMenu(
+      'collector',
+      'Collector',
+      null,
+      null,
+      () => 'Collector',
+      () => Router.push(`${PATH.SALES}/collector`),
+    ),
+  ]),
+
   CreateMenu('transportation', 'Transportation', null, NabatiIcons.ICTruck, null, null, [
     CreateMenu(
       'transportation-driver',

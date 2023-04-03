@@ -92,17 +92,17 @@ export default function PageApprovalDetail() {
     }
     setPayloads(newPayload)
 
-    // confirmUndelivered(payload)
-    //   .then(() => {
-    //     setIsSuccessConfirm(true)
-    //     setShowConfirm('success-approve')
-    //     setProccessing('')
-    //   })
-    //   .catch(() => setProccessing(''))
+    confirmUndelivered(newPayload)
+      .then(() => {
+        setIsSuccessConfirm(true)
+        setShowConfirm('success-approve')
+        setProccessing('')
+      })
+      .catch(() => setProccessing(''))
   }
 
   const handleReject = (reason: string, index: number) => {
-    // setProccessing('Wait for rejecting')
+    setProccessing('Wait for rejecting')
 
     // const payload = {
     //   shipment_id: router.query.id,
@@ -121,36 +121,36 @@ export default function PageApprovalDetail() {
           delivery_id: dataTable[index].delivery_oder_id,
           delivery_date: dataTable[index].order_date,
           is_delivery: 0,
-          cancelation_reason_id: reason,
+          cancelation_reason_id: reason.split(' - ')[0],
         },
       ],
     }
-    setPayloads(newPayload)
-    const newData = [...dataTable]
-    newData[index] = {
-      ...dataTable[index],
-      cancel_reason: reason,
-    }
-    setDataTable(newData)
+    // setPayloads(newPayload)
+    // const newData = [...dataTable]
+    // newData[index] = {
+    //   ...dataTable[index],
+    //   cancel_reason: reason,
+    // }
+    // setDataTable(newData)
 
-    // confirmUndelivered(payload)
-    //   .then(() => {
-    //     setShowConfirm('success-reject')
+    confirmUndelivered(newPayload)
+      .then(() => {
+        setShowConfirm('success-reject')
 
-    //     const newData = [...dataTable]
-    //     newData[index] = {
-    //       ...dataTable[index],
-    //       cancel_reason: reason,
-    //     }
-    //     setDataTable(newData)
+        const newData = [...dataTable]
+        newData[index] = {
+          ...dataTable[index],
+          cancel_reason: reason,
+        }
+        setDataTable(newData)
 
-    //     setProccessing('')
-    //   })
-    //   .catch(() => setProccessing(''))
+        setProccessing('')
+      })
+      .catch(() => setProccessing(''))
   }
 
   const handleReschedule = (date: any, index: number) => {
-    // setProccessing('Wait for reschedule')
+    setProccessing('Wait for reschedule')
     // const payload = {
     //   shipment_id: router.query.id,
     //   items: [
@@ -176,28 +176,27 @@ export default function PageApprovalDetail() {
 
     setPayloads(payload)
 
-    const newData = [...dataTable]
-    newData[index] = {
-      ...dataTable[index],
-      new_delivery_date: date,
-    }
-    setDataTable(newData)
+    // const newData = [...dataTable]
+    // newData[index] = {
+    //   ...dataTable[index],
+    //   new_delivery_date: date,
+    // }
+    // setDataTable(newData)
 
-    // console.log(date)
-    // confirmUndelivered(payload)
-    //   .then(() => {
-    //     setShowConfirm('success-reschedule')
+    confirmUndelivered(payload)
+      .then(() => {
+        setShowConfirm('success-reschedule')
 
-    //     const newData = [...dataTable]
-    //     newData[index] = {
-    //       ...dataTable[index],
-    //       new_delivery_date: date,
-    //     }
-    //     setDataTable(newData)
+        const newData = [...dataTable]
+        newData[index] = {
+          ...dataTable[index],
+          new_delivery_date: date,
+        }
+        setDataTable(newData)
 
-    //     setProccessing('')
-    //   })
-    //   .catch(() => setProccessing(''))
+        setProccessing('')
+      })
+      .catch(() => setProccessing(''))
   }
 
   return (
@@ -257,6 +256,7 @@ export default function PageApprovalDetail() {
               scroll={{ x: 'max-content', y: 600 }}
               columns={tableUndelivered(handleReject, handleReschedule)}
               data={dataTable}
+              rowKey="shipment_id"
             />
           </div>
         </Card>

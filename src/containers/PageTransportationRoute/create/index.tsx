@@ -4,7 +4,12 @@ import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldBranchAll, fieldCountry } from 'src/configs/fieldFetches'
+import {
+  fieldBranchAll,
+  fieldCountry,
+  fieldModeOfTransportation,
+  fieldShippingType,
+} from 'src/configs/fieldFetches'
 import { createTransportationRoute, updateTransportationRoute } from 'src/api/transportation/route'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
@@ -159,10 +164,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="transportation_mode_id">
           <DebounceSelect
             label="Mode of Transport"
-            type="input"
+            type="select"
             placeholder="e.g Mode of Transport"
+            fetchOptions={fieldModeOfTransportation}
             onChange={(val: any) => {
-              onChangeForm('transportation_mode_id', val.target.value)
+              onChangeForm('transportation_mode_id', val.value)
             }}
           />
         </Form.Item>
@@ -170,10 +176,11 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="shipment_type_id">
           <DebounceSelect
             label="Shipping Type"
-            type="input"
+            type="select"
             placeholder="e.g Shipping Type"
+            fetchOptions={fieldShippingType}
             onChange={(val: any) => {
-              onChangeForm('shipment_type_id', val.target.value)
+              onChangeForm('shipment_type_id', val.value)
             }}
           />
         </Form.Item>
