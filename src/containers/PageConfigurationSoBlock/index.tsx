@@ -55,9 +55,10 @@ export default function PageConfigurationSloc() {
   //   content: <div style={{ textAlign: 'center' }}>{table.state.selected.join(', ')}</div>,
   // }
 
-  const { searchProps } = useFilters(table, 'Search by branch id, sloc id', [
+  const { searchProps } = useFilters(table, 'Search by branch id, sloc id, Sales org id', [
     'branch_id',
     'sloc_id',
+    'sales_org_id',
   ])
 
   useEffect(() => {
