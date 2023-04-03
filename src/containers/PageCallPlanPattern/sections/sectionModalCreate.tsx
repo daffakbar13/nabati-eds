@@ -2,9 +2,10 @@ import { Col, Modal, Row, Typography } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import {
-  fieldDivisionID,
+  fieldCustomer,
   fieldNewSalesmanDivision,
-  // fieldSalesmanID,
+  fieldCompanyList,
+  fieldBranchAll,
 } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { useSFACallPlanPatternContext } from '../states'
@@ -13,9 +14,66 @@ import SectionLoader from './sectionLoader'
 
 export default function SectionModalCreate() {
   const {
-    state: { showModal, confirm },
-    handler: { showConfirm },
+    state: { showModal, confirm, showValue },
+    handler: { showConfirm, handleShowValue },
   } = useSFACallPlanPatternContext()
+
+  const callPlanPatternCycleDay = [
+    {
+      label: 'M1',
+      value: 'M1',
+    },
+    {
+      label: 'M2C13',
+      value: 'M2C13',
+    },
+    {
+      label: 'M2C24',
+      value: 'M2C24',
+    },
+  ]
+
+  const callPlanPatternVisitDay = [
+    {
+      label: 'Monday',
+      value: '1',
+    },
+    {
+      label: 'Tuesday',
+      value: '2',
+    },
+    {
+      label: 'Wednesday',
+      value: '3',
+    },
+    {
+      label: 'Thursday',
+      value: '4',
+    },
+    {
+      label: 'Friday',
+      value: '5',
+    },
+    {
+      label: 'Saturday',
+      value: '6',
+    },
+    {
+      label: 'Sunday',
+      value: '7',
+    },
+  ]
+
+  const callPlanPatternIsActive = [
+    {
+      label: 'Active',
+      value: '1',
+    },
+    {
+      label: 'Inactive',
+      value: '0',
+    },
+  ]
 
   const footer = (
     <div style={{ display: 'flex', gap: 16 }}>
@@ -53,9 +111,9 @@ export default function SectionModalCreate() {
             required
             label="Company"
             placeholder={'Select'}
-            // value={editable.division_id || ''}
-            fetchOptions={fieldDivisionID}
-            // onChange={(e) => handleEditable({ ...editable, division_id: e.value })}
+            value={showValue.company_id || ''}
+            fetchOptions={fieldCompanyList}
+            onChange={(e) => handleShowValue({ ...showValue, company_id: e.value })}
           />
         </Col>
         <Col span={12}>
@@ -64,10 +122,10 @@ export default function SectionModalCreate() {
             required
             label="Branch"
             placeholder={'Select'}
-            // value={editable.salesman_id || ''}
+            value={showValue.branch_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
-            fetchOptions={fieldNewSalesmanDivision}
-            // onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
+            fetchOptions={fieldBranchAll}
+            onChange={(e) => handleShowValue({ ...showValue, branch_id: e.value })}
           />
         </Col>
         <Col span={12}>
@@ -77,9 +135,9 @@ export default function SectionModalCreate() {
             required
             label="Salesman ID"
             placeholder={'Select'}
-            // value={editable.division_id || ''}
-            fetchOptions={fieldDivisionID}
-            // onChange={(e) => handleEditable({ ...editable, division_id: e.value })}
+            value={showValue.salesman_id || ''}
+            fetchOptions={fieldNewSalesmanDivision}
+            onChange={(e) => handleShowValue({ ...showValue, salesman_id: e.value })}
           />
         </Col>
         <Col span={12}>
@@ -88,10 +146,10 @@ export default function SectionModalCreate() {
             required
             label="Customer ID"
             placeholder={'Select'}
-            // value={editable.salesman_id || ''}
+            value={showValue.customer_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
-            fetchOptions={fieldNewSalesmanDivision}
-            // onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
+            fetchOptions={fieldCustomer}
+            onChange={(e) => handleShowValue({ ...showValue, customer_id: e.value })}
           />
         </Col>
         <Col span={12}>
@@ -101,21 +159,23 @@ export default function SectionModalCreate() {
             required
             label="Cycle"
             placeholder={'Select'}
-            // value={editable.division_id || ''}
-            fetchOptions={fieldDivisionID}
-            // onChange={(e) => handleEditable({ ...editable, division_id: e.value })}
+            value={showValue.cycle || ''}
+            //fetchOptions={fieldDivisionID}
+            options={callPlanPatternCycleDay}
+            onChange={(e) => handleShowValue({ ...showValue, cycle: e.value })}
           />
         </Col>
         <Col span={12}>
           <DebounceSelect
+            // disabled={!isModalCreate}
             type="select"
             required
             label="Visit Day"
             placeholder={'Select'}
-            // value={editable.salesman_id || ''}
-            // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
-            fetchOptions={fieldNewSalesmanDivision}
-            // onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
+            value={showValue.visit_day || ''}
+            //fetchOptions={fieldDivisionID}
+            options={callPlanPatternVisitDay}
+            onChange={(e) => handleShowValue({ ...showValue, visit_day: e.value })}
           />
         </Col>
         <Col span={12}>
@@ -125,9 +185,10 @@ export default function SectionModalCreate() {
             required
             label="Status"
             placeholder={'Select'}
-            // value={editable.division_id || ''}
-            fetchOptions={fieldDivisionID}
-            // onChange={(e) => handleEditable({ ...editable, division_id: e.value })}
+            value={showValue.is_active || ''}
+            //fetchOptions={fieldDivisionID}
+            options={callPlanPatternIsActive}
+            onChange={(e) => handleShowValue({ ...showValue, is_active: e.value })}
           />
         </Col>
       </Row>
