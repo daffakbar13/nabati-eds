@@ -9,6 +9,7 @@ import { createCallPlanPattern } from 'src/api/call-plan-pattern'
 export default function ConfirmSubmit() {
   const {
     handler: { showConfirm, unShowConfirm, runProcess, stopProcess, changeCreateCallPlanPattern },
+    state: { showValue },
   } = useSFACallPlanPatternContext()
 
   return (
@@ -35,15 +36,16 @@ export default function ConfirmSubmit() {
           onClick={() => {
             runProcess('Wait for submitting Quotation')
             createCallPlanPattern({
-              company_id: '',
-              customer_id: '',
-              salesman_id: '',
-              visit_day: '',
-              cycle: '',
-              is_active: '',
+              branch_id: showValue.branch_id,
+              company_id: showValue.company_id,
+              customer_id: showValue.customer_id,
+              salesman_id: showValue.salesman_id,
+              visit_day: showValue.visit_day,
+              cycle: showValue.cycle,
+              is_active: showValue.is_active,
             })
               .then((params) => {
-                //showConfirm('success-submit')
+                showConfirm('success-submit')
                 changeCreateCallPlanPattern(params)
                 stopProcess()
               })
