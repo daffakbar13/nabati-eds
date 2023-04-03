@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { FilterSection } from './components'
-import { Col, Select, Row, Typography } from 'antd'
+import { Col, Select, Row, Typography, Progress } from 'antd'
 import { Card, Loader } from 'src/components'
 import { Button, Modal, Spacer, Text, Table } from 'pink-lava-ui'
 import { useEffect, useState } from 'react'
@@ -209,6 +209,17 @@ export default function Warehouse() {
                   </Col>
                 </Row>
               </Col>
+            </Row>
+            <Row justify="space-between" align="middle">
+              <Typography.Text strong>PMA Bandung Selatan</Typography.Text>
+              <Typography.Text>19.000</Typography.Text>
+              <Progress percent={90} showInfo={false} strokeColor={'#eb008b'} />
+            </Row>
+            <Spacer size={10} />
+            <Row justify="space-between" align="middle">
+              <Typography.Text strong>PMA Pandeglag</Typography.Text> <br />
+              <Typography.Text>1.429</Typography.Text>
+              <Progress percent={20} showInfo={false} strokeColor={'#eb008b'} />
             </Row>
           </Card>
         </Col>
