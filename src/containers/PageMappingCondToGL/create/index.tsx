@@ -161,6 +161,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <DebounceSelect
             type="select"
             label="Condition Type"
+            disabled={isOnEditMode ? true : false}
             value={dataForm?.cond_type_id}
             placeholder="Type to search"
             fetchOptions={fieldConditionType}
