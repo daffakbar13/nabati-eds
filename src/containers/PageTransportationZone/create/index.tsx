@@ -60,7 +60,13 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       }
       return res
     } catch (error) {
-      return error
+      if (error.response) {
+        setShowError(error.response.data.data.message)
+      } else {
+        setShowError(error.message)
+      }
+      setLoading(false)
+      setConfirmModal(false)
     }
   }
 
@@ -75,7 +81,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       }
       return res
     } catch (error) {
-      return error
+      if (error.response) {
+        console.log(error.response.data) // => the response payload
+        setShowError(error.response.data.data.message)
+      } else {
+        setShowError(error.message)
+      }
+      setLoading(false)
+      setConfirmModal(false)
+      return
+      // return error
     }
   }
 
