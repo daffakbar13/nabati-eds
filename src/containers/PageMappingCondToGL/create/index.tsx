@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldCountry } from 'src/configs/fieldFetches'
+import { fieldConditionType, fieldCountry } from 'src/configs/fieldFetches'
 import { createMappingCondToGL, updateMappingCondToGL } from 'src/api/mapping-cond-to-gl'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
@@ -21,7 +21,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     if (!isOnEditMode) return
     const fetchData = async () => {
       form.setFieldsValue({
-        cond_type_id: payload?.cond_type_id,
+        cond_type_id: `${payload?.cond_type_id} - ${payload?.cond_type_name}`,
         gl_account_id: payload?.gl_account_id,
       })
       setDataForm({
@@ -114,19 +114,19 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item> */}
         <Spacer size={10} />
-        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
           <DebounceSelect
             type="select"
             label="Condition Type"
             value={dataForm?.cond_type_id}
             placeholder="Type to search"
-            fetchOptions={fieldCountry}
+            fetchOptions={fieldConditionType}
             onChange={(e: any) => {
               onChangeForm('cond_type_id', e.value)
             }}
           />
-        </Form.Item> */}
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
+        </Form.Item>
+        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
           <DebounceSelect
             label="Condition Type"
             type="input"
@@ -135,7 +135,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
               onChangeForm('cond_type_id', val.target.value)
             }}
           />
-        </Form.Item>
+        </Form.Item> */}
         <Spacer size={10} />
         {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
           <DebounceSelect
