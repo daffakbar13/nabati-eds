@@ -20,7 +20,7 @@ export function useColumnNonCallPlanList() {
     }),
     addColumn({
       title: 'Customer ID',
-      dataIndex: 'sold_to_customer_id',
+      dataIndex: 'customer_id',
       sorter: true,
     }),
     addColumn({
@@ -30,7 +30,7 @@ export function useColumnNonCallPlanList() {
     }),
     addColumn({
       title: 'Date',
-      dataIndex: 'order_date',
+      dataIndex: 'visit_date',
     }),
     addColumn({
       title: 'Status',

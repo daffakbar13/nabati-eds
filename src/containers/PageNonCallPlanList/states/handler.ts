@@ -18,12 +18,15 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'confirm', payload: 'undefined' })
   }
 
-  function changeSubmittedQuotation(payload: string[]) {
-    dispatch({ type: 'submittedQuotation', payload })
-  }
-
   function handleShowModal(payload: boolean) {
     dispatch({ type: 'showModal', payload })
+  }
+
+  function onChangeFormCreateNonCallPlan(field: string, value: string) {
+    dispatch({
+      type: 'formCreateNonCallPlan',
+      payload: { ...state.formCreateNonCallPlan, [field]: value },
+    })
   }
 
   return {
@@ -31,7 +34,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     stopProcess,
     showConfirm,
     unShowConfirm,
-    changeSubmittedQuotation,
     handleShowModal,
+    onChangeFormCreateNonCallPlan,
   }
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { getQuotation } from 'src/api/quotation'
 import useTable from 'src/hooks/useTable/index'
+import { getNonCallPlanList } from 'src/api/non-call-plan-list'
 import { useColumnNonCallPlanList } from './columns'
 import { useSFANonCallPlanListProvider } from './states'
 
@@ -9,8 +10,7 @@ export default function SFANonCallPlanListProvider(
 ) {
   const { children } = props
   const table = useTable({
-    funcApi: getQuotation,
-    // haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
+    funcApi: getNonCallPlanList,
     columns: useColumnNonCallPlanList(),
   })
   const SFANonCallPlanList = useSFANonCallPlanListProvider()
