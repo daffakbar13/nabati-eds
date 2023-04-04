@@ -3,11 +3,13 @@ import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
-import { useSFANonCallPlanListContext } from '../../states'
+import { generateNonCallPlan } from 'src/api/non-call-plan-list'
+import { useSFANonCallPlanListContext } from '../../states/useContext'
 
 export default function ConfirmSubmit() {
   const {
-    handler: { showConfirm, unShowConfirm, runProcess, stopProcess, changeSubmittedQuotation },
+    state: { formCreateNonCallPlan },
+    handler: { showConfirm, unShowConfirm, runProcess, stopProcess },
   } = useSFANonCallPlanListContext()
 
   return (
@@ -16,7 +18,7 @@ export default function ConfirmSubmit() {
         Confirm Submit
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
-        Are you sure to submit non call plan list ?
+        Are you sure to submit non call plan ?
       </Typography.Title>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -31,18 +33,15 @@ export default function ConfirmSubmit() {
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          // onClick={() => {
-          //   runProcess('Wait for submitting Quotation')
-          //   multipleSubmitQuotation({ order_list: selected.map((id) => ({ id })) })
-          //     .then((response) => response.data)
-          //     .then((data) => {
-          //       showConfirm('success-submit')
-          //       changeSubmittedQuotation(data.results.map(({ id }) => id))
-          //       stopProcess()
-          //     })
-          //     .catch(() => stopProcess())
-          // }}
-          onClick={() => unShowConfirm()}
+          onClick={() => {
+            runProcess('Wait for submitting Call PLan List')
+            generateNonCallPlan(formCreateNonCallPlan)
+              .then(() => {
+                showConfirm('success-submit')
+                stopProcess()
+              })
+              .catch(() => stopProcess())
+          }}
         >
           Yes
         </Button>

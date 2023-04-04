@@ -20,7 +20,7 @@ export function useColumnCallPlanList() {
     }),
     addColumn({
       title: 'Customer ID',
-      dataIndex: 'sold_to_customer_id',
+      dataIndex: 'customer_id',
       sorter: true,
     }),
     addColumn({
@@ -30,11 +30,11 @@ export function useColumnCallPlanList() {
     }),
     addColumn({
       title: 'Day',
-      render: () => 'Monday',
+      dataIndex: 'calendar_day_name',
     }),
     addColumn({
       title: 'Date',
-      dataIndex: 'order_date',
+      dataIndex: 'visit_date',
     }),
     addColumn({
       title: 'Status',
@@ -42,11 +42,11 @@ export function useColumnCallPlanList() {
     }),
     addColumn({
       title: 'Week ID',
-      render: () => '202228',
+      dataIndex: 'calendar_week',
     }),
     addColumn({
       title: 'Week In Period',
-      render: () => '1',
+      dataIndex: 'calendar_week_in_month',
     }),
     addColumn({
       title: 'Call Pattern',

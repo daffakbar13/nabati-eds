@@ -46,6 +46,7 @@ import {
   getCompanybyCountry,
   getTaxbyCompany,
   getVehicle,
+  getConditionType,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -1240,6 +1241,17 @@ export function fieldInco(search = '') {
 
 export function fieldRules(search = '') {
   return getRules().then((result) =>
+    result.data
+      .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
+      .map(({ id, name }) => ({
+        label: [id, name].join(' - '),
+        value: id,
+      })),
+  )
+}
+
+export function fieldConditionType(search = '') {
+  return getConditionType().then((result) =>
     result.data
       .filter(({ id }) => id.toLowerCase().includes(search.toLowerCase()))
       .map(({ id, name }) => ({

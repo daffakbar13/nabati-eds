@@ -18,7 +18,10 @@ export function useSFANonCallPlanListProvider() {
     ctx,
     baseReducer,
     baseHandler,
-    { submittedQuotation: [], showModal: false },
+    {
+      formCreateNonCallPlan: { generate_date: new Date().toISOString() },
+      showModal: false,
+    },
   )
 }
 
