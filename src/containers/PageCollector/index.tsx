@@ -56,17 +56,8 @@ export default function PageCollector() {
 
   const handleDeleteData = async () => {
     try {
-      await Promise.all(
-        table.state.selected.map((id) => {
-          deleteCollector({ id }).then((res) => console.log(res))
-        }),
-      )
+      await deleteCollector({ ids: table.state.selected })
       return true
-
-      // const res = deleteTransportationRoute({
-      //   id: table.state.selected,
-      // })
-      // return res
     } catch (error) {
       return error
     }
