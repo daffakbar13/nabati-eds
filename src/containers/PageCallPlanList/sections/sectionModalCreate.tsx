@@ -10,8 +10,8 @@ import SectionLoader from './sectionLoader'
 
 export default function SectionModalCreate() {
   const {
-    state: { showModal, confirm },
-    handler: { showConfirm },
+    state: { formCreateCallPlan, showModal, confirm },
+    handler: { showConfirm, onChangeFormCreateCallPlan },
   } = useSFACallPlanListContext()
 
   const footer = (
@@ -50,9 +50,9 @@ export default function SectionModalCreate() {
             required
             label="Company"
             placeholder={'Select'}
-            // value={editable.division_id || ''}
+            value={formCreateCallPlan.company_id || ''}
             fetchOptions={fieldCompanyList}
-            // onChange={(e) => handleEditable({ ...editable, division_id: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('company_id', e.value)}
           />
         </Col>
         <Col span={12}>
@@ -61,24 +61,25 @@ export default function SectionModalCreate() {
             required
             label="Branch"
             placeholder={'Select'}
-            // value={editable.salesman_id || ''}
-            // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
+            value={formCreateCallPlan.branch_id || ''}
             fetchOptions={fieldBranchAll}
-            // onChange={(e) => handleEditable({ ...editable, salesman_id: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('branch_id', e.value)}
           />
         </Col>
         <Col span={12}>
           <DatePickerInput
             fullWidth
-            // onChange={(val: any) => {
-            //   if (val !== null) {
-            //     onChangeForm('order_date', new Date(moment(val).format()).toISOString())
-            //   }
-            // }}
+            onChange={(e) => {
+              if (e !== null) {
+                onChangeFormCreateCallPlan(
+                  'generate_date',
+                  new Date(moment(e).format()).toISOString(),
+                )
+              }
+            }}
             label="Generate Date"
             disabledDate={(current) => current < moment().startOf('day')}
-            // value={moment(new Date().toISOString())}
-            defaultValue={moment(new Date().toISOString())}
+            value={moment(formCreateCallPlan.generate_date)}
             format={'DD-MMM-YYYY'}
             required
           />

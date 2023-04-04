@@ -18,7 +18,11 @@ export function useSFACallPlanListProvider() {
     ctx,
     baseReducer,
     baseHandler,
-    { submittedQuotation: [], showModal: false },
+    {
+      formCreateCallPlan: { generate_date: new Date().toISOString() },
+      submittedQuotation: [],
+      showModal: false,
+    },
   )
 }
 

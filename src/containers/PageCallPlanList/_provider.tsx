@@ -1,16 +1,13 @@
 import React from 'react'
-import { getQuotation } from 'src/api/quotation'
 import useTable from 'src/hooks/useTable/index'
+import { getCallPlanList } from 'src/api/call-plan-list'
 import { useColumnCallPlanList } from './columns'
 import { useSFACallPlanListProvider } from './states'
 
-export default function SFACallPlanListProvider(
-  props: React.PropsWithChildren<React.ReactNode>,
-) {
+export default function SFACallPlanListProvider(props: React.PropsWithChildren<React.ReactNode>) {
   const { children } = props
   const table = useTable({
-    funcApi: getQuotation,
-    // haveCheckBox: [{ rowKey: 'status_name', member: ['New'] }],
+    funcApi: getCallPlanList,
     columns: useColumnCallPlanList(),
   })
   const SFACallPlanList = useSFACallPlanListProvider()

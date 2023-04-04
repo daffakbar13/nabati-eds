@@ -6,4 +6,5 @@ export interface StateType {
   confirm?: string
   submittedQuotation: string[]
   showModal: boolean
+  formCreateCallPlan?: any
 }

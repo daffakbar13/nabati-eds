@@ -10,7 +10,12 @@ export default function SectionAction() {
     state: { table },
     handler: { handleShowModal },
   } = useSFACallPlanListContext()
-  const { searchProps } = useFilters(table, 'Salesman ID, Customer ID, etc', ['eds_order.id'])
+  const { searchProps } = useFilters(table, 'Salesman ID, Customer ID, etc', [
+    'salesman_id',
+    'salesman_name',
+    'customer_id',
+    'customer_name',
+  ])
   // const router = useRouter()
 
   return (

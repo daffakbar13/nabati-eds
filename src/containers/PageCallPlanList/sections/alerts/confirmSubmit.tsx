@@ -3,11 +3,13 @@ import { Typography } from 'antd'
 import React from 'react'
 import { Popup } from 'src/components'
 import { Button } from 'pink-lava-ui'
+import { generateCallPlan } from 'src/api/call-plan-list'
 import { useSFACallPlanListContext } from '../../states'
 
 export default function ConfirmSubmit() {
   const {
-    handler: { showConfirm, unShowConfirm, runProcess, stopProcess, changeSubmittedQuotation },
+    state: { formCreateCallPlan },
+    handler: { showConfirm, unShowConfirm, runProcess, stopProcess },
   } = useSFACallPlanListContext()
 
   return (
@@ -16,7 +18,7 @@ export default function ConfirmSubmit() {
         Confirm Submit
       </Typography.Title>
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
-        Are you sure to submit call plan list ?
+        Are you sure to submit call plan ?
       </Typography.Title>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
@@ -31,18 +33,15 @@ export default function ConfirmSubmit() {
           size="big"
           style={{ flexGrow: 1 }}
           variant="primary"
-          // onClick={() => {
-          //   runProcess('Wait for submitting Quotation')
-          //   multipleSubmitQuotation({ order_list: selected.map((id) => ({ id })) })
-          //     .then((response) => response.data)
-          //     .then((data) => {
-          //       showConfirm('success-submit')
-          //       changeSubmittedQuotation(data.results.map(({ id }) => id))
-          //       stopProcess()
-          //     })
-          //     .catch(() => stopProcess())
-          // }}
-          onClick={() => unShowConfirm()}
+          onClick={() => {
+            runProcess('Wait for submitting Call PLan List')
+            generateCallPlan(formCreateCallPlan)
+              .then(() => {
+                showConfirm('success-submit')
+                stopProcess()
+              })
+              .catch(() => stopProcess())
+          }}
         >
           Yes
         </Button>
