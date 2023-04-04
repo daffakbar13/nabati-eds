@@ -44,10 +44,10 @@ export default function PageMappingCondToGL() {
     haveCheckBox: 'All',
   })
 
-  const { searchProps } = useFilters(table, 'Search by ID, Name, Country ID', [
-    'id',
-    'name',
-    'country_id',
+  const { searchProps } = useFilters(table, 'Search by Company, Condition Type, G/L Account', [
+    'company_id',
+    'condition_type_id',
+    'gl_account_id',
   ])
 
   const oneSelected = table.state.selected.length === 1
