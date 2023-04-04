@@ -46,7 +46,7 @@ export default function PageMappingCondToGL() {
 
   const { searchProps } = useFilters(table, 'Search by Company, Condition Type, G/L Account', [
     'company_id',
-    'condition_type_id',
+    'cond_type_id',
     'gl_account_id',
   ])
 
