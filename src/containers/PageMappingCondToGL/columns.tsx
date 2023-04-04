@@ -16,6 +16,7 @@ export const columns = (
   addColumn({
     title: 'Condition Type',
     dataIndex: 'cond_type_id',
+    render: (text: string, record: any, index: number) => `${text} - ${record.cond_type_name}`,
   }),
   addColumn({
     title: 'G/L Account',

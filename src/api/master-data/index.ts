@@ -55,9 +55,10 @@ const subUrl = {
   getSlocbyConfigSlocSalesman: '/v1/configuration/sloc_salesman',
   getInco: '/v1/master/get-inco',
   getRules: '/v1/master/get-rules',
-  getCountry: '/v1/master-data/list_country',
+  getCountry: 'v1/master-data/list_country',
   getCompanybyCountry: '/v1/master-data/list_company',
   getTaxbyCompany: '/v1/master-data/list_tax',
+  getConditionType: 'v1/master/get-cond-type/PP01',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -613,6 +614,16 @@ export const getRules = async (): Promise<CommonDetailResponse<any>> => {
     method: METHODS.GET,
     overrideBaseUrl,
     subUrl: subUrl.getRules,
+  })
+
+  return response.data
+}
+
+export const getConditionType = async (): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.GET,
+    overrideBaseUrl,
+    subUrl: subUrl.getConditionType,
   })
 
   return response.data

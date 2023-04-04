@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Modal } from 'src/components'
 import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
-import { fieldCountry } from 'src/configs/fieldFetches'
+import { fieldConditionType, fieldCountry } from 'src/configs/fieldFetches'
 import { createMappingCondToGL, updateMappingCondToGL } from 'src/api/mapping-cond-to-gl'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
@@ -21,7 +21,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     if (!isOnEditMode) return
     const fetchData = async () => {
       form.setFieldsValue({
-        cond_type_id: payload?.cond_type_id,
+        cond_type_id: `${payload?.cond_type_id} - ${payload?.cond_type_name}`,
         gl_account_id: payload?.gl_account_id,
       })
       setDataForm({
@@ -90,6 +90,49 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
     }
   }
 
+  const dataGLAcconunt = [
+    {
+      id: '31000001',
+      text: 'Penjualan',
+    },
+    {
+      id: '32000001',
+      text: 'Potongan Reguler',
+    },
+    {
+      id: '32000002',
+      text: 'Potongan COD',
+    },
+    {
+      id: '32000003',
+      text: 'Potongan PC',
+    },
+    {
+      id: '32000004',
+      text: 'Potongan BS Allowanc',
+    },
+    {
+      id: '32000005',
+      text: 'Potongan IPT',
+    },
+    {
+      id: '32000006',
+      text: 'Potongan Promo Uang',
+    },
+    {
+      id: '32000007',
+      text: 'Potongan Add IDR',
+    },
+    {
+      id: '33000001',
+      text: 'Potongan Retur',
+    },
+    {
+      id: '33000002',
+      text: 'Retur Penjualan',
+    },
+  ]
+
   const content = (
     <>
       <Form
@@ -114,48 +157,32 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item> */}
         <Spacer size={10} />
-        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
           <DebounceSelect
             type="select"
             label="Condition Type"
+            disabled={isOnEditMode ? true : false}
             value={dataForm?.cond_type_id}
             placeholder="Type to search"
-            fetchOptions={fieldCountry}
+            fetchOptions={fieldConditionType}
             onChange={(e: any) => {
               onChangeForm('cond_type_id', e.value)
             }}
           />
-        </Form.Item> */}
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="cond_type_id">
-          <DebounceSelect
-            label="Condition Type"
-            type="input"
-            placeholder="e.g Condition Type"
-            onChange={(val: any) => {
-              onChangeForm('cond_type_id', val.target.value)
-            }}
-          />
         </Form.Item>
         <Spacer size={10} />
-        {/* <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
+        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
           <DebounceSelect
             type="select"
             label="G/L Account"
             value={dataForm?.gl_account_id}
             placeholder="Type to search"
-            fetchOptions={fieldCountry}
+            options={dataGLAcconunt.map((item) => ({
+              value: item.id,
+              label: `${item.id} - ${item.text}`,
+            }))}
             onChange={(e: any) => {
               onChangeForm('gl_account_id', e.value)
-            }}
-          />
-        </Form.Item> */}
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="gl_account_id">
-          <DebounceSelect
-            label="G/L Account"
-            type="input"
-            placeholder="e.g G/L Account"
-            onChange={(val: any) => {
-              onChangeForm('gl_account_id', val.target.value)
             }}
           />
         </Form.Item>

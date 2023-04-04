@@ -1,11 +1,12 @@
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
-// import { CommonListResponse, CommonListParams } from 'src/api/types'
+//import { CommonListResponse, CommonListParams } from 'src/api/types'
 
 const url = 'v1/callplan-patterns'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_4
 
 interface CreateCallPlanPattern {
+  branch_id: string
   company_id: string
   customer_id: string
   salesman_id: string
