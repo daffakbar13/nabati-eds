@@ -195,24 +195,6 @@ export default function PageUndelivered() {
                   <DebounceSelect type="select" fetchOptions={fieldBranchAll} />
                 </SmartFilter.Field>
                 <SmartFilter.Field
-                  field="ship_to_customer"
-                  dataType="S"
-                  label="Sold to Customer"
-                  options={['EQ', 'NE', 'BT', 'NB']}
-                >
-                  <DebounceSelect type="select" fetchOptions={fieldCustomer} />
-                  <DebounceSelect type="select" fetchOptions={fieldCustomer} />
-                </SmartFilter.Field>
-                {/* <SmartFilter.Field
-              field="order_type"
-              dataType="S"
-              label="Order Type"
-              options={['EQ', 'NE', 'BT', 'NB']}
-            >
-              <DebounceSelect type="select" options={optionsOrderType} />
-              <DebounceSelect type="select" options={optionsOrderType} />
-            </SmartFilter.Field> */}
-                <SmartFilter.Field
                   field="order_date"
                   dataType="S"
                   label="Creating Date"
