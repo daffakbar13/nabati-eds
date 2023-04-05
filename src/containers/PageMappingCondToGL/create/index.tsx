@@ -20,13 +20,16 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   useEffect(() => {
     if (!isOnEditMode) return
     const fetchData = async () => {
+      const selectedGLAccount = dataGLAcconunt.find((item) => item.id === payload?.gl_account_id)
       form.setFieldsValue({
         cond_type_id: `${payload?.cond_type_id} - ${payload?.cond_type_name}`,
-        gl_account_id: payload?.gl_account_id,
+        gl_account_id: `${payload?.gl_account_id} - ${selectedGLAccount?.text}`,
+        description: selectedGLAccount?.text,
       })
       setDataForm({
         cond_type_id: payload?.cond_type_id,
         gl_account_id: payload?.gl_account_id,
+        description: selectedGLAccount?.text,
       })
     }
 

@@ -1,4 +1,4 @@
-import { Form } from 'antd'
+import { Form, Select } from 'antd'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Modal, Text } from 'src/components'
@@ -6,9 +6,11 @@ import { Spacer } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { fieldBranchAll, fieldCustomerByID, fieldCompanyList } from 'src/configs/fieldFetches'
 import { createCollector, updateCollector } from 'src/api/collector'
+import { Text as Texts } from 'pink-lava-ui'
 
 export default function CreateConfigurationCompany({ visible = false, close = () => {}, payload }) {
   const [loading, setLoading] = useState(false)
+  const [optionsCustomer, setOptionsCustomer] = useState([])
   const [showConfirmModal, setConfirmModal] = useState(false)
   const [showConfirmCancelModal, setConfirmCancelModal] = useState(false)
   const [dataForm, setDataForm] = useState<any>()
@@ -19,8 +21,19 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
 
   // const initialValue = {
   //   company_id: 'PP01',
-  //   credit_limit_before: 0,
   // }
+
+  const onSearchCustomer = async (value: any) => {
+    fieldCustomerByID(value).then((newOptions) => {
+      setOptionsCustomer([...newOptions])
+    })
+  }
+
+  useEffect(() => {
+    fieldCustomerByID('').then((res) => {
+      setOptionsCustomer(res)
+    })
+  }, [])
 
   useEffect(() => {
     // form.resetFields()
@@ -30,14 +43,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         name: payload?.name,
         company_id: `${payload?.company_id} - ${payload?.company_name}`,
         branch_id: `${payload?.branch_id} - ${payload?.branch_name}`,
-        customer_ids: payload?.customer_ids,
+        customer_ids: payload?.customers.map((item) => `${item?.id} - ${item?.name}`),
       })
       setDataForm({
         id: payload?.id,
         name: payload?.name,
         company_id: payload?.company_id,
         branch_id: payload?.branch_id,
-        customer_ids: payload?.customer_ids,
+        customer_ids: payload?.customers.map((item) => item.id),
       })
     }
 
@@ -71,16 +84,20 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
   }
 
   const handleSubmit = async () => {
-    setDataForm(undefined)
     // const reqBody = { ...initialValue, ...dataForm }
     // const reqBody = isOnEditMode ? { ...{ id: payload?.id }, ...dataForm } : { ...dataForm }
     const reqBody = { ...dataForm }
 
+    // console.log(reqBody)
     if (!isOnEditMode) {
+      // reqBody['customer_ids'] = [dataForm.customer_ids]
+      setDataForm(undefined)
       return doCreate(reqBody)
     }
 
     if (isOnEditMode) {
+      // reqBody['customer_ids'] = [dataForm.customer_ids]
+      setDataForm(undefined)
       return doUpdate(reqBody)
     }
 
@@ -166,14 +183,41 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           />
         </Form.Item>
         <Spacer size={10} />
-        <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="customer_ids">
-          <DebounceSelect
-            label="Customer"
-            type="select"
-            placeholder="e.g Customer"
-            fetchOptions={fieldCustomerByID}
+        <Form.Item
+          style={{ marginBottom: 0, paddingBottom: 0 }}
+          name="customer_ids"
+          label={
+            <Texts
+              variant="headingSmall"
+              textAlign="center"
+              style={{ fontSize: 16, fontWeight: 'bold' }}
+            >
+              Customer
+            </Texts>
+          }
+        >
+          <Select
+            mode="multiple"
+            allowClear
+            size="large"
+            style={{
+              width: '100%',
+              border: '1px solid #AAAAAA',
+              borderRadius: 8,
+              minHeight: 48,
+            }}
+            placeholder="Type To Search"
+            labelInValue
+            onSearch={(search) => onSearchCustomer(search)}
+            options={optionsCustomer || []}
             onChange={(val: any) => {
-              onChangeForm('customer_ids', val.value)
+              onChangeForm(
+                'customer_ids',
+                val?.map(function (obj) {
+                  return obj.value
+                }),
+              )
+              setOptionsCustomer([])
             }}
           />
         </Form.Item>

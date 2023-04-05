@@ -176,6 +176,12 @@ export const menuSales = [
       () => Router.push(`${PATH.SALES}/salesman-division-product`),
     ),
   ]),
+  {
+    key: 'product',
+    title: 'Product',
+    icon: NabatiIcons.ICInventory,
+    onClick: () => Router.push(`${PATH.SALES}/product`),
+  },
   CreateMenu('collection', 'Collection', null, NabatiIcons.ICInventory, null, null, [
     CreateMenu(
       'collector',

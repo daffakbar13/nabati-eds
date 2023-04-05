@@ -21,6 +21,7 @@ export const columns = (
   addColumn({
     title: 'G/L Account',
     dataIndex: 'gl_account_id',
+    render: (text: string, record: any, index: number) => `${text} - ${record.description}`,
   }),
   addColumn({
     title: 'Active/Inactive',

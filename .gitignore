@@ -7,7 +7,7 @@
 .pnp.js
 /yarn.lock
 /docker-compose.yml
-/Dockerfile
+# /Dockerfile
 
 # testing
 

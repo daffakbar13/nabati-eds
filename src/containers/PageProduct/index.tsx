@@ -7,11 +7,16 @@ import { columns } from './columns'
 import CreateModal from './create'
 import Pagination from 'src/components/Pagination'
 import { Col as ColAntd, Row as RowAntd, Popover } from 'antd'
-import { DownOutlined } from '@ant-design/icons'
 import { ICDownloadTemplate, ICUploadTemplate } from 'src/assets'
-import { deleteCollector, getListCollector, updateStatusCollector } from 'src/api/collector'
+import {
+  getLisTransportationZone,
+  deleteTransportationZone,
+  updateStatusTransportationZone,
+} from 'src/api/transportation/transportation-zone'
+import { DownOutlined } from '@ant-design/icons'
+import { getDataProduct } from 'src/api/product'
 
-export default function PageCollector() {
+export default function PageProduct() {
   const [selectedRow, setSelectedRow] = useState(null)
   const [showChangeStatusModal, setShowChangeStatusModal] = useState(false)
   const [changeStatusPayload, setChangeStatusPayload] = useState(null)
@@ -19,7 +24,6 @@ export default function PageCollector() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [selectedData, setSelectedData] = useState([])
   const [selectedDataText, setSelectedDataText] = useState([])
-  const data = []
   const router = useRouter()
 
   const goToDetailPage = (row: any) => {
@@ -33,16 +37,15 @@ export default function PageCollector() {
   }
 
   const table = useTable({
-    funcApi: getListCollector,
-    columns: columns(goToDetailPage, onClickSwitch),
-    haveCheckBox: 'All',
-    data,
+    funcApi: getDataProduct,
+    columns: columns(goToDetailPage),
   })
 
-  const { searchProps } = useFilters(table, 'Search by ID, Name, Branch, Company, etc', [
-    'id',
-    'name, branch_name, company_name',
-  ])
+  const { searchProps } = useFilters(
+    table,
+    'Search by Product ID, Product Name, Product Category, etc',
+    ['product_id', 'name', 'category_id'],
+  )
 
   const oneSelected = table.state.selected.length === 1
   const firstSelected = selectedDataText?.[0]
@@ -56,7 +59,12 @@ export default function PageCollector() {
 
   const handleDeleteData = async () => {
     try {
-      await deleteCollector({ ids: table.state.selected })
+      await Promise.all(
+        table.state.selected.map((id) => {
+          const country_id = table.state.data.find((item) => item.id === id).country_id
+          return deleteTransportationZone({ id, country_id }).then((res) => console.log(res))
+        }),
+      )
       return true
     } catch (error) {
       return error
@@ -65,26 +73,27 @@ export default function PageCollector() {
 
   const handleChangeStatus = async () => {
     try {
-      const res = updateStatusCollector({
+      const res = updateStatusTransportationZone({
         id: changeStatusPayload?.id,
-        status: changeStatusPayload?.status ? false : true,
+        country_id: changeStatusPayload?.country_id,
+        is_active: changeStatusPayload?.is_active ? 0 : 1,
       })
       return res
     } catch (error) {
       return error
     }
   }
+
   useEffect(() => {
     let textselected = []
-    const ArrayFiltered = table.state.data.filter((dataAll) =>
-      table.state.selected.some((selected) => dataAll.id === selected),
-    )
-
-    const DeletedData = ArrayFiltered.map((item: any) => {
-      textselected.push(`${item.id} - ${item.identification}`)
+    const DeletedData = table.state.selected.map((id) => {
+      const country_id = table.state.data.find((item) => item.id === id).country_id
+      return deleteTransportationZone({ id, country_id }).then(() => {
+        const item = table.state.data.find((item) => item.id === id)
+        if (item) textselected.push(`${item.id} - ${item.name}`)
+      })
     })
-
-    setSelectedDataText(textselected)
+    Promise.all(DeletedData).then(() => setSelectedDataText(textselected))
   }, [table.state.selected])
 
   const moreContent = (
@@ -110,7 +119,7 @@ export default function PageCollector() {
 
   return (
     <>
-      <Text variant={'h4'}>Collector</Text>
+      <Text variant={'h4'}>Product</Text>
       <Spacer size={20} />
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
@@ -120,20 +129,8 @@ export default function PageCollector() {
           <Row gap="16px">
             <RowAntd gutter={10}>
               <ColAntd>
-                <Popover placement="bottom" content={moreContent} trigger="click">
-                  <Button
-                    size="big"
-                    variant="secondary"
-                    // onClick={downloadTemplateQuotation}
-                    style={{ gap: 5 }}
-                  >
-                    More <DownOutlined />
-                  </Button>
-                </Popover>
-              </ColAntd>
-              <ColAntd>
-                <Button size="big" variant="primary" onClick={() => setShowCreateModal(true)}>
-                  Create
+                <Button size="big" variant="tertiary">
+                  Download
                 </Button>
               </ColAntd>
             </RowAntd>
@@ -150,7 +147,7 @@ export default function PageCollector() {
           <FloatAction>
             <RowAntd justify="space-between" style={{ flexGrow: 1 }}>
               <b style={{ lineHeight: '48px' }}>
-                {table.state.selected.length} Collector are Selected
+                {table.state.selected.length} Transportation Zone are Selected
               </b>
               <RowAntd gutter={10}>
                 <ColAntd>
@@ -188,7 +185,7 @@ export default function PageCollector() {
         }}
         content={
           <>
-            Are you sure want Delete Collector{' '}
+            Are you sure want Delete Transportation Zone{' '}
             {oneSelected ? (
               <span style={{ fontWeight: 'bold' }}>{selectedText.text} ?</span>
             ) : (
@@ -201,26 +198,26 @@ export default function PageCollector() {
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Collector has been successfully deleted`}
+        successContent={(res: any) => `Transportation Zone has been successfully deleted`}
         successOkText="OK"
         width={432}
       />
 
       <Modal
-        title={`Confirm ${changeStatusPayload?.status ? 'inactivate' : 'activate'}`}
+        title={`Confirm ${changeStatusPayload?.is_active ? 'inactivate' : 'activate'}`}
         open={showChangeStatusModal}
         onOk={handleChangeStatus}
         onCancel={() => {
           setShowChangeStatusModal(false)
         }}
         content={`Are you sure want to ${
-          changeStatusPayload?.status ? 'inactivate' : 'activate'
-        } this Collector?`}
+          changeStatusPayload?.is_active ? 'inactivate' : 'activate'
+        } this Transportation Zone?`}
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
-        successContent={(res: any) => `Collector has been successfully 
-          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+        successContent={(res: any) => `Transportation Zone has been successfully 
+          ${changeStatusPayload?.is_active ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
       />
