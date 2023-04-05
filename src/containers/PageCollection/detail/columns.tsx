@@ -9,7 +9,6 @@ import moment from 'moment'
 import Total from 'src/components/Total'
 import { Popup } from 'src/components'
 import { fieldReason } from 'src/configs/fieldFetches'
-import currency from 'src/utils/currencyFormat'
 
 interface PaymentTypes {
   billing_amount?: number
@@ -91,7 +90,7 @@ export const useTableDetailCollection = (
   ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
-  delivered: number[],
+  // delivered: number[],
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
@@ -210,8 +209,8 @@ export const useTableDetailCollection = (
       }),
       addColumn({
         title: 'Paid Amount',
-        // dataIndex: 'paid_amount',
-        render: (_, __, i) => currency(delivered[i] || 0),
+        dataIndex: 'paid_amount',
+        // render: (_, __, i) => currency(delivered[i] || 0),
       }),
       addColumn({
         title: 'Payment Method',
@@ -227,30 +226,35 @@ export const useTableDetailCollection = (
       }),
       addColumn({
         title: 'Action',
-        render: (_, r) => (
-          <div style={{ display: 'flex', gap: 5 }}>
-            <Button
-              variant="primary"
-              size="small"
-              onClick={() => {
-                setShowModalDelivered(true)
-                setData(r)
-              }}
-            >
-              Delivered
-            </Button>
-            <Button
-              variant="tertiary"
-              size="small"
-              onClick={() => setShowPopupUndelivered(r.billing_number)}
-            >
-              Undelivered
-            </Button>
-            {showPopupUndelivered === r.billing_number && (
-              <PopupUndelivered id={r.billing_number} />
-            )}
-          </div>
-        ),
+        render: (_, r) => {
+          const isDelivered = r.undelivered_reason_id === ''
+          return (
+            <div style={{ display: 'flex', gap: 5 }}>
+              <Button
+                variant="primary"
+                size="small"
+                onClick={() => {
+                  setShowModalDelivered(true)
+                  setData(r)
+                }}
+                disabled={isDelivered}
+              >
+                Delivered
+              </Button>
+              <Button
+                variant="tertiary"
+                size="small"
+                onClick={() => setShowPopupUndelivered(r.billing_number)}
+                disabled={!isDelivered}
+              >
+                Undelivered
+              </Button>
+              {showPopupUndelivered === r.billing_number && (
+                <PopupUndelivered id={r.billing_number} />
+              )}
+            </div>
+          )
+        },
       }),
     ],
   }
