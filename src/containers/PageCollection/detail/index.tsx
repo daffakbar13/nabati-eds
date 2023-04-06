@@ -22,7 +22,8 @@ export default function PageCollectionDetail() {
 
   function getTotalAmount() {
     if (hasData) {
-      return [...data.details].map((d) => d.billing_amount).reduce((prev, curr) => prev + curr)
+      const totalAmount = [...data.details].map((d) => d.billing_amount).reduce((a, b) => a + b)
+      return Number(Number(totalAmount).toFixed(0)).toLocaleString()
     }
     return 0
   }

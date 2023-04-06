@@ -234,7 +234,8 @@ export const useTableDetailCollection = (
       addColumn({
         title: 'Action',
         render: (_, r) => {
-          const isDelivered = r.undelivered_reason_id === ''
+          const isDelivered = r.is_delivered === 1
+          const isUndelivered = r.is_delivered === 2
           return (
             <div style={{ display: 'flex', gap: 5 }}>
               <Button
@@ -252,7 +253,7 @@ export const useTableDetailCollection = (
                 variant="tertiary"
                 size="small"
                 onClick={() => setShowPopupUndelivered(r.billing_number)}
-                disabled={!isDelivered}
+                disabled={isUndelivered}
               >
                 Undelivered
               </Button>
