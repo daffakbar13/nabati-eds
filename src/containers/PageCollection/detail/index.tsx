@@ -28,6 +28,13 @@ export default function PageCollectionDetail() {
     return 0
   }
 
+  function isCanSubmit() {
+    if (hasData) {
+      return ![...data.details].map((e) => e.is_delivered).includes(0)
+    }
+    return false
+  }
+
   function undeliveBilling(
     billing_id: string,
     cancelation_reason_id: string,
@@ -96,56 +103,56 @@ export default function PageCollectionDetail() {
   return (
     <Col>
       {processing && <Loader type="process" text={processing} />}
-        <>
-          {modalDelivered}
-          <Row justify="space-between">
-            <Row gutter={16} align="middle">
-              <Col>
-                <ArrowLeftOutlined
-                  onClick={() => {
-                    router.push({ pathname: `${PATH.SALES}/collection` })
-                  }}
-                  style={{ fontSize: 25 }}
-                />
-              </Col>
-              <Col>
-                <Text variant={'h4'}>Cash {titlePage}</Text>
-              </Col>
-            </Row>
+      <>
+        {modalDelivered}
+        <Row justify="space-between">
+          <Row gutter={16} align="middle">
             <Col>
-              {tradeType !== 'MT' && (
-                <ButtonPinkLava
-                  size="big"
-                  variant="primary"
-                  // disabled={!canSubmit}
-                  onClick={() => {
-                    if (hasData) {
-                      setProcessing('Wait for finish collection')
-                      finishCollection(handleFinishPayload())
-                        .then(() => {
-                          setProcessing(undefined)
-                          router.push(`${PATH.SALES}/collection`)
-                        })
-                        .catch(() => setProcessing(undefined))
-                    }
-                  }}
-                >
-                  Finish
-                </ButtonPinkLava>
-              )}
+              <ArrowLeftOutlined
+                onClick={() => {
+                  router.push({ pathname: `${PATH.SALES}/collection` })
+                }}
+                style={{ fontSize: 25 }}
+              />
+            </Col>
+            <Col>
+              <Text variant={'h4'}>Cash {titlePage}</Text>
             </Col>
           </Row>
-          <Spacer size={20} />
-          <Card style={{ padding: '16px 20px' }}>
-            <Table dataSource={data?.details || []} columns={columns} scroll={{ x: 'max-content' }} />
-            <Spacer size={30} />
-            <Row justify="end">
-              <Col>
-                <Total label="Total Amount" value={getTotalAmount()} />
-              </Col>
-            </Row>
-          </Card>
-        </>
+          <Col>
+            {tradeType !== 'MT' && (
+              <ButtonPinkLava
+                size="big"
+                variant="primary"
+                disabled={!isCanSubmit()}
+                onClick={() => {
+                  if (hasData) {
+                    setProcessing('Wait for finish collection')
+                    finishCollection(handleFinishPayload())
+                      .then(() => {
+                        setProcessing(undefined)
+                        router.push(`${PATH.SALES}/collection`)
+                      })
+                      .catch(() => setProcessing(undefined))
+                  }
+                }}
+              >
+                Finish
+              </ButtonPinkLava>
+            )}
+          </Col>
+        </Row>
+        <Spacer size={20} />
+        <Card style={{ padding: '16px 20px' }}>
+          <Table dataSource={data?.details || []} columns={columns} scroll={{ x: 'max-content' }} />
+          <Spacer size={30} />
+          <Row justify="end">
+            <Col>
+              <Total label="Total Amount" value={getTotalAmount()} />
+            </Col>
+          </Row>
+        </Card>
+      </>
     </Col>
   )
 }
