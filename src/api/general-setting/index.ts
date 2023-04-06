@@ -45,11 +45,11 @@ export const updateGeneralSetting = async (payload: any) => {
 }
 
 export const updateStatusGeneralSetting = async (payload: any) => {
-    const response = await call({
-      method: METHODS.PUT,
-      overrideBaseUrl,
-      subUrl: `${url}/update-status`,
-      data: payload,
-    })
-    return response.data
-  }
+  const response = await call({
+    method: METHODS.PUT,
+    overrideBaseUrl,
+    subUrl: `${url}/update-status`,
+    data: payload,
+  })
+  return response.data
+}

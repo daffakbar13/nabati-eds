@@ -25,7 +25,9 @@ export const getListTrasportationMode = async (
   return response.data
 }
 
-export const createConfigTrasportationMode = async (params: any): Promise<CommonListResponse<TrasportationMode>> => {
+export const createConfigTrasportationMode = async (
+  params: any,
+): Promise<CommonListResponse<TrasportationMode>> => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}`,

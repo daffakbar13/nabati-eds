@@ -9,6 +9,7 @@ import moment from 'moment'
 import Total from 'src/components/Total'
 import { Popup } from 'src/components'
 import { fieldReason } from 'src/configs/fieldFetches'
+import currency from 'src/utils/currencyFormat'
 
 interface PaymentTypes {
   billing_amount?: number
@@ -210,7 +211,13 @@ export const useTableDetailCollection = (
       addColumn({
         title: 'Paid Amount',
         dataIndex: 'paid_amount',
-        // render: (_, __, i) => currency(delivered[i] || 0),
+        render: (_, r) => {
+          const isDelivered = r.is_delivered === 1
+          if (isDelivered) {
+            return currency(r.paid_amount)
+          }
+          return 0
+        },
       }),
       addColumn({
         title: 'Payment Method',

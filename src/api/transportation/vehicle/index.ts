@@ -25,9 +25,7 @@ export const getListVehicle = async (
   return response.data
 }
 
-export const createConfigVehicle = async (
-  params: any,
-): Promise<CommonListResponse<Vehicle>> => {
+export const createConfigVehicle = async (params: any): Promise<CommonListResponse<Vehicle>> => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}`,
@@ -37,9 +35,7 @@ export const createConfigVehicle = async (
   return response.data
 }
 
-export const updateConfigVehicle = async (
-  params: any,
-): Promise<CommonListResponse<Vehicle>> => {
+export const updateConfigVehicle = async (params: any): Promise<CommonListResponse<Vehicle>> => {
   const response = await call({
     method: METHODS.PUT,
     subUrl: `${url}`,

@@ -15,7 +15,7 @@ export default function SectionField() {
   const router = useRouter()
   const isEditPage = router.asPath.includes('edit')
   const { is_cus_noo } = router.query
-  const isNoo = is_cus_noo as string === 'true'
+  const isNoo = (is_cus_noo as string) === 'true'
 
   return (
     <Row gutter={[10, 10]}>

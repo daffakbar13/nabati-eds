@@ -97,8 +97,7 @@ export const menuSFA = [
         key: 'loyalti-list',
         title: 'Loyalti List',
         content: () => 'Loyalti List',
-        onClick: () =>
-          Router.push(`${PATH.SFA}/loyalti-list`),
+        onClick: () => Router.push(`${PATH.SFA}/loyalti-list`),
       },
     ],
   },
@@ -111,8 +110,7 @@ export const menuSFA = [
         key: 'loyalti-list',
         title: 'Insentif List',
         content: () => 'Insentif List',
-        onClick: () =>
-          Router.push(`${PATH.SFA}/loyalti-list`),
+        onClick: () => Router.push(`${PATH.SFA}/loyalti-list`),
       },
     ],
   },
@@ -125,8 +123,7 @@ export const menuSFA = [
         key: 'leaderboard-list',
         title: 'Leaderboard List',
         content: () => 'Leaderboard List',
-        onClick: () =>
-          Router.push(`${PATH.SFA}/leaderboard-list`),
+        onClick: () => Router.push(`${PATH.SFA}/leaderboard-list`),
       },
     ],
   },
@@ -139,8 +136,7 @@ export const menuSFA = [
         key: 'target-toko-list',
         title: 'Target Toko List',
         content: () => 'Target Toko List',
-        onClick: () =>
-          Router.push(`${PATH.SFA}/target-toko-list`),
+        onClick: () => Router.push(`${PATH.SFA}/target-toko-list`),
       },
     ],
   },

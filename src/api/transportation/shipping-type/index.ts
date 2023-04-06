@@ -25,7 +25,9 @@ export const getListShippingType = async (
   return response.data
 }
 
-export const createConfigShippingType = async (params: any): Promise<CommonListResponse<ShippingType>> => {
+export const createConfigShippingType = async (
+  params: any,
+): Promise<CommonListResponse<ShippingType>> => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}`,
@@ -60,7 +62,7 @@ export const updateStatusShippingType = async (
   return response.data
 }
 
-export const deleteShippingType= async (
+export const deleteShippingType = async (
   params: any,
 ): Promise<CommonListResponse<ShippingType>> => {
   const response = await call({

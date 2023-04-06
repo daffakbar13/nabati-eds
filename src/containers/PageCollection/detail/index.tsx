@@ -90,15 +90,11 @@ export default function PageCollectionDetail() {
     }),
   })
 
-  const { columns, modalDelivered } = useTableDetailCollection(
-    undeliveBilling,
-    deliveBilling,
-  )
+  const { columns, modalDelivered } = useTableDetailCollection(undeliveBilling, deliveBilling)
 
   return (
     <Col>
       {processing && <Loader type="process" text={processing} />}
-      {hasData && (
         <>
           {modalDelivered}
           <Row justify="space-between">
@@ -122,13 +118,15 @@ export default function PageCollectionDetail() {
                   variant="primary"
                   // disabled={!canSubmit}
                   onClick={() => {
-                    setProcessing('Wait for finish collection')
-                    finishCollection(handleFinishPayload())
-                      .then(() => {
-                        setProcessing(undefined)
-                        router.push(`${PATH.SALES}/collection`)
-                      })
-                      .catch(() => setProcessing(undefined))
+                    if (hasData) {
+                      setProcessing('Wait for finish collection')
+                      finishCollection(handleFinishPayload())
+                        .then(() => {
+                          setProcessing(undefined)
+                          router.push(`${PATH.SALES}/collection`)
+                        })
+                        .catch(() => setProcessing(undefined))
+                    }
                   }}
                 >
                   Finish
@@ -138,9 +136,7 @@ export default function PageCollectionDetail() {
           </Row>
           <Spacer size={20} />
           <Card style={{ padding: '16px 20px' }}>
-            {/* <div style={{ overflow: 'scroll' }}> */}
-            <Table dataSource={data.details} columns={columns} scroll={{ x: 'max-content' }} />
-            {/* </div> */}
+            <Table dataSource={data?.details || []} columns={columns} scroll={{ x: 'max-content' }} />
             <Spacer size={30} />
             <Row justify="end">
               <Col>
@@ -149,7 +145,6 @@ export default function PageCollectionDetail() {
             </Row>
           </Card>
         </>
-      )}
     </Col>
   )
 }

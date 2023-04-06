@@ -61,9 +61,7 @@ export const updateStatusDriver = async (
   return response.data
 }
 
-export const deleteDriver = async (
-  params: any,
-): Promise<CommonListResponse<Drivers>> => {
+export const deleteDriver = async (params: any): Promise<CommonListResponse<Drivers>> => {
   const response = await call({
     method: METHODS.DELETE,
     subUrl: `${url}`,

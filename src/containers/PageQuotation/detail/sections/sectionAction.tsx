@@ -116,36 +116,36 @@ export default function SectionAction() {
         {isStatus('7') && (
           <>
             <Col>
-          <Popover placement="bottom" content={moreContent} trigger="click">
-            <Button
-              size="big"
-              variant="secondary"
-              // onClick={downloadTemplateQuotation}
-              style={{ gap: 5 }}
-            >
-              More <DownOutlined />
-            </Button>
-          </Popover>
-        </Col>
-          <Col>
-            <Button
-              size="big"
-              variant="primary"
-              onClick={() => {
-                runProcess('Wait for submitting Sales Order')
-                multipleSubmitQuotation({ order_list: [{ id: router.query.id as string }] })
-                  .then((res) => {
-                    const [first] = res.data.results
-                    setNewSalesOrder(first.id)
-                    showConfirm('success-submit')
-                    stopProcess()
-                  })
-                  .catch(() => stopProcess())
-              }}
-            >
-              Submit
-            </Button>
-          </Col>
+              <Popover placement="bottom" content={moreContent} trigger="click">
+                <Button
+                  size="big"
+                  variant="secondary"
+                  // onClick={downloadTemplateQuotation}
+                  style={{ gap: 5 }}
+                >
+                  More <DownOutlined />
+                </Button>
+              </Popover>
+            </Col>
+            <Col>
+              <Button
+                size="big"
+                variant="primary"
+                onClick={() => {
+                  runProcess('Wait for submitting Sales Order')
+                  multipleSubmitQuotation({ order_list: [{ id: router.query.id as string }] })
+                    .then((res) => {
+                      const [first] = res.data.results
+                      setNewSalesOrder(first.id)
+                      showConfirm('success-submit')
+                      stopProcess()
+                    })
+                    .catch(() => stopProcess())
+                }}
+              >
+                Submit
+              </Button>
+            </Col>
           </>
         )}
       </Row>

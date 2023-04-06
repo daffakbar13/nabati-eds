@@ -107,7 +107,7 @@ export const updateCustomerNOO = async (payload: any, customerId: string) => {
   return response.data
 }
 
-export const updateStatusWaitingApprovalCustomerNOO = async (id:string) => {
+export const updateStatusWaitingApprovalCustomerNOO = async (id: string) => {
   const response = await call({
     method: METHODS.PUT,
     subUrl: `v1/master/update/${id}/status-waiting-approval/customer-noo`,
