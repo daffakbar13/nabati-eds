@@ -187,7 +187,7 @@ export default function BPB(props: BPBProps) {
         <TTD label="Diketahui Oleh," title="Kepala Gudang SBH/SPV Log/BM" />
         <TTD label="Diterima Kembali Oleh," title="Kepala Gudang" />
       </Row>
-      {/* <LabelPGI text={`${data.pgi_status ? 'After' : 'Before'}PGI`} /> */}
+      <LabelPGI text={`${data.pgi_status ? 'After' : 'Before'}PGI`} />
     </PaperA4>
   )
 }

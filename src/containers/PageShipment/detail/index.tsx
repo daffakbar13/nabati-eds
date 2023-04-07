@@ -251,15 +251,19 @@ export default function PageShipmentDetail() {
                   overflow: 'scroll',
                 }}
               >
-                <div ref={componentRef}>
-                  {currentTab === '2' && <BPB data={dataBpb} />}
-                  {currentTab === '3' && tradeType === 'MT' ? (
-                    <BSTS data={dataBsts} />
-                  ) : (
-                    <BSTF data={dataBstf} />
-                  )}
-                  {currentTab === '4' && <HPH data={dataHph} />}
-                </div>
+                {tradeType === 'MT' ? (
+                  <div ref={componentRef}>
+                    {currentTab === '2' && <BPB data={dataBpb} />}
+                    {currentTab === '3' && <BSTS data={dataBsts} />}
+                    {currentTab === '4' && <HPH data={dataHph} />}
+                  </div>
+                ) : (
+                  <div ref={componentRef}>
+                    {currentTab === '2' && <BPB data={dataBpb} />}
+                    {currentTab === '3' && <BSTF data={dataBstf} />}
+                    {currentTab === '4' && <HPH data={dataHph} />}
+                  </div>
+                )}
               </div>
             )}
           </>
