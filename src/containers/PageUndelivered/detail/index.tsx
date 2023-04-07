@@ -58,7 +58,7 @@ export default function PageApprovalDetail() {
     fieldReason('J')
       .then((res) => {
         setOptionsReason(res)
-        setReason(res[0].value)
+        // setReason(res[0].value)
       })
       .catch(() => setOptionsReason([]))
   }, [])
@@ -85,8 +85,8 @@ export default function PageApprovalDetail() {
           ? dataTable.map((item) => ({
               delivery_id: item?.delivery_oder_id,
               delivery_date: date,
-              is_delivery: 1,
-              cancelation_reason_id: '',
+              is_delivery: reason ? 0 : 1,
+              cancelation_reason_id: reason ? reason.split(' - ')[0] : '',
             }))
           : [],
     }
@@ -102,6 +102,7 @@ export default function PageApprovalDetail() {
   }
 
   const handleReject = (reason: string, index: number) => {
+    setReason(reason)
     setProccessing('Wait for rejecting')
 
     // const payload = {
@@ -125,28 +126,31 @@ export default function PageApprovalDetail() {
         },
       ],
     }
-    // setPayloads(newPayload)
-    // const newData = [...dataTable]
-    // newData[index] = {
-    //   ...dataTable[index],
-    //   cancel_reason: reason,
-    // }
-    // setDataTable(newData)
+    setPayloads(newPayload)
 
-    confirmUndelivered(newPayload)
-      .then(() => {
-        setShowConfirm('success-reject')
+    const newData = [...dataTable]
+    newData[index] = {
+      ...dataTable[index],
+      cancel_reason: reason,
+    }
+    setDataTable(newData)
 
-        const newData = [...dataTable]
-        newData[index] = {
-          ...dataTable[index],
-          cancel_reason: reason,
-        }
-        setDataTable(newData)
+    setProccessing('')
 
-        setProccessing('')
-      })
-      .catch(() => setProccessing(''))
+    // confirmUndelivered(newPayload)
+    //   .then(() => {
+    //     setShowConfirm('success-reject')
+
+    //     const newData = [...dataTable]
+    //     newData[index] = {
+    //       ...dataTable[index],
+    //       cancel_reason: reason,
+    //     }
+    //     setDataTable(newData)
+
+    //     setProccessing('')
+    //   })
+    //   .catch(() => setProccessing(''))
   }
 
   const handleReschedule = (date: any, index: number) => {
@@ -173,30 +177,30 @@ export default function PageApprovalDetail() {
         },
       ],
     }
-
     setPayloads(payload)
 
-    // const newData = [...dataTable]
-    // newData[index] = {
-    //   ...dataTable[index],
-    //   new_delivery_date: date,
-    // }
-    // setDataTable(newData)
+    const newData = [...dataTable]
+    newData[index] = {
+      ...dataTable[index],
+      new_delivery_date: date,
+    }
+    setDataTable(newData)
 
-    confirmUndelivered(payload)
-      .then(() => {
-        setShowConfirm('success-reschedule')
+    setProccessing('')
+    //   confirmUndelivered(payload)
+    //     .then(() => {
+    //       setShowConfirm('success-reschedule')
 
-        const newData = [...dataTable]
-        newData[index] = {
-          ...dataTable[index],
-          new_delivery_date: date,
-        }
-        setDataTable(newData)
+    //       const newData = [...dataTable]
+    //       newData[index] = {
+    //         ...dataTable[index],
+    //         new_delivery_date: date,
+    //       }
+    //       setDataTable(newData)
 
-        setProccessing('')
-      })
-      .catch(() => setProccessing(''))
+    //       setProccessing('')
+    //     })
+    //     .catch(() => setProccessing(''))
   }
 
   return (
