@@ -1,10 +1,7 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable radix */
 import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, SmartFilter } from 'src/components'
-import { colors } from 'src/configs/colors'
 import { Popover, Typography } from 'antd'
 import useTable from 'src/hooks/useTable'
 import { CheckCircleFilled } from '@ant-design/icons'
@@ -66,9 +63,7 @@ export default function PageApproval() {
       <Typography.Title level={5} style={{ margin: 0, fontWeight: 'bold' }}>
         Are you sure to approve Sales Order
         <Typography.Text
-          copyable={{
-            text: oneSelected ? selectedSalesOrder.text : table.state.selected.join(', '),
-          }}
+          copyable={{ text: oneSelected ? selectedSalesOrder.text : table.state.selected.join(', ') }}
         >
           {oneSelected ? (
             ` ${selectedSalesOrder.text}`
@@ -138,9 +133,7 @@ export default function PageApproval() {
         <div>
           New Sales Order
           <Typography.Text
-            copyable={{
-              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
-            }}
+            copyable={{ text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', ') }}
           >
             {oneSelected ? (
               ` ${submittedQuotation[0]}`
@@ -255,9 +248,7 @@ export default function PageApproval() {
         <div>
           Sales Order
           <Typography.Text
-            copyable={{
-              text: oneSelected ? selectedSalesOrder.text : table.state.selected.join(', '),
-            }}
+            copyable={{ text: oneSelected ? selectedSalesOrder.text : table.state.selected.join(', ') }}
           >
             {oneSelected ? (
               ` ${selectedSalesOrder.text}`

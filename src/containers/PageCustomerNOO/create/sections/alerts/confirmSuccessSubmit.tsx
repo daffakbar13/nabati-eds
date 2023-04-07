@@ -52,12 +52,12 @@ export default function ConfirmSuccessSubmit() {
           onClick={() => {
             !isEditPage
               ? router.push({
-                pathname: `${PATH.SALES}/quotation/create`,
-                query: {
-                  is_cus_noo: true,
-                  cus_noo_id: customerId,
-                },
-              })
+                  pathname: `${PATH.SALES}/quotation/create`,
+                  query: {
+                    is_cus_noo: true,
+                    cus_noo_id: customerId,
+                  },
+                })
               : router.push(`${PATH.SALES}/customer-noo`)
           }}
         >

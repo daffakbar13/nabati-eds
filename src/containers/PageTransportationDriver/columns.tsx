@@ -40,10 +40,7 @@ export const columns = (
     dataIndex: 'driver_status',
     render: (text: string, record: any, index: number) => (
       <>
-        <Switch
-          checked={text}
-          onChange={(bool: boolean) => onClickSwitch(bool, record)}
-        />
+        <Switch checked={text} onChange={(bool: boolean) => onClickSwitch(bool, record)} />
       </>
     ),
   }),

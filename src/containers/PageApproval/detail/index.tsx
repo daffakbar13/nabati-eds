@@ -15,10 +15,9 @@ import dateFormat from 'src/utils/dateFormat'
 import TitleDataList from 'src/components/TitleDataList'
 import Total from 'src/components/Total'
 import { concatString } from 'src/utils/concatString'
-import { PageApprovalDetailProps } from './types'
 import { tableApproval } from './columns'
 
-export default function PageApprovalDetail(props: PageApprovalDetailProps) {
+export default function PageApprovalDetail() {
   const titlePage = useTitlePage('detail')
   const [showConfirm, setShowConfirm] = React.useState('')
   const [reason, setReason] = React.useState('')
@@ -127,12 +126,22 @@ export default function PageApprovalDetail(props: PageApprovalDetailProps) {
         <Button
           size="big"
           style={{ flexGrow: 1 }}
-          variant="primary"
+          variant="tertiary"
           onClick={() => {
             router.push(`${PATH.SALES}/approval`)
           }}
         >
-          OK
+          Back To List
+        </Button>
+        <Button
+          size="big"
+          style={{ flexGrow: 1 }}
+          variant="primary"
+          onClick={() => {
+            router.push(`${PATH.SALES}/sales-order/detail/${router.query.id}`)
+          }}
+        >
+          Go To Sales Order
         </Button>
       </div>
     </Popup>

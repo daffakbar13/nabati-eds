@@ -25,7 +25,9 @@ export const getListVehicleType = async (
   return response.data
 }
 
-export const createConfigVehicleType = async (params: any): Promise<CommonListResponse<VehicleTypes>> => {
+export const createConfigVehicleType = async (
+  params: any,
+): Promise<CommonListResponse<VehicleTypes>> => {
   const response = await call({
     method: METHODS.POST,
     subUrl: `${url}`,
@@ -61,9 +63,7 @@ export const updateStatusVehicleType = async (
   return response.data
 }
 
-export const deleteVehicleType = async (
-  params: any,
-): Promise<CommonListResponse<VehicleTypes>> => {
+export const deleteVehicleType = async (params: any): Promise<CommonListResponse<VehicleTypes>> => {
   const response = await call({
     method: METHODS.DELETE,
     subUrl: `${url}`,

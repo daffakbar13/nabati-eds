@@ -9,7 +9,6 @@ export const columnsTopProductRevenue = [
   addColumn({
     title: 'Description',
     dataIndex: 'product_name',
-
   }),
   addColumn({
     title: 'Revenue',

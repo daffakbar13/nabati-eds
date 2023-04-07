@@ -22,9 +22,17 @@ export default function PageCollectionDetail() {
 
   function getTotalAmount() {
     if (hasData) {
-      return [...data.details].map((d) => d.billing_amount).reduce((prev, curr) => prev + curr)
+      const totalAmount = [...data.details].map((d) => d.billing_amount).reduce((a, b) => a + b)
+      return Number(Number(totalAmount).toFixed(0)).toLocaleString()
     }
     return 0
+  }
+
+  function isCanSubmit() {
+    if (hasData) {
+      return ![...data.details].map((e) => e.is_delivered).includes(0)
+    }
+    return false
   }
 
   function undeliveBilling(
@@ -90,38 +98,35 @@ export default function PageCollectionDetail() {
     }),
   })
 
-  const { columns, modalDelivered } = useTableDetailCollection(
-    undeliveBilling,
-    deliveBilling,
-  )
+  const { columns, modalDelivered } = useTableDetailCollection(undeliveBilling, deliveBilling)
 
   return (
     <Col>
       {processing && <Loader type="process" text={processing} />}
-      {hasData && (
-        <>
-          {modalDelivered}
-          <Row justify="space-between">
-            <Row gutter={16} align="middle">
-              <Col>
-                <ArrowLeftOutlined
-                  onClick={() => {
-                    router.push({ pathname: `${PATH.SALES}/collection` })
-                  }}
-                  style={{ fontSize: 25 }}
-                />
-              </Col>
-              <Col>
-                <Text variant={'h4'}>Cash {titlePage}</Text>
-              </Col>
-            </Row>
+      <>
+        {modalDelivered}
+        <Row justify="space-between">
+          <Row gutter={16} align="middle">
             <Col>
-              {tradeType !== 'MT' && (
-                <ButtonPinkLava
-                  size="big"
-                  variant="primary"
-                  // disabled={!canSubmit}
-                  onClick={() => {
+              <ArrowLeftOutlined
+                onClick={() => {
+                  router.push({ pathname: `${PATH.SALES}/collection` })
+                }}
+                style={{ fontSize: 25 }}
+              />
+            </Col>
+            <Col>
+              <Text variant={'h4'}>Cash {titlePage}</Text>
+            </Col>
+          </Row>
+          <Col>
+            {tradeType !== 'MT' && (
+              <ButtonPinkLava
+                size="big"
+                variant="primary"
+                disabled={!isCanSubmit()}
+                onClick={() => {
+                  if (hasData) {
                     setProcessing('Wait for finish collection')
                     finishCollection(handleFinishPayload())
                       .then(() => {
@@ -129,27 +134,25 @@ export default function PageCollectionDetail() {
                         router.push(`${PATH.SALES}/collection`)
                       })
                       .catch(() => setProcessing(undefined))
-                  }}
-                >
-                  Finish
-                </ButtonPinkLava>
-              )}
+                  }
+                }}
+              >
+                Finish
+              </ButtonPinkLava>
+            )}
+          </Col>
+        </Row>
+        <Spacer size={20} />
+        <Card style={{ padding: '16px 20px' }}>
+          <Table dataSource={data?.details || []} columns={columns} scroll={{ x: 'max-content' }} />
+          <Spacer size={30} />
+          <Row justify="end">
+            <Col>
+              <Total label="Total Amount" value={getTotalAmount()} />
             </Col>
           </Row>
-          <Spacer size={20} />
-          <Card style={{ padding: '16px 20px' }}>
-            {/* <div style={{ overflow: 'scroll' }}> */}
-            <Table dataSource={data.details} columns={columns} scroll={{ x: 'max-content' }} />
-            {/* </div> */}
-            <Spacer size={30} />
-            <Row justify="end">
-              <Col>
-                <Total label="Total Amount" value={getTotalAmount()} />
-              </Col>
-            </Row>
-          </Card>
-        </>
-      )}
+        </Card>
+      </>
     </Col>
   )
 }

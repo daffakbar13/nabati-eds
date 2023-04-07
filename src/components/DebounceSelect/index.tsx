@@ -114,7 +114,7 @@ function DebounceSelect<
       {type === 'number' && (
         <Input
           size="large"
-          type='number'
+          type="number"
           {...(props as any)}
           style={{
             border: '1px solid #AAAAAA',

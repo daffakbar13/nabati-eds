@@ -40,11 +40,7 @@ export default function SectionAction() {
           </Button>
         </Col>
         <Col>
-          <Button
-            size="big"
-            variant="primary"
-            onClick={() => handleShowModal(true)}
-          >
+          <Button size="big" variant="primary" onClick={() => handleShowModal(true)}>
             Generate
           </Button>
         </Col>

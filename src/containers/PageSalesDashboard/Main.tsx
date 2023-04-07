@@ -50,9 +50,7 @@ export default function Main() {
     Filler,
   )
   const getKey = (array, key) =>
-    array?.map((a) =>
-      key === 'date' ? moment(a[key]).format('DD MMMM') : a[key],
-    )
+    array?.map((a) => (key === 'date' ? moment(a[key]).format('DD MMMM') : a[key]))
 
   const startOfMonth = moment().startOf('month')
   const endOfMonth = moment().endOf('month')
