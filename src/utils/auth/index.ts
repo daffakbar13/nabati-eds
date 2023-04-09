@@ -21,7 +21,7 @@ export const auth = {
       .then()
       .finally(() => {
         localStorage.clear()
-        if (!withRedirect) window.location.href = `${PUBLIC_URL}/login`
+        if (!withRedirect) window.location.href = `${PUBLIC_URL}/eds/login`
       })
   },
   isAuthenticated: (): boolean => !!auth.getToken(),

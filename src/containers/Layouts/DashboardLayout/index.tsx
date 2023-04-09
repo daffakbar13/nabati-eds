@@ -35,7 +35,7 @@ export default function DashboardLayout(props: React.PropsWithChildren<React.Rea
 
   const handleLogout = () => {
     localStorage.clear()
-    window.location.href = '/login'
+    window.location.href = '/eds/login'
   }
 
   useEffect(() => {
