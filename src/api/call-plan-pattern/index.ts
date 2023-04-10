@@ -6,10 +6,10 @@ const url = 'v1/callplan-patterns'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_4
 
 interface CreateCallPlanPattern {
-  branch_id: string
-  company_id: string
-  customer_id: string
   salesman_id: string
+  customer_id: string
+  company_id: string
+  branch_id: string
   visit_day: string
   cycle: string
   is_active: string
@@ -22,14 +22,23 @@ export const createCallPlanPattern = async (params: CreateCallPlanPattern): Prom
     subUrl: `${url}/create`,
     data: params,
   })
-  return params
+  return response.data
 }
 
-export const getCallPlanPattern = async (params: any): Promise<any> => {
+export const callPlanPatternList = async (params: any): Promise<any> => {
   const response = await call({
-    method: METHODS.GET,
+    method: METHODS.POST,
     overrideBaseUrl,
-    subUrl: `${url}/download-template`,
+    subUrl: `${url}/list`,
+    data: params,
+  })
+  return response.data
+}
+
+export const uploadCallPlanPatternData = async (params: CreateCallPlanPattern) => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${url}/upload`,
     data: params,
   })
   return response.data
