@@ -12,8 +12,11 @@ export default function PageLogin() {
 
   const onFinish = (values: any) => {
     setShowLoader(true)
+    const headers = {
+      origin: 'https://hermes-portal.nabatisnack.co.id',
+    }
     axios
-      .post('https://sfa-dev.nabatisnack.co.id:8080', values)
+      .post('https://sfa-dev.nabatisnack.co.id:8080/login', values, { headers })
       .then((res) => {
         router.replace('/')
       })
