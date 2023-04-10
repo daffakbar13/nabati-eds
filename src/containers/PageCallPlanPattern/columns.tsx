@@ -1,5 +1,4 @@
 import { addColumn } from 'src/utils/createColumns'
-import { concatString } from 'src/utils/concatString'
 import { Switch } from 'pink-lava-ui'
 import { baseHandler } from './states/handler'
 
@@ -13,48 +12,49 @@ export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>
     }),
     addColumn({
       title: 'Salesman ID',
-      render: (_, { salesman_id, salesman_name }) => concatString(salesman_id, salesman_name),
+      dataIndex: 'salesman_name',
+      render: (_, { salesman_id }) => salesman_id,
       sorter: true,
     }),
     addColumn({
       title: 'Customer ID',
       dataIndex: 'sold_to_customer_id',
-      render: (id, { customer_name }) => concatString(id, customer_name),
+      render: (_, { customer_id }) => customer_id.replace('-', ''),
       sorter: true,
     }),
     addColumn({
       title: 'Company ID',
-      render: (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
+      render: (_, { company_id }) => company_id,
       sorter: true,
     }),
     addColumn({
       title: 'Branch ID',
-      render: (_, { branch_id, branch_name }) => concatString(branch_id, branch_name),
+      render: (_, { branch_id }) => branch_id,
       sorter: true,
     }),
     addColumn({
       title: 'Cycle',
-      render: () => 'M1',
+      render: (_, { cycle }) => cycle,
     }),
     addColumn({
       title: 'Visit Day',
-      render: () => 'Monday',
+      render: (_, { visit_day }) => visit_day,
     }),
     addColumn({
       title: 'Week 1',
-      render: () => '1',
+      render: (_, { week_1 }) => week_1,
     }),
     addColumn({
       title: 'Week 2',
-      render: () => '2',
+      render: (_, { week_2 }) => week_2,
     }),
     addColumn({
       title: 'Week 3',
-      render: () => '3',
+      render: (_, { week_3 }) => week_3,
     }),
     addColumn({
       title: 'Week 4',
-      render: () => '4',
+      render: (_, { week_4 }) => week_4,
     }),
     addColumn({
       title: 'Active/Inactive',
