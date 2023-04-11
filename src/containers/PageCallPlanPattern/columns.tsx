@@ -12,23 +12,25 @@ export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>
     }),
     addColumn({
       title: 'Salesman ID',
-      dataIndex: 'salesman_name',
+      dataIndex: 'salesman_id',
       render: (_, { salesman_id }) => salesman_id,
       sorter: true,
     }),
     addColumn({
       title: 'Customer ID',
-      dataIndex: 'sold_to_customer_id',
+      dataIndex: 'customer_id',
       render: (_, { customer_id }) => customer_id.replace('-', ''),
       sorter: true,
     }),
     addColumn({
       title: 'Company ID',
+      dataIndex: 'company_id',
       render: (_, { company_id }) => company_id,
       sorter: true,
     }),
     addColumn({
       title: 'Branch ID',
+      dataIndex: 'branch_id',
       render: (_, { branch_id }) => branch_id,
       sorter: true,
     }),
