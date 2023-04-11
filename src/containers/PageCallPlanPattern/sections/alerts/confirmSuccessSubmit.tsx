@@ -15,7 +15,6 @@ export default function ConfirmSuccessSubmit() {
       table: {
         state: { selected },
       },
-      submittedQuotation,
     },
   } = useSFACallPlanPatternContext()
   const router = useRouter()
@@ -42,23 +41,7 @@ export default function ConfirmSuccessSubmit() {
           textAlign: 'center',
         }}
       >
-        <div>
-          New Sales Order
-          <Typography.Text
-            copyable={{
-              text: oneSelected ? submittedQuotation[0] : submittedQuotation.join(', '),
-            }}
-          >
-            {oneSelected ? (
-              ` ${submittedQuotation[0]}`
-            ) : (
-              <Popover content={submittedQuotation.join(', ')}>
-                {` ${submittedQuotation[0]}, +${submittedQuotation.length - 1} more`}
-              </Popover>
-            )}
-          </Typography.Text>{' '}
-          has been
-        </div>
+        <div>New Call Plan Pattern has been</div>
         <div>successfully submitted</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
@@ -71,16 +54,6 @@ export default function ConfirmSuccessSubmit() {
           }}
         >
           Back To List
-        </Button>
-        <Button
-          size="big"
-          style={{ flexGrow: 1 }}
-          variant="primary"
-          onClick={() => {
-            router.push(`${PATH.SALES}/sales-order`)
-          }}
-        >
-          Next Process
         </Button>
       </div>
     </Popup>

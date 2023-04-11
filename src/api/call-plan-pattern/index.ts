@@ -1,6 +1,6 @@
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
-//import { CommonListResponse, CommonListParams } from 'src/api/types'
+import { CommonListResponse, CommonListParams } from 'src/api/types'
 
 const url = 'v1/callplan-patterns'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_4
@@ -22,10 +22,12 @@ export const createCallPlanPattern = async (params: CreateCallPlanPattern): Prom
     subUrl: `${url}/create`,
     data: params,
   })
-  return response.data
+  return params
 }
 
-export const callPlanPatternList = async (params: any): Promise<any> => {
+export const callPlanPatternList = async (
+  params: CommonListParams,
+): Promise<CommonListResponse<any>> => {
   const response = await call({
     method: METHODS.POST,
     overrideBaseUrl,

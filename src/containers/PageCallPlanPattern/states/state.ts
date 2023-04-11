@@ -8,4 +8,5 @@ export interface StateType {
   showModal: boolean
   editable?: any
   selected?: any
+  showValue?: any
 }
