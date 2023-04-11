@@ -9,17 +9,23 @@ export default function PageLogin() {
   const [showLoader, setShowLoader] = useState(false)
   const [form] = Form.useForm()
   const router = useRouter()
+  var querystring = require('querystring')
 
   const onFinish = (values: any) => {
     setShowLoader(true)
     axios
-      .post('https://sfa-dev.nabatisnack.co.id:8080', values)
+      .post('https://sfa-dev.nabatisnack.co.id:8080/login/', querystring.stringify(values), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      })
       .then((res) => {
         router.replace('/')
       })
       .catch((error) => {
         if (error.response) {
-          message.error(error.response.data.data.message)
+          // message.error(error.response.data.data.message)
+          message.error('user not found')
         } else {
           message.error(error.message)
         }
