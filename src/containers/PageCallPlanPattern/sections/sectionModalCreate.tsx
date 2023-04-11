@@ -24,11 +24,11 @@ export default function SectionModalCreate() {
       value: '1',
     },
     {
-      label: 'M2C13',
+      label: 'M2C24',
       value: '2',
     },
     {
-      label: 'M2C24',
+      label: 'M2C13',
       value: '3',
     },
   ]
@@ -111,7 +111,7 @@ export default function SectionModalCreate() {
             required
             label="Company"
             placeholder={'Select'}
-            value={showValue.company_id || ''}
+            // value={showValue.company_id || ''}
             fetchOptions={fieldCompanyList}
             onChange={(e) => handleShowValue({ ...showValue, company_id: e.value })}
           />
@@ -122,7 +122,7 @@ export default function SectionModalCreate() {
             required
             label="Branch"
             placeholder={'Select'}
-            value={showValue.branch_id || ''}
+            //value={showValue.branch_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
             fetchOptions={fieldBranchAll}
             onChange={(e) => handleShowValue({ ...showValue, branch_id: e.value })}
@@ -135,7 +135,7 @@ export default function SectionModalCreate() {
             required
             label="Salesman ID"
             placeholder={'Select'}
-            value={showValue.salesman_id || ''}
+            //value={showValue.salesman_id || ''}
             fetchOptions={fieldNewSalesmanDivision}
             onChange={(e) => handleShowValue({ ...showValue, salesman_id: e.value })}
           />
@@ -146,7 +146,7 @@ export default function SectionModalCreate() {
             required
             label="Customer ID"
             placeholder={'Select'}
-            value={showValue.customer_id || ''}
+            //value={showValue.customer_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
             fetchOptions={fieldCustomer}
             onChange={(e) => handleShowValue({ ...showValue, customer_id: e.value })}
@@ -159,7 +159,7 @@ export default function SectionModalCreate() {
             required
             label="Cycle"
             placeholder={'Select'}
-            value={showValue.cycle || ''}
+            //value={showValue.cycle || ''}
             //fetchOptions={fieldDivisionID}
             options={callPlanPatternCycleDay}
             onChange={(e) => handleShowValue({ ...showValue, cycle: e.value })}
@@ -172,7 +172,7 @@ export default function SectionModalCreate() {
             required
             label="Visit Day"
             placeholder={'Select'}
-            value={showValue.visit_day || ''}
+            //value={showValue.visit_day || ''}
             //fetchOptions={fieldDivisionID}
             options={callPlanPatternVisitDay}
             onChange={(e) => handleShowValue({ ...showValue, visit_day: e.value })}
@@ -185,7 +185,7 @@ export default function SectionModalCreate() {
             required
             label="Status"
             placeholder={'Select'}
-            value={showValue.is_active || ''}
+            //value={showValue.is_active || ''}
             //fetchOptions={fieldDivisionID}
             options={callPlanPatternIsActive}
             onChange={(e) => handleShowValue({ ...showValue, is_active: e.value })}

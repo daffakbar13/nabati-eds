@@ -44,10 +44,9 @@ export default function ConfirmSubmit() {
               cycle: showValue.cycle,
               is_active: showValue.is_active,
             })
-              .then((response) => response.data)
-              .then((data) => {
+              .then((params) => {
                 showConfirm('success-submit')
-                changeCreateCallPlanPattern(data)
+                changeCreateCallPlanPattern(params)
                 stopProcess()
               })
               .catch(() => {
