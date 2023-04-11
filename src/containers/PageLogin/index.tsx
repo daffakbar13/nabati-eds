@@ -17,6 +17,7 @@ export default function PageLogin() {
       .post('https://sfa-dev.nabatisnack.co.id:8080/login/', querystring.stringify(values), {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          origin: 'https://hermes-portal.nabatisnack.co.id',
         },
       })
       .then((res) => {

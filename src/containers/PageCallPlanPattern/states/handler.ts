@@ -10,12 +10,12 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'processing', payload: undefined })
   }
 
-  function showConfirm(payload: string[]) {
+  function showConfirm(payload: string) {
     dispatch({ type: 'confirm', payload })
   }
 
   function unShowConfirm() {
-    dispatch({ type: 'confirm', payload: 'undefined' })
+    dispatch({ type: 'confirm', payload: undefined })
   }
 
   function changeCreateCallPlanPattern(payload: string[]) {
@@ -26,17 +26,15 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'showModal', payload })
   }
 
-  function handleEditable(payload: string) {
+  function handleShowValue(payload: string) {
     dispatch({
-      type: 'editable',
+      type: 'showValue',
       payload,
     })
   }
-  function handleSelected(payload: string[]) {
-    dispatch({
-      type: 'selected',
-      payload,
-    })
+
+  function handleSelected(payload: any) {
+    dispatch({ type: 'selected', payload })
   }
 
   return {
@@ -46,7 +44,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     unShowConfirm,
     changeCreateCallPlanPattern,
     handleShowModal,
-    handleEditable,
+    handleShowValue,
     handleSelected,
   }
 }
