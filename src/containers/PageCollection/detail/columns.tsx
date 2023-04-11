@@ -234,9 +234,11 @@ export const useTableDetailCollection = (
       addColumn({
         title: 'Delivery Confirmation',
         render: (_, r) => {
-          const isActiveUnDelivered = r.is_delivered === 1 || r.is_delivered === 0
-          const isActiveDelivered = r.is_delivered === 2 || r.is_delivered === 0
-          const isFromSFA = r.is_delivered === 3
+          const isActive = (...value: number[]) => value.includes(r.is_delivered)
+          const isActiveUnDelivered = isActive(0, 1, 3)
+          const isActiveDelivered = isActive(0, 2, 4)
+          const isFromSFA = isActive(3, 4)
+          const disableStyleFromSFA = { ...(isFromSFA && { cursor: 'no-drop' }) }
           return (
             <div style={{ display: 'flex', gap: 5 }}>
               <Button
@@ -244,7 +246,7 @@ export const useTableDetailCollection = (
                 size="small"
                 style={{ cursor: 'no-drop' }}
                 {...(isActiveDelivered && {
-                  style: { backgroundColor: '#ddd', ...(isFromSFA && { cursor: 'pointer' }) },
+                  style: { backgroundColor: '#ddd', ...disableStyleFromSFA },
                   onClick() {
                     if (!isFromSFA) {
                       setShowModalDelivered(true)
@@ -260,11 +262,7 @@ export const useTableDetailCollection = (
                 size="small"
                 style={{ cursor: 'no-drop' }}
                 {...(isActiveUnDelivered && {
-                  style: {
-                    border: '2px solid #ddd',
-                    color: '#ddd',
-                    ...(isFromSFA && { cursor: 'pointer' }),
-                  },
+                  style: { border: '2px solid #ddd', color: '#ddd', ...disableStyleFromSFA },
                   onClick() {
                     if (!isFromSFA) {
                       setShowPopupUndelivered(r.billing_number)
