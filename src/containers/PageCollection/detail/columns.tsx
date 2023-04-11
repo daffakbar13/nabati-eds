@@ -238,7 +238,8 @@ export const useTableDetailCollection = (
           const isActiveUnDelivered = isActive(0, 1, 3)
           const isActiveDelivered = isActive(0, 2, 4)
           const isFromSFA = isActive(3, 4)
-          const disableStyleFromSFA = { ...(isFromSFA && { cursor: 'no-drop' }) }
+          const disabledCursor = { cursor: 'no-drop' }
+          const disableStyleFromSFA = { ...(isFromSFA && disabledCursor) }
           const deliveredStyle = { backgroundColor: '#ddd' }
           const undeliveredStyle = { border: '2px solid #ddd', color: '#ddd' }
           return (
@@ -246,7 +247,7 @@ export const useTableDetailCollection = (
               <Button
                 variant="primary"
                 size="small"
-                style={{ cursor: 'no-drop' }}
+                style={disabledCursor}
                 {...(isActiveDelivered && {
                   style: { ...deliveredStyle, ...disableStyleFromSFA },
                   onClick() {
@@ -262,7 +263,7 @@ export const useTableDetailCollection = (
               <Button
                 variant="tertiary"
                 size="small"
-                style={{ cursor: 'no-drop' }}
+                style={disabledCursor}
                 {...(isActiveUnDelivered && {
                   style: { ...undeliveredStyle, ...disableStyleFromSFA },
                   onClick() {
