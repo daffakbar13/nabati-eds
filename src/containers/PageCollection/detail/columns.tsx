@@ -236,6 +236,7 @@ export const useTableDetailCollection = (
         render: (_, r) => {
           const isActiveUnDelivered = r.is_delivered === 1 || r.is_delivered === 0
           const isActiveDelivered = r.is_delivered === 2 || r.is_delivered === 0
+          const isFromSFA = r.is_delivered === 3
           return (
             <div style={{ display: 'flex', gap: 5 }}>
               <Button
@@ -243,10 +244,12 @@ export const useTableDetailCollection = (
                 size="small"
                 style={{ cursor: 'no-drop' }}
                 {...(isActiveDelivered && {
-                  style: { backgroundColor: '#ddd' },
+                  style: { backgroundColor: '#ddd', ...(isFromSFA && { cursor: 'pointer' }) },
                   onClick() {
-                    setShowModalDelivered(true)
-                    setData(r)
+                    if (!isFromSFA) {
+                      setShowModalDelivered(true)
+                      setData(r)
+                    }
                   },
                 })}
               >
@@ -257,9 +260,15 @@ export const useTableDetailCollection = (
                 size="small"
                 style={{ cursor: 'no-drop' }}
                 {...(isActiveUnDelivered && {
-                  style: { border: '2px solid #ddd', color: '#ddd' },
+                  style: {
+                    border: '2px solid #ddd',
+                    color: '#ddd',
+                    ...(isFromSFA && { cursor: 'pointer' }),
+                  },
                   onClick() {
-                    setShowPopupUndelivered(r.billing_number)
+                    if (!isFromSFA) {
+                      setShowPopupUndelivered(r.billing_number)
+                    }
                   },
                 })}
               >
