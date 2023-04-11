@@ -232,7 +232,7 @@ export const useTableDetailCollection = (
         dataIndex: 'undelivered_reason_name',
       }),
       addColumn({
-        title: 'Action',
+        title: 'Delivery Confirmation',
         render: (_, r) => {
           const isDelivered = r.is_delivered === 1
           const isUndelivered = r.is_delivered === 2
@@ -241,19 +241,27 @@ export const useTableDetailCollection = (
               <Button
                 variant="primary"
                 size="small"
-                onClick={() => {
-                  setShowModalDelivered(true)
-                  setData(r)
-                }}
-                disabled={isDelivered}
+                style={{ cursor: 'no-drop' }}
+                {...(isUndelivered && {
+                  style: { backgroundColor: '#ddd' },
+                  onClick() {
+                    setShowModalDelivered(true)
+                    setData(r)
+                  },
+                })}
               >
                 Delivered
               </Button>
               <Button
                 variant="tertiary"
                 size="small"
-                onClick={() => setShowPopupUndelivered(r.billing_number)}
-                disabled={isUndelivered}
+                style={{ cursor: 'no-drop' }}
+                {...(isDelivered && {
+                  style: { border: '2px solid #ddd', color: '#ddd' },
+                  onClick() {
+                    setShowPopupUndelivered(r.billing_number)
+                  },
+                })}
               >
                 Undelivered
               </Button>
