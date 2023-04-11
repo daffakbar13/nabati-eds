@@ -234,15 +234,15 @@ export const useTableDetailCollection = (
       addColumn({
         title: 'Delivery Confirmation',
         render: (_, r) => {
-          const isDelivered = r.is_delivered === 1
-          const isUndelivered = r.is_delivered === 2
+          const isActiveUnDelivered = r.is_delivered === 1 || r.is_delivered === 0
+          const isActiveDelivered = r.is_delivered === 2 || r.is_delivered === 0
           return (
             <div style={{ display: 'flex', gap: 5 }}>
               <Button
                 variant="primary"
                 size="small"
                 style={{ cursor: 'no-drop' }}
-                {...(isUndelivered && {
+                {...(isActiveDelivered && {
                   style: { backgroundColor: '#ddd' },
                   onClick() {
                     setShowModalDelivered(true)
@@ -256,7 +256,7 @@ export const useTableDetailCollection = (
                 variant="tertiary"
                 size="small"
                 style={{ cursor: 'no-drop' }}
-                {...(isDelivered && {
+                {...(isActiveUnDelivered && {
                   style: { border: '2px solid #ddd', color: '#ddd' },
                   onClick() {
                     setShowPopupUndelivered(r.billing_number)
