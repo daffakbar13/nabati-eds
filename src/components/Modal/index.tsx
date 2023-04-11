@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, Typography, Spin } from 'antd'
+import { Modal, Typography, Spin, message } from 'antd'
 import { Button } from 'pink-lava-ui'
 import SuccessModal from './success'
 
@@ -62,6 +62,11 @@ const ModalCustomize = ({
       close()
     } catch (error) {
       setLoading(false)
+      if (error?.response) {
+        message.error(error?.response?.data?.message || 'network error')
+      } else {
+        message.error(error?.message || 'network error')
+      }
     }
   }
 

@@ -139,7 +139,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
       >
         <Spacer size={20} />
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 20, rowGap: 30 }}>
-          <Form.Item
+          {/* <Form.Item
             name="vehicle_id"
             style={{ marginTop: -12, marginBottom: 0 }}
             rules={[{ required: true }]}
@@ -154,14 +154,14 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
                 onChangeForm('vehicle_id', val.target.value)
               }}
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             name="name"
             style={{ marginTop: -12, marginBottom: 0 }}
             rules={[{ required: true }]}
           >
             <DebounceSelect
-              label="Name"
+              label="Vehicle Name"
               required
               type="input"
               placeholder="e.g name"
@@ -297,11 +297,9 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
           <Form.Item
             name="helper"
             style={{ marginTop: -12, marginBottom: 0 }}
-            rules={[{ required: true }]}
           >
             <DebounceSelect
               label="Helper"
-              required
               type="select"
               placeholder="Select Helper"
               fetchOptions={(search) => fieldTransportationHelper(search, branchId)}
@@ -312,6 +310,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
             />
           </Form.Item>
         </div>
+        <Spacer size={20} />
         <Row justifyContent="space-between" reverse>
           <Row gap="16px">
             <Button type="button" size="big" variant="tertiary" onClick={handleCancel}>
