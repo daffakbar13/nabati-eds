@@ -43,7 +43,7 @@ export const updateConfigCompany = async (
   key: string = '1',
 ): Promise<CommonListResponse<StockRealTime>> => {
   const response = await call({
-    method: METHODS.POST,
+    method: METHODS.PUT,
     subUrl: `${url}/update_company/${companyId}/${key}`,
     overrideBaseUrl,
     data: params,
