@@ -89,7 +89,7 @@ export default function PageConfigurationTaxRegulator() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Sloc Company?`}
         onOkSuccess={() => {
-          router.reload()
+          router.push(router.asPath)
         }}
         successContent={(res: any) => `Config sloc company has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}

@@ -87,7 +87,7 @@ export default function PageConfigurationBranchLocation() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Sloc Company?`}
         onOkSuccess={() => {
-          router.reload()
+          router.push(router.asPath)
         }}
         successContent={(res: any) => `Config sloc company has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
@@ -103,7 +103,7 @@ export default function PageConfigurationBranchLocation() {
         }}
         content={'Are you sure want to delete this Branch?'}
         onOkSuccess={() => {
-          router.reload()
+          router.push(router.asPath)
         }}
         successContent={(res: any) => 'This branch has been successfully deleted'}
         successOkText="OK"

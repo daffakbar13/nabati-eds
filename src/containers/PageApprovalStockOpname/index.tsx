@@ -438,7 +438,7 @@ export default function PageApprovalStockOpname() {
               size="big"
               style={{ flexGrow: 1 }}
               variant="primary"
-              onClick={() => router.reload()}
+              onClick={() => router.push(router.asPath)}
             >
               OK
             </Button>
@@ -451,7 +451,7 @@ export default function PageApprovalStockOpname() {
         open={approveModal}
         onOk={handleApprove}
         onCancel={() => setApproveModal(false)}
-        onOkSuccess={() => router.reload()}
+        onOkSuccess={() => router.push(router.asPath)}
         content={`Are you sure want to approve? Reff. Number ${table.state.selected.join(', ')}`}
         successOkText="OK"
         successContent={(res: any) => (

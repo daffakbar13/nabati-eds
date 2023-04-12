@@ -72,7 +72,7 @@ function StatusActionCustomer({ data }: { data: any }) {
         } this customer ${data.id}?`}
         onOkSuccess={() => {
           setChecked(data?.status_id ? false : true)
-          router.reload()
+          router.push(router.asPath)
         }}
         successContent={(res: any) => `Customer ${data.id} has been successfully 
           ${data?.status_id ? 'inactivated' : 'activated'}`}
@@ -118,7 +118,7 @@ function StatusActionSalesOrg({ data }: { data: any }) {
         } this Sales Org ${data.sales_org}?`}
         onOkSuccess={() => {
           setChecked(data?.status_sales_org ? false : true)
-          router.reload()
+          router.push(router.asPath)
         }}
         successContent={(res: any) => `Sales Org ${data.sales_org} has been successfully 
           ${data?.status_sales_org ? 'inactivated' : 'activated'}`}

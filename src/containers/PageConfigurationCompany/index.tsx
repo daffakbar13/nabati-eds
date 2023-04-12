@@ -188,7 +188,7 @@ export default function PageConfigurationSloc() {
           changeStatusPayload?.status ? 'inactivate' : 'activate'
         } this Company?`}
         onOkSuccess={() => {
-          router.reload()
+          router.push(router.asPath)
         }}
         successContent={(res: any) => `Config company has been successfully 
           ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}

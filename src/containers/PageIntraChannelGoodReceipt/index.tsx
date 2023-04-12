@@ -202,7 +202,7 @@ export default function PageIntraChannelGoodIssue() {
                 style={{ flexGrow: 1 }}
                 variant="secondary"
                 onClick={() => {
-                  router.reload()
+                  router.push(router.asPath)
                 }}
               >
                 Cancel Proccess
@@ -212,7 +212,7 @@ export default function PageIntraChannelGoodIssue() {
                 style={{ flexGrow: 1 }}
                 variant="primary"
                 onClick={() => {
-                  router.reload()
+                  router.push(router.asPath)
                 }}
               >
                 Submit

@@ -174,7 +174,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         loading={loading}
         onOkSuccess={() => {
           handleCancel()
-          router.reload()
+          router.push(router.asPath)
         }}
         successContent={(res: any) => 'Config item category has been successfully Updated'}
         successOkText="OK"

@@ -65,7 +65,7 @@ export default function ConfirmSuccessSubmit(props: ConfirmSuccessSubmitProps) {
           style={{ flexGrow: 1 }}
           variant="secondary"
           onClick={() => {
-            router.reload()
+            router.push(router.asPath)
           }}
         >
           Back To List

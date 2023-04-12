@@ -52,7 +52,13 @@ export default function PageConfigurationSloc() {
     haveCheckBox: 'All',
   })
 
-  const { searchProps } = useFilters(table, 'Search by Sales Org ID', ['id'])
+  const { searchProps } = useFilters(table, 'Search by Sales Org ID', [
+    'id',
+    'company_id',
+    'create_from',
+    'partial_availability',
+    'notes',
+  ])
 
   const [selectedDataText, setSelectedDataText] = useState([])
 

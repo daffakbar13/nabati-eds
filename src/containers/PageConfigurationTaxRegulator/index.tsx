@@ -54,6 +54,11 @@ export default function PageConfigurationTaxRegulator() {
     'company_id',
     'tax_subject',
     'tax_cl_material',
+    'tax_name',
+    'country_id',
+    'valid_from',
+    'valid_to',
+    'amount',
   ])
 
   const handleDeleteData = async () => {

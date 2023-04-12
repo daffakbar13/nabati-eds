@@ -68,7 +68,7 @@ export default function PageConfigurationSloc() {
     try {
       const res = updateStatusVehicle(
         {
-          status: changeStatusPayload?.status ? false : true,
+          status: changeStatusPayload?.driver_status ? false : true,
         },
         changeStatusPayload?.vehicle_id,
       )
@@ -173,20 +173,20 @@ export default function PageConfigurationSloc() {
         width={432}
       />
       <Modal
-        title={`Confirm ${changeStatusPayload?.status ? 'inactivate' : 'activate'}`}
+        title={`Confirm ${changeStatusPayload?.driver_status ? 'inactivate' : 'activate'}`}
         open={showChangeStatusModal}
         onOk={handleChangeStatus}
         onCancel={() => {
           setShowChangeStatusModal(false)
         }}
         content={`Are you sure want to ${
-          changeStatusPayload?.status ? 'inactivate' : 'activate'
+          changeStatusPayload?.driver_status ? 'inactivate' : 'activate'
         } this Vehicle?`}
         onOkSuccess={() => {
           router.push(router.asPath)
         }}
         successContent={(res: any) => `Vehicle has been successfully 
-          ${changeStatusPayload?.status ? 'inactivated' : 'activated'}`}
+          ${changeStatusPayload?.driver_status ? 'inactivated' : 'activated'}`}
         successOkText="OK"
         width={432}
       />
