@@ -210,7 +210,7 @@ export const useTableDetailCollection = (
         title: 'Paid Amount',
         dataIndex: 'paid_amount',
         render: (_, r) => {
-          const isDelivered = r.is_delivered === 1
+          const isDelivered = [1, 3].includes(r.is_delivered)
           if (isDelivered) {
             return currency(r.paid_amount)
           }
