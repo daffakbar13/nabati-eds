@@ -45,3 +45,13 @@ export const uploadCallPlanPatternData = async (params: CreateCallPlanPattern) =
   })
   return response.data
 }
+
+export const updateCallPlanActivation = async (params: CreateCallPlanPattern): Promise<any> => {
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/active`,
+    data: params,
+  })
+  return response.data
+}

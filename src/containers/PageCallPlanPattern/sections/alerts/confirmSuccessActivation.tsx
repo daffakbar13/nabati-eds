@@ -12,7 +12,7 @@ export default function ConfirmSuccessActivation() {
     state: { selected },
   } = useSFACallPlanPatternContext()
   const router = useRouter()
-  const isActive = selected.is_active === 'Active'
+  const isActive = selected.is_active === '1'
 
   return (
     <Popup>
@@ -36,7 +36,7 @@ export default function ConfirmSuccessActivation() {
         }}
       >
         <div>{'Call Plan Pattern has been'}</div>
-        <div>successfully {isActive ? 'inactived' : 'actived'}</div>
+        <div>successfully {isActive ? 'Inactivated' : 'Activated'}</div>
       </div>
       <div style={{ display: 'flex', gap: 10 }}>
         <Button
