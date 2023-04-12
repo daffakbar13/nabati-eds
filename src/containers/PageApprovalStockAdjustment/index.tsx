@@ -387,7 +387,7 @@ export default function PageApprovalStockAdjustment() {
               size="big"
               style={{ flexGrow: 1 }}
               variant="primary"
-              onClick={() => router.reload()}
+              onClick={() => router.push(router.asPath)}
             >
               OK
             </Button>
@@ -401,7 +401,7 @@ export default function PageApprovalStockAdjustment() {
         open={approveModal}
         onOk={handleApprove}
         onCancel={() => setApproveModal(false)}
-        onOkSuccess={() => router.reload()}
+        onOkSuccess={() => router.push(router.asPath)}
         content={`Are you sure want to approve? Stock Adjustment ID : ${table.state.selected.join(
           ', ',
         )}`}
