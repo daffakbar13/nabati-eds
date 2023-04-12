@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable camelcase */
 import { MinusCircleFilled } from '@ant-design/icons'
 import { Input, InputNumber, Select } from 'antd'
 import React from 'react'
@@ -105,7 +103,6 @@ export function useTableProduct() {
             />
           ),
           width: 150,
-          // fixed: true,
         }),
         addColumn({
           title: 'Uom',
@@ -122,7 +119,6 @@ export function useTableProduct() {
             />
           ),
           width: 150,
-          // fixed: true,
         }),
         addColumn({
           title: 'Quantity',
@@ -138,9 +134,9 @@ export function useTableProduct() {
                 handleChangeQty(e.target.value, index)
               }}
               onPressEnter={(e) => {
-                handleChangeQty(e.target.value, index)
+                handleChangeQty((e.target as any).value, index)
               }}
-              onClick={(e) => {
+              onClick={(e: any) => {
                 e.target.value = order_qty.toString()
                 e.currentTarget.focus()
               }}
@@ -179,9 +175,9 @@ export function useTableProduct() {
                   handleChangeDiscount(e.target.value, index)
                 }}
                 onPressEnter={(e) => {
-                  handleChangeDiscount(e.target.value, index)
+                  handleChangeDiscount((e.target as any).value, index)
                 }}
-                onClick={(e) => {
+                onClick={(e: any) => {
                   e.target.value = discount
                   e.currentTarget.focus()
                 }}
@@ -216,7 +212,7 @@ export function useTableProduct() {
                 handleChangeRemarks(e.target.value, index)
               }}
               onPressEnter={(e) => {
-                handleChangeRemarks(e.target.value, index)
+                handleChangeRemarks((e.target as any).value, index)
               }}
               onChange={(e) => {
                 e.target.setAttribute('placeholder', e.target.value)
