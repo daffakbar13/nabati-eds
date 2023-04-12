@@ -64,17 +64,6 @@ export default function SectionModalCreate() {
     },
   ]
 
-  const callPlanPatternIsActive = [
-    {
-      label: 'Active',
-      value: '1',
-    },
-    {
-      label: 'Inactive',
-      value: '0',
-    },
-  ]
-
   const footer = (
     <div style={{ display: 'flex', gap: 16 }}>
       <Button
@@ -176,19 +165,6 @@ export default function SectionModalCreate() {
             //fetchOptions={fieldDivisionID}
             options={callPlanPatternVisitDay}
             onChange={(e) => handleShowValue({ ...showValue, visit_day: e.value })}
-          />
-        </Col>
-        <Col span={12}>
-          <DebounceSelect
-            // disabled={!isModalCreate}
-            type="select"
-            required
-            label="Status"
-            placeholder={'Select'}
-            //value={showValue.is_active || ''}
-            //fetchOptions={fieldDivisionID}
-            options={callPlanPatternIsActive}
-            onChange={(e) => handleShowValue({ ...showValue, is_active: e.value })}
           />
         </Col>
       </Row>

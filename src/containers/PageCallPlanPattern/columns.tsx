@@ -4,6 +4,30 @@ import { baseHandler } from './states/handler'
 
 export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>) {
   const { showConfirm, handleSelected } = handler
+  function handleAction(id: string) {
+    handleSelected(id)
+  }
+  function getDayName(dayNumber: string): string {
+    switch (dayNumber) {
+      case '1':
+        return 'Monday'
+      case '2':
+        return 'Tuesday'
+      case '3':
+        return 'Wednesday'
+      case '4':
+        return 'Thursday'
+      case '5':
+        return 'Friday'
+      case '6':
+        return 'Saturday'
+      case '7':
+        return 'Sunday'
+      default:
+        return 'Invalid day number'
+    }
+  }
+
   return [
     addColumn({
       title: 'No',
@@ -36,11 +60,15 @@ export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>
     }),
     addColumn({
       title: 'Cycle',
+      dataIndex: 'cycle',
       render: (_, { cycle }) => cycle,
+      sorter: true,
     }),
     addColumn({
       title: 'Visit Day',
-      render: (_, { visit_day }) => visit_day,
+      dataIndex: 'visit_day',
+      render: (_, { visit_day }) => getDayName(visit_day),
+      sorter: true,
     }),
     addColumn({
       title: 'Week 1',
@@ -60,11 +88,11 @@ export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>
     }),
     addColumn({
       title: 'Active/Inactive',
-      render: () => (
+      render: (_, r) => (
         <Switch
-          checked={true}
+          checked={r.is_active === '1'}
           onChange={() => {
-            handleSelected({ is_active: 'Active' })
+            handleSelected(r)
             showConfirm('activation')
           }}
         />
