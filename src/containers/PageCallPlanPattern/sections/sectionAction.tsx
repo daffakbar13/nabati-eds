@@ -14,11 +14,13 @@ export default function SectionAction() {
     state: { table },
     handler: { handleShowModal },
   } = useSFACallPlanPatternContext()
-  const { searchProps } = useFilters(table, 'Salesman ID, Customer ID, Company ID', [
+  const { searchProps } = useFilters(table, 'Salesman/Customer/Branch ID, Cycle', [
     'salesman_id',
     'customer_id',
-    'eds_customer_salesman.company_id',
+    //'eds_customer_salesman.company_id',
     'eds_salesman.branch_id',
+    'cycle',
+    //'visit_day',
   ])
   // const router = useRouter()
   let jsonData = null

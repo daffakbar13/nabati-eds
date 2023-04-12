@@ -42,7 +42,7 @@ export default function ConfirmSubmit() {
               salesman_id: showValue.salesman_id,
               visit_day: showValue.visit_day,
               cycle: showValue.cycle,
-              is_active: showValue.is_active,
+              is_active: '1',
             })
               .then((params) => {
                 showConfirm('success-submit')
