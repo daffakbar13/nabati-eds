@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { addColumn } from 'src/utils/createColumns'
 import { Button, Table, DatePickerInput } from 'pink-lava-ui'
 import { Modal, Typography } from 'antd'
@@ -91,7 +90,6 @@ export const useTableDetailCollection = (
   ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
-  // delivered: number[],
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
@@ -234,19 +232,27 @@ export const useTableDetailCollection = (
       addColumn({
         title: 'Delivery Confirmation',
         render: (_, r) => {
-          const isActiveUnDelivered = r.is_delivered === 1 || r.is_delivered === 0
-          const isActiveDelivered = r.is_delivered === 2 || r.is_delivered === 0
+          const isActive = (...value: number[]) => value.includes(r.is_delivered)
+          const isActiveUnDelivered = isActive(0, 1, 3)
+          const isActiveDelivered = isActive(0, 2, 4)
+          const isFromSFA = isActive(3, 4)
+          const disabledCursor = { cursor: 'no-drop' }
+          const disableStyleFromSFA = { ...(isFromSFA && disabledCursor) }
+          const deliveredStyle = { backgroundColor: '#ddd' }
+          const undeliveredStyle = { border: '2px solid #ddd', color: '#ddd' }
           return (
             <div style={{ display: 'flex', gap: 5 }}>
               <Button
                 variant="primary"
                 size="small"
-                style={{ cursor: 'no-drop' }}
+                style={disabledCursor}
                 {...(isActiveDelivered && {
-                  style: { backgroundColor: '#ddd' },
+                  style: { ...deliveredStyle, ...disableStyleFromSFA },
                   onClick() {
-                    setShowModalDelivered(true)
-                    setData(r)
+                    if (!isFromSFA) {
+                      setShowModalDelivered(true)
+                      setData(r)
+                    }
                   },
                 })}
               >
@@ -255,11 +261,13 @@ export const useTableDetailCollection = (
               <Button
                 variant="tertiary"
                 size="small"
-                style={{ cursor: 'no-drop' }}
+                style={disabledCursor}
                 {...(isActiveUnDelivered && {
-                  style: { border: '2px solid #ddd', color: '#ddd' },
+                  style: { ...undeliveredStyle, ...disableStyleFromSFA },
                   onClick() {
-                    setShowPopupUndelivered(r.billing_number)
+                    if (!isFromSFA) {
+                      setShowPopupUndelivered(r.billing_number)
+                    }
                   },
                 })}
               >

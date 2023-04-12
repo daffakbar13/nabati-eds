@@ -18,7 +18,7 @@ export function useSFACallPlanPatternProvider() {
     ctx,
     baseReducer,
     baseHandler,
-    { submittedQuotation: [], showModal: false },
+    { createCallPlanPattern: [], showModal: false },
   )
 }
 
