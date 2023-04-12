@@ -1,30 +1,41 @@
 import { useRouter } from 'next/router'
-import { Col, Row, Spacer, Table, Text } from 'pink-lava-ui'
+import { Col, Row, Spacer, Table, Text, Search } from 'pink-lava-ui'
 import { useState } from 'react'
-import {
-  Card,
-  DownloadButton,
-  SearchQueryParams,
-  Select,
-  SelectMasterData,
-  SmartFilter,
-} from 'src/components'
+import { Card, DownloadButton, Select, SelectMasterData, SmartFilter } from 'src/components'
 
 import {
   exportExcelListSwapHandling,
   getListSwapHandling,
 } from 'src/api/logistic/list-swap-handling'
-import { useTable } from 'src/hooks'
+import { useTable, useFilters } from 'src/hooks'
 import { columns } from './columns'
 
 export default function PageListSwapHandling() {
-  const [filters, setFilters] = useState([])
   const router = useRouter()
 
   const table = useTable({
     funcApi: getListSwapHandling,
     columns,
   })
+
+  const downloadFunction = async (reqBody: any) => {
+    try {
+      const res = exportExcelListSwapHandling({
+        filters: filters,
+        limit: table.state.limit,
+        page: table.state.page,
+      })
+      return res
+    } catch (error) {
+      return error
+    }
+  }
+
+  const { filters, oldfilters, setFilters, searchProps } = useFilters(
+    table,
+    'Search by Branch, Material',
+    ['branch_id', 'product_id'],
+  )
 
   return (
     <Col>
@@ -33,7 +44,7 @@ export default function PageListSwapHandling() {
       <Card style={{ overflow: 'unset' }}>
         <Row justifyContent="space-between">
           <Row gap="16px">
-            <SearchQueryParams />
+            <Search {...searchProps} />
             <SmartFilter onOk={setFilters}>
               <SmartFilter.Field
                 field="branch_id"
@@ -82,7 +93,7 @@ export default function PageListSwapHandling() {
             </SmartFilter>
           </Row>
           <Row gap="16px">
-            <DownloadButton downloadApi={exportExcelListSwapHandling} />
+            <DownloadButton downloadApi={downloadFunction} />
           </Row>
         </Row>
       </Card>
