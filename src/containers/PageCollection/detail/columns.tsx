@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { addColumn } from 'src/utils/createColumns'
 import { Button, Table, DatePickerInput } from 'pink-lava-ui'
 import { Modal, Typography } from 'antd'
@@ -91,7 +90,6 @@ export const useTableDetailCollection = (
   ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
-  // delivered: number[],
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
