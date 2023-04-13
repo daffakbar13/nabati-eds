@@ -8,8 +8,8 @@ import { createCallPlanPattern } from 'src/api/call-plan-pattern'
 
 export default function ConfirmSubmit() {
   const {
-    handler: { showConfirm, unShowConfirm, runProcess, stopProcess, changeCreateCallPlanPattern },
-    state: { showValue },
+    handler: { showConfirm, unShowConfirm, runProcess, stopProcess },
+    state: { formCreateCallPlan },
   } = useSFACallPlanPatternContext()
 
   return (
@@ -34,27 +34,17 @@ export default function ConfirmSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            runProcess('Wait for submitting Quotation')
-            createCallPlanPattern({
-              branch_id: showValue.branch_id,
-              company_id: showValue.company_id,
-              customer_id: showValue.customer_id,
-              salesman_id: showValue.salesman_id,
-              visit_day: showValue.visit_day,
-              cycle: showValue.cycle,
-              is_active: '1',
-            })
-              .then((params) => {
+            console.log(formCreateCallPlan)
+            runProcess('Wait for submitting Create Call Plan')
+            createCallPlanPattern(formCreateCallPlan)
+              .then(() => {
                 showConfirm('success-submit')
-                changeCreateCallPlanPattern(params)
                 stopProcess()
               })
               .catch(() => {
                 stopProcess()
               })
           }}
-
-          //</div>onClick={() => unShowConfirm()}
         >
           Yes
         </Button>
