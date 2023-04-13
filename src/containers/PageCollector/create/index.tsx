@@ -161,6 +161,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={10} />
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="company_id">
           <DebounceSelect
+            disabled={isOnEditMode ? true : false}
             label="Company"
             type="select"
             placeholder="e.g Company"
@@ -173,6 +174,7 @@ export default function CreateConfigurationCompany({ visible = false, close = ()
         <Spacer size={10} />
         <Form.Item style={{ marginBottom: 0, paddingBottom: 0 }} name="branch_id">
           <DebounceSelect
+            disabled={isOnEditMode ? true : false}
             label="Branch"
             type="select"
             placeholder="e.g Branch"
