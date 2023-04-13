@@ -22,7 +22,7 @@ export const createCallPlanPattern = async (params: CreateCallPlanPattern): Prom
     subUrl: `${url}/create`,
     data: params,
   })
-  return params
+  return response.data
 }
 
 export const callPlanPatternList = async (

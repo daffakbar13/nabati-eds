@@ -1,4 +1,4 @@
-import { Col, Popover, Row } from 'antd'
+import { Col, Popover, Row, message } from 'antd'
 import { DownOutlined, UpOutlined } from '@ant-design/icons'
 // import { useRouter } from 'next/router'
 import { Search, Button } from 'pink-lava-ui'
@@ -24,6 +24,9 @@ export default function SectionAction() {
   ])
   // const router = useRouter()
   let jsonData = null
+
+  const showPopUpMessage = (fieldName: string, isSuccess: boolean) =>
+    message[isSuccess ? 'success' : 'error'](`${fieldName}`)
 
   function downloadCallPlanPattern() {
     const excelData = [
@@ -62,21 +65,21 @@ export default function SectionAction() {
   const handleClickUpload = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault()
     if (jsonData !== null) {
-      //console.log(jsonData)
       //uploadCallPlanPatternData(jsonData)
       jsonData = null
       const input = document.querySelector('input[type="file"]') as HTMLInputElement
       input.value = ''
-      alert('Upload Data Success !')
+      showPopUpMessage('Upload Data Success !', true)
     } else {
-      alert('No file selected !')
+      showPopUpMessage('No file selected !', false)
+      return
     }
   }
 
   const uploadCallPlanPattern = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target?.files?.[0]
     if (!file) {
-      alert('No file selected !')
+      showPopUpMessage('No file selected !', false)
       return
     }
 
@@ -86,7 +89,7 @@ export default function SectionAction() {
       fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     const validExtension = file.name.endsWith(allowedFileType)
     if (!validFileType || !validExtension) {
-      alert('Invalid file type or extension')
+      showPopUpMessage('Invalid file type or extension !', false)
       event.target.value = null
       return
     }
@@ -113,7 +116,7 @@ export default function SectionAction() {
       ]
       const headerRow = json[0] as string[]
       if (!expectedHeaders.every((header) => headerRow.includes(header))) {
-        alert('Excel data does not match the format !')
+        showPopUpMessage('Excel data does not match the format !', false)
         event.target.value = null
         return
       }

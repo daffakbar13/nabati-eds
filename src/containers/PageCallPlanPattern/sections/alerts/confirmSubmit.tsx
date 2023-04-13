@@ -34,7 +34,6 @@ export default function ConfirmSubmit() {
           style={{ flexGrow: 1 }}
           variant="primary"
           onClick={() => {
-            console.log(formCreateCallPlan)
             runProcess('Wait for submitting Create Call Plan')
             createCallPlanPattern(formCreateCallPlan)
               .then(() => {
