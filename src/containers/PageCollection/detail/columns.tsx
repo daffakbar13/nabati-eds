@@ -40,12 +40,7 @@ const useTablePayment = () => {
       }),
       addColumn({
         title: 'Amount',
-        render: () => (
-          <DebounceSelect
-            type="input"
-            value={Number(data.billing_amount).toFixed(2).toLocaleString() as any}
-          />
-        ),
+        render: () => <DebounceSelect type="input" value={currency(data.billing_amount) as any} />,
       }),
       addColumn({
         title: 'Payment Method',
