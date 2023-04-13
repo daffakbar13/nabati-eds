@@ -40,7 +40,7 @@ export const columns = [
   addColumn({
     title: 'Material',
     dataIndex: 'product_id',
-    render: (text, record, index) => `${text || ''} - ${record.product_description || ''}`,
+    render: (text, record, index) => `${text || ''} - ${record?.product_description?.String || ''}`,
   }),
   addColumn({
     title: 'Large',
