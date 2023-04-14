@@ -56,8 +56,8 @@ export default function PageConfigurationSloc() {
   // }
 
   const { searchProps } = useFilters(table, 'Search by branch id, sloc id, Sales org id', [
-    'branch_id',
-    'sloc_id',
+    'company_id',
+    'config_approval_name',
     'sales_org_id',
   ])
 

@@ -136,7 +136,7 @@ export const useTableAddItem = (props: any) => {
           props?.dataUpdate?.is_approved,
         )
         props?.dataUpdate.children
-          .filter(function (item) {
+          ?.filter(function (item) {
             return item?.sales_org_id === props?.selectedOrg
           })
           .map((item: any, index) => {
