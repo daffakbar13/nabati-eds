@@ -45,58 +45,63 @@ export default function PageAvailabilityOverview() {
   useEffect(() => {
     const dataApi = table.state.data.map((item: any, index) => {
       if (item?.GroupByProduct?.length > 1) {
+        const childGroup = item?.GroupByProduct.sort(function (a, b) {
+          if (a.sloc_id === b.sloc_id) {
+            return a.status_data_name < b.status_data_name ? 1 : -1
+          }
+          a.sloc_id > b.sloc_id ? 1 : -1
+        })
+
         return {
           key: index,
           branch: `${item?.branch_id} - ${item?.branch_name}`,
-          material: `${item?.GroupByProduct?.[0].product_id} - ${item?.GroupByProduct?.[0].product_name}`,
-          sloc: item?.GroupByProduct?.[0].sloc_id,
-          status: item?.GroupByProduct?.[0].status_data_name,
-          status_data: item?.GroupByProduct?.[0].status_data
-            ? `${item?.GroupByProduct?.[0].status_data} - ${item?.GroupByProduct?.[0].booking_id}`
+          material: `${childGroup?.[0].product_id} - ${childGroup?.[0].product_name}`,
+          sloc: childGroup?.[0].sloc_id,
+          status: childGroup?.[0].status_data_name,
+          status_data: childGroup?.[0].status_data
+            ? `${childGroup?.[0].status_data} - ${childGroup?.[0].booking_id}`
             : '',
-          stock_large: item?.GroupByProduct?.[0].stock.large || '',
-          stock_middle: item?.GroupByProduct?.[0].stock.middle || '',
-          stock_small: item?.GroupByProduct?.[0].stock.small || '',
-          stock_in_small: item?.GroupByProduct?.[0].stock.total_in_small || '',
-          stock_in_large: item?.GroupByProduct?.[0].stock.total_in_large || '',
-          bo_large: item?.GroupByProduct?.[0].booking_order.large || '',
-          bo_middle: item?.GroupByProduct?.[0].booking_order.middle || '',
-          bo_small: item?.GroupByProduct?.[0].booking_order.small || '',
-          bo_in_small: item?.GroupByProduct?.[0].booking_order.total_in_small || '',
-          bo_in_large: item?.GroupByProduct?.[0].booking_order.total_in_large || '',
-          available_large: item?.GroupByProduct?.[0].available.large || '',
-          available_middle: item?.GroupByProduct?.[0].available.middle || '',
-          available_small: item?.GroupByProduct?.[0].available.small || '',
-          available_in_small: item?.GroupByProduct?.[0].available.total_in_small || '',
-          available_in_large: item?.GroupByProduct?.[0].available.total_in_large || '',
-          children: item?.GroupByProduct?.slice(1)
-            .sort((a, b) => (a.sloc_id > b.sloc_id ? 1 : -1))
-            .map((itemChild: any, indexChild) => ({
-              key: `${index}-${indexChild}`,
-              branch: `${item.branch_id} - ${item.branch_name}`,
-              // material: `${itemChild?.product_id} - ${itemChild?.product_name}`,
-              material: '',
-              sloc: itemChild?.sloc_id,
-              status: itemChild?.status_data_name,
-              status_data: itemChild?.status_data
-                ? `${itemChild?.status_data} - ${itemChild?.booking_id}`
-                : '',
-              stock_large: itemChild?.stock.large || '',
-              stock_middle: itemChild?.stock.middle || '',
-              stock_small: itemChild?.stock.small || '',
-              stock_in_small: itemChild?.stock.total_in_small || '',
-              stock_in_large: itemChild?.stock.total_in_large || '',
-              bo_large: itemChild?.booking_order.large || '',
-              bo_middle: itemChild?.booking_order.middle || '',
-              bo_small: itemChild?.booking_order.small || '',
-              bo_in_small: itemChild?.booking_order.total_in_small || '',
-              bo_in_large: itemChild?.booking_order.total_in_large || '',
-              available_large: itemChild?.available.large || '',
-              available_middle: itemChild?.available.middle || '',
-              available_small: itemChild?.available.small || '',
-              available_in_small: itemChild?.available.total_in_small || '',
-              available_in_large: itemChild?.available.total_in_large || '',
-            })),
+          stock_large: childGroup?.[0].stock.large || '',
+          stock_middle: childGroup?.[0].stock.middle || '',
+          stock_small: childGroup?.[0].stock.small || '',
+          stock_in_small: childGroup?.[0].stock.total_in_small || '',
+          stock_in_large: childGroup?.[0].stock.total_in_large || '',
+          bo_large: childGroup?.[0].booking_order.large || '',
+          bo_middle: childGroup?.[0].booking_order.middle || '',
+          bo_small: childGroup?.[0].booking_order.small || '',
+          bo_in_small: childGroup?.[0].booking_order.total_in_small || '',
+          bo_in_large: childGroup?.[0].booking_order.total_in_large || '',
+          available_large: childGroup?.[0].available.large || '',
+          available_middle: childGroup?.[0].available.middle || '',
+          available_small: childGroup?.[0].available.small || '',
+          available_in_small: childGroup?.[0].available.total_in_small || '',
+          available_in_large: childGroup?.[0].available.total_in_large || '',
+          children: childGroup?.slice(1).map((itemChild: any, indexChild) => ({
+            key: `${index}-${indexChild}`,
+            branch: `${item.branch_id} - ${item.branch_name}`,
+            // material: `${itemChild?.product_id} - ${itemChild?.product_name}`,
+            material: '',
+            sloc: itemChild?.sloc_id,
+            status: itemChild?.status_data_name,
+            status_data: itemChild?.status_data
+              ? `${itemChild?.status_data} - ${itemChild?.booking_id}`
+              : '',
+            stock_large: itemChild?.stock.large || '',
+            stock_middle: itemChild?.stock.middle || '',
+            stock_small: itemChild?.stock.small || '',
+            stock_in_small: itemChild?.stock.total_in_small || '',
+            stock_in_large: itemChild?.stock.total_in_large || '',
+            bo_large: itemChild?.booking_order.large || '',
+            bo_middle: itemChild?.booking_order.middle || '',
+            bo_small: itemChild?.booking_order.small || '',
+            bo_in_small: itemChild?.booking_order.total_in_small || '',
+            bo_in_large: itemChild?.booking_order.total_in_large || '',
+            available_large: itemChild?.available.large || '',
+            available_middle: itemChild?.available.middle || '',
+            available_small: itemChild?.available.small || '',
+            available_in_small: itemChild?.available.total_in_small || '',
+            available_in_large: itemChild?.available.total_in_large || '',
+          })),
         }
       }
       return {
