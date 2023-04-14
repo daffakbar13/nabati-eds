@@ -1,5 +1,5 @@
 import { Col, Popover, Row, message } from 'antd'
-import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
 // import { useRouter } from 'next/router'
 import { Search, Button } from 'pink-lava-ui'
 import React from 'react'
@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx'
 import { ICDownloadTemplate, ICUpload } from 'src/assets'
 import { useSFACallPlanPatternContext } from '../states'
 import { uploadCallPlanPatternData } from 'src/api/call-plan-pattern'
+import type { UploadFile } from 'antd/es/upload/interface'
 
 export default function SectionAction() {
   const {
@@ -128,7 +129,7 @@ export default function SectionAction() {
   const moreContentForDownload = (
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
       <Col span={24}>
-        <Row gutter={10}>
+        <Row gutter={10} style={{ cursor: 'pointer' }}>
           <Col>
             <ICDownloadTemplate />
           </Col>
@@ -141,14 +142,16 @@ export default function SectionAction() {
   const moreContentForUpload = (
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
       <Col span={24}>
-        <Row gutter={10}>
-          <div>
-            <input type="file" onChange={uploadCallPlanPattern} />
-          </div>
+        <div>
+          <input type="file" onChange={uploadCallPlanPattern} />
+        </div>
+      </Col>
+      <Col span={24}>
+        <Row gutter={10} style={{ cursor: 'pointer' }}>
           <Col>
             <ICUpload />
           </Col>
-          <Col onClick={handleClickUpload}> Upload Data</Col>
+          <Col onClick={handleClickUpload}> Click here to Upload</Col>
         </Row>
       </Col>
     </Row>
@@ -165,14 +168,14 @@ export default function SectionAction() {
         <Col>
           <Popover placement="bottom" content={moreContentForDownload} trigger="click">
             <Button size="big" variant="tertiary" style={{ gap: 5 }}>
-              <DownOutlined /> Download
+              <DownloadOutlined /> Download
             </Button>
           </Popover>
         </Col>
         <Col>
           <Popover placement="bottom" content={moreContentForUpload} trigger="click">
             <Button size="big" variant="secondary" style={{ gap: 5 }}>
-              <UpOutlined /> Upload
+              <UploadOutlined /> Upload
             </Button>
           </Popover>
         </Col>
