@@ -120,26 +120,26 @@ export default function PageCollectionDetail() {
             </Col>
           </Row>
           <Col>
-            {tradeType !== 'MT' && (
-              <ButtonPinkLava
-                size="big"
-                variant="primary"
-                disabled={!isCanSubmit()}
-                onClick={() => {
-                  if (hasData) {
-                    setProcessing('Wait for finish collection')
-                    finishCollection(handleFinishPayload())
-                      .then(() => {
-                        setProcessing(undefined)
-                        router.push(`${PATH.SALES}/collection`)
-                      })
-                      .catch(() => setProcessing(undefined))
-                  }
-                }}
-              >
-                Finish
-              </ButtonPinkLava>
-            )}
+            {/* {tradeType !== 'MT' && ( */}
+            <ButtonPinkLava
+              size="big"
+              variant="primary"
+              disabled={!isCanSubmit()}
+              onClick={() => {
+                if (hasData) {
+                  setProcessing('Wait for finish collection')
+                  finishCollection(handleFinishPayload())
+                    .then(() => {
+                      setProcessing(undefined)
+                      router.push(`${PATH.SALES}/collection`)
+                    })
+                    .catch(() => setProcessing(undefined))
+                }
+              }}
+            >
+              Finish
+            </ButtonPinkLava>
+            {/* )} */}
           </Col>
         </Row>
         <Spacer size={20} />

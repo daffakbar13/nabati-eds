@@ -1,4 +1,4 @@
-import { Col, Modal, Row, Typography } from 'antd'
+import { Col, Form, Modal, Row, Typography, message } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import {
@@ -14,8 +14,8 @@ import SectionLoader from './sectionLoader'
 
 export default function SectionModalCreate() {
   const {
-    state: { showModal, confirm, showValue },
-    handler: { showConfirm, handleShowValue },
+    state: { formCreateCallPlan, showModal, confirm },
+    handler: { showConfirm, onChangeFormCreateCallPlan },
   } = useSFACallPlanPatternContext()
 
   const callPlanPatternCycleDay = [
@@ -63,6 +63,20 @@ export default function SectionModalCreate() {
       value: '7',
     },
   ]
+  const [form] = Form.useForm()
+
+  const handleErrorMessage = (fieldName: string) => {
+    message.error(`${fieldName} !`)
+  }
+
+  const mandatoryFields = [
+    { name: 'Company ID', value: formCreateCallPlan.company_id },
+    { name: 'Branch ID', value: formCreateCallPlan.branch_id },
+    { name: 'Salesman ID', value: formCreateCallPlan.salesman_id },
+    { name: 'Customer ID', value: formCreateCallPlan.customer_id },
+    { name: 'Cycle', value: formCreateCallPlan.cycle },
+    { name: 'Visit Day', value: formCreateCallPlan.visit_day },
+  ]
 
   const footer = (
     <div style={{ display: 'flex', gap: 16 }}>
@@ -81,7 +95,14 @@ export default function SectionModalCreate() {
         variant="primary"
         style={{ flexGrow: 1 }}
         onClick={() => {
-          showConfirm('submit')
+          const emptyFields = mandatoryFields.filter((field) => !field.value)
+          if (emptyFields.length > 0) {
+            const fieldNames = emptyFields.map((field) => field.name).join(', ')
+            handleErrorMessage(`Please fill in the following mandatory(*) fields: ${fieldNames}`)
+          } else {
+            onChangeFormCreateCallPlan('is_active', '1')
+            showConfirm('submit')
+          }
         }}
       >
         Submit
@@ -100,9 +121,9 @@ export default function SectionModalCreate() {
             required
             label="Company"
             placeholder={'Select'}
-            // value={showValue.company_id || ''}
+            value={formCreateCallPlan.company_id || ''}
             fetchOptions={fieldCompanyList}
-            onChange={(e) => handleShowValue({ ...showValue, company_id: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('company_id', e.value)}
           />
         </Col>
         <Col span={12}>
@@ -111,10 +132,10 @@ export default function SectionModalCreate() {
             required
             label="Branch"
             placeholder={'Select'}
-            //value={showValue.branch_id || ''}
+            value={formCreateCallPlan.branch_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
             fetchOptions={fieldBranchAll}
-            onChange={(e) => handleShowValue({ ...showValue, branch_id: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('branch_id', e.value)}
           />
         </Col>
         <Col span={12}>
@@ -124,9 +145,9 @@ export default function SectionModalCreate() {
             required
             label="Salesman ID"
             placeholder={'Select'}
-            //value={showValue.salesman_id || ''}
+            value={formCreateCallPlan.salesman_id || ''}
             fetchOptions={fieldNewSalesmanDivision}
-            onChange={(e) => handleShowValue({ ...showValue, salesman_id: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('salesman_id', e.value)}
           />
         </Col>
         <Col span={12}>
@@ -135,10 +156,10 @@ export default function SectionModalCreate() {
             required
             label="Customer ID"
             placeholder={'Select'}
-            //value={showValue.customer_id || ''}
+            value={formCreateCallPlan.customer_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
             fetchOptions={fieldCustomer}
-            onChange={(e) => handleShowValue({ ...showValue, customer_id: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('customer_id', e.value)}
           />
         </Col>
         <Col span={12}>
@@ -148,10 +169,10 @@ export default function SectionModalCreate() {
             required
             label="Cycle"
             placeholder={'Select'}
-            //value={showValue.cycle || ''}
+            value={formCreateCallPlan.cycle || ''}
             //fetchOptions={fieldDivisionID}
             options={callPlanPatternCycleDay}
-            onChange={(e) => handleShowValue({ ...showValue, cycle: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('cycle', e.value)}
           />
         </Col>
         <Col span={12}>
@@ -161,10 +182,10 @@ export default function SectionModalCreate() {
             required
             label="Visit Day"
             placeholder={'Select'}
-            //value={showValue.visit_day || ''}
+            value={formCreateCallPlan.visit_day || ''}
             //fetchOptions={fieldDivisionID}
             options={callPlanPatternVisitDay}
-            onChange={(e) => handleShowValue({ ...showValue, visit_day: e.value })}
+            onChange={(e) => onChangeFormCreateCallPlan('visit_day', e.value)}
           />
         </Col>
       </Row>
