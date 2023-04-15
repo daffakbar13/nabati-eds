@@ -255,9 +255,9 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     app?: ReturnType<typeof useAppContext>,
   ) {
     if (funcApi) {
-      app.handler.handleTableLog(state.body)
-      app.handler.handleReadyFor(funcApi.name)
-      app.handler.handleIsRequestPrev(false)
+      app?.handler.handleTableLog(state.body)
+      app?.handler.handleReadyFor(funcApi.name)
+      app?.handler.handleIsRequestPrev(false)
     }
   }
   return {
