@@ -98,7 +98,11 @@ export default function PageCollectionDetail() {
     }),
   })
 
-  const { columns, modalDelivered } = useTableDetailCollection(undeliveBilling, deliveBilling)
+  const { columns, modalDelivered } = useTableDetailCollection(
+    undeliveBilling,
+    deliveBilling,
+    tradeType as string,
+  )
 
   return (
     <Col>

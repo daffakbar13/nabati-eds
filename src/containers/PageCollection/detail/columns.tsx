@@ -86,6 +86,7 @@ export const useTableDetailCollection = (
   ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
+  tradeType?: string,
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
@@ -99,6 +100,7 @@ export const useTableDetailCollection = (
     setShowModalDelivered(false)
   }
 
+  // MODAL DELIVERED
   const modalDelivered = (
     <Modal open={showModalDelivered} onCancel={closeModal} width={'85vw'} footer={null}>
       <Typography.Title level={2}>{data.customer_id}</Typography.Title>
@@ -221,10 +223,26 @@ export const useTableDetailCollection = (
         title: 'Balance',
         dataIndex: 'balance',
       }),
-      addColumn({
-        title: 'Undelivered Reason',
-        dataIndex: 'undelivered_reason_name',
-      }),
+      tradeType === 'MT'
+        ? addColumn({
+            title: 'Status',
+            dataIndex: 'status',
+            render: (value, r) => {
+              if (r?.paid_amount) {
+                if (r?.balance || r?.billing_amount !== r?.paid_amount) {
+                  return 'Partial Paid'
+                } else {
+                  return 'Paid'
+                }
+              } else {
+                return 'Unpaid'
+              }
+            },
+          })
+        : addColumn({
+            title: 'Undelivered Reason',
+            dataIndex: 'undelivered_reason_name',
+          }),
       addColumn({
         title: 'Delivery Confirmation',
         render: (_, r) => {
