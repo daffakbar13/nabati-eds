@@ -29,14 +29,19 @@ export default function PageCollection() {
   ]
 
   useEffect(() => {
-    if (type === 'MT') {
-      table.handler.updateData([])
-      table.handler.getApi(getCollectionListMT)
-    } else {
-      table.handler.updateData([])
-      table.handler.getApi(getCollectionListGT)
+    async function fetchData() {
+      if (type === 'MT') {
+        table.handler.updateData([])
+        // await new Promise((resolve) => setTimeout(resolve, 5000))
+        table.handler.getApi(getCollectionListMT)
+      } else {
+        table.handler.updateData([])
+        // await new Promise((resolve) => setTimeout(resolve, 5000))
+        table.handler.getApi(getCollectionListGT)
+      }
     }
-  }, [type])
+    fetchData()
+  }, [type, table.state.page])
 
   return (
     <Col>
@@ -46,14 +51,18 @@ export default function PageCollection() {
         <Button
           size="big"
           variant={type === 'GT' ? 'primary' : 'secondary'}
-          onClick={() => setType('GT')}
+          onClick={() => {
+            setType('GT')
+          }}
         >
           CASH
         </Button>
         <Button
           size="big"
           variant={type === 'MT' ? 'primary' : 'secondary'}
-          onClick={() => setType('MT')}
+          onClick={() => {
+            setType('MT')
+          }}
         >
           TOP
         </Button>

@@ -115,6 +115,7 @@ export default function useFilters(
     filters,
     setFilters,
     oldfilters,
+    setOldFilters,
     filterId,
     setFilterId,
     onChangeSearch,

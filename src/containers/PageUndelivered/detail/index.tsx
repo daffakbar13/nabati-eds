@@ -18,6 +18,7 @@ import ConfirmSuccessApprove from '../alerts/ConfirmSuccessApprove'
 import ConfirmSuccessReject from '../alerts/ConfirmSuccessReject'
 import ConfirmSuccessReschedule from '../alerts/ConfirmSuccessReschedule'
 import ConfirmConfirm from '../alerts/ConfirmConfirm'
+import moment from 'moment'
 
 export default function PageApprovalDetail() {
   const titlePage = useTitlePage('detail')
@@ -26,6 +27,7 @@ export default function PageApprovalDetail() {
     'approve' | 'success-approve' | 'success-reject' | 'success-reschedule' | 'confirm' | ''
   >('')
   const [reason, setReason] = React.useState('')
+  const [date, setDate] = useState('')
   const [dataTable, setDataTable] = React.useState([])
   const [optionsReason, setOptionsReason] = React.useState([])
   const [payloads, setPayloads] = React.useState({})
@@ -68,14 +70,14 @@ export default function PageApprovalDetail() {
       shipment_id: router.query.id,
       delivery_data: dataTable?.map((d, i) => ({
         delivery_id: d.delivery_oder_id,
-        delivery_date: d.order_date,
-        is_delivery: 0,
+        delivery_date: moment(d?.order_date).format('YYYY-MM-DD'),
+        is_delivery: 1,
         cancelation_reason_id: reason,
       })),
     }))
-  }, [dataTable])
+  }, [])
 
-  const handleApprove = (date: any) => {
+  const handleApprove = () => {
     setProccessing('Wait for approving')
 
     const newPayload = {
@@ -84,7 +86,7 @@ export default function PageApprovalDetail() {
         dataTable?.length > 0
           ? dataTable.map((item) => ({
               delivery_id: item?.delivery_oder_id,
-              delivery_date: date,
+              delivery_date: reason ? moment(item?.order_date).format('YYYY-MM-DD') : date,
               is_delivery: reason ? 0 : 1,
               cancelation_reason_id: reason ? reason.split(' - ')[0] : '',
             }))
@@ -102,25 +104,16 @@ export default function PageApprovalDetail() {
   }
 
   const handleReject = (reason: string, index: number) => {
+    setDate('')
     setReason(reason)
     setProccessing('Wait for rejecting')
 
-    // const payload = {
-    //   shipment_id: router.query.id,
-    //   items: [
-    //     {
-    //       delivery_order_id: dataTable[index]['delivery_oder_id'],
-    //       new_delivery_date: dataTable[index]['order_date'],
-    //       cancel_reason: reason,
-    //     },
-    //   ],
-    // }
     const newPayload = {
       shipment_id: router.query.id,
       delivery_data: [
         {
           delivery_id: dataTable[index].delivery_oder_id,
-          delivery_date: dataTable[index].order_date,
+          delivery_date: moment(dataTable[index].order_date).format('YYYY-MM-DD'),
           is_delivery: 0,
           cancelation_reason_id: reason.split(' - ')[0],
         },
@@ -132,39 +125,17 @@ export default function PageApprovalDetail() {
     newData[index] = {
       ...dataTable[index],
       cancel_reason: reason,
+      new_delivery_date: '',
     }
     setDataTable(newData)
 
     setProccessing('')
-
-    // confirmUndelivered(newPayload)
-    //   .then(() => {
-    //     setShowConfirm('success-reject')
-
-    //     const newData = [...dataTable]
-    //     newData[index] = {
-    //       ...dataTable[index],
-    //       cancel_reason: reason,
-    //     }
-    //     setDataTable(newData)
-
-    //     setProccessing('')
-    //   })
-    //   .catch(() => setProccessing(''))
   }
 
   const handleReschedule = (date: any, index: number) => {
+    setReason('')
+    setDate(date)
     setProccessing('Wait for reschedule')
-    // const payload = {
-    //   shipment_id: router.query.id,
-    //   items: [
-    //     {
-    //       delivery_order_id: dataTable[index]['delivery_oder_id'],
-    //       new_delivery_date: date,
-    //       cancel_reason: dataTable[index]['cancel_reason'],
-    //     },
-    //   ],
-    // }
 
     const payload = {
       shipment_id: router.query.id,
@@ -183,24 +154,11 @@ export default function PageApprovalDetail() {
     newData[index] = {
       ...dataTable[index],
       new_delivery_date: date,
+      cancel_reason: '',
     }
     setDataTable(newData)
 
     setProccessing('')
-    //   confirmUndelivered(payload)
-    //     .then(() => {
-    //       setShowConfirm('success-reschedule')
-
-    //       const newData = [...dataTable]
-    //       newData[index] = {
-    //         ...dataTable[index],
-    //         new_delivery_date: date,
-    //       }
-    //       setDataTable(newData)
-
-    //       setProccessing('')
-    //     })
-    //     .catch(() => setProccessing(''))
   }
 
   return (

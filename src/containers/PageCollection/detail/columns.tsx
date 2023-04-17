@@ -9,6 +9,7 @@ import Total from 'src/components/Total'
 import { Popup } from 'src/components'
 import { fieldReason } from 'src/configs/fieldFetches'
 import currency from 'src/utils/currencyFormat'
+import { useRouter } from 'next/router'
 
 interface PaymentTypes {
   billing_amount?: number
@@ -85,6 +86,7 @@ export const useTableDetailCollection = (
   ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
+  tradeType?: string,
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
@@ -98,6 +100,7 @@ export const useTableDetailCollection = (
     setShowModalDelivered(false)
   }
 
+  // MODAL DELIVERED
   const modalDelivered = (
     <Modal open={showModalDelivered} onCancel={closeModal} width={'85vw'} footer={null}>
       <Typography.Title level={2}>{data.customer_id}</Typography.Title>
@@ -220,10 +223,26 @@ export const useTableDetailCollection = (
         title: 'Balance',
         dataIndex: 'balance',
       }),
-      addColumn({
-        title: 'Undelivered Reason',
-        dataIndex: 'undelivered_reason_name',
-      }),
+      tradeType === 'MT'
+        ? addColumn({
+            title: 'Status',
+            dataIndex: 'status',
+            render: (value, r) => {
+              if (r?.paid_amount) {
+                if (r?.balance || r?.billing_amount !== r?.paid_amount) {
+                  return 'Partial Paid'
+                } else {
+                  return 'Paid'
+                }
+              } else {
+                return 'Unpaid'
+              }
+            },
+          })
+        : addColumn({
+            title: 'Undelivered Reason',
+            dataIndex: 'undelivered_reason_name',
+          }),
       addColumn({
         title: 'Delivery Confirmation',
         render: (_, r) => {
@@ -235,44 +254,69 @@ export const useTableDetailCollection = (
           const disableStyleFromSFA = { ...(isFromSFA && disabledCursor) }
           const deliveredStyle = { backgroundColor: '#ddd' }
           const undeliveredStyle = { border: '2px solid #ddd', color: '#ddd' }
-          return (
-            <div style={{ display: 'flex', gap: 5 }}>
-              <Button
-                variant="primary"
-                size="small"
-                style={disabledCursor}
-                {...(isActiveDelivered && {
-                  style: { ...deliveredStyle, ...disableStyleFromSFA },
-                  onClick() {
-                    if (!isFromSFA) {
-                      setShowModalDelivered(true)
-                      setData(r)
-                    }
-                  },
-                })}
-              >
-                Delivered
-              </Button>
-              <Button
-                variant="tertiary"
-                size="small"
-                style={disabledCursor}
-                {...(isActiveUnDelivered && {
-                  style: { ...undeliveredStyle, ...disableStyleFromSFA },
-                  onClick() {
-                    if (!isFromSFA) {
-                      setShowPopupUndelivered(r.billing_number)
-                    }
-                  },
-                })}
-              >
-                Undelivered
-              </Button>
-              {showPopupUndelivered === r.billing_number && (
-                <PopupUndelivered id={r.billing_number} />
-              )}
-            </div>
-          )
+          const router = useRouter()
+          const { tradeType } = router.query
+          if (tradeType === 'GT') {
+            return (
+              <div style={{ display: 'flex', gap: 5 }}>
+                <Button
+                  variant="primary"
+                  size="small"
+                  style={disabledCursor}
+                  {...(isActiveDelivered && {
+                    style: { ...deliveredStyle, ...disableStyleFromSFA },
+                    onClick() {
+                      if (!isFromSFA) {
+                        setShowModalDelivered(true)
+                        setData(r)
+                      }
+                    },
+                  })}
+                >
+                  Delivered
+                </Button>
+                <Button
+                  variant="tertiary"
+                  size="small"
+                  style={disabledCursor}
+                  {...(isActiveUnDelivered && {
+                    style: { ...undeliveredStyle, ...disableStyleFromSFA },
+                    onClick() {
+                      if (!isFromSFA) {
+                        setShowPopupUndelivered(r.billing_number)
+                      }
+                    },
+                  })}
+                >
+                  Undelivered
+                </Button>
+                {showPopupUndelivered === r.billing_number && (
+                  <PopupUndelivered id={r.billing_number} />
+                )}
+              </div>
+            )
+          } else {
+            return (
+              <div style={{ display: 'flex', gap: 5 }}>
+                <Button
+                  variant="primary"
+                  size="small"
+                  style={disabledCursor}
+                  {...(isActiveDelivered && {
+                    style: { ...deliveredStyle, ...disableStyleFromSFA },
+                    onClick() {
+                      if (!isFromSFA) {
+                        setShowModalDelivered(true)
+                        setData(r)
+                      }
+                    },
+                  })}
+                >
+                  Confirm
+                </Button>
+              </div>
+            )
+          }
         },
       }),
     ],

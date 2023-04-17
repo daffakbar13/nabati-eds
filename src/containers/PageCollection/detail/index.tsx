@@ -98,7 +98,11 @@ export default function PageCollectionDetail() {
     }),
   })
 
-  const { columns, modalDelivered } = useTableDetailCollection(undeliveBilling, deliveBilling)
+  const { columns, modalDelivered } = useTableDetailCollection(
+    undeliveBilling,
+    deliveBilling,
+    tradeType as string,
+  )
 
   return (
     <Col>
@@ -120,26 +124,26 @@ export default function PageCollectionDetail() {
             </Col>
           </Row>
           <Col>
-            {tradeType !== 'MT' && (
-              <ButtonPinkLava
-                size="big"
-                variant="primary"
-                disabled={!isCanSubmit()}
-                onClick={() => {
-                  if (hasData) {
-                    setProcessing('Wait for finish collection')
-                    finishCollection(handleFinishPayload())
-                      .then(() => {
-                        setProcessing(undefined)
-                        router.push(`${PATH.SALES}/collection`)
-                      })
-                      .catch(() => setProcessing(undefined))
-                  }
-                }}
-              >
-                Finish
-              </ButtonPinkLava>
-            )}
+            {/* {tradeType !== 'MT' && ( */}
+            <ButtonPinkLava
+              size="big"
+              variant="primary"
+              disabled={!isCanSubmit()}
+              onClick={() => {
+                if (hasData) {
+                  setProcessing('Wait for finish collection')
+                  finishCollection(handleFinishPayload())
+                    .then(() => {
+                      setProcessing(undefined)
+                      router.push(`${PATH.SALES}/collection`)
+                    })
+                    .catch(() => setProcessing(undefined))
+                }
+              }}
+            >
+              Finish
+            </ButtonPinkLava>
+            {/* )} */}
           </Col>
         </Row>
         <Spacer size={20} />

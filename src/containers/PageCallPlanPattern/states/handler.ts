@@ -26,15 +26,15 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     dispatch({ type: 'showModal', payload })
   }
 
-  function handleShowValue(payload: string) {
-    dispatch({
-      type: 'showValue',
-      payload,
-    })
-  }
-
   function handleSelected(payload: any) {
     dispatch({ type: 'selected', payload })
+  }
+
+  function onChangeFormCreateCallPlan(field: string, value: string) {
+    dispatch({
+      type: 'formCreateCallPlan',
+      payload: { ...state.formCreateCallPlan, [field]: value },
+    })
   }
 
   return {
@@ -44,7 +44,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     unShowConfirm,
     changeCreateCallPlanPattern,
     handleShowModal,
-    handleShowValue,
     handleSelected,
+    onChangeFormCreateCallPlan,
   }
 }
