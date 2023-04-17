@@ -4,10 +4,13 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { Button, Text, Spacer, Layout } from 'pink-lava-ui'
 import { useState } from 'react'
+import { setCookie } from 'cookies-next'
 
 export default function PageLogin() {
   const [showLoader, setShowLoader] = useState(false)
   const [form] = Form.useForm()
+  const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
+
   const router = useRouter()
   var querystring = require('querystring')
 
@@ -21,7 +24,29 @@ export default function PageLogin() {
         },
       })
       .then((res) => {
-        router.replace('/')
+        axios
+          .get(`${overrideBaseUrl}v1/master/get-company`, {
+            headers: {
+              Authorization: `Bearer ${res?.data?.token_code || ''}`,
+            },
+          })
+          .then((resMenu) => {
+            localStorage.setItem('company', JSON.stringify(resMenu?.data?.data))
+            localStorage.setItem('company_selected', resMenu?.data?.data?.[0]?.id || '')
+            setCookie('expired_date', res?.data?.expired_date)
+            setCookie('refresh_token', res?.data?.refresh_token)
+            setCookie('token_code', res?.data?.token_code)
+            router.replace('/')
+          })
+          .catch((error) => {
+            if (error.response) {
+              message.error('user not found')
+            } else {
+              message.error(error.message)
+            }
+            setShowLoader(false)
+          })
+        // router.replace('/')
       })
       .catch((error) => {
         if (error.response) {
