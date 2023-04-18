@@ -44,9 +44,11 @@ export default function useTable(props: useTableProps) {
   const handler = baseHandler(state, dispatch)
 
   React.useEffect(() => {
-    handler.getApi(funcApi)
-    handler.handleSaveTableLog(funcApi, app)
-  }, [state.body])
+    if (!state.loading) {
+      handler.getApi(funcApi)
+      handler.handleSaveTableLog(funcApi, app)
+    }
+  }, [state.body, state.loading])
 
   React.useEffect(() => {
     handler.handleDefineTableProps(haveCheckBox, removeHideShowColums, columns)

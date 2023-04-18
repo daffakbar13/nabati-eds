@@ -42,6 +42,7 @@ export default function PageCollectionDetail() {
   ) {
     setProcessing('Wait for undeliver billing')
     updateCollection({
+      is_eds: 1,
       shipment_id: router.query.id,
       billings: [{ billing_id, is_delivered: 0, cancelation_reason_id, cancelation_reason_name }],
     })
@@ -53,6 +54,7 @@ export default function PageCollectionDetail() {
     const { billing_number, billing_amount } = data_billing
     setProcessing('Wait for deliver billing')
     updateCollection({
+      is_eds: 1,
       shipment_id: router.query.id,
       billings: [
         {
