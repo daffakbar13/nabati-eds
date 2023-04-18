@@ -7,26 +7,6 @@ export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>
   function handleAction(id: string) {
     handleSelected(id)
   }
-  function getDayName(dayNumber: string): string {
-    switch (dayNumber) {
-      case '1':
-        return 'Monday'
-      case '2':
-        return 'Tuesday'
-      case '3':
-        return 'Wednesday'
-      case '4':
-        return 'Thursday'
-      case '5':
-        return 'Friday'
-      case '6':
-        return 'Saturday'
-      case '7':
-        return 'Sunday'
-      default:
-        return 'Invalid day number'
-    }
-  }
 
   return [
     addColumn({
@@ -37,7 +17,6 @@ export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>
     addColumn({
       title: 'Salesman ID',
       dataIndex: 'salesman_id',
-      render: (_, { salesman_id }) => salesman_id,
       sorter: true,
     }),
     addColumn({
@@ -66,8 +45,8 @@ export function useColumnCallPlanPattern(handler: ReturnType<typeof baseHandler>
     }),
     addColumn({
       title: 'Visit Day',
-      dataIndex: 'visit_day',
-      render: (_, { visit_day }) => getDayName(visit_day),
+      dataIndex: 'visit_day_name',
+      render: (_, { visit_day_name }) => visit_day_name,
       sorter: true,
     }),
     addColumn({

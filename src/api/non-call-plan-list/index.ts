@@ -2,7 +2,7 @@ import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
 import { CommonListParams, CommonListResponse } from '../types'
 
-const url = 'v1/non-callplans'
+const url = 'v1/callplans'
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_4
 
 interface GenerateNonCallPlanPayload {
