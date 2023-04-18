@@ -22,7 +22,7 @@ export default function SectionAction() {
   ])
   // const router = useRouter()
 
-  function downloadCallPlanPattern() {
+  function downloadNonCallPlanData() {
     const excelData = [
       {
         CompanyID: '131600',
@@ -66,7 +66,7 @@ export default function SectionAction() {
           <Col>
             <ICDownloadTemplate />
           </Col>
-          <Col onClick={downloadCallPlanPattern}> Download Data</Col>
+          <Col onClick={downloadNonCallPlanData}> Download Data</Col>
         </Row>
       </Col>
     </Row>
