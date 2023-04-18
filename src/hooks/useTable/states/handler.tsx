@@ -232,7 +232,7 @@ export function baseHandler(state: StateType, dispatch: React.Dispatch<DispatchT
     })
   }
   async function getApi(funcApi?: Parameters<typeof useTable>['0']['funcApi']) {
-    if (funcApi) {
+    if (funcApi && !state.loading) {
       handleLoading(true)
       funcApi(state.body)
         .then((response) => response.data)
