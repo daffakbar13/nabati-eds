@@ -18,7 +18,18 @@ export const getNonCallPlanList = async (
     method: METHODS.POST,
     overrideBaseUrl,
     subUrl: `${url}/list`,
-    data: params,
+    data: {
+      filters: [
+        {
+          field: 'source',
+          option: 'NE',
+          from_value: 'CALLPLAN',
+        },
+        ...params.filters,
+      ],
+      limit: params.limit,
+      page: params.page,
+    },
   })
   return response.data
 }
