@@ -1,5 +1,4 @@
 import React from 'react'
-import { getQuotation } from 'src/api/quotation'
 import useTable from 'src/hooks/useTable/index'
 import { getNonCallPlanList } from 'src/api/non-call-plan-list'
 import { useColumnNonCallPlanList } from './columns'

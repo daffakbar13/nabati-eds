@@ -8,20 +8,20 @@ import * as XLSX from 'xlsx'
 import { ICDownloadTemplate, ICUpload } from 'src/assets'
 import { useSFACallPlanPatternContext } from '../states'
 import { uploadCallPlanPatternData } from 'src/api/call-plan-pattern'
-import type { UploadFile } from 'antd/es/upload/interface'
 
 export default function SectionAction() {
   const {
     state: { table },
     handler: { handleShowModal },
   } = useSFACallPlanPatternContext()
-  const { searchProps } = useFilters(table, 'Salesman/Customer/Branch ID, Cycle', [
+  const { searchProps } = useFilters(table, 'Salesman/Customer/Branch ID, Cycle, Visit Day', [
     'salesman_id',
     'customer_id',
     //'eds_customer_salesman.company_id',
-    'eds_salesman.branch_id',
+    'branch_id',
     'cycle',
     //'visit_day',
+    'eds_day.day',
   ])
   // const router = useRouter()
   let jsonData = null
@@ -32,8 +32,8 @@ export default function SectionAction() {
   function downloadCallPlanPattern() {
     const excelData = [
       {
-        SalesmanID: '131600',
         CustomerID: 'C1624002',
+        SalesmanID: '131600',
         Company: 'PP01',
         Branch: 'P104',
         Cycle: 'M1',
@@ -63,17 +63,20 @@ export default function SectionAction() {
     window.URL.revokeObjectURL(url)
   }
 
-  const handleClickUpload = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClickUpload = async (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault()
-    if (jsonData !== null) {
-      //uploadCallPlanPatternData(jsonData)
-      jsonData = null
-      const input = document.querySelector('input[type="file"]') as HTMLInputElement
-      input.value = ''
-      showPopUpMessage('Upload Data Success !', true)
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement
+    const file = input?.files?.[0]
+    if (file) {
+      try {
+        await uploadCallPlanPatternData(file)
+        input.value = ''
+        showPopUpMessage('Upload Data Success !', true)
+      } catch (error) {
+        showPopUpMessage('Failed to upload data!', false)
+      }
     } else {
-      showPopUpMessage('No file selected !', false)
-      return
+      showPopUpMessage('No file selected!', false)
     }
   }
 
@@ -86,17 +89,17 @@ export default function SectionAction() {
 
     const allowedFileType = '.xlsx'
     const fileType = file.type
-    const validFileType =
-      fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    const validationFile = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    const validFileType = fileType === validationFile
     const validExtension = file.name.endsWith(allowedFileType)
     if (!validFileType || !validExtension) {
-      showPopUpMessage('Invalid file type or extension !', false)
+      showPopUpMessage('Invalid file type or extension', false)
       event.target.value = null
       return
     }
     const reader = new FileReader()
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const data = new Uint8Array(e.target.result as ArrayBuffer)
       const workbook = XLSX.read(data, { type: 'array' })
       const sheetName = workbook.SheetNames[0]
@@ -115,13 +118,13 @@ export default function SectionAction() {
         'Week 4',
         'Call Date',
       ]
+
       const headerRow = json[0] as string[]
       if (!expectedHeaders.every((header) => headerRow.includes(header))) {
         showPopUpMessage('Excel data does not match the format !', false)
         event.target.value = null
         return
       }
-      jsonData = json[1]
     }
     reader.readAsArrayBuffer(file)
   }

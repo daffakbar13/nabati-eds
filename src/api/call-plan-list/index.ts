@@ -32,3 +32,16 @@ export const generateCallPlan = async (params: GenerateCallPlanPayload): Promise
   })
   return response.data
 }
+
+export const uploadCallPlanListData = async (file: File): Promise<any> => {
+  const formData = new FormData()
+  formData.append('call_plan_upload', file, file.name)
+
+  const response = await call({
+    method: METHODS.POST,
+    overrideBaseUrl,
+    subUrl: `${url}/upload`,
+    data: formData,
+  })
+  return response.data
+}

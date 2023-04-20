@@ -37,11 +37,15 @@ export const callPlanPatternList = async (
   return response.data
 }
 
-export const uploadCallPlanPatternData = async (params: CreateCallPlanPattern) => {
+export const uploadCallPlanPatternData = async (file: File): Promise<any> => {
+  const formData = new FormData()
+  formData.append('call_plan_pattern_upload', file, file.name)
+
   const response = await call({
     method: METHODS.POST,
+    overrideBaseUrl,
     subUrl: `${url}/upload`,
-    data: params,
+    data: formData,
   })
   return response.data
 }
