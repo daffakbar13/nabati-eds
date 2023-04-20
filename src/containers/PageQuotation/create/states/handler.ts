@@ -228,15 +228,16 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
                 label: [salesman_id, salesman_name].join(' - '),
                 value: [salesman_id, salesman_name].join(' - '),
               })),
-              sales_org: data.splice(0, 1).map(({ sales_org_id, sales_org_name }) => ({
+              sales_org: data.map(({ sales_org_id, sales_org_name }) => ({
                 label: [sales_org_id, sales_org_name].join(' - '),
                 value: [sales_org_id, sales_org_name].join(' - '),
               })),
-              branch: data.splice(0, 1).map(({ branch_id, branch_name }) => ({
+              branch: [...data].map(({ branch_id, branch_name }) => ({
                 label: [branch_id, branch_name].join(' - '),
                 value: [branch_id, branch_name].join(' - '),
               })),
             }
+
             setOptionsSalesman(newOptions.salesman)
             setOptionsSalesOrg(newOptions.sales_org)
             setOptionsBranch(newOptions.branch)
