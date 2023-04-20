@@ -1,10 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { useRouter } from 'next/router'
-/* eslint-disable no-shadow */
 import React from 'react'
 import { CommonDetailParams } from 'src/api/types'
 
 export default function useDetail(
-  funcApi?: (params: CommonDetailParams) => Promise<any>,
+  funcApi?: (p: CommonDetailParams) => Promise<any>,
   params?: CommonDetailParams,
   strict: boolean = true,
 ) {
@@ -19,9 +19,8 @@ export default function useDetail(
     if (!Object.values(params).includes(undefined)) {
       funcApi(params)
         .then((results) => setData(results.data))
-        .catch((err) => {
-          console.log(err)
-          // router.push('/not-found-404')
+        .catch(() => {
+          router.push('/not-found-404')
         })
     }
   }, [router.query])
