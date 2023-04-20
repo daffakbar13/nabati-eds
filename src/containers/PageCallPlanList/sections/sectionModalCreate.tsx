@@ -1,4 +1,4 @@
-import { Col, Modal, Row, Typography } from 'antd'
+import { Col, Modal, Row, Typography, message } from 'antd'
 import React from 'react'
 import { Button, DatePickerInput } from 'pink-lava-ui'
 import { fieldBranchAll, fieldCompanyList } from 'src/configs/fieldFetches'
@@ -13,6 +13,15 @@ export default function SectionModalCreate() {
     state: { formCreateCallPlan, showModal, confirm },
     handler: { showConfirm, onChangeFormCreateCallPlan },
   } = useSFACallPlanListContext()
+
+  const handleErrorMessage = (fieldName: string) => {
+    message.error(`${fieldName} !`)
+  }
+
+  const mandatoryFields = [
+    { name: 'Company', value: formCreateCallPlan.company_id },
+    { name: 'Branch', value: formCreateCallPlan.branch_id },
+  ]
 
   const footer = (
     <div style={{ display: 'flex', gap: 16 }}>
@@ -31,7 +40,13 @@ export default function SectionModalCreate() {
         variant="primary"
         style={{ flexGrow: 1 }}
         onClick={() => {
-          showConfirm('submit')
+          const emptyFields = mandatoryFields.filter((field) => !field.value)
+          if (emptyFields.length > 0) {
+            const fieldNames = emptyFields.map((field) => field.name).join(', ')
+            handleErrorMessage(`Please fill in the following mandatory(*) fields: ${fieldNames}`)
+          } else {
+            showConfirm('submit')
+          }
         }}
       >
         Submit

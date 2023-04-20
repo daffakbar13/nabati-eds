@@ -11,7 +11,7 @@ import { DispatchType } from './reducer'
 import { StateType } from './state'
 
 export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchType>) {
-  const { dataForm, tableProduct, optionsOrderType, fetching } = state
+  const { dataForm, optionsOrderType, fetching } = state
 
   const router = useRouter()
   const splitString = (data: string) => data.split(' - ')[0]
@@ -186,15 +186,15 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
         .then((result) => {
           const { data } = result
           const newOptions = {
-            salesman: data.map(({ salesman_id, salesman_name }) => ({
+            salesman: [...data].map(({ salesman_id, salesman_name }) => ({
               label: [salesman_id, salesman_name].join(' - '),
               value: [salesman_id, salesman_name].join(' - '),
             })),
-            sales_org: data.splice(0, 1).map(({ sales_org_id, sales_org_name }) => ({
+            sales_org: [...data].map(({ sales_org_id, sales_org_name }) => ({
               label: [sales_org_id, sales_org_name].join(' - '),
               value: [sales_org_id, sales_org_name].join(' - '),
             })),
-            branch: data.splice(0, 1).map(({ branch_id, branch_name }) => ({
+            branch: [...data].map(({ branch_id, branch_name }) => ({
               label: [branch_id, branch_name].join(' - '),
               value: [branch_id, branch_name].join(' - '),
             })),
@@ -235,8 +235,7 @@ export function useHandler(state: StateType, dispatch: React.Dispatch<DispatchTy
       dataForm?.sales_org_id,
     ]
     const fieldAreRequired = requiredFields.filter((e) => e === '' || e === undefined).length === 0
-    const productNotNull =
-      dataForm?.items?.filter(({ product_id }) => product_id === '').length === 0
+    const productNotNull = dataForm?.items?.filter((e) => e.product_id === '').length === 0
     if (fieldAreRequired && productNotNull) {
       setCanSave(true)
     } else {

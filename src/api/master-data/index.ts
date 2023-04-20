@@ -1,14 +1,7 @@
-/* eslint-disable camelcase */
 import { call } from 'src/api/BaseApi'
 import { METHODS } from 'src/api/methods'
-import {
-  CommonListResponse,
-  CommonDetailResponse,
-  CommonListParams,
-  CommonDetailParams,
-} from 'src/api/types'
+import { CommonDetailResponse, CommonListParams } from 'src/api/types'
 import { getCustomerByFilterProps } from './types'
-// import { QuotationItem } from './types'
 
 const subUrl = {
   getCompany: 'v1/master/get-company',
@@ -254,7 +247,6 @@ export const getPricingByIdAndUom = async (
 export const getReason = async (
   doc_category_id: string = 'C',
 ): Promise<CommonDetailResponse<any>> => {
-  console.log(doc_category_id)
   const response = await call({
     method: METHODS.GET,
     overrideBaseUrl,

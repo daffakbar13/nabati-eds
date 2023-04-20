@@ -1,39 +1,42 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-alert */
-import { Col, Popover, Row } from 'antd'
+import { Col, Popover, Row, message } from 'antd'
 import { Search, Button } from 'pink-lava-ui'
 import React from 'react'
 import { useFilters } from 'src/hooks'
 import * as XLSX from 'xlsx'
 import { ICDownloadTemplate, ICUpload } from 'src/assets'
-import { DownOutlined, UpOutlined } from '@ant-design/icons'
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
 import { useSFACallPlanListContext } from '../states'
+import { uploadCallPlanListData } from 'src/api/call-plan-list'
 
 export default function SectionAction() {
   const {
     state: { table },
     handler: { handleShowModal },
   } = useSFACallPlanListContext()
-  const { searchProps } = useFilters(table, 'Salesman ID, Customer ID, etc', [
+  const { searchProps } = useFilters(table, 'Salesman&Customer ID/Name', [
     'salesman_id',
     'salesman_name',
     'customer_id',
     'customer_name',
   ])
-  let jsonData = null
+  const showPopUpMessage = (fieldName: string, isSuccess: boolean) =>
+    message[isSuccess ? 'success' : 'error'](`${fieldName}`)
 
   const excelData = [
     {
       'Salesman ID': '131600',
-      'Salesman Name': 'OFFCE OFFICE',
-      'Customer ID': 'C1624884',
-      'Customer Name': 'RIZKI, TK',
+      'Salesman Name': 'SANGKAKALA, TK',
+      'Customer ID': 'C1624001',
+      'Customer Name': 'SANGKAKALA, TK',
+      'Branch ID': 'P104',
+      Company: 'PP01',
+      Cycle: 'M1',
+      Date: '24/03/2023',
       Day: 'Monday',
-      Date: '24 Apr 2023 07:00',
-      Status: 'Generate',
+      Week: '4',
       'Week ID': '202317',
-      'Week In Period': '4',
-      'Call Pattern': 'Call PLan',
     },
   ]
 
@@ -57,22 +60,27 @@ export default function SectionAction() {
     window.URL.revokeObjectURL(url)
   }
 
-  const handleClickUpload = (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleClickUpload = async (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault()
-    if (jsonData !== null) {
-      jsonData = null
-      const input = document.querySelector('input[type="file"]') as HTMLInputElement
-      input.value = ''
-      alert('Upload Data Success !')
+    const input = document.querySelector('input[type="file"]') as HTMLInputElement
+    const file = input?.files?.[0]
+    if (file) {
+      try {
+        await uploadCallPlanListData(file)
+        input.value = ''
+        showPopUpMessage('Upload Data Success !', true)
+      } catch (error) {
+        showPopUpMessage('Failed to upload data!', false)
+      }
     } else {
-      alert('No file selected !')
+      showPopUpMessage('No file selected!', false)
     }
   }
 
-  const uploadCallPlanPattern = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadCallPlanList = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target?.files?.[0]
     if (!file) {
-      alert('No file selected !')
+      showPopUpMessage('No file selected !', false)
       return
     }
 
@@ -82,28 +90,38 @@ export default function SectionAction() {
     const validFileType = fileType === validationFile
     const validExtension = file.name.endsWith(allowedFileType)
     if (!validFileType || !validExtension) {
-      alert('Invalid file type or extension')
+      showPopUpMessage('Invalid file type or extension', false)
       event.target.value = null
       return
     }
     const reader = new FileReader()
 
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       const data = new Uint8Array(e.target.result as ArrayBuffer)
       const workbook = XLSX.read(data, { type: 'array' })
       const sheetName = workbook.SheetNames[0]
       const worksheet = workbook.Sheets[sheetName]
       const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
 
-      const expectedHeaders = Object.keys(excelData[0])
+      const expectedHeaders = [
+        'Salesman ID',
+        'Salesman Name',
+        'Customer ID',
+        'Customer Name',
+        'Branch ID',
+        'Company',
+        'Cycle',
+        'Call Date',
+        'Day',
+        'Week',
+        'Week ID',
+      ]
       const headerRow = json[0] as string[]
       if (!expectedHeaders.every((header) => headerRow.includes(header))) {
-        alert('Excel data does not match the format !')
+        showPopUpMessage('Excel data does not match the format !', false)
         event.target.value = null
         return
       }
-      const [newJson] = json
-      jsonData = newJson
     }
     reader.readAsArrayBuffer(file)
   }
@@ -125,7 +143,7 @@ export default function SectionAction() {
     <Row gutter={[10, 10]} style={{ fontWeight: 'bold', width: 200 }}>
       <Col>
         <div>
-          <input type="file" onChange={uploadCallPlanPattern} />
+          <input type="file" onChange={uploadCallPlanList} />
         </div>
       </Col>
       <Col span={24}>
@@ -133,7 +151,7 @@ export default function SectionAction() {
           <Col>
             <ICUpload />
           </Col>
-          <Col onClick={handleClickUpload}> Upload Data</Col>
+          <Col onClick={handleClickUpload}>Click here to Upload</Col>
         </Row>
       </Col>
     </Row>
@@ -150,14 +168,14 @@ export default function SectionAction() {
         <Col>
           <Popover placement="bottom" content={moreContentForDownload} trigger="click">
             <Button size="big" variant="tertiary" style={{ gap: 5 }}>
-              <DownOutlined /> Download
+              <DownloadOutlined /> Download
             </Button>
           </Popover>
         </Col>
         <Col>
           <Popover placement="bottom" content={moreContentForUpload} trigger="click">
             <Button size="big" variant="secondary" style={{ gap: 5 }}>
-              <UpOutlined /> Upload
+              <UploadOutlined /> Upload
             </Button>
           </Popover>
         </Col>
