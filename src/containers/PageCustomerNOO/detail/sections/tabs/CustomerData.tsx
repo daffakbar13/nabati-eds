@@ -118,19 +118,18 @@ export default function CustomerData() {
 
   const dataList = Object.keys(dataCustomer).map((title) => ({
     title,
-    content: Object.keys(dataCustomer[title]).map((value) =>
-      DataList.createDataList(value, dataCustomer[title][value]),
+    content: Object.keys(dataCustomer[title]).map(
+      (v) => DataList.createDataList(v, dataCustomer[title][v]),
+      // eslint-disable-next-line function-paren-newline
     ),
     limit: LimitData[title],
   }))
 
-  const dataTable: TableInformation[] = salesman.map(
-    ({ salesman_id, salesman_name, salesman_group_id, salesman_group_name }) => {
-      return {
-        Salesman: concatString(salesman_id, salesman_name),
-        'Salesman Group': concatString(salesman_group_id, salesman_group_name),
-      }
-    },
+  const dataTable: TableInformation[] = (salesman || []).map(
+    ({ salesman_id, salesman_name, salesman_group_id, salesman_group_name }) => ({
+      Salesman: concatString(salesman_id, salesman_name),
+      'Salesman Group': concatString(salesman_group_id, salesman_group_name),
+    }),
   )
 
   return (
