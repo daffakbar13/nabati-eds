@@ -14,7 +14,7 @@ export const useTableAddItem = (props: propsUseTable, deleteRows: (a: any) => vo
   const initialValue = {
     product_sender_id: '',
     product_receiver_id: '',
-    qty: 1,
+    qty: 2,
     uom_id: 'CTN',
     batch: '',
     remarks: '',

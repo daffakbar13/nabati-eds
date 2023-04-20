@@ -26,6 +26,7 @@ import BSTF from './tabs/BSTF'
 import BSTS from './tabs/BSTS'
 import { Modal } from 'src/components'
 import { validateFreezeByBranchId } from 'src/api/logistic/stock-opname'
+import Accounting from '../detail/tabs/ShipmentAccounting'
 
 export default function PageShipmentDetail() {
   const titlePage = useTitlePage('detail')
@@ -47,7 +48,6 @@ export default function PageShipmentDetail() {
 
   const isStatus = (...value: string[]) => value.includes(router.query.status as string)
   const { tradeType } = router.query
-
   const ConfirmPGI = () => (
     <Popup
       onOutsideClick={() => {
@@ -233,13 +233,17 @@ export default function PageShipmentDetail() {
           items={
             isStatus('New')
               ? AllTabs(tradeType as 'MT' | 'GT').slice(0, 2)
-              : AllTabs(tradeType as 'MT' | 'GT')
+              : isStatus('Complete')
+              ? AllTabs(tradeType as 'MT' | 'GT')
+              : AllTabs(tradeType as 'MT' | 'GT').slice(0, 4)
           }
         />
         {hasData && (
           <>
             {currentTab === '1' ? (
               <DocumentHeader data={data} />
+            ) : currentTab === '5' ? (
+              <Accounting data={data} />
             ) : (
               <div
                 style={{

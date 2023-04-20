@@ -15,6 +15,7 @@ import SalesmanInfo from './tabs/SalesmanInfo'
 import Billing from './tabs/Billing'
 import PricingCondition from './tabs/PricingCondition'
 import PrintBilling from '../print'
+import Accounting from './tabs/DocumentAccounting'
 
 export default function PageBillingDetail() {
   const titlePage = useTitlePage('detail')
@@ -28,6 +29,7 @@ export default function PageBillingDetail() {
   const data = useDetail(getDetailBilling, { id: router.query.id as string })
   const printRef = React.useRef<HTMLDivElement>()
   const hasData = Object.keys(data).length > 0
+  const { status } = router.query
 
   return (
     <Col>
@@ -77,7 +79,7 @@ export default function PageBillingDetail() {
           onChange={(asd) => {
             setCurrentTab(asd)
           }}
-          items={AllTabs}
+          items={status === 'Complete' ? AllTabs : AllTabs.slice(0, 5)}
         />
         {hasData && (
           <>
@@ -86,6 +88,7 @@ export default function PageBillingDetail() {
             {currentTab === '3' && <DocumentFlow />}
             {currentTab === '4' && <CustomerInfo data={data} />}
             {currentTab === '5' && <SalesmanInfo data={data} />}
+            {currentTab === '6' && <Accounting data={data} />}
           </>
         )}
       </Card>

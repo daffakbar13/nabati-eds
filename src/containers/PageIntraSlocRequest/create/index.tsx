@@ -80,11 +80,12 @@ export default function PageCreateRequestIntraSloc() {
     document_type: 'ZINS',
     document_date: moment(now).format('YYYY-MM-DD'),
     posting_date: moment(now).format('YYYY-MM-DD'),
-    suppl_branch_id: 'P100',
+    suppl_branch_id: 'P104',
     suppl_sloc_id: 'GS00',
-    receive_sloc_id: 'GS00',
+    receive_sloc_id: 'BS00',
     status_id: '01',
     remarks: '',
+    channel: 'GT',
     items: tableAddItems.data,
   }
   const titlePage = useTitlePage(isCreatePage ? 'create' : 'edit')

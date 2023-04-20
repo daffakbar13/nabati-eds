@@ -128,3 +128,44 @@ export const TablePricingCondition = [
     render: (_, { net_include }) => currency(net_include),
   }),
 ]
+
+export const TableDocumentAccounting = [
+  addColumn({
+    title: 'No',
+    render: (_, __, i) => i + 1,
+    fixed: true,
+  }),
+  addColumn({
+    title: 'G/L Account',
+    dataIndex: 'product_id',
+    fixed: true,
+  }),
+  addColumn({
+    title: 'D/C',
+    dataIndex: 'item_category_id',
+  }),
+  addColumn({
+    title: 'Ammount In Doc Currency',
+    render: (_, { price }) => currency(price),
+  }),
+  addColumn({
+    title: 'Tax Code',
+    dataIndex: 'tax_value',
+  }),
+  addColumn({
+    title: 'Assignment',
+    dataIndex: 'uom_id',
+  }),
+  addColumn({
+    title: 'Text',
+    dataIndex: 'description',
+  }),
+  addColumn({
+    title: 'Cost Center',
+    dataIndex: 'billing_qty',
+  }),
+  addColumn({
+    title: 'Profit Center',
+    dataIndex: 'gross_value',
+  }),
+]
