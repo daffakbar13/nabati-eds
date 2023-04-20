@@ -2,10 +2,10 @@ import { Col, Form, Modal, Row, Typography, message } from 'antd'
 import React from 'react'
 import { Button } from 'pink-lava-ui'
 import {
-  fieldCustomer,
   fieldNewSalesmanDivision,
   fieldCompanyList,
   fieldBranchAll,
+  fieldCustomerByID,
 } from 'src/configs/fieldFetches'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { useSFACallPlanPatternContext } from '../states'
@@ -63,15 +63,14 @@ export default function SectionModalCreate() {
       value: '7',
     },
   ]
-  const [form] = Form.useForm()
 
   const handleErrorMessage = (fieldName: string) => {
     message.error(`${fieldName} !`)
   }
 
   const mandatoryFields = [
-    { name: 'Company ID', value: formCreateCallPlan.company_id },
-    { name: 'Branch ID', value: formCreateCallPlan.branch_id },
+    { name: 'Company', value: formCreateCallPlan.company_id },
+    { name: 'Branch', value: formCreateCallPlan.branch_id },
     { name: 'Salesman ID', value: formCreateCallPlan.salesman_id },
     { name: 'Customer ID', value: formCreateCallPlan.customer_id },
     { name: 'Cycle', value: formCreateCallPlan.cycle },
@@ -135,7 +134,9 @@ export default function SectionModalCreate() {
             value={formCreateCallPlan.branch_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
             fetchOptions={fieldBranchAll}
-            onChange={(e) => onChangeFormCreateCallPlan('branch_id', e.value)}
+            onChange={(e) => {
+              onChangeFormCreateCallPlan('branch_id', e.value)
+            }}
           />
         </Col>
         <Col span={12}>
@@ -158,7 +159,7 @@ export default function SectionModalCreate() {
             placeholder={'Select'}
             value={formCreateCallPlan.customer_id || ''}
             // fetchOptions={isModalCreate ? fieldNewSalesmanDivision : fieldSalesmanID}
-            fetchOptions={fieldCustomer}
+            fetchOptions={fieldCustomerByID}
             onChange={(e) => onChangeFormCreateCallPlan('customer_id', e.value)}
           />
         </Col>
