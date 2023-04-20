@@ -1,6 +1,19 @@
 import { addColumn } from 'src/utils/createColumns'
 import TaggedStatus from 'src/components/TaggedStatus'
 
+const statusStringSwitcher = (status: string) => {
+  switch (status) {
+    case 'NON_VISITED':
+      return 'Unvisited'
+    case 'SKIP':
+      return 'Skip'
+    case 'VISITED':
+      return 'Visited'
+    default:
+      return ''
+  }
+}
+
 export function useColumnCallPlanList() {
   return [
     addColumn({
@@ -38,7 +51,7 @@ export function useColumnCallPlanList() {
     }),
     addColumn({
       title: 'Status',
-      render: () => <TaggedStatus status="Generate" />,
+      render: (_, { status }) => <TaggedStatus status={statusStringSwitcher(status)} />,
     }),
     addColumn({
       title: 'Week ID',
