@@ -8,6 +8,7 @@ const AllTabs = (tradeType: 'GT' | 'MT') => [
   CreateTabs(`BPB`, '2'),
   tradeType === 'MT' ? CreateTabs(`BSTS`, '3') : CreateTabs(`BSTF`, '3'),
   CreateTabs(`HPH`, '4'),
+  CreateTabs(`Document Accounting`, '5'),
 ]
 
 export default AllTabs

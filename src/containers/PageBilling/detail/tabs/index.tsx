@@ -9,6 +9,7 @@ const AllTabs = [
   CreateTabs(`Document Flow`, '3'),
   CreateTabs(`Customer Info`, '4'),
   CreateTabs(`Salesman Info`, '5'),
+  CreateTabs(`Document Accounting`, '6'),
 ]
 
 export default AllTabs

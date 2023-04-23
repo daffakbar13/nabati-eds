@@ -26,6 +26,7 @@ import BSTF from './tabs/BSTF'
 import BSTS from './tabs/BSTS'
 import { Modal } from 'src/components'
 import { validateFreezeByBranchId } from 'src/api/logistic/stock-opname'
+import DocumentAccounting from './tabs/DocumentAccounting'
 
 export default function PageShipmentDetail() {
   const titlePage = useTitlePage('detail')
@@ -209,12 +210,14 @@ export default function PageShipmentDetail() {
                     {currentTab === '2' && 'Print BPB'}
                     {currentTab === '3' && 'Print BSTS'}
                     {currentTab === '4' && 'Print HPH'}
+                    {currentTab === '5' && 'Print'}
                   </Button>
                 ) : (
                   <Button size="big" variant="primary">
                     {currentTab === '2' && 'Print BPB'}
                     {currentTab === '3' && 'Print BSTF'}
                     {currentTab === '4' && 'Print HPH'}
+                    {currentTab === '5' && 'Print'}
                   </Button>
                 )
               }
@@ -240,6 +243,8 @@ export default function PageShipmentDetail() {
           <>
             {currentTab === '1' ? (
               <DocumentHeader data={data} />
+            ) : currentTab === '5' ? (
+              <DocumentAccounting data={data} />
             ) : (
               <div
                 style={{

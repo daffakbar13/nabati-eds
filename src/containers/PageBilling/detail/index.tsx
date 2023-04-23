@@ -15,6 +15,7 @@ import SalesmanInfo from './tabs/SalesmanInfo'
 import Billing from './tabs/Billing'
 import PricingCondition from './tabs/PricingCondition'
 import PrintBilling from '../print'
+import DocumentAccounting from './tabs/DocumentAccounting'
 
 export default function PageBillingDetail() {
   const titlePage = useTitlePage('detail')
@@ -86,6 +87,7 @@ export default function PageBillingDetail() {
             {currentTab === '3' && <DocumentFlow />}
             {currentTab === '4' && <CustomerInfo data={data} />}
             {currentTab === '5' && <SalesmanInfo data={data} />}
+            {currentTab === '6' && <DocumentAccounting data={data} />}
           </>
         )}
       </Card>
