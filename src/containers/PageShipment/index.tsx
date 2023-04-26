@@ -1,9 +1,4 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable camelcase */
-/* eslint-disable no-param-reassign */
-/* eslint-disable arrow-spacing */
-/* eslint-disable no-plusplus */
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRouter } from 'next/router'
 import { Button, Col, Row, Search, Spacer, Text, Table, DatePickerInput } from 'pink-lava-ui'
 import { Card, FloatAction, Popup, SmartFilter } from 'src/components'
@@ -22,7 +17,7 @@ import { useFilters } from 'src/hooks'
 import { TableBilling } from './columns'
 
 export default function PageShipment() {
-  const [type, setType] = useState<'GT' | 'MT'>('GT')
+  const [type, setType] = React.useState<'GT' | 'MT'>('GT')
   const table = useTable({
     funcApi: type === 'GT' ? getShipment : getShipmentMT,
     haveCheckBox: [{ rowKey: 'status', member: ['New'] }],
@@ -42,16 +37,6 @@ export default function PageShipment() {
     { label: 'Draft', value: '10' },
     { label: 'Cancel', value: '7' },
   ]
-
-  useEffect(() => {
-    if (type === 'MT') {
-      table.handler.updateData([])
-      table.handler.getApi(getShipmentMT)
-    } else {
-      table.handler.updateData([])
-      table.handler.getApi(getShipment)
-    }
-  }, [type])
 
   const ConfirmPGI = () => (
     <Popup
@@ -90,9 +75,9 @@ export default function PageShipment() {
           variant="primary"
           onClick={() => {
             table.state.selected.forEach((shipment_id, index) => {
-              setPending((curr) => ++curr)
+              setPending((p) => p + 1)
               PGIShipment(shipment_id, { posting_date: postingDate }).then(() => {
-                setPending((curr) => --curr)
+                setPending((p) => p - 1)
                 if (index === table.state.selected.length - 1) {
                   setShowConfirm('success-PGI')
                 }
@@ -130,9 +115,7 @@ export default function PageShipment() {
         <div>
           Shipment
           <Typography.Text
-            copyable={{
-              text: oneSelected ? table.state.selected[0] : table.state.selected.join(', '),
-            }}
+            copyable={{ text: oneSelected ? table.state.selected[0] : table.state.selected.join(', ') }}
           >
             {oneSelected ? (
               ` ${table.state.selected[0]} `
@@ -171,14 +154,20 @@ export default function PageShipment() {
           <Button
             size="big"
             variant={type === 'GT' ? 'primary' : 'secondary'}
-            onClick={() => setType('GT')}
+            onClick={() => {
+              table.handler.getApi(getShipment)
+              setType('GT')
+            }}
           >
             CASH
           </Button>
           <Button
             size="big"
             variant={type === 'MT' ? 'primary' : 'secondary'}
-            onClick={() => setType('MT')}
+            onClick={() => {
+              table.handler.getApi(getShipmentMT)
+              setType('MT')
+            }}
           >
             TOP
           </Button>

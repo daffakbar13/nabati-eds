@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import CreateColumns, { addColumn } from 'src/utils/createColumns'
+import { addColumn } from 'src/utils/createColumns'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
 import { Button } from 'pink-lava-ui'

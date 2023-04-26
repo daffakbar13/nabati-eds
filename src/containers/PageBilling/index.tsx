@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Button, Col, Row, Spacer, Text, Table, DatePickerInput, Search } from 'pink-lava-ui'
 import DebounceSelect from 'src/components/DebounceSelect'
 import { Card, SmartFilter } from 'src/components'
@@ -15,7 +15,6 @@ import {
 } from 'src/configs/fieldFetches'
 import { useFilters } from 'src/hooks'
 import ReactToPrint from 'react-to-print'
-// import { Col, Row } from 'antd'
 import { TableBilling } from './columns'
 import PrintBilling from './print'
 
@@ -27,24 +26,11 @@ export default function PageBilling() {
   })
   const { oldfilters, setFilters, searchProps } = useFilters(table, 'Search Billing ID')
   const hasData = table.state.total > 0
-  const [optionsOrderType, setOptionsOrderType] = useState([])
+  const [optionsOrderType, setOptionsOrderType] = React.useState([])
   const [invoice, setInvoice] = React.useState<any[]>()
   const [suratJalan, setSuratJalan] = React.useState<any[]>()
-  const [type, setType] = useState<'GT' | 'MT'>('GT')
+  const [type, setType] = React.useState<'GT' | 'MT'>('GT')
   const titlePage = useTitlePage('list')
-  // useEffect(() => {
-  //   fieldOrderType('M').then((result) => setOptionsOrderType(result))
-  // }, [])
-  useEffect(() => {
-    fieldOrderType('M').then((result) => setOptionsOrderType(result))
-    if (type === 'MT') {
-      table.handler.updateData([])
-      table.handler.getApi(getBillingMT)
-    } else {
-      table.handler.updateData([])
-      table.handler.getApi(getBillingGT)
-    }
-  }, [type])
 
   const statusOption = [
     { label: 'All', value: null },
@@ -63,6 +49,11 @@ export default function PageBilling() {
     .map((s) => s.billing_number)
 
   const printRef = React.useRef<HTMLDivElement>()
+
+  React.useEffect(() => {
+    fieldOrderType('M').then((result) => setOptionsOrderType(result))
+  }, [])
+
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>
@@ -71,14 +62,20 @@ export default function PageBilling() {
         <Button
           size="big"
           variant={type === 'GT' ? 'primary' : 'secondary'}
-          onClick={() => setType('GT')}
+          onClick={() => {
+            table.handler.getApi(getBillingGT)
+            setType('GT')
+          }}
         >
           CASH
         </Button>
         <Button
           size="big"
           variant={type === 'MT' ? 'primary' : 'secondary'}
-          onClick={() => setType('MT')}
+          onClick={() => {
+            table.handler.getApi(getBillingMT)
+            setType('MT')
+          }}
         >
           TOP
         </Button>
