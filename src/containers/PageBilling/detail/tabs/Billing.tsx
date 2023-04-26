@@ -30,7 +30,6 @@ export default function Billing(props: BillingProps) {
     DataList.createDataList('Modified On', moment(data.modified_at?.Time).format('DD MMMM YYYY')),
     DataList.createDataList('Modified By', data.modified_at?.Valid || '-'),
   ]
-
   return (
     <>
       <Row gutter={8}>
