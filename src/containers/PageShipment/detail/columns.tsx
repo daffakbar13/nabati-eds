@@ -1,4 +1,5 @@
 import CreateColumns, { addColumn } from 'src/utils/createColumns'
+import currency from 'src/utils/currencyFormat'
 
 export const TableDocumentHeader = [
   addColumn({
@@ -60,7 +61,7 @@ export const TableCustomerInfo = [
   CreateColumns('Salesman Group', 'Doc. Number'),
 ]
 
-export const TableDocumentAccounting = [
+export const TableShipmentAccounting = [
   addColumn({
     title: 'No',
     render: (_, __, i) => i + 1,
@@ -68,19 +69,20 @@ export const TableDocumentAccounting = [
   }),
   addColumn({
     title: 'G/L Account',
-    // render: (_, { product_id, description }) => concatString(product_id, description),
+    dataIndex: 'product_id',
+    fixed: true,
   }),
   addColumn({
     title: 'D/C',
     dataIndex: 'item_category_id',
   }),
   addColumn({
-    title: 'Amount In Doc. Currency',
-    dataIndex: 'condition_type',
+    title: 'Ammount In Doc Currency',
+    render: (_, { price }) => currency(price),
   }),
   addColumn({
     title: 'Tax Code',
-    dataIndex: 'description',
+    dataIndex: 'tax_value',
   }),
   addColumn({
     title: 'Assignment',
@@ -88,12 +90,14 @@ export const TableDocumentAccounting = [
   }),
   addColumn({
     title: 'Text',
-    dataIndex: 'billing_qty',
+    dataIndex: 'description',
   }),
   addColumn({
     title: 'Cost Center',
+    dataIndex: 'billing_qty',
   }),
   addColumn({
     title: 'Profit Center',
+    dataIndex: 'gross_value',
   }),
 ]

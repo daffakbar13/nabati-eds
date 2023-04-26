@@ -86,7 +86,6 @@ export const useTableDetailCollection = (
   ) => void,
   // eslint-disable-next-line no-unused-vars
   handleDelive: (data_billing: string) => void,
-  tradeType?: string,
 ) => {
   const [data, setData] = React.useState<any>({})
   const [showModalDelivered, setShowModalDelivered] = React.useState(false)
@@ -95,6 +94,7 @@ export const useTableDetailCollection = (
   const [reasonUndeliveredID, setReasonUndeliveredID] = React.useState()
   const [reasonUndeliveredName, setReasonUndeliveredName] = React.useState()
   const payment = useTablePayment()
+  const { tradeType } = useRouter().query
 
   function closeModal() {
     setShowModalDelivered(false)
@@ -223,39 +223,37 @@ export const useTableDetailCollection = (
         title: 'Balance',
         dataIndex: 'balance',
       }),
-      tradeType === 'MT'
-        ? addColumn({
-            title: 'Status',
-            dataIndex: 'status',
-            render: (value, r) => {
-              if (r?.paid_amount) {
-                if (r?.balance || r?.billing_amount !== r?.paid_amount) {
-                  return 'Partial Paid'
-                } else {
-                  return 'Paid'
-                }
-              } else {
-                return 'Unpaid'
+      addColumn({
+        ...(tradeType === 'MT' && {
+          title: 'Status',
+          dataIndex: 'status',
+          render: (_, r) => {
+            if (r?.paid_amount) {
+              if (r?.balance || r?.billing_amount !== r?.paid_amount) {
+                return 'Partial Paid'
               }
-            },
-          })
-        : addColumn({
-            title: 'Undelivered Reason',
-            dataIndex: 'undelivered_reason_name',
-          }),
+              return 'Paid'
+            }
+            return 'Unpaid'
+          },
+        }),
+        ...(tradeType !== 'MT' && {
+          title: 'Undelivered Reason',
+          dataIndex: 'undelivered_reason_name',
+        }),
+      }),
       addColumn({
         title: 'Delivery Confirmation',
         render: (_, r) => {
           const isActive = (...value: number[]) => value.includes(r.is_delivered)
+          const isChanges = !isActive(0)
           const isActiveUnDelivered = isActive(0, 1, 3)
           const isActiveDelivered = isActive(0, 2, 4)
           const isFromSFA = isActive(3, 4)
-          const disabledCursor = { cursor: 'no-drop' }
+          const disabledCursor = { ...(isChanges && { cursor: 'no-drop' }) }
           const disableStyleFromSFA = { ...(isFromSFA && disabledCursor) }
-          const deliveredStyle = { backgroundColor: '#ddd' }
-          const undeliveredStyle = { border: '2px solid #ddd', color: '#ddd' }
-          const router = useRouter()
-          const { tradeType } = router.query
+          const deliveredStyle = { ...(isChanges && { backgroundColor: '#ddd' }) }
+          const undeliveredStyle = { ...(isChanges && { border: '2px solid #ddd', color: '#ddd' }) }
           if (tradeType === 'GT') {
             return (
               <div style={{ display: 'flex', gap: 5 }}>
@@ -295,28 +293,27 @@ export const useTableDetailCollection = (
                 )}
               </div>
             )
-          } else {
-            return (
-              <div style={{ display: 'flex', gap: 5 }}>
-                <Button
-                  variant="primary"
-                  size="small"
-                  style={disabledCursor}
-                  {...(isActiveDelivered && {
-                    style: { ...deliveredStyle, ...disableStyleFromSFA },
-                    onClick() {
-                      if (!isFromSFA) {
-                        setShowModalDelivered(true)
-                        setData(r)
-                      }
-                    },
-                  })}
-                >
-                  Confirm
-                </Button>
-              </div>
-            )
           }
+          return (
+            <div style={{ display: 'flex', gap: 5 }}>
+              <Button
+                variant="primary"
+                size="small"
+                style={disabledCursor}
+                {...(isActiveDelivered && {
+                  style: { ...deliveredStyle, ...disableStyleFromSFA },
+                  onClick() {
+                    if (!isFromSFA) {
+                      setShowModalDelivered(true)
+                      setData(r)
+                    }
+                  },
+                })}
+              >
+                Confirm
+              </Button>
+            </div>
+          )
         },
       }),
     ],

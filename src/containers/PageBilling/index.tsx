@@ -63,7 +63,6 @@ export default function PageBilling() {
     .map((s) => s.billing_number)
 
   const printRef = React.useRef<HTMLDivElement>()
-
   return (
     <Col>
       <Text variant={'h4'}>{titlePage}</Text>

@@ -18,8 +18,6 @@ export default function PageCollectionDetail() {
   const [processing, setProcessing] = React.useState<string>()
   const hasData = Object.keys(data).length > 0
 
-  const { tradeType } = router.query
-
   function getTotalAmount() {
     if (hasData) {
       const totalAmount = [...data.details].map((d) => d.billing_amount).reduce((a, b) => a + b)
@@ -100,11 +98,7 @@ export default function PageCollectionDetail() {
     }),
   })
 
-  const { columns, modalDelivered } = useTableDetailCollection(
-    undeliveBilling,
-    deliveBilling,
-    tradeType as string,
-  )
+  const { columns, modalDelivered } = useTableDetailCollection(undeliveBilling, deliveBilling)
 
   return (
     <Col>

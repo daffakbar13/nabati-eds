@@ -29,6 +29,7 @@ export default function PageBillingDetail() {
   const data = useDetail(getDetailBilling, { id: router.query.id as string })
   const printRef = React.useRef<HTMLDivElement>()
   const hasData = Object.keys(data).length > 0
+  const { status } = router.query
 
   return (
     <Col>
@@ -78,7 +79,7 @@ export default function PageBillingDetail() {
           onChange={(asd) => {
             setCurrentTab(asd)
           }}
-          items={AllTabs}
+          items={status === 'Complete' ? AllTabs : AllTabs.slice(0, 5)}
         />
         {hasData && (
           <>

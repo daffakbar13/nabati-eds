@@ -137,19 +137,20 @@ export const TableDocumentAccounting = [
   }),
   addColumn({
     title: 'G/L Account',
-    // render: (_, { product_id, description }) => concatString(product_id, description),
+    dataIndex: 'product_id',
+    fixed: true,
   }),
   addColumn({
     title: 'D/C',
     dataIndex: 'item_category_id',
   }),
   addColumn({
-    title: 'Amount In Doc. Currency',
-    dataIndex: 'condition_type',
+    title: 'Ammount In Doc Currency',
+    render: (_, { price }) => currency(price),
   }),
   addColumn({
     title: 'Tax Code',
-    dataIndex: 'description',
+    dataIndex: 'tax_value',
   }),
   addColumn({
     title: 'Assignment',
@@ -157,14 +158,14 @@ export const TableDocumentAccounting = [
   }),
   addColumn({
     title: 'Text',
-    dataIndex: 'billing_qty',
+    dataIndex: 'description',
   }),
   addColumn({
     title: 'Cost Center',
-    render: (_, { price }) => currency(price),
+    dataIndex: 'billing_qty',
   }),
   addColumn({
     title: 'Profit Center',
-    render: (_, { gross_value }) => currency(gross_value),
+    dataIndex: 'gross_value',
   }),
 ]

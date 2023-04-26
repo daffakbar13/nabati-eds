@@ -3,7 +3,7 @@ import moment from 'moment'
 import React from 'react'
 import DataList from 'src/components/DataList'
 import { Spacer, Table } from 'pink-lava-ui'
-import { TableDocumentAccounting } from '../columns'
+import { TableShipmentAccounting } from '../columns'
 import { concatString } from 'src/utils/concatString'
 
 interface AccountingProps {
@@ -12,7 +12,7 @@ interface AccountingProps {
 
 // const DataList.createDataList = (label: string, value: string) => ({ label, value })
 
-export default function Accounting(props: AccountingProps) {
+export default function ShipmentAccounting(props: AccountingProps) {
   const { data } = props
   const company_code = data?.customer_info?.customer_sales_data
 
@@ -25,7 +25,7 @@ export default function Accounting(props: AccountingProps) {
     DataList.createDataList('Document Type', data.billing_type_id),
     DataList.createDataList(
       'Company Code',
-      concatString(company_code.company_id, company_code.company_name),
+      company_code ? concatString(company_code.company_id, company_code.company_name) : '-',
     ),
     DataList.createDataList('Currency', data.currency_id),
     DataList.createDataList('Exchange Rate', moment(data.pricing_date).format('DD MMMM YYYY')),
@@ -49,7 +49,7 @@ export default function Accounting(props: AccountingProps) {
       <div style={{ overflow: 'scroll' }}>
         <Table
           scroll={{ x: 'max-content' }}
-          columns={TableDocumentAccounting}
+          columns={TableShipmentAccounting}
           data={data.billing_item}
         />
       </div>
