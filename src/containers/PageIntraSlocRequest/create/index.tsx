@@ -8,7 +8,7 @@ import useTitlePage from 'src/hooks/useTitlePage'
 import { createRequestIntraSloc } from 'src/api/logistic/request-intra-sloc'
 import { useRouter } from 'next/router'
 import { PATH } from 'src/configs/menus'
-import { fieldBranchAll, fieldSlocByConfigLogistic } from 'src/configs/fieldFetches'
+import { fieldBranchAll, fieldSlocByConfigLogisticWithFilter } from 'src/configs/fieldFetches'
 import { useTableAddItem } from './columns'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 
@@ -45,7 +45,9 @@ export default function PageCreateRequestIntraSloc() {
   const isCreatePage = router.asPath.split('/').reverse()[0] === 'create'
   const [branchSelected, setBranchSelected] = useState('')
   const [ChannelBranch, setChannelBranch] = useState('')
+  const [ChannelType, setChannelType] = useState('')
   const [allSloc, setAllScloc] = useState([])
+  const [allSlocTo, setAllSclocTo] = useState([])
   const [disabledButton, setDisabledButton] = useState(true)
   const [selectedRow, setSelectedRow] = useState<number>()
   const [modalCancel, setModalCancel] = useState(false)
@@ -85,6 +87,7 @@ export default function PageCreateRequestIntraSloc() {
     receive_sloc_id: 'GS00',
     status_id: '01',
     remarks: '',
+    channel: ChannelBranch,
     items: tableAddItems.data,
   }
   const titlePage = useTitlePage(isCreatePage ? 'create' : 'edit')
@@ -94,9 +97,14 @@ export default function PageCreateRequestIntraSloc() {
   }
 
   const onChangeBranch = (value: any) => {
-    fieldSlocByConfigLogistic(value).then((result) => {
+    fieldSlocByConfigLogisticWithFilter(value, 'EQ', 'Intra Sloc').then((result) => {
       setAllScloc(result)
     })
+    fieldSlocByConfigLogisticWithFilter(value, 'BT', 'Intra Sloc', 'Intra Channel').then(
+      (result) => {
+        setAllSclocTo(result)
+      },
+    )
   }
 
   const onClickSubmit = async () => {
@@ -176,6 +184,7 @@ export default function PageCreateRequestIntraSloc() {
                     onChangeForm('suppl_branch_id', val.label.split(' - ')[0])
                     onChangeBranch(val.label.split(' - ')[0])
                     setBranchSelected(val.label)
+                    setChannelBranch(val.key)
                   }}
                   value={branchSelected}
                 />
@@ -254,18 +263,18 @@ export default function PageCreateRequestIntraSloc() {
                   label={
                     <>
                       To Sloc<span style={{ color: 'red' }}> *</span>{' '}
-                      {ChannelBranch == 'Intra Channel' && (
+                      {ChannelType == 'Intra Channel' && (
                         <Tag icon={<ExclamationCircleOutlined />} color="warning">
                           You will do intra channel
                         </Tag>
                       )}
                     </>
                   }
-                  options={allSloc}
+                  options={allSlocTo}
                   disabled={branchSelected === ''}
                   onChange={(val: any) => {
                     onChangeForm('receive_sloc_id', val.label.split(' - ')[0])
-                    setChannelBranch(val.key)
+                    setChannelType(val.key)
                   }}
                 />
               </Form.Item>

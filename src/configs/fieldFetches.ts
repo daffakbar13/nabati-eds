@@ -47,6 +47,7 @@ import {
   getTaxbyCompany,
   getVehicle,
   getConditionType,
+  getSlocbyConfigLogisticWithFilter,
 } from 'src/api/master-data'
 import { getListPoSto } from 'src/api/logistic/po-sto'
 import { getListDoSto } from 'src/api/logistic/do-sto'
@@ -1452,5 +1453,25 @@ export function fieldTaxbyCompany(search = '', company_id = '') {
         label: tax_name,
         value: tax_name,
       })),
+  )
+}
+
+export function fieldSlocByConfigLogisticWithFilter(
+  branch_id: string,
+  sloc_type_option = 'EQ',
+  sloc_type_form: string,
+  sloc_type_to = '',
+) {
+  return getSlocbyConfigLogisticWithFilter(
+    branch_id,
+    sloc_type_option,
+    sloc_type_form,
+    sloc_type_to,
+  ).then((result) =>
+    result.data?.map(({ sloc_id, sloc_name, sloc_type }) => ({
+      label: [sloc_id, sloc_name].join(' - '),
+      value: sloc_id,
+      key: sloc_type,
+    })),
   )
 }

@@ -52,6 +52,7 @@ const subUrl = {
   getCompanybyCountry: '/v1/master-data/list_company',
   getTaxbyCompany: '/v1/master-data/list_tax',
   getConditionType: 'v1/master/get-cond-type/PP01',
+  getSlocbyConfigLogisticWithFilter: 'v1/configuration/list_config_sloc/filter_branch',
 }
 const overrideBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_1
 const BaseUrl2 = process.env.NEXT_PUBLIC_API_BASE_URL_2
@@ -656,6 +657,35 @@ export const getTaxbyCompany = async (idCompany: string): Promise<CommonDetailRe
   const response = await call({
     method: METHODS.GET,
     subUrl: `${BaseUrl2}${subUrl.getTaxbyCompany}/${idCompany}`,
+  })
+
+  return response.data
+}
+
+export const getSlocbyConfigLogisticWithFilter = async (
+  idbranch: string,
+  sloctypeoption: string,
+  sloctypefrom: string,
+  sloctypeto: string,
+): Promise<CommonDetailResponse<any>> => {
+  const response = await call({
+    method: METHODS.POST,
+    subUrl: `${BaseUrl2}${subUrl.getSlocbyConfigLogisticWithFilter}`,
+    data: {
+      filters: [
+        {
+          field: 'branch_id',
+          option: 'EQ',
+          from_value: idbranch,
+        },
+        {
+          field: 'sloc_type',
+          option: sloctypeoption,
+          from_value: sloctypefrom,
+          to_value: sloctypeto,
+        },
+      ],
+    },
   })
 
   return response.data
