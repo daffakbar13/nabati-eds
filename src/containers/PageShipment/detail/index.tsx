@@ -209,12 +209,14 @@ export default function PageShipmentDetail() {
                     {currentTab === '2' && 'Print BPB'}
                     {currentTab === '3' && 'Print BSTS'}
                     {currentTab === '4' && 'Print HPH'}
+                    {currentTab === '5' && 'Print'}
                   </Button>
                 ) : (
                   <Button size="big" variant="primary">
                     {currentTab === '2' && 'Print BPB'}
                     {currentTab === '3' && 'Print BSTF'}
                     {currentTab === '4' && 'Print HPH'}
+                    {currentTab === '5' && 'Print'}
                   </Button>
                 )
               }
