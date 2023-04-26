@@ -32,6 +32,7 @@ interface DataFormTypes {
   receive_sloc_id: string
   status_id: string
   remarks: string
+  channel: string
   items: Array<ItemsState>
 }
 
